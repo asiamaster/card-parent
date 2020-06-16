@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dili.card.dao.ICardAccountCycleDetailDao">
+	
+	<select id="selectList" resultType="com.dili.card.entity.CardAccountCycleDetailEntity">
+		SELECT
+			`id`, 
+			`cycle_no`, 
+			`receive_times`, 
+			`receive_amount`, 
+			`deliver_times`, 
+			`deliver_amount`, 
+			`depo_cash_times`, 
+			`depo_cash_amount`, 
+			`depo_pos_times`, 
+			`depo_pos_amount`, 
+			`draw_cash_times`, 
+			`draw_cash_amount`, 
+			`revenue_amount`, 
+			`firm_id`, 
+			`firm_name`, 
+			`create_time`, 
+			`modify_time`
+		FROM
+			card_account_cycle_detail
+		ORDER BY
+			id DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO card_account_cycle_detail (
+			`cycle_no`, 
+			`receive_times`, 
+			`receive_amount`, 
+			`deliver_times`, 
+			`deliver_amount`, 
+			`depo_cash_times`, 
+			`depo_cash_amount`, 
+			`depo_pos_times`, 
+			`depo_pos_amount`, 
+			`draw_cash_times`, 
+			`draw_cash_amount`, 
+			`revenue_amount`, 
+			`firm_id`, 
+			`firm_name`, 
+			`create_time`, 
+			`modify_time`
+		)
+		VALUES (
+			#{cycleNo}, 
+			#{receiveTimes}, 
+			#{receiveAmount}, 
+			#{deliverTimes}, 
+			#{deliverAmount}, 
+			#{depoCashTimes}, 
+			#{depoCashAmount}, 
+			#{depoPosTimes}, 
+			#{depoPosAmount}, 
+			#{drawCashTimes}, 
+			#{drawCashAmount}, 
+			#{revenueAmount}, 
+			#{firmId}, 
+			#{firmName}, 
+			#{createTime}, 
+			#{modifyTime}
+		)
+	</insert>
+	
+	<select id="getById" resultType="com.dili.card.entity.CardAccountCycleDetailEntity">
+		SELECT
+			`id`, 
+			`cycle_no`, 
+			`receive_times`, 
+			`receive_amount`, 
+			`deliver_times`, 
+			`deliver_amount`, 
+			`depo_cash_times`, 
+			`depo_cash_amount`, 
+			`depo_pos_times`, 
+			`depo_pos_amount`, 
+			`draw_cash_times`, 
+			`draw_cash_amount`, 
+			`revenue_amount`, 
+			`firm_id`, 
+			`firm_name`, 
+			`create_time`, 
+			`modify_time`
+		FROM
+			card_account_cycle_detail
+		WHERE
+			id = #{id}
+	</select>
+	
+	<update id="update">
+		UPDATE card_account_cycle_detail
+	 	<set>
+			<if test="cycleNo != null">`cycle_no` = #{cycleNo}, </if>
+			<if test="receiveTimes != null">`receive_times` = #{receiveTimes}, </if>
+			<if test="receiveAmount != null">`receive_amount` = #{receiveAmount}, </if>
+			<if test="deliverTimes != null">`deliver_times` = #{deliverTimes}, </if>
+			<if test="deliverAmount != null">`deliver_amount` = #{deliverAmount}, </if>
+			<if test="depoCashTimes != null">`depo_cash_times` = #{depoCashTimes}, </if>
+			<if test="depoCashAmount != null">`depo_cash_amount` = #{depoCashAmount}, </if>
+			<if test="depoPosTimes != null">`depo_pos_times` = #{depoPosTimes}, </if>
+			<if test="depoPosAmount != null">`depo_pos_amount` = #{depoPosAmount}, </if>
+			<if test="drawCashTimes != null">`draw_cash_times` = #{drawCashTimes}, </if>
+			<if test="drawCashAmount != null">`draw_cash_amount` = #{drawCashAmount}, </if>
+			<if test="revenueAmount != null">`revenue_amount` = #{revenueAmount}, </if>
+			<if test="firmId != null">`firm_id` = #{firmId}, </if>
+			<if test="firmName != null">`firm_name` = #{firmName}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="modifyTime != null">`modify_time` = #{modifyTime}</if>
+		</set>
+		WHERE
+			id = #{id}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			card_account_cycle_detail
+		WHERE
+			id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

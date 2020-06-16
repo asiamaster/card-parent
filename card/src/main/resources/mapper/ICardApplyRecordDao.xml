@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dili.card.dao.ICardApplyRecordDao">
+	
+	<select id="selectList" resultType="com.dili.card.entity.CardApplyRecordEntity">
+		SELECT
+			`id`, 
+			`apply_time`, 
+			`card_no`, 
+			`amount`, 
+			`apply_user_id`, 
+			`apply_user_name`, 
+			`creator_id`, 
+			`creator`, 
+			`create_time`, 
+			`firm_id`, 
+			`firm_name`, 
+			`modify_time`, 
+			`notes`
+		FROM
+			card_apply_record
+		ORDER BY
+			id DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO card_apply_record (
+			`apply_time`, 
+			`card_no`, 
+			`amount`, 
+			`apply_user_id`, 
+			`apply_user_name`, 
+			`creator_id`, 
+			`creator`, 
+			`create_time`, 
+			`firm_id`, 
+			`firm_name`, 
+			`modify_time`, 
+			`notes`
+		)
+		VALUES (
+			#{applyTime}, 
+			#{cardNo}, 
+			#{amount}, 
+			#{applyUserId}, 
+			#{applyUserName}, 
+			#{creatorId}, 
+			#{creator}, 
+			#{createTime}, 
+			#{firmId}, 
+			#{firmName}, 
+			#{modifyTime}, 
+			#{notes}
+		)
+	</insert>
+	
+	<select id="getById" resultType="com.dili.card.entity.CardApplyRecordEntity">
+		SELECT
+			`id`, 
+			`apply_time`, 
+			`card_no`, 
+			`amount`, 
+			`apply_user_id`, 
+			`apply_user_name`, 
+			`creator_id`, 
+			`creator`, 
+			`create_time`, 
+			`firm_id`, 
+			`firm_name`, 
+			`modify_time`, 
+			`notes`
+		FROM
+			card_apply_record
+		WHERE
+			id = #{id}
+	</select>
+	
+	<update id="update">
+		UPDATE card_apply_record
+	 	<set>
+			<if test="applyTime != null">`apply_time` = #{applyTime}, </if>
+			<if test="cardNo != null">`card_no` = #{cardNo}, </if>
+			<if test="amount != null">`amount` = #{amount}, </if>
+			<if test="applyUserId != null">`apply_user_id` = #{applyUserId}, </if>
+			<if test="applyUserName != null">`apply_user_name` = #{applyUserName}, </if>
+			<if test="creatorId != null">`creator_id` = #{creatorId}, </if>
+			<if test="creator != null">`creator` = #{creator}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="firmId != null">`firm_id` = #{firmId}, </if>
+			<if test="firmName != null">`firm_name` = #{firmName}, </if>
+			<if test="modifyTime != null">`modify_time` = #{modifyTime}, </if>
+			<if test="notes != null">`notes` = #{notes}</if>
+		</set>
+		WHERE
+			id = #{id}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			card_apply_record
+		WHERE
+			id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

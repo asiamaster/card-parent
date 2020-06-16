@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dili.card.dao.ICardFundLogDao">
+	
+	<select id="selectList" resultType="com.dili.card.entity.CardFundLogEntity">
+		SELECT
+			`id`, 
+			`serial_no`, 
+			`type`, 
+			`to_account_id`, 
+			`to_name`, 
+			`to_card_no`, 
+			`cycle_no`, 
+			`balance`, 
+			`amount`, 
+			`original_amount`, 
+			`total_fee`, 
+			`channel_type`, 
+			`bank_card_type`, 
+			`firm_id`, 
+			`firm_name`, 
+			`state`, 
+			`version`, 
+			`pay_serial_no`, 
+			`notes`, 
+			`creator_id`, 
+			`creator`, 
+			`modify_time`, 
+			`create_time`
+		FROM
+			card_fund_log
+		ORDER BY
+			id DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO card_fund_log (
+			`id`, 
+			`serial_no`, 
+			`type`, 
+			`to_account_id`, 
+			`to_name`, 
+			`to_card_no`, 
+			`cycle_no`, 
+			`balance`, 
+			`amount`, 
+			`original_amount`, 
+			`total_fee`, 
+			`channel_type`, 
+			`bank_card_type`, 
+			`firm_id`, 
+			`firm_name`, 
+			`state`, 
+			`version`, 
+			`pay_serial_no`, 
+			`notes`, 
+			`creator_id`, 
+			`creator`, 
+			`modify_time`, 
+			`create_time`
+		)
+		VALUES (
+			#{id}, 
+			#{serialNo}, 
+			#{type}, 
+			#{toAccountId}, 
+			#{toName}, 
+			#{toCardNo}, 
+			#{cycleNo}, 
+			#{balance}, 
+			#{amount}, 
+			#{originalAmount}, 
+			#{totalFee}, 
+			#{channelType}, 
+			#{bankCardType}, 
+			#{firmId}, 
+			#{firmName}, 
+			#{state}, 
+			#{version}, 
+			#{paySerialNo}, 
+			#{notes}, 
+			#{creatorId}, 
+			#{creator}, 
+			#{modifyTime}, 
+			#{createTime}
+		)
+	</insert>
+	
+	<select id="getById" resultType="com.dili.card.entity.CardFundLogEntity">
+		SELECT
+			`id`, 
+			`serial_no`, 
+			`type`, 
+			`to_account_id`, 
+			`to_name`, 
+			`to_card_no`, 
+			`cycle_no`, 
+			`balance`, 
+			`amount`, 
+			`original_amount`, 
+			`total_fee`, 
+			`channel_type`, 
+			`bank_card_type`, 
+			`firm_id`, 
+			`firm_name`, 
+			`state`, 
+			`version`, 
+			`pay_serial_no`, 
+			`notes`, 
+			`creator_id`, 
+			`creator`, 
+			`modify_time`, 
+			`create_time`
+		FROM
+			card_fund_log
+		WHERE
+			id = #{id}
+	</select>
+	
+	<update id="update">
+		UPDATE card_fund_log
+	 	<set>
+			<if test="serialNo != null">`serial_no` = #{serialNo}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="toAccountId != null">`to_account_id` = #{toAccountId}, </if>
+			<if test="toName != null">`to_name` = #{toName}, </if>
+			<if test="toCardNo != null">`to_card_no` = #{toCardNo}, </if>
+			<if test="cycleNo != null">`cycle_no` = #{cycleNo}, </if>
+			<if test="balance != null">`balance` = #{balance}, </if>
+			<if test="amount != null">`amount` = #{amount}, </if>
+			<if test="originalAmount != null">`original_amount` = #{originalAmount}, </if>
+			<if test="totalFee != null">`total_fee` = #{totalFee}, </if>
+			<if test="channelType != null">`channel_type` = #{channelType}, </if>
+			<if test="bankCardType != null">`bank_card_type` = #{bankCardType}, </if>
+			<if test="firmId != null">`firm_id` = #{firmId}, </if>
+			<if test="firmName != null">`firm_name` = #{firmName}, </if>
+			<if test="state != null">`state` = #{state}, </if>
+			<if test="version != null">`version` = #{version}, </if>
+			<if test="paySerialNo != null">`pay_serial_no` = #{paySerialNo}, </if>
+			<if test="notes != null">`notes` = #{notes}, </if>
+			<if test="creatorId != null">`creator_id` = #{creatorId}, </if>
+			<if test="creator != null">`creator` = #{creator}, </if>
+			<if test="modifyTime != null">`modify_time` = #{modifyTime}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}</if>
+		</set>
+		WHERE
+			id = #{id}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			card_fund_log
+		WHERE
+			id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

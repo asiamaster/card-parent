@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dili.card.dao.ICardUserLogDao">
+	
+	<select id="selectList" resultType="com.dili.card.entity.CardUserLogEntity">
+		SELECT
+			`id`, 
+			`serial_no`, 
+			`type`, 
+			`cycle_no`, 
+			`account_id`, 
+			`name`, 
+			`card_no`, 
+			`new_card_no`, 
+			`card_returned`, 
+			`cash_pledge`, 
+			`out_trade_no`, 
+			`consignor_contract_no`, 
+			`agent_name`, 
+			`agent_id_code`, 
+			`agent_telphone`, 
+			`firm_id`, 
+			`firm_name`, 
+			`creator_id`, 
+			`creator`, 
+			`notes`, 
+			`create_time`
+		FROM
+			card_user_log
+		ORDER BY
+			id DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO card_user_log (
+			`serial_no`, 
+			`type`, 
+			`cycle_no`, 
+			`account_id`, 
+			`name`, 
+			`card_no`, 
+			`new_card_no`, 
+			`card_returned`, 
+			`cash_pledge`, 
+			`out_trade_no`, 
+			`consignor_contract_no`, 
+			`agent_name`, 
+			`agent_id_code`, 
+			`agent_telphone`, 
+			`firm_id`, 
+			`firm_name`, 
+			`creator_id`, 
+			`creator`, 
+			`notes`, 
+			`create_time`
+		)
+		VALUES (
+			#{serialNo}, 
+			#{type}, 
+			#{cycleNo}, 
+			#{accountId}, 
+			#{name}, 
+			#{cardNo}, 
+			#{newCardNo}, 
+			#{cardReturned}, 
+			#{cashPledge}, 
+			#{outTradeNo}, 
+			#{consignorContractNo}, 
+			#{agentName}, 
+			#{agentIdCode}, 
+			#{agentTelphone}, 
+			#{firmId}, 
+			#{firmName}, 
+			#{creatorId}, 
+			#{creator}, 
+			#{notes}, 
+			#{createTime}
+		)
+	</insert>
+	
+	<select id="getById" resultType="com.dili.card.entity.CardUserLogEntity">
+		SELECT
+			`id`, 
+			`serial_no`, 
+			`type`, 
+			`cycle_no`, 
+			`account_id`, 
+			`name`, 
+			`card_no`, 
+			`new_card_no`, 
+			`card_returned`, 
+			`cash_pledge`, 
+			`out_trade_no`, 
+			`consignor_contract_no`, 
+			`agent_name`, 
+			`agent_id_code`, 
+			`agent_telphone`, 
+			`firm_id`, 
+			`firm_name`, 
+			`creator_id`, 
+			`creator`, 
+			`notes`, 
+			`create_time`
+		FROM
+			card_user_log
+		WHERE
+			id = #{id}
+	</select>
+	
+	<update id="update">
+		UPDATE card_user_log
+	 	<set>
+			<if test="serialNo != null">`serial_no` = #{serialNo}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="cycleNo != null">`cycle_no` = #{cycleNo}, </if>
+			<if test="accountId != null">`account_id` = #{accountId}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="cardNo != null">`card_no` = #{cardNo}, </if>
+			<if test="newCardNo != null">`new_card_no` = #{newCardNo}, </if>
+			<if test="cardReturned != null">`card_returned` = #{cardReturned}, </if>
+			<if test="cashPledge != null">`cash_pledge` = #{cashPledge}, </if>
+			<if test="outTradeNo != null">`out_trade_no` = #{outTradeNo}, </if>
+			<if test="consignorContractNo != null">`consignor_contract_no` = #{consignorContractNo}, </if>
+			<if test="agentName != null">`agent_name` = #{agentName}, </if>
+			<if test="agentIdCode != null">`agent_id_code` = #{agentIdCode}, </if>
+			<if test="agentTelphone != null">`agent_telphone` = #{agentTelphone}, </if>
+			<if test="firmId != null">`firm_id` = #{firmId}, </if>
+			<if test="firmName != null">`firm_name` = #{firmName}, </if>
+			<if test="creatorId != null">`creator_id` = #{creatorId}, </if>
+			<if test="creator != null">`creator` = #{creator}, </if>
+			<if test="notes != null">`notes` = #{notes}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}</if>
+		</set>
+		WHERE
+			id = #{id}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			card_user_log
+		WHERE
+			id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

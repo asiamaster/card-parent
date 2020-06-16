@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dili.card.dao.ICardAccountCycleDao">
+	
+	<select id="selectList" resultType="com.dili.card.entity.CardAccountCycleEntity">
+		SELECT
+			`id`, 
+			`user_id`, 
+			`user_name`, 
+			`cycle_no`, 
+			`cash_box`, 
+			`start_time`, 
+			`end_time`, 
+			`check_time`, 
+			`state`, 
+			`cash_amount`, 
+			`auditor_id`, 
+			`auditor_name`, 
+			`version`, 
+			`firm_id`, 
+			`firm_name`, 
+			`notes`, 
+			`create_time`, 
+			`modify_time`
+		FROM
+			card_account_cycle
+		ORDER BY
+			id DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO card_account_cycle (
+			`user_id`, 
+			`user_name`, 
+			`cycle_no`, 
+			`cash_box`, 
+			`start_time`, 
+			`end_time`, 
+			`check_time`, 
+			`state`, 
+			`cash_amount`, 
+			`auditor_id`, 
+			`auditor_name`, 
+			`version`, 
+			`firm_id`, 
+			`firm_name`, 
+			`notes`, 
+			`create_time`, 
+			`modify_time`
+		)
+		VALUES (
+			#{userId}, 
+			#{userName}, 
+			#{cycleNo}, 
+			#{cashBox}, 
+			#{startTime}, 
+			#{endTime}, 
+			#{checkTime}, 
+			#{state}, 
+			#{cashAmount}, 
+			#{auditorId}, 
+			#{auditorName}, 
+			#{version}, 
+			#{firmId}, 
+			#{firmName}, 
+			#{notes}, 
+			#{createTime}, 
+			#{modifyTime}
+		)
+	</insert>
+	
+	<select id="getById" resultType="com.dili.card.entity.CardAccountCycleEntity">
+		SELECT
+			`id`, 
+			`user_id`, 
+			`user_name`, 
+			`cycle_no`, 
+			`cash_box`, 
+			`start_time`, 
+			`end_time`, 
+			`check_time`, 
+			`state`, 
+			`cash_amount`, 
+			`auditor_id`, 
+			`auditor_name`, 
+			`version`, 
+			`firm_id`, 
+			`firm_name`, 
+			`notes`, 
+			`create_time`, 
+			`modify_time`
+		FROM
+			card_account_cycle
+		WHERE
+			id = #{id}
+	</select>
+	
+	<update id="update">
+		UPDATE card_account_cycle
+	 	<set>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="userName != null">`user_name` = #{userName}, </if>
+			<if test="cycleNo != null">`cycle_no` = #{cycleNo}, </if>
+			<if test="cashBox != null">`cash_box` = #{cashBox}, </if>
+			<if test="startTime != null">`start_time` = #{startTime}, </if>
+			<if test="endTime != null">`end_time` = #{endTime}, </if>
+			<if test="checkTime != null">`check_time` = #{checkTime}, </if>
+			<if test="state != null">`state` = #{state}, </if>
+			<if test="cashAmount != null">`cash_amount` = #{cashAmount}, </if>
+			<if test="auditorId != null">`auditor_id` = #{auditorId}, </if>
+			<if test="auditorName != null">`auditor_name` = #{auditorName}, </if>
+			<if test="version != null">`version` = #{version}, </if>
+			<if test="firmId != null">`firm_id` = #{firmId}, </if>
+			<if test="firmName != null">`firm_name` = #{firmName}, </if>
+			<if test="notes != null">`notes` = #{notes}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="modifyTime != null">`modify_time` = #{modifyTime}</if>
+		</set>
+		WHERE
+			id = #{id}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			card_account_cycle
+		WHERE
+			id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
