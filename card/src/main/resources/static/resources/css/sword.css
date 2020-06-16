@@ -1,0 +1,31 @@
+.search-collapse, .select-table {
+    width: 100%;
+    background: #fff;
+    border-radius: 6px;
+    margin-top: 10px;
+    padding-top: 5px;
+    padding-bottom: 13px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, .2);
+}
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0,0,0,0);
+}
+.table-striped table thead {
+    background-color: #eff3f8;
+}
+.btn {
+    margin-right: 5px;
+}
+/** 表单验证 样式布局 **/
+.control-label.is-required:before {
+    content: '* ';
+    color: red;
+
+}
+.col-form-label {
+    text-align: right;
+}
+.container-fluid{
+    margin-top: 15px;
+}
+

@@ -1,96 +1,122 @@
-<!DOCTYPE html>
-<html lang="en">
+<#bs4Body>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" href="/resources/css/sword.css" >
 </head>
-<body>
-    模板变量table信息参见:org.mybatis.generator.api.IntrospectedTable<br/>
-    类名首字母小写:role<br/>
-    类名:Role<br/>
-    表名:role<br/>
-    表注释:<br/>
-    实体对象名:Role<br/>
-    列信息:<br/>
-    获取指定id列JDBC类型:BIGINT<br/>
-    所有列:
-        actualColumnName:String:id,
-        javaProperty:String:id,
-        defaultValue:String:,
-        remarks:String:主键,
-        length:int:19,
-        nullable:boolean:false,
-        identity:boolean:true,
-        tableAlias:String:,
-        jdbcTypeName:String:BIGINT,
-        scale:int:0,
-        jdbcTypeName:String:BIGINT,
-        jdbcType:int:-5:BIGINT
-        ===========================================================================
-        actualColumnName:String:role_name,
-        javaProperty:String:roleName,
-        defaultValue:String:,
-        remarks:String:角色名,
-        length:int:255,
-        nullable:boolean:false,
-        identity:boolean:false,
-        tableAlias:String:,
-        jdbcTypeName:String:VARCHAR,
-        scale:int:0,
-        jdbcTypeName:String:VARCHAR,
-        jdbcType:int:12:VARCHAR
-        ===========================================================================
-        actualColumnName:String:description,
-        javaProperty:String:description,
-        defaultValue:String:,
-        remarks:String:角色描述,
-        length:int:255,
-        nullable:boolean:true,
-        identity:boolean:false,
-        tableAlias:String:,
-        jdbcTypeName:String:VARCHAR,
-        scale:int:0,
-        jdbcTypeName:String:VARCHAR,
-        jdbcType:int:12:VARCHAR
-        ===========================================================================
-        actualColumnName:String:firm_code,
-        javaProperty:String:firmCode,
-        defaultValue:String:,
-        remarks:String:所属市场编码,
-        length:int:50,
-        nullable:boolean:true,
-        identity:boolean:false,
-        tableAlias:String:,
-        jdbcTypeName:String:VARCHAR,
-        scale:int:0,
-        jdbcTypeName:String:VARCHAR,
-        jdbcType:int:12:VARCHAR
-        ===========================================================================
-        actualColumnName:String:created,
-        javaProperty:String:created,
-        defaultValue:String:CURRENT_TIMESTAMP,
-        remarks:String:创建时间,
-        length:int:26,
-        nullable:boolean:false,
-        identity:boolean:false,
-        tableAlias:String:,
-        jdbcTypeName:String:TIMESTAMP,
-        scale:int:0,
-        jdbcTypeName:String:TIMESTAMP,
-        jdbcType:int:93:TIMESTAMP
-        ===========================================================================
-        actualColumnName:String:modified,
-        javaProperty:String:modified,
-        defaultValue:String:CURRENT_TIMESTAMP,
-        remarks:String:修改时间,
-        length:int:26,
-        nullable:boolean:false,
-        identity:boolean:false,
-        tableAlias:String:,
-        jdbcTypeName:String:TIMESTAMP,
-        scale:int:0,
-        jdbcTypeName:String:TIMESTAMP,
-        jdbcType:int:93:TIMESTAMP
-        ===========================================================================
-</body>
-</html>
+<div class="main-container container-fluid">
+    <#bs4nav>
+    <form class="row col-sm-12" id="queryForm">
+        <div class="form-group col-auto">
+            <label for="roleName1">角色名称</label>
+            <input id="roleName1" name="roleName1" type="text" class="form-control input-control len224"
+                   placeholder="角色名称">
+        </div>
+        <div class="form-group col-auto">
+            <label for="roleName2">角色名称</label>
+            <input id="roleName2" name="roleName2" type="text"  class="form-control input-sm input-control len224"
+                   placeholder="品类名称/品类代码">
+        </div>
+        <div class="form-group col-auto">
+            <label for="status">状态</label>
+            <select id="status" class="form-control"  name="status">
+            </select>
+            <#bcomboProvider _id="status" _provider="dataDictionaryValueProvider" _value="${obj.type!}" _queryParams='{dd_code:"role_status_type", required:true}'/>
+        </div>
+        <div class="form-group col-auto">
+            <label for="createdStart">创建时间:</label>
+            <div class="form-inline">
+                <div class="input-group">
+                    <input type="text" name="createdStart" id="createdStart" class="form-control date laydatetime laystart"
+                           value="${createdStart!,dateFormat='yyyy-MM-dd HH:mm:ss'}"/>
+                    <div class="input-group-append">
+                        <label for="createdStart" class="input-group-text fa fa-calendar"></label>
+                    </div>
+                </div>&nbsp;&nbsp;至&nbsp;&nbsp;
+                <div class="input-group" id="datetimepicker3">
+                    <input type="text" name="createdEnd" id="createdEnd" class="form-control date laydatetime layend"
+                           value="${createdEnd!,dateFormat='yyyy-MM-dd HH:mm:ss'}"/>
+                    <div class="input-group-append">
+                        <label for="createdEnd" class="input-group-text fa fa-calendar"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="form-group col">
+        <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search('queryForm', 'bootstrap-table')"><i
+                class="fa fa-search"></i>&nbsp;搜索</a>
+        <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('queryForm', 'bootstrap-table')"><i
+                class="fa fa-refresh"></i>&nbsp;重置</a>
+    </div>
+</#bs4nav>
+</div>
+
+<div class="btn-group" id="toolbar" role="group">
+    <a class="btn btn-success" onclick="$.operate.add()">
+        <i class="fa fa-plus"></i> 新增
+    </a>
+    <a  class="btn btn-primary" onclick="$.operate.edit()">
+        <i class="fa fa-pencil-square-o"></i> 修改
+    </a>
+
+    <a  class="btn btn-danger" onclick="$.operate.remove()">
+        <i class="fa fa-remove"></i> 删除
+    </a>
+    <a class="btn btn-warning" onclick="$.table.exportExcel()">
+        <i class="fa fa-download"></i> 导出
+    </a>
+</div>
+
+<div class="col-sm-12 select-table table-striped">
+    <table id="bootstrap-table"></table>
+</div>
+
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/layer/layer.min.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/sword.js"></script>
+<script>
+    var prefix = "${contextPath}/role";
+    $(function() {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add.html",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            sortName: "postSort",
+            modalName: "角色",
+            singleSelect: true,
+            pageSize: 2,
+            pageList: [1, 2, 5],
+            columns: [{
+                radio: true
+            },
+                {
+                    field: 'id',
+                    title: '角色id'
+                },
+                {
+                    field: 'name',
+                    title: '角色名称',
+                },
+                {
+                    field: 'description',
+                    title: '角色描述',
+                },
+                {
+                    field: 'marketId',
+                    title: '市场id',
+                },
+                {
+                    field: 'status',
+                    title: '状态',
+                    align: 'center',
+                },
+                {
+                    field: 'createdTime',
+                    title: '创建时间',
+                    sortable: true
+                }]
+        };
+        $.table.init(options);
+    });
+</script>
