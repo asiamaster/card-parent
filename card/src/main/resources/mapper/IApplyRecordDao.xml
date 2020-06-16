@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.dili.card.dao.ICardApplyRecordDao">
+<mapper namespace="com.dili.card.dao.IApplyRecordDao">
 	
-	<select id="selectList" resultType="com.dili.card.entity.CardApplyRecordEntity">
+	<select id="selectList" resultType="com.dili.card.entity.ApplyRecordEntity">
 		SELECT
 			`id`, 
 			`apply_time`, 
@@ -55,7 +55,7 @@
 		)
 	</insert>
 	
-	<select id="getById" resultType="com.dili.card.entity.CardApplyRecordEntity">
+	<select id="getById" resultType="com.dili.card.entity.ApplyRecordEntity">
 		SELECT
 			`id`, 
 			`apply_time`, 

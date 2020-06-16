@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 账户资金操作记录,在柜员办理的业务,仅用作记录，统计结账以支付系统为主
  * @author bob
  */
-public class CardFundLogEntity implements Serializable {
+public class FundLogEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -58,9 +58,9 @@ public class CardFundLogEntity implements Serializable {
 	/** 创建时间 */
 	private LocalDateTime createTime; 
     /**
-     * CardFundLogEntity constructor
+     * FundLogEntity constructor
      */
-	public CardFundLogEntity() {
+	public FundLogEntity() {
 		super();
 	}
 
@@ -387,11 +387,11 @@ public class CardFundLogEntity implements Serializable {
 	}
 
     /**
-     * CardFundLogEntity.toString()
+     * FundLogEntity.toString()
      */
     @Override
     public String toString() {
-        return "CardFundLogEntity{" +
+        return "FundLogEntity{" +
                "id='" + id + '\'' +
                ", serialNo='" + serialNo + '\'' +
                ", type='" + type + '\'' +

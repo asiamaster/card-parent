@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 柜员账务周期详情
  * @author bob
  */
-public class CardAccountCycleDetailEntity implements Serializable {
+public class AccountCycleDetailEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -46,9 +46,9 @@ public class CardAccountCycleDetailEntity implements Serializable {
 	/** 修改时间 */
 	private LocalDateTime modifyTime; 
     /**
-     * CardAccountCycleDetailEntity constructor
+     * AccountCycleDetailEntity constructor
      */
-	public CardAccountCycleDetailEntity() {
+	public AccountCycleDetailEntity() {
 		super();
 	}
 
@@ -291,11 +291,11 @@ public class CardAccountCycleDetailEntity implements Serializable {
 	}
 
     /**
-     * CardAccountCycleDetailEntity.toString()
+     * AccountCycleDetailEntity.toString()
      */
     @Override
     public String toString() {
-        return "CardAccountCycleDetailEntity{" +
+        return "AccountCycleDetailEntity{" +
                "id='" + id + '\'' +
                ", cycleNo='" + cycleNo + '\'' +
                ", receiveTimes='" + receiveTimes + '\'' +

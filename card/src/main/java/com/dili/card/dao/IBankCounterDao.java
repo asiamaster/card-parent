@@ -2,42 +2,42 @@ package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
-import com.dili.card.entity.CardFundLogEntity;
+import com.dili.card.entity.BankCounterEntity;
 
 /**
- * 账户资金操作记录,在柜员办理的业务,仅用作记录，统计结账以支付系统为主
+ * 银行存取款
  * @author bob<>
  */
 @Mapper
-public interface ICardFundLogDao {
+public interface IBankCounterDao {
 	/**
      * 列表查询
      * @param page
      * @param search
      * @return
      */
-	List<CardFundLogEntity> selectList(CardFundLogEntity cardFundLog);
+	List<BankCounterEntity> selectList(BankCounterEntity bankCounter);
 
     /**
      * 新增
-     * @param cardFundLog
+     * @param bankCounter
      * @return
      */
-	int save(CardFundLogEntity cardFundLog);
+	int save(BankCounterEntity bankCounter);
 
     /**
      * 根据id查询
      * @param id
      * @return
      */
-	CardFundLogEntity getById(Long id);
+	BankCounterEntity getById(Long id);
 
     /**
      * 修改
-     * @param cardFundLog
+     * @param bankCounter
      * @return
      */
-	int update(CardFundLogEntity cardFundLog);
+	int update(BankCounterEntity bankCounter);
 
     /**
      * 删除

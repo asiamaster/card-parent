@@ -2,42 +2,42 @@ package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
-import com.dili.card.entity.CardBankCounterEntity;
+import com.dili.card.entity.FundContractEntity;
 
 /**
- * 银行存取款
+ * 资金委托合同
  * @author bob<>
  */
 @Mapper
-public interface ICardBankCounterDao {
+public interface IFundContractDao {
 	/**
      * 列表查询
      * @param page
      * @param search
      * @return
      */
-	List<CardBankCounterEntity> selectList(CardBankCounterEntity cardBankCounter);
+	List<FundContractEntity> selectList(FundContractEntity fundContract);
 
     /**
      * 新增
-     * @param cardBankCounter
+     * @param fundContract
      * @return
      */
-	int save(CardBankCounterEntity cardBankCounter);
+	int save(FundContractEntity fundContract);
 
     /**
      * 根据id查询
      * @param id
      * @return
      */
-	CardBankCounterEntity getById(Long id);
+	FundContractEntity getById(Long id);
 
     /**
      * 修改
-     * @param cardBankCounter
+     * @param fundContract
      * @return
      */
-	int update(CardBankCounterEntity cardBankCounter);
+	int update(FundContractEntity fundContract);
 
     /**
      * 删除

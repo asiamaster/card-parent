@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 受委托人
  * @author bob
  */
-public class CardFundConsignorEntity implements Serializable {
+public class FundConsignorEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -30,9 +30,9 @@ public class CardFundConsignorEntity implements Serializable {
 	/** 商户名称 */
 	private String firmName; 
     /**
-     * CardFundConsignorEntity constructor
+     * FundConsignorEntity constructor
      */
-	public CardFundConsignorEntity() {
+	public FundConsignorEntity() {
 		super();
 	}
 
@@ -163,11 +163,11 @@ public class CardFundConsignorEntity implements Serializable {
 	}
 
     /**
-     * CardFundConsignorEntity.toString()
+     * FundConsignorEntity.toString()
      */
     @Override
     public String toString() {
-        return "CardFundConsignorEntity{" +
+        return "FundConsignorEntity{" +
                "id='" + id + '\'' +
                ", contractNo='" + contractNo + '\'' +
                ", consigneeName='" + consigneeName + '\'' +

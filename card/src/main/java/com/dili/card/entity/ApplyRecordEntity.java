@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 柜员申领卡片记录
  * @author bob
  */
-public class CardApplyRecordEntity implements Serializable {
+public class ApplyRecordEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -38,9 +38,9 @@ public class CardApplyRecordEntity implements Serializable {
 	/** 备注 */
 	private String notes; 
     /**
-     * CardApplyRecordEntity constructor
+     * ApplyRecordEntity constructor
      */
-	public CardApplyRecordEntity() {
+	public ApplyRecordEntity() {
 		super();
 	}
 
@@ -227,11 +227,11 @@ public class CardApplyRecordEntity implements Serializable {
 	}
 
     /**
-     * CardApplyRecordEntity.toString()
+     * ApplyRecordEntity.toString()
      */
     @Override
     public String toString() {
-        return "CardApplyRecordEntity{" +
+        return "ApplyRecordEntity{" +
                "id='" + id + '\'' +
                ", applyTime='" + applyTime + '\'' +
                ", cardNo='" + cardNo + '\'' +

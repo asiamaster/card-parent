@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 柜员交款领款
  * @author bob
  */
-public class CardUserCashEntity implements Serializable {
+public class UserCashEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -40,9 +40,9 @@ public class CardUserCashEntity implements Serializable {
 	/** 修改时间 */
 	private LocalDateTime modifyTime; 
     /**
-     * CardUserCashEntity constructor
+     * UserCashEntity constructor
      */
-	public CardUserCashEntity() {
+	public UserCashEntity() {
 		super();
 	}
 
@@ -243,11 +243,11 @@ public class CardUserCashEntity implements Serializable {
 	}
 
     /**
-     * CardUserCashEntity.toString()
+     * UserCashEntity.toString()
      */
     @Override
     public String toString() {
-        return "CardUserCashEntity{" +
+        return "UserCashEntity{" +
                "id='" + id + '\'' +
                ", userId='" + userId + '\'' +
                ", userName='" + userName + '\'' +

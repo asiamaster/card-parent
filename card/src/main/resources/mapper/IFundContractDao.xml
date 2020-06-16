@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.dili.card.dao.ICardBankCounterDao">
+<mapper namespace="com.dili.card.dao.IFundContractDao">
 	
-	<select id="selectList" resultType="com.dili.card.entity.CardBankCounterEntity">
+	<select id="selectList" resultType="com.dili.card.entity.FundContractEntity">
 		SELECT
 			`id`, 
-			`action`, 
-			`amount`, 
+			`contract_no`, 
+			`consignor_account_id`, 
+			`start_time`, 
+			`end_time`, 
 			`state`, 
-			`serial_no`, 
-			`apply_time`, 
+			`signature_image_path`, 
 			`creator_id`, 
 			`creator`, 
 			`firm_id`, 
@@ -19,18 +20,19 @@
 			`create_time`, 
 			`modify_time`
 		FROM
-			card_bank_counter
+			card_fund_contract
 		ORDER BY
 			id DESC
 	</select>
 	
 	<insert id="save">
-		INSERT INTO card_bank_counter (
-			`action`, 
-			`amount`, 
+		INSERT INTO card_fund_contract (
+			`contract_no`, 
+			`consignor_account_id`, 
+			`start_time`, 
+			`end_time`, 
 			`state`, 
-			`serial_no`, 
-			`apply_time`, 
+			`signature_image_path`, 
 			`creator_id`, 
 			`creator`, 
 			`firm_id`, 
@@ -40,11 +42,12 @@
 			`modify_time`
 		)
 		VALUES (
-			#{action}, 
-			#{amount}, 
+			#{contractNo}, 
+			#{consignorAccountId}, 
+			#{startTime}, 
+			#{endTime}, 
 			#{state}, 
-			#{serialNo}, 
-			#{applyTime}, 
+			#{signatureImagePath}, 
 			#{creatorId}, 
 			#{creator}, 
 			#{firmId}, 
@@ -55,14 +58,15 @@
 		)
 	</insert>
 	
-	<select id="getById" resultType="com.dili.card.entity.CardBankCounterEntity">
+	<select id="getById" resultType="com.dili.card.entity.FundContractEntity">
 		SELECT
 			`id`, 
-			`action`, 
-			`amount`, 
+			`contract_no`, 
+			`consignor_account_id`, 
+			`start_time`, 
+			`end_time`, 
 			`state`, 
-			`serial_no`, 
-			`apply_time`, 
+			`signature_image_path`, 
 			`creator_id`, 
 			`creator`, 
 			`firm_id`, 
@@ -71,19 +75,20 @@
 			`create_time`, 
 			`modify_time`
 		FROM
-			card_bank_counter
+			card_fund_contract
 		WHERE
 			id = #{id}
 	</select>
 	
 	<update id="update">
-		UPDATE card_bank_counter
+		UPDATE card_fund_contract
 	 	<set>
-			<if test="action != null">`action` = #{action}, </if>
-			<if test="amount != null">`amount` = #{amount}, </if>
+			<if test="contractNo != null">`contract_no` = #{contractNo}, </if>
+			<if test="consignorAccountId != null">`consignor_account_id` = #{consignorAccountId}, </if>
+			<if test="startTime != null">`start_time` = #{startTime}, </if>
+			<if test="endTime != null">`end_time` = #{endTime}, </if>
 			<if test="state != null">`state` = #{state}, </if>
-			<if test="serialNo != null">`serial_no` = #{serialNo}, </if>
-			<if test="applyTime != null">`apply_time` = #{applyTime}, </if>
+			<if test="signatureImagePath != null">`signature_image_path` = #{signatureImagePath}, </if>
 			<if test="creatorId != null">`creator_id` = #{creatorId}, </if>
 			<if test="creator != null">`creator` = #{creator}, </if>
 			<if test="firmId != null">`firm_id` = #{firmId}, </if>
@@ -99,7 +104,7 @@
 	<delete id="batchRemove">
 		DELETE
 		FROM
-			card_bank_counter
+			card_fund_contract
 		WHERE
 			id IN
 		<foreach item="id" collection="array" open="(" separator="," close=")">

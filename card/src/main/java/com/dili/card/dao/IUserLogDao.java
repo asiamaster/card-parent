@@ -2,42 +2,42 @@ package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
-import com.dili.card.entity.CardAccountCycleEntity;
+import com.dili.card.entity.UserLogEntity;
 
 /**
- * 柜员账务周期
+ * 用户操作记录
  * @author bob<>
  */
 @Mapper
-public interface ICardAccountCycleDao {
+public interface IUserLogDao {
 	/**
      * 列表查询
      * @param page
      * @param search
      * @return
      */
-	List<CardAccountCycleEntity> selectList(CardAccountCycleEntity cardAccountCycle);
+	List<UserLogEntity> selectList(UserLogEntity userLog);
 
     /**
      * 新增
-     * @param cardAccountCycle
+     * @param userLog
      * @return
      */
-	int save(CardAccountCycleEntity cardAccountCycle);
+	int save(UserLogEntity userLog);
 
     /**
      * 根据id查询
      * @param id
      * @return
      */
-	CardAccountCycleEntity getById(Long id);
+	UserLogEntity getById(Long id);
 
     /**
      * 修改
-     * @param cardAccountCycle
+     * @param userLog
      * @return
      */
-	int update(CardAccountCycleEntity cardAccountCycle);
+	int update(UserLogEntity userLog);
 
     /**
      * 删除

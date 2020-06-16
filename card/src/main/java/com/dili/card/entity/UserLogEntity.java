@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 用户操作记录
  * @author bob
  */
-public class CardUserLogEntity implements Serializable {
+public class UserLogEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -54,9 +54,9 @@ public class CardUserLogEntity implements Serializable {
 	/** 创建时间 */
 	private LocalDateTime createTime; 
     /**
-     * CardUserLogEntity constructor
+     * UserLogEntity constructor
      */
-	public CardUserLogEntity() {
+	public UserLogEntity() {
 		super();
 	}
 
@@ -355,11 +355,11 @@ public class CardUserLogEntity implements Serializable {
 	}
 
     /**
-     * CardUserLogEntity.toString()
+     * UserLogEntity.toString()
      */
     @Override
     public String toString() {
-        return "CardUserLogEntity{" +
+        return "UserLogEntity{" +
                "id='" + id + '\'' +
                ", serialNo='" + serialNo + '\'' +
                ", type='" + type + '\'' +
