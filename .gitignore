@@ -7,7 +7,7 @@
 /bin/
 /classes/
 /.settings/
-/.settings
+.settings
 /.idea/
 /.gradle/
 .classpath

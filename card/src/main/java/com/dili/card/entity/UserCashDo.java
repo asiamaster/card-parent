@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 柜员交款领款
  * @author bob
  */
-public class UserCashEntity implements Serializable {
+public class UserCashDo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -42,7 +42,7 @@ public class UserCashEntity implements Serializable {
     /**
      * UserCashEntity constructor
      */
-	public UserCashEntity() {
+	public UserCashDo() {
 		super();
 	}
 

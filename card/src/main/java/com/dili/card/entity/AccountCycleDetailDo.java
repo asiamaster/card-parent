@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 柜员账务周期详情
  * @author bob
  */
-public class AccountCycleDetailEntity implements Serializable {
+public class AccountCycleDetailDo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -48,7 +48,7 @@ public class AccountCycleDetailEntity implements Serializable {
     /**
      * AccountCycleDetailEntity constructor
      */
-	public AccountCycleDetailEntity() {
+	public AccountCycleDetailDo() {
 		super();
 	}
 

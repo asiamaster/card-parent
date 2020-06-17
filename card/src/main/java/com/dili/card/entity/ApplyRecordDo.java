@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 柜员申领卡片记录
  * @author bob
  */
-public class ApplyRecordEntity implements Serializable {
+public class ApplyRecordDo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -40,7 +40,7 @@ public class ApplyRecordEntity implements Serializable {
     /**
      * ApplyRecordEntity constructor
      */
-	public ApplyRecordEntity() {
+	public ApplyRecordDo() {
 		super();
 	}
 

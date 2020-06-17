@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 用户操作记录
  * @author bob
  */
-public class UserLogEntity implements Serializable {
+public class UserLogDo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -56,7 +56,7 @@ public class UserLogEntity implements Serializable {
     /**
      * UserLogEntity constructor
      */
-	public UserLogEntity() {
+	public UserLogDo() {
 		super();
 	}
 

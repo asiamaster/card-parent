@@ -3,7 +3,7 @@
 
 <mapper namespace="com.dili.card.dao.IFundLogDao">
 	
-	<select id="selectList" resultType="com.dili.card.entity.FundLogEntity">
+	<select id="selectList" resultType="com.dili.card.entity.FundLogDo">
 		SELECT
 			`id`, 
 			`serial_no`, 
@@ -87,7 +87,7 @@
 		)
 	</insert>
 	
-	<select id="getById" resultType="com.dili.card.entity.FundLogEntity">
+	<select id="getById" resultType="com.dili.card.entity.FundLogDo">
 		SELECT
 			`id`, 
 			`serial_no`, 

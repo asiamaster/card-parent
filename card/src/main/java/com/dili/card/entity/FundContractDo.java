@@ -4,28 +4,30 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 银行存取款
+ * 资金委托合同
  * @author bob
  */
-public class BankCounterEntity implements Serializable {
+public class FundContractDo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
 	/**  */
 	private Long id; 
-	/** 动作-存款 取款 */
-	private Integer action; 
-	/** 操作金额-分 */
-	private Long amount; 
-	/** 状态-新建 封存 */
+	/** 合同编号 */
+	private String contractNo; 
+	/** 委托人账号ID */
+	private Long consignorAccountId; 
+	/** 合同开始日期 */
+	private LocalDateTime startTime; 
+	/** 合同结束日期 */
+	private LocalDateTime endTime; 
+	/** 状态(委托中、已解除、已到期) */
 	private Integer state; 
-	/** 银行操作流水号 */
-	private Long serialNo; 
-	/** 实际存取款时间 */
-	private LocalDateTime applyTime; 
-	/** 操作人员ID */
+	/** 委托人签名图片地址 */
+	private String signatureImagePath; 
+	/** 创建人ID */
 	private Long creatorId; 
-	/** 操作人员名称 */
+	/** 创建人姓名 */
 	private String creator; 
 	/** 商户编码 */
 	private Long firmId; 
@@ -38,9 +40,9 @@ public class BankCounterEntity implements Serializable {
 	/** 修改时间 */
 	private LocalDateTime modifyTime; 
     /**
-     * BankCounterEntity constructor
+     * FundContractEntity constructor
      */
-	public BankCounterEntity() {
+	public FundContractDo() {
 		super();
 	}
 
@@ -59,98 +61,112 @@ public class BankCounterEntity implements Serializable {
 	}
 
     /**
-     * setter for 动作-存款 取款
+     * setter for 合同编号
      */
-	public void setAction(Integer action) {
-		this.action = action;
+	public void setContractNo(String contractNo) {
+		this.contractNo = contractNo;
 	}
 
     /**
-     * getter for 动作-存款 取款
+     * getter for 合同编号
      */
-	public Integer getAction() {
-		return action;
+	public String getContractNo() {
+		return contractNo;
 	}
 
     /**
-     * setter for 操作金额-分
+     * setter for 委托人账号ID
      */
-	public void setAmount(Long amount) {
-		this.amount = amount;
+	public void setConsignorAccountId(Long consignorAccountId) {
+		this.consignorAccountId = consignorAccountId;
 	}
 
     /**
-     * getter for 操作金额-分
+     * getter for 委托人账号ID
      */
-	public Long getAmount() {
-		return amount;
+	public Long getConsignorAccountId() {
+		return consignorAccountId;
 	}
 
     /**
-     * setter for 状态-新建 封存
+     * setter for 合同开始日期
+     */
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
+	}
+
+    /**
+     * getter for 合同开始日期
+     */
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
+
+    /**
+     * setter for 合同结束日期
+     */
+	public void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
+	}
+
+    /**
+     * getter for 合同结束日期
+     */
+	public LocalDateTime getEndTime() {
+		return endTime;
+	}
+
+    /**
+     * setter for 状态(委托中、已解除、已到期)
      */
 	public void setState(Integer state) {
 		this.state = state;
 	}
 
     /**
-     * getter for 状态-新建 封存
+     * getter for 状态(委托中、已解除、已到期)
      */
 	public Integer getState() {
 		return state;
 	}
 
     /**
-     * setter for 银行操作流水号
+     * setter for 委托人签名图片地址
      */
-	public void setSerialNo(Long serialNo) {
-		this.serialNo = serialNo;
+	public void setSignatureImagePath(String signatureImagePath) {
+		this.signatureImagePath = signatureImagePath;
 	}
 
     /**
-     * getter for 银行操作流水号
+     * getter for 委托人签名图片地址
      */
-	public Long getSerialNo() {
-		return serialNo;
+	public String getSignatureImagePath() {
+		return signatureImagePath;
 	}
 
     /**
-     * setter for 实际存取款时间
-     */
-	public void setApplyTime(LocalDateTime applyTime) {
-		this.applyTime = applyTime;
-	}
-
-    /**
-     * getter for 实际存取款时间
-     */
-	public LocalDateTime getApplyTime() {
-		return applyTime;
-	}
-
-    /**
-     * setter for 操作人员ID
+     * setter for 创建人ID
      */
 	public void setCreatorId(Long creatorId) {
 		this.creatorId = creatorId;
 	}
 
     /**
-     * getter for 操作人员ID
+     * getter for 创建人ID
      */
 	public Long getCreatorId() {
 		return creatorId;
 	}
 
     /**
-     * setter for 操作人员名称
+     * setter for 创建人姓名
      */
 	public void setCreator(String creator) {
 		this.creator = creator;
 	}
 
     /**
-     * getter for 操作人员名称
+     * getter for 创建人姓名
      */
 	public String getCreator() {
 		return creator;
@@ -227,17 +243,18 @@ public class BankCounterEntity implements Serializable {
 	}
 
     /**
-     * BankCounterEntity.toString()
+     * FundContractEntity.toString()
      */
     @Override
     public String toString() {
-        return "BankCounterEntity{" +
+        return "FundContractEntity{" +
                "id='" + id + '\'' +
-               ", action='" + action + '\'' +
-               ", amount='" + amount + '\'' +
+               ", contractNo='" + contractNo + '\'' +
+               ", consignorAccountId='" + consignorAccountId + '\'' +
+               ", startTime='" + startTime + '\'' +
+               ", endTime='" + endTime + '\'' +
                ", state='" + state + '\'' +
-               ", serialNo='" + serialNo + '\'' +
-               ", applyTime='" + applyTime + '\'' +
+               ", signatureImagePath='" + signatureImagePath + '\'' +
                ", creatorId='" + creatorId + '\'' +
                ", creator='" + creator + '\'' +
                ", firmId='" + firmId + '\'' +

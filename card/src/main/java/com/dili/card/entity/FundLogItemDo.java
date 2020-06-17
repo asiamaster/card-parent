@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 账户资金操作费用,在柜员办理的业务
  * @author bob
  */
-public class FundLogItemEntity implements Serializable {
+public class FundLogItemDo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -26,7 +26,7 @@ public class FundLogItemEntity implements Serializable {
     /**
      * FundLogItemEntity constructor
      */
-	public FundLogItemEntity() {
+	public FundLogItemDo() {
 		super();
 	}
 

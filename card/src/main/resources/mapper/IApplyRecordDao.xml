@@ -3,7 +3,7 @@
 
 <mapper namespace="com.dili.card.dao.IApplyRecordDao">
 	
-	<select id="selectList" resultType="com.dili.card.entity.ApplyRecordEntity">
+	<select id="selectList" resultType="com.dili.card.entity.ApplyRecordDo">
 		SELECT
 			`id`, 
 			`apply_time`, 
@@ -55,7 +55,7 @@
 		)
 	</insert>
 	
-	<select id="getById" resultType="com.dili.card.entity.ApplyRecordEntity">
+	<select id="getById" resultType="com.dili.card.entity.ApplyRecordDo">
 		SELECT
 			`id`, 
 			`apply_time`, 

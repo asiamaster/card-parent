@@ -3,7 +3,7 @@
 
 <mapper namespace="com.dili.card.dao.IBankCounterDao">
 	
-	<select id="selectList" resultType="com.dili.card.entity.BankCounterEntity">
+	<select id="selectList" resultType="com.dili.card.entity.BankCounterDo">
 		SELECT
 			`id`, 
 			`action`, 
@@ -55,7 +55,7 @@
 		)
 	</insert>
 	
-	<select id="getById" resultType="com.dili.card.entity.BankCounterEntity">
+	<select id="getById" resultType="com.dili.card.entity.BankCounterDo">
 		SELECT
 			`id`, 
 			`action`, 

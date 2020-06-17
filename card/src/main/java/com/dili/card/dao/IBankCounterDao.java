@@ -2,7 +2,7 @@ package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
-import com.dili.card.entity.BankCounterEntity;
+import com.dili.card.entity.BankCounterDo;
 
 /**
  * 银行存取款
@@ -16,28 +16,28 @@ public interface IBankCounterDao {
      * @param search
      * @return
      */
-	List<BankCounterEntity> selectList(BankCounterEntity bankCounter);
+	List<BankCounterDo> selectList(BankCounterDo bankCounter);
 
     /**
      * 新增
      * @param bankCounter
      * @return
      */
-	int save(BankCounterEntity bankCounter);
+	int save(BankCounterDo bankCounter);
 
     /**
      * 根据id查询
      * @param id
      * @return
      */
-	BankCounterEntity getById(Long id);
+	BankCounterDo getById(Long id);
 
     /**
      * 修改
      * @param bankCounter
      * @return
      */
-	int update(BankCounterEntity bankCounter);
+	int update(BankCounterDo bankCounter);
 
     /**
      * 删除

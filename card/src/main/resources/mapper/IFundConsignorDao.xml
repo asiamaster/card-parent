@@ -3,7 +3,7 @@
 
 <mapper namespace="com.dili.card.dao.IFundConsignorDao">
 	
-	<select id="selectList" resultType="com.dili.card.entity.FundConsignorEntity">
+	<select id="selectList" resultType="com.dili.card.entity.FundConsignorDo">
 		SELECT
 			`id`, 
 			`contract_no`, 
@@ -43,7 +43,7 @@
 		)
 	</insert>
 	
-	<select id="getById" resultType="com.dili.card.entity.FundConsignorEntity">
+	<select id="getById" resultType="com.dili.card.entity.FundConsignorDo">
 		SELECT
 			`id`, 
 			`contract_no`, 

@@ -2,7 +2,7 @@ package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
-import com.dili.card.entity.ApplyRecordEntity;
+import com.dili.card.entity.ApplyRecordDo;
 
 /**
  * 柜员申领卡片记录
@@ -16,28 +16,28 @@ public interface IApplyRecordDao {
      * @param search
      * @return
      */
-	List<ApplyRecordEntity> selectList(ApplyRecordEntity applyRecord);
+	List<ApplyRecordDo> selectList(ApplyRecordDo applyRecord);
 
     /**
      * 新增
      * @param applyRecord
      * @return
      */
-	int save(ApplyRecordEntity applyRecord);
+	int save(ApplyRecordDo applyRecord);
 
     /**
      * 根据id查询
      * @param id
      * @return
      */
-	ApplyRecordEntity getById(Long id);
+	ApplyRecordDo getById(Long id);
 
     /**
      * 修改
      * @param applyRecord
      * @return
      */
-	int update(ApplyRecordEntity applyRecord);
+	int update(ApplyRecordDo applyRecord);
 
     /**
      * 删除

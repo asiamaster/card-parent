@@ -2,7 +2,7 @@ package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
-import com.dili.card.entity.AccountCycleDetailEntity;
+import com.dili.card.entity.AccountCycleDetailDo;
 
 /**
  * 柜员账务周期详情
@@ -16,28 +16,28 @@ public interface IAccountCycleDetailDao {
      * @param search
      * @return
      */
-	List<AccountCycleDetailEntity> selectList(AccountCycleDetailEntity accountCycleDetail);
+	List<AccountCycleDetailDo> selectList(AccountCycleDetailDo accountCycleDetail);
 
     /**
      * 新增
      * @param accountCycleDetail
      * @return
      */
-	int save(AccountCycleDetailEntity accountCycleDetail);
+	int save(AccountCycleDetailDo accountCycleDetail);
 
     /**
      * 根据id查询
      * @param id
      * @return
      */
-	AccountCycleDetailEntity getById(Long id);
+	AccountCycleDetailDo getById(Long id);
 
     /**
      * 修改
      * @param accountCycleDetail
      * @return
      */
-	int update(AccountCycleDetailEntity accountCycleDetail);
+	int update(AccountCycleDetailDo accountCycleDetail);
 
     /**
      * 删除

@@ -3,7 +3,7 @@
 
 <mapper namespace="com.dili.card.dao.IAccountCycleDao">
 	
-	<select id="selectList" resultType="com.dili.card.entity.AccountCycleEntity">
+	<select id="selectList" resultType="com.dili.card.entity.AccountCycleDo">
 		SELECT
 			`id`, 
 			`user_id`, 
@@ -70,7 +70,7 @@
 		)
 	</insert>
 	
-	<select id="getById" resultType="com.dili.card.entity.AccountCycleEntity">
+	<select id="getById" resultType="com.dili.card.entity.AccountCycleDo">
 		SELECT
 			`id`, 
 			`user_id`, 

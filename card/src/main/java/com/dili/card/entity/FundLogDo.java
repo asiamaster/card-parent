@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 账户资金操作记录,在柜员办理的业务,仅用作记录，统计结账以支付系统为主
  * @author bob
  */
-public class FundLogEntity implements Serializable {
+public class FundLogDo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -60,7 +60,7 @@ public class FundLogEntity implements Serializable {
     /**
      * FundLogEntity constructor
      */
-	public FundLogEntity() {
+	public FundLogDo() {
 		super();
 	}
 

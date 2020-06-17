@@ -2,7 +2,7 @@ package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
-import com.dili.card.entity.UserCashEntity;
+import com.dili.card.entity.UserCashDo;
 
 /**
  * 柜员交款领款
@@ -16,28 +16,28 @@ public interface IUserCashDao {
      * @param search
      * @return
      */
-	List<UserCashEntity> selectList(UserCashEntity userCash);
+	List<UserCashDo> selectList(UserCashDo userCash);
 
     /**
      * 新增
      * @param userCash
      * @return
      */
-	int save(UserCashEntity userCash);
+	int save(UserCashDo userCash);
 
     /**
      * 根据id查询
      * @param id
      * @return
      */
-	UserCashEntity getById(Long id);
+	UserCashDo getById(Long id);
 
     /**
      * 修改
      * @param userCash
      * @return
      */
-	int update(UserCashEntity userCash);
+	int update(UserCashDo userCash);
 
     /**
      * 删除

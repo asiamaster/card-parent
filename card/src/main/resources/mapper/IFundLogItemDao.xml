@@ -3,7 +3,7 @@
 
 <mapper namespace="com.dili.card.dao.IFundLogItemDao">
 	
-	<select id="selectList" resultType="com.dili.card.entity.FundLogItemEntity">
+	<select id="selectList" resultType="com.dili.card.entity.FundLogItemDo">
 		SELECT
 			`id`, 
 			`serial_no`, 
@@ -34,7 +34,7 @@
 		)
 	</insert>
 	
-	<select id="getById" resultType="com.dili.card.entity.FundLogItemEntity">
+	<select id="getById" resultType="com.dili.card.entity.FundLogItemDo">
 		SELECT
 			`id`, 
 			`serial_no`, 

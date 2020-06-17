@@ -3,7 +3,7 @@
 
 <mapper namespace="com.dili.card.dao.IUserCashDao">
 	
-	<select id="selectList" resultType="com.dili.card.entity.UserCashEntity">
+	<select id="selectList" resultType="com.dili.card.entity.UserCashDo">
 		SELECT
 			`id`, 
 			`user_id`, 
@@ -58,7 +58,7 @@
 		)
 	</insert>
 	
-	<select id="getById" resultType="com.dili.card.entity.UserCashEntity">
+	<select id="getById" resultType="com.dili.card.entity.UserCashDo">
 		SELECT
 			`id`, 
 			`user_id`, 

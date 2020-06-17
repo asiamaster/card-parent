@@ -3,7 +3,7 @@
 
 <mapper namespace="com.dili.card.dao.IUserLogDao">
 	
-	<select id="selectList" resultType="com.dili.card.entity.UserLogEntity">
+	<select id="selectList" resultType="com.dili.card.entity.UserLogDo">
 		SELECT
 			`id`, 
 			`serial_no`, 
@@ -79,7 +79,7 @@
 		)
 	</insert>
 	
-	<select id="getById" resultType="com.dili.card.entity.UserLogEntity">
+	<select id="getById" resultType="com.dili.card.entity.UserLogDo">
 		SELECT
 			`id`, 
 			`serial_no`, 

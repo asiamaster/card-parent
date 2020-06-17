@@ -2,7 +2,7 @@ package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
-import com.dili.card.entity.FundContractEntity;
+import com.dili.card.entity.FundContractDo;
 
 /**
  * 资金委托合同
@@ -16,28 +16,28 @@ public interface IFundContractDao {
      * @param search
      * @return
      */
-	List<FundContractEntity> selectList(FundContractEntity fundContract);
+	List<FundContractDo> selectList(FundContractDo fundContract);
 
     /**
      * 新增
      * @param fundContract
      * @return
      */
-	int save(FundContractEntity fundContract);
+	int save(FundContractDo fundContract);
 
     /**
      * 根据id查询
      * @param id
      * @return
      */
-	FundContractEntity getById(Long id);
+	FundContractDo getById(Long id);
 
     /**
      * 修改
      * @param fundContract
      * @return
      */
-	int update(FundContractEntity fundContract);
+	int update(FundContractDo fundContract);
 
     /**
      * 删除

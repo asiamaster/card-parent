@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 受委托人
  * @author bob
  */
-public class FundConsignorEntity implements Serializable {
+public class FundConsignorDo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -32,7 +32,7 @@ public class FundConsignorEntity implements Serializable {
     /**
      * FundConsignorEntity constructor
      */
-	public FundConsignorEntity() {
+	public FundConsignorDo() {
 		super();
 	}
 

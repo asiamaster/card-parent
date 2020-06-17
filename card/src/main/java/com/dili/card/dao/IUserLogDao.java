@@ -2,7 +2,7 @@ package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
-import com.dili.card.entity.UserLogEntity;
+import com.dili.card.entity.UserLogDo;
 
 /**
  * 用户操作记录
@@ -16,28 +16,28 @@ public interface IUserLogDao {
      * @param search
      * @return
      */
-	List<UserLogEntity> selectList(UserLogEntity userLog);
+	List<UserLogDo> selectList(UserLogDo userLog);
 
     /**
      * 新增
      * @param userLog
      * @return
      */
-	int save(UserLogEntity userLog);
+	int save(UserLogDo userLog);
 
     /**
      * 根据id查询
      * @param id
      * @return
      */
-	UserLogEntity getById(Long id);
+	UserLogDo getById(Long id);
 
     /**
      * 修改
      * @param userLog
      * @return
      */
-	int update(UserLogEntity userLog);
+	int update(UserLogDo userLog);
 
     /**
      * 删除
