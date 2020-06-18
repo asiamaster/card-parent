@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/financial")
-public class PayerManagementController {
+public class AccountCycleManagementController {
 	
 }
