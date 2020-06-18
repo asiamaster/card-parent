@@ -10,7 +10,7 @@ import java.util.List;
  * @author ：WangBo
  * @time ：2020年6月17日下午5:15:19
  */
-public enum UserTransactionType
+public enum OperateType
 {
 	ACCOUNT_TRANSACT("办卡", 10),
 	ACCOUNT_CHARGE("充值", 11),
@@ -31,15 +31,15 @@ public enum UserTransactionType
 	private String name;
 	private int code;
 	
-	private UserTransactionType(String name, int code)
+	private OperateType(String name, int code)
 	{
 		this.name = name;
 		this.code = code;
 	}
 	
-	public static UserTransactionType getTransactionType(int code)
+	public static OperateType getTransactionType(int code)
 	{
-		for (UserTransactionType type : UserTransactionType.values()) {
+		for (OperateType type : OperateType.values()) {
 			if (type.getCode() == code) {
 				return type;
 			}
@@ -49,7 +49,7 @@ public enum UserTransactionType
 	
 	public static String getName(int code)
 	{
-		for (UserTransactionType type : UserTransactionType.values()) {
+		for (OperateType type : OperateType.values()) {
 			if (type.getCode() == code) {
 				return type.name;
 			}
@@ -77,11 +77,11 @@ public enum UserTransactionType
 		this.code = code;
 	}
 	
-	public static List<UserTransactionType> getStatisticsList()
+	public static List<OperateType> getStatisticsList()
 	{
-		UserTransactionType[] itemList = UserTransactionType.values();
-		List<UserTransactionType> filteredItemList = new ArrayList<UserTransactionType>();
-		for (UserTransactionType type : itemList) {
+		OperateType[] itemList = OperateType.values();
+		List<OperateType> filteredItemList = new ArrayList<OperateType>();
+		for (OperateType type : itemList) {
 			if (type != BANKCARD_BIND && type != BANKCARD_REMOVE) {
 				filteredItemList.add(type);
 			}
@@ -89,20 +89,20 @@ public enum UserTransactionType
 		return filteredItemList;
 	}
 	
-	public static List<UserTransactionType> getAllList()
+	public static List<OperateType> getAllList()
 	{
-		UserTransactionType[] itemList = UserTransactionType.values();
-		List<UserTransactionType> allItemList = new ArrayList<UserTransactionType>();
-		for (UserTransactionType type : itemList) {
+		OperateType[] itemList = OperateType.values();
+		List<OperateType> allItemList = new ArrayList<OperateType>();
+		for (OperateType type : itemList) {
 			allItemList.add(type);
 		}
 		return allItemList;
 	}
 	
 	public static List<Integer> getReverseList() {
-		UserTransactionType[] itemList = UserTransactionType.values();
+		OperateType[] itemList = OperateType.values();
 		List<Integer> filteredItemList = new ArrayList<Integer>();
-		for (UserTransactionType type : itemList) {
+		for (OperateType type : itemList) {
 			if (type == ACCOUNT_CHARGE || type == ACCOUNT_WITHDRAW) {
 				filteredItemList.add(type.code);
 			}
@@ -120,10 +120,10 @@ public enum UserTransactionType
 		return false;
 	}
 	
-	public static UserTransactionType getFinanceReverseType(int code) {
-		List<UserTransactionType> list = new ArrayList<>();
-		Collections.addAll(list, UserTransactionType.ACCOUNT_CHARGE, UserTransactionType.ACCOUNT_WITHDRAW);
-		for (UserTransactionType e : list) {
+	public static OperateType getFinanceReverseType(int code) {
+		List<OperateType> list = new ArrayList<>();
+		Collections.addAll(list, OperateType.ACCOUNT_CHARGE, OperateType.ACCOUNT_WITHDRAW);
+		for (OperateType e : list) {
 			if (e.getCode() == code) {
 				return e;
 			}
