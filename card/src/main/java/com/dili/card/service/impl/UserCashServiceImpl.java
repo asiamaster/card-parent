@@ -17,29 +17,29 @@ import com.dili.ss.exception.BusinessException;
 public class UserCashServiceImpl implements IUserCashService{
 	
 	@Autowired
-	private IUserCashDao iUserCashDao;
+	private IUserCashDao userCashDao;
 
 	@Override
 	public void save(UserCashDto userCashDto, CashAction cashAction) {
 		UserCashDo userCashDo = this.buildUserCashEntity(userCashDto, cashAction);
-		iUserCashDao.save(userCashDo);
+		userCashDao.save(userCashDo);
 	}
 
 	@Override
 	public List<UserCashDto> list(UserCashDto userCashDto, CashAction cashAction) {
 		UserCashDo condition = this.buildUserCashCondition(userCashDto, cashAction);
-		List<UserCashDo> userCashs = iUserCashDao.selectList(condition);
+		List<UserCashDo> userCashs = userCashDao.selectList(condition);
 		return this.buildPageUserCash(userCashs);
 	}
 
 	@Override
 	public void delete(Long id) {
-		iUserCashDao.delete(id);
+		userCashDao.delete(id);
 	}
 	
 	@Override
 	public UserCashDto findById(Long id) {
-		UserCashDo userCashDo = iUserCashDao.getById(id);
+		UserCashDo userCashDo = userCashDao.getById(id);
 		if (userCashDo == null) {
 			throw new BusinessException(ResultCode.DATA_ERROR, "该记录不存在");
 		}
