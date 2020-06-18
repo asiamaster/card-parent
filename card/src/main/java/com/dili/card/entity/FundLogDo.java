@@ -4,59 +4,49 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 账户资金操作记录,在柜员办理的业务,仅用作记录，统计结账以支付系统为主
+ * 账户资金操作记录
  * @author bob
  */
 public class FundLogDo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	/**  */
+	/** 主键ID */
 	private Long id; 
-	/** 操作流水号 */
+	/** 操作流水号 与操作记录关联字段 */
 	private String serialNo; 
-	/** 服务类型-开卡 提现等 */
-	private Integer type; 
-	/** 对方账号ID */
-	private Long toAccountId; 
-	/** 对方用户名称 */
-	private Long toName; 
-	/** 对方卡号 */
-	private String toCardNo; 
-	/** 账务周期流水号 */
-	private Long cycleNo; 
-	/** 操作前账户余额 */
+	/** 客户账户ID */
+	private Long accountId; 
+	/** 客户编号 */
+	private String customerNo; 
+	/** 客户名称 */
+	private String customerName; 
+	/** 园区卡号 */
+	private String cardNo; 
+	/** 初期余额 */
 	private Long balance; 
-	/** 操作金额-分 */
+	/** 交易金额 */
 	private Long amount; 
-	/** 操作原始金额， */
-	private Long originalAmount; 
-	/** 费用总金额-分 */
-	private Long totalFee; 
-	/** 渠道类型，现金 POS、银行卡等 */
-	private Integer channelType; 
-	/** 银行卡类型，借记卡、信用卡 */
-	private Integer bankCardType; 
-	/** 商户编码 */
-	private Long firmId; 
-	/** 商户名称 */
-	private String firmName; 
-	/** 1-成功，2-失败，3-处理中 */
-	private Integer state; 
-	/** 数据版本号 */
-	private Integer version; 
-	/** 转帐交易流水号-支付系统 */
-	private String paySerialNo; 
+	/** 资金动作-收入、支出 */
+	private Integer action; 
+	/** 交易类型-充值、体现、消费、转账 */
+	private Integer tradeType; 
+	/** 交易渠道-现金、POS等 */
+	private Integer tradeChannel; 
+	/** 交易流水号 */
+	private String tradeNo; 
 	/** 备注 */
 	private String notes; 
-	/** 操作人员 */
-	private Long creatorId; 
-	/** 操作员名称 */
-	private String creator; 
-	/** 修改时间 */
+	/** 状态 1-成功，2-失败，3-处理中 */
+	private Integer state; 
+	/** 操作时间 与操作记录中字段保持一致 */
+	private LocalDateTime operateTime; 
+	/** 商户ID */
+	private Long firmId; 
+	/**  */
 	private LocalDateTime modifyTime; 
-	/** 创建时间 */
-	private LocalDateTime createTime; 
+	/**  */
+	private Integer version; 
     /**
      * FundLogEntity constructor
      */
@@ -65,255 +55,171 @@ public class FundLogDo implements Serializable {
 	}
 
     /**
-     * setter for 
+     * setter for 主键ID
      */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
     /**
-     * getter for 
+     * getter for 主键ID
      */
 	public Long getId() {
 		return id;
 	}
 
     /**
-     * setter for 操作流水号
+     * setter for 操作流水号 与操作记录关联字段
      */
 	public void setSerialNo(String serialNo) {
 		this.serialNo = serialNo;
 	}
 
     /**
-     * getter for 操作流水号
+     * getter for 操作流水号 与操作记录关联字段
      */
 	public String getSerialNo() {
 		return serialNo;
 	}
 
     /**
-     * setter for 服务类型-开卡 提现等
+     * setter for 客户账户ID
      */
-	public void setType(Integer type) {
-		this.type = type;
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
 	}
 
     /**
-     * getter for 服务类型-开卡 提现等
+     * getter for 客户账户ID
      */
-	public Integer getType() {
-		return type;
+	public Long getAccountId() {
+		return accountId;
 	}
 
     /**
-     * setter for 对方账号ID
+     * setter for 客户编号
      */
-	public void setToAccountId(Long toAccountId) {
-		this.toAccountId = toAccountId;
+	public void setCustomerNo(String customerNo) {
+		this.customerNo = customerNo;
 	}
 
     /**
-     * getter for 对方账号ID
+     * getter for 客户编号
      */
-	public Long getToAccountId() {
-		return toAccountId;
+	public String getCustomerNo() {
+		return customerNo;
 	}
 
     /**
-     * setter for 对方用户名称
+     * setter for 客户名称
      */
-	public void setToName(Long toName) {
-		this.toName = toName;
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 
     /**
-     * getter for 对方用户名称
+     * getter for 客户名称
      */
-	public Long getToName() {
-		return toName;
+	public String getCustomerName() {
+		return customerName;
 	}
 
     /**
-     * setter for 对方卡号
+     * setter for 园区卡号
      */
-	public void setToCardNo(String toCardNo) {
-		this.toCardNo = toCardNo;
+	public void setCardNo(String cardNo) {
+		this.cardNo = cardNo;
 	}
 
     /**
-     * getter for 对方卡号
+     * getter for 园区卡号
      */
-	public String getToCardNo() {
-		return toCardNo;
+	public String getCardNo() {
+		return cardNo;
 	}
 
     /**
-     * setter for 账务周期流水号
-     */
-	public void setCycleNo(Long cycleNo) {
-		this.cycleNo = cycleNo;
-	}
-
-    /**
-     * getter for 账务周期流水号
-     */
-	public Long getCycleNo() {
-		return cycleNo;
-	}
-
-    /**
-     * setter for 操作前账户余额
+     * setter for 初期余额
      */
 	public void setBalance(Long balance) {
 		this.balance = balance;
 	}
 
     /**
-     * getter for 操作前账户余额
+     * getter for 初期余额
      */
 	public Long getBalance() {
 		return balance;
 	}
 
     /**
-     * setter for 操作金额-分
+     * setter for 交易金额
      */
 	public void setAmount(Long amount) {
 		this.amount = amount;
 	}
 
     /**
-     * getter for 操作金额-分
+     * getter for 交易金额
      */
 	public Long getAmount() {
 		return amount;
 	}
 
     /**
-     * setter for 操作原始金额，
+     * setter for 资金动作-收入、支出
      */
-	public void setOriginalAmount(Long originalAmount) {
-		this.originalAmount = originalAmount;
+	public void setAction(Integer action) {
+		this.action = action;
 	}
 
     /**
-     * getter for 操作原始金额，
+     * getter for 资金动作-收入、支出
      */
-	public Long getOriginalAmount() {
-		return originalAmount;
+	public Integer getAction() {
+		return action;
 	}
 
     /**
-     * setter for 费用总金额-分
+     * setter for 交易类型-充值、体现、消费、转账
      */
-	public void setTotalFee(Long totalFee) {
-		this.totalFee = totalFee;
+	public void setTradeType(Integer tradeType) {
+		this.tradeType = tradeType;
 	}
 
     /**
-     * getter for 费用总金额-分
+     * getter for 交易类型-充值、体现、消费、转账
      */
-	public Long getTotalFee() {
-		return totalFee;
+	public Integer getTradeType() {
+		return tradeType;
 	}
 
     /**
-     * setter for 渠道类型，现金 POS、银行卡等
+     * setter for 交易渠道-现金、POS等
      */
-	public void setChannelType(Integer channelType) {
-		this.channelType = channelType;
+	public void setTradeChannel(Integer tradeChannel) {
+		this.tradeChannel = tradeChannel;
 	}
 
     /**
-     * getter for 渠道类型，现金 POS、银行卡等
+     * getter for 交易渠道-现金、POS等
      */
-	public Integer getChannelType() {
-		return channelType;
+	public Integer getTradeChannel() {
+		return tradeChannel;
 	}
 
     /**
-     * setter for 银行卡类型，借记卡、信用卡
+     * setter for 交易流水号
      */
-	public void setBankCardType(Integer bankCardType) {
-		this.bankCardType = bankCardType;
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
 	}
 
     /**
-     * getter for 银行卡类型，借记卡、信用卡
+     * getter for 交易流水号
      */
-	public Integer getBankCardType() {
-		return bankCardType;
-	}
-
-    /**
-     * setter for 商户编码
-     */
-	public void setFirmId(Long firmId) {
-		this.firmId = firmId;
-	}
-
-    /**
-     * getter for 商户编码
-     */
-	public Long getFirmId() {
-		return firmId;
-	}
-
-    /**
-     * setter for 商户名称
-     */
-	public void setFirmName(String firmName) {
-		this.firmName = firmName;
-	}
-
-    /**
-     * getter for 商户名称
-     */
-	public String getFirmName() {
-		return firmName;
-	}
-
-    /**
-     * setter for 1-成功，2-失败，3-处理中
-     */
-	public void setState(Integer state) {
-		this.state = state;
-	}
-
-    /**
-     * getter for 1-成功，2-失败，3-处理中
-     */
-	public Integer getState() {
-		return state;
-	}
-
-    /**
-     * setter for 数据版本号
-     */
-	public void setVersion(Integer version) {
-		this.version = version;
-	}
-
-    /**
-     * getter for 数据版本号
-     */
-	public Integer getVersion() {
-		return version;
-	}
-
-    /**
-     * setter for 转帐交易流水号-支付系统
-     */
-	public void setPaySerialNo(String paySerialNo) {
-		this.paySerialNo = paySerialNo;
-	}
-
-    /**
-     * getter for 转帐交易流水号-支付系统
-     */
-	public String getPaySerialNo() {
-		return paySerialNo;
+	public String getTradeNo() {
+		return tradeNo;
 	}
 
     /**
@@ -331,59 +237,73 @@ public class FundLogDo implements Serializable {
 	}
 
     /**
-     * setter for 操作人员
+     * setter for 状态 1-成功，2-失败，3-处理中
      */
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
+	public void setState(Integer state) {
+		this.state = state;
 	}
 
     /**
-     * getter for 操作人员
+     * getter for 状态 1-成功，2-失败，3-处理中
      */
-	public Long getCreatorId() {
-		return creatorId;
+	public Integer getState() {
+		return state;
 	}
 
     /**
-     * setter for 操作员名称
+     * setter for 操作时间 与操作记录中字段保持一致
      */
-	public void setCreator(String creator) {
-		this.creator = creator;
+	public void setOperateTime(LocalDateTime operateTime) {
+		this.operateTime = operateTime;
 	}
 
     /**
-     * getter for 操作员名称
+     * getter for 操作时间 与操作记录中字段保持一致
      */
-	public String getCreator() {
-		return creator;
+	public LocalDateTime getOperateTime() {
+		return operateTime;
 	}
 
     /**
-     * setter for 修改时间
+     * setter for 商户ID
+     */
+	public void setFirmId(Long firmId) {
+		this.firmId = firmId;
+	}
+
+    /**
+     * getter for 商户ID
+     */
+	public Long getFirmId() {
+		return firmId;
+	}
+
+    /**
+     * setter for 
      */
 	public void setModifyTime(LocalDateTime modifyTime) {
 		this.modifyTime = modifyTime;
 	}
 
     /**
-     * getter for 修改时间
+     * getter for 
      */
 	public LocalDateTime getModifyTime() {
 		return modifyTime;
 	}
 
     /**
-     * setter for 创建时间
+     * setter for 
      */
-	public void setCreateTime(LocalDateTime createTime) {
-		this.createTime = createTime;
+	public void setVersion(Integer version) {
+		this.version = version;
 	}
 
     /**
-     * getter for 创建时间
+     * getter for 
      */
-	public LocalDateTime getCreateTime() {
-		return createTime;
+	public Integer getVersion() {
+		return version;
 	}
 
     /**
@@ -394,27 +314,22 @@ public class FundLogDo implements Serializable {
         return "FundLogEntity{" +
                "id='" + id + '\'' +
                ", serialNo='" + serialNo + '\'' +
-               ", type='" + type + '\'' +
-               ", toAccountId='" + toAccountId + '\'' +
-               ", toName='" + toName + '\'' +
-               ", toCardNo='" + toCardNo + '\'' +
-               ", cycleNo='" + cycleNo + '\'' +
+               ", accountId='" + accountId + '\'' +
+               ", customerNo='" + customerNo + '\'' +
+               ", customerName='" + customerName + '\'' +
+               ", cardNo='" + cardNo + '\'' +
                ", balance='" + balance + '\'' +
                ", amount='" + amount + '\'' +
-               ", originalAmount='" + originalAmount + '\'' +
-               ", totalFee='" + totalFee + '\'' +
-               ", channelType='" + channelType + '\'' +
-               ", bankCardType='" + bankCardType + '\'' +
-               ", firmId='" + firmId + '\'' +
-               ", firmName='" + firmName + '\'' +
-               ", state='" + state + '\'' +
-               ", version='" + version + '\'' +
-               ", paySerialNo='" + paySerialNo + '\'' +
+               ", action='" + action + '\'' +
+               ", tradeType='" + tradeType + '\'' +
+               ", tradeChannel='" + tradeChannel + '\'' +
+               ", tradeNo='" + tradeNo + '\'' +
                ", notes='" + notes + '\'' +
-               ", creatorId='" + creatorId + '\'' +
-               ", creator='" + creator + '\'' +
+               ", state='" + state + '\'' +
+               ", operateTime='" + operateTime + '\'' +
+               ", firmId='" + firmId + '\'' +
                ", modifyTime='" + modifyTime + '\'' +
-               ", createTime='" + createTime + '\'' +
+               ", version='" + version + '\'' +
                '}';
     }
 
