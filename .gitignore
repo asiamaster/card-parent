@@ -16,3 +16,4 @@
 .vscode/launch.json
 .gitignore
 *.log
+/logs/
