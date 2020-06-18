@@ -21,29 +21,29 @@ import com.dili.ss.exception.BusinessException;
 public class ContractServiceImpl implements IContractService {
 	
 	@Autowired
-	private IFundConsignorDao iFundConsignorDao;
+	private IFundConsignorDao fundConsignorDao;
 	@Autowired
-	private IFundContractDao icContractDao;
+	private IFundContractDao contractDao;
 
 	@Override
 	public void save(FundContractRequestDto fundContractRequest) {
 		FundContractDo fundContract = this.buildContract(fundContractRequest);
 		List<FundConsignorDo> consignors = this.buildConsignor(fundContractRequest.getConsignors());
-		icContractDao.save(fundContract);
-		iFundConsignorDao.saveBatch(consignors);
+		contractDao.save(fundContract);
+		fundConsignorDao.saveBatch(consignors);
 	}
 
 	@Override
 	public List<FundContractResponseDto> list(FundContractRequestDto fundContractRequest) {
 		FundContractDo condition = this.buildQueryContractConditon(fundContractRequest);
-		List<FundContractDo> fundContracts = icContractDao.selectList(condition);
+		List<FundContractDo> fundContracts = contractDao.selectList(condition);
 		List<FundContractResponseDto> fundResponseContracts = this.huildResponseContracts(fundContracts);
 		return fundResponseContracts;
 	}
 
 	@Override
 	public void remove(FundContractRequestDto fundContractRequest) {
-		FundContractDo fundContract = icContractDao.getById(fundContractRequest.getId());
+		FundContractDo fundContract = contractDao.getById(fundContractRequest.getId());
 		if (fundContract == null) {
 			throw new BusinessException(ResultCode.DATA_ERROR, "该合同号不存在");
 		}
@@ -53,18 +53,18 @@ public class ContractServiceImpl implements IContractService {
 		FundContractDo updateFundContract = new FundContractDo();
 		updateFundContract.setId(fundContractRequest.getId());
 		updateFundContract.setState(ContractState.REMOVED.getCode());
-		icContractDao.update(updateFundContract);
+		contractDao.update(updateFundContract);
 	}
 
 	@Override
 	public FundContractResponseDto detail(FundContractRequestDto fundContractRequest) {
-		FundContractDo fundContract = icContractDao.getById(fundContractRequest.getId());
+		FundContractDo fundContract = contractDao.getById(fundContractRequest.getId());
 		if (fundContract == null) {
 			throw new BusinessException(ResultCode.DATA_ERROR, "该合同号不存在");
 		}
 		FundConsignorDo fundConsignorDo = new FundConsignorDo();
 		fundConsignorDo.setContractNo(fundContract.getContractNo());
-		List<FundConsignorDo> consignors = iFundConsignorDao.selectList(fundConsignorDo);
+		List<FundConsignorDo> consignors = fundConsignorDao.selectList(fundConsignorDo);
 		FundContractResponseDto contractResponse = this.buildContractDetail(fundContract, consignors);
 		return contractResponse;
 	}
