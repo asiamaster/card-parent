@@ -23,7 +23,7 @@ public class ContractManagementController {
 	 * 新增合同
 	 */
 	@PostMapping("/save")
-	public BaseOutput<Boolean> returnCard(@RequestBody FundContractRequestDto fundContractRequest) {
+	public BaseOutput<Boolean> save(@RequestBody FundContractRequestDto fundContractRequest) {
 		iContractService.save(fundContractRequest);
 		return BaseOutput.success();
 	}

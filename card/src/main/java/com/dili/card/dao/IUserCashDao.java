@@ -45,4 +45,9 @@ public interface IUserCashDao {
      * @return
      */
 	int batchRemove(Long[] id);
+
+	/**
+	 * 删除
+	 */
+	void delete(Long id);
 }
