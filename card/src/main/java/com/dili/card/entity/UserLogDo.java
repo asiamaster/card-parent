@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 用户操作记录
+ * 用于记录柜员日常操作-办卡、充值等
  * @author bob
  */
 public class UserLogDo implements Serializable {
@@ -15,44 +15,34 @@ public class UserLogDo implements Serializable {
 	private Long id; 
 	/** 操作流水号 */
 	private String serialNo; 
-	/** 服务类型-开卡 提现等 */
-	private Integer type; 
 	/** 账务周期流水号 */
 	private Long cycleNo; 
-	/** 用户账号 */
+	/** 账户ID */
 	private Long accountId; 
-	/** 用户名称 */
-	private Long name; 
-	/** 卡号-保留字段 */
+	/** 客户编号 */
+	private String customerNo; 
+	/** 客户名称 */
+	private String customerName; 
+	/** 客户卡号 */
 	private String cardNo; 
-	/** 新卡卡号 */
-	private String newCardNo; 
-	/** 是否退还卡片 */
-	private Integer cardReturned; 
-	/** 押金-分 */
-	private Long cashPledge; 
-	/** 外部流水号 */
-	private String outTradeNo; 
-	/** 委托合同编号，提现 */
-	private String consignorContractNo; 
-	/** 代理人名称 */
-	private String agentName; 
-	/** 代理人身份证号 */
-	private String agentIdCode; 
-	/** 代理人联系电话 */
-	private String agentTelphone; 
-	/** 商户编码 */
+	/** 操作类型 */
+	private Integer type; 
+	/** 操作总金额 */
+	private Long totalAmount; 
+	/** 操作人ID */
+	private Long operatorId; 
+	/** 操作人工号 */
+	private String operatorNo; 
+	/** 操作人姓名 */
+	private String operatorName; 
+	/** 操作时间 */
+	private LocalDateTime operateTime; 
+	/** 商户ID */
 	private Long firmId; 
-	/** 商户名称 */
-	private String firmName; 
-	/** 操作人员 */
-	private Long creatorId; 
-	/** 操作员名称 */
-	private String creator; 
-	/** 备注 */
+	/**  */
 	private String notes; 
-	/** 创建时间 */
-	private LocalDateTime createTime; 
+	/** 附带内容(以json存储不同操作类型附加字段) */
+	private String attach; 
     /**
      * UserLogEntity constructor
      */
@@ -89,20 +79,6 @@ public class UserLogDo implements Serializable {
 	}
 
     /**
-     * setter for 服务类型-开卡 提现等
-     */
-	public void setType(Integer type) {
-		this.type = type;
-	}
-
-    /**
-     * getter for 服务类型-开卡 提现等
-     */
-	public Integer getType() {
-		return type;
-	}
-
-    /**
      * setter for 账务周期流水号
      */
 	public void setCycleNo(Long cycleNo) {
@@ -117,241 +93,185 @@ public class UserLogDo implements Serializable {
 	}
 
     /**
-     * setter for 用户账号
+     * setter for 账户ID
      */
 	public void setAccountId(Long accountId) {
 		this.accountId = accountId;
 	}
 
     /**
-     * getter for 用户账号
+     * getter for 账户ID
      */
 	public Long getAccountId() {
 		return accountId;
 	}
 
     /**
-     * setter for 用户名称
+     * setter for 客户编号
      */
-	public void setName(Long name) {
-		this.name = name;
+	public void setCustomerNo(String customerNo) {
+		this.customerNo = customerNo;
 	}
 
     /**
-     * getter for 用户名称
+     * getter for 客户编号
      */
-	public Long getName() {
-		return name;
+	public String getCustomerNo() {
+		return customerNo;
 	}
 
     /**
-     * setter for 卡号-保留字段
+     * setter for 客户名称
+     */
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+    /**
+     * getter for 客户名称
+     */
+	public String getCustomerName() {
+		return customerName;
+	}
+
+    /**
+     * setter for 客户卡号
      */
 	public void setCardNo(String cardNo) {
 		this.cardNo = cardNo;
 	}
 
     /**
-     * getter for 卡号-保留字段
+     * getter for 客户卡号
      */
 	public String getCardNo() {
 		return cardNo;
 	}
 
     /**
-     * setter for 新卡卡号
+     * setter for 操作类型
      */
-	public void setNewCardNo(String newCardNo) {
-		this.newCardNo = newCardNo;
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
     /**
-     * getter for 新卡卡号
+     * getter for 操作类型
      */
-	public String getNewCardNo() {
-		return newCardNo;
+	public Integer getType() {
+		return type;
 	}
 
     /**
-     * setter for 是否退还卡片
+     * setter for 操作总金额
      */
-	public void setCardReturned(Integer cardReturned) {
-		this.cardReturned = cardReturned;
+	public void setTotalAmount(Long totalAmount) {
+		this.totalAmount = totalAmount;
 	}
 
     /**
-     * getter for 是否退还卡片
+     * getter for 操作总金额
      */
-	public Integer getCardReturned() {
-		return cardReturned;
+	public Long getTotalAmount() {
+		return totalAmount;
 	}
 
     /**
-     * setter for 押金-分
+     * setter for 操作人ID
      */
-	public void setCashPledge(Long cashPledge) {
-		this.cashPledge = cashPledge;
+	public void setOperatorId(Long operatorId) {
+		this.operatorId = operatorId;
 	}
 
     /**
-     * getter for 押金-分
+     * getter for 操作人ID
      */
-	public Long getCashPledge() {
-		return cashPledge;
+	public Long getOperatorId() {
+		return operatorId;
 	}
 
     /**
-     * setter for 外部流水号
+     * setter for 操作人工号
      */
-	public void setOutTradeNo(String outTradeNo) {
-		this.outTradeNo = outTradeNo;
+	public void setOperatorNo(String operatorNo) {
+		this.operatorNo = operatorNo;
 	}
 
     /**
-     * getter for 外部流水号
+     * getter for 操作人工号
      */
-	public String getOutTradeNo() {
-		return outTradeNo;
+	public String getOperatorNo() {
+		return operatorNo;
 	}
 
     /**
-     * setter for 委托合同编号，提现
+     * setter for 操作人姓名
      */
-	public void setConsignorContractNo(String consignorContractNo) {
-		this.consignorContractNo = consignorContractNo;
+	public void setOperatorName(String operatorName) {
+		this.operatorName = operatorName;
 	}
 
     /**
-     * getter for 委托合同编号，提现
+     * getter for 操作人姓名
      */
-	public String getConsignorContractNo() {
-		return consignorContractNo;
+	public String getOperatorName() {
+		return operatorName;
 	}
 
     /**
-     * setter for 代理人名称
+     * setter for 操作时间
      */
-	public void setAgentName(String agentName) {
-		this.agentName = agentName;
+	public void setOperateTime(LocalDateTime operateTime) {
+		this.operateTime = operateTime;
 	}
 
     /**
-     * getter for 代理人名称
+     * getter for 操作时间
      */
-	public String getAgentName() {
-		return agentName;
+	public LocalDateTime getOperateTime() {
+		return operateTime;
 	}
 
     /**
-     * setter for 代理人身份证号
-     */
-	public void setAgentIdCode(String agentIdCode) {
-		this.agentIdCode = agentIdCode;
-	}
-
-    /**
-     * getter for 代理人身份证号
-     */
-	public String getAgentIdCode() {
-		return agentIdCode;
-	}
-
-    /**
-     * setter for 代理人联系电话
-     */
-	public void setAgentTelphone(String agentTelphone) {
-		this.agentTelphone = agentTelphone;
-	}
-
-    /**
-     * getter for 代理人联系电话
-     */
-	public String getAgentTelphone() {
-		return agentTelphone;
-	}
-
-    /**
-     * setter for 商户编码
+     * setter for 商户ID
      */
 	public void setFirmId(Long firmId) {
 		this.firmId = firmId;
 	}
 
     /**
-     * getter for 商户编码
+     * getter for 商户ID
      */
 	public Long getFirmId() {
 		return firmId;
 	}
 
     /**
-     * setter for 商户名称
-     */
-	public void setFirmName(String firmName) {
-		this.firmName = firmName;
-	}
-
-    /**
-     * getter for 商户名称
-     */
-	public String getFirmName() {
-		return firmName;
-	}
-
-    /**
-     * setter for 操作人员
-     */
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
-	}
-
-    /**
-     * getter for 操作人员
-     */
-	public Long getCreatorId() {
-		return creatorId;
-	}
-
-    /**
-     * setter for 操作员名称
-     */
-	public void setCreator(String creator) {
-		this.creator = creator;
-	}
-
-    /**
-     * getter for 操作员名称
-     */
-	public String getCreator() {
-		return creator;
-	}
-
-    /**
-     * setter for 备注
+     * setter for 
      */
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
 
     /**
-     * getter for 备注
+     * getter for 
      */
 	public String getNotes() {
 		return notes;
 	}
 
     /**
-     * setter for 创建时间
+     * setter for 附带内容(以json存储不同操作类型附加字段)
      */
-	public void setCreateTime(LocalDateTime createTime) {
-		this.createTime = createTime;
+	public void setAttach(String attach) {
+		this.attach = attach;
 	}
 
     /**
-     * getter for 创建时间
+     * getter for 附带内容(以json存储不同操作类型附加字段)
      */
-	public LocalDateTime getCreateTime() {
-		return createTime;
+	public String getAttach() {
+		return attach;
 	}
 
     /**
@@ -362,25 +282,20 @@ public class UserLogDo implements Serializable {
         return "UserLogEntity{" +
                "id='" + id + '\'' +
                ", serialNo='" + serialNo + '\'' +
-               ", type='" + type + '\'' +
                ", cycleNo='" + cycleNo + '\'' +
                ", accountId='" + accountId + '\'' +
-               ", name='" + name + '\'' +
+               ", customerNo='" + customerNo + '\'' +
+               ", customerName='" + customerName + '\'' +
                ", cardNo='" + cardNo + '\'' +
-               ", newCardNo='" + newCardNo + '\'' +
-               ", cardReturned='" + cardReturned + '\'' +
-               ", cashPledge='" + cashPledge + '\'' +
-               ", outTradeNo='" + outTradeNo + '\'' +
-               ", consignorContractNo='" + consignorContractNo + '\'' +
-               ", agentName='" + agentName + '\'' +
-               ", agentIdCode='" + agentIdCode + '\'' +
-               ", agentTelphone='" + agentTelphone + '\'' +
+               ", type='" + type + '\'' +
+               ", totalAmount='" + totalAmount + '\'' +
+               ", operatorId='" + operatorId + '\'' +
+               ", operatorNo='" + operatorNo + '\'' +
+               ", operatorName='" + operatorName + '\'' +
+               ", operateTime='" + operateTime + '\'' +
                ", firmId='" + firmId + '\'' +
-               ", firmName='" + firmName + '\'' +
-               ", creatorId='" + creatorId + '\'' +
-               ", creator='" + creator + '\'' +
                ", notes='" + notes + '\'' +
-               ", createTime='" + createTime + '\'' +
+               ", attach='" + attach + '\'' +
                '}';
     }
 
