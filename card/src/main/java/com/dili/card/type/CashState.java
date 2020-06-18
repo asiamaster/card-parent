@@ -1,7 +1,7 @@
 package com.dili.card.type;
 
 /**
- * 合同状态
+ * 领款曲矿记录状态
  * @author wb
  */
 public enum CashState {

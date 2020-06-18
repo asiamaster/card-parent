@@ -1,7 +1,7 @@
 package com.dili.card.type;
 
 /**
- * 合同状态
+ * 领取款动作
  * @author wb
  */
 public enum CashAction {
