@@ -12,7 +12,16 @@ public class OperatorRequestDto implements Serializable {
     private Long opId;
     /**操作员名字*/
     private String opName;
+    /**操作员工号*/
+    private String opNo;
 
+    public OperatorRequestDto() {}
+
+    public OperatorRequestDto(Long opId, String opName, String opNo) {
+        this.opId = opId;
+        this.opName = opName;
+        this.opNo = opNo;
+    }
     public Long getOpId() {
         return opId;
     }
@@ -27,5 +36,13 @@ public class OperatorRequestDto implements Serializable {
 
     public void setOpName(String opName) {
         this.opName = opName;
+    }
+
+    public String getOpNo() {
+        return opNo;
+    }
+
+    public void setOpNo(String opNo) {
+        this.opNo = opNo;
     }
 }
