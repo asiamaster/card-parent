@@ -7,25 +7,20 @@
 		SELECT
 			`id`, 
 			`serial_no`, 
-			`type`, 
 			`cycle_no`, 
 			`account_id`, 
-			`name`, 
+			`customer_no`, 
+			`customer_name`, 
 			`card_no`, 
-			`new_card_no`, 
-			`card_returned`, 
-			`cash_pledge`, 
-			`out_trade_no`, 
-			`consignor_contract_no`, 
-			`agent_name`, 
-			`agent_id_code`, 
-			`agent_telphone`, 
+			`type`, 
+			`total_amount`, 
+			`operator_id`, 
+			`operator_no`, 
+			`operator_name`, 
+			`operate_time`, 
 			`firm_id`, 
-			`firm_name`, 
-			`creator_id`, 
-			`creator`, 
 			`notes`, 
-			`create_time`
+			`attach`
 		FROM
 			card_user_log
 		ORDER BY
@@ -35,47 +30,37 @@
 	<insert id="save">
 		INSERT INTO card_user_log (
 			`serial_no`, 
-			`type`, 
 			`cycle_no`, 
 			`account_id`, 
-			`name`, 
+			`customer_no`, 
+			`customer_name`, 
 			`card_no`, 
-			`new_card_no`, 
-			`card_returned`, 
-			`cash_pledge`, 
-			`out_trade_no`, 
-			`consignor_contract_no`, 
-			`agent_name`, 
-			`agent_id_code`, 
-			`agent_telphone`, 
+			`type`, 
+			`total_amount`, 
+			`operator_id`, 
+			`operator_no`, 
+			`operator_name`, 
+			`operate_time`, 
 			`firm_id`, 
-			`firm_name`, 
-			`creator_id`, 
-			`creator`, 
 			`notes`, 
-			`create_time`
+			`attach`
 		)
 		VALUES (
 			#{serialNo}, 
-			#{type}, 
 			#{cycleNo}, 
 			#{accountId}, 
-			#{name}, 
+			#{customerNo}, 
+			#{customerName}, 
 			#{cardNo}, 
-			#{newCardNo}, 
-			#{cardReturned}, 
-			#{cashPledge}, 
-			#{outTradeNo}, 
-			#{consignorContractNo}, 
-			#{agentName}, 
-			#{agentIdCode}, 
-			#{agentTelphone}, 
+			#{type}, 
+			#{totalAmount}, 
+			#{operatorId}, 
+			#{operatorNo}, 
+			#{operatorName}, 
+			#{operateTime}, 
 			#{firmId}, 
-			#{firmName}, 
-			#{creatorId}, 
-			#{creator}, 
 			#{notes}, 
-			#{createTime}
+			#{attach}
 		)
 	</insert>
 	
@@ -83,25 +68,20 @@
 		SELECT
 			`id`, 
 			`serial_no`, 
-			`type`, 
 			`cycle_no`, 
 			`account_id`, 
-			`name`, 
+			`customer_no`, 
+			`customer_name`, 
 			`card_no`, 
-			`new_card_no`, 
-			`card_returned`, 
-			`cash_pledge`, 
-			`out_trade_no`, 
-			`consignor_contract_no`, 
-			`agent_name`, 
-			`agent_id_code`, 
-			`agent_telphone`, 
+			`type`, 
+			`total_amount`, 
+			`operator_id`, 
+			`operator_no`, 
+			`operator_name`, 
+			`operate_time`, 
 			`firm_id`, 
-			`firm_name`, 
-			`creator_id`, 
-			`creator`, 
 			`notes`, 
-			`create_time`
+			`attach`
 		FROM
 			card_user_log
 		WHERE
@@ -112,25 +92,20 @@
 		UPDATE card_user_log
 	 	<set>
 			<if test="serialNo != null">`serial_no` = #{serialNo}, </if>
-			<if test="type != null">`type` = #{type}, </if>
 			<if test="cycleNo != null">`cycle_no` = #{cycleNo}, </if>
 			<if test="accountId != null">`account_id` = #{accountId}, </if>
-			<if test="name != null">`name` = #{name}, </if>
+			<if test="customerNo != null">`customer_no` = #{customerNo}, </if>
+			<if test="customerName != null">`customer_name` = #{customerName}, </if>
 			<if test="cardNo != null">`card_no` = #{cardNo}, </if>
-			<if test="newCardNo != null">`new_card_no` = #{newCardNo}, </if>
-			<if test="cardReturned != null">`card_returned` = #{cardReturned}, </if>
-			<if test="cashPledge != null">`cash_pledge` = #{cashPledge}, </if>
-			<if test="outTradeNo != null">`out_trade_no` = #{outTradeNo}, </if>
-			<if test="consignorContractNo != null">`consignor_contract_no` = #{consignorContractNo}, </if>
-			<if test="agentName != null">`agent_name` = #{agentName}, </if>
-			<if test="agentIdCode != null">`agent_id_code` = #{agentIdCode}, </if>
-			<if test="agentTelphone != null">`agent_telphone` = #{agentTelphone}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="totalAmount != null">`total_amount` = #{totalAmount}, </if>
+			<if test="operatorId != null">`operator_id` = #{operatorId}, </if>
+			<if test="operatorNo != null">`operator_no` = #{operatorNo}, </if>
+			<if test="operatorName != null">`operator_name` = #{operatorName}, </if>
+			<if test="operateTime != null">`operate_time` = #{operateTime}, </if>
 			<if test="firmId != null">`firm_id` = #{firmId}, </if>
-			<if test="firmName != null">`firm_name` = #{firmName}, </if>
-			<if test="creatorId != null">`creator_id` = #{creatorId}, </if>
-			<if test="creator != null">`creator` = #{creator}, </if>
 			<if test="notes != null">`notes` = #{notes}, </if>
-			<if test="createTime != null">`create_time` = #{createTime}</if>
+			<if test="attach != null">`attach` = #{attach}</if>
 		</set>
 		WHERE
 			id = #{id}
