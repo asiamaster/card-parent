@@ -47,4 +47,12 @@ public class PayerManagementController {
 		return BaseOutput.success();
 	}
 	
+	/**
+	 * 获取详情
+	 */
+	@PostMapping("/detail")
+	public BaseOutput<UserCashDto> detail(@RequestBody UserCashDto userCashDto) {
+		return BaseOutput.successData(iUserCashService.findById(userCashDto.getId()));
+	}
+	
 }

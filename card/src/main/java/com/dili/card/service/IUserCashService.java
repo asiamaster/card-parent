@@ -1,5 +1,7 @@
 package com.dili.card.service;
 
+import java.util.List;
+
 import com.dili.card.dto.UserCashDto;
 import com.dili.card.type.CashAction;
 
@@ -16,17 +18,22 @@ public interface IUserCashService {
 	/**
 	 * 现金操作记录列表
 	 */
-	void list(UserCashDto userCashDto, CashAction cashAction);
+	List<UserCashDto> list(UserCashDto userCashDto, CashAction cashAction);
 
 	/**
 	 * 删除现金操作记录
 	 */
 	void delete(Long id);
+	
+	/**
+	 * 删除现金操作记录
+	 */
+	UserCashDto findById(Long id);
 
 	/**
 	 * 现金领款记录列表
 	 */
-	void listPayee(UserCashDto userCashDto);
+	List<UserCashDto> listPayee(UserCashDto userCashDto);
 
 	/**
 	 * 保存现金领款记录
@@ -41,6 +48,6 @@ public interface IUserCashService {
 	/**
 	 * 现金交款记录列表
 	 */
-	void listPayer(UserCashDto userCashDto);
+	List<UserCashDto> listPayer(UserCashDto userCashDto);
 
 }
