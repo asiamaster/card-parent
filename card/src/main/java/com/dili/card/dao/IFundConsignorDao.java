@@ -45,4 +45,10 @@ public interface IFundConsignorDao {
      * @return
      */
 	int batchRemove(Long[] id);
+
+	/**
+	 * 批量保存
+	 * @param consignors
+	 */
+	void saveBatch(List<FundConsignorDo> consignors);
 }

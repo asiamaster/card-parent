@@ -7,9 +7,7 @@ import java.util.List;
  * 资金委托合同
  * @author bob
  */
-public class FundContractRequestDto{
-	
-	private Long id;
+public class FundContractResponseDto{
 	
 	/** 委托人账号ID */
 	private Long consignorAccountId; 
@@ -132,14 +130,6 @@ public class FundContractRequestDto{
 
 	public void setConsignors(List<FundConsignorRequestDto> consignors) {
 		Consignors = consignors;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 }

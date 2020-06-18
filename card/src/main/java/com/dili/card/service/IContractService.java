@@ -1,6 +1,9 @@
 package com.dili.card.service;
 
+import java.util.List;
+
 import com.dili.card.dto.FundContractRequestDto;
+import com.dili.card.dto.FundContractResponseDto;
 
 /**
  * 合同管理
@@ -17,7 +20,7 @@ public interface IContractService {
 	/**
 	 * 列表
 	 */
-	void list(FundContractRequestDto fundContractRequest);
+	List<FundContractResponseDto> list(FundContractRequestDto fundContractRequest);
 
 	/**
 	 * 解除合同
@@ -27,6 +30,6 @@ public interface IContractService {
 	/**
 	 * 合同详情
 	 */
-	void detail(FundContractRequestDto fundContractRequest);
+	FundContractResponseDto detail(FundContractRequestDto fundContractRequest);
 
 }
