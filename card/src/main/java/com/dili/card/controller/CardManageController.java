@@ -29,7 +29,7 @@ public class CardManageController {
     /**
      * 解挂卡片
      */
-    @PostMapping("/unLostCard")
+    @PostMapping("/unLostCard.action")
     public BaseOutput<?> unLostCard(@RequestBody CardRequestDto cardParam) {
         try {
             if (cardParam.getAccountId() == null) {
