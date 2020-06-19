@@ -7,7 +7,7 @@ public enum TradeChannel {
 
     CASH(1, "现金"),
     POS(2, "POS"),
-    BANK_CARD(3, "银行卡");
+    BANK_CARD(3, "网银");
     private int code;
     private String name;
 

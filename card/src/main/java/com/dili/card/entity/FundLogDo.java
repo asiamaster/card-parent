@@ -34,7 +34,9 @@ public class FundLogDo implements Serializable {
 	/** 交易类型-充值、体现、消费、转账 */
 	private Integer tradeType; 
 	/** 交易渠道-现金、POS等 */
-	private Integer tradeChannel; 
+	private Integer tradeChannel;
+	/** 银行卡类型*/
+	private Integer bankCardType;
 	/** 交易流水号 */
 	private String tradeNo; 
 	/** 备注 */
@@ -225,6 +227,22 @@ public class FundLogDo implements Serializable {
 	public Integer getTradeChannel() {
 		return tradeChannel;
 	}
+
+    /**
+     *
+     * @return
+     */
+    public Integer getBankCardType() {
+        return bankCardType;
+    }
+
+    /**
+     *
+     * @param bankCardType
+     */
+    public void setBankCardType(Integer bankCardType) {
+        this.bankCardType = bankCardType;
+    }
 
     /**
      * setter for 交易流水号
