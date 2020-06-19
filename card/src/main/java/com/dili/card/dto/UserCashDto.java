@@ -25,8 +25,18 @@ public class UserCashDto implements Serializable {
 	private Integer state; 
 	/** 备注 */
 	private String notes; 
+	/** 经办人 */
+	private Long creatorId; 
+	/** 经办人姓名 */
+	private String creator;
 	/** 创建时间 */
 	private LocalDateTime createTime; 
+	
+	/** 创建开始时间 */
+	private LocalDateTime createStartTime;
+	
+	/** 创建结束时间 */
+	private LocalDateTime createEndTime;
 
     /**
      * UserCashEntity constructor
@@ -145,6 +155,38 @@ public class UserCashDto implements Serializable {
      */
 	public LocalDateTime getCreateTime() {
 		return createTime;
+	}
+
+	public Long getCreatorId() {
+		return creatorId;
+	}
+
+	public void setCreatorId(Long creatorId) {
+		this.creatorId = creatorId;
+	}
+
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+
+	public LocalDateTime getCreateStartTime() {
+		return createStartTime;
+	}
+
+	public void setCreateStartTime(LocalDateTime createStartTime) {
+		this.createStartTime = createStartTime;
+	}
+
+	public LocalDateTime getCreateEndTime() {
+		return createEndTime;
+	}
+
+	public void setCreateEndTime(LocalDateTime createEndTime) {
+		this.createEndTime = createEndTime;
 	}
 
 }

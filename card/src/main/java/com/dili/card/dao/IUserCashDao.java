@@ -2,6 +2,8 @@ package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
+
+import com.dili.card.dto.UserCashDto;
 import com.dili.card.entity.UserCashDo;
 
 /**
@@ -50,4 +52,12 @@ public interface IUserCashDao {
 	 * 删除
 	 */
 	void delete(Long id);
+	
+	/**
+     * 列表查询
+     * @param page
+     * @param search
+     * @return
+     */
+	List<UserCashDo> findEntityByCondition(UserCashDto userCashDto);
 }
