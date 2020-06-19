@@ -14,7 +14,9 @@ public class FundLogItemDo implements Serializable {
 	/**  */
 	private Long id; 
 	/** 操作流水号 */
-	private String serialNo; 
+	private String serialNo;
+	/** 资金动作*/
+	private Integer action;
 	/** 费用类型-押金/工本费/手续费 */
 	private Integer type; 
 	/** 费用名称 */
@@ -58,7 +60,23 @@ public class FundLogItemDo implements Serializable {
 		return serialNo;
 	}
 
-    /**
+	/**
+	 *
+	 * @return
+	 */
+	public Integer getAction() {
+		return action;
+	}
+
+	/**
+	 *
+	 * @param action
+	 */
+	public void setAction(Integer action) {
+		this.action = action;
+	}
+
+	/**
      * setter for 费用类型-押金/工本费/手续费
      */
 	public void setType(Integer type) {

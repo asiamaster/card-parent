@@ -6,7 +6,8 @@
 	<select id="selectList" resultType="com.dili.card.entity.FundLogItemDo">
 		SELECT
 			`id`, 
-			`serial_no`, 
+			`serial_no`,
+			`action`,
 			`type`, 
 			`type_name`, 
 			`amount`, 
@@ -19,14 +20,16 @@
 	
 	<insert id="save">
 		INSERT INTO card_fund_log_item (
-			`serial_no`, 
+			`serial_no`,
+			`action`,
 			`type`, 
 			`type_name`, 
 			`amount`, 
 			`create_time`
 		)
 		VALUES (
-			#{serialNo}, 
+			#{serialNo},
+			#{action},
 			#{type}, 
 			#{typeName}, 
 			#{amount}, 
@@ -37,7 +40,8 @@
 	<select id="getById" resultType="com.dili.card.entity.FundLogItemDo">
 		SELECT
 			`id`, 
-			`serial_no`, 
+			`serial_no`,
+			`action`,
 			`type`, 
 			`type_name`, 
 			`amount`, 
@@ -52,6 +56,7 @@
 		UPDATE card_fund_log_item
 	 	<set>
 			<if test="serialNo != null">`serial_no` = #{serialNo}, </if>
+			<if test="action != null">`action` = #{action},</if>
 			<if test="type != null">`type` = #{type}, </if>
 			<if test="typeName != null">`type_name` = #{typeName}, </if>
 			<if test="amount != null">`amount` = #{amount}, </if>
