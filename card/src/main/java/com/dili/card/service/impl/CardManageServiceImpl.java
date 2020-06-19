@@ -1,8 +1,11 @@
 package com.dili.card.service.impl;
 
 import com.dili.card.dto.CardRequestDto;
+import com.dili.card.entity.CardAggregationWrapper;
 import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.service.ICardManageService;
+import com.dili.card.service.ICustomerService;
+import com.dili.customer.sdk.domain.Customer;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.exception.BusinessException;
 import org.springframework.stereotype.Service;
@@ -22,14 +25,20 @@ public class CardManageServiceImpl implements ICardManageService {
 
     @Resource
     private CardManageRpc cardManageRpc;
+    @Resource
+    private ICustomerService customerService;
 
     @Transactional
     @Override
     public void unLostCard(CardRequestDto cardParam) {
-        BaseOutput<?> baseOutput = cardManageRpc.unLostCard(cardParam);
+        BaseOutput<CardAggregationWrapper> baseOutput = cardManageRpc.unLostCard(cardParam);
         if (!baseOutput.isSuccess()) {
             throw new BusinessException(baseOutput.getCode(), baseOutput.getMessage());
         }
-        //TODO 构建日志
+        //TODO 目前不能保证一致性
+        //暂时放在这里组装
+        CardAggregationWrapper wrapper = baseOutput.getData();
+        Customer customer = customerService.getWithNotNull(wrapper.getUserAccount().getCustormerId(), wrapper.getUserAccount().getFirmId());
+        //TODO 待完
     }
 }
