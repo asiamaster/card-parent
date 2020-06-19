@@ -44,6 +44,12 @@ public class UserCashServiceImpl implements IUserCashService{
 		userCashDao.delete(id);
 	}
 	
+
+	@Override
+	public void modify(UserCashDto userCashDto) {
+		userCashDao.updateAmount(userCashDto.getId(), userCashDto.getAmount(), userCashDto.getNotes());
+	}
+	
 	@Override
 	public UserCashDto findById(Long id) {
 		UserCashDo userCashDo = userCashDao.getById(id);

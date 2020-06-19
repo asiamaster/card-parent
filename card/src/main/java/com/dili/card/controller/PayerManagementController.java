@@ -55,4 +55,13 @@ public class PayerManagementController {
 		return BaseOutput.successData(iUserCashService.findById(userCashDto.getId()));
 	}
 	
+	/**
+	 * 获取详情
+	 */
+	@PostMapping("/modify")
+	public BaseOutput<UserCashDto> modify(@RequestBody UserCashDto userCashDto) {
+		iUserCashService.modify(userCashDto);
+		return BaseOutput.success();
+	}
+	
 }

@@ -1,6 +1,8 @@
 package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 import com.dili.card.dto.UserCashDto;
@@ -60,4 +62,9 @@ public interface IUserCashDao {
      * @return
      */
 	List<UserCashDo> findEntityByCondition(UserCashDto userCashDto);
+
+	/**
+	 * 更新领取款金额
+	 */
+	void updateAmount(@Param("id") Long id, @Param("notes") Long amount, @Param("notes") String notes);
 }
