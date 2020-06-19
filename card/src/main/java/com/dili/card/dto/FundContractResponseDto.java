@@ -1,7 +1,6 @@
 package com.dili.card.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 资金委托合同
@@ -9,36 +8,28 @@ import java.util.List;
  */
 public class FundContractResponseDto{
 	
-	/** 委托人账号ID */
-	private Long consignorAccountId; 
+	/** 委托人姓名 */
+	private String consignorName; 
+	/** 委托人卡号 */
+	private String consignorCard; 
+	/** 合同编号 */
+	private String contractNo; 
 	/** 合同开始日期 */
 	private LocalDateTime startTime; 
 	/** 合同结束日期 */
 	private LocalDateTime endTime; 
 	/** 状态(委托中、已解除、已到期) */
 	private Integer state; 
-	/** 委托人签名图片地址 */
-	private String signatureImagePath; 
 	/** 备注 */
 	private String notes; 
 	/** 创建时间 */
 	private LocalDateTime createTime; 
-	/** 被委托人列表 */
-	private List<FundConsignorRequestDto> Consignors;
-
-    /**
-     * setter for 委托人账号ID
-     */
-	public void setConsignorAccountId(Long consignorAccountId) {
-		this.consignorAccountId = consignorAccountId;
-	}
-
-    /**
-     * getter for 委托人账号ID
-     */
-	public Long getConsignorAccountId() {
-		return consignorAccountId;
-	}
+	/** 被委托人姓名 */
+	private String names;
+	/** 被委托人姓名 */
+	private String mobiles;
+	/** 创建人姓名 */
+	private String creator; 
 
     /**
      * setter for 合同开始日期
@@ -83,20 +74,6 @@ public class FundContractResponseDto{
 	}
 
     /**
-     * setter for 委托人签名图片地址
-     */
-	public void setSignatureImagePath(String signatureImagePath) {
-		this.signatureImagePath = signatureImagePath;
-	}
-
-    /**
-     * getter for 委托人签名图片地址
-     */
-	public String getSignatureImagePath() {
-		return signatureImagePath;
-	}
-
-    /**
      * setter for 备注
      */
 	public void setNotes(String notes) {
@@ -124,12 +101,51 @@ public class FundContractResponseDto{
 		return createTime;
 	}
 
-	public List<FundConsignorRequestDto> getConsignors() {
-		return Consignors;
+	public String getConsignorName() {
+		return consignorName;
 	}
 
-	public void setConsignors(List<FundConsignorRequestDto> consignors) {
-		Consignors = consignors;
+	public void setConsignorName(String consignorName) {
+		this.consignorName = consignorName;
 	}
 
+	public String getConsignorCard() {
+		return consignorCard;
+	}
+
+	public void setConsignorCard(String consignorCard) {
+		this.consignorCard = consignorCard;
+	}
+
+	public String getContractNo() {
+		return contractNo;
+	}
+
+	public void setContractNo(String contractNo) {
+		this.contractNo = contractNo;
+	}
+
+	public String getNames() {
+		return names;
+	}
+
+	public void setNames(String names) {
+		this.names = names;
+	}
+
+	public String getMobiles() {
+		return mobiles;
+	}
+
+	public void setMobiles(String mobiles) {
+		this.mobiles = mobiles;
+	}
+
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
 }
