@@ -5,7 +5,7 @@ package com.dili.card.dto;
  * 卡请求相关
  *
  */
-public class CardRequestDto {
+public class CardRequestDto extends BaseDto{
 	/** 卡号 */
 	private String cardNo;
 	/** 新卡号 */
@@ -18,16 +18,7 @@ public class CardRequestDto {
 	private String loginPwd;
 	/** 二次输入登录密码 */
 	private String secondLoginPwd;
-	/**操作员信息*/
-	private OperatorRequestDto operator;
 
-	public OperatorRequestDto getOperator() {
-		return operator;
-	}
-
-	public void setOperator(OperatorRequestDto operator) {
-		this.operator = operator;
-	}
 
 	public String getCardNo() {
 		return cardNo;
