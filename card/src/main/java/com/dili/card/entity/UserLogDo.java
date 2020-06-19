@@ -18,7 +18,9 @@ public class UserLogDo implements Serializable {
 	/** 账务周期流水号 */
 	private Long cycleNo; 
 	/** 账户ID */
-	private Long accountId; 
+	private Long accountId;
+	/** 客户ID*/
+	private Long customerId;
 	/** 客户编号 */
 	private String customerNo; 
 	/** 客户名称 */
@@ -106,7 +108,23 @@ public class UserLogDo implements Serializable {
 		return accountId;
 	}
 
-    /**
+	/**
+	 *
+	 * @return
+	 */
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	/**
+	 *
+	 * @param customerId
+	 */
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+
+	/**
      * setter for 客户编号
      */
 	public void setCustomerNo(String customerNo) {

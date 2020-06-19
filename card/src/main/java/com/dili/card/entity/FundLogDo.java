@@ -16,7 +16,9 @@ public class FundLogDo implements Serializable {
 	/** 操作流水号 与操作记录关联字段 */
 	private String serialNo; 
 	/** 客户账户ID */
-	private Long accountId; 
+	private Long accountId;
+	/** 客户ID*/
+	private Long customerId;
 	/** 客户编号 */
 	private String customerNo; 
 	/** 客户名称 */
@@ -96,7 +98,23 @@ public class FundLogDo implements Serializable {
 		return accountId;
 	}
 
-    /**
+	/**
+	 *
+	 * @return
+	 */
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	/**
+	 *
+	 * @param customerId
+	 */
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+
+	/**
      * setter for 客户编号
      */
 	public void setCustomerNo(String customerNo) {

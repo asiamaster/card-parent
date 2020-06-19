@@ -8,7 +8,8 @@
 			`id`, 
 			`serial_no`, 
 			`cycle_no`, 
-			`account_id`, 
+			`account_id`,
+			`customer_id`,
 			`customer_no`, 
 			`customer_name`, 
 			`card_no`, 
@@ -31,7 +32,8 @@
 		INSERT INTO card_user_log (
 			`serial_no`, 
 			`cycle_no`, 
-			`account_id`, 
+			`account_id`,
+			`customer_id`,
 			`customer_no`, 
 			`customer_name`, 
 			`card_no`, 
@@ -48,7 +50,8 @@
 		VALUES (
 			#{serialNo}, 
 			#{cycleNo}, 
-			#{accountId}, 
+			#{accountId},
+			#{customerId},
 			#{customerNo}, 
 			#{customerName}, 
 			#{cardNo}, 
@@ -69,7 +72,8 @@
 			`id`, 
 			`serial_no`, 
 			`cycle_no`, 
-			`account_id`, 
+			`account_id`,
+			`customer_id`,
 			`customer_no`, 
 			`customer_name`, 
 			`card_no`, 
@@ -94,6 +98,7 @@
 			<if test="serialNo != null">`serial_no` = #{serialNo}, </if>
 			<if test="cycleNo != null">`cycle_no` = #{cycleNo}, </if>
 			<if test="accountId != null">`account_id` = #{accountId}, </if>
+			<if test="customerId != null">`customer_id` = #{customerId},</if>
 			<if test="customerNo != null">`customer_no` = #{customerNo}, </if>
 			<if test="customerName != null">`customer_name` = #{customerName}, </if>
 			<if test="cardNo != null">`card_no` = #{cardNo}, </if>
