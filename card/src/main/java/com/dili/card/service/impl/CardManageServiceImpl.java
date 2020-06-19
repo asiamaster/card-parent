@@ -57,5 +57,6 @@ public class CardManageServiceImpl implements ICardManageService {
         userLog.setOperatorName(cardParam.getOpName());
         userLog.setOperateTime(LocalDateTime.now());
         userLogService.saveUserLog(userLog);
+        //TODO 待调用公共日志系统
     }
 }
