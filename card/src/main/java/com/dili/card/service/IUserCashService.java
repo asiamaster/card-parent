@@ -50,4 +50,9 @@ public interface IUserCashService {
 	 */
 	List<UserCashDto> listPayer(UserCashDto userCashDto);
 
+	/**
+	 * 修改更新
+	 */
+	void modify(UserCashDto userCashDto);
+
 }

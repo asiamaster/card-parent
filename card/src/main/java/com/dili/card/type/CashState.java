@@ -6,7 +6,8 @@ package com.dili.card.type;
  */
 public enum CashState {
 	
-	NORMAL(1, "正常"),
+	UNSETTLED(1, "未对账"),
+	SETTLED(2, "已对账"),
 	DELETED(-1, "删除");
 	private int code;
 	private String name;
