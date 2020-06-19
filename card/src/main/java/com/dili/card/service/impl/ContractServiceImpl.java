@@ -147,7 +147,7 @@ public class ContractServiceImpl implements IContractService {
 		contractResponseDto.setCreator(fundContractDo.getCreator());
 		contractResponseDto.setStartTime(fundContractDo.getStartTime());
 		contractResponseDto.setEndTime(fundContractDo.getEndTime());
-		return null;
+		return contractResponseDto;
 	}
 
 	/**
