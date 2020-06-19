@@ -7,7 +7,7 @@ package com.dili.card.entity;
  */
 public class CardAggregationWrapper {
 	/** 市场编码 */
-	private String firmId;
+	private Long firmId;
 	/** 禁用状态（管理员使用:1-启用2-禁用） */
 	private Integer systemDisableStatus;
 	/**卡账户*/
@@ -15,11 +15,11 @@ public class CardAggregationWrapper {
 	/**卡信息*/
 	private UserCardDo userCard;
 
-	public String getFirmId() {
+	public Long getFirmId() {
 		return firmId;
 	}
 
-	public void setFirmId(String firmId) {
+	public void setFirmId(Long firmId) {
 		this.firmId = firmId;
 	}
 
