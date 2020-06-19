@@ -16,7 +16,8 @@
 			`amount`, 
 			`action`, 
 			`trade_type`, 
-			`trade_channel`, 
+			`trade_channel`,
+			`bank_card_type`,
 			`trade_no`, 
 			`notes`, 
 			`state`, 
@@ -42,7 +43,8 @@
 			`amount`, 
 			`action`, 
 			`trade_type`, 
-			`trade_channel`, 
+			`trade_channel`,
+			`bank_card_type`,
 			`trade_no`, 
 			`notes`, 
 			`state`, 
@@ -62,7 +64,8 @@
 			#{amount}, 
 			#{action}, 
 			#{tradeType}, 
-			#{tradeChannel}, 
+			#{tradeChannel},
+			#{bankCardType},
 			#{tradeNo}, 
 			#{notes}, 
 			#{state}, 
@@ -86,7 +89,8 @@
 			`amount`, 
 			`action`, 
 			`trade_type`, 
-			`trade_channel`, 
+			`trade_channel`,
+			`bank_card_type`,
 			`trade_no`, 
 			`notes`, 
 			`state`, 
@@ -114,6 +118,7 @@
 			<if test="action != null">`action` = #{action}, </if>
 			<if test="tradeType != null">`trade_type` = #{tradeType}, </if>
 			<if test="tradeChannel != null">`trade_channel` = #{tradeChannel}, </if>
+			<if test="bankCardType != null">`bank_card_type` = #{bankCardType},</if>
 			<if test="tradeNo != null">`trade_no` = #{tradeNo}, </if>
 			<if test="notes != null">`notes` = #{notes}, </if>
 			<if test="state != null">`state` = #{state}, </if>
