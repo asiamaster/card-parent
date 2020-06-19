@@ -142,7 +142,12 @@ public class ContractServiceImpl implements IContractService {
 	 * 合同页面信息
 	 */
 	private FundContractResponseDto buildPageContracts(FundContractDo fundContractDo) {
-		return null;
+		FundContractResponseDto contractResponseDto = new FundContractResponseDto();
+		contractResponseDto.setContractNo(fundContractDo.getContractNo());
+		contractResponseDto.setCreator(fundContractDo.getCreator());
+		contractResponseDto.setStartTime(fundContractDo.getStartTime());
+		contractResponseDto.setEndTime(fundContractDo.getEndTime());
+		return contractResponseDto;
 	}
 
 	/**
