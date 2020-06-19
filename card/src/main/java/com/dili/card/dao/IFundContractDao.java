@@ -2,6 +2,8 @@ package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
+
+import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.entity.FundContractDo;
 
 /**
@@ -45,4 +47,9 @@ public interface IFundContractDao {
      * @return
      */
 	int batchRemove(Long[] id);
+
+	/**
+	 * 通过条件查询
+	 */
+	List<FundContractDo> findEntityByCondition(FundContractRequestDto fundContractRequest);
 }
