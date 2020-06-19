@@ -23,7 +23,7 @@ import javax.annotation.Resource;
  * @time ：2020年4月28日下午4:04:46
  */
 @RestController
-@RequestMapping(value = "/account")
+@RequestMapping(value = "/card")
 public class CardManageController {
     private static Logger LOGGER = LoggerFactory.getLogger(CardManageController.class);
 

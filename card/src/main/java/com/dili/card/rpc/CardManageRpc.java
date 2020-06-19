@@ -15,6 +15,6 @@ public interface CardManageRpc {
     /**
      * 解挂卡片
      */
-    @PostMapping("/account/unLostCard")
+    @PostMapping("/api/card/unLostCard")
     BaseOutput<CardAggregationWrapper> unLostCard(CardRequestDto cardParam);
 }
