@@ -2,8 +2,6 @@ package com.dili.card.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.dili.card.dto.CardRequestDto;
-import com.dili.card.dto.OperatorRequestDto;
-import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.service.ICardManageService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
@@ -45,7 +43,9 @@ public class CardManageController {
                 return BaseOutput.failure("密码为空");
             }
             UserTicket userTicket = getUserTicket();
-            cardParam.setOperator(new OperatorRequestDto(userTicket.getId(), userTicket.getRealName(), userTicket.getUserName()));
+            cardParam.setOpId(userTicket.getId());
+            cardParam.setOpName(userTicket.getRealName());
+            cardParam.setOpNo(userTicket.getUserName());
             cardManageService.unLostCard(cardParam);
             return BaseOutput.success();
         } catch (BusinessException e) {

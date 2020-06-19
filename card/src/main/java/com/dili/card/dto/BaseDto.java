@@ -4,24 +4,17 @@ import java.io.Serializable;
 
 /**
  * @Auther: miaoguoxin
- * @Date: 2020/6/17 16:42
- * @Description: 用于接收当前操作员信息
+ * @Date: 2020/6/19 10:27
+ * @Description:
  */
-public class OperatorRequestDto implements Serializable {
+public class BaseDto implements Serializable {
     /**操作员id*/
     private Long opId;
     /**操作员名字*/
     private String opName;
-    /**操作员工号*/
+    /** 操作员工号*/
     private String opNo;
 
-    public OperatorRequestDto() {}
-
-    public OperatorRequestDto(Long opId, String opName, String opNo) {
-        this.opId = opId;
-        this.opName = opName;
-        this.opNo = opNo;
-    }
     public Long getOpId() {
         return opId;
     }
