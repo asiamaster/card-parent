@@ -13,7 +13,6 @@ import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.AccountQueryRpc;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.exception.BusinessException;
 
 /**
  * 账户查询解析器
