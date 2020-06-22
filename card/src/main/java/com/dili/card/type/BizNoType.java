@@ -6,7 +6,8 @@ package com.dili.card.type;
  */
 public enum BizNoType {
 	
-	CONTRACT_NO("正常", "contractNo");
+	CONTRACT_NO("正常", "contractNo"),
+	OPERATE_SERIAL_NO("操作流水号", "operateSerialNo");
 
 	private String name;
 	private String code;
