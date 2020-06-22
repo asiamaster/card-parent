@@ -2,11 +2,12 @@ package com.dili.card.type;
 
 /**
  * 业务编号类型
- * @author zx
+ * @author zhangxxing
  */
 public enum BizNoType {
 	
-	CONTRACT_NO("正常", "contractNo"),
+	CONTRACT_NO("合同编号", "contractNo"),
+	CYCLET_NO("账务周期编号", "cycleNo"),
 	OPERATE_SERIAL_NO("操作流水号", "operateSerialNo");
 
 	private String name;
