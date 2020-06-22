@@ -51,4 +51,9 @@ public interface IFundConsignorDao {
 	 * @param consignors
 	 */
 	void saveBatch(List<FundConsignorDo> consignors);
+
+	/**
+	 * 通过合同编号查询被委托人信息
+	 */
+	List<FundConsignorDo> FindConsignorsByContractNo(String contractNo);
 }

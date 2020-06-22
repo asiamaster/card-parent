@@ -13,9 +13,11 @@ import com.dili.card.dto.CustomerDto;
 import com.dili.card.dto.FundConsignorRequestDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.entity.FundConsignorDo;
 import com.dili.card.entity.FundContractDo;
 import com.dili.card.rpc.UidRpc;
+import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IContractService;
@@ -38,6 +40,8 @@ public class ContractServiceImpl implements IContractService {
 	private UidRpcResovler uidRpcResovler;
 	@Autowired
 	private CustomerRpcResolver customerRpcResolver;
+	@Autowired
+	private AccountQueryRpcResolver accountQueryRpcResolver;
 
 	@Override
 	public void save(FundContractRequestDto fundContractRequest) {
@@ -79,18 +83,42 @@ public class ContractServiceImpl implements IContractService {
 		if (fundContract == null) {
 			throw new BusinessException(ResultCode.DATA_ERROR, "该合同号不存在");
 		}
-		FundConsignorDo fundConsignorDo = new FundConsignorDo();
-		fundConsignorDo.setContractNo(fundContract.getContractNo());
-		List<FundConsignorDo> consignors = fundConsignorDao.selectList(fundConsignorDo);
-		FundContractResponseDto contractResponse = this.buildContractDetail(fundContract, consignors);
+		FundContractResponseDto contractResponse = this.buildContractDetail(fundContract);
 		return contractResponse;
 	}
 
 	/**
-	 * 构建页面详情数据
+	 * 构建页面合同详情数据
 	 */
-	private FundContractResponseDto buildContractDetail(FundContractDo fundContract,
-			List<FundConsignorDo> consignors) {
+	private FundContractResponseDto buildContractDetail(FundContractDo fundContract) {
+		return this.buildContractResponse(fundContract, true);
+	}
+
+	/**
+	 * 构建页面相应数据
+	 */
+	private FundContractResponseDto buildContractResponse(FundContractDo fundContractDo, boolean detail) {
+		FundContractResponseDto contractResponseDto = new FundContractResponseDto();
+		contractResponseDto.setContractNo(fundContractDo.getContractNo());
+		contractResponseDto.setCreator(fundContractDo.getCreator());
+		contractResponseDto.setCreateTime(fundContractDo.getCreateTime());
+		contractResponseDto.setStartTime(fundContractDo.getStartTime());
+		contractResponseDto.setEndTime(fundContractDo.getEndTime());
+		
+		List<FundConsignorDo> consignors = fundConsignorDao.FindConsignorsByContractNo(fundContractDo.getContractNo());
+		
+		if (!detail) {
+			
+			for (FundConsignorDo fundConsignorDo : consignors) {
+				
+			}
+			//构建卡数据
+			UserAccountCardResponseDto userAccountCardResponseDto = accountQueryRpcResolver.findSingleUserCard(fundContractDo.getConsignorAccountId());
+			contractResponseDto.setConsignorCard(userAccountCardResponseDto.getCardNo());
+			//获取客户信息
+			CustomerDto customer = customerRpcResolver.findCustomerById(userAccountCardResponseDto.getCustomerId());
+			contractResponseDto.setConsignorName(customer.getName());
+		}
 		return null;
 	}
 
@@ -169,6 +197,7 @@ public class ContractServiceImpl implements IContractService {
 		FundContractResponseDto contractResponseDto = new FundContractResponseDto();
 		contractResponseDto.setContractNo(fundContractDo.getContractNo());
 		contractResponseDto.setCreator(fundContractDo.getCreator());
+		contractResponseDto.setCreateTime(fundContractDo.getCreateTime());
 		contractResponseDto.setStartTime(fundContractDo.getStartTime());
 		contractResponseDto.setEndTime(fundContractDo.getEndTime());
 		return contractResponseDto;
