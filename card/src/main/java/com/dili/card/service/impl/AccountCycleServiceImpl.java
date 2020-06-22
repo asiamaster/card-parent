@@ -12,6 +12,9 @@ import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.type.BizNoType;
+import com.dili.card.type.CycleState;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
 
 @Service("accountCycleService")
 public class AccountCycleServiceImpl implements IAccountCycleService {
@@ -49,12 +52,19 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			accountCycle.setUserId(userId);
 			accountCycle.setUserName(userName);
 			accountCycle.setCycleNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CYCLET_NO.getCode())));
+			accountCycle.setCashBox(0L);
+			accountCycle.setState(CycleState.ACTIVE.getCode());
+			//构建商户信息
+			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+			accountCycle.setFirmId(userTicket.getFirmId());
+			accountCycle.setFirmName(userTicket.getFirmName());
+			accountCycle.setVersion(1);
 		}
 	}
 
 	@Override
 	public AccountCycleDo findByUserId(Long userId) {
-		return null;
+		return accountCycleDao.findActiveCycleByUserId(userId);
 	}
 
 }

@@ -6,7 +6,7 @@ package com.dili.card.type;
  *
  */
 public enum CycleState {
-	UNSETTLED(1, "活跃"),
+	ACTIVE(1, "活跃"),
 	SETTLED(1, "已结账"),
 	FLATED(-1, "已平账");
 	private int code;

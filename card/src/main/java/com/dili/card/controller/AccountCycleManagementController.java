@@ -18,10 +18,10 @@ import com.dili.ss.domain.BaseOutput;
 @RestController
 @RequestMapping(value = "/cycle")
 public class AccountCycleManagementController {
-	
+
 	@Autowired
 	private IAccountCycleService iAccountCycleService;
-	
+
 	/**
 	 * 对账
 	 */
@@ -30,7 +30,7 @@ public class AccountCycleManagementController {
 		iAccountCycleService.checkAccount(accountCycleDto.getId());
 		return BaseOutput.success();
 	}
-	
+
 	/**
 	 * 账务列表
 	 */
@@ -38,7 +38,7 @@ public class AccountCycleManagementController {
 	public BaseOutput<List<AccountCycleDto>> list(@RequestBody AccountCycleDto accountCycleDto) {
 		return BaseOutput.successData(iAccountCycleService.list(accountCycleDto));
 	}
-	
+
 	/**
 	 * 账务详情
 	 */
@@ -46,5 +46,5 @@ public class AccountCycleManagementController {
 	public BaseOutput<AccountCycleDto> detail(@RequestBody AccountCycleDto accountCycleDto) {
 		return BaseOutput.successData(iAccountCycleService.detail(accountCycleDto.getId()));
 	}
-	
+
 }

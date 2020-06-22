@@ -5,6 +5,7 @@ import com.dili.ss.domain.BaseOutput;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
+
 /**
  * 卡相关rpc
  */

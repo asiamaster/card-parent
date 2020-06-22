@@ -1,6 +1,7 @@
 package com.dili.card.dto;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -21,18 +22,19 @@ public class UserAccountCardResponseDto implements Serializable {
     private Long fundAccountId;
     /**客户id*/
     private Long customerId;
-    /** 使用权限(充值、提现、交费等) {@link com.dili.account.type.UsePermissionType} */
+    /** 使用权限(充值、提现、交费等) {@link com.dili.card.type.UsePermissionType} */
     private List<String> permissionList;
     /** 卡ID */
     private Long cardId;
     /** 卡号 */
     private String cardNo;
-    /**卡用途 {@link com.dili.account.type.CardBizType}*/
+    /**卡用途 {@link com.dili.card.type.CardBizType}*/
     private Integer cardUsageType;
-    /** 卡类别-主/副/临时/联营 {@link com.dili.account.type.CardCategory}*/
-    private Integer cardCategory;
-    /** 卡片状态 {@link com.dili.account.type.CardStatus} */
+    /** 卡类型-主/副/临时/联营 {@link com.dili.card.type.CardType}*/
+    private Integer cardType;
+    /** 卡片状态 {@link com.dili.card.type.CardStatus} */
     private Integer cardState;
+    private LocalDateTime cardCreateTime;
 
     public Long getCustomerId() {
         return customerId;
@@ -114,12 +116,12 @@ public class UserAccountCardResponseDto implements Serializable {
         this.permissionList = permissionList;
     }
 
-    public Integer getCardCategory() {
-        return cardCategory;
+    public Integer getCardType() {
+        return cardType;
     }
 
-    public void setCardCategory(Integer cardCategory) {
-        this.cardCategory = cardCategory;
+    public void setCardType(Integer cardType) {
+        this.cardType = cardType;
     }
 
     public Integer getCardState() {
@@ -128,5 +130,13 @@ public class UserAccountCardResponseDto implements Serializable {
 
     public void setCardState(Integer cardState) {
         this.cardState = cardState;
+    }
+
+    public LocalDateTime getCardCreateTime() {
+        return cardCreateTime;
+    }
+
+    public void setCardCreateTime(LocalDateTime cardCreateTime) {
+        this.cardCreateTime = cardCreateTime;
     }
 }
