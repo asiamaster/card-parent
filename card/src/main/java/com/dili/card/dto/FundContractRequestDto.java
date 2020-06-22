@@ -11,9 +11,12 @@ public class FundContractRequestDto{
 	
 	/** id */
 	private Long id;
-	
+	/** 合同编号 */
+	private String contractNo; 
 	/** 委托人账号ID */
 	private Long consignorAccountId; 
+	/** 委托人账号ID */
+	private Long customerId;
 	/** 合同开始日期 */
 	private LocalDateTime startTime; 
 	/** 合同结束日期 */
@@ -200,6 +203,22 @@ public class FundContractRequestDto{
 
 	public void setExpirationTime(String expirationTime) {
 		this.expirationTime = expirationTime;
+	}
+
+	public String getContractNo() {
+		return contractNo;
+	}
+
+	public void setContractNo(String contractNo) {
+		this.contractNo = contractNo;
+	}
+
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
 
 }

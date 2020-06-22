@@ -1,5 +1,10 @@
 package com.dili.card.type;
 
+/**
+ * 卡状态信息
+ * @author apache
+ *
+ */
 public enum CardStatus {
 	NORMAL("正常", 1),
 

@@ -25,7 +25,7 @@ public class AccountQueryRpcResolver {
 	private AccountQueryRpc accountQueryRpc;
 	
 	/**
-	 * 批量查询单个账户信息
+	 * 批量查询多个账户信息
 	 */
 	public List<UserAccountCardResponseDto> findBacthUserCard(List<Long> accountIds){
 		UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();

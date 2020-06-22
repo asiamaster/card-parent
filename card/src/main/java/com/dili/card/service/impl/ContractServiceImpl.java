@@ -9,12 +9,17 @@ import org.springframework.stereotype.Service;
 
 import com.dili.card.dao.IFundConsignorDao;
 import com.dili.card.dao.IFundContractDao;
+import com.dili.card.dto.CustomerDto;
 import com.dili.card.dto.FundConsignorRequestDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
 import com.dili.card.entity.FundConsignorDo;
 import com.dili.card.entity.FundContractDo;
+import com.dili.card.rpc.UidRpc;
+import com.dili.card.rpc.resolver.CustomerRpcResolver;
+import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IContractService;
+import com.dili.card.type.BizNoType;
 import com.dili.card.type.ContractState;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.exception.BusinessException;
@@ -29,13 +34,17 @@ public class ContractServiceImpl implements IContractService {
 	private IFundConsignorDao fundConsignorDao;
 	@Autowired
 	private IFundContractDao contractDao;
+	@Autowired
+	private UidRpcResovler uidRpcResovler;
+	@Autowired
+	private CustomerRpcResolver customerRpcResolver;
 
 	@Override
 	public void save(FundContractRequestDto fundContractRequest) {
 		//构建合同主体
 		FundContractDo fundContract = this.buildContractEntity(fundContractRequest);
 		//构建被委托人主体
-		List<FundConsignorDo> consignors = this.buildConsignorEntities(fundContractRequest.getConsignors());
+		List<FundConsignorDo> consignors = this.buildConsignorEntities(fundContractRequest);
 		//数据保存操作
 		contractDao.save(fundContract);
 		fundConsignorDao.saveBatch(consignors);
@@ -77,6 +86,9 @@ public class ContractServiceImpl implements IContractService {
 		return contractResponse;
 	}
 
+	/**
+	 * 构建页面详情数据
+	 */
 	private FundContractResponseDto buildContractDetail(FundContractDo fundContract,
 			List<FundConsignorDo> consignors) {
 		return null;
@@ -85,10 +97,10 @@ public class ContractServiceImpl implements IContractService {
 	/**
 	 * 构建被委托人信息列表
 	 */
-	private List<FundConsignorDo> buildConsignorEntities(List<FundConsignorRequestDto> consignors) {
+	private List<FundConsignorDo> buildConsignorEntities(FundContractRequestDto fundContractRequest) {
 		List<FundConsignorDo> consignorDos = new ArrayList<FundConsignorDo>();
-		for (FundConsignorRequestDto consignorRequestDto : consignors) {
-			consignorDos.add(this.buildConsignorEntity(consignorRequestDto));
+		for (FundConsignorRequestDto consignorRequestDto : fundContractRequest.getConsignors()) {
+			consignorDos.add(this.buildConsignorEntity(consignorRequestDto, fundContractRequest.getContractNo()));
 		}
 		return consignorDos;
 	}
@@ -96,15 +108,18 @@ public class ContractServiceImpl implements IContractService {
 	/**
 	 * 构建被委托人信息
 	 */
-	private FundConsignorDo buildConsignorEntity(FundConsignorRequestDto consignorRequestDto) {
+	private FundConsignorDo buildConsignorEntity(FundConsignorRequestDto consignorRequestDto, String contractNo) {
 		FundConsignorDo fundConsignorDo = new FundConsignorDo();
+		//构建合同被委托人核心数据
 		fundConsignorDo.setConsigneeIdCode(consignorRequestDto.getConsigneeIdCode());
 		fundConsignorDo.setConsigneeIdMobile(consignorRequestDto.getConsigneeIdMobile());
 		fundConsignorDo.setConsigneeName(consignorRequestDto.getConsigneeName());
 		fundConsignorDo.setSignatureImagePath(consignorRequestDto.getSignatureImagePath());
+		//构建商户信息
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		fundConsignorDo.setFirmId(userTicket.getFirmId());
 		fundConsignorDo.setFirmName(userTicket.getFirmName());
+		fundConsignorDo.setContractNo(contractNo);
 		return fundConsignorDo;
 	}
 
@@ -113,17 +128,26 @@ public class ContractServiceImpl implements IContractService {
 	 */
 	private FundContractDo buildContractEntity(FundContractRequestDto fundContractRequest) {
 		FundContractDo fundContractDo = new FundContractDo();
+		//构建合同委托人核心数据
 		fundContractDo.setConsignorAccountId(fundContractRequest.getConsignorAccountId());
 		fundContractDo.setStartTime(fundContractRequest.getStartTime());
 		fundContractDo.setEndTime(fundContractRequest.getEndTime());
 		fundContractDo.setSignatureImagePath(fundContractRequest.getSignatureImagePath());
 		fundContractDo.setNotes(fundContractRequest.getNotes());
+		//构建商户信息
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		fundContractDo.setCreatorId(userTicket.getId());
 		fundContractDo.setCreator(userTicket.getUserName());
 		fundContractDo.setFirmId(userTicket.getFirmId());
 		fundContractDo.setFirmName(userTicket.getFirmName());
 		fundContractDo.setState(ContractState.ENTUST.getCode());
+		//获取业务编号
+		String contractNo = uidRpcResovler.bizNumber(BizNoType.CONTRACT_NO.getCode());
+		fundContractDo.setContractNo(contractNo);
+		fundContractRequest.setContractNo(contractNo);
+		//获取客户信息
+		CustomerDto customer = customerRpcResolver.findCustomerById(fundContractRequest.getCustomerId());
+		fundContractDo.setConsignorCustomerCode(customer.getCode());
 		return fundContractDo;
 	}
 

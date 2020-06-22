@@ -3,6 +3,7 @@ package com.dili.card.rpc.resolver;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import com.dili.card.dto.CustomerDto;
 import com.dili.card.dto.CustomerQuery;
@@ -23,14 +24,17 @@ public class CustomerRpcResolver {
 	/**
 	 * 根据客户id查询客户信息
 	 */
-    public List<CustomerDto> findCustomerById(Long id){
+    public CustomerDto findCustomerById(Long id){
     	CustomerQuery customer = new CustomerQuery();
     	customer.setId(id);
     	BaseOutput<List<CustomerDto>> baseOutput = customerRpc.list(customer);
     	if (!baseOutput.isSuccess()) {
     		throw new BusinessException(ResultCode.DATA_ERROR, "远程调用客户服务失败");
 		}
-		return baseOutput.getData();
+    	if (CollectionUtils.isEmpty(baseOutput.getData())) {
+    		throw new BusinessException(ResultCode.DATA_ERROR, "客户信息不存在");
+		}
+		return baseOutput.getData().get(0);
     }
     
     /**
