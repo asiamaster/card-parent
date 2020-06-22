@@ -1,18 +1,23 @@
 package com.dili.card.service.impl;
 
 import com.dili.card.dto.CardRequestDto;
+import com.dili.card.dto.SerialDto;
 import com.dili.card.entity.BusinessRecordDo;
-import com.dili.card.entity.CardAggregationWrapper;
+import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.service.ICardManageService;
 import com.dili.card.service.ISerialRecordService;
 import com.dili.card.type.OperateType;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.exception.BusinessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -23,6 +28,7 @@ import javax.annotation.Resource;
  */
 @Service("cardManageService")
 public class CardManageServiceImpl implements ICardManageService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CardManageServiceImpl.class);
 
     @Resource
     private CardManageRpc cardManageRpc;
@@ -32,7 +38,7 @@ public class CardManageServiceImpl implements ICardManageService {
     /**
      * @param cardParam
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void unLostCard(CardRequestDto cardParam) {
         BusinessRecordDo businessRecord = new BusinessRecordDo();
@@ -40,11 +46,47 @@ public class CardManageServiceImpl implements ICardManageService {
         businessRecord.setType(OperateType.LOSS_REMOVE.getCode());
         businessRecord.setAmount(0L);
         serialRecordService.saveBusinessRecord(businessRecord);
-        BaseOutput<CardAggregationWrapper> baseOutput = cardManageRpc.unLostCard(cardParam);
+        BaseOutput<?> baseOutput = cardManageRpc.unLostCard(cardParam);
         if (!baseOutput.isSuccess()) {
+            //针对解挂失操作，暂时处理为解挂失失败则回滚业务办理记录
             throw new BusinessException(baseOutput.getCode(), baseOutput.getMessage());
         }
-        CardAggregationWrapper wrapper = baseOutput.getData();
+        try {//成功则修改状态及期初期末金额，存储操作流水
+            SerialDto serialDto = buildUnLostCardSerial(cardParam, businessRecord);
+            serialRecordService.handleSuccess(serialDto);
+        } catch (Exception e) {
+            LOGGER.error("unLostCard", e);
+        }
+    }
 
+    /**
+     * 构建操作流水 后期根据各业务代码调整优化
+     * @param cardParam
+     * @return
+     */
+    private SerialDto buildUnLostCardSerial(CardRequestDto cardParam, BusinessRecordDo businessRecord) {
+        SerialDto serialDto = new SerialDto();
+        serialDto.setSerialNo(businessRecord.getSerialNo());
+        serialDto.setStartBalance(0L);
+        serialDto.setEndBalance(0L);
+        List<SerialRecordDo> serialRecordList = new ArrayList<>(1);
+        SerialRecordDo serialRecord = new SerialRecordDo();
+        serialRecordService.copyCommonFields(serialRecord, businessRecord);
+        //注释字段为当前操作不需要的字段  其他业务可能需要
+        //serialRecord.setAction();
+        serialRecord.setStartBalance(0L);
+        serialRecord.setAmount(0L);
+        serialRecord.setEndBalance(0L);
+        //serialRecord.setTradeType();
+        //serialRecord.setTradeChannel();
+        //serialRecord.setTradeNo(businessRecord.getTradeNo());
+        //serialRecord.setFundItem();
+        //serialRecord.setFundItemName();
+        /** 操作时间-与支付系统保持一致 */
+        serialRecord.setOperateTime(businessRecord.getOperateTime());
+        //serialRecord.setNotes();
+        serialRecordList.add(serialRecord);
+        serialDto.setSerialRecordList(serialRecordList);
+        return serialDto;
     }
 }

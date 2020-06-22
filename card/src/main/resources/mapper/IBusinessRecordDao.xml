@@ -43,7 +43,7 @@
 			id DESC
 	</select>
 	
-	<insert id="save">
+	<insert id="save" parameterType="com.dili.card.entity.BusinessRecordDo" useGeneratedKeys="true">
 		INSERT INTO card_business_record (
 			`serial_no`, 
 			`cycle_no`, 

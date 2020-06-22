@@ -1,7 +1,9 @@
 package com.dili.card.service;
 
 import com.dili.card.dto.CardRequestDto;
+import com.dili.card.dto.SerialDto;
 import com.dili.card.entity.BusinessRecordDo;
+import com.dili.card.entity.SerialRecordDo;
 
 /**
  * 操作流水记录service接口
@@ -21,4 +23,23 @@ public interface ISerialRecordService {
      * @param businessRecord
      */
     void saveBusinessRecord(BusinessRecordDo businessRecord);
+
+    /**
+     * 拷贝公共字段
+     * @param serialRecord
+     * @param businessRecord
+     */
+    void copyCommonFields(SerialRecordDo serialRecord, BusinessRecordDo businessRecord);
+
+    /**
+     * 失败处理 改状态 需新开事务
+     * @param serialDto
+     */
+    void handleFailure(SerialDto serialDto);
+
+    /**
+     * 成功处理 改状态、记操作流水 需重开事务
+     * @param serialDto
+     */
+    void handleSuccess(SerialDto serialDto);
 }

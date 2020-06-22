@@ -1,6 +1,6 @@
 package com.dili.card.rpc;
 
-import com.dili.card.dto.SerialRequestDto;
+import com.dili.card.dto.SerialDto;
 import com.dili.ss.domain.BaseOutput;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +14,9 @@ public interface SerialRecordRpc {
 
     /**
      * 批量存储操作流水
-     * @param serialRequestDto
+     * @param serialDto
      * @return
      */
     @RequestMapping(value = "/batchSave", method = RequestMethod.POST)
-    public BaseOutput<?> batchSave(SerialRequestDto serialRequestDto);
+    BaseOutput<?> batchSave(SerialDto serialDto);
 }
