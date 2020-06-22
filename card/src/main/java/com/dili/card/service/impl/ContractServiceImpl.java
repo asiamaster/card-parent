@@ -1,31 +1,29 @@
 package com.dili.card.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.dili.card.dao.IFundConsignorDao;
 import com.dili.card.dao.IFundContractDao;
-import com.dili.card.dto.CustomerDto;
 import com.dili.card.dto.FundConsignorRequestDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
 import com.dili.card.entity.FundConsignorDo;
 import com.dili.card.entity.FundContractDo;
-import com.dili.card.rpc.UidRpc;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IContractService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.ContractState;
+import com.dili.customer.sdk.domain.Customer;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.exception.BusinessException;
 import com.dili.ss.util.DateUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class ContractServiceImpl implements IContractService {
@@ -146,7 +144,7 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setContractNo(contractNo);
 		fundContractRequest.setContractNo(contractNo);
 		//获取客户信息
-		CustomerDto customer = customerRpcResolver.findCustomerById(fundContractRequest.getCustomerId());
+		Customer customer = customerRpcResolver.findCustomerById(fundContractRequest.getCustomerId());
 		fundContractDo.setConsignorCustomerCode(customer.getCode());
 		return fundContractDo;
 	}
