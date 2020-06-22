@@ -5,10 +5,10 @@ package com.dili.card.type;
  * @author zhangxxing
  */
 public enum BizNoType {
-	
+
 	CONTRACT_NO("合同编号", "contractNo"),
 	CYCLET_NO("账务周期编号", "cycleNo"),
-	OPERATE_SERIAL_NO("操作流水号", "operateSerialNo");
+	OPERATE_SERIAL_NO("卡务操作流水号", "cardOperateSerialNo");
 
 	private String name;
 	private String code;

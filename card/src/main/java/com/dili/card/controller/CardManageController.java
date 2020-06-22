@@ -2,10 +2,10 @@ package com.dili.card.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.dili.card.dto.CardRequestDto;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.ICardManageService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
-import com.dili.ss.exception.BusinessException;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 import org.slf4j.Logger;
@@ -36,20 +36,15 @@ public class CardManageController {
     @PostMapping("/unLostCard.action")
     public BaseOutput<?> unLostCard(@RequestBody CardRequestDto cardParam) {
         try {
-            if (cardParam.getAccountId() == null) {
-                return BaseOutput.failure("账户ID为空");
-            }
+            validateCommonParam(cardParam);
             if (StrUtil.isBlank(cardParam.getLoginPwd())) {
                 return BaseOutput.failure("密码为空");
             }
-            UserTicket userTicket = getUserTicket();
-            cardParam.setOpId(userTicket.getId());
-            cardParam.setOpName(userTicket.getRealName());
-            cardParam.setOpNo(userTicket.getUserName());
+            buildOperatorInfo(cardParam);
             cardManageService.unLostCard(cardParam);
             return BaseOutput.success();
-        } catch (BusinessException e) {
-            return BaseOutput.failure(e.getErrorMsg());
+        } catch (CardAppBizException e) {
+            return BaseOutput.failure(e.getMessage());
         } catch (Exception e) {
             LOGGER.error("unLostCard", e);
             return BaseOutput.failure();
@@ -63,5 +58,33 @@ public class CardManageController {
     private UserTicket getUserTicket() {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         return userTicket != null ? userTicket : DTOUtils.newInstance(UserTicket.class);
+    }
+
+    /**
+     * 构建操作人相关信息
+     * @param cardParam
+     */
+    private void buildOperatorInfo(CardRequestDto cardParam) {
+        UserTicket userTicket = getUserTicket();
+        cardParam.setOpId(userTicket.getId());
+        cardParam.setOpName(userTicket.getRealName());
+        cardParam.setOpNo(userTicket.getUserName());
+        cardParam.setFirmId(userTicket.getFirmId());
+    }
+
+    /**
+     * 验证公共参数 针对卡片操作三要素
+     * @param cardParam
+     */
+    private void validateCommonParam(CardRequestDto cardParam) {
+        if (cardParam.getAccountId() == null) {
+            throw new CardAppBizException("账户ID为空");
+        }
+        if (cardParam.getCustomerId() == null) {
+            throw new CardAppBizException("客户ID为空");
+        }
+        if (StrUtil.isBlank(cardParam.getCardNo())) {
+            throw new CardAppBizException("卡号为空");
+        }
     }
 }
