@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.AccountQueryRpc;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
@@ -32,10 +33,10 @@ public class AccountQueryRpcResolver {
 		userAccountCardQuery.setAccountIds(accountIds);
 		BaseOutput<List<UserAccountCardResponseDto>> baseOutput = accountQueryRpc.findUserCards(userAccountCardQuery);
 		if (!baseOutput.isSuccess()) {
-			throw new BusinessException(ResultCode.DATA_ERROR, "远程调用账户服务失败");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "远程调用账户服务失败");
 		}
 		if (CollectionUtils.isEmpty(baseOutput.getData())) {
-			throw new BusinessException(ResultCode.DATA_ERROR, "卡信息不存在");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "卡信息不存在");
 		}
 		return baseOutput.getData();
 	}

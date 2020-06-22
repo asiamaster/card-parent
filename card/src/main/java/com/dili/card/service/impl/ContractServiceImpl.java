@@ -8,6 +8,7 @@ import com.dili.card.dto.FundContractResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.entity.FundConsignorDo;
 import com.dili.card.entity.FundContractDo;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
@@ -64,7 +65,7 @@ public class ContractServiceImpl implements IContractService {
 	public void remove(FundContractRequestDto fundContractRequest) {
 		FundContractDo fundContract = contractDao.getById(fundContractRequest.getId());
 		if (fundContract == null) {
-			throw new BusinessException(ResultCode.DATA_ERROR, "该合同号不存在");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "该合同号不存在");
 		}
 		if (ContractState.REMOVED.getCode() == fundContract.getState()) {
 			return;
@@ -79,7 +80,7 @@ public class ContractServiceImpl implements IContractService {
 	public FundContractResponseDto detail(FundContractRequestDto fundContractRequest) {
 		FundContractDo fundContract = contractDao.getById(fundContractRequest.getId());
 		if (fundContract == null) {
-			throw new BusinessException(ResultCode.DATA_ERROR, "该合同号不存在");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "该合同号不存在");
 		}
 		FundContractResponseDto contractResponse = this.buildContractDetail(fundContract);
 		return contractResponse;
@@ -106,7 +107,6 @@ public class ContractServiceImpl implements IContractService {
 		List<FundConsignorDo> consignors = fundConsignorDao.FindConsignorsByContractNo(fundContractDo.getContractNo());
 		
 		if (!detail) {
-			
 			for (FundConsignorDo fundConsignorDo : consignors) {
 				
 			}

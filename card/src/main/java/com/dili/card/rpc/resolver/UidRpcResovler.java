@@ -3,6 +3,7 @@ package com.dili.card.rpc.resolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.UidRpc;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
@@ -27,7 +28,7 @@ public class UidRpcResovler {
     public String bizNumber(String type) {
     	BaseOutput<String> baseOutput = uidRpc.bizNumber(type);
     	if (!baseOutput.isSuccess()) {
-			throw new BusinessException(ResultCode.DATA_ERROR, "远程调用编号生成服务失败");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "远程调用编号生成服务失败");
 		}
 		return baseOutput.getData();
     }
