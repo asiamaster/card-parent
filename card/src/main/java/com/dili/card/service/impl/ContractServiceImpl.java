@@ -102,7 +102,7 @@ public class ContractServiceImpl implements IContractService {
 		}
 		//过期时间构建
 		if (contractQueryDto.getDays() != null && contractQueryDto.getDays() > 0) {
-			contractQueryDto.setExpirationTime(DateUtils.format(DateUtils.addDays(new Date(), contractQueryDto.getDays())));
+			contractQueryDto.setExpirationTime(DateUtils.format(DateUtils.addDays(new Date(), contractQueryDto.getDays()), "yyyy-MM-dd"));
 		}
 	}
 	
@@ -136,12 +136,15 @@ public class ContractServiceImpl implements IContractService {
 	 */
 	private FundContractResponseDto buildContractResponse(FundContractDo fundContractDo, boolean detail) {
 		FundContractResponseDto contractResponseDto = new FundContractResponseDto();
-		//
+		//构建合同核心数据
 		contractResponseDto.setContractNo(fundContractDo.getContractNo());
 		contractResponseDto.setCreator(fundContractDo.getCreator());
 		contractResponseDto.setCreateTime(fundContractDo.getCreateTime());
 		contractResponseDto.setStartTime(fundContractDo.getStartTime());
 		contractResponseDto.setEndTime(fundContractDo.getEndTime());
+		contractResponseDto.setTerminater(fundContractDo.getTerminater());
+		contractResponseDto.setTerminateNotes(fundContractDo.getTerminateNotes());
+		contractResponseDto.setTerminateTime(fundContractDo.getTerminateTime());
 		
 		List<FundConsignorDo> consignors = fundConsignorDao.FindConsignorsByContractNo(fundContractDo.getContractNo());
 		if (!detail) {

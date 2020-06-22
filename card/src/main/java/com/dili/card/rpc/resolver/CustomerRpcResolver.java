@@ -25,6 +25,24 @@ import java.util.stream.Collectors;
 @Component
 public class CustomerRpcResolver {
 
+	@Autowired
+	private CustomerRpc customerRpc;
+
+	/**
+	 * 根据客户id查询客户信息
+	 */
+    public Customer findCustomerById(Long id){
+    	CustomerQueryInput customer = new CustomerQueryInput();
+    	customer.setId(id);
+    	BaseOutput<List<Customer>> baseOutput = customerRpc.list(customer);
+    	if (!baseOutput.isSuccess()) {
+    		throw new CardAppBizException(ResultCode.DATA_ERROR, "远程调用客户服务失败");
+		}
+    	if (CollectionUtils.isEmpty(baseOutput.getData())) {
+    		throw new CardAppBizException(ResultCode.DATA_ERROR, "客户信息不存在");
+		}
+		return baseOutput.getData().get(0);
+
     @Autowired
     private CustomerRpc customerRpc;
 
@@ -85,6 +103,16 @@ public class CustomerRpcResolver {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "远程调用客户服务失败");
         }
         return baseOutput.getData();
+	 * 根据客户姓名查询客户信息
+	 */
+    public List<Customer> findCustomerByName(String name){
+		CustomerQueryInput customer = new CustomerQueryInput();
+    	customer.setName(name);
+    	BaseOutput<List<Customer>> baseOutput = customerRpc.list(customer);
+    	if (!baseOutput.isSuccess()) {
+    		throw new CardAppBizException(ResultCode.DATA_ERROR, "远程调用客户服务失败");
+		}
+		return baseOutput.getData();
     }
 
 

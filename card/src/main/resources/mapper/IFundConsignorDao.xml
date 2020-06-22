@@ -60,6 +60,23 @@
 			id = #{id}
 	</select>
 	
+	<select id="getByContractNo" resultType="com.dili.card.entity.FundConsignorDo">
+		SELECT
+			`id`, 
+			`contract_no`, 
+			`consignee_name`, 
+			`signature_image_path`, 
+			`consignee_id_code`, 
+			`consignee_id_mobile`, 
+			`create_time`, 
+			`firm_id`, 
+			`firm_name`
+		FROM
+			card_fund_consignor
+		WHERE
+			contract_no = #{contractNo}
+	</select>
+	
 	<update id="update">
 		UPDATE card_fund_consignor
 	 	<set>

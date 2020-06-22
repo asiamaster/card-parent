@@ -10,11 +10,12 @@ import org.springframework.util.CollectionUtils;
 import com.dili.card.dao.IUserCashDao;
 import com.dili.card.dto.UserCashDto;
 import com.dili.card.entity.UserCashDo;
+import com.dili.card.exception.CardAppBizException;
+import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IUserCashService;
 import com.dili.card.type.CashAction;
 import com.dili.card.type.CashState;
 import com.dili.ss.constant.ResultCode;
-import com.dili.ss.exception.BusinessException;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 
@@ -25,6 +26,8 @@ public class UserCashServiceImpl implements IUserCashService{
 	
 	@Autowired
 	private IUserCashDao userCashDao;
+	@Autowired
+	private IAccountCycleService accountCycleService;
 
 	@Override
 	public void save(UserCashDto userCashDto, CashAction cashAction) {
@@ -54,7 +57,7 @@ public class UserCashServiceImpl implements IUserCashService{
 	public UserCashDto findById(Long id) {
 		UserCashDo userCashDo = userCashDao.getById(id);
 		if (userCashDo == null) {
-			throw new BusinessException(ResultCode.DATA_ERROR, "该记录不存在");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "该记录不存在");
 		}
 		return this.buildSingleCashDtoy(userCashDo);
 	}
@@ -90,11 +93,13 @@ public class UserCashServiceImpl implements IUserCashService{
 		userCash.setUserName(userCashDto.getUserName());
 		userCash.setState(CashState.UNSETTLED.getCode());
 		userCash.setNotes(userCashDto.getNotes());
+		//构建商户信息和创建者
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		userCash.setCreatorId(userTicket.getId());
 		userCash.setCreator(userTicket.getUserName());
 		userCash.setFirmId(userTicket.getFirmId());
 		userCash.setFirmName(userTicket.getFirmName());
+		accountCycleService.createCycle(userCashDto.getUserId(), userCashDto.getUserName());
 		return userCash;
 	}
 

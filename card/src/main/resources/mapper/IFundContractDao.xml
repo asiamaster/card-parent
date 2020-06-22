@@ -8,6 +8,7 @@
 			`id`, 
 			`contract_no`, 
 			`consignor_account_id`, 
+			`consignor_customer_code`,
 			`start_time`, 
 			`end_time`, 
 			`state`, 
@@ -29,6 +30,7 @@
 		INSERT INTO card_fund_contract (
 			`contract_no`, 
 			`consignor_account_id`, 
+			`consignor_customer_code`,
 			`start_time`, 
 			`end_time`, 
 			`state`, 
@@ -43,7 +45,8 @@
 		)
 		VALUES (
 			#{contractNo}, 
-			#{consignorAccountId}, 
+			#{consignorAccountId},
+			#{consignorCustomerCode},
 			#{startTime}, 
 			#{endTime}, 
 			#{state}, 
@@ -62,13 +65,17 @@
 		SELECT
 			`id`, 
 			`contract_no`, 
-			`consignor_account_id`, 
+			`consignor_account_id`,
+			`consignor_customer_code`, 
 			`start_time`, 
 			`end_time`, 
 			`state`, 
 			`signature_image_path`, 
 			`creator_id`, 
 			`creator`, 
+			·terminater·,
+			`terminate_notes`,
+			`terminate_time`,
 			`firm_id`, 
 			`firm_name`, 
 			`notes`, 
@@ -91,11 +98,14 @@
 			<if test="signatureImagePath != null">`signature_image_path` = #{signatureImagePath}, </if>
 			<if test="creatorId != null">`creator_id` = #{creatorId}, </if>
 			<if test="creator != null">`creator` = #{creator}, </if>
+			<if test="terminater != null">`terminater` = #{terminater}, </if>
+			<if test="terminate_notes != null">`terminate_notes` = #{terminateNotes}, </if>
+			<if test="terminate_time != null">`terminate_time` = #{terminaterTime}, </if>
 			<if test="firmId != null">`firm_id` = #{firmId}, </if>
 			<if test="firmName != null">`firm_name` = #{firmName}, </if>
 			<if test="notes != null">`notes` = #{notes}, </if>
 			<if test="createTime != null">`create_time` = #{createTime}, </if>
-			<if test="modifyTime != null">`modify_time` = #{modifyTime}</if>
+			<if test="modifyTime != null">`modify_time` = NOW()</if>
 		</set>
 		WHERE
 			id = #{id}
@@ -112,4 +122,43 @@
 		</foreach>
 	</delete>
 
+	<select id="findEntityByCondition" parameterType="com.dili.card.dto.FundContractQueryDto" resultType="com.dili.card.entity.FundContractDo">
+		SELECT
+			`id`, 
+			`contract_no`, 
+			`consignor_account_id`, 
+			`consignor_customer_code`,
+			`start_time`, 
+			`end_time`, 
+			`state`, 
+			`creator`, 
+			`create_time`, 
+		FROM
+			card_fund_contract
+		WHERE
+			1=1
+			<if test="contractNo != null and contractNo != '' ">
+				AND contract_no = #{contractNo}
+			</if>
+			<if test="consignorCustomerCode != null and consignorCustomerCode != '' ">
+				AND consignor_customer_code = #{consignorCustomerCode}
+			</if>
+			<if test="consigneeMobile != null and consigneeMobile != ''">
+				AND contract_no IN (SELECT contract_no FROM card_fund_consignor WHERE consignee_id_mobile = #{consigneeMobile})
+			</if>
+			<if test="state != null">
+				AND state = #{state}
+			</if>
+			<if test="createStartTime != null and createStartTime != ''">
+				AND create_time >= #{createStartTime}
+			</if>
+			<if test="createEndTime != null and createEndTime != ''">
+				<![CDATA[ AND create_time <= #{createEndTime}]]>
+			</if>
+			<if test="expirationTime != null and expirationTime != ''">
+				<![CDATA[ AND DATE_FORMAT(end_time,'%Y-%m-%d') = #{expirationTime}]]>
+			</if>
+		ORDER BY create_time DESC
+		LIMIT #{startIndex}, #{pageSize}
+	</select>
 </mapper>

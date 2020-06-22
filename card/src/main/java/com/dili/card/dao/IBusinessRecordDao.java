@@ -2,42 +2,42 @@ package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
-import com.dili.card.entity.FundLogItemDo;
+import com.dili.card.entity.BusinessRecordDo;
 
 /**
- * 账户资金操作费用,在柜员办理的业务
+ * 柜台业务办理记录
  * @author bob<>
  */
 @Mapper
-public interface IFundLogItemDao {
+public interface IBusinessRecordDao {
 	/**
      * 列表查询
      * @param page
      * @param search
      * @return
      */
-	List<FundLogItemDo> selectList(FundLogItemDo fundLogItem);
+	List<BusinessRecordDo> selectList(BusinessRecordDo businessRecord);
 
     /**
      * 新增
-     * @param fundLogItem
+     * @param businessRecord
      * @return
      */
-	int save(FundLogItemDo fundLogItem);
+	int save(BusinessRecordDo businessRecord);
 
     /**
      * 根据id查询
      * @param id
      * @return
      */
-	FundLogItemDo getById(Long id);
+	BusinessRecordDo getById(Long id);
 
     /**
      * 修改
-     * @param fundLogItem
+     * @param businessRecord
      * @return
      */
-	int update(FundLogItemDo fundLogItem);
+	int update(BusinessRecordDo businessRecord);
 
     /**
      * 删除
