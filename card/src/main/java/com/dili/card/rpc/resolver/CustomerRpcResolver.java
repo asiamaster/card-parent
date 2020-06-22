@@ -105,7 +105,11 @@ public class CustomerRpcResolver {
         return customer;
     }
 
-
+    /**
+     *
+     * @param customer
+     * @return
+     */
     private CustomerResponseDto convertFromCustomer(Customer customer) {
         CustomerResponseDto customerResponseDto = new CustomerResponseDto();
         BeanUtils.copyProperties(customer, customerResponseDto);
