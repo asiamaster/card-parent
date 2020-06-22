@@ -4,7 +4,9 @@ import com.dili.card.dto.CardRequestDto;
 import com.dili.card.entity.CardAggregationWrapper;
 import com.dili.ss.domain.BaseOutput;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 卡相关rpc
@@ -15,6 +17,6 @@ public interface CardManageRpc {
     /**
      * 解挂卡片
      */
-    @PostMapping("/api/card/unLostCard")
-    BaseOutput<CardAggregationWrapper> unLostCard(CardRequestDto cardParam);
+    @RequestMapping(value = "/api/card/unLostCard", method = RequestMethod.POST)
+    BaseOutput<CardAggregationWrapper> unLostCard(@RequestBody CardRequestDto cardParam);
 }

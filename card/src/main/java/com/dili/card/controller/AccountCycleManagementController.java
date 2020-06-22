@@ -12,8 +12,8 @@ import com.dili.card.service.IAccountCycleService;
 @RestController
 @RequestMapping(value = "/financial")
 public class AccountCycleManagementController {
-	
-	@Autowired
-	private IAccountCycleService iAccountCycleService;
-	
+
+//	@Autowired
+//	private IAccountCycleService iAccountCycleService;
+
 }

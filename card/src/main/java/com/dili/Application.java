@@ -23,7 +23,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @DTOScan(value={"com.dili.ss", "com.dili.card.domain"})
 @EnableDiscoveryClient
 @EnableFeignClients
-
 public class Application extends SpringBootServletInitializer {
 
     @LoadBalanced

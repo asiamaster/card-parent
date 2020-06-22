@@ -7,6 +7,7 @@ import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.service.ICardManageService;
 import com.dili.card.service.IUserLogService;
 import com.dili.card.type.OperateType;
+import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.exception.BusinessException;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,6 @@ import java.time.LocalDateTime;
  */
 @Service("cardManageService")
 public class CardManageServiceImpl implements ICardManageService {
-
     @Resource
     private CardManageRpc cardManageRpc;
     @Resource
