@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
  */
 public class FundContractResponseDto{
 	
+	/** 委托人编号 */
+	private String consignorCode; 
 	/** 委托人姓名 */
 	private String consignorName; 
 	/** 委托人卡号 */
@@ -25,9 +27,9 @@ public class FundContractResponseDto{
 	/** 创建时间 */
 	private LocalDateTime createTime; 
 	/** 被委托人姓名 */
-	private String names;
+	private String consigneeNames;
 	/** 被委托人姓名 */
-	private String mobiles;
+	private String consigneeMobiles;
 	/** 创建人姓名 */
 	private String creator; 
 
@@ -125,27 +127,35 @@ public class FundContractResponseDto{
 		this.contractNo = contractNo;
 	}
 
-	public String getNames() {
-		return names;
-	}
-
-	public void setNames(String names) {
-		this.names = names;
-	}
-
-	public String getMobiles() {
-		return mobiles;
-	}
-
-	public void setMobiles(String mobiles) {
-		this.mobiles = mobiles;
-	}
-
 	public String getCreator() {
 		return creator;
 	}
 
 	public void setCreator(String creator) {
 		this.creator = creator;
+	}
+
+	public String getConsigneeNames() {
+		return consigneeNames;
+	}
+
+	public void setConsigneeNames(String consigneeNames) {
+		this.consigneeNames = consigneeNames;
+	}
+
+	public String getConsigneeMobiles() {
+		return consigneeMobiles;
+	}
+
+	public void setConsigneeMobiles(String consigneeMobiles) {
+		this.consigneeMobiles = consigneeMobiles;
+	}
+
+	public String getConsignorCode() {
+		return consignorCode;
+	}
+
+	public void setConsignorCode(String consignorCode) {
+		this.consignorCode = consignorCode;
 	}
 }

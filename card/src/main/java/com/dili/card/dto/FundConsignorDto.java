@@ -4,7 +4,7 @@ package com.dili.card.dto;
  * 受委托人
  * @author bob
  */
-public class FundConsignorRequestDto {
+public class FundConsignorDto {
 	
 	/** 合同编号 */
 	private String contractNo; 

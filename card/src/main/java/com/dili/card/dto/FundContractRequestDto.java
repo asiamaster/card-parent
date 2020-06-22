@@ -30,7 +30,7 @@ public class FundContractRequestDto{
 	/** 创建时间 */
 	private LocalDateTime createTime; 
 	/** 被委托人列表 */
-	private List<FundConsignorRequestDto> Consignors;
+	private List<FundConsignorDto> Consignors;
 	/** 委托人卡信息 */
 	private String cardNo;
 	/** 委托人姓名或者编号 */
@@ -141,11 +141,11 @@ public class FundContractRequestDto{
 		return createTime;
 	}
 
-	public List<FundConsignorRequestDto> getConsignors() {
+	public List<FundConsignorDto> getConsignors() {
 		return Consignors;
 	}
 
-	public void setConsignors(List<FundConsignorRequestDto> consignors) {
+	public void setConsignors(List<FundConsignorDto> consignors) {
 		Consignors = consignors;
 	}
 
