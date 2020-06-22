@@ -32,6 +32,12 @@ public class FundContractResponseDto{
 	private String consigneeMobiles;
 	/** 创建人姓名 */
 	private String creator; 
+	/** 解除人 */
+	private String terminater; 
+	/** 解除人意见*/
+	private String terminateNotes;
+	/** 解除时间*/
+	private LocalDateTime terminateTime;
 
     /**
      * setter for 合同开始日期
@@ -157,5 +163,29 @@ public class FundContractResponseDto{
 
 	public void setConsignorCode(String consignorCode) {
 		this.consignorCode = consignorCode;
+	}
+
+	public String getTerminater() {
+		return terminater;
+	}
+
+	public void setTerminater(String terminater) {
+		this.terminater = terminater;
+	}
+
+	public String getTerminateNotes() {
+		return terminateNotes;
+	}
+
+	public void setTerminateNotes(String terminateNotes) {
+		this.terminateNotes = terminateNotes;
+	}
+
+	public LocalDateTime getTerminateTime() {
+		return terminateTime;
+	}
+
+	public void setTerminateTime(LocalDateTime terminateTime) {
+		this.terminateTime = terminateTime;
 	}
 }
