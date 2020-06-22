@@ -45,4 +45,9 @@ public interface IAccountCycleDao {
      * @return
      */
 	int batchRemove(Long[] id);
+
+	/**
+	 * 根据用户id查询账务周期
+	 */
+	AccountCycleDo findActiveCycleByUserId(Long userId);
 }
