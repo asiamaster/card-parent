@@ -1,9 +1,10 @@
 package com.dili.card.dao;
 
-import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
-import com.dili.card.dto.FundContractRequestDto;
+import org.apache.ibatis.annotations.Mapper;
+
+import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.entity.FundContractDo;
 
 /**
@@ -51,5 +52,5 @@ public interface IFundContractDao {
 	/**
 	 * 通过条件查询
 	 */
-	List<FundContractDo> findEntityByCondition(FundContractRequestDto fundContractRequest);
+	List<FundContractDo> findEntityByCondition(FundContractQueryDto contractQueryDto);
 }

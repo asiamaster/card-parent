@@ -31,18 +31,8 @@ public class FundContractRequestDto{
 	private LocalDateTime createTime; 
 	/** 被委托人列表 */
 	private List<FundConsignorDto> Consignors;
-	/** 委托人卡信息 */
-	private String cardNo;
 	/** 委托人姓名或者编号 */
-	private String consignorName;
-	/** 创建开始时间 */
-	private String createStartTime;
-	/** 创建结束时间 */
-	private String createEndTime;
-	/** 距离到期天数 */
-	private Integer days;
-	/** 距离到期时间 */
-	private String expirationTime;
+	private String consignorCustomerCode;
     /**
      * setter for 委托人账号ID
      */
@@ -157,54 +147,6 @@ public class FundContractRequestDto{
 		this.id = id;
 	}
 
-	public String getCardNo() {
-		return cardNo;
-	}
-
-	public void setCardNo(String cardNo) {
-		this.cardNo = cardNo;
-	}
-
-	public String getConsignorName() {
-		return consignorName;
-	}
-
-	public void setConsignorName(String consignorName) {
-		this.consignorName = consignorName;
-	}
-
-	public String getCreateStartTime() {
-		return createStartTime;
-	}
-
-	public void setCreateStartTime(String createStartTime) {
-		this.createStartTime = createStartTime;
-	}
-
-	public String getCreateEndTime() {
-		return createEndTime;
-	}
-
-	public void setCreateEndTime(String createEndTime) {
-		this.createEndTime = createEndTime;
-	}
-
-	public Integer getDays() {
-		return days;
-	}
-
-	public void setDays(Integer days) {
-		this.days = days;
-	}
-
-	public String getExpirationTime() {
-		return expirationTime;
-	}
-
-	public void setExpirationTime(String expirationTime) {
-		this.expirationTime = expirationTime;
-	}
-
 	public String getContractNo() {
 		return contractNo;
 	}
@@ -221,4 +163,11 @@ public class FundContractRequestDto{
 		this.customerId = customerId;
 	}
 
+	public String getConsignorCustomerCode() {
+		return consignorCustomerCode;
+	}
+
+	public void setConsignorCustomerCode(String consignorCustomerCode) {
+		this.consignorCustomerCode = consignorCustomerCode;
+	}
 }

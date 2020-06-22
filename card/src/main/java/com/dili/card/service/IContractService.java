@@ -2,6 +2,7 @@ package com.dili.card.service;
 
 import java.util.List;
 
+import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
 
@@ -20,7 +21,7 @@ public interface IContractService {
 	/**
 	 * 列表
 	 */
-	List<FundContractResponseDto> list(FundContractRequestDto fundContractRequest);
+	List<FundContractResponseDto> list(FundContractQueryDto contractQueryDto);
 
 	/**
 	 * 解除合同

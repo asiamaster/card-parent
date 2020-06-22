@@ -17,7 +17,7 @@ public class FundContractDo implements Serializable {
 	private String contractNo; 
 	/** 委托人账号ID */
 	private Long consignorAccountId; 
-	/** 委托人账号ID */
+	/** 委托人编号 */
 	private String consignorCustomerCode; 
 	/** 合同开始日期 */
 	private LocalDateTime startTime; 
@@ -31,6 +31,12 @@ public class FundContractDo implements Serializable {
 	private Long creatorId; 
 	/** 创建人姓名 */
 	private String creator; 
+	/** 解除人 */
+	private String terminater; 
+	/** 解除人意见*/
+	private String terminateNotes;
+	/** 解除时间*/
+	private LocalDateTime terminateTime;
 	/** 商户编码 */
 	private Long firmId; 
 	/** 商户名称 */
@@ -273,6 +279,30 @@ public class FundContractDo implements Serializable {
 
 	public void setConsignorCustomerCode(String consignorCustomerCode) {
 		this.consignorCustomerCode = consignorCustomerCode;
+	}
+
+	public String getTerminater() {
+		return terminater;
+	}
+
+	public void setTerminater(String terminater) {
+		this.terminater = terminater;
+	}
+
+	public String getTerminateNotes() {
+		return terminateNotes;
+	}
+
+	public void setTerminateNotes(String terminateNotes) {
+		this.terminateNotes = terminateNotes;
+	}
+
+	public LocalDateTime getTerminateTime() {
+		return terminateTime;
+	}
+
+	public void setTerminateTime(LocalDateTime terminateTime) {
+		this.terminateTime = terminateTime;
 	}
 
 }

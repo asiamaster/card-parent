@@ -1,8 +1,17 @@
 package com.dili.card.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.dili.card.dao.IFundConsignorDao;
 import com.dili.card.dao.IFundContractDao;
 import com.dili.card.dto.FundConsignorDto;
+import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -17,16 +26,9 @@ import com.dili.card.type.BizNoType;
 import com.dili.card.type.ContractState;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.ss.constant.ResultCode;
-import com.dili.ss.exception.BusinessException;
 import com.dili.ss.util.DateUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class ContractServiceImpl implements IContractService {
@@ -54,9 +56,9 @@ public class ContractServiceImpl implements IContractService {
 	}
 
 	@Override
-	public List<FundContractResponseDto> list(FundContractRequestDto fundContractRequest) {
-		this.buildQueryContractConditon(fundContractRequest);
-		List<FundContractDo> fundContracts = contractDao.findEntityByCondition(fundContractRequest);
+	public List<FundContractResponseDto> list(FundContractQueryDto contractQueryDto) {
+		this.buildQueryContractConditon(contractQueryDto);
+		List<FundContractDo> fundContracts = contractDao.findEntityByCondition(contractQueryDto);
 		List<FundContractResponseDto> fundResponseContracts = this.huildPageResponseContracts(fundContracts);
 		return fundResponseContracts;
 	}
@@ -74,6 +76,8 @@ public class ContractServiceImpl implements IContractService {
 		updateFundContract.setId(fundContractRequest.getId());
 		updateFundContract.setState(ContractState.REMOVED.getCode());
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		updateFundContract.setTerminater(userTicket.getRealName());
+		updateFundContract.setTerminateNotes(fundContractRequest.getNotes());
 		contractDao.update(updateFundContract);
 	}
 
@@ -90,8 +94,16 @@ public class ContractServiceImpl implements IContractService {
 	/**
 	 * 构建查询条件
 	 */
-	private void buildQueryContractConditon(FundContractRequestDto fundContractRequest) {
-		fundContractRequest.setExpirationTime(DateUtils.format(DateUtils.addDays(new Date(), fundContractRequest.getDays())));
+	private void buildQueryContractConditon(FundContractQueryDto contractQueryDto) {
+		if (StringUtils.isBlank(contractQueryDto.getCardNo())) {
+			//构建卡数据
+			UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver.findByCardNo(contractQueryDto.getCardNo());
+			contractQueryDto.setConsignorAccountId(userAccountCard.getAccountId());
+		}
+		//过期时间构建
+		if (contractQueryDto.getDays() != null && contractQueryDto.getDays() > 0) {
+			contractQueryDto.setExpirationTime(DateUtils.format(DateUtils.addDays(new Date(), contractQueryDto.getDays())));
+		}
 	}
 	
 	/**
@@ -154,10 +166,10 @@ public class ContractServiceImpl implements IContractService {
 			}
 		}
 		//构建卡数据
-		UserAccountCardResponseDto userAccountCardResponseDto = accountQueryRpcResolver.findSingleUserCard(fundContractDo.getConsignorAccountId());
-		contractResponseDto.setConsignorCard(userAccountCardResponseDto.getCardNo());
+		UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver.findByAccountId(fundContractDo.getConsignorAccountId());
+		contractResponseDto.setConsignorCard(userAccountCard.getCardNo());
 		//获取客户信息
-		Customer customer = customerRpcResolver.findCustomerById(userAccountCardResponseDto.getCustomerId());
+		Customer customer = customerRpcResolver.findCustomerById(userAccountCard.getCustomerId());
 		contractResponseDto.setConsignorCode(customer.getCode());
 		contractResponseDto.setConsignorName(customer.getName());
 		return contractResponseDto;
