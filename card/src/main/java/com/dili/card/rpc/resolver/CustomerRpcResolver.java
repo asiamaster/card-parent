@@ -3,7 +3,7 @@ package com.dili.card.rpc.resolver;
 
 import com.dili.card.exception.CardAppBizException;
 import com.dili.customer.sdk.domain.Customer;
-import com.dili.customer.sdk.domain.dto.CustomerQuery;
+import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
@@ -28,7 +28,7 @@ public class CustomerRpcResolver {
 	 * 根据客户id查询客户信息
 	 */
     public Customer findCustomerById(Long id){
-    	CustomerQuery customer = new CustomerQuery();
+    	CustomerQueryInput customer = new CustomerQueryInput();
     	customer.setId(id);
     	BaseOutput<List<Customer>> baseOutput = customerRpc.list(customer);
     	if (!baseOutput.isSuccess()) {
@@ -44,7 +44,7 @@ public class CustomerRpcResolver {
 	 * 根据客户姓名查询客户信息
 	 */
     public List<Customer> findCustomerByName(String name){
-    	CustomerQuery customer = new CustomerQuery();
+		CustomerQueryInput customer = new CustomerQueryInput();
     	customer.setName(name);
     	BaseOutput<List<Customer>> baseOutput = customerRpc.list(customer);
     	if (!baseOutput.isSuccess()) {
