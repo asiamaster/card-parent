@@ -132,5 +132,30 @@
 			`create_time`, 
 		FROM
 			card_fund_contract
+		WHERE
+			1=1
+			<if test="contractNo != null and contractNo != '' ">
+				AND contract_no = #{contractNo}
+			</if>
+			<if test="consignorCustomerCode != null and consignorCustomerCode != '' ">
+				AND consignor_customer_code = #{consignorCustomerCode}
+			</if>
+			<if test="consigneeMobile != null and consigneeMobile != ''">
+				AND contract_no IN (SELECT contract_no FROM card_fund_consignor WHERE consignee_id_mobile = #{consigneeMobile})
+			</if>
+			<if test="state != null">
+				AND state = #{state}
+			</if>
+			<if test="createStartTime != null and createStartTime != ''">
+				AND create_time >= #{createStartTime}
+			</if>
+			<if test="createEndTime != null and createEndTime != ''">
+				<![CDATA[ AND create_time <= #{createEndTime}]]>
+			</if>
+			<if test="expirationTime != null and expirationTime != ''">
+				<![CDATA[ AND DATE_FORMAT(end_time,'%Y-%m-%d') = #{expirationTime}]]>
+			</if>
+		ORDER BY create_time DESC
+		LIMIT #{startIndex}, #{pageSize}
 	</select>
 </mapper>

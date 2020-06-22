@@ -102,7 +102,7 @@ public class ContractServiceImpl implements IContractService {
 		}
 		//过期时间构建
 		if (contractQueryDto.getDays() != null && contractQueryDto.getDays() > 0) {
-			contractQueryDto.setExpirationTime(DateUtils.format(DateUtils.addDays(new Date(), contractQueryDto.getDays())));
+			contractQueryDto.setExpirationTime(DateUtils.format(DateUtils.addDays(new Date(), contractQueryDto.getDays()), "yyyy-MM-dd"));
 		}
 	}
 	
