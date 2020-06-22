@@ -18,6 +18,8 @@ public class CardRequestDto extends BaseDto{
 	private String loginPwd;
 	/** 二次输入登录密码 */
 	private String secondLoginPwd;
+	/** 客户ID*/
+	private Long customerId;
 
 
 	public String getCardNo() {
@@ -66,5 +68,13 @@ public class CardRequestDto extends BaseDto{
 
 	public void setOldLoginPwd(String oldLoginPwd) {
 		this.oldLoginPwd = oldLoginPwd;
+	}
+
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
 }
