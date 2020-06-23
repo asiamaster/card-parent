@@ -1,4 +1,6 @@
-package com.dili.card.util;
+package com.dili.card.validator;
+
+import com.dili.card.validator.OrderByValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

@@ -35,6 +35,14 @@ public class CurrencyUtils {
         return currency.toString();
     }
 
+
+    public static String toYuanWithStripTrailingZeros(Long cent){
+        if (cent == null) {
+            return null;
+        }
+        return point2ten(cent).stripTrailingZeros().toPlainString();
+    }
+
     public static String toNoSymbolCurrency(Long cent) {
         if (cent == null) {
             return null;
@@ -70,6 +78,7 @@ public class CurrencyUtils {
         BigDecimal cent = amount.multiply(YUAN_CENT_UNIT);
         return cent.longValue();
     }
+
 
     private static BigDecimal point2ten(Long point) {
         if (null == point) {

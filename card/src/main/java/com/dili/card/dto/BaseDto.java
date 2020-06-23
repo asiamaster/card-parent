@@ -1,6 +1,6 @@
 package com.dili.card.dto;
 
-import com.dili.card.util.IsOrderBy;
+import com.dili.card.validator.IsOrderBy;
 import com.dili.card.validator.ConstantValidator;
 import org.hibernate.validator.constraints.Range;
 

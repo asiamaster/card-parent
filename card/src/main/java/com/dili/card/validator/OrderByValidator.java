@@ -1,4 +1,4 @@
-package com.dili.card.util;
+package com.dili.card.validator;
 
 import org.apache.commons.lang3.StringUtils;
 
