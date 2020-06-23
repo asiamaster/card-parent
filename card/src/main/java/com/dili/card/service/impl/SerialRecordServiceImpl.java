@@ -16,7 +16,6 @@ import com.dili.card.service.ISerialRecordService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.OperateState;
 import com.dili.customer.sdk.domain.Customer;
-import com.dili.ss.domain.BaseOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -95,17 +94,33 @@ public class SerialRecordServiceImpl implements ISerialRecordService {
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
     public void handleFailure(SerialDto serialDto) {
-        //TODO 待完成
+        try {
+            BusinessRecordDo businessRecord = new BusinessRecordDo();
+            businessRecord.setSerialNo(serialDto.getSerialNo());
+            businessRecord.setState(OperateState.FAILURE.getCode());
+            businessRecordDao.doFailureUpdate(businessRecord);
+        } catch (Exception e) {
+            LOGGER.error("", JSON.toJSONString(serialDto));//记录数据方便后期处理
+            throw new CardAppBizException("修改办理状态失败");
+        }
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
     public void handleSuccess(SerialDto serialDto) {
-        //TODO 待完成
-        BaseOutput<?> baseOutput = serialRecordRpcResolver.batchSave(serialDto);
-        if (!baseOutput.isSuccess()) {
-            LOGGER.error("", JSON.toJSONString(serialDto));
-            throw new CardAppBizException("保存操作流水失败");
+        try {
+            //修改状态
+            BusinessRecordDo businessRecord = new BusinessRecordDo();
+            businessRecord.setSerialNo(serialDto.getSerialNo());
+            businessRecord.setState(OperateState.SUCCESS.getCode());
+            businessRecord.setStartBalance(serialDto.getStartBalance());
+            businessRecord.setEndBalance(serialDto.getEndBalance());
+            businessRecordDao.doSuccessUpdate(businessRecord);
+            //保存流水
+            serialRecordRpcResolver.batchSave(serialDto);
+        } catch (Exception e) {
+            LOGGER.error("", JSON.toJSONString(serialDto));//记录数据方便后期处理
+            throw new CardAppBizException("修改办理状态失败");
         }
     }
 }

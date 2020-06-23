@@ -1,8 +1,9 @@
 package com.dili.card.dao;
 
-import org.apache.ibatis.annotations.Mapper;
-import java.util.List;
 import com.dili.card.entity.BusinessRecordDo;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * 柜台业务办理记录
@@ -45,4 +46,16 @@ public interface IBusinessRecordDao {
      * @return
      */
 	int batchRemove(Long[] id);
+
+	/**
+	 * 根据操作流水号重置操作记录为失败
+	 * @param businessRecord
+	 */
+    int doFailureUpdate(BusinessRecordDo businessRecord);
+
+	/**
+	 * 根据操作流水号重置操作记录为成功
+	 * @param businessRecord
+	 */
+	int doSuccessUpdate(BusinessRecordDo businessRecord);
 }

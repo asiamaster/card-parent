@@ -202,4 +202,13 @@
 		</foreach>
 	</delete>
 
+	<!-- 根据操作流水号重置操作记录为失败 -->
+	<update id="doFailureUpdate" parameterType="com.dili.card.entity.BusinessRecordDo">
+		update card_business_record set `state` = #{state} where `serial_no` = #{serialNo}
+	</update>
+
+	<!-- 根据操作流水号重置操作记录为成功 -->
+	<update id="doSuccessUpdate" parameterType="com.dili.card.entity.BusinessRecordDo">
+		update card_business_record set `start_balance` = #{startBalance}, `end_balance` = #{endBalance},`state` = #{state} where `serial_no` = #{serialNo}
+	</update>
 </mapper>

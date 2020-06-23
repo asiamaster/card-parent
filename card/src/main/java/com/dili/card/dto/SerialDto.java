@@ -28,6 +28,8 @@ public class SerialDto {
     private Long startBalance;
     /** 总的期末余额*/
     private Long endBalance;
+    /** 商户ID*/
+    private Long firmId;
     /** 流水列表 */
     private List<SerialRecordDo> serialRecordList;
 
@@ -101,6 +103,14 @@ public class SerialDto {
 
     public void setEndBalance(Long endBalance) {
         this.endBalance = endBalance;
+    }
+
+    public Long getFirmId() {
+        return firmId;
+    }
+
+    public void setFirmId(Long firmId) {
+        this.firmId = firmId;
     }
 
     public List<SerialRecordDo> getSerialRecordList() {
