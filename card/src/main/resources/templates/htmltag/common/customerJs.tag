@@ -1,20 +1,9 @@
 <script>
-    /**
-     *
-     * @Date 2019-03-17 09:00:00
-     * @author chenliangfang
-     *
-     ***/
-
-    /************  start **************/
-    /************  end ***************/
-
-
     window.domain = 'diligrp.com';
     var registerDia;
 
 
-    /************* 刷卡获取客户信息  start *****************/
+    /************* 获取客户信息  start *****************/
     // 客户名称
     var customerNameQueryAutoCompleteOption = {
         serviceUrl: '/customer/list.action',
