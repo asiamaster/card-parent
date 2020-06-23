@@ -9,8 +9,8 @@
                 <#bcomboProvider _id='fund_item' _provider='fundItemProvider' _queryParams='{emptyText:"全部"}'/>
             </div>
             <div class="form-group col">
-                <label for="customer" class="">客户</label>
-                <input type="text" class="form-control" name="customer" id="customer" maxlength="50"/>
+                <label for="customerName" class="">客户</label>
+                <#bautoCompleteProvider _hiddenDomainId="customerId" _hiddenDomainName="customerId" _displayDomainId="customerName" _displayDomainName="customerName" _placeholder="" _optionVariable="customerNameQueryAutoCompleteOption"/>
             </div>
             <div class="form-group col">
                 <label for="cardNo" class="">业务卡号</label>
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="col align-self-center mt-3">
-                <button type="button" class="btn btn-outline-primary mr-2"  onclick="javascript:$('#queryForm .form-control').val('');"><i class="fa fa-refresh"></i> 清空</button>
+                <button type="button" class="btn btn-outline-primary mr-2"  onclick="javascript:$('#queryForm .form-control,#customerId').val('');"><i class="fa fa-refresh"></i> 清空</button>
                 <button type="button" class="btn btn-outline-primary" onclick="queryDataHandler();return false;"><i class="fa fa-search"></i> 查询</button>
             </div>
         </div>
@@ -104,4 +104,5 @@
 </div>
 </#bs4Body>
 <#common_commonJs/>
+<#common_customerJs/>
 <#serial_indexJs/>
