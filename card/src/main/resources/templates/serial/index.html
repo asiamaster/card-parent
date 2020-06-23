@@ -39,7 +39,7 @@
             </div>
             <div class="col align-self-center mt-3">
                 <button type="button" class="btn btn-outline-primary mr-2"  onclick="javascript:$('#queryForm .form-control').val('');"><i class="fa fa-refresh"></i> 清空</button>
-                <button type="button" class="btn btn-outline-primary" onclick="queryDataHandler()"><i class="fa fa-search"></i> 查询</button>
+                <button type="button" class="btn btn-outline-primary" onclick="queryDataHandler();return false;"><i class="fa fa-search"></i> 查询</button>
             </div>
         </div>
     </form>
@@ -75,13 +75,13 @@
                     <th data-field="fundItemName" data-align="center" data-sortable="false" data-sort-name="fund_item_name">
                         资金项目
                     </th>
-                    <th data-field="startBalance" data-align="center" data-sortable="false" data-sort-name="start_balance">
+                    <th data-field="startBalanceView" data-align="center" data-sortable="false" data-sort-name="start_balance">
                         期初金额
                     </th>
-                    <th data-field="amount" data-align="center" data-sortable="false" data-sort-name="amount">
+                    <th data-field="amountView" data-align="center" data-sortable="false" data-sort-name="amount">
                         发生金额
                     </th>
-                    <th data-field="endBalance" data-align="center" data-sortable="false" data-sort-name="end_balance">
+                    <th data-field="endBalanceView" data-align="center" data-sortable="false" data-sort-name="end_balance">
                         账户余额
                     </th>
                     <th data-field="cardNo" data-align="center" data-sortable="false" data-sort-name="card_no">
