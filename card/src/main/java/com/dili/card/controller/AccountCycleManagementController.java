@@ -25,9 +25,9 @@ public class AccountCycleManagementController {
 	/**
 	 * 对账
 	 */
-	@PostMapping("/checkAccount")
-	public BaseOutput<Boolean> save(@RequestBody AccountCycleDto accountCycleDto) {
-		iAccountCycleService.checkAccount(accountCycleDto.getId());
+	@PostMapping("/settle")
+	public BaseOutput<Boolean> settle(@RequestBody AccountCycleDto accountCycleDto) {
+		iAccountCycleService.settle(accountCycleDto.getId());
 		return BaseOutput.success();
 	}
 

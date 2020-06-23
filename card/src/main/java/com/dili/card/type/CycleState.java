@@ -3,12 +3,11 @@ package com.dili.card.type;
 /**
  * 账务周期状态
  * @author apache
- *
  */
 public enum CycleState {
 	ACTIVE(1, "活跃"),
-	SETTLED(1, "已结账"),
-	FLATED(-1, "已平账");
+	SETTLED(2, "已结账"),
+	FLATED(3, "已平账");
 	private int code;
 	private String name;
 	

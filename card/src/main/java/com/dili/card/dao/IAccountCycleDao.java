@@ -1,6 +1,8 @@
 package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 import com.dili.card.entity.AccountCycleDo;
 
@@ -49,5 +51,18 @@ public interface IAccountCycleDao {
 	/**
 	 * 根据用户id查询账务周期
 	 */
-	AccountCycleDo findActiveCycleByUserId(Long userId);
+	AccountCycleDo findActiveCycleByUserId(@Param("userId") Long userId);
+
+	/**
+	 * 根据账务周期编号查询账务周期
+	 * @param cycleNo
+	 */
+	AccountCycleDo findByCycleNo(Long cycleNo);
+
+	/**
+	 * 更新状态 
+	 * @param id 账务周期主键id
+	 * @param state 状态
+	 */
+	int updateStateById(Long id, Integer state, Integer version);
 }

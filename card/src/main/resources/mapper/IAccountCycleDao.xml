@@ -54,7 +54,7 @@
 			#{userName}, 
 			#{cycleNo}, 
 			#{cashBox}, 
-			#{startTime}, 
+			NOW(), 
 			#{endTime}, 
 			#{checkTime}, 
 			#{state}, 
@@ -65,8 +65,8 @@
 			#{firmId}, 
 			#{firmName}, 
 			#{notes}, 
-			#{createTime}, 
-			#{modifyTime}
+			NOW(), 
+			NOW()
 		)
 	</insert>
 	
@@ -114,8 +114,7 @@
 			<if test="firmId != null">`firm_id` = #{firmId}, </if>
 			<if test="firmName != null">`firm_name` = #{firmName}, </if>
 			<if test="notes != null">`notes` = #{notes}, </if>
-			<if test="createTime != null">`create_time` = #{createTime}, </if>
-			<if test="modifyTime != null">`modify_time` = #{modifyTime}</if>
+			<if test="modifyTime != null">`modify_time` = NOW()</if>
 		</set>
 		WHERE
 			id = #{id}
@@ -131,5 +130,30 @@
 			#{id}
 		</foreach>
 	</delete>
-
+	
+	<select id="findActiveCycleByUserId" resultType="com.dili.card.entity.AccountCycleDo">
+		SELECT
+			`id`, 
+			`user_id`, 
+			`user_name`, 
+			`cycle_no`, 
+			`cash_box`, 
+			`start_time`, 
+			`end_time`, 
+			`check_time`, 
+			`state`, 
+			`cash_amount`, 
+			`auditor_id`, 
+			`auditor_name`, 
+			`version`, 
+			`firm_id`, 
+			`firm_name`, 
+			`notes`, 
+			`create_time`, 
+			`modify_time`
+		FROM
+			card_account_cycle
+		WHERE
+			userId = #{userId} and state = #{state}
+	</select>
 </mapper>
