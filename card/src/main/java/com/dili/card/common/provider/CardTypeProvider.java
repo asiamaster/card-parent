@@ -33,6 +33,10 @@ public class CardTypeProvider implements ValueProvider {
 
     @Override
     public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
-        return null;
+        if (obj == null) {
+            return null;
+        }
+        Integer cardType = (Integer) obj;
+        return CardType.getName(cardType);
     }
 }

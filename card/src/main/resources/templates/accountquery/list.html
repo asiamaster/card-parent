@@ -53,64 +53,41 @@
 
 <div class="row">
     <div class="col-12">
-        <table id="bootstrap-table"
+        <table id="grid"
                data-show-fullscreen="true"
                data-buttons-class="primary"
-               data-icons="bui.variable.icons"></table>
+               data-icons="bui.variable.icons">
+            <thead>
+            <tr>
+                <th data-checkbox="true"></th>
+                <th data-field="cardNo" data-sortable="true" data-sort-name="card_no" data-align="center" >
+                    卡号
+                </th>
+                <th data-field="cardType" data-formatter="valueFormatter" data-sortable="true" data-align="center" data-sort-name="card_type" >
+                    卡类别
+                </th>
+                <th data-field="customer.code" data-align="center">
+                    客户编号
+                </th>
+                <th data-field="customer.name" data-align="center">
+                    客户名称
+                </th>
+                <th data-field="customer.contactsPhone" data-align="center" >
+                    联系方式
+                </th>
+                <th data-field="cardCreateTime" data-sortable="true" data-sort-name="card_create_time" data-align="center">
+                    开卡时间
+                </th>
+                <th data-field="cardState" data-formatter="valueFormatter" data-sortable="true" data-sort-name="card_state" data-align="center">
+                    状态
+                </th>
+            </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
 </#bs4Body>
+<#common_enumJs/>
+<#accountquery_indexJs/>
 <script type="text/javascript" src="${contextPath}/resources/sword.js"></script>
-<script>
-    var prefix = "${contextPath}/accountQuery";
-    $(function() {
-        var options = {
-            url: prefix + "/page.action",
-            createUrl: prefix + "/add.html",
-            updateUrl: prefix + "/edit/{id}",
-            removeUrl: prefix + "/remove",
-            exportUrl: prefix + "/export",
-            sortName: "card_create_time",
-            modalName: "卡查询",
-            columns: [{
-                checkbox: true
-            },
-                {
-                    field: 'cardNo',
-                    title: '卡号',
-                    align: 'center',
-                },
-                {
-                    field: 'cardType',
-                    title: '卡类别',
-                    align: 'center',
-                },
-                {
-                    field: 'customer.code',
-                    title: '客户编号',
-                    align: 'center',
-                },
-                {
-                    field: 'customer.name',
-                    title: '客户名称',
-                    align: 'center',
-                },
-                {
-                    field: 'customer.contactsPhone',
-                    title: '联系方式',
-                    align: 'center',
-                },
-                {
-                    field: 'cardCreateTime',
-                    title: '开卡时间',
-                    align: 'center',
-                },{
-                    field: 'cardState',
-                    title: '状态',
-                    align: 'center',
-                }]
-        };
-        $.table.init(options);
-    });
-</script>
