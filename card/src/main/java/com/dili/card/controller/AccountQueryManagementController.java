@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -46,6 +47,7 @@ public class AccountQueryManagementController {
      * @date 2020/6/22
      */
     @PostMapping("/page.action")
+    @ResponseBody
     public PageOutput<List<AccountListResponseDto>> getPage(@RequestBody @Validated(ConstantValidator.Page.class)
                                                                     UserAccountCardQuery param) {
         return accountQueryService.getPage(param);

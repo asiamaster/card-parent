@@ -99,7 +99,7 @@ public class UserCashServiceImpl implements IUserCashService{
 		userCash.setCreator(userTicket.getUserName());
 		userCash.setFirmId(userTicket.getFirmId());
 		userCash.setFirmName(userTicket.getFirmName());
-		accountCycleService.createCycle(userCashDto.getUserId(), userCashDto.getUserName());
+		accountCycleService.createCycleRecord(userCashDto.getUserId(), userCashDto.getUserName());
 		return userCash;
 	}
 

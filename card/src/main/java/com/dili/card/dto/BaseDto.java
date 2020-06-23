@@ -1,5 +1,6 @@
 package com.dili.card.dto;
 
+import com.dili.card.util.IsOrderBy;
 import com.dili.card.validator.ConstantValidator;
 import org.hibernate.validator.constraints.Range;
 
@@ -21,7 +22,6 @@ public class BaseDto implements Serializable {
     private String opNo;
     /** 商户ID*/
     private Long firmId;
-
     /**页码*/
     @NotNull(message = "页码不能为空", groups = ConstantValidator.Page.class)
     @Min(value = 1, message = "页码最小为1", groups = ConstantValidator.Page.class)
@@ -30,6 +30,11 @@ public class BaseDto implements Serializable {
     @NotNull(message = "分页条数不能为空", groups = ConstantValidator.Page.class)
     @Range(min = 1, max = 100, message = "每页最少1条，最多100条", groups = ConstantValidator.Page.class)
     private Integer pageSize;
+    /**顺序or降序 ASC、DESC*/
+    @IsOrderBy(message = "排序不正确", groups = ConstantValidator.Page.class)
+    private String orderBy;
+    /**排序字段*/
+    private String orderByColumn;
 
     public Long getOpId() {
         return opId;
@@ -77,5 +82,21 @@ public class BaseDto implements Serializable {
 
     public void setFirmId(Long firmId) {
         this.firmId = firmId;
+    }
+
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
+    }
+
+    public String getOrderByColumn() {
+        return orderByColumn;
+    }
+
+    public void setOrderByColumn(String orderByColumn) {
+        this.orderByColumn = orderByColumn;
     }
 }

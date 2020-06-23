@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,6 @@ import com.dili.card.entity.FundConsignorDo;
 import com.dili.card.entity.FundContractDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
-import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IContractService;
 import com.dili.card.type.BizNoType;
@@ -32,7 +32,7 @@ import com.dili.uap.sdk.session.SessionContext;
 
 @Service
 public class ContractServiceImpl implements IContractService {
-	
+
 	@Autowired
 	private IFundConsignorDao fundConsignorDao;
 	@Autowired
@@ -105,7 +105,7 @@ public class ContractServiceImpl implements IContractService {
 			contractQueryDto.setExpirationTime(DateUtils.format(DateUtils.addDays(new Date(), contractQueryDto.getDays()), "yyyy-MM-dd"));
 		}
 	}
-	
+
 	/**
 	 * 合同页面信息列表
 	 */
@@ -145,7 +145,7 @@ public class ContractServiceImpl implements IContractService {
 		contractResponseDto.setTerminater(fundContractDo.getTerminater());
 		contractResponseDto.setTerminateNotes(fundContractDo.getTerminateNotes());
 		contractResponseDto.setTerminateTime(fundContractDo.getTerminateTime());
-		
+
 		List<FundConsignorDo> consignors = fundConsignorDao.FindConsignorsByContractNo(fundContractDo.getContractNo());
 		if (!detail) {
 			//列表被委托人信息
