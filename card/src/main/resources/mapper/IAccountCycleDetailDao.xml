@@ -15,6 +15,10 @@
 			`depo_cash_amount`, 
 			`depo_pos_times`, 
 			`depo_pos_amount`, 
+			 bank_in_times,
+			 bank_in_amount,
+			 bank_out_times,
+			 bank_out_amount,
 			`draw_cash_times`, 
 			`draw_cash_amount`, 
 			`revenue_amount`, 
@@ -39,6 +43,10 @@
 			`depo_cash_amount`, 
 			`depo_pos_times`, 
 			`depo_pos_amount`, 
+			 bank_in_times,
+			 bank_in_amount,
+			 bank_out_times,
+			 bank_out_amount,
 			`draw_cash_times`, 
 			`draw_cash_amount`, 
 			`revenue_amount`, 
@@ -56,14 +64,18 @@
 			#{depoCashTimes}, 
 			#{depoCashAmount}, 
 			#{depoPosTimes}, 
-			#{depoPosAmount}, 
+			#{depoPosAmount},
+			#{bankInTimes},  
+			#{bankInAmount}, 
+			#{bankOutTimes}, 
+			#{bankOutAmount},
 			#{drawCashTimes}, 
 			#{drawCashAmount}, 
 			#{revenueAmount}, 
 			#{firmId}, 
 			#{firmName}, 
-			#{createTime}, 
-			#{modifyTime}
+			# NOW(), 
+			# NOW()
 		)
 	</insert>
 	
@@ -79,6 +91,10 @@
 			`depo_cash_amount`, 
 			`depo_pos_times`, 
 			`depo_pos_amount`, 
+			 bank_in_times,
+			 bank_in_amount,
+			 bank_out_times,
+			 bank_out_amount,
 			`draw_cash_times`, 
 			`draw_cash_amount`, 
 			`revenue_amount`, 
@@ -109,22 +125,21 @@
 			<if test="revenueAmount != null">`revenue_amount` = #{revenueAmount}, </if>
 			<if test="firmId != null">`firm_id` = #{firmId}, </if>
 			<if test="firmName != null">`firm_name` = #{firmName}, </if>
-			<if test="createTime != null">`create_time` = #{createTime}, </if>
-			<if test="modifyTime != null">`modify_time` = #{modifyTime}</if>
+			<if test="createTime != null">`create_time` =  NOW(), </if>
+			<if test="modifyTime != null">`modify_time` = NOW()</if>
 		</set>
 		WHERE
 			id = #{id}
 	</update>
-	
-	<delete id="batchRemove">
-		DELETE
-		FROM
-			card_account_cycle_detail
-		WHERE
-			id IN
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
 
+	<!-- 统计账务周期信息 -->
+	<select id="statisticCycleRecord" resultType="com.dili.card.dto.CycleStatistcDto">
+		SELECT
+			times,amount,type,trade_channel
+ 		FROM
+ 			card_business_record
+ 		WHERE
+ 			operator_id = #{operatorId} AND `cycle_no` = #{cycleNo}
+ 		GROUP BY type,trade_channel
+	</select>
 </mapper>
