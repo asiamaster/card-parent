@@ -50,6 +50,14 @@ public class CardManageServiceImpl implements ICardManageService {
         if (!baseOutput.isSuccess()) {
             //针对解挂失操作，暂时处理为解挂失失败则回滚业务办理记录
             throw new BusinessException(baseOutput.getCode(), baseOutput.getMessage());
+            //如果需要保存失败办理记录，则用以下代码
+            /*try {
+                SerialDto serialDto = new SerialDto();
+                serialDto.setSerialNo(businessRecord.getSerialNo());
+                serialRecordService.handleFailure(serialDto);
+            } catch (Exception e) {
+                LOGGER.error("unLostCard", e);
+            }*/
         }
         try {//成功则修改状态及期初期末金额，存储操作流水
             SerialDto serialDto = buildUnLostCardSerial(cardParam, businessRecord);
