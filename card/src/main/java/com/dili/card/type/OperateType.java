@@ -22,7 +22,9 @@ public enum OperateType
 	BANKCARD_BIND("银行卡绑定", 21),
 	BANKCARD_REMOVE("银行卡解绑", 22),
 	BANK_TRANSFER("转账", 23),
-	PERMISSION_SET("权限设置", 24);
+	PERMISSION_SET("权限设置", 24),
+	PAYEE("领款", 25),
+	PAYER("交款", 26);
 	
 	private String name;
 	private int code;
