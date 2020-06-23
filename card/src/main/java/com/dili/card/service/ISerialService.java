@@ -9,7 +9,7 @@ import com.dili.card.entity.SerialRecordDo;
  * 操作流水记录service接口
  * @author xuliang
  */
-public interface ISerialRecordService {
+public interface ISerialService {
 
     /**
      * 组装公共数据 包括流水号、客户信息、账务周期、操作员信息、默认状态等
