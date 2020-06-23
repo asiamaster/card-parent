@@ -139,7 +139,7 @@
  		FROM
  			card_business_record
  		WHERE
- 			operator_id = #{operatorId} AND `cycle_no` = #{cycleNo}
+ 			operator_id = #{operatorId} AND `cycle_no` = #{cycleNo} AND type IN (11,12,25,26)
  		GROUP BY type,trade_channel
 	</select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.dili.card.service.impl;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,9 @@ import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
-import com.dili.card.service.IUserCashService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CycleState;
+import com.dili.card.type.CycleStatisticType;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 
@@ -63,14 +64,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		accountCycleDetailDao.save(accountCycleDetail);
 	}
 
-	/**
-	 * 账务周期详情统计信息
-	 */
-	private void buildCycleDetail(AccountCycleDetailDo accountCycleDetail, AccountCycleDo cycle) {
-		List<CycleStatistcDto> cycleStatistcs = accountCycleDetailDao.statisticCycleRecord(cycle.getCycleNo(), cycle.getUserId());
-		
-	}
-
 	@Override
 	public List<AccountCycleDto> list(AccountCycleDto accountCycleDto) {
 		return null;
@@ -78,6 +71,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	public AccountCycleDto detail(Long id) {
+		AccountCycleDo accountCycle = accountCycleDao.getById(id);
 		return null;
 	}
 
@@ -160,5 +154,30 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			throw new CardAppBizException("当前账务周期已平账,不能重复操作");
 		}
 	}
+	
+
+	/**
+	 * 账务周期详情统计信息
+	 */
+	private void buildCycleDetail(AccountCycleDetailDo accountCycleDetail, AccountCycleDo cycle) {
+		List<CycleStatistcDto> cycleStatistcs = accountCycleDetailDao.statisticCycleRecord(cycle.getCycleNo(), cycle.getUserId());
+		for (CycleStatistcDto cycleStatistc : cycleStatistcs) {
+			CycleStatisticType cycleStatisticType = CycleStatisticType.getCycleStatisticType(cycleStatistc.getType(), cycleStatistc.getTradeChannel());
+			Field times;
+			Field amount;
+			try {
+				times = accountCycleDetail.getClass().getDeclaredField(cycleStatisticType.getTimes());
+				times.setAccessible(true);
+				times.set(accountCycleDetail, cycleStatistc.getTimes());
+				amount = accountCycleDetail.getClass().getDeclaredField(cycleStatisticType.getAmount());
+				amount.setAccessible(true);
+				amount.set(accountCycleDetail, cycleStatistc.getAmount());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+	}
+
 
 }
