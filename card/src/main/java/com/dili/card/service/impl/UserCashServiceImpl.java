@@ -21,7 +21,7 @@ import com.dili.uap.sdk.session.SessionContext;
 
 import cn.hutool.core.util.NumberUtil;
 
-@Service
+@Service("userCashService")
 public class UserCashServiceImpl implements IUserCashService{
 	
 	@Autowired
