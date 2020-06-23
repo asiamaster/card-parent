@@ -1,5 +1,7 @@
 package com.dili.card.dto;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -20,6 +22,7 @@ public class AccountListResponseDto implements Serializable {
     /**卡状态 {@link com.dili.card.type.CardStatus}*/
     private Integer cardState;
     /**开卡时间*/
+    @JSONField(format = "yyyy-MM-dd HH:mm:dd")
     private LocalDateTime cardCreateTime;
 
     public Long getAccountId() {
