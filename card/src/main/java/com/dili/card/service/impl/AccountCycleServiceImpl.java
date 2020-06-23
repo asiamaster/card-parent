@@ -67,14 +67,17 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	public AccountCycleDto detail(Long id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public AccountCycleDo createCycleRecord(Long userId, String userName) {
-		AccountCycleDo accountCycle = accountCycleDao.findActiveCycleByUserId(userId);
+		AccountCycleDo accountCycle = this.findSettledCycleByUserId(userId);
+		if (accountCycle != null) {
+			throw new CardAppBizException("当前账务周期正在对账中,不能操作");
+		}
+		accountCycle = this.findActiveCycleByUserId(userId);
 		if (accountCycle == null) {
 			accountCycle = new AccountCycleDo();
 			accountCycle.setUserId(userId);
@@ -89,20 +92,22 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			accountCycle.setVersion(1);
 			accountCycleDao.save(accountCycle);
 		}
-		if (CycleState.SETTLED.getCode() == accountCycle.getState()) {
-			throw new CardAppBizException("当前账务周期正在对账中,不能操作");
-		}
 		return accountCycle;
 	}
 
 	@Override
 	public AccountCycleDo findByUserId(Long userId) {
-		return accountCycleDao.findActiveCycleByUserId(userId);
+		return null;
 	}
 
 	@Override
-	public AccountCycleDo findActiveCycleByUserId(Long userId, String userName) {
-		return this.createCycleRecord(userId, userName);
+	public AccountCycleDo findActiveCycleByUserId(Long userId) {
+		return accountCycleDao.findByUserIdAndState(userId, CycleState.ACTIVE.getCode());
+	}
+	
+	@Override
+	public AccountCycleDo findSettledCycleByUserId(Long userId) {
+		return accountCycleDao.findByUserIdAndState(userId, CycleState.SETTLED.getCode());
 	}
 
 	@Override

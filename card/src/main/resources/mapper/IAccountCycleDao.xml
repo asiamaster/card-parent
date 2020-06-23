@@ -131,7 +131,7 @@
 		</foreach>
 	</delete>
 	
-	<select id="findActiveCycleByUserId" resultType="com.dili.card.entity.AccountCycleDo">
+	<select id="findByUserIdAndState" resultType="com.dili.card.entity.AccountCycleDo">
 		SELECT
 			`id`, 
 			`user_id`, 
@@ -156,4 +156,12 @@
 		WHERE
 			userId = #{userId} and state = #{state}
 	</select>
+	
+	<update id="updateStateById">
+		UPDATE card_account_cycle SET 
+			`state` = #{state},`version` = version + 1, `modify_time` = NOW()
+			<if test="state != null and state ==3 ">, `end_time` = NOW() </if>
+		WHERE
+			id = #{id} and version = #{version}
+	</update>
 </mapper>

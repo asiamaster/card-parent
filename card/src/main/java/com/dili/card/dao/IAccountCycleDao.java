@@ -49,11 +49,6 @@ public interface IAccountCycleDao {
 	int batchRemove(Long[] id);
 
 	/**
-	 * 根据用户id查询账务周期
-	 */
-	AccountCycleDo findActiveCycleByUserId(@Param("userId") Long userId);
-
-	/**
 	 * 根据账务周期编号查询账务周期
 	 * @param cycleNo
 	 */
@@ -65,4 +60,11 @@ public interface IAccountCycleDao {
 	 * @param state 状态
 	 */
 	int updateStateById(Long id, Integer state, Integer version);
+
+	/**
+	 * 根据童虎id查询账务周期
+	 * @param userId
+	 * @param state
+	 */
+	AccountCycleDo findByUserIdAndState(Long userId, Integer state);
 }

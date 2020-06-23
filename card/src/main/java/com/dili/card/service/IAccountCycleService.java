@@ -46,7 +46,14 @@ public interface IAccountCycleService {
 	 * @param userId 柜员编号
 	 * @param userName 柜员姓名
 	 */
-	AccountCycleDo findActiveCycleByUserId(Long userId, String userName);
+	AccountCycleDo findActiveCycleByUserId(Long userId);
+	
+	/**
+	 * 获取该柜员已结账账务周期 
+	 * @param userId 柜员编号
+	 * @param userName 柜员姓名
+	 */
+	AccountCycleDo findSettledCycleByUserId(Long userId);
 
 	/**
 	 * 根据账务周期编号查询账务周期
