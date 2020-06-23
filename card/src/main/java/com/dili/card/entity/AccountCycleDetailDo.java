@@ -11,7 +11,7 @@ public class AccountCycleDetailDo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	/**  */
+	/** 主键  */
 	private Long id; 
 	/** 账务周期流水号 */
 	private Long cycleNo; 
@@ -31,10 +31,18 @@ public class AccountCycleDetailDo implements Serializable {
 	private Integer depoPosTimes; 
 	/** POS充值金额-分 */
 	private Long depoPosAmount; 
-	/** 提现次数 */
+	/** 网银充值次数 */
+	private Integer bankInTimes; 
+	/** 网银充值金额-分 */
+	private Long bankInAmount; 
+	/** 现金提现次数 */
 	private Integer drawCashTimes; 
-	/** 提现金额-分 */
+	/** 现金提现金额-分 */
 	private Long drawCashAmount; 
+	/** 网银提现次数 */
+	private Integer bankOutTimes; 
+	/** 网银提现金额-分 */
+	private Long bankOutAmount; 
 	/** 现金收益金额-分 */
 	private Long revenueAmount; 
 	/** 商户编码 */
@@ -315,5 +323,37 @@ public class AccountCycleDetailDo implements Serializable {
                ", modifyTime='" + modifyTime + '\'' +
                '}';
     }
+
+	public Integer getBankInTimes() {
+		return bankInTimes;
+	}
+
+	public void setBankInTimes(Integer bankInTimes) {
+		this.bankInTimes = bankInTimes;
+	}
+
+	public Long getBankInAmount() {
+		return bankInAmount;
+	}
+
+	public void setBankInAmount(Long bankInAmount) {
+		this.bankInAmount = bankInAmount;
+	}
+
+	public Integer getBankOutTimes() {
+		return bankOutTimes;
+	}
+
+	public void setBankOutTimes(Integer bankOutTimes) {
+		this.bankOutTimes = bankOutTimes;
+	}
+
+	public Long getBankOutAmount() {
+		return bankOutAmount;
+	}
+
+	public void setBankOutAmount(Long bankOutAmount) {
+		this.bankOutAmount = bankOutAmount;
+	}
 
 }

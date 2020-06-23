@@ -115,4 +115,17 @@ public class CustomerRpcResolver {
         BeanUtils.copyProperties(customer, customerResponseDto);
         return customerResponseDto;
     }
+
+    /**
+     * 根据条件查询客户列表
+     * @param query
+     * @return
+     */
+    public List<Customer> list(CustomerQueryInput query) {
+        BaseOutput<List<Customer>> baseOutput = customerRpc.list(query);
+        if (!baseOutput.isSuccess()) {
+            throw new CardAppBizException("远程调用客户服务失败");
+        }
+        return baseOutput.getData();
+    }
 }

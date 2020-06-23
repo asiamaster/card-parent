@@ -1,6 +1,6 @@
 package com.dili.card.service.impl;
 
-import java.time.LocalDateTime;
+import java.lang.reflect.Field;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dili.card.dao.IAccountCycleDao;
 import com.dili.card.dao.IAccountCycleDetailDao;
 import com.dili.card.dto.AccountCycleDto;
-import com.dili.card.dto.UserCashDto;
+import com.dili.card.dto.CycleStatistcDto;
 import com.dili.card.entity.AccountCycleDetailDo;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
-import com.dili.card.service.IUserCashService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CycleState;
+import com.dili.card.type.CycleStatisticType;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 
@@ -31,8 +31,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	private IAccountCycleDetailDao accountCycleDetailDao;
 	@Autowired
 	private UidRpcResovler uidRpcResovler;
-	@Autowired
-	private IUserCashService userCashService;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -50,23 +48,19 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void flated(Long id) {
-		AccountCycleDo accountCycle = this.findById(id);
+		AccountCycleDo cycle = this.findById(id);
 		//平账状态校验
-		this.validateCycleFlatedState(accountCycle);
+		this.validateCycleFlatedState(cycle);
 		//更新状态
-		this.updateStateById(id, CycleState.FLATED.getCode(), accountCycle.getVersion());
-		//构建账务周期信息
+		this.updateStateById(id, CycleState.FLATED.getCode(), cycle.getVersion());
+		//构建账务周期
 		AccountCycleDetailDo accountCycleDetail = new AccountCycleDetailDo();
-		accountCycleDetail.setCycleNo(accountCycle.getCycleNo());
-		//构建领取款相关信息
-		UserCashDto userCashDto = this.buildUserCashCondition(accountCycle);
-		//账务周期领款信息
-		this.buildCyclePayee(accountCycleDetail, userCashDto);
-		//账务周期交款信息
-		this.buildCyclePayer(accountCycleDetail, userCashDto);
+		accountCycleDetail.setCycleNo(cycle.getCycleNo());
+		//账务周期详情统计信息
+		this.buildCycleDetail(accountCycleDetail, cycle);
 		//构建商户相关信息
 		this.buildFirmInfo(accountCycleDetail);
-		
+		//保存
 		accountCycleDetailDao.save(accountCycleDetail);
 	}
 
@@ -77,6 +71,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	public AccountCycleDto detail(Long id) {
+		AccountCycleDo accountCycle = accountCycleDao.getById(id);
 		return null;
 	}
 
@@ -129,7 +124,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		return accountCycle;
 	}
 	
-	
 	/**
 	 * 构建商户相关信息
 	 */
@@ -160,42 +154,30 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			throw new CardAppBizException("当前账务周期已平账,不能重复操作");
 		}
 	}
+	
 
 	/**
-	 * 账务周期交款信息
+	 * 账务周期详情统计信息
 	 */
-	private void buildCyclePayer(AccountCycleDetailDo accountCycleDetail, UserCashDto userCashDto) {
-		List<UserCashDto> userCashs = userCashService.listPayer(userCashDto);
-		accountCycleDetail.setDeliverTimes(userCashs.size());
-		Long amount = 0L;
-		for (UserCashDto userCash : userCashs) {
-			amount += userCash.getAmount();
+	private void buildCycleDetail(AccountCycleDetailDo accountCycleDetail, AccountCycleDo cycle) {
+		List<CycleStatistcDto> cycleStatistcs = accountCycleDetailDao.statisticCycleRecord(cycle.getCycleNo(), cycle.getUserId());
+		for (CycleStatistcDto cycleStatistc : cycleStatistcs) {
+			CycleStatisticType cycleStatisticType = CycleStatisticType.getCycleStatisticType(cycleStatistc.getType(), cycleStatistc.getTradeChannel());
+			Field times;
+			Field amount;
+			try {
+				times = accountCycleDetail.getClass().getDeclaredField(cycleStatisticType.getTimes());
+				times.setAccessible(true);
+				times.set(accountCycleDetail, cycleStatistc.getTimes());
+				amount = accountCycleDetail.getClass().getDeclaredField(cycleStatisticType.getAmount());
+				amount.setAccessible(true);
+				amount.set(accountCycleDetail, cycleStatistc.getAmount());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		}
-		accountCycleDetail.setDeliverAmount(amount);
 	}
 
-	/**
-	 * 账务周期领款信息
-	 */
-	private void buildCyclePayee(AccountCycleDetailDo accountCycleDetail, UserCashDto userCashDto) {
-		List<UserCashDto> userCashs = userCashService.listPayee(userCashDto);
-		accountCycleDetail.setReceiveTimes(userCashs.size());
-		Long amount = 0L;
-		for (UserCashDto userCash : userCashs) {
-			amount += userCash.getAmount();
-		}
-		accountCycleDetail.setReceiveAmount(amount);
-	}
-
-	/**
-	 * 构建领取款查询条件
-	 */
-	private UserCashDto buildUserCashCondition(AccountCycleDo accountCycle) {
-		UserCashDto userCashDto = new UserCashDto();
-		userCashDto.setUserId(accountCycle.getUserId());
-		userCashDto.setCreateStartTime(accountCycle.getStartTime());
-		userCashDto.setCreateEndTime(LocalDateTime.now());
-		return userCashDto;
-	}
 
 }
