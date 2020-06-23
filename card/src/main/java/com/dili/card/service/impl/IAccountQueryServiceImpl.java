@@ -43,7 +43,13 @@ public class IAccountQueryServiceImpl implements IAccountQueryService {
                 .map(UserAccountCardResponseDto::getCustomerId)
                 .distinct()
                 .collect(Collectors.toList());
-        List<CustomerResponseDto> customers = customerRpcResolver.findCustomerByIdsWithConvert(customerIds);
+        //List<CustomerResponseDto> customers = customerRpcResolver.findCustomerByIdsWithConvert(customerIds);
+        List<CustomerResponseDto> customers = new ArrayList<>();
+        CustomerResponseDto customerResponseDto = new CustomerResponseDto();
+        customerResponseDto.setId(105L);
+        customerResponseDto.setCode("testsss");
+        customerResponseDto.setContactsPhone("13455435345");
+        customers.add(customerResponseDto);
         List<AccountListResponseDto> result = this.convertListFromAccountCardUnionCustomer(data, customers);
         return PageUtils.convert2PageOutput(page, result);
     }

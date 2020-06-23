@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.dili.card.BaseTest;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.customer.sdk.domain.Customer;
 import com.dili.ss.domain.PageOutput;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,8 @@ import static org.mockito.Mockito.doCallRealMethod;
 class AccountQueryRpcResolverTest extends BaseTest {
     @SpyBean
     private AccountQueryRpcResolver accountQueryRpcResolver;
+    @SpyBean
+    private CustomerRpcResolver customerRpcResolver;
 
     @Test
     void findPageByCondition() {
@@ -39,5 +42,11 @@ class AccountQueryRpcResolverTest extends BaseTest {
         PageOutput<List<UserAccountCardResponseDto>> pageByCondition = accountQueryRpcResolver.findPageByCondition(param);
         assertTrue(pageByCondition.getData().size() > 0);
         LOGGER.info("获取的分页结果:{}", JSON.toJSONString(pageByCondition.getData()));
+    }
+
+    @Test
+    void findCustomers(){
+        List<Customer> customerByIds = customerRpcResolver.findCustomerByIds(Lists.newArrayList(150L));
+        LOGGER.info("获取到的客户:{}",JSON.toJSONString(customerByIds));
     }
 }

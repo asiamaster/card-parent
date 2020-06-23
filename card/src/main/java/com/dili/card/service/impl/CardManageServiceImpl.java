@@ -6,7 +6,7 @@ import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.service.ICardManageService;
-import com.dili.card.service.ISerialRecordService;
+import com.dili.card.service.ISerialService;
 import com.dili.card.type.OperateType;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.exception.BusinessException;
@@ -33,7 +33,7 @@ public class CardManageServiceImpl implements ICardManageService {
     @Resource
     private CardManageRpc cardManageRpc;
     @Resource
-    private ISerialRecordService serialRecordService;
+    private ISerialService serialRecordService;
 
     /**
      * @param cardParam

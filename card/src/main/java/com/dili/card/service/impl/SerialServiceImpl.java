@@ -12,7 +12,7 @@ import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
-import com.dili.card.service.ISerialRecordService;
+import com.dili.card.service.ISerialService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.OperateState;
 import com.dili.customer.sdk.domain.Customer;
@@ -30,8 +30,8 @@ import java.time.LocalDateTime;
  * @author xuliang
  */
 @Service
-public class SerialRecordServiceImpl implements ISerialRecordService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SerialRecordServiceImpl.class);
+public class SerialServiceImpl implements ISerialService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SerialServiceImpl.class);
 
     @Resource
     private UidRpcResovler uidRpcResovler;

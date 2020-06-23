@@ -1,0 +1,107 @@
+<#bs4Body>
+<div class="container-fluid">
+    <#bs4nav>
+    <form id="queryForm" role="form" >
+        <div class="row  row-cols-6">
+            <div class="form-group col">
+                <label for="fund_item" class="">资金项目</label>
+                <select id="fund_item" name="fundItem" class="form-control"></select>
+                <#bcomboProvider _id='fund_item' _provider='fundItemProvider' _queryParams='{emptyText:"全部"}'/>
+            </div>
+            <div class="form-group col">
+                <label for="customer" class="">客户</label>
+                <input type="text" class="form-control" name="customer" id="customer" maxlength="50"/>
+            </div>
+            <div class="form-group col">
+                <label for="cardNo" class="">业务卡号</label>
+                <input type="text" class="form-control" name="cardNo" id="cardNo" maxlength="50"/>
+            </div>
+            <div class="form-group col">
+                <label for="code" class="">操作员</label>
+                <input type="text" class="form-control" name="code" id="code" maxlength="50"/>
+            </div>
+            <div class="form-group col-auto">
+                <label class="justify-content-end">操作时间</label>
+                <div class="form-inline">
+                    <div class="input-group">
+                        <input type="text" name="operateTimeStart" id="operateTimeStart" class="form-control laydatetime"/>
+                        <div class="input-group-append">
+                            <label for="operateTimeStart"  class="input-group-text fa fa-calendar"></label>
+                        </div>
+                    </div>&nbsp;&nbsp;至&nbsp;&nbsp;
+                    <div class="input-group">
+                        <input type="text" name="operateTimeEnd" id="operateTimeEnd" class="form-control laydatetime"/>
+                        <div class="input-group-append">
+                            <label for="operateTimeEnd"  class="input-group-text fa fa-calendar"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col align-self-center mt-3">
+                <button type="button" class="btn btn-outline-primary mr-2"  onclick="javascript:$('#queryForm .form-control').val('');"><i class="fa fa-refresh"></i> 清空</button>
+                <button type="button" class="btn btn-outline-primary" onclick="queryDataHandler()"><i class="fa fa-search"></i> 查询</button>
+            </div>
+        </div>
+    </form>
+</#bs4nav>
+    <hr>
+    <div class="row">
+        <div class="col-12">
+            <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
+                <#resource code="export-serial-record">
+                <button id="btn-export" type="button" class="btn btn-primary" onclick="bui.util.doExport('grid','queryForm')"><i class="fa fa-file-excel-o"></i>
+                    导出
+                </button>
+                </#resource>
+            </div>
+            <table id="grid" data-toggle="table" data-title="操作交易记录" class="table" data-toolbar="#toolbar"
+                   data-pagination="true" data-page-number="1" data-page-size="10"
+                   data-query-params="queryParams" data-side-pagination="server" data-method="POST"
+                   data-content-type="application/x-www-form-urlencoded" data-single-select="true"
+                   data-click-to-select="true" data-unique-id="id" data-sort-name="operate_time"
+                   data-sort-order="desc" data-icons="bui.variable.icons" data-buttons-class="primary"
+                   data-show-refresh="true" data-show-fullscreen="true" data-show-columns="true">
+                <thead>
+                <tr>
+                    <th data-field="operateTime" data-align="center" data-sortable="false" data-sort-name="operate_time">
+                        时间
+                    </th>
+                    <th data-field="customerNo" data-align="center" data-sortable="false" data-sort-name="customer_no">
+                        客户编号
+                    </th>
+                    <th data-field="customerName" data-align="center" data-sortable="false" data-sort-name="customer_name">
+                        客户名称
+                    </th>
+                    <th data-field="fundItemName" data-align="center" data-sortable="false" data-sort-name="fund_item_name">
+                        资金项目
+                    </th>
+                    <th data-field="startBalance" data-align="center" data-sortable="false" data-sort-name="start_balance">
+                        期初金额
+                    </th>
+                    <th data-field="amount" data-align="center" data-sortable="false" data-sort-name="amount">
+                        发生金额
+                    </th>
+                    <th data-field="endBalance" data-align="center" data-sortable="false" data-sort-name="end_balance">
+                        账户余额
+                    </th>
+                    <th data-field="cardNo" data-align="center" data-sortable="false" data-sort-name="card_no">
+                        业务卡号
+                    </th>
+                    <th data-field="operatorNo" data-align="center" data-sortable="false" data-sort-name="operator_no">
+                        操作员工号
+                    </th>
+                    <th data-field="operatorName" data-align="center" data-sortable="false" data-sort-name="operator_name">
+                        操作员
+                    </th>
+                    <th data-field="notes" data-align="center" data-sortable="false">
+                        备注
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+</#bs4Body>
+<#common_commonJs/>
+<#serial_indexJs/>
