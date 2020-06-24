@@ -1,14 +1,13 @@
 package com.dili.card.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.dili.card.common.holder.IUserTicketHolder;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.domain.PageOutput;
-import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.UserTicket;
-import com.dili.uap.sdk.session.SessionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -24,7 +23,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/serial")
-public class SerialController {
+public class SerialController implements IUserTicketHolder {
     private static final Logger LOGGER = LoggerFactory.getLogger(SerialController.class);
 
     @Resource
@@ -65,12 +64,4 @@ public class SerialController {
         return new EasyuiPageOutput(0, new ArrayList(0)).toString();
     }
 
-    /**
-     * 获取登录用户信息 如为null则new一个，以免空指针
-     * @return
-     */
-    private UserTicket getUserTicket() {
-        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-        return userTicket != null ? userTicket : DTOUtils.newInstance(UserTicket.class);
-    }
 }

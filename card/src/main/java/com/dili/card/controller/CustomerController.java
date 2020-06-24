@@ -1,13 +1,12 @@
 package com.dili.card.controller;
 
+import com.dili.card.common.holder.IUserTicketHolder;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.UserTicket;
-import com.dili.uap.sdk.session.SessionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -22,7 +21,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/customer")
-public class CustomerController {
+public class CustomerController implements IUserTicketHolder {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
 
     @Resource
@@ -46,14 +45,5 @@ public class CustomerController {
             LOGGER.error("list", e);
             return BaseOutput.failure();
         }
-    }
-
-    /**
-     * 获取登录用户信息 如为null则new一个，以免空指针
-     * @return
-     */
-    private UserTicket getUserTicket() {
-        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-        return userTicket != null ? userTicket : DTOUtils.newInstance(UserTicket.class);
     }
 }
