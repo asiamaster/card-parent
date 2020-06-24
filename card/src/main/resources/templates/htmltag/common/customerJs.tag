@@ -6,7 +6,7 @@
     /************* 获取客户信息  start *****************/
     // 客户名称
     var customerNameQueryAutoCompleteOption = {
-        serviceUrl: '/customer/list.action',
+        serviceUrl: '/customer/listByName.action',
         //paramName: 'name',
         displayFieldName: 'name',
         showNoSuggestionNotice: true,

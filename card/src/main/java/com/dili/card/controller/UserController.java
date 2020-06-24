@@ -2,6 +2,7 @@ package com.dili.card.controller;
 
 import com.dili.card.common.holder.IUserTicketHolder;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.User;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.domain.dto.UserQuery;
@@ -28,16 +29,18 @@ public class UserController implements IUserTicketHolder {
 
     /**
      * 查询客户列表
-     * @param query
+     * @param keyword
      * @return
      */
-    @RequestMapping(value = "/list.action")
+    @RequestMapping(value = "/listByKeyword.action")
     @ResponseBody
-    public BaseOutput<List<User>> list(UserQuery query) {
+    public BaseOutput<List<User>> listByKeyword(String keyword) {
         try {
+            UserQuery query = DTOUtils.newDTO(UserQuery.class);
             UserTicket userTicket = getUserTicket();
             query.setFirmCode(userTicket.getFirmCode());
-            return userRpc.list(query);
+            query.setKeyword(keyword);
+            return userRpc.listByExample(query);
         } catch (Exception e) {
             LOGGER.error("list", e);
             return BaseOutput.failure();

@@ -3,8 +3,8 @@
     /************* 获取用户信息  start *****************/
     // 客户名称
     var userNameQueryAutoCompleteOption = {
-        serviceUrl: '/user/list.action',
-        paramName: 'userName',
+        serviceUrl: '/user/listByKeyword.action',
+        paramName: 'keyword',
         displayFieldName: 'realName',
         showNoSuggestionNotice: true,
         width: 'flex',
