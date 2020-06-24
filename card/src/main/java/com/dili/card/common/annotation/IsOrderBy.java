@@ -1,6 +1,6 @@
-package com.dili.card.validator;
+package com.dili.card.common.annotation;
 
-import com.dili.card.validator.OrderByValidator;
+import com.dili.card.validator.OrderByConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -19,7 +19,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({FIELD})
 @Retention(RUNTIME)
 @Documented
-@Constraint(validatedBy = OrderByValidator.class)
+@Constraint(validatedBy = OrderByConstraintValidator.class)
 public @interface IsOrderBy {
     String message() default "";
 

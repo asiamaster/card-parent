@@ -10,12 +10,16 @@
             </div>
             <div class="form-group col-auto">
                 <label for="cardState">当前状态</label>
-                <select id="cardState" name="cardState" class="form-control"></select>
+                <select name="cardState" id="cardState"  class="form-control"></select>
                 <#bcomboProvider _id="cardState" _provider="cardStateProvider" _queryParams='{emptyText:"-- 状态 --"}'/>
             </div>
             <div class="form-group col-auto">
                 <label for="cardNo">卡号</label>
-                <input type="text" class="form-control" name="cardNo" id="cardNo" maxlength="50"/>
+                <input param-multiple="true" name="cardNos" type="text" class="form-control"  id="cardNo" maxlength="50"/>
+            </div>
+            <div class="form-group col-auto">
+                <label for="customerId">客户</label>
+                <input param-multiple="true" name="customerIds" id="customerId" type="text" class="form-control"  />
             </div>
             <div class="form-group col-auto">
                 <label for="startDate">开始时间:</label>
@@ -59,11 +63,10 @@
                data-icons="bui.variable.icons">
             <thead>
             <tr>
-                <th data-checkbox="true"></th>
                 <th data-field="cardNo" data-sortable="true" data-sort-name="card_no" data-align="center" >
                     卡号
                 </th>
-                <th data-field="cardType" data-formatter="valueFormatter" data-sortable="true" data-align="center" data-sort-name="card_type" >
+                <th data-field="cardTypeText" data-sortable="true" data-align="center" data-sort-name="card_type" >
                     卡类别
                 </th>
                 <th data-field="customer.code" data-align="center">
@@ -72,13 +75,16 @@
                 <th data-field="customer.name" data-align="center">
                     客户名称
                 </th>
+                <th data-field="accountTypeText" data-align="center">
+                    身份类型
+                </th>
                 <th data-field="customer.contactsPhone" data-align="center" >
                     联系方式
                 </th>
                 <th data-field="cardCreateTime" data-sortable="true" data-sort-name="card_create_time" data-align="center">
                     开卡时间
                 </th>
-                <th data-field="cardState" data-formatter="valueFormatter" data-sortable="true" data-sort-name="card_state" data-align="center">
+                <th data-field="cardStateText" data-sortable="true" data-sort-name="card_state" data-align="center">
                     状态
                 </th>
             </tr>
@@ -88,6 +94,6 @@
 </div>
 
 </#bs4Body>
-<#common_enumJs/>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <#accountquery_indexJs/>
-<script type="text/javascript" src="${contextPath}/resources/sword.js"></script>
+

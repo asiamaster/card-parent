@@ -19,6 +19,7 @@ public class CustomerResponseDto implements Serializable {
     /**证件地址*/
     private String certificateAddr;
 
+
     public Long getId() {
         return id;
     }

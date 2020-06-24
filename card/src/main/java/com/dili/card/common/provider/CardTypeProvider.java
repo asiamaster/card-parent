@@ -1,6 +1,7 @@
 package com.dili.card.common.provider;
 
 
+import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
 import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
@@ -19,16 +20,18 @@ import java.util.stream.Collectors;
  */
 @Component
 public class CardTypeProvider implements ValueProvider {
+    private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
 
-    @Override
-    public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
-        List<ValuePair<?>> buffer = new ArrayList<>();
+    static {
         CardType.getAll().stream()
                 .filter(cardCategory -> cardCategory == CardType.MASTER
                         || cardCategory == CardType.SLAVE)
                 .collect(Collectors.toList())
-                .forEach(c -> buffer.add(new ValuePairImpl(c.getName(), c.getCode())));
-        return buffer;
+                .forEach(c -> BUFFER.add(new ValuePairImpl(c.getName(), c.getCode())));
+    }
+    @Override
+    public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
+        return BUFFER;
     }
 
     @Override
