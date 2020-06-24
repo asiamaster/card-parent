@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 操作流水相关rpc
  */
-@FeignClient(name = "account-service", contextId = "serialRecordRpc", url = "http://127.0.0.1:8386")
+@FeignClient(name = "account-service", contextId = "serialRecordRpc")
 public interface SerialRecordRpc {
 
     /**

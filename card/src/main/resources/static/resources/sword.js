@@ -31,12 +31,12 @@ var table = {
             // 初始化表格参数
             init: function(options) {
                 var defaults = {
-                    id: "bootstrap-table",
+                    id: "grid",
                     type: 0, // 0 代表bootstrapTable 1代表bootstrapTreeTable
                     height: undefined,
                     sidePagination: "server",
                     sortName: "",
-                    sortOrder: "asc",
+                    sortOrder: "desc",
                     pagination: true,
                     pageSize: 10,
                     pageList: [10, 20, 50],
@@ -71,7 +71,7 @@ var table = {
                 if (options.showLoading){
                     $.modal.loading("loading...");
                 }
-                $('#' + options.id).bootstrapTable({
+                $('#' + options.id).bootstrapTable( {
                     id: options.id,
                     url: options.url,                                   // 请求后台的URL（*）
                     contentType: "application/json",   // 编码类型
@@ -80,7 +80,7 @@ var table = {
                     height: options.height,                             // 表格的高度
                     striped: options.striped,                           // 是否显示行间隔色
                     sortable: true,                                     // 是否启用排序
-                    sortStable: true,                                   // 设置为 true 将获得稳定的排序
+                    sortStable: false,                                   // 设置为 true 将获得稳定的排序
                     sortName: options.sortName,                         // 排序列名称
                     sortOrder: options.sortOrder,                       // 排序方式  asc 或者 desc
                     pagination: options.pagination,                     // 是否显示分页（*）
@@ -148,7 +148,7 @@ var table = {
                     pageNum:        params.offset / params.limit + 1,
                     searchValue:    params.search,
                     orderByColumn:  params.sort,
-                    isAsc:          params.order
+                    orderBy:        params.order
                 };
                 var currentId = $.common.isEmpty(table.options.formId) ? 'queryForm' : table.options.formId;
                 return $.extend(curParams, $.common.formToJSON(currentId));

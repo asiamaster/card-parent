@@ -1,13 +1,12 @@
 package com.dili.card.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.dili.card.common.holder.IUserTicketHolder;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.ICardManageService;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.UserTicket;
-import com.dili.uap.sdk.session.SessionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +23,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping(value = "/card")
-public class CardManageController {
+public class CardManageController implements IUserTicketHolder {
     private static Logger LOGGER = LoggerFactory.getLogger(CardManageController.class);
 
 	@Resource
@@ -49,15 +48,6 @@ public class CardManageController {
             LOGGER.error("unLostCard", e);
             return BaseOutput.failure();
         }
-    }
-
-    /**
-     * 获取登录用户信息 如为null则new一个，以免空指针
-     * @return
-     */
-    private UserTicket getUserTicket() {
-        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-        return userTicket != null ? userTicket : DTOUtils.newInstance(UserTicket.class);
     }
 
     /**

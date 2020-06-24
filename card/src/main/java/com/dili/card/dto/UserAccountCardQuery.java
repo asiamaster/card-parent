@@ -1,9 +1,12 @@
 package com.dili.card.dto;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,15 +26,16 @@ public class UserAccountCardQuery extends BaseDto{
 	/** 主账户ID */
 	private Long parentAccountId;
 	/**结束时间*/
-	@JSONField(format = "yyyy-MM-dd HH:mm:dd")
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime startDate;
 	/**开始时间*/
-	@JSONField(format = "yyyy-MM-dd HH:mm:dd")
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime endDate;
 	/**卡类别 {@link com.dili.card.type.CardType}*/
 	private Integer cardType;
 	/**卡状态 {@link com.dili.card.type.CardStatus}*/
 	private Integer cardState;
+
 	public List<Long> getCustomerIds() {
 		return customerIds;
 	}
@@ -94,5 +98,10 @@ public class UserAccountCardQuery extends BaseDto{
 
 	public void setCardState(Integer cardState) {
 		this.cardState = cardState;
+	}
+
+	public static void main(String[] args) {
+		String json = "{\"startDate\":\"2020-06-23 20:00:06\"}";
+		UserAccountCardQuery userAccountCardQuery = JSON.parseObject(json, UserAccountCardQuery.class);
 	}
 }

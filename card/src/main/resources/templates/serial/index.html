@@ -9,16 +9,16 @@
                 <#bcomboProvider _id='fund_item' _provider='fundItemProvider' _queryParams='{emptyText:"全部"}'/>
             </div>
             <div class="form-group col">
-                <label for="customer" class="">客户</label>
-                <input type="text" class="form-control" name="customer" id="customer" maxlength="50"/>
+                <label for="customerName" class="">客户</label>
+                <#bautoCompleteProvider _hiddenDomainId="customerId" _hiddenDomainName="customerId" _displayDomainId="customerName" _displayDomainName="customerName" _placeholder="" _optionVariable="customerNameQueryAutoCompleteOption"/>
             </div>
             <div class="form-group col">
                 <label for="cardNo" class="">业务卡号</label>
                 <input type="text" class="form-control" name="cardNo" id="cardNo" maxlength="50"/>
             </div>
             <div class="form-group col">
-                <label for="code" class="">操作员</label>
-                <input type="text" class="form-control" name="code" id="code" maxlength="50"/>
+                <label for="operatorName" class="">操作员</label>
+                <#bautoCompleteProvider _hiddenDomainId="operatorId" _hiddenDomainName="operatorId" _displayDomainId="operatorName" _displayDomainName="operatorName" _placeholder="" _optionVariable="userNameQueryAutoCompleteOption"/>
             </div>
             <div class="form-group col-auto">
                 <label class="justify-content-end">操作时间</label>
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="col align-self-center mt-3">
-                <button type="button" class="btn btn-outline-primary mr-2"  onclick="javascript:$('#queryForm .form-control').val('');"><i class="fa fa-refresh"></i> 清空</button>
+                <button type="button" class="btn btn-outline-primary mr-2"  onclick="javascript:$('#queryForm .form-control,#customerId,#operatorId').val('');"><i class="fa fa-refresh"></i> 清空</button>
                 <button type="button" class="btn btn-outline-primary" onclick="queryDataHandler();return false;"><i class="fa fa-search"></i> 查询</button>
             </div>
         </div>
@@ -104,4 +104,6 @@
 </div>
 </#bs4Body>
 <#common_commonJs/>
+<#common_customerJs/>
+<#common_userJs/>
 <#serial_indexJs/>
