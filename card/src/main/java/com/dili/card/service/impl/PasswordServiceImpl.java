@@ -2,11 +2,13 @@ package com.dili.card.service.impl;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.rpc.resolver.CardManageRpcResolver;
 import com.dili.card.service.IPasswordService;
+import com.dili.card.service.ISerialService;
 
 /**
  * @description: 密码相关的操作
@@ -16,9 +18,13 @@ public class PasswordServiceImpl implements IPasswordService{
 
 	@Resource
 	private CardManageRpcResolver cardManageRpcResolver;
+	@Autowired
+	private ISerialService serialService;
 
 	@Override
 	public void resetLoginPwd(CardRequestDto cardRequestDto) throws Exception {
+		//重置密码
 		cardManageRpcResolver.resetLoginPwd(cardRequestDto);
+		//记录操作记录
 	}
 }
