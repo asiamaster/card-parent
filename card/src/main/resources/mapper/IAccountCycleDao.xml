@@ -2,8 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dili.card.dao.IAccountCycleDao">
-	
-	<select id="selectList" resultType="com.dili.card.entity.AccountCycleDo">
+
+	<sql id="where_condition">
+		<where>
+			<if test="firmId != null">AND `firm_id` = #{firmId}</if>
+			<if test="userId != null"> AND `user_id` = #{userId}</if>
+			<if test="userName != null and userName != ''">AND `user_name` = #{userName}</if>
+			<if test="auditorId != null">AND `auditor_id` = #{auditorId} </if>
+			<if test="auditorName != null and auditorName != ''">AND `auditor_name` = #{auditorName}</if>
+			<if test="state != null"> AND state = #{state}</if>
+		</where>
+	</sql>
+
+	<!-- 通过条件查询 实体列表-->
+	<select id="findBYCondition" resultType="com.dili.card.entity.AccountCycleDo">
 		SELECT
 			`id`, 
 			`user_id`, 
@@ -17,16 +29,22 @@
 			`cash_amount`, 
 			`auditor_id`, 
 			`auditor_name`, 
-			`version`, 
-			`firm_id`, 
-			`firm_name`, 
 			`notes`, 
 			`create_time`, 
-			`modify_time`
 		FROM
 			card_account_cycle
-		ORDER BY
-			id DESC
+		<include refid="where_condition"/>
+		ORDER BY create_time DESC
+		LIMIT #{startIndex}, #{pageSize}
+	</select>
+	
+		<!-- 通过条件查询 数量统计-->
+	<select id="findCountBYCondition" resultType="com.dili.card.entity.AccountCycleDo">
+		SELECT
+			COUNT(*)
+		FROM
+			card_account_cycle
+		<include refid="where_condition"/>
 	</select>
 	
 	<insert id="save">
@@ -120,17 +138,6 @@
 			id = #{id}
 	</update>
 	
-	<delete id="batchRemove">
-		DELETE
-		FROM
-			card_account_cycle
-		WHERE
-			id IN
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
-	
 	<select id="findByUserIdAndState" resultType="com.dili.card.entity.AccountCycleDo">
 		SELECT
 			`id`, 
@@ -157,6 +164,7 @@
 			userId = #{userId} and state = #{state}
 	</select>
 	
+	<!-- 更新状态sql -->
 	<update id="updateStateById">
 		UPDATE card_account_cycle SET 
 			`state` = #{state},`version` = version + 1, `modify_time` = NOW()

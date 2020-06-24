@@ -1,14 +1,18 @@
 package com.dili.card.service.impl;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.hpsf.Array;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dili.card.dao.IAccountCycleDao;
 import com.dili.card.dao.IAccountCycleDetailDao;
+import com.dili.card.dto.AccountCycleDetailDto;
 import com.dili.card.dto.AccountCycleDto;
 import com.dili.card.dto.CycleStatistcDto;
 import com.dili.card.entity.AccountCycleDetailDo;
@@ -16,11 +20,14 @@ import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
+import com.dili.card.service.IUserCashService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CycleState;
 import com.dili.card.type.CycleStatisticType;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
+
+import cn.hutool.core.util.NumberUtil;
 
 @Service("accountCycleService")
 public class AccountCycleServiceImpl implements IAccountCycleService {
@@ -31,7 +38,8 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	private IAccountCycleDetailDao accountCycleDetailDao;
 	@Autowired
 	private UidRpcResovler uidRpcResovler;
-
+	@Autowired
+	private IUserCashService userCashService;
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void settle(Long id) {
@@ -51,28 +59,41 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		AccountCycleDo cycle = this.findById(id);
 		//平账状态校验
 		this.validateCycleFlatedState(cycle);
-		//更新状态
-		this.updateStateById(id, CycleState.FLATED.getCode(), cycle.getVersion());
-		//构建账务周期
-		AccountCycleDetailDo accountCycleDetail = new AccountCycleDetailDo();
-		accountCycleDetail.setCycleNo(cycle.getCycleNo());
 		//账务周期详情统计信息
-		this.buildCycleDetail(accountCycleDetail, cycle);
+		AccountCycleDetailDo accountCycleDetail = this.buildCycleDetail(cycle);
 		//构建商户相关信息
 		this.buildFirmInfo(accountCycleDetail);
-		//保存
+		//更新账务周期状态
+		this.updateStateById(id, CycleState.FLATED.getCode(), cycle.getVersion());
+		//保存账务周期详情信息
 		accountCycleDetailDao.save(accountCycleDetail);
+		//更新领取款记录
+		userCashService.flatedByCycle(cycle.getCycleNo());
 	}
 
 	@Override
 	public List<AccountCycleDto> list(AccountCycleDto accountCycleDto) {
-		return null;
+		this.buildQueryCondition(accountCycleDto);
+		List<AccountCycleDo> accountCycles = accountCycleDao.findBYCondition(accountCycleDto);
+		return this.buildAccountCycleList(accountCycles);
+	}
+
+	/**
+	 * 构造页面响应实体列表
+	 */
+	private List<AccountCycleDto> buildAccountCycleList(List<AccountCycleDo> accountCycles) {
+		List<AccountCycleDto> accountCycleDtos = new ArrayList<AccountCycleDto>();
+		for (AccountCycleDo accountCycle : accountCycles) {
+			accountCycleDtos.add(this.buildAccountCycleWrapper(accountCycle));
+		}
+		return accountCycleDtos;
 	}
 
 	@Override
 	public AccountCycleDto detail(Long id) {
-		AccountCycleDo accountCycle = accountCycleDao.getById(id);
-		return null;
+		AccountCycleDo cycle = accountCycleDao.getById(id);
+		AccountCycleDto accountCycleDto = this.buildAccountCycleWrapper(cycle);
+		return accountCycleDto;
 	}
 
 	@Override
@@ -159,7 +180,9 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	/**
 	 * 账务周期详情统计信息
 	 */
-	private void buildCycleDetail(AccountCycleDetailDo accountCycleDetail, AccountCycleDo cycle) {
+	private AccountCycleDetailDo buildCycleDetail(AccountCycleDo cycle) {
+		AccountCycleDetailDo accountCycleDetail = new AccountCycleDetailDo();
+		accountCycleDetail.setCycleNo(cycle.getCycleNo());
 		List<CycleStatistcDto> cycleStatistcs = accountCycleDetailDao.statisticCycleRecord(cycle.getCycleNo(), cycle.getUserId());
 		for (CycleStatistcDto cycleStatistc : cycleStatistcs) {
 			CycleStatisticType cycleStatisticType = CycleStatisticType.getCycleStatisticType(cycleStatistc.getType(), cycleStatistc.getTradeChannel());
@@ -175,9 +198,53 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
 		}
+		return accountCycleDetail;
 	}
 
+	
+	/**
+	 * 查询条件
+	 */
+	private void buildQueryCondition(AccountCycleDto accountCycleDto) {
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		accountCycleDto.setFirmId(userTicket.getFirmId());
+		accountCycleDto.setUserId(NumberUtil.isInteger(accountCycleDto.getUserName()) ? Long.valueOf(accountCycleDto.getUserName()) : null);
+		accountCycleDto.setAuditorId(NumberUtil.isInteger(accountCycleDto.getAuditorName()) ? Long.valueOf(accountCycleDto.getAuditorName()) : null);
+	}
+	
+	/**
+	 * 构建账务周期包装实体实体
+	 */
+	private AccountCycleDto buildAccountCycleWrapper(AccountCycleDo cycle) {
+		AccountCycleDto accountCycleDto =  this.buildAccountCycleDto(cycle);
+		accountCycleDto.setAccountCycleDetailDto(this.buildAccountCycleDetailDto(this.buildCycleDetail(cycle)));
+		return accountCycleDto;
+	}
+	
+	/**
+	 * 构建账务周期相应实体
+	 */
+	private AccountCycleDto buildAccountCycleDto(AccountCycleDo cycle) {
+		AccountCycleDto accountCycleDto =  new AccountCycleDto();
+		accountCycleDto.setId(cycle.getId());
+		accountCycleDto.setUserId(cycle.getUserId());
+		accountCycleDto.setUserName(cycle.getUserName());
+		accountCycleDto.setCycleNo(cycle.getCycleNo());
+		accountCycleDto.setCashBox(cycle.getCashBox());
+		accountCycleDto.setStartTime(cycle.getStartTime());
+		accountCycleDto.setEndTime(cycle.getEndTime());
+		accountCycleDto.setState(cycle.getState());
+		return accountCycleDto;
+	}
+	
+	/**
+	 * 构建账务周期详情相应实体
+	 */
+	private AccountCycleDetailDto buildAccountCycleDetailDto(AccountCycleDetailDo accountCycleDetail) {
+		AccountCycleDetailDto accountCycleDetailDto = new AccountCycleDetailDto();
+		BeanUtils.copyProperties(accountCycleDetail, accountCycleDetailDto);
+		return accountCycleDetailDto;
+	} 
 
 }

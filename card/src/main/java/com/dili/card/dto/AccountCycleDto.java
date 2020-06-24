@@ -5,203 +5,142 @@ import java.time.LocalDateTime;
 
 /**
  * 柜员账务周期
+ * 
  * @author bob
  */
 public class AccountCycleDto implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	/**  */
-	private Long id; 
+	private Long id;
 	/** 员工ID */
-	private Long userId; 
+	private Long userId;
 	/** 员工姓名 */
-	private String userName; 
+	private String userName;
 	/** 账务周期流水号 */
-	private Long cycleNo; 
+	private Long cycleNo;
 	/** 工位现金柜 */
-	private Long cashBox; 
+	private Long cashBox;
 	/** 账务开始时间 */
-	private LocalDateTime startTime; 
+	private LocalDateTime startTime;
 	/** 账务结束时间 */
-	private LocalDateTime endTime; 
-	/** 对账时间 */
-	private LocalDateTime checkTime; 
+	private LocalDateTime endTime;
 	/** 账务状态-激活 结账 平账 */
-	private Integer state; 
+	private Integer state;
 	/** 交付现金金额-分 */
-	private Long cashAmount; 
+	private Long cashAmount;
 	/** 审核员-员工ID */
-	private Long auditorId; 
+	private Long auditorId;
 	/** 审核员-员工姓名 */
-	private String auditorName; 
+	private String auditorName;
+	/** 商户编码 */
+	private Long firmId; 
+	/** 账务周期详情 */
+	private AccountCycleDetailDto accountCycleDetailDto;
 
-    /**
-     * setter for 
-     */
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-    /**
-     * getter for 
-     */
 	public Long getId() {
 		return id;
 	}
 
-    /**
-     * setter for 员工ID
-     */
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-    /**
-     * getter for 员工ID
-     */
 	public Long getUserId() {
 		return userId;
 	}
 
-    /**
-     * setter for 员工姓名
-     */
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
-    /**
-     * getter for 员工姓名
-     */
 	public String getUserName() {
 		return userName;
 	}
 
-    /**
-     * setter for 账务周期流水号
-     */
-	public void setCycleNo(Long cycleNo) {
-		this.cycleNo = cycleNo;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
-    /**
-     * getter for 账务周期流水号
-     */
 	public Long getCycleNo() {
 		return cycleNo;
 	}
 
-    /**
-     * setter for 工位现金柜
-     */
-	public void setCashBox(Long cashBox) {
-		this.cashBox = cashBox;
+	public void setCycleNo(Long cycleNo) {
+		this.cycleNo = cycleNo;
 	}
 
-    /**
-     * getter for 工位现金柜
-     */
 	public Long getCashBox() {
 		return cashBox;
 	}
 
-    /**
-     * setter for 账务开始时间
-     */
-	public void setStartTime(LocalDateTime startTime) {
-		this.startTime = startTime;
+	public void setCashBox(Long cashBox) {
+		this.cashBox = cashBox;
 	}
 
-    /**
-     * getter for 账务开始时间
-     */
 	public LocalDateTime getStartTime() {
 		return startTime;
 	}
 
-    /**
-     * setter for 账务结束时间
-     */
-	public void setEndTime(LocalDateTime endTime) {
-		this.endTime = endTime;
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
 	}
 
-    /**
-     * getter for 账务结束时间
-     */
 	public LocalDateTime getEndTime() {
 		return endTime;
 	}
 
-    /**
-     * setter for 对账时间
-     */
-	public void setCheckTime(LocalDateTime checkTime) {
-		this.checkTime = checkTime;
+	public void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
 	}
 
-    /**
-     * getter for 对账时间
-     */
-	public LocalDateTime getCheckTime() {
-		return checkTime;
-	}
-
-    /**
-     * setter for 账务状态-激活 结账 平账
-     */
-	public void setState(Integer state) {
-		this.state = state;
-	}
-
-    /**
-     * getter for 账务状态-激活 结账 平账
-     */
 	public Integer getState() {
 		return state;
 	}
 
-    /**
-     * setter for 交付现金金额-分
-     */
-	public void setCashAmount(Long cashAmount) {
-		this.cashAmount = cashAmount;
+	public void setState(Integer state) {
+		this.state = state;
 	}
 
-    /**
-     * getter for 交付现金金额-分
-     */
 	public Long getCashAmount() {
 		return cashAmount;
 	}
 
-    /**
-     * setter for 审核员-员工ID
-     */
-	public void setAuditorId(Long auditorId) {
-		this.auditorId = auditorId;
+	public void setCashAmount(Long cashAmount) {
+		this.cashAmount = cashAmount;
 	}
 
-    /**
-     * getter for 审核员-员工ID
-     */
 	public Long getAuditorId() {
 		return auditorId;
 	}
 
-    /**
-     * setter for 审核员-员工姓名
-     */
+	public void setAuditorId(Long auditorId) {
+		this.auditorId = auditorId;
+	}
+
+	public String getAuditorName() {
+		return auditorName;
+	}
+
 	public void setAuditorName(String auditorName) {
 		this.auditorName = auditorName;
 	}
 
-    /**
-     * getter for 审核员-员工姓名
-     */
-	public String getAuditorName() {
-		return auditorName;
+	public AccountCycleDetailDto getAccountCycleDetailDto() {
+		return accountCycleDetailDto;
+	}
+
+	public void setAccountCycleDetailDto(AccountCycleDetailDto accountCycleDetailDto) {
+		this.accountCycleDetailDto = accountCycleDetailDto;
+	}
+
+	public Long getFirmId() {
+		return firmId;
+	}
+
+	public void setFirmId(Long firmId) {
+		this.firmId = firmId;
 	}
 
 }
