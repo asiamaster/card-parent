@@ -18,18 +18,25 @@ import java.util.Map;
  */
 @Component
 public class CardStateProvider implements ValueProvider {
+    private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
+
+    static {
+        CardStatus.getAll()
+                .forEach(c -> BUFFER.add(new ValuePairImpl(c.getName(), c.getCode())));
+    }
 
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
-        List<ValuePair<?>> buffer = new ArrayList<>();
-        CardStatus.getAll()
-                .forEach(c -> buffer.add(new ValuePairImpl(c.getName(), c.getCode())));
-        return buffer;
+        return BUFFER;
     }
 
     @Override
     public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
-        return null;
+        if (obj == null) {
+            return null;
+        }
+        Integer cardState = (Integer) obj;
+        return CardStatus.getName(cardState);
     }
 
 }

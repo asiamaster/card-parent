@@ -39,16 +39,14 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	private UidRpcResovler uidRpcResovler;
 	@Autowired
 	private IUserCashService userCashService;
+	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void settle(Long id) {
 		AccountCycleDo accountCycle = this.findById(id);
-		if (accountCycle.getState() == CycleState.SETTLED.getCode()) {
-			throw new CardAppBizException("当前账务周期已结账,不能重复操作");
-		}
-		if (accountCycle.getState() == CycleState.FLATED.getCode()) {
-			throw new CardAppBizException("当前账务周期已平账,不能进行结账操作");
-		}
+		//对账状态校验
+		this.validateCycleSettledState(accountCycle);
+		//更新账务周期状态
 		this.updateStateById(id, CycleState.SETTLED.getCode(), accountCycle.getVersion());
 	}
 	
@@ -72,27 +70,15 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	public List<AccountCycleDto> list(AccountCycleDto accountCycleDto) {
+		//构建查询条件
 		this.buildQueryCondition(accountCycleDto);
-		List<AccountCycleDo> accountCycles = accountCycleDao.findBYCondition(accountCycleDto);
-		return this.buildAccountCycleList(accountCycles);
-	}
-
-	/**
-	 * 构造页面响应实体列表
-	 */
-	private List<AccountCycleDto> buildAccountCycleList(List<AccountCycleDo> accountCycles) {
-		List<AccountCycleDto> accountCycleDtos = new ArrayList<AccountCycleDto>();
-		for (AccountCycleDo accountCycle : accountCycles) {
-			accountCycleDtos.add(this.buildAccountCycleWrapper(accountCycle));
-		}
-		return accountCycleDtos;
+		//封装返回数据
+		return this.buildAccountCycleList(accountCycleDao.findBYCondition(accountCycleDto));
 	}
 
 	@Override
 	public AccountCycleDto detail(Long id) {
-		AccountCycleDo cycle = accountCycleDao.getById(id);
-		AccountCycleDto accountCycleDto = this.buildAccountCycleWrapper(cycle);
-		return accountCycleDto;
+		return this.buildAccountCycleWrapper(accountCycleDao.getById(id));
 	}
 
 	@Override
@@ -145,6 +131,17 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	}
 	
 	/**
+	 * 构造页面响应实体列表
+	 */
+	private List<AccountCycleDto> buildAccountCycleList(List<AccountCycleDo> accountCycles) {
+		List<AccountCycleDto> accountCycleDtos = new ArrayList<AccountCycleDto>();
+		for (AccountCycleDo accountCycle : accountCycles) {
+			accountCycleDtos.add(this.buildAccountCycleWrapper(accountCycle));
+		}
+		return accountCycleDtos;
+	}
+	
+	/**
 	 * 构建商户相关信息
 	 */
 	private void buildFirmInfo(AccountCycleDetailDo accountCycleDetail) {
@@ -160,6 +157,18 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		int update = accountCycleDao.updateStateById(id, state, version);
 		if (update == 0) {
 			throw new CardAppBizException("操作频繁,平账失败");
+		}
+	}
+	
+	/**
+	 * 对账前状态校验
+	 */
+	private void validateCycleSettledState(AccountCycleDo accountCycle) {
+		if (accountCycle.getState() == CycleState.SETTLED.getCode()) {
+			throw new CardAppBizException("当前账务周期已结账,不能重复操作");
+		}
+		if (accountCycle.getState() == CycleState.FLATED.getCode()) {
+			throw new CardAppBizException("当前账务周期已平账,不能进行结账操作");
 		}
 	}
 	

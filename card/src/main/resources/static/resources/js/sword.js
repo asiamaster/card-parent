@@ -1393,13 +1393,29 @@ var table = {
             // 获取form下所有的字段并转换为json对象
             formToJSON: function(formId) {
                 var json = {};
-                $.each($("#" + formId).serializeArray(), function(i, field) {
+                var form = "#" + formId;
+
+                $.each($(form).serializeArray(), function(i, field) {
+                    if ($.common.isEmpty(field.value)) {
+                        return
+                    }
                     if(json[field.name]) {
                         json[field.name] += ("," + field.value);
                     } else {
                         json[field.name] = field.value;
                     }
                 });
+                var jQuery = $(form).find('input,textarea');
+                for(var i = 0; i < jQuery.length; i++) {
+                    var name = jQuery[i].getAttribute("name");
+                    var multiple = jQuery[i].getAttribute("param-multiple");
+                    if (multiple =='true'){
+                        if ($.common.isEmpty(json[name])) {
+                            continue;
+                        }
+                        json[name]=[json[name]]
+                    }
+                }
                 return json;
             },
             // 获取obj对象长度
