@@ -76,12 +76,9 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		return this.buildAccountCycleList(accountCycleDao.findBYCondition(accountCycleDto));
 	}
 
-
 	@Override
 	public AccountCycleDto detail(Long id) {
-		AccountCycleDo cycle = accountCycleDao.getById(id);
-		AccountCycleDto accountCycleDto = this.buildAccountCycleWrapper(cycle);
-		return accountCycleDto;
+		return this.buildAccountCycleWrapper(accountCycleDao.getById(id));
 	}
 
 	@Override
