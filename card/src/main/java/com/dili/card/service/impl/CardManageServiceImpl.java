@@ -66,6 +66,12 @@ public class CardManageServiceImpl implements ICardManageService {
             LOGGER.error("unLostCard", e);
         }
     }
+    
+
+	@Override
+	public void returnCard(CardRequestDto cardParam) {
+		cardManageRpc.returnCard(cardParam);
+	}
 
     /**
      * 构建操作流水 后期根据各业务代码调整优化

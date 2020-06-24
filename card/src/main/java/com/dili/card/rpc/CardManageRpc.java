@@ -25,7 +25,7 @@ public interface CardManageRpc {
     BaseOutput<?> returnCard(CardRequestDto cardParam);
     
     /**
-     * 退卡
+     * 重置密码
      */
     @PostMapping("/api/card/resetLoginPwd")
     BaseOutput<?> resetLoginPwd(CardRequestDto cardParam);

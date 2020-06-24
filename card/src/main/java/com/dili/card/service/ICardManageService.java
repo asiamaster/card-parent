@@ -14,5 +14,10 @@ public interface ICardManageService {
 	 * 解挂卡片
 	 */
 	void unLostCard(CardRequestDto cardParam);
+	
+	/**
+	 * 退卡
+	 */
+	void returnCard(CardRequestDto cardParam);
 
 }
