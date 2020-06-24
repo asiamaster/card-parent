@@ -17,4 +17,16 @@ public interface CardManageRpc {
      */
     @PostMapping("/api/card/unLostCard")
     BaseOutput<?> unLostCard(CardRequestDto cardParam);
+    
+    /**
+     * 退卡
+     */
+    @PostMapping("/api/card/returnCard")
+    BaseOutput<?> returnCard(CardRequestDto cardParam);
+    
+    /**
+     * 退卡
+     */
+    @PostMapping("/api/card/resetLoginPwd")
+    BaseOutput<?> resetLoginPwd(CardRequestDto cardParam);
 }
