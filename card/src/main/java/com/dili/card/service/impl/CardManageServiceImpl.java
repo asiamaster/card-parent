@@ -33,7 +33,7 @@ public class CardManageServiceImpl implements ICardManageService {
     @Resource
     private CardManageRpc cardManageRpc;
     @Resource
-    private ISerialService serialRecordService;
+    private ISerialService serialService;
 
     /**
      * @param cardParam
@@ -42,10 +42,10 @@ public class CardManageServiceImpl implements ICardManageService {
     @Override
     public void unLostCard(CardRequestDto cardParam) {
         BusinessRecordDo businessRecord = new BusinessRecordDo();
-        serialRecordService.buildCommonInfo(cardParam, businessRecord);
+        serialService.buildCommonInfo(cardParam, businessRecord);
         businessRecord.setType(OperateType.LOSS_REMOVE.getCode());
         businessRecord.setAmount(0L);
-        serialRecordService.saveBusinessRecord(businessRecord);
+        serialService.saveBusinessRecord(businessRecord);
         BaseOutput<?> baseOutput = cardManageRpc.unLostCard(cardParam);
         if (!baseOutput.isSuccess()) {
             //针对解挂失操作，暂时处理为解挂失失败则回滚业务办理记录
@@ -61,11 +61,17 @@ public class CardManageServiceImpl implements ICardManageService {
         }
         try {//成功则修改状态及期初期末金额，存储操作流水
             SerialDto serialDto = buildUnLostCardSerial(cardParam, businessRecord);
-            serialRecordService.handleSuccess(serialDto);
+            serialService.handleSuccess(serialDto);
         } catch (Exception e) {
             LOGGER.error("unLostCard", e);
         }
     }
+    
+
+	@Override
+	public void returnCard(CardRequestDto cardParam) {
+		cardManageRpc.returnCard(cardParam);
+	}
 
     /**
      * 构建操作流水 后期根据各业务代码调整优化
@@ -79,7 +85,7 @@ public class CardManageServiceImpl implements ICardManageService {
         serialDto.setEndBalance(0L);
         List<SerialRecordDo> serialRecordList = new ArrayList<>(1);
         SerialRecordDo serialRecord = new SerialRecordDo();
-        serialRecordService.copyCommonFields(serialRecord, businessRecord);
+        serialService.copyCommonFields(serialRecord, businessRecord);
         //注释字段为当前操作不需要的字段  其他业务可能需要
         //serialRecord.setAction();
         serialRecord.setStartBalance(0L);
