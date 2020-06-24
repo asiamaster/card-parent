@@ -70,21 +70,12 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	public List<AccountCycleDto> list(AccountCycleDto accountCycleDto) {
+		//构建查询条件
 		this.buildQueryCondition(accountCycleDto);
-		List<AccountCycleDo> accountCycles = accountCycleDao.findBYCondition(accountCycleDto);
-		return this.buildAccountCycleList(accountCycles);
+		//封装返回数据
+		return this.buildAccountCycleList(accountCycleDao.findBYCondition(accountCycleDto));
 	}
 
-	/**
-	 * 构造页面响应实体列表
-	 */
-	private List<AccountCycleDto> buildAccountCycleList(List<AccountCycleDo> accountCycles) {
-		List<AccountCycleDto> accountCycleDtos = new ArrayList<AccountCycleDto>();
-		for (AccountCycleDo accountCycle : accountCycles) {
-			accountCycleDtos.add(this.buildAccountCycleWrapper(accountCycle));
-		}
-		return accountCycleDtos;
-	}
 
 	@Override
 	public AccountCycleDto detail(Long id) {
@@ -140,6 +131,17 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			throw new CardAppBizException("账务周期不存在");
 		}
 		return accountCycle;
+	}
+	
+	/**
+	 * 构造页面响应实体列表
+	 */
+	private List<AccountCycleDto> buildAccountCycleList(List<AccountCycleDo> accountCycles) {
+		List<AccountCycleDto> accountCycleDtos = new ArrayList<AccountCycleDto>();
+		for (AccountCycleDo accountCycle : accountCycles) {
+			accountCycleDtos.add(this.buildAccountCycleWrapper(accountCycle));
+		}
+		return accountCycleDtos;
 	}
 	
 	/**
