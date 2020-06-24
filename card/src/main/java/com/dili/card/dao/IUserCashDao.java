@@ -67,4 +67,9 @@ public interface IUserCashDao {
 	 * 更新领取款金额
 	 */
 	void updateAmount(@Param("id") Long id, @Param("notes") Long amount, @Param("notes") String notes);
+
+	/**
+	 * 根据账务周期更新状态
+	 */
+	int updateStateByCycle(Long cycleNo, int code);
 }

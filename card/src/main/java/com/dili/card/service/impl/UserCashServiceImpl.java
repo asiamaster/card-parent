@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.dili.card.dao.IUserCashDao;
 import com.dili.card.dto.UserCashDto;
+import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.UserCashDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountCycleService;
@@ -61,6 +62,15 @@ public class UserCashServiceImpl implements IUserCashService{
 		}
 		return this.buildSingleCashDtoy(userCashDo);
 	}
+	
+
+	@Override
+	public void flatedByCycle(Long cycleNo) {
+		int update = userCashDao.updateStateByCycle(cycleNo, CashState.SETTLED.getCode());
+		if (update == 0) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "更新操作失败");
+		}
+	}
 
 	@Override
 	public List<UserCashDto> listPayee(UserCashDto userCashDto) {
@@ -99,7 +109,8 @@ public class UserCashServiceImpl implements IUserCashService{
 		userCash.setCreator(userTicket.getUserName());
 		userCash.setFirmId(userTicket.getFirmId());
 		userCash.setFirmName(userTicket.getFirmName());
-		accountCycleService.createCycleRecord(userCashDto.getUserId(), userCashDto.getUserName());
+		AccountCycleDo accountCycle = accountCycleService.createCycleRecord(userCashDto.getUserId(), userCashDto.getUserName());
+		userCash.setCycleNo(accountCycle.getCycleNo());
 		return userCash;
 	}
 

@@ -54,5 +54,10 @@ public interface IUserCashService {
 	 * 修改更新
 	 */
 	void modify(UserCashDto userCashDto);
+	
+	/**
+	 * 根据账务周期更新记录
+	 */
+	void flatedByCycle(Long cycleNo);
 
 }

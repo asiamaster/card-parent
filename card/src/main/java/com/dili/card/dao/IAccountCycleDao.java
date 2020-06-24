@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.dili.card.dto.AccountCycleDto;
 import com.dili.card.entity.AccountCycleDo;
 
 /**
@@ -12,13 +13,6 @@ import com.dili.card.entity.AccountCycleDo;
  */
 @Mapper
 public interface IAccountCycleDao {
-	/**
-     * 列表查询
-     * @param page
-     * @param search
-     * @return
-     */
-	List<AccountCycleDo> selectList(AccountCycleDo accountCycle);
 
     /**
      * 新增
@@ -41,13 +35,6 @@ public interface IAccountCycleDao {
      */
 	int update(AccountCycleDo accountCycle);
 
-    /**
-     * 删除
-     * @param id
-     * @return
-     */
-	int batchRemove(Long[] id);
-
 	/**
 	 * 根据账务周期编号查询账务周期
 	 * @param cycleNo
@@ -67,4 +54,14 @@ public interface IAccountCycleDao {
 	 * @param state
 	 */
 	AccountCycleDo findByUserIdAndState(Long userId, Integer state);
+
+	/**
+	 * 通过条件查询
+	 */
+	List<AccountCycleDo> findBYCondition(AccountCycleDto accountCycleDto);
+	
+	/**
+	 * 通过条件查询
+	 */
+	Long findCountBYCondition(AccountCycleDto accountCycleDto);
 }
