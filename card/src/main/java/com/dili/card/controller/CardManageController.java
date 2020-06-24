@@ -28,6 +28,15 @@ public class CardManageController implements IUserTicketHolder {
 
 	@Resource
 	private ICardManageService cardManageService;
+	
+	   /**
+     * 退卡
+     */
+    @PostMapping("/returnCard.action")
+    public BaseOutput<Boolean> returnCard(@RequestBody CardRequestDto cardRequest) {
+        cardManageService.returnCard(cardRequest);
+        return BaseOutput.success();
+    }
 
     /**
      * 解挂卡片
