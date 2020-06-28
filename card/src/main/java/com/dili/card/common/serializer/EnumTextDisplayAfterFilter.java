@@ -3,6 +3,7 @@ package com.dili.card.common.serializer;
 import com.alibaba.fastjson.serializer.AfterFilter;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.ss.metadata.ValueProvider;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +42,10 @@ public class EnumTextDisplayAfterFilter extends AfterFilter {
                 //有就从缓存里面取，提升一点效率
                 ValueProvider providerBean = this.getProvider(providerClazz);
                 String displayText = providerBean.getDisplayText(declaredField.get(object), null, null);
-                //构造一个新的key value
-                super.writeKeyValue(declaredField.getName() + DISPLAY_SUFFIX, displayText);
+                if (StringUtils.isNoneBlank(displayText)){
+                    //构造一个新的key value
+                    super.writeKeyValue(declaredField.getName() + DISPLAY_SUFFIX, displayText);
+                }
             } catch (Exception e) {
                 LOGGER.error("反射获取字段失败:", e);
             }

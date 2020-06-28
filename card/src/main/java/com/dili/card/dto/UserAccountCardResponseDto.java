@@ -1,5 +1,14 @@
 package com.dili.card.dto;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.dili.card.common.annotation.TextDisplay;
+import com.dili.card.common.provider.AccountStateProvider;
+import com.dili.card.common.provider.CardStateProvider;
+import com.dili.card.common.provider.CardTypeProvider;
+import com.dili.http.okhttp.utils.L;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,11 +40,47 @@ public class UserAccountCardResponseDto implements Serializable {
     /**卡账户用途 {@link com.dili.account.type.AccountUsageType}*/
     private List<String> usageType;
     /** 卡类型-主/副/临时/联营 {@link com.dili.card.type.CardType}*/
+    @TextDisplay(CardTypeProvider.class)
     private Integer cardType;
     /** 卡片状态 {@link com.dili.card.type.CardStatus} */
+    @TextDisplay(CardStateProvider.class)
     private Integer cardState;
+    /**账户状态 {@link com.dili.card.type.AccountStatus}*/
+    @TextDisplay(AccountStateProvider.class)
+    private Integer accountState;
     /**开卡时间*/
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime cardCreateTime;
+    /**建卡人名字*/
+    private String creator;
+    /**建卡人id*/
+    private Long creatorId;
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public Long getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(Long creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    public Integer getAccountState() {
+        return accountState;
+    }
+
+    public void setAccountState(Integer accountState) {
+        this.accountState = accountState;
+    }
 
     public Long getCustomerId() {
         return customerId;

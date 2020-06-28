@@ -27,7 +27,7 @@ public class AccountListResponseDto extends BaseDto implements Serializable {
     @TextDisplay(CardStateProvider.class)
     private Integer cardState;
     /**开卡时间*/
-    @JSONField(format = "yyyy-MM-dd HH:mm:dd")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime cardCreateTime;
 
     public Long getAccountId() {

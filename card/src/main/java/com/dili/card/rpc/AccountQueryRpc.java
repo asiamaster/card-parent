@@ -1,12 +1,13 @@
 package com.dili.card.rpc;
 
+import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -16,13 +17,21 @@ import java.util.List;
  * 卡相关rpc
  */
 @FeignClient(name = "account-service", contextId = "accountQueryService",
-        path = "api/account",url = "http://127.0.0.1:8386")
+        path = "api/account", url = "http://127.0.0.1:8386")
 public interface AccountQueryRpc {
     /**
      *查询卡信息列表
      */
     @RequestMapping(value = "/getList", method = RequestMethod.POST)
     BaseOutput<List<UserAccountCardResponseDto>> findUserCards(UserAccountCardQuery cardQuery);
+
+    /**
+     * 查询包含关联卡的信息
+     * @author miaoguoxin
+     * @date 2020/6/28
+     */
+    @RequestMapping(value = "/getAssociation/{cardNo}", method = RequestMethod.GET)
+    BaseOutput<AccountWithAssociationResponseDto> findAssociation(@PathVariable String cardNo);
 
     /**
      * 查询分页

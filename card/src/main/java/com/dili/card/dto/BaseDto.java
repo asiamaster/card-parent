@@ -32,7 +32,7 @@ public class BaseDto implements Serializable {
     private Integer pageSize;
     /**顺序or降序 ASC、DESC*/
     @IsOrderBy(message = "排序不正确", groups = ConstantValidator.Page.class)
-    private String orderBy;
+    private String sort;
     /**排序字段*/
     private String orderByColumn;
 
@@ -84,12 +84,12 @@ public class BaseDto implements Serializable {
         this.firmId = firmId;
     }
 
-    public String getOrderBy() {
-        return orderBy;
+    public String getSort() {
+        return sort;
     }
 
-    public void setOrderBy(String orderBy) {
-        this.orderBy = orderBy;
+    public void setSort(String sort) {
+        this.sort = sort;
     }
 
     public String getOrderByColumn() {

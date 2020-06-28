@@ -1,0 +1,60 @@
+<#bs4Body>
+<style>
+    .tab-info {
+        padding: 3rem;
+    }
+</style>
+<div class="main-container container-fluid">
+    <ul id="detailTab" class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="card-tab" data-toggle="tab" href="#cardInfo" role="tab"
+               aria-selected="true">
+                <h4>卡信息</h4>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="freeze-tab" data-toggle="tab" href="#freeze" role="tab">
+                <h4>冻结资金</h4>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="unfreeze-tab" data-toggle="tab" href="#unfreeze" role="tab">
+                <h4>解冻资金</h4>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div id="detailTabContent" class="tab-content border border-top-0">
+    <div class="tab-pane show active" id="cardInfo" role="tabpanel">
+        <div id="cardInfoContent" class="tab-info">
+        </div>
+    </div>
+    <div class="tab-pane" id="freeze" role="tabpanel">
+        新闻编辑内容
+    </div>
+    <div class="tab-pane" id="unfreeze" role="tabpanel">
+        新闻审核内容
+    </div>
+</div>
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script>
+    var prefix = "${contextPath}/accountQuery";
+    $('a[data-toggle="tab"]').on('shown.bs.tab', (e) => {
+        console.log(e.target.getAttribute("id"))
+        console.log(e.relatedTarget)
+    })
+
+    $(() => {
+        init();
+    });
+
+    function init() {
+        var cardNo = $.common.getQueryVariable("cardNo");
+        var url = prefix + "/accountDetail.html" + "?cardNo=" + cardNo;
+        $.operate.load('cardInfoContent', url, function (response, status, xhr) {
+
+        })
+    }
+</script>

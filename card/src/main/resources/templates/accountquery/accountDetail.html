@@ -1,0 +1,34 @@
+<style>
+
+</style>
+<div class="main-container container-fluid">
+    <div class="panel-heading">
+        <h4 class="panel-title">基本信息</h4>
+    </div>
+    <div class="panel-body" style="display: block;">
+        <table id="card" class="table table-bordered">
+            <tbody>
+            <tr>
+                <td>卡号</td>
+                <td>${detail.cardAssociation.primary.cardNo!}</td>
+                <td>卡类别</td>
+                <td>${detail.cardAssociation.primary.cardTypeText!}</td>
+                <td>卡片状态</td>
+                <td>${detail.cardAssociation.primary.cardStateText!}</td>
+                <td>账户状态</td>
+                <td>${detail.cardAssociation.primary.accountStateText!}</td>
+            </tr>
+            <tr>
+                <td>可用余额</td>
+                <td>${detail.accountFund.availableAmountText!}</td>
+                <td>冻结金额</td>
+                <td>${detail.accountFund.frozenAmountText!}</td>
+                <td>创建人</td>
+                <td>${detail.cardAssociation.primary.creator!}</td>
+                <td>创建时间</td>
+                <td>${detail.cardAssociation.primary.cardCreateTime!}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

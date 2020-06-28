@@ -63,6 +63,18 @@ public class CustomerRpcResolver {
     }
 
     /**
+    * 根据客户id查询然后转换一下
+    * @param
+    * @return
+    * @author miaoguoxin
+    * @date 2020/6/28
+    */
+    public CustomerResponseDto findCustomerByIdWithConvert(Long id){
+        Customer customer = this.findCustomerById(id);
+        return this.convertFromCustomer(customer);
+    }
+
+    /**
     *  根据id批量查客户然后转换一下
     * @author miaoguoxin
     * @date 2020/6/22

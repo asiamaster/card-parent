@@ -1,5 +1,6 @@
 package com.dili.card.rpc.resolver;
 
+import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.exception.CardAppBizException;
@@ -37,7 +38,6 @@ public class AccountQueryRpcResolver {
         this.validateSuccess(page);
         return page;
     }
-
 
 
     /**
@@ -83,10 +83,21 @@ public class AccountQueryRpcResolver {
     }
 
     /**
-    * 校验
-    * @author miaoguoxin
-    * @date 2020/6/22
-    */
+     * 查询包含关联卡的信息
+     * @author miaoguoxin
+     * @date 2020/6/28
+     */
+    public AccountWithAssociationResponseDto findByCardNoWithAssociation(String cardNo) {
+        BaseOutput<AccountWithAssociationResponseDto> result = accountQueryRpc.findAssociation(cardNo);
+        this.validateSuccess(result);
+        return result.getData();
+    }
+
+    /**
+     * 校验
+     * @author miaoguoxin
+     * @date 2020/6/22
+     */
     private void validateSuccess(BaseOutput<?> baseOutput) {
         if (!baseOutput.isSuccess()) {
             LOGGER.error("调用账户服务失败:{}", baseOutput.getMessage());

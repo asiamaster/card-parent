@@ -2,6 +2,7 @@ package com.dili.card.service;
 
 import com.alibaba.fastjson.JSON;
 import com.dili.card.BaseTest;
+import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
@@ -78,6 +80,18 @@ class IAccountQueryServiceTest extends BaseTest {
         LOGGER.info("获取到结果:{}", JSON.toJSONString(page.getData()));
     }
 
+    @Test
+    void testGetDetailByCardNo() {
+        AccountDetailResponseDto detail = accountQueryService.getDetailByCardNo("888800034670");
+        doReturn(this.createCustomerResponse(Lists.newArrayList(105L)).get(0))
+                .when(customerRpcResolver)
+                .findCustomerByIdWithConvert(105L);
+        assertNotNull(detail);
+        assertNotNull(detail.getCardAssociation());
+        assertNotNull(detail.getCardAssociation().getPrimary());
+        LOGGER.info("获取到的详情:{}",JSON.toJSONString(detail));
+    }
+
     private List<CustomerResponseDto> createCustomerResponse(List<Long> customerIds) {
         List<CustomerResponseDto> customerResponseDtos = new ArrayList<>();
         for (Long customerId : customerIds) {
@@ -89,4 +103,6 @@ class IAccountQueryServiceTest extends BaseTest {
         }
         return customerResponseDtos;
     }
+
+
 }

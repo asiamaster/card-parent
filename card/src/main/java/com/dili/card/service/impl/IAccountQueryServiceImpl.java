@@ -1,6 +1,9 @@
 package com.dili.card.service.impl;
 
+import com.dili.card.dto.AccountDetailResponseDto;
+import com.dili.card.dto.AccountFundResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
+import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -8,7 +11,9 @@ import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.util.PageUtils;
+import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
+import com.dili.ss.exception.BusinessException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,19 +48,34 @@ public class IAccountQueryServiceImpl implements IAccountQueryService {
                 .map(UserAccountCardResponseDto::getCustomerId)
                 .distinct()
                 .collect(Collectors.toList());
-        //List<CustomerResponseDto> customers = customerRpcResolver.findCustomerByIdsWithConvert(customerIds);
-        List<CustomerResponseDto> customers = new ArrayList<>();
-        CustomerResponseDto customerResponseDto = new CustomerResponseDto();
-        customerResponseDto.setId(105L);
-        customerResponseDto.setCode("testsss");
-        customerResponseDto.setContactsPhone("13455435345");
-        customers.add(customerResponseDto);
-        List<AccountListResponseDto> result = this.convertListFromAccountCardUnionCustomer(data, customers);
+        List<CustomerResponseDto> customers = customerRpcResolver.findCustomerByIdsWithConvert(customerIds);
+        List<AccountListResponseDto> result = this.addCustomer2AccountList(data, customers);
         return PageUtils.convert2PageOutput(page, result);
     }
 
-    private List<AccountListResponseDto> convertListFromAccountCardUnionCustomer(List<UserAccountCardResponseDto> accountCards,
-                                                                                 List<CustomerResponseDto> customers) {
+    @Override
+    public AccountDetailResponseDto getDetailByCardNo(String cardNo) {
+        AccountDetailResponseDto detail = new AccountDetailResponseDto();
+        AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByCardNoWithAssociation(cardNo);
+        if (cardAssociation.getPrimary() == null) {
+            throw new BusinessException(ResultCode.DATA_ERROR, "卡账户信息存在");
+        }
+        //已经做了判null处理
+        CustomerResponseDto customer = customerRpcResolver.findCustomerByIdWithConvert(cardAssociation.getPrimary().getCustomerId());
+        //TODO 资金需要调用rpc
+        AccountFundResponseDto fund = new AccountFundResponseDto();
+        fund.setBalance(1L);
+        fund.setAvailableAmount(1L);
+        fund.setFrozenAmount(1000L);
+
+        detail.setAccountFund(fund);
+        detail.setCustomer(customer);
+        detail.setCardAssociation(cardAssociation);
+        return detail;
+    }
+
+    private List<AccountListResponseDto> addCustomer2AccountList(List<UserAccountCardResponseDto> accountCards,
+                                                                 List<CustomerResponseDto> customers) {
         Map<Long, CustomerResponseDto> customerMap = customers.stream()
                 .collect(Collectors.toMap(CustomerResponseDto::getId, Function.identity(), (key1, key2) -> key2));
         List<AccountListResponseDto> accountListResponseDtos = new ArrayList<>(accountCards.size());
