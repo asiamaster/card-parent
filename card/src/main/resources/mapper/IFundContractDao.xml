@@ -56,8 +56,8 @@
 			#{firmId}, 
 			#{firmName}, 
 			#{notes}, 
-			#{createTime}, 
-			#{modifyTime}
+			NOW(), 
+			NOW()
 		)
 	</insert>
 	

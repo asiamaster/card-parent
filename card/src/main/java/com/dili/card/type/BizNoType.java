@@ -6,7 +6,7 @@ package com.dili.card.type;
  */
 public enum BizNoType {
 
-	CONTRACT_NO("合同编号", "contractNo"),
+	CONTRACT_NO("合同编号", "fundContractNo"),
 	CYCLET_NO("账务周期编号", "cycleNo"),
 	OPERATE_SERIAL_NO("卡务操作流水号", "cardOperateSerialNo");
 
