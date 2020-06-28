@@ -140,6 +140,8 @@ public class SerialServiceImpl implements ISerialService {
 
     @Override
     public List<BusinessRecordDo> todayChargeList(SerialDto serialDto) {
+        serialDto.setType(OperateType.ACCOUNT_CHARGE.getCode());
+        serialDto.setState(OperateState.SUCCESS.getCode());
         serialDto.setOperateTimeStart(DateUtil.formatDate("yyyy-MM-dd") + " 00:00:00");
         serialDto.setOperateTimeEnd(DateUtil.formatDate("yyyy-MM-dd") + " 23:59:59");
         serialDto.setSort("operate_time");
