@@ -88,4 +88,24 @@ public class SerialController implements IUserTicketHolder {
             return BaseOutput.failure();
         }
     }
+
+    /**
+     * 查询客户今日充值记录
+     * @param serialDto
+     * @return
+     */
+    @RequestMapping(value = "/business/todayChargeList.action")
+    @ResponseBody
+    public BaseOutput<List<BusinessRecordDo>> todayChargeList(SerialDto serialDto) {
+        try {
+            if (serialDto.getAccountId() == null) {
+                return BaseOutput.failure("账户ID为空");
+            }
+            List<BusinessRecordDo> itemList = serialService.todayChargeList(serialDto);
+            return BaseOutput.success().setData(itemList);
+        } catch (Exception e) {
+            LOGGER.error("todayChargeList", e);
+            return BaseOutput.failure();
+        }
+    }
 }

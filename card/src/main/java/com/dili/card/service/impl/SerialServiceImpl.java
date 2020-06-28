@@ -16,6 +16,7 @@ import com.dili.card.service.ISerialService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.OperateState;
 import com.dili.card.type.OperateType;
+import com.dili.card.util.DateUtil;
 import com.dili.customer.sdk.domain.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,6 +135,15 @@ public class SerialServiceImpl implements ISerialService {
         serialDto.setOrder("desc");
         serialDto.setState(OperateState.SUCCESS.getCode());
         serialDto.setOperateTypeList(OperateType.createReprintList());
+        return businessRecordDao.list(serialDto);
+    }
+
+    @Override
+    public List<BusinessRecordDo> todayChargeList(SerialDto serialDto) {
+        serialDto.setOperateTimeStart(DateUtil.formatDate("yyyy-MM-dd") + " 00:00:00");
+        serialDto.setOperateTimeEnd(DateUtil.formatDate("yyyy-MM-dd") + " 23:59:59");
+        serialDto.setSort("operate_time");
+        serialDto.setOrder("desc");
         return businessRecordDao.list(serialDto);
     }
 }
