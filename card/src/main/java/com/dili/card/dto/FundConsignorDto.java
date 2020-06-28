@@ -1,5 +1,7 @@
 package com.dili.card.dto;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * 受委托人
  * @author bob
@@ -9,12 +11,16 @@ public class FundConsignorDto {
 	/** 合同编号 */
 	private String contractNo; 
 	/** 受托人姓名 */
+	@NotEmpty(message = "受托人姓名不能为空")
 	private String consigneeName; 
 	/** 受委托人签名图片地址 */
+	@NotEmpty(message = "受委托人签名图片地址不能为空")
 	private String signatureImagePath; 
 	/** 受托人证件号 */
+	@NotEmpty(message = "受托人证件号不能为空")
 	private String consigneeIdCode; 
 	/** 受托人手机号 */
+	@NotEmpty(message = "受托人手机号不能为空")
 	private String consigneeIdMobile; 
 
     /**

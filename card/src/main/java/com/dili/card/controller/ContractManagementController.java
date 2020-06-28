@@ -3,6 +3,8 @@ package com.dili.card.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +25,19 @@ public class ContractManagementController {
 	@Autowired
 	private IContractService iContractService;
 	
+    /**
+     * 列表页面
+     */
+    @GetMapping("/list.html")
+    public String listView() {
+        return "contract/list";
+    }
+	
 	/**
 	 * 新增合同
 	 */
-	@PostMapping("/save")
-	public BaseOutput<Boolean> save(@RequestBody FundContractRequestDto fundContractRequest) {
+	@PostMapping("/save.action")
+	public BaseOutput<Boolean> save(@RequestBody @Validated FundContractRequestDto fundContractRequest) {
 		iContractService.save(fundContractRequest);
 		return BaseOutput.success();
 	}
@@ -35,7 +45,7 @@ public class ContractManagementController {
 	/**
 	 * 列表合同
 	 */
-	@PostMapping("/list")
+	@PostMapping("/list.action")
 	public BaseOutput<List<FundContractResponseDto>> list(@RequestBody FundContractQueryDto contractQueryDto) {
 		return BaseOutput.successData(iContractService.list(contractQueryDto));
 	}
@@ -43,7 +53,7 @@ public class ContractManagementController {
 	/**
 	 * 详情合同
 	 */
-	@PostMapping("/detail")
+	@PostMapping("/detail.action")
 	public BaseOutput<FundContractResponseDto> detail(@RequestBody FundContractRequestDto fundContractRequest) {
 		return BaseOutput.successData(iContractService.detail(fundContractRequest));
 	}
@@ -51,7 +61,7 @@ public class ContractManagementController {
 	/**
 	 * 解除合同
 	 */
-	@PostMapping("/remove")
+	@PostMapping("/remove.action")
 	public BaseOutput<Boolean> remove(@RequestBody FundContractRequestDto fundContractRequest) {
 		iContractService.remove(fundContractRequest);
 		return BaseOutput.success();

@@ -15,6 +15,8 @@ import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.OperateState;
+import com.dili.card.type.OperateType;
+import com.dili.card.util.DateUtil;
 import com.dili.customer.sdk.domain.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 操作流水service实现类
@@ -56,7 +59,7 @@ public class SerialServiceImpl implements ISerialService {
         businessRecord.setCustomerNo(customer.getCode());
         businessRecord.setCustomerName(customer.getName());
         //账务周期
-        AccountCycleDo accountCycle = accountCycleService.findByUserId(cardParam.getOpId());
+        AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(cardParam.getOpId());
         businessRecord.setCycleNo(accountCycle.getCycleNo());
         //操作员信息
         businessRecord.setOperatorId(cardParam.getOpId());
@@ -122,5 +125,27 @@ public class SerialServiceImpl implements ISerialService {
             LOGGER.error("", JSON.toJSONString(serialDto));//记录数据方便后期处理
             throw new CardAppBizException("修改办理状态失败");
         }
+    }
+
+    @Override
+    public List<BusinessRecordDo> cycleReprintList(SerialDto serialDto) {
+        AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(serialDto.getOperatorId());
+        serialDto.setCycleNo(accountCycle.getCycleNo());
+        serialDto.setSort("operate_time");
+        serialDto.setOrder("desc");
+        serialDto.setState(OperateState.SUCCESS.getCode());
+        serialDto.setOperateTypeList(OperateType.createReprintList());
+        return businessRecordDao.list(serialDto);
+    }
+
+    @Override
+    public List<BusinessRecordDo> todayChargeList(SerialDto serialDto) {
+        serialDto.setType(OperateType.ACCOUNT_CHARGE.getCode());
+        serialDto.setState(OperateState.SUCCESS.getCode());
+        serialDto.setOperateTimeStart(DateUtil.formatDate("yyyy-MM-dd") + " 00:00:00");
+        serialDto.setOperateTimeEnd(DateUtil.formatDate("yyyy-MM-dd") + " 23:59:59");
+        serialDto.setSort("operate_time");
+        serialDto.setOrder("desc");
+        return businessRecordDao.list(serialDto);
     }
 }

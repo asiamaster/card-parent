@@ -43,9 +43,8 @@
 		)
 	</insert>
 	
-	<select id="getById" resultType="com.dili.card.entity.FundConsignorDo">
-		SELECT
-			`id`, 
+	<insert id="saveBatch">
+		INSERT INTO card_fund_consignor (
 			`contract_no`, 
 			`consignee_name`, 
 			`signature_image_path`, 
@@ -54,11 +53,22 @@
 			`create_time`, 
 			`firm_id`, 
 			`firm_name`
-		FROM
-			card_fund_consignor
-		WHERE
-			id = #{id}
-	</select>
+		)
+		VALUES 
+		<foreach collection="list" item="item" index="index"
+                 separator=",">
+                 (
+			#{item.contractNo}, 
+			#{item.consigneeName}, 
+			#{item.signatureImagePath}, 
+			#{item.consigneeIdCode}, 
+			#{item.consigneeIdMobile}, 
+			NOW(), 
+			#{item.firmId}, 
+			#{item.firmName}
+		)
+         </foreach>
+	</insert>
 	
 	<select id="getByContractNo" resultType="com.dili.card.entity.FundConsignorDo">
 		SELECT
@@ -92,16 +102,5 @@
 		WHERE
 			id = #{id}
 	</update>
-	
-	<delete id="batchRemove">
-		DELETE
-		FROM
-			card_fund_consignor
-		WHERE
-			id IN
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
 
 </mapper>

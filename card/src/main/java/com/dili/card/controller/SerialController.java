@@ -3,8 +3,11 @@ package com.dili.card.controller;
 import cn.hutool.core.util.StrUtil;
 import com.dili.card.common.holder.IUserTicketHolder;
 import com.dili.card.dto.SerialDto;
+import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
+import com.dili.card.service.ISerialService;
+import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -28,11 +31,13 @@ public class SerialController implements IUserTicketHolder {
 
     @Resource
     private SerialRecordRpcResolver serialRecordRpcResolver;
+    @Resource
+    private ISerialService serialService;
     /**
      * 跳转到操作流水页面
      * @return
      */
-    @RequestMapping(value = "/forwardList.html")
+    @RequestMapping(value = "/account/forwardList.html")
     public String forwardList() {
         return "serial/index";
     }
@@ -42,7 +47,7 @@ public class SerialController implements IUserTicketHolder {
      * @param serialDto
      * @return
      */
-    @RequestMapping(value = "/listPage.action")
+    @RequestMapping(value = "/account/listPage.action")
     @ResponseBody
     public String listPage(SerialDto serialDto) {
         try {
@@ -64,4 +69,43 @@ public class SerialController implements IUserTicketHolder {
         return new EasyuiPageOutput(0, new ArrayList(0)).toString();
     }
 
+    /**
+     * 获取操作员当前账期内用于补打的操作记录列表 默认20条，按操作时间倒序排列
+     * @param serialDto
+     * @return
+     */
+    @RequestMapping(value = "/business/cycleReprintList.action")
+    @ResponseBody
+    public BaseOutput<List<BusinessRecordDo>> cycleReprintList(SerialDto serialDto) {
+        try {
+            UserTicket userTicket = getUserTicket();
+            serialDto.setOperatorId(userTicket.getId());
+            serialDto.setFirmId(userTicket.getFirmId());
+            List<BusinessRecordDo> itemList = serialService.cycleReprintList(serialDto);
+            return BaseOutput.success().setData(itemList);
+        } catch (Exception e) {
+            LOGGER.error("reprintList", e);
+            return BaseOutput.failure();
+        }
+    }
+
+    /**
+     * 查询客户今日充值记录
+     * @param serialDto
+     * @return
+     */
+    @RequestMapping(value = "/business/todayChargeList.action")
+    @ResponseBody
+    public BaseOutput<List<BusinessRecordDo>> todayChargeList(SerialDto serialDto) {
+        try {
+            if (serialDto.getAccountId() == null) {
+                return BaseOutput.failure("账户ID为空");
+            }
+            List<BusinessRecordDo> itemList = serialService.todayChargeList(serialDto);
+            return BaseOutput.success().setData(itemList);
+        } catch (Exception e) {
+            LOGGER.error("todayChargeList", e);
+            return BaseOutput.failure();
+        }
+    }
 }

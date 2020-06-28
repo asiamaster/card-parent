@@ -17,7 +17,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * 由MyBatis Generator工具自动生成
  */
 @SpringBootApplication
-@MapperScan(basePackages = {"com.dili.card.mapper", "com.dili.ss.dao"})
+@MapperScan(basePackages = {"com.dili.card.dao", "com.dili.ss.dao"})
 @ComponentScan(basePackages={"com.dili.ss","com.dili.card", "com.dili.uap.sdk"})
 @RestfulScan({"com.dili.uap.sdk.rpc"})
 @DTOScan(value={"com.dili.ss", "com.dili.card.domain"})

@@ -8,6 +8,7 @@ import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dili.card.dao.IFundConsignorDao;
 import com.dili.card.dao.IFundContractDao;
@@ -26,6 +27,7 @@ import com.dili.card.type.BizNoType;
 import com.dili.card.type.ContractState;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.ss.constant.ResultCode;
+import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.util.DateUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
@@ -45,6 +47,7 @@ public class ContractServiceImpl implements IContractService {
 	private AccountQueryRpcResolver accountQueryRpcResolver;
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void save(FundContractRequestDto fundContractRequest) {
 		//构建合同主体
 		FundContractDo fundContract = this.buildContractEntity(fundContractRequest);
