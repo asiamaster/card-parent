@@ -5,6 +5,8 @@ import com.dili.card.dto.SerialDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 
+import java.util.List;
+
 /**
  * 操作流水记录service接口
  * @author xuliang
@@ -42,4 +44,11 @@ public interface ISerialService {
      * @param serialDto
      */
     void handleSuccess(SerialDto serialDto);
+
+    /**
+     * 获取操作员当前账期内用于补打的操作记录
+     * @param serialDto
+     * @return
+     */
+    List<BusinessRecordDo> cycleReprintList(SerialDto serialDto);
 }

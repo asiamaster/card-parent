@@ -33,8 +33,16 @@ public class SerialDto extends BaseDomain {
     private Long endBalance;
     /** 商户ID*/
     private Long firmId;
+    /** 账务周期号 */
+    private Long cycleNo;
+    /** 限制条数*/
+    private Integer limit;
+    /** 操作状态*/
+    private Integer state;
     /** 流水列表 */
     private List<SerialRecordDo> serialRecordList;
+    /** 操作类型列表*/
+    private List<Integer> operateTypeList;
 
     public String getSerialNo() {
         return serialNo;
@@ -124,11 +132,43 @@ public class SerialDto extends BaseDomain {
         this.firmId = firmId;
     }
 
+    public Long getCycleNo() {
+        return cycleNo;
+    }
+
+    public void setCycleNo(Long cycleNo) {
+        this.cycleNo = cycleNo;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
     public List<SerialRecordDo> getSerialRecordList() {
         return serialRecordList;
     }
 
     public void setSerialRecordList(List<SerialRecordDo> serialRecordList) {
         this.serialRecordList = serialRecordList;
+    }
+
+    public List<Integer> getOperateTypeList() {
+        return operateTypeList;
+    }
+
+    public void setOperateTypeList(List<Integer> operateTypeList) {
+        this.operateTypeList = operateTypeList;
     }
 }

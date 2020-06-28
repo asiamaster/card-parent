@@ -5,9 +5,10 @@ package com.dili.card.type;
  */
 public enum TradeChannel {
 
-    CASH(1, "现金"),
-    POS(2, "POS"),
-    BANK_CARD(3, "网银");
+    BALANCE(1, "账户余额"),
+    CASH(2, "现金"),
+    POS(3, "POS"),
+    BANK_CARD(4, "网银");
     private int code;
     private String name;
 

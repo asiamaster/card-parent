@@ -1,5 +1,8 @@
 package com.dili.card.type;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @description： 
  *          柜台操作记录类型
@@ -54,7 +57,21 @@ public enum OperateType
 		}
 		return null;
 	}
-	
+
+	/**
+	 * 获取用于当前账期补打操作列表
+	 * @return
+	 */
+	public static List<Integer> createReprintList() {
+		List<Integer> typeList = new ArrayList<>();
+		typeList.add(ACCOUNT_TRANSACT.getCode());
+		typeList.add(ACCOUNT_CHARGE.getCode());
+		typeList.add(ACCOUNT_WITHDRAW.getCode());
+		typeList.add(CHANGE.getCode());
+		typeList.add(REFUND_CARD.getCode());
+		return typeList;
+	}
+
 	public String getName()
 	{
 		return name;
