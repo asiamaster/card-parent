@@ -211,4 +211,83 @@
 	<update id="doSuccessUpdate" parameterType="com.dili.card.entity.BusinessRecordDo">
 		update card_business_record set `start_balance` = #{startBalance}, `end_balance` = #{endBalance},`state` = #{state} where `serial_no` = #{serialNo}
 	</update>
+
+	<!-- 查询业务操作记录列表 -->
+	<select id="list" parameterType="com.dili.card.dto.SerialDto" resultType="com.dili.card.entity.BusinessRecordDo">
+		SELECT
+			`id`,
+			`serial_no`,
+			`cycle_no`,
+			`type`,
+			`account_id`,
+			`card_no`,
+			`customer_id`,
+			`customer_no`,
+			`customer_name`,
+			`start_balance`,
+			`amount`,
+			`end_balance`,
+			`trade_type`,
+			`trade_channel`,
+			`bank_card_type`,
+			`trade_no`,
+			`contract_no`,
+			`consignor_id`,
+			`new_card_no`,
+			`deposit`,
+			`card_cost`,
+			`service_cost`,
+			`attach`,
+			`operator_id`,
+			`operator_no`,
+			`operator_name`,
+			`operate_time`,
+			`notes`,
+			`state`,
+			`firm_id`,
+			`modify_time`,
+			`version`
+		FROM
+			card_business_record
+		where 1 = 1
+		<if test="firmId != null">
+			and `firm_id` = #{firmId}
+		</if>
+		<if test="cycleNo != null">
+			and `cycle_no` = #{cycleNo}
+		</if>
+		<if test="accountId != null">
+			and `account_id` = #{accountId}
+		</if>
+		<if test="customerId != null">
+			and `customer_id` = #{customerId}
+		</if>
+		<if test="type != null">
+			and `type` = #{type}
+		</if>
+		<if test="operatorId != null">
+			and `operator_id` = #{operatorId}
+		</if>
+		<if test="state != null">
+			and `state` = #{state}
+		</if>
+		<if test="operateTimeStart != null and operateTimeStart != ''">
+			and `operate_time` &gt;= #{operateTimeStart}
+		</if>
+		<if test="operateTimeEnd != null and operateTimeEnd != ''">
+			and `operate_time` &lt;= #{operateTimeEnd}
+		</if>
+		<if test="operateTypeList != null and operateTypeList.size() > 0">
+		    and `type` in
+		    <foreach collection="operateTypeList" item="temp" separator="," open="(" close=")">
+				#{temp}
+			</foreach>
+		</if>
+		<if test="sort != null and sort != '' and order != null and order != ''">
+			ORDER BY ${sort} ${order}
+		</if>
+		<if test="limit != null">
+			limit #{limit}
+		</if>
+	</select>
 </mapper>

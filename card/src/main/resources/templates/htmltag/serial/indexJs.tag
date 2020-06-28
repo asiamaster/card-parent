@@ -4,7 +4,7 @@
             $('#grid').bootstrapTable('resetView')
         });
         //初始化表格
-        $('#grid').bootstrapTable('refreshOptions', {url: '/serial/listPage.action'});
+        $('#grid').bootstrapTable('refreshOptions', {url: '/serial/account/listPage.action'});
     });
 
     /**

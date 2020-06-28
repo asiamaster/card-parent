@@ -1,5 +1,11 @@
 package com.dili.card.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.dili.card.type.*;
+import com.dili.card.util.CurrencyUtils;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -64,6 +70,9 @@ public class BusinessRecordDo implements Serializable {
 	/** 操作员名称 */
 	private String operatorName; 
 	/** 操作时间 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime operateTime; 
 	/** 备注 */
 	private String notes; 
@@ -571,4 +580,76 @@ public class BusinessRecordDo implements Serializable {
                '}';
     }
 
+	/**
+	 * 获取期初金额展示
+	 * @return
+	 */
+	public String getStartBalanceView() {
+		if (this.startBalance == null || this.startBalance.equals(0L)) {
+			return "0";
+		}
+		return CurrencyUtils.toYuanWithStripTrailingZeros(this.startBalance);
+	}
+
+	/**
+	 * 获取发生金额展示
+	 * @return
+	 */
+	public String getAmountView() {
+		if (this.amount == null || this.amount.equals(0L)) {
+			return "0";
+		}
+		return CurrencyUtils.toYuanWithStripTrailingZeros(this.amount);
+	}
+
+	/**
+	 * 获取期末金额展示
+	 * @return
+	 */
+	public String getEndBalanceView() {
+		if (this.endBalance == null || this.endBalance.equals(0L)) {
+			return "0";
+		}
+		return CurrencyUtils.toYuanWithStripTrailingZeros(this.endBalance);
+	}
+
+	/**
+	 * 获取操作类型名称
+	 * @return
+	 */
+	public String getTypeName() {
+		return this.type != null ? OperateType.getName(this.type) : "";
+	}
+
+	/**
+	 * 获取交易类型名称
+	 * @return
+	 */
+	public String getTradeTypeName() {
+		return this.tradeType != null ? TradeType.getNameByCode(this.tradeType) : "";
+	}
+
+	/**
+	 * 获取交易渠道名称
+	 * @return
+	 */
+	public String getTradeChannelName() {
+		return this.tradeChannel != null ? TradeChannel.getNameByCode(this.tradeChannel) : "";
+	}
+
+	/**
+	 * 获取银行卡类型名称
+	 * @return
+	 */
+	public String getBankCardTypeName() {
+		return this.bankCardType != null ? BankCardType.getNameByCode(this.bankCardType) : "";
+	}
+
+	/**
+	 * 获取状态名称
+	 * @return
+	 */
+	public String getStateName() {
+		return this.state != null ? OperateState.getNameByCode(this.state) : "";
+	}
 }
