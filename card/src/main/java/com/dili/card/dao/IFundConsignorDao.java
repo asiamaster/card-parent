@@ -26,25 +26,11 @@ public interface IFundConsignorDao {
 	int save(FundConsignorDo fundConsignor);
 
     /**
-     * 根据id查询
-     * @param id
-     * @return
-     */
-	FundConsignorDo getById(Long id);
-
-    /**
      * 修改
      * @param fundConsignor
      * @return
      */
 	int update(FundConsignorDo fundConsignor);
-
-    /**
-     * 删除
-     * @param id
-     * @return
-     */
-	int batchRemove(Long[] id);
 
 	/**
 	 * 批量保存

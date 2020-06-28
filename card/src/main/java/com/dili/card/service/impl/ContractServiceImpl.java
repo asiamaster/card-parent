@@ -26,6 +26,7 @@ import com.dili.card.type.BizNoType;
 import com.dili.card.type.ContractState;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.ss.constant.ResultCode;
+import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.util.DateUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
@@ -201,6 +202,9 @@ public class ContractServiceImpl implements IContractService {
 		fundConsignorDo.setSignatureImagePath(consignorRequestDto.getSignatureImagePath());
 		//构建商户信息
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		if (userTicket == null) {
+			userTicket = DTOUtils.newInstance(UserTicket.class);
+		}
 		fundConsignorDo.setFirmId(userTicket.getFirmId());
 		fundConsignorDo.setFirmName(userTicket.getFirmName());
 		fundConsignorDo.setContractNo(contractNo);
@@ -220,6 +224,9 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setNotes(fundContractRequest.getNotes());
 		//构建商户信息
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		if (userTicket == null) {
+			userTicket = DTOUtils.newInstance(UserTicket.class);
+		}
 		fundContractDo.setCreatorId(userTicket.getId());
 		fundContractDo.setCreator(userTicket.getUserName());
 		fundContractDo.setFirmId(userTicket.getFirmId());
