@@ -39,6 +39,8 @@ public class SerialDto extends BaseDomain {
     private Integer limit;
     /** 操作状态*/
     private Integer state;
+    /** 操作类型*/
+    private Integer type;
     /** 流水列表 */
     private List<SerialRecordDo> serialRecordList;
     /** 操作类型列表*/
@@ -154,6 +156,14 @@ public class SerialDto extends BaseDomain {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public List<SerialRecordDo> getSerialRecordList() {

@@ -51,4 +51,11 @@ public interface ISerialService {
      * @return
      */
     List<BusinessRecordDo> cycleReprintList(SerialDto serialDto);
+
+    /**
+     * 获取客户今日充值记录列表
+     * @param serialDto
+     * @return
+     */
+    List<BusinessRecordDo> todayChargeList(SerialDto serialDto);
 }
