@@ -8,6 +8,7 @@ import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dili.card.dao.IFundConsignorDao;
 import com.dili.card.dao.IFundContractDao;
@@ -46,6 +47,7 @@ public class ContractServiceImpl implements IContractService {
 	private AccountQueryRpcResolver accountQueryRpcResolver;
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void save(FundContractRequestDto fundContractRequest) {
 		//构建合同主体
 		FundContractDo fundContract = this.buildContractEntity(fundContractRequest);
@@ -202,9 +204,6 @@ public class ContractServiceImpl implements IContractService {
 		fundConsignorDo.setSignatureImagePath(consignorRequestDto.getSignatureImagePath());
 		//构建商户信息
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		if (userTicket == null) {
-			userTicket = DTOUtils.newInstance(UserTicket.class);
-		}
 		fundConsignorDo.setFirmId(userTicket.getFirmId());
 		fundConsignorDo.setFirmName(userTicket.getFirmName());
 		fundConsignorDo.setContractNo(contractNo);
@@ -224,9 +223,6 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setNotes(fundContractRequest.getNotes());
 		//构建商户信息
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		if (userTicket == null) {
-			userTicket = DTOUtils.newInstance(UserTicket.class);
-		}
 		fundContractDo.setCreatorId(userTicket.getId());
 		fundContractDo.setCreator(userTicket.getUserName());
 		fundContractDo.setFirmId(userTicket.getFirmId());
