@@ -59,13 +59,13 @@
                  separator=",">
                  (
 			#{item.contractNo}, 
-			#{item.cconsigneeName}, 
-			#{item.csignatureImagePath}, 
-			#{item.cconsigneeIdCode}, 
-			#{item.cconsigneeIdMobile}, 
-			#{item.ccreateTime}, 
-			#{item.cfirmId}, 
-			#{item.cfirmName}
+			#{item.consigneeName}, 
+			#{item.signatureImagePath}, 
+			#{item.consigneeIdCode}, 
+			#{item.consigneeIdMobile}, 
+			NOW(), 
+			#{item.firmId}, 
+			#{item.firmName}
 		)
          </foreach>
 	</insert>
