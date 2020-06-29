@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.dili.card.dao.IUserCashDao;
@@ -23,14 +24,15 @@ import com.dili.uap.sdk.session.SessionContext;
 import cn.hutool.core.util.NumberUtil;
 
 @Service("userCashService")
-public class UserCashServiceImpl implements IUserCashService{
-	
+public class UserCashServiceImpl implements IUserCashService {
+
 	@Autowired
 	private IUserCashDao userCashDao;
 	@Autowired
 	private IAccountCycleService accountCycleService;
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void save(UserCashDto userCashDto, CashAction cashAction) {
 		UserCashDo userCashDo = this.buildUserCashEntity(userCashDto, cashAction);
 		userCashDao.save(userCashDo);
@@ -51,7 +53,6 @@ public class UserCashServiceImpl implements IUserCashService{
 		}
 		userCashDao.delete(id);
 	}
-	
 
 	@Override
 	public void modify(UserCashDto userCashDto) {
@@ -61,7 +62,7 @@ public class UserCashServiceImpl implements IUserCashService{
 		}
 		userCashDao.updateAmount(userCashDto.getId(), userCashDto.getAmount(), userCashDto.getNotes());
 	}
-	
+
 	@Override
 	public UserCashDo findById(Long id) {
 		UserCashDo userCashDo = userCashDao.getById(id);
@@ -70,12 +71,11 @@ public class UserCashServiceImpl implements IUserCashService{
 		}
 		return userCashDo;
 	}
-	
+
 	@Override
 	public UserCashDto detail(Long id) {
 		return this.buildSingleCashDtoy(this.findById(id));
 	}
-	
 
 	@Override
 	public void flatedByCycle(Long cycleNo) {
@@ -116,13 +116,14 @@ public class UserCashServiceImpl implements IUserCashService{
 		userCash.setUserName(userCashDto.getUserName());
 		userCash.setState(CashState.UNSETTLED.getCode());
 		userCash.setNotes(userCashDto.getNotes());
-		//构建商户信息和创建者
+		// 构建商户信息和创建者
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		userCash.setCreatorId(userTicket.getId());
-		userCash.setCreator(userTicket.getUserName());
+		userCash.setCreator(userTicket.getRealName());
 		userCash.setFirmId(userTicket.getFirmId());
 		userCash.setFirmName(userTicket.getFirmName());
-		AccountCycleDo accountCycle = accountCycleService.createCycleRecord(userCashDto.getUserId(), userCashDto.getUserName());
+		AccountCycleDo accountCycle = accountCycleService.createCycleRecord(userCashDto.getUserId(),
+				userCashDto.getUserName());
 		userCash.setCycleNo(accountCycle.getCycleNo());
 		return userCash;
 	}
@@ -132,8 +133,10 @@ public class UserCashServiceImpl implements IUserCashService{
 	 */
 	private void buildUserCashCondition(UserCashDto userCashDto, CashAction cashAction) {
 		userCashDto.setState(cashAction.getCode());
-		userCashDto.setUserId(NumberUtil.isInteger(userCashDto.getUserName()) ? Long.valueOf(userCashDto.getUserName()) : null);
-		userCashDto.setCreatorId(NumberUtil.isInteger(userCashDto.getCreator()) ? Long.valueOf(userCashDto.getCreator()) : null);
+		userCashDto.setUserId(
+				NumberUtil.isInteger(userCashDto.getUserName()) ? Long.valueOf(userCashDto.getUserName()) : null);
+		userCashDto.setCreatorId(
+				NumberUtil.isInteger(userCashDto.getCreator()) ? Long.valueOf(userCashDto.getCreator()) : null);
 	}
 
 	/**

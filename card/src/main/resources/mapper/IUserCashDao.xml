@@ -53,8 +53,8 @@
 			#{firmName}, 
 			#{creatorId}, 
 			#{creator}, 
-			#{createTime}, 
-			#{modifyTime}
+			NOW(), 
+			NOW()
 		)
 	</insert>
 	
