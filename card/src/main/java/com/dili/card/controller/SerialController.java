@@ -1,7 +1,7 @@
 package com.dili.card.controller;
 
 import cn.hutool.core.util.StrUtil;
-import com.dili.card.common.holder.IUserTicketHolder;
+import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/serial")
-public class SerialController implements IUserTicketHolder {
+public class SerialController implements IControllerHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SerialController.class);
 
     @Resource
