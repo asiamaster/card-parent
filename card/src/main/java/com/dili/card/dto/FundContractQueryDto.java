@@ -4,7 +4,8 @@ package com.dili.card.dto;
  * 资金委托合同
  * @author bob
  */
-public class FundContractQueryDto{
+public class FundContractQueryDto extends BaseDto{
+	private static final long serialVersionUID = 1L;
 	/** 委托人账号ID */
 	private Long consignorAccountId;
 	/** 合同编号 */
@@ -13,7 +14,7 @@ public class FundContractQueryDto{
 	private Integer state; 
 	/** 委托人卡信息 */
 	private String cardNo;
-	/** 委托人姓名 */
+	/** 委托人编号 */
 	private String consignorCustomerCode;
 	/** 被委托人手机号 */
 	private String consigneeMobile;

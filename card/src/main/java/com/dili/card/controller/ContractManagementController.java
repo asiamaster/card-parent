@@ -14,7 +14,9 @@ import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
 import com.dili.card.service.IContractService;
+import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.PageOutput;
 
 /**
  * 合同管理
@@ -45,9 +47,9 @@ public class ContractManagementController {
 	/**
 	 * 列表合同
 	 */
-	@PostMapping("/list.action")
-	public BaseOutput<List<FundContractResponseDto>> list(@RequestBody FundContractQueryDto contractQueryDto) {
-		return BaseOutput.successData(iContractService.list(contractQueryDto));
+	@PostMapping("/page.action")
+	public PageOutput<List<FundContractResponseDto>> page(@RequestBody  @Validated(ConstantValidator.Page.class) FundContractQueryDto contractQueryDto) {
+		return iContractService.page(contractQueryDto);
 	}
 	
 	/**
