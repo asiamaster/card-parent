@@ -37,6 +37,6 @@ public interface IContractService {
 	/**
 	 * 合同详情
 	 */
-	FundContractResponseDto detail(FundContractRequestDto fundContractRequest);
+	FundContractResponseDto detail(Long id);
 
 }

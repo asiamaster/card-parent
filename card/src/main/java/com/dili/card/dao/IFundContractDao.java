@@ -3,6 +3,7 @@ package com.dili.card.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.entity.FundContractDo;
@@ -13,13 +14,6 @@ import com.dili.card.entity.FundContractDo;
  */
 @Mapper
 public interface IFundContractDao {
-	/**
-     * 列表查询
-     * @param page
-     * @param search
-     * @return
-     */
-	List<FundContractDo> selectList(FundContractDo fundContract);
 
     /**
      * 新增
@@ -33,7 +27,7 @@ public interface IFundContractDao {
      * @param id
      * @return
      */
-	FundContractDo getById(Long id);
+	FundContractDo getById(@Param("id") Long id);
 
     /**
      * 修改
@@ -41,13 +35,6 @@ public interface IFundContractDao {
      * @return
      */
 	int update(FundContractDo fundContract);
-
-    /**
-     * 删除
-     * @param id
-     * @return
-     */
-	int batchRemove(Long[] id);
 
 	/**
 	 * 通过条件查询
