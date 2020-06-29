@@ -2,6 +2,8 @@ package com.dili.card.dto;
 
 import java.time.LocalDateTime;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * 资金委托合同
  * @author bob
@@ -17,14 +19,17 @@ public class FundContractResponseDto{
 	/** 合同编号 */
 	private String contractNo; 
 	/** 合同开始日期 */
+	@JSONField(format = "yyyy-MM-dd")
 	private LocalDateTime startTime; 
 	/** 合同结束日期 */
+	@JSONField(format = "yyyy-MM-dd")
 	private LocalDateTime endTime; 
 	/** 状态(委托中、已解除、已到期) */
 	private Integer state; 
 	/** 备注 */
 	private String notes; 
 	/** 创建时间 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createTime; 
 	/** 被委托人姓名 */
 	private String consigneeNames;
