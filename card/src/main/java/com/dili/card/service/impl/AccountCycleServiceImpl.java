@@ -95,9 +95,12 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			accountCycle.setUserName(userName);
 			accountCycle.setCycleNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CYCLET_NO.getCode())));
 			accountCycle.setCashBox(0L);
+			accountCycle.setCashAmount(0L);
 			accountCycle.setState(CycleState.ACTIVE.getCode());
 			//构建商户信息
 			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+			accountCycle.setAuditorId(userTicket.getId());
+			accountCycle.setAuditorName(userTicket.getRealName());
 			accountCycle.setFirmId(userTicket.getFirmId());
 			accountCycle.setFirmName(userTicket.getFirmName());
 			accountCycle.setVersion(1);

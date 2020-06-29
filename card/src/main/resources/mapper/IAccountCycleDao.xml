@@ -161,7 +161,7 @@
 		FROM
 			card_account_cycle
 		WHERE
-			userId = #{userId} and state = #{state}
+			user_id = #{userId} and state = #{state}
 	</select>
 	
 	<!-- 更新状态sql -->

@@ -3,6 +3,7 @@ package com.dili.card.service;
 import java.util.List;
 
 import com.dili.card.dto.UserCashDto;
+import com.dili.card.entity.UserCashDo;
 import com.dili.card.type.CashAction;
 
 /**
@@ -26,9 +27,14 @@ public interface IUserCashService {
 	void delete(Long id);
 	
 	/**
-	 * 删除现金操作记录
+	 * 查找操作记录
 	 */
-	UserCashDto findById(Long id);
+	UserCashDo findById(Long id);
+	
+	/**
+	 * 查找操作记录
+	 */
+	UserCashDto detail(Long id);
 
 	/**
 	 * 现金领款记录列表
