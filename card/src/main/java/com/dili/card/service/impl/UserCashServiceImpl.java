@@ -45,22 +45,35 @@ public class UserCashServiceImpl implements IUserCashService{
 
 	@Override
 	public void delete(Long id) {
+		UserCashDo userCashDo = this.findById(id);
+		if (CashState.SETTLED.getCode() == userCashDo.getState()) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能删除");
+		}
 		userCashDao.delete(id);
 	}
 	
 
 	@Override
 	public void modify(UserCashDto userCashDto) {
+		UserCashDo userCashDo = this.findById(userCashDto.getId());
+		if (CashState.SETTLED.getCode() == userCashDo.getState()) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能修改");
+		}
 		userCashDao.updateAmount(userCashDto.getId(), userCashDto.getAmount(), userCashDto.getNotes());
 	}
 	
 	@Override
-	public UserCashDto findById(Long id) {
+	public UserCashDo findById(Long id) {
 		UserCashDo userCashDo = userCashDao.getById(id);
 		if (userCashDo == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "该记录不存在");
 		}
-		return this.buildSingleCashDtoy(userCashDo);
+		return userCashDo;
+	}
+	
+	@Override
+	public UserCashDto detail(Long id) {
+		return this.buildSingleCashDtoy(this.findById(id));
 	}
 	
 
