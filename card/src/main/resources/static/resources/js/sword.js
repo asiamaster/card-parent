@@ -861,34 +861,6 @@ var table = {
                 }
                 return url;
             },
-            //封装的jqueryload方法
-            load: function (targetId,url,callback) {
-                $('#'+targetId).load(url,function (response,status,xhr) {
-                    if (xhr.status == 404){
-                        $('#'+targetId).html("<div></div>");
-                        $.modal.alertError("Not Found")
-                    }
-                    if (xhr.status == 500){
-                        $('#'+targetId).html("<div></div>");
-                        $.modal.alertError("请稍后重试")
-                    }
-                    if (typeof response == 'string') {
-                        try {
-                            var jsonObj =JSON.parse(response);
-                            if (jsonObj.code != '200') {
-                                $('#'+targetId).html("<div></div>");
-                                $.modal.alertError(jsonObj.message)
-                                return;
-                            }
-                        } catch(e) {
-                            console.log(e.message);
-                        }
-                    }
-                    if (typeof callback == 'function'){
-                        callback(response,status,xhr);
-                    }
-                })
-            },
             // 删除信息
             remove: function () {
                 table.set();
@@ -935,12 +907,6 @@ var table = {
                 table.set();
                 $.modal.open("添加" + table.options.modalName, $.operate.addUrl(id));
             },
-            // 添加信息 全屏
-            addFull: function (id) {
-                table.set();
-                var url = $.common.isEmpty(id) ? table.options.createUrl : table.options.createUrl.replace("{id}", id);
-                $.modal.openFull("添加" + table.options.modalName, url);
-            },
             // 添加访问地址
             addUrl: function (id) {
                 var url = $.common.isEmpty(id) ? table.options.createUrl.replace("{id}", "") : table.options.createUrl.replace("{id}", id);
@@ -960,23 +926,6 @@ var table = {
                 } else {
                     $.modal.open("修改" + table.options.modalName, $.operate.editUrl(id));
                 }
-            },
-            // 修改信息，以tab页展现
-            editTab: function (id) {
-                table.set();
-                $.modal.openTab("修改" + table.options.modalName, $.operate.editUrl(id));
-            },
-            // 修改信息 全屏
-            editFull: function (id) {
-                table.set();
-                var url = "/404.html";
-                if ($.common.isNotEmpty(id)) {
-                    url = table.options.updateUrl.replace("{id}", id);
-                } else {
-                    var row = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
-                    url = table.options.updateUrl.replace("{id}", row);
-                }
-                $.modal.openFull("修改" + table.options.modalName, url);
             },
             // 修改访问地址
             editUrl: function (id) {

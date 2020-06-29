@@ -43,6 +43,13 @@
 		<springloaded.version>1.2.8.RELEASE</springloaded.version>
 	</properties>
 
+	<dependencies>
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>2.1.1</version>
+		</dependency>
+	</dependencies>
 	<build>
 		<!-- 资源文件过滤 -->
 		<resources>

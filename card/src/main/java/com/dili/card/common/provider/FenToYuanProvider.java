@@ -21,10 +21,10 @@ public class FenToYuanProvider implements ValueProvider {
 
     @Override
     public String getDisplayText(Object val, Map metaMap, FieldMeta fieldMeta) {
-        if (val==null){
+        if (val == null) {
             return null;
         }
-        Long fen = (Long)val;
+        Long fen = (Long) val;
         return CurrencyUtils.toYuanWithStripTrailingZeros(fen);
     }
 }

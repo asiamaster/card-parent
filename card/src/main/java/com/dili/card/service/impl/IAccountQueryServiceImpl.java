@@ -56,10 +56,8 @@ public class IAccountQueryServiceImpl implements IAccountQueryService {
     @Override
     public AccountDetailResponseDto getDetailByCardNo(String cardNo) {
         AccountDetailResponseDto detail = new AccountDetailResponseDto();
-        AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByCardNoWithAssociation(cardNo);
-        if (cardAssociation.getPrimary() == null) {
-            throw new BusinessException(ResultCode.DATA_ERROR, "卡账户信息存在");
-        }
+        AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByCardNoWithAssociation(cardNo)
+                .orElseThrow(() -> new BusinessException(ResultCode.DATA_ERROR, "卡账户信息不存在"));
         //已经做了判null处理
         CustomerResponseDto customer = customerRpcResolver.findCustomerByIdWithConvert(cardAssociation.getPrimary().getCustomerId());
         //TODO 资金需要调用rpc

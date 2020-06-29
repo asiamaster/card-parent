@@ -15,7 +15,7 @@
             </div>
             <div class="form-group col-auto">
                 <label for="cardNo-multiple">卡号</label>
-                <input id="cardNo-multiple" name="cardNos" type="text" class="form-control" maxlength="50"/>
+                <input id="cardNo-multiple" name="cardNos" type="text" class="form-control"/>
             </div>
             <!--如果id以 -multiple 为结尾，那么该表单字段为转为数组形式 -->
             <div class="form-group col">
@@ -29,9 +29,9 @@
                 _optionVariable="customerNameQueryAutoCompleteOption"/>
             </div>
             <#component_dateControls
+            _labelText="创建时间:"
             _startDateParam="startDate"
-            _endDateParam="endDate"
-            />
+            _endDateParam="endDate"/>
             <div class="col align-self-center mt-3">
                 <button id="clear" type="button" class="btn btn-outline-primary mr-2" onclick="$.form.reset()"><i
                         class="fa fa-refresh"></i> 清空
@@ -41,11 +41,9 @@
                 </button>
             </div>
         </div>
-
     </form>
 </#bs4nav>
 </div>
-
 <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
     <button id="btn_edit" type="button" class="btn btn-primary" onclick="openUpdateHandler()"><i
             class="fa fa-pencil-square-o"></i> 查看
@@ -55,7 +53,6 @@
         导出
     </button>
 </div>
-
 <div class="row">
     <div class="col-12">
         <table id="grid"

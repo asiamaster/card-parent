@@ -5,6 +5,7 @@ import java.util.List;
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
+import com.dili.ss.domain.PageOutput;
 
 /**
  * 合同管理
@@ -22,6 +23,11 @@ public interface IContractService {
 	 * 列表
 	 */
 	List<FundContractResponseDto> list(FundContractQueryDto contractQueryDto);
+	
+	/**
+	 * 分页
+	 */
+	PageOutput<List<FundContractResponseDto>> page(FundContractQueryDto contractQueryDto);
 
 	/**
 	 * 解除合同
@@ -31,6 +37,6 @@ public interface IContractService {
 	/**
 	 * 合同详情
 	 */
-	FundContractResponseDto detail(FundContractRequestDto fundContractRequest);
+	FundContractResponseDto detail(Long id);
 
 }
