@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
@@ -32,7 +31,6 @@ import java.util.List;
  * @date: 2020/4/8 11:22
  */
 @ControllerAdvice
-@RequestMapping("/error")
 public class GenericGlobalExceptionResolver {
     @Autowired
     private HttpServletRequest request;
@@ -137,8 +135,8 @@ public class GenericGlobalExceptionResolver {
                 .orElse("未知参数错误");
     }
 
-    @RequestMapping(value = "handleError",produces = "text/html")
-    public String handleError(HttpServletRequest request, HttpServletResponse response){
+    @RequestMapping(value = "handleError", produces = "text/html")
+    public String handleError(HttpServletRequest request, HttpServletResponse response) {
         return SpringUtil.getProperty("error.page.default", "error/default");
     }
 }
