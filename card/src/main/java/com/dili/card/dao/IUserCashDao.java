@@ -43,13 +43,6 @@ public interface IUserCashDao {
      */
 	int update(UserCashDo userCash);
 
-    /**
-     * 删除
-     * @param id
-     * @return
-     */
-	int batchRemove(Long[] id);
-
 	/**
 	 * 删除
 	 */

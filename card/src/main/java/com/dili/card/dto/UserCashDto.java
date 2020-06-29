@@ -3,6 +3,11 @@ package com.dili.card.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import com.dili.card.validator.ConstantValidator;
+
 /**
  * 柜员交款领款
  * @author bob
@@ -11,15 +16,21 @@ public class UserCashDto implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	/**领款人编号*/
+	/**主键id*/
 	private Long id; 
 	/** 领款或收款人 */
-	private Long userId; 
+	@NotNull(message = "员工id不为空", groups = ConstantValidator.Insert.class)
+	private Long userId;
+	/** 领款或收款人 */
+	@NotBlank(message = "员工编号不为空", groups = ConstantValidator.Insert.class)
+	private String userCode;
 	/** 领款人名称-保留字段 */
+	@NotBlank(message = "员工姓名不为空", groups = ConstantValidator.Insert.class)
 	private String userName; 
 	/** 现金动作-领款 交款 */
 	private Integer action; 
 	/** 操作金额-分 */
+	@NotNull(message = "金额不为空", groups = ConstantValidator.Insert.class)
 	private Long amount; 
 	/** 状态-预留字段 */
 	private Integer state; 
@@ -187,6 +198,14 @@ public class UserCashDto implements Serializable {
 
 	public void setCreateEndTime(LocalDateTime createEndTime) {
 		this.createEndTime = createEndTime;
+	}
+
+	public String getUserCode() {
+		return userCode;
+	}
+
+	public void setUserCode(String userCode) {
+		this.userCode = userCode;
 	}
 
 }

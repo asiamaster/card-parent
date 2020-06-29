@@ -13,8 +13,10 @@ public class UserCashDo implements Serializable {
 	
 	/**  */
 	private Long id; 
-	/** 领款或收款人 */
+	/** 领款或收款人主键 */
 	private Long userId; 
+	/** 领款或收款人 编号*/
+	private String userCode; 
 	/** 操作人员名称-保留字段 */
 	private String userName; 
 	/** 现金动作-领款 交款 */
@@ -264,5 +266,13 @@ public class UserCashDo implements Serializable {
                ", modifyTime='" + modifyTime + '\'' +
                '}';
     }
+
+	public String getUserCode() {
+		return userCode;
+	}
+
+	public void setUserCode(String userCode) {
+		this.userCode = userCode;
+	}
 
 }

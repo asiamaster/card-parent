@@ -1,6 +1,7 @@
 package com.dili.card.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dili.card.dto.UserCashDto;
 import com.dili.card.service.IUserCashService;
+import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.domain.BaseOutput;
 
 /**
@@ -24,7 +26,7 @@ public class UserCashManagementController {
 	 * 新增领款
 	 */
 	@PostMapping("/savePayee.action")
-	public BaseOutput<Boolean> savePayee(@RequestBody UserCashDto userCashDto) {
+	public BaseOutput<Boolean> savePayee(@RequestBody @Validated(value = ConstantValidator.Insert.class)UserCashDto userCashDto) {
 		iUserCashService.savePayee(userCashDto);
 		return BaseOutput.success();
 	}
