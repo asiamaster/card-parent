@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,16 +20,20 @@ import com.dili.card.entity.FundConsignorDo;
 import com.dili.card.entity.FundContractDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
+import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IContractService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.ContractState;
+import com.dili.card.util.PageUtils;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.ss.constant.ResultCode;
-import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.domain.PageOutput;
 import com.dili.ss.util.DateUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 
 @Service
 public class ContractServiceImpl implements IContractService {
@@ -60,11 +63,22 @@ public class ContractServiceImpl implements IContractService {
 
 	@Override
 	public List<FundContractResponseDto> list(FundContractQueryDto contractQueryDto) {
+		//构建查询条件
 		this.buildQueryContractConditon(contractQueryDto);
+		//查询条件
 		List<FundContractDo> fundContracts = contractDao.findEntityByCondition(contractQueryDto);
-		List<FundContractResponseDto> fundResponseContracts = this.huildPageResponseContracts(fundContracts);
-		return fundResponseContracts;
+		//数据转换
+		return this.huildPageResponseContracts(fundContracts);
 	}
+	
+
+	@Override
+	public PageOutput<List<FundContractResponseDto>> page(FundContractQueryDto contractQueryDto) {
+		Page<?> page = PageHelper.startPage(contractQueryDto.getPageNum(), contractQueryDto.getPageSize());
+		List<FundContractResponseDto> contractResponses = this.list(contractQueryDto);
+		return PageUtils.convert2PageOutput(page, contractResponses);
+	}
+
 
 	@Override
 	public void remove(FundContractRequestDto fundContractRequest) {
@@ -98,7 +112,7 @@ public class ContractServiceImpl implements IContractService {
 	 * 构建查询条件
 	 */
 	private void buildQueryContractConditon(FundContractQueryDto contractQueryDto) {
-		if (StringUtils.isBlank(contractQueryDto.getCardNo())) {
+		if (!StringUtils.isBlank(contractQueryDto.getCardNo())) {
 			//构建卡数据
 			UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver.findByCardNo(contractQueryDto.getCardNo());
 			contractQueryDto.setConsignorAccountId(userAccountCard.getAccountId());
@@ -227,7 +241,7 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setCreator(userTicket.getUserName());
 		fundContractDo.setFirmId(userTicket.getFirmId());
 		fundContractDo.setFirmName(userTicket.getFirmName());
-		fundContractDo.setState(ContractState.ENTUST.getCode());
+		fundContractDo.setState(ContractState.UNSTARTED.getCode());
 		//获取业务编号
 		String contractNo = uidRpcResovler.bizNumber(BizNoType.CONTRACT_NO.getCode());
 		fundContractDo.setContractNo(contractNo);
