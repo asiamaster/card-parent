@@ -132,7 +132,7 @@
 			`end_time`, 
 			`state`, 
 			`creator`, 
-			`create_time`, 
+			`create_time`
 		FROM
 			card_fund_contract
 		WHERE
@@ -156,9 +156,8 @@
 				<![CDATA[ AND create_time <= #{createEndTime}]]>
 			</if>
 			<if test="expirationTime != null and expirationTime != ''">
-				<![CDATA[ AND DATE_FORMAT(end_time,'%Y-%m-%d') = #{expirationTime}]]>
+				<![CDATA[ AND end_time = #{expirationTime}]]>
 			</if>
 		ORDER BY create_time DESC
-		LIMIT #{startIndex}, #{pageSize}
 	</select>
 </mapper>

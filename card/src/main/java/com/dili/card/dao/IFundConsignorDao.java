@@ -1,6 +1,8 @@
 package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 import com.dili.card.entity.FundConsignorDo;
 
@@ -41,5 +43,5 @@ public interface IFundConsignorDao {
 	/**
 	 * 通过合同编号查询被委托人信息
 	 */
-	List<FundConsignorDo> FindConsignorsByContractNo(String contractNo);
+	List<FundConsignorDo> findConsignorsByContractNo(@Param("contractNo") String contractNo);
 }

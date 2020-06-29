@@ -70,7 +70,7 @@
          </foreach>
 	</insert>
 	
-	<select id="getByContractNo" resultType="com.dili.card.entity.FundConsignorDo">
+	<select id="findConsignorsByContractNo" resultType="com.dili.card.entity.FundConsignorDo">
 		SELECT
 			`id`, 
 			`contract_no`, 
@@ -102,5 +102,4 @@
 		WHERE
 			id = #{id}
 	</update>
-
 </mapper>

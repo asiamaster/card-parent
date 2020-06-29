@@ -163,7 +163,7 @@ public class ContractServiceImpl implements IContractService {
 		contractResponseDto.setTerminateNotes(fundContractDo.getTerminateNotes());
 		contractResponseDto.setTerminateTime(fundContractDo.getTerminateTime());
 
-		List<FundConsignorDo> consignors = fundConsignorDao.FindConsignorsByContractNo(fundContractDo.getContractNo());
+		List<FundConsignorDo> consignors = fundConsignorDao.findConsignorsByContractNo(fundContractDo.getContractNo());
 		if (!detail) {
 			//列表被委托人信息
 			StringBuilder mobiles = new StringBuilder();
@@ -172,8 +172,8 @@ public class ContractServiceImpl implements IContractService {
 				mobiles.append(fundConsignorDo.getConsigneeName() + "、");
 				names.append(fundConsignorDo.getConsigneeIdMobile() + "、");
 			}
-			contractResponseDto.setConsigneeNames(names.substring(names.lastIndexOf("、")));
-			contractResponseDto.setConsigneeMobiles(mobiles.substring(mobiles.lastIndexOf("、")));
+			contractResponseDto.setConsigneeNames(names.substring(0, names.lastIndexOf("、")));
+			contractResponseDto.setConsigneeMobiles(mobiles.substring(0, mobiles.lastIndexOf("、")));
 		}else {
 			//详情被委托人信息
 			List<FundConsignorDto> consignorDtos = new ArrayList<FundConsignorDto>();
