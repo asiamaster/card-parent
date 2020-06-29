@@ -20,34 +20,66 @@ public class PayProperties {
     /** token*/
     private String token;
 
+    /**
+     *
+     * @return
+     */
     public String getDomain() {
         return domain;
     }
 
+    /**
+     *
+     * @param domain
+     */
     public void setDomain(String domain) {
         this.domain = domain;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getAppId() {
         return appId;
     }
 
+    /**
+     *
+     * @param appId
+     */
     public void setAppId(long appId) {
         this.appId = appId;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getSecret() {
         return secret;
     }
 
+    /**
+     *
+     * @param secret
+     */
     public void setSecret(String secret) {
         this.secret = secret;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getToken() {
         return token;
     }
 
+    /**
+     *
+     * @param token
+     */
     public void setToken(String token) {
         this.token = token;
     }
