@@ -1,5 +1,5 @@
 <div class="form-group col-auto">
-    <label for="startDate">开始时间:</label>
+    <label for="startDate">${_labelText!}</label>
     <div class="form-inline">
         <div class="input-group">
             <input type="text" name="${_startDateParam!}" id="startDate" class="form-control date laydatetime laystart"

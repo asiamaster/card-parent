@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.dili.card.dto.FreezeFundDto;
 
 /**
- * @description： 
+ * @description：
  *          解冻资金
  * @author ：WangBo
  * @time ：2020年6月29日上午10:38:25
@@ -18,6 +18,11 @@ import com.dili.card.dto.FreezeFundDto;
 @RequestMapping("/unfreeze")
 public class UnfreezeCardController {
 
+	/**
+	*
+	* @author miaoguoxin
+	* @date 2020/6/29
+	*/
 	@RequestMapping(value = "/confirm.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public ModelAndView confirm(FreezeFundDto freezeInfo){

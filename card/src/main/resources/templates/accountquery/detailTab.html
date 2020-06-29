@@ -1,0 +1,100 @@
+<#bs4Body>
+<style>
+    .tab-info {
+        padding: 3rem;
+    }
+</style>
+<div class="main-container container-fluid">
+    <ul id="detailTab" class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" id="card-tab" uri="/accountQuery/accountDetail.html" data-toggle="tab" href="#cardInfo"
+               role="tab" aria-selected="true">
+                <h5>卡信息</h5>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" id="frozen-tab" uri="/accountQuery/frozenFund.html" data-toggle="tab" href="#freeze" role="tab">
+                <h5>冻结资金</h5>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="unfrozen-tab" uri="/unfrozenFund.html" data-toggle="tab" href="#unfreeze" role="tab">
+                <h5>解冻资金</h5>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div id="detailTabContent" class="tab-content border border-top-0">
+    <div class="tab-pane tab-info" id="cardInfo" role="tabpanel">
+    </div>
+    <div class="tab-pane tab-info" id="freeze" role="tabpanel">
+    </div>
+    <div class="tab-pane" id="unfreeze" role="tabpanel">
+        新闻审核内容
+    </div>
+</div>
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script>
+    //用于初始化激活tab,动态添加class active
+    let initActiveEleId ='#frozen-tab';
+    //用来动态装载tab标签信息
+    let tab = new Map();
+
+    let prefix = "${contextPath}";
+    let cardNo = $.common.getQueryVariable("cardNo");
+
+    //tab切换时间监听
+    $('a[data-toggle="tab"]').on('shown.bs.tab', (e) => {
+        let oldId = e.relatedTarget.getAttribute("id");
+        tab.get(oldId).isActive = false;
+        let newId = e.target.getAttribute("id");
+        let targetTab = tab.get(newId);
+        targetTab.isActive = true;
+        $(targetTab.href).load(targetTab.url, (response, status, xhr) => {
+
+        });
+    });
+
+    //初始化函数
+    $(() => {
+        initActiveClass();
+        initResources();
+        initActiveTab();
+    });
+
+    //激活初始的tab页签
+    function initActiveClass() {
+        let $ele = $(initActiveEleId);
+        $ele.addClass('active');
+        let targetId = $ele.attr('href');
+        $(targetId).addClass('show active');
+    }
+
+    //初始化页签资源
+    function initResources() {
+        $('#detailTab').find('a').each((i, ele) => {
+            let id = $(ele).attr('id');
+            let uri = $(ele).attr('uri');
+            let href = $(ele).attr('href')
+            let isActive = $(ele).hasClass('active');
+            tab.set(id, {
+                url: prefix + uri + "?cardNo=" + cardNo,
+                href: href,
+                isActive: isActive
+            })
+        });
+    }
+
+    function initActiveTab() {
+        for (let item of tab.values()) {
+            if (item.isActive) {
+                $(item.href).load(item.url, (response, status, xhr) => {
+
+                });
+                break;
+            }
+        }
+    }
+</script>
