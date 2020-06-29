@@ -5,10 +5,20 @@ package com.dili.card.type;
  */
 public enum TradeType {
 
-    CHARGE(1, "充值"),
-    WITHDRAW(2, "提现"),
-    CONSUME(3, "消费"),
-    TRANSFER(4, "转账");
+    DEPOSIT(10,"账户充值"),
+    WITHDRAW(11,"账户提现"),
+    FEE(12,"缴费"),
+    AUTH_FEE(13,"预授权缴费"),
+    PRE_DEPOSIT(14,"预存款"),
+    DIRECT_TRADE(20,"即时交易"),
+    AUTH_TRADE(21,"预授权交易"),
+    VOUCH_TRADE(22,"担保交易"),
+    TRANSFER(23,"账户转账"),
+    BANK_DEPOSIT(30,"银行圈存"),
+    BANK_WITHDRAW(31,"银行圈提"),
+    CANCEL(40,"交易撤销"),
+    REFUND(41,"交易退款"),
+    CORRECT(42,"交易冲正");
     private int code;
     private String name;
 
