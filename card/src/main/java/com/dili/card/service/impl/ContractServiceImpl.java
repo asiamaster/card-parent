@@ -99,8 +99,8 @@ public class ContractServiceImpl implements IContractService {
 	}
 
 	@Override
-	public FundContractResponseDto detail(FundContractRequestDto fundContractRequest) {
-		FundContractDo fundContract = contractDao.getById(fundContractRequest.getId());
+	public FundContractResponseDto detail(Long id) {
+		FundContractDo fundContract = contractDao.getById(id);
 		if (fundContract == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "该合同号不存在");
 		}

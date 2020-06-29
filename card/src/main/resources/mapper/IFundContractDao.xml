@@ -3,29 +3,6 @@
 
 <mapper namespace="com.dili.card.dao.IFundContractDao">
 	
-	<select id="selectList" resultType="com.dili.card.entity.FundContractDo">
-		SELECT
-			`id`, 
-			`contract_no`, 
-			`consignor_account_id`, 
-			`consignor_customer_code`,
-			`start_time`, 
-			`end_time`, 
-			`state`, 
-			`signature_image_path`, 
-			`creator_id`, 
-			`creator`, 
-			`firm_id`, 
-			`firm_name`, 
-			`notes`, 
-			`create_time`, 
-			`modify_time`
-		FROM
-			card_fund_contract
-		ORDER BY
-			id DESC
-	</select>
-	
 	<insert id="save">
 		INSERT INTO card_fund_contract (
 			`contract_no`, 
@@ -73,7 +50,7 @@
 			`signature_image_path`, 
 			`creator_id`, 
 			`creator`, 
-			·terminater·,
+			terminater,
 			`terminate_notes`,
 			`terminate_time`,
 			`firm_id`, 
@@ -99,8 +76,8 @@
 			<if test="creatorId != null">`creator_id` = #{creatorId}, </if>
 			<if test="creator != null">`creator` = #{creator}, </if>
 			<if test="terminater != null">`terminater` = #{terminater}, </if>
-			<if test="terminate_notes != null">`terminate_notes` = #{terminateNotes}, </if>
-			<if test="terminate_time != null">`terminate_time` = #{terminaterTime}, </if>
+			<if test="terminateNotes != null">`terminate_notes` = #{terminateNotes}, </if>
+			<if test="state != null and state == 4">`terminate_time` = NOW(), </if>
 			<if test="firmId != null">`firm_id` = #{firmId}, </if>
 			<if test="firmName != null">`firm_name` = #{firmName}, </if>
 			<if test="notes != null">`notes` = #{notes}, </if>
@@ -110,17 +87,6 @@
 		WHERE
 			id = #{id}
 	</update>
-	
-	<delete id="batchRemove">
-		DELETE
-		FROM
-			card_fund_contract
-		WHERE
-			id IN
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
 
 	<select id="findEntityByCondition" parameterType="com.dili.card.dto.FundContractQueryDto" resultType="com.dili.card.entity.FundContractDo">
 		SELECT
