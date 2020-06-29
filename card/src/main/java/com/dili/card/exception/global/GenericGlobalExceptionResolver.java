@@ -135,8 +135,4 @@ public class GenericGlobalExceptionResolver {
                 .orElse("未知参数错误");
     }
 
-    @RequestMapping(value = "handleError", produces = "text/html")
-    public String handleError(HttpServletRequest request, HttpServletResponse response) {
-        return SpringUtil.getProperty("error.page.default", "error/default");
-    }
 }

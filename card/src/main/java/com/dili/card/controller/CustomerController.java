@@ -1,6 +1,6 @@
 package com.dili.card.controller;
 
-import com.dili.card.common.holder.IUserTicketHolder;
+import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.customer.sdk.domain.Customer;
@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/customer")
-public class CustomerController implements IUserTicketHolder {
+public class CustomerController implements IControllerHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
 
     @Resource

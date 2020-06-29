@@ -1,5 +1,6 @@
 package com.dili.card.common.serializer;
 
+import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.fastjson.serializer.AfterFilter;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.ss.metadata.ValueProvider;
@@ -30,25 +31,27 @@ public class EnumTextDisplayAfterFilter extends AfterFilter {
         if (!NEED_SCAN_PACKAGE.equalsIgnoreCase(packageName)) {
             return;
         }
-        Field[] declaredFields = object.getClass().getDeclaredFields();
-        for (Field declaredField : declaredFields) {
-            declaredField.setAccessible(true);
-            TextDisplay textDisplay = declaredField.getAnnotation(TextDisplay.class);
-            if (textDisplay == null) {
-                continue;
-            }
-            try {
+
+        Field[] declaredFields = ReflectUtil.getFields(object.getClass());
+        try {
+            for (Field declaredField : declaredFields) {
+                declaredField.setAccessible(true);
+                TextDisplay textDisplay = declaredField.getAnnotation(TextDisplay.class);
+                if (textDisplay == null) {
+                    continue;
+                }
+
                 Class<? extends ValueProvider> providerClazz = textDisplay.value();
                 //有就从缓存里面取，提升一点效率
                 ValueProvider providerBean = this.getProvider(providerClazz);
                 String displayText = providerBean.getDisplayText(declaredField.get(object), null, null);
-                if (StringUtils.isNoneBlank(displayText)){
+                if (StringUtils.isNoneBlank(displayText)) {
                     //构造一个新的key value
                     super.writeKeyValue(declaredField.getName() + DISPLAY_SUFFIX, displayText);
                 }
-            } catch (Exception e) {
-                LOGGER.error("反射获取字段失败:", e);
             }
+        } catch (Exception e) {
+            LOGGER.error("反射获取字段失败:", e);
         }
     }
 

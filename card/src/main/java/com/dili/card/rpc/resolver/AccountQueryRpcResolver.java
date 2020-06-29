@@ -14,9 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 账户查询解析器
@@ -58,7 +58,8 @@ public class AccountQueryRpcResolver {
      * 通过账号查询单个账户信息
      */
     public UserAccountCardResponseDto findByAccountId(Long accountId) {
-        return this.findBacthByAccountIds(Arrays.asList(accountId)).get(0);
+
+        return this.findBacthByAccountIds(Collections.singletonList(accountId)).get(0);
     }
 
     /**
@@ -87,10 +88,13 @@ public class AccountQueryRpcResolver {
      * @author miaoguoxin
      * @date 2020/6/28
      */
-    public AccountWithAssociationResponseDto findByCardNoWithAssociation(String cardNo) {
+    public Optional<AccountWithAssociationResponseDto> findByCardNoWithAssociation(String cardNo) {
         BaseOutput<AccountWithAssociationResponseDto> result = accountQueryRpc.findAssociation(cardNo);
-        this.validateSuccess(result);
-        return result.getData();
+        if (!result.isSuccess()) {
+            LOGGER.warn("调用账户服务错误:{}", result.getMessage());
+            return Optional.empty();
+        }
+        return Optional.ofNullable(result.getData());
     }
 
     /**
@@ -100,7 +104,7 @@ public class AccountQueryRpcResolver {
      */
     private void validateSuccess(BaseOutput<?> baseOutput) {
         if (!baseOutput.isSuccess()) {
-            LOGGER.error("调用账户服务失败:{}", baseOutput.getMessage());
+            LOGGER.warn("调用账户服务错误:{}", baseOutput.getMessage());
             throw new CardAppBizException(ResultCode.DATA_ERROR, "远程调用账户服务失败");
         }
     }

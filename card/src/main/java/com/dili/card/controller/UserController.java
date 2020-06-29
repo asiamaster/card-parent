@@ -1,6 +1,6 @@
 package com.dili.card.controller;
 
-import com.dili.card.common.holder.IUserTicketHolder;
+import com.dili.card.common.handler.IControllerHandler;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.User;
@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/user")
-public class UserController implements IUserTicketHolder {
+public class UserController implements IControllerHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Resource

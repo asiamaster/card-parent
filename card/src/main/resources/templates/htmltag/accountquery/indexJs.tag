@@ -18,10 +18,7 @@
         var out = [];
         for (let i = 0; i < value.length; i++) {
             out.push(value.charAt(i))
-            if (i === 0) {
-                continue;
-            }
-            if (i % 4 === 0) {
+            if ((i + 1) % 4 === 0) {
                 out.push(" ")
             }
         }

@@ -46,19 +46,19 @@ public class AccountQueryManagementController {
     }
 
     /**
-     * 详情页
+     * 跳转卡详情的tab页签入口
      * @param
      * @return
      * @author miaoguoxin
      * @date 2020/6/28
      */
-    @GetMapping("/detailFacade.html")
+    @GetMapping("/detailTab.html")
     public String detailFacadeView() {
-        return "accountquery/detailFacade";
+        return "accountquery/detailTab";
     }
 
     /**
-     * 根据卡号查卡账户详情
+     * 跳转卡账户详情页面
      * @author miaoguoxin
      * @date 2020/6/28
      */
@@ -71,6 +71,22 @@ public class AccountQueryManagementController {
                 new EnumTextDisplayAfterFilter());
         map.put("detail", JSON.parseObject(json));
         return "accountquery/accountDetail";
+    }
+
+    /**
+    *
+    * @author miaoguoxin
+    * @date 2020/6/29
+    */
+    @GetMapping("/frozenFund.html")
+    public String frozenFundView(String cardNo, ModelMap map){
+        if (StringUtils.isBlank(cardNo)) {
+            throw new CardAppBizException(ResultCode.PARAMS_ERROR, "卡号不能为空");
+        }
+        String json = JSON.toJSONString(accountQueryService.getDetailByCardNo(cardNo),
+                new EnumTextDisplayAfterFilter());
+        map.put("detail", JSON.parseObject(json));
+        return "fund/frozen";
     }
 
 
