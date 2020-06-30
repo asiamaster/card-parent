@@ -1,9 +1,9 @@
 package com.dili.card.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 import com.dili.card.dto.UserCashDto;
 import com.dili.card.entity.UserCashDo;
@@ -65,4 +65,5 @@ public interface IUserCashDao {
 	 * 根据账务周期更新状态
 	 */
 	int updateStateByCycle(@Param("cycleNo") Long cycleNo, @Param("state") Integer state);
+	
 }
