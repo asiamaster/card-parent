@@ -58,10 +58,10 @@ public interface IAccountCycleDao {
 	/**
 	 * 通过条件查询
 	 */
-	List<AccountCycleDo> findBYCondition(AccountCycleDto accountCycleDto);
+	List<AccountCycleDo> findByCondition(AccountCycleDto accountCycleDto);
 	
 	/**
 	 * 通过条件查询
 	 */
-	Long findCountBYCondition(AccountCycleDto accountCycleDto);
+	Long findCountByCondition(AccountCycleDto accountCycleDto);
 }

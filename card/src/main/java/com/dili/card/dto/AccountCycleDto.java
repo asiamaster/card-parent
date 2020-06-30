@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  * 
  * @author bob
  */
-public class AccountCycleDto implements Serializable {
+public class AccountCycleDto extends BaseDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

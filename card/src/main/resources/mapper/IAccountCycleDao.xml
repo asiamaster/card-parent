@@ -7,15 +7,12 @@
 		<where>
 			<if test="firmId != null">AND `firm_id` = #{firmId}</if>
 			<if test="userId != null"> AND `user_id` = #{userId}</if>
-			<if test="userName != null and userName != ''">AND `user_name` = #{userName}</if>
 			<if test="auditorId != null">AND `auditor_id` = #{auditorId} </if>
-			<if test="auditorName != null and auditorName != ''">AND `auditor_name` = #{auditorName}</if>
 			<if test="state != null"> AND state = #{state}</if>
 		</where>
 	</sql>
-
-	<!-- 通过条件查询 实体列表-->
-	<select id="findBYCondition" resultType="com.dili.card.entity.AccountCycleDo">
+	
+	<sql id="baseSql">
 		SELECT
 			`id`, 
 			`user_id`, 
@@ -29,17 +26,18 @@
 			`cash_amount`, 
 			`auditor_id`, 
 			`auditor_name`, 
+			`version`, 
+			`firm_id`, 
+			`firm_name`, 
 			`notes`, 
 			`create_time`, 
+			`modify_time`
 		FROM
 			card_account_cycle
-		<include refid="where_condition"/>
-		ORDER BY create_time DESC
-		LIMIT #{startIndex}, #{pageSize}
-	</select>
+	</sql>
 	
 		<!-- 通过条件查询 数量统计-->
-	<select id="findCountBYCondition" resultType="com.dili.card.entity.AccountCycleDo">
+	<select id="findCountByCondition" resultType="com.dili.card.entity.AccountCycleDo">
 		SELECT
 			COUNT(*)
 		FROM
@@ -89,29 +87,14 @@
 	</insert>
 	
 	<select id="getById" resultType="com.dili.card.entity.AccountCycleDo">
-		SELECT
-			`id`, 
-			`user_id`, 
-			`user_name`, 
-			`cycle_no`, 
-			`cash_box`, 
-			`start_time`, 
-			`end_time`, 
-			`check_time`, 
-			`state`, 
-			`cash_amount`, 
-			`auditor_id`, 
-			`auditor_name`, 
-			`version`, 
-			`firm_id`, 
-			`firm_name`, 
-			`notes`, 
-			`create_time`, 
-			`modify_time`
-		FROM
-			card_account_cycle
-		WHERE
-			id = #{id}
+		<include refid="baseSql"/>
+		WHERE id = #{id}
+	</select>
+	
+	<select id="findByCondition" parameterType="com.dili.card.dto.AccountCycleDto" resultType="com.dili.card.entity.AccountCycleDo">
+		<include refid="baseSql"/>
+		<include refid="where_condition"/>
+		ORDER BY create_time DESC
 	</select>
 	
 	<update id="update">
@@ -139,29 +122,8 @@
 	</update>
 	
 	<select id="findByUserIdAndState" resultType="com.dili.card.entity.AccountCycleDo">
-		SELECT
-			`id`, 
-			`user_id`, 
-			`user_name`, 
-			`cycle_no`, 
-			`cash_box`, 
-			`start_time`, 
-			`end_time`, 
-			`check_time`, 
-			`state`, 
-			`cash_amount`, 
-			`auditor_id`, 
-			`auditor_name`, 
-			`version`, 
-			`firm_id`, 
-			`firm_name`, 
-			`notes`, 
-			`create_time`, 
-			`modify_time`
-		FROM
-			card_account_cycle
-		WHERE
-			user_id = #{userId} and state = #{state}
+		<include refid="baseSql"/>
+		WHERE user_id = #{userId} and state = #{state}
 	</select>
 	
 	<!-- 更新状态sql -->

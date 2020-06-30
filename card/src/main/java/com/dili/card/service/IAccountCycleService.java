@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dili.card.dto.AccountCycleDto;
 import com.dili.card.entity.AccountCycleDo;
+import com.dili.ss.domain.PageOutput;
 
 /**
  * 账务周期服务
@@ -25,6 +26,11 @@ public interface IAccountCycleService {
 	 * 账务周期列表
 	 */
 	List<AccountCycleDto> list(AccountCycleDto accountCycleDto);
+	
+	/**
+	 * 账务周期分页查询
+	 */
+	PageOutput<List<AccountCycleDto>> page(AccountCycleDto accountCycleDto);
 
 	/**
 	 * 账务周期详情
