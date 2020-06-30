@@ -1,5 +1,7 @@
 package com.dili.card.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +13,7 @@ import com.dili.card.dto.UserCashDto;
 import com.dili.card.service.IUserCashService;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.PageOutput;
 
 /**
  * 现金管理
@@ -35,16 +38,15 @@ public class UserCashManagementController {
 	 * 列表领款
 	 */
 	@PostMapping("/listPayee.action")
-	public BaseOutput<Boolean> listPayee(@RequestBody UserCashDto userCashDto) {
-		iUserCashService.listPayee(userCashDto);
-		return BaseOutput.success();
+	public PageOutput<List<UserCashDto>> listPayee(@RequestBody UserCashDto userCashDto) {
+		return iUserCashService.listPayee(userCashDto);
 	}
 	
 	/**
 	 * 新增交款
 	 */
 	@PostMapping("/savePayer.action")
-	public BaseOutput<Boolean> savePayer(@RequestBody UserCashDto userCashDto) {
+	public BaseOutput<Boolean> savePayer(@RequestBody @Validated(value = ConstantValidator.Insert.class) UserCashDto userCashDto) {
 		iUserCashService.savePayer(userCashDto);
 		return BaseOutput.success();
 	}
@@ -53,9 +55,8 @@ public class UserCashManagementController {
 	 * 列表交款
 	 */
 	@PostMapping("/listPayer.action")
-	public BaseOutput<Boolean> listPayer(@RequestBody UserCashDto userCashDto) {
-		iUserCashService.listPayer(userCashDto);
-		return BaseOutput.success();
+	public PageOutput<List<UserCashDto>> listPayer(@RequestBody UserCashDto userCashDto) {
+		return iUserCashService.listPayer(userCashDto);
 	}
 	
 	
@@ -71,7 +72,7 @@ public class UserCashManagementController {
 	/**
 	 * 获取详情
 	 */
-	@PostMapping("/detail")
+	@PostMapping("/detail.action")
 	public BaseOutput<UserCashDto> detail(@RequestBody UserCashDto userCashDto) {
 		return BaseOutput.successData(iUserCashService.detail(userCashDto.getId()));
 	}
@@ -79,8 +80,8 @@ public class UserCashManagementController {
 	/**
 	 * 修改
 	 */
-	@PostMapping("/modify")
-	public BaseOutput<UserCashDto> modify(@RequestBody UserCashDto userCashDto) {
+	@PostMapping("/modify.action")
+	public BaseOutput<UserCashDto> modify(@RequestBody @Validated(value = ConstantValidator.Update.class) UserCashDto userCashDto) {
 		iUserCashService.modify(userCashDto);
 		return BaseOutput.success();
 	}

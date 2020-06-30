@@ -83,7 +83,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public AccountCycleDo createCycleRecord(Long userId, String userName) {
+	public AccountCycleDo findActiveCycleByUserId(Long userId, String userName) {
 		AccountCycleDo accountCycle = this.findSettledCycleByUserId(userId);
 		if (accountCycle != null) {
 			throw new CardAppBizException("当前账务周期正在对账中,不能操作");

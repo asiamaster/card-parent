@@ -1,5 +1,6 @@
 package com.dili.card.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +18,14 @@ import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IUserCashService;
 import com.dili.card.type.CashAction;
 import com.dili.card.type.CashState;
+import com.dili.card.util.CurrencyUtils;
+import com.dili.card.util.PageUtils;
 import com.dili.ss.constant.ResultCode;
+import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 
 import cn.hutool.core.util.NumberUtil;
 
@@ -60,7 +66,11 @@ public class UserCashServiceImpl implements IUserCashService {
 		if (CashState.SETTLED.getCode() == userCashDo.getState()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能修改");
 		}
-		userCashDao.updateAmount(userCashDto.getId(), userCashDto.getAmount(), userCashDto.getNotes());
+		userCashDo = new UserCashDo();
+		userCashDo.setId(userCashDto.getId());
+		userCashDo.setAmount(CurrencyUtils.yuan2Cent(new BigDecimal(userCashDto.getAmountYuan())));
+		userCashDo.setNotes(userCashDto.getNotes());
+		userCashDao.update(userCashDo);
 	}
 
 	@Override
@@ -86,8 +96,10 @@ public class UserCashServiceImpl implements IUserCashService {
 	}
 
 	@Override
-	public List<UserCashDto> listPayee(UserCashDto userCashDto) {
-		return this.list(userCashDto, CashAction.PAYEE);
+	public PageOutput<List<UserCashDto>> listPayee(UserCashDto userCashDto) {
+		Page<?> page = PageHelper.startPage(userCashDto.getPageNum(), userCashDto.getPageSize());
+		List<UserCashDto> userCashs = this.list(userCashDto, CashAction.PAYEE);
+		return PageUtils.convert2PageOutput(page, userCashs);
 	}
 
 	@Override
@@ -101,8 +113,10 @@ public class UserCashServiceImpl implements IUserCashService {
 	}
 
 	@Override
-	public List<UserCashDto> listPayer(UserCashDto userCashDto) {
-		return this.list(userCashDto, CashAction.PAYER);
+	public PageOutput<List<UserCashDto>> listPayer(UserCashDto userCashDto) {
+		Page<?> page = PageHelper.startPage(userCashDto.getPageNum(), userCashDto.getPageSize());
+		List<UserCashDto> userCashs = this.list(userCashDto, CashAction.PAYER);
+		return PageUtils.convert2PageOutput(page, userCashs);
 	}
 
 	/**
@@ -111,7 +125,7 @@ public class UserCashServiceImpl implements IUserCashService {
 	private UserCashDo buildUserCashEntity(UserCashDto userCashDto, CashAction cashAction) {
 		UserCashDo userCash = new UserCashDo();
 		userCash.setAction(cashAction.getCode());
-		userCash.setAmount(userCashDto.getAmount());
+		userCash.setAmount(CurrencyUtils.yuan2Cent(new BigDecimal(userCashDto.getAmountYuan())));
 		userCash.setUserId(userCashDto.getUserId());
 		userCash.setUserName(userCashDto.getUserName());
 		userCash.setState(CashState.UNSETTLED.getCode());
@@ -122,7 +136,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		userCash.setCreator(userTicket.getRealName());
 		userCash.setFirmId(userTicket.getFirmId());
 		userCash.setFirmName(userTicket.getFirmName());
-		AccountCycleDo accountCycle = accountCycleService.createCycleRecord(userCashDto.getUserId(),
+		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDto.getUserId(),
 				userCashDto.getUserName());
 		userCash.setCycleNo(accountCycle.getCycleNo());
 		return userCash;
@@ -132,6 +146,8 @@ public class UserCashServiceImpl implements IUserCashService {
 	 * 构建领取款查询条件
 	 */
 	private void buildUserCashCondition(UserCashDto userCashDto, CashAction cashAction) {
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		userCashDto.setFirmId(userTicket.getFirmId());
 		userCashDto.setState(cashAction.getCode());
 		userCashDto.setUserId(
 				NumberUtil.isInteger(userCashDto.getUserName()) ? Long.valueOf(userCashDto.getUserName()) : null);
@@ -158,10 +174,11 @@ public class UserCashServiceImpl implements IUserCashService {
 	 */
 	private UserCashDto buildSingleCashDtoy(UserCashDo userCashDo) {
 		UserCashDto cashDto = new UserCashDto();
-		cashDto.setAmount(userCashDo.getAmount());
+		cashDto.setAmountYuan(CurrencyUtils.toYuanWithStripTrailingZeros(userCashDo.getAmount()));
 		cashDto.setCreatorId(userCashDo.getCreatorId());
 		cashDto.setCreator(userCashDo.getCreator());
 		cashDto.setUserId(userCashDo.getUserId());
+		cashDto.setUserCode(userCashDo.getUserCode());
 		cashDto.setUserName(userCashDo.getUserName());
 		cashDto.setCreateTime(userCashDo.getCreateTime());
 		cashDto.setNotes(userCashDo.getNotes());

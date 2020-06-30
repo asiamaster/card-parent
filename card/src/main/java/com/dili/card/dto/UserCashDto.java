@@ -6,32 +6,36 @@ import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.validator.ConstantValidator;
 
 /**
  * 柜员交款领款
  * @author bob
  */
-public class UserCashDto implements Serializable {
+public class UserCashDto extends BaseDto implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
 	/**主键id*/
+	@NotNull(message = "数据id不为空", groups = {ConstantValidator.Update.class})
 	private Long id; 
 	/** 领款或收款人 */
-	@NotNull(message = "员工id不为空", groups = ConstantValidator.Insert.class)
+	@NotNull(message = "员工id不为空", groups = {ConstantValidator.Insert.class})
 	private Long userId;
 	/** 领款或收款人 */
-	@NotBlank(message = "员工编号不为空", groups = ConstantValidator.Insert.class)
+	@NotBlank(message = "员工编号不为空", groups = {ConstantValidator.Insert.class})
 	private String userCode;
 	/** 领款人名称-保留字段 */
-	@NotBlank(message = "员工姓名不为空", groups = ConstantValidator.Insert.class)
+	@NotBlank(message = "员工姓名不为空", groups = {ConstantValidator.Insert.class})
 	private String userName; 
 	/** 现金动作-领款 交款 */
 	private Integer action; 
 	/** 操作金额-分 */
-	@NotNull(message = "金额不为空", groups = ConstantValidator.Insert.class)
 	private Long amount; 
+	/** 操作金额-元 */
+	@NotNull(message = "金额不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
+	private String amountYuan;
 	/** 状态-预留字段 */
 	private Integer state; 
 	/** 备注 */
@@ -41,6 +45,7 @@ public class UserCashDto implements Serializable {
 	/** 经办人姓名 */
 	private String creator;
 	/** 创建时间 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createTime; 
 	
 	/** 创建开始时间 */
@@ -48,12 +53,29 @@ public class UserCashDto implements Serializable {
 	
 	/** 创建结束时间 */
 	private LocalDateTime createEndTime;
+	
+	/** 创建结束时间 */
+	private Long firmId;
 
     /**
      * UserCashEntity constructor
      */
 	public UserCashDto() {
 		super();
+	}
+	
+	 /**
+     * setter for 
+     */
+	public void setFirmId(Long firmId) {
+		this.firmId = firmId;
+	}
+
+    /**
+     * getter for 
+     */
+	public Long getFirmId() {
+		return firmId;
 	}
 
     /**
@@ -206,6 +228,14 @@ public class UserCashDto implements Serializable {
 
 	public void setUserCode(String userCode) {
 		this.userCode = userCode;
+	}
+
+	public String getAmountYuan() {
+		return amountYuan;
+	}
+
+	public void setAmountYuan(String amountYuan) {
+		this.amountYuan = amountYuan;
 	}
 
 }
