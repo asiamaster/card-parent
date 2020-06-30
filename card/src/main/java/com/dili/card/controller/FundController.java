@@ -91,6 +91,9 @@ public class FundController implements IControllerHandler {
             throw new CardAppBizException("", "请输入密码");
         }
         TradeChannel tradeChannel = TradeChannel.getByCode(fundRequestDto.getTradeChannel());
+        if (tradeChannel == null) {
+            throw new CardAppBizException("", "不支持该提款方式");
+        }
         switch (tradeChannel) {
             case CASH:break;
             case E_BANK:
