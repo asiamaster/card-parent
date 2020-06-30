@@ -26,7 +26,6 @@ import com.dili.ss.constant.ResultCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -68,10 +67,7 @@ public class SerialServiceImpl implements ISerialService {
         businessRecord.setCustomerNo(customer.getCode());
         businessRecord.setCustomerName(customer.getName());
         //账务周期
-        AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(cardParam.getOpId());
-        if (accountCycle == null) {
-            throw new CardAppBizException("", "未查询到操作员账期");
-        }
+        AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(cardParam.getOpId(), cardParam.getOpName());
         businessRecord.setCycleNo(accountCycle.getCycleNo());
         //操作员信息
         businessRecord.setOperatorId(cardParam.getOpId());
@@ -106,7 +102,6 @@ public class SerialServiceImpl implements ISerialService {
         serialRecord.setFirmId(businessRecord.getFirmId());
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
     public void handleFailure(SerialDto serialDto) {
         try {
@@ -115,14 +110,18 @@ public class SerialServiceImpl implements ISerialService {
             businessRecord.setState(OperateState.FAILURE.getCode());
             businessRecordDao.doFailureUpdate(businessRecord);
         } catch (Exception e) {
-            LOGGER.error("", JSON.toJSONString(serialDto));//记录数据方便后期处理
+            LOGGER.error(JSON.toJSONString(serialDto), e);//记录数据方便后期处理
             throw new CardAppBizException("修改办理状态失败");
         }
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
     public void handleSuccess(SerialDto serialDto) {
+        handleSuccess(serialDto, true);
+    }
+
+    @Override
+    public void handleSuccess(SerialDto serialDto, boolean saveSerial) {
         try {
             //修改状态
             BusinessRecordDo businessRecord = new BusinessRecordDo();
@@ -131,10 +130,22 @@ public class SerialServiceImpl implements ISerialService {
             businessRecord.setStartBalance(serialDto.getStartBalance());
             businessRecord.setEndBalance(serialDto.getEndBalance());
             businessRecordDao.doSuccessUpdate(businessRecord);
+        } catch (Exception e) {
+            LOGGER.error(JSON.toJSONString(serialDto), e);//记录数据方便后期处理
+            throw new CardAppBizException("", "修改办理状态失败");
+        }
+        if (saveSerial) {
+            saveSerialRecord(serialDto);
+        }
+    }
+
+    @Override
+    public void saveSerialRecord(SerialDto serialDto) {
+        try {
             //保存流水
             serialRecordRpcResolver.batchSave(serialDto);
         } catch (Exception e) {
-            LOGGER.error("", JSON.toJSONString(serialDto));//记录数据方便后期处理
+            LOGGER.error(JSON.toJSONString(serialDto), e);//记录数据方便后期处理
             throw new CardAppBizException("修改办理状态失败");
         }
     }

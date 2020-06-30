@@ -9,18 +9,20 @@ import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.service.ISerialService;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 业务记录  以及 操作流水  相关controller
@@ -50,7 +52,8 @@ public class SerialController implements IControllerHandler {
      */
     @RequestMapping(value = "/account/listPage.action")
     @ResponseBody
-    public String listPage(SerialDto serialDto) {
+    public Map<String, Object> listPage(SerialDto serialDto) {
+        Map<String, Object> result = new HashMap<>();
         try {
             UserTicket userTicket = getUserTicket();
             serialDto.setFirmId(userTicket.getFirmId());
@@ -62,12 +65,13 @@ public class SerialController implements IControllerHandler {
             }
             PageOutput<List<SerialRecordDo>> pageOutput = serialRecordRpcResolver.listPage(serialDto);
             if (pageOutput.isSuccess()) {
-                return new EasyuiPageOutput(pageOutput.getTotal(), pageOutput.getData()).toString();
+                result.put("rows", pageOutput.getData());
+                result.put("total", pageOutput.getTotal());
             }
         } catch (Exception e) {
             LOGGER.error("listPage", e);
         }
-        return new EasyuiPageOutput(0, new ArrayList(0)).toString();
+        return result;
     }
 
     /**
@@ -77,7 +81,7 @@ public class SerialController implements IControllerHandler {
      */
     @RequestMapping(value = "/business/cycleReprintList.action")
     @ResponseBody
-    public BaseOutput<List<BusinessRecordDo>> cycleReprintList(SerialDto serialDto) {
+    public BaseOutput<List<BusinessRecordDo>> cycleReprintList(@RequestBody SerialDto serialDto) {
         try {
             UserTicket userTicket = getUserTicket();
             serialDto.setOperatorId(userTicket.getId());
@@ -99,7 +103,7 @@ public class SerialController implements IControllerHandler {
      */
     @RequestMapping(value = "/business/todayChargeList.action")
     @ResponseBody
-    public BaseOutput<List<BusinessRecordDo>> todayChargeList(SerialDto serialDto) {
+    public BaseOutput<List<BusinessRecordDo>> todayChargeList(@RequestBody SerialDto serialDto) {
         try {
             if (serialDto.getAccountId() == null) {
                 return BaseOutput.failure("账户ID为空");
@@ -112,6 +116,60 @@ public class SerialController implements IControllerHandler {
             return BaseOutput.failure(e.getMessage());
         }catch (Exception e) {
             LOGGER.error("todayChargeList", e);
+            return BaseOutput.failure();
+        }
+    }
+
+
+    /**
+     * 办理成功后修改业务单状态 用于修复数据
+     * @param serialDto
+     * @return
+     */
+    @RequestMapping(value = "/business/handleSuccess/{flag}")
+    @ResponseBody
+    public BaseOutput<?> handleSuccess(@RequestBody SerialDto serialDto, @PathVariable boolean flag) {
+        try {
+            serialService.handleSuccess(serialDto, flag);
+            return BaseOutput.success();
+        } catch (Exception e) {
+            LOGGER.error("handleSuccess", e);
+            return BaseOutput.failure();
+        }
+    }
+
+
+    /**
+     * 办理失败后修改业务单状态 用于修复数据
+     * @param serialDto
+     * @return
+     */
+    @RequestMapping(value = "/business/handleFailure")
+    @ResponseBody
+    public BaseOutput<?> handleFailure(@RequestBody SerialDto serialDto) {
+        try {
+            serialService.handleFailure(serialDto);
+            return BaseOutput.success();
+        } catch (Exception e) {
+            LOGGER.error("handleFailure", e);
+            return BaseOutput.failure();
+        }
+    }
+
+
+    /**
+     * 保存账户流水 用于修复数据
+     * @param serialDto
+     * @return
+     */
+    @RequestMapping(value = "/account/saveSerial")
+    @ResponseBody
+    public BaseOutput<?> saveSerial(@RequestBody SerialDto serialDto) {
+        try {
+            serialService.saveSerialRecord(serialDto);
+            return BaseOutput.success();
+        } catch (Exception e) {
+            LOGGER.error("saveSerial", e);
             return BaseOutput.failure();
         }
     }

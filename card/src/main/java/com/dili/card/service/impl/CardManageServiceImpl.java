@@ -4,12 +4,12 @@ import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.service.ICardManageService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.OperateType;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -49,15 +49,7 @@ public class CardManageServiceImpl implements ICardManageService {
         BaseOutput<?> baseOutput = cardManageRpc.unLostCard(cardParam);
         if (!baseOutput.isSuccess()) {
             //针对解挂失操作，暂时处理为解挂失失败则回滚业务办理记录
-            throw new BusinessException(baseOutput.getCode(), baseOutput.getMessage());
-            //如果需要保存失败办理记录，则用以下代码
-            /*try {
-                SerialDto serialDto = new SerialDto();
-                serialDto.setSerialNo(businessRecord.getSerialNo());
-                serialRecordService.handleFailure(serialDto);
-            } catch (Exception e) {
-                LOGGER.error("unLostCard", e);
-            }*/
+            throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         }
         try {//成功则修改状态及期初期末金额，存储操作流水
             SerialDto serialDto = buildUnLostCardSerial(cardParam, businessRecord);
@@ -81,16 +73,16 @@ public class CardManageServiceImpl implements ICardManageService {
     private SerialDto buildUnLostCardSerial(CardRequestDto cardParam, BusinessRecordDo businessRecord) {
         SerialDto serialDto = new SerialDto();
         serialDto.setSerialNo(businessRecord.getSerialNo());
-        serialDto.setStartBalance(0L);
-        serialDto.setEndBalance(0L);
+        //serialDto.setStartBalance(0L);
+        //serialDto.setEndBalance(0L);
         List<SerialRecordDo> serialRecordList = new ArrayList<>(1);
         SerialRecordDo serialRecord = new SerialRecordDo();
         serialService.copyCommonFields(serialRecord, businessRecord);
         //注释字段为当前操作不需要的字段  其他业务可能需要
         //serialRecord.setAction();
-        serialRecord.setStartBalance(0L);
-        serialRecord.setAmount(0L);
-        serialRecord.setEndBalance(0L);
+        //serialRecord.setStartBalance(0L);
+        //serialRecord.setAmount(0L);
+        //serialRecord.setEndBalance(0L);
         //serialRecord.setTradeType();
         //serialRecord.setTradeChannel();
         //serialRecord.setTradeNo(businessRecord.getTradeNo());

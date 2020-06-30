@@ -40,10 +40,23 @@ public interface ISerialService {
     void handleFailure(SerialDto serialDto);
 
     /**
-     * 成功处理 改状态、记操作流水 需重开事务
+     * 成功处理 改状态、记操作流水
      * @param serialDto
      */
     void handleSuccess(SerialDto serialDto);
+
+    /**
+     * 成功处理 改状态、记操作流水
+     * @param serialDto
+     * * @param saveSerial 是否保存账户流水标记
+     */
+    void handleSuccess(SerialDto serialDto, boolean saveSerial);
+
+    /**
+     * 保存账户流水
+     * @param serialDto
+     */
+    void saveSerialRecord(SerialDto serialDto);
 
     /**
      * 获取操作员当前账期内用于补打的操作记录
