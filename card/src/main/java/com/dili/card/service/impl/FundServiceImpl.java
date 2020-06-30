@@ -47,7 +47,7 @@ public class FundServiceImpl implements IFundService {
         //构建创建交易参数
         CreateTradeRequestDto createTradeRequest = new CreateTradeRequestDto();
         createTradeRequest.setType(TradeType.WITHDRAW.getCode());
-        createTradeRequest.setAccountId(fundRequestDto.getAccountId());
+        createTradeRequest.setAccountId(fundRequestDto.getFundAccountId());
         createTradeRequest.setAmount(fundRequestDto.getAmount());
         createTradeRequest.setSerialNo(businessRecord.getSerialNo());
         createTradeRequest.setCycleNo(String.valueOf(businessRecord.getCycleNo()));
@@ -66,7 +66,7 @@ public class FundServiceImpl implements IFundService {
         //提现提交
         WithdrawRequestDto withdrawRequest = new WithdrawRequestDto();
         withdrawRequest.setTradeId(tradeNo);
-        withdrawRequest.setAccountId(fundRequestDto.getAccountId());
+        withdrawRequest.setAccountId(fundRequestDto.getFundAccountId());
         withdrawRequest.setChannelId(fundRequestDto.getTradeChannel());
         withdrawRequest.setPassword(fundRequestDto.getTradePwd());
         if (fundRequestDto.getServiceCost() > 0) {

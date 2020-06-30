@@ -6,6 +6,8 @@ package com.dili.card.dto;
  */
 public class FundRequestDto extends CardRequestDto{
 
+    /** 资金账户ID*/
+    private Long fundAccountId;
     /** 交易渠道*/
     private Integer tradeChannel;
     /** 金额*/
@@ -14,6 +16,14 @@ public class FundRequestDto extends CardRequestDto{
     private String tradePwd;
     /** 手续费*/
     private Long serviceCost;
+
+    public Long getFundAccountId() {
+        return fundAccountId;
+    }
+
+    public void setFundAccountId(Long fundAccountId) {
+        this.fundAccountId = fundAccountId;
+    }
 
     public Integer getTradeChannel() {
         return tradeChannel;
