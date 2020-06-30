@@ -31,6 +31,15 @@ public class AccountCycleManagementController {
 		iAccountCycleService.settle(accountCycleDto.getId());
 		return BaseOutput.success();
 	}
+	
+	/**
+	 * 平账
+	 */
+	@PostMapping("/flated.action")
+	public BaseOutput<Boolean> flated(@RequestBody AccountCycleDto accountCycleDto) {
+		iAccountCycleService.flated(accountCycleDto.getId());
+		return BaseOutput.success();
+	}
 
 	/**
 	 * 账务列表

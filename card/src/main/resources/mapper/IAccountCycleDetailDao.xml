@@ -44,8 +44,8 @@
 			#{revenueAmount}, 
 			#{firmId}, 
 			#{firmName}, 
-			# NOW(), 
-			# NOW()
+			NOW(), 
+			NOW()
 		)
 	</insert>
 	

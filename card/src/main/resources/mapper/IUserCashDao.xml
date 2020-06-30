@@ -127,4 +127,11 @@
 		WHERE
 			id = #{id}
 	</update>
+	
+	<update id="updateStateByCycle">
+		UPDATE card_user_cash
+			`state` = #{state}
+		WHERE
+			`cycle_no` = #{cycleNo}
+	</update>
 </mapper>
