@@ -9,6 +9,13 @@ public class BalanceRequestDto {
     /** 账户ID*/
     private Long accountId;
 
+    public BalanceRequestDto() {
+    }
+
+    public BalanceRequestDto(Long accountId) {
+        this.accountId = accountId;
+    }
+
     /**
      *
      * @return

@@ -17,7 +17,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,7 +48,7 @@ public class FundController implements IControllerHandler {
      * @date 2020/6/29
      */
     @GetMapping("/frozen.html")
-    public String frozenFundView(String cardNo, ModelMap map){
+    public String frozenFundView(String cardNo, ModelMap map) {
         if (StringUtils.isBlank(cardNo)) {
             throw new CardAppBizException(ResultCode.PARAMS_ERROR, "卡号不能为空");
         }
@@ -78,6 +81,20 @@ public class FundController implements IControllerHandler {
     }
 
     /**
+     * 冻结资金
+     * @param
+     * @return
+     * @author miaoguoxin
+     * @date 2020/6/30
+     */
+    @PostMapping("frozen.action")
+    @ResponseBody
+    public BaseOutput<?> frozen(@RequestBody @Validated FundRequestDto requestDto) {
+        validateCommonParam(requestDto);
+        return null;
+    }
+
+    /**
      * 验证提现参数
      * @param fundRequestDto
      */
@@ -99,13 +116,15 @@ public class FundController implements IControllerHandler {
             throw new CardAppBizException("", "不支持该提款方式");
         }
         switch (tradeChannel) {
-            case CASH:break;
+            case CASH:
+                break;
             case E_BANK:
                 if (fundRequestDto.getServiceCost() == null || fundRequestDto.getServiceCost() < 0L) {
                     throw new CardAppBizException("", "请正确输入手续费");
                 }
                 break;
-            default: throw new CardAppBizException("", "不支持该提款方式");
+            default:
+                throw new CardAppBizException("", "不支持该提款方式");
         }
     }
 }

@@ -36,7 +36,7 @@ public class CustomerRpcResolver {
         customer.setId(id);
         BaseOutput<List<Customer>> baseOutput = customerRpc.list(customer);
         if (!baseOutput.isSuccess()) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "远程调用客户服务失败");
+            throw new CardAppBizException(ResultCode.DATA_ERROR, baseOutput.getMessage());
         }
         if (CollectionUtils.isEmpty(baseOutput.getData())) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "客户信息不存在");
@@ -54,7 +54,7 @@ public class CustomerRpcResolver {
         customer.setIdList(ids);
         BaseOutput<List<Customer>> baseOutput = customerRpc.list(customer);
         if (!baseOutput.isSuccess()) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "远程调用客户服务失败");
+            throw new CardAppBizException(ResultCode.DATA_ERROR, baseOutput.getMessage());
         }
         if (CollectionUtils.isEmpty(baseOutput.getData())) {
             return new ArrayList<>();
@@ -94,7 +94,7 @@ public class CustomerRpcResolver {
         customer.setName(name);
         BaseOutput<List<Customer>> baseOutput = customerRpc.list(customer);
         if (!baseOutput.isSuccess()) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "远程调用客户服务失败");
+            throw new CardAppBizException(ResultCode.DATA_ERROR, baseOutput.getMessage());
         }
         return baseOutput.getData();
     }

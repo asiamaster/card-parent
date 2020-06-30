@@ -29,4 +29,11 @@ public interface IPayService {
      * @return
      */
     BalanceResponseDto queryBalance(BalanceRequestDto balanceRequestDto);
+
+    /**
+    * 冻结资金
+    * @author miaoguoxin
+    * @date 2020/6/30
+    */
+    Long frozenFund(Long fundAccountId, Long amount);
 }

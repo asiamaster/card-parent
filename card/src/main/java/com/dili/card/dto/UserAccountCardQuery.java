@@ -1,6 +1,7 @@
 package com.dili.card.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +32,38 @@ public class UserAccountCardQuery extends BaseDto {
     private Integer cardType;
     /**卡状态 {@link com.dili.card.type.CardStatus}*/
     private Integer cardState;
+    /**是否排除退还状态*/
+    private Integer excludeReturn;
+    /**是否排除禁用状态*/
+    private Integer excludeDisabled;
+
+    public UserAccountCardQuery setDefSort(String defSort) {
+        if (StringUtils.isBlank(super.getSort())) {
+            super.setSort(defSort);
+        }
+        return this;
+    }
+
+    public UserAccountCardQuery setDefOrderByColumn(String defColumn) {
+        if (StringUtils.isBlank(super.getOrderByColumn())) {
+            super.setOrderByColumn(defColumn);
+        }
+        return this;
+    }
+
+    public UserAccountCardQuery setDefExcludeReturn(Integer defExcludeReturn) {
+        if (this.getExcludeReturn() == null) {
+            this.setExcludeReturn(defExcludeReturn);
+        }
+        return this;
+    }
+
+    public UserAccountCardQuery setDefExcludeDisabled(Integer defExcludeDisabled) {
+        if (this.getExcludeDisabled() == null) {
+            this.setExcludeDisabled(defExcludeDisabled);
+        }
+        return this;
+    }
 
     public List<Long> getCustomerIds() {
         return customerIds;
@@ -96,4 +129,19 @@ public class UserAccountCardQuery extends BaseDto {
         this.cardState = cardState;
     }
 
+    public Integer getExcludeReturn() {
+        return excludeReturn;
+    }
+
+    public void setExcludeReturn(Integer excludeReturn) {
+        this.excludeReturn = excludeReturn;
+    }
+
+    public Integer getExcludeDisabled() {
+        return excludeDisabled;
+    }
+
+    public void setExcludeDisabled(Integer excludeDisabled) {
+        this.excludeDisabled = excludeDisabled;
+    }
 }

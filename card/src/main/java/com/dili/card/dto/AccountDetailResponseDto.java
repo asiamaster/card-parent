@@ -1,5 +1,7 @@
 package com.dili.card.dto;
 
+import com.dili.card.dto.pay.BalanceResponseDto;
+
 import java.io.Serializable;
 
 /**
@@ -9,17 +11,17 @@ import java.io.Serializable;
  */
 public class AccountDetailResponseDto implements Serializable {
     /**卡账户资金*/
-    private AccountFundResponseDto accountFund;
+    private BalanceResponseDto accountFund;
     /**包含卡关联的信息*/
     private AccountWithAssociationResponseDto cardAssociation;
     /**客户信息*/
     private CustomerResponseDto customer;
 
-    public AccountFundResponseDto getAccountFund() {
+    public BalanceResponseDto getAccountFund() {
         return accountFund;
     }
 
-    public void setAccountFund(AccountFundResponseDto accountFund) {
+    public void setAccountFund(BalanceResponseDto accountFund) {
         this.accountFund = accountFund;
     }
 

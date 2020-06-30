@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @description： 
+ * @description：
  *          柜台操作记录类型
  * @author ：WangBo
  * @time ：2020年6月17日下午5:15:19
@@ -27,17 +27,19 @@ public enum OperateType
 	BANK_TRANSFER("转账", 23),
 	PERMISSION_SET("权限设置", 24),
 	PAYEE("领款", 25),
-	PAYER("交款", 26);
-	
+	PAYER("交款", 26),
+	FROZEN_FUND("冻结资金",27),
+	;
+
 	private String name;
 	private int code;
-	
+
 	private OperateType(String name, int code)
 	{
 		this.name = name;
 		this.code = code;
 	}
-	
+
 	public static OperateType getOperateType(int code)
 	{
 		for (OperateType type : OperateType.values()) {
@@ -47,7 +49,7 @@ public enum OperateType
 		}
 		return null;
 	}
-	
+
 	public static String getName(int code)
 	{
 		for (OperateType type : OperateType.values()) {
@@ -76,17 +78,17 @@ public enum OperateType
 	{
 		return name;
 	}
-	
+
 	public void setName(String name)
 	{
 		this.name = name;
 	}
-	
+
 	public int getCode()
 	{
 		return code;
 	}
-	
+
 	public void setCode(int code)
 	{
 		this.code = code;

@@ -88,13 +88,10 @@ public class AccountQueryRpcResolver {
      * @author miaoguoxin
      * @date 2020/6/28
      */
-    public Optional<AccountWithAssociationResponseDto> findByCardNoWithAssociation(String cardNo) {
+    public AccountWithAssociationResponseDto findByCardNoWithAssociation(String cardNo) {
         BaseOutput<AccountWithAssociationResponseDto> result = accountQueryRpc.findAssociation(cardNo);
-        if (!result.isSuccess()) {
-            LOGGER.warn("调用账户服务错误:{}", result.getMessage());
-            return Optional.empty();
-        }
-        return Optional.ofNullable(result.getData());
+        this.validateSuccess(result);
+        return result.getData();
     }
 
     /**
@@ -119,7 +116,7 @@ public class AccountQueryRpcResolver {
     private void validateSuccess(BaseOutput<?> baseOutput) {
         if (!baseOutput.isSuccess()) {
             LOGGER.warn("调用账户服务错误:{}", baseOutput.getMessage());
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "远程调用账户服务失败");
+            throw new CardAppBizException(ResultCode.DATA_ERROR, baseOutput.getMessage());
         }
     }
 }

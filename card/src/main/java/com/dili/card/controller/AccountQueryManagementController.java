@@ -73,9 +73,6 @@ public class AccountQueryManagementController {
         return "accountquery/accountDetail";
     }
 
-
-
-
     /**
      * 分页查询
      * @param

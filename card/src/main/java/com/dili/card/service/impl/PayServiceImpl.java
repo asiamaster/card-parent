@@ -6,10 +6,16 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.dili.card.config.PayProperties;
-import com.dili.card.dto.pay.*;
+import com.dili.card.dto.pay.BalanceRequestDto;
+import com.dili.card.dto.pay.BalanceResponseDto;
+import com.dili.card.dto.pay.CreateTradeRequestDto;
+import com.dili.card.dto.pay.WithdrawRequestDto;
+import com.dili.card.dto.pay.WithdrawResponseDto;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IPayService;
 import com.dili.ss.domain.BaseOutput;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,6 +31,8 @@ public class PayServiceImpl implements IPayService {
 
     @Resource
     private PayProperties payProperties;
+    @Autowired
+    private PayRpcResolver payRpcResolver;
     //请求uri 目前只有一个
     private static final String URI = "/payment/api/gateway.do";
     //请求中Content-Type值
@@ -54,6 +62,12 @@ public class PayServiceImpl implements IPayService {
         BaseOutput<WithdrawResponseDto> baseOutput = JSON.parseObject(jsonResult, new TypeReference<BaseOutput<WithdrawResponseDto>>() {
         }.getType());
         return baseOutput;
+    }
+
+
+    @Override
+    public Long frozenFund(Long fundAccountId, Long amount) {
+        return payRpcResolver.postFrozenFund(fundAccountId, amount);
     }
 
 

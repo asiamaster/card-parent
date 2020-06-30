@@ -2,11 +2,6 @@ package com.dili.card.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.dili.card.dto.FundOpRequestDto;
 
 /**
  * @description：
@@ -18,14 +13,4 @@ import com.dili.card.dto.FundOpRequestDto;
 @RequestMapping("/unfreeze")
 public class UnfreezeCardController {
 
-	/**
-	*
-	* @author miaoguoxin
-	* @date 2020/6/29
-	*/
-	@RequestMapping(value = "/confirm.action", method = { RequestMethod.GET, RequestMethod.POST })
-	@ResponseBody
-	public ModelAndView confirm(FundOpRequestDto freezeInfo){
-		return null;
-	}
 }

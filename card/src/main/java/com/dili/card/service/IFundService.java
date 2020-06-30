@@ -1,6 +1,5 @@
 package com.dili.card.service;
 
-import com.dili.card.dto.FundOpRequestDto;
 import com.dili.card.dto.FundRequestDto;
 
 /**
@@ -20,5 +19,5 @@ public interface IFundService {
     * @author miaoguoxin
     * @date 2020/6/29
     */
-    void frozen(FundOpRequestDto fundOpRequestDto);
+    void frozen(FundRequestDto fundRequestDto);
 }

@@ -1,14 +1,17 @@
 package com.dili.card.service.impl;
 
-import com.dili.card.dto.FundOpRequestDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.pay.BalanceRequestDto;
+import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.FeeItemDto;
 import com.dili.card.dto.pay.WithdrawRequestDto;
 import com.dili.card.dto.pay.WithdrawResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
@@ -16,9 +19,12 @@ import com.dili.card.type.FeeType;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
+import com.dili.card.validator.AccountValidator;
+import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +44,8 @@ public class FundServiceImpl implements IFundService {
     private ISerialService serialService;
     @Resource
     private IPayService payService;
+    @Autowired
+    private AccountQueryRpcResolver accountQueryRpcResolver;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -93,9 +101,30 @@ public class FundServiceImpl implements IFundService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void frozen(FundOpRequestDto fundOpRequestDto) {
+    public void frozen(FundRequestDto requestDto) {
+        Long accountId = requestDto.getAccountId();
+        UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findByAccountId(accountId);
+        AccountValidator.validateMatchAccount(requestDto, accountCard);
 
+        BalanceResponseDto balance = payService.queryBalance(new BalanceRequestDto(accountCard.getFundAccountId()));
+        if (requestDto.getAmount() >= balance.getAvailableAmount()) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "可用余额不足");
+        }
+
+        BusinessRecordDo businessRecord = new BusinessRecordDo();
+        serialService.buildCommonInfo(requestDto, businessRecord);
+
+        businessRecord.setType(OperateType.FROZEN_FUND.getCode());
+        businessRecord.setAmount(requestDto.getAmount());
+        businessRecord.setNotes(requestDto.getMark());
+        serialService.saveBusinessRecord(businessRecord);
+
+        payService.frozenFund(accountCard.getFundAccountId(), requestDto.getAmount());
+
+        SerialDto serialDto = new SerialDto();
+        serialService.handleSuccess(serialDto);
     }
+
 
     /**
      * 构建提现流水 后期根据各业务代码调整优化

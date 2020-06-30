@@ -21,7 +21,6 @@ public class CardRequestDto extends BaseDto{
 	/** 客户ID*/
 	private Long customerId;
 
-
 	public String getCardNo() {
 		return cardNo;
 	}

@@ -1,18 +1,23 @@
 package com.dili.card.dto.pay;
 
+import com.dili.card.common.annotation.TextDisplay;
+import com.dili.card.common.provider.FenToYuanProvider;
+
 /**
  * 余额查询返回dto
  * @author xuliang
  */
 public class BalanceResponseDto {
-
     /** 账户ID*/
     private Long accountId;
     /** 余额*/
+    @TextDisplay(FenToYuanProvider.class)
     private Long balance;
     /** 冻结余额*/
+    @TextDisplay(FenToYuanProvider.class)
     private Long frozenAmount;
     /** 可用余额*/
+    @TextDisplay(FenToYuanProvider.class)
     private Long availableAmount;
 
     /**

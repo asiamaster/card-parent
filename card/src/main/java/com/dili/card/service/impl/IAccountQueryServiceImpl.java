@@ -1,19 +1,17 @@
 package com.dili.card.service.impl;
 
 import com.dili.card.dto.AccountDetailResponseDto;
-import com.dili.card.dto.AccountFundResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.util.PageUtils;
-import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
-import com.dili.ss.exception.BusinessException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,8 +35,11 @@ public class IAccountQueryServiceImpl implements IAccountQueryService {
     @Autowired
     private AccountQueryRpcResolver accountQueryRpcResolver;
 
+
     @Override
     public PageOutput<List<AccountListResponseDto>> getPage(UserAccountCardQuery param) {
+        //默认查询所有卡状态，并排除掉已禁用账户
+        param.setDefExcludeReturn(0).setDefExcludeDisabled(1);
         PageOutput<List<UserAccountCardResponseDto>> page = accountQueryRpcResolver.findPageByCondition(param);
         List<UserAccountCardResponseDto> data = page.getData();
         if (CollectionUtils.isEmpty(data)) {
@@ -56,12 +57,10 @@ public class IAccountQueryServiceImpl implements IAccountQueryService {
     @Override
     public AccountDetailResponseDto getDetailByCardNo(String cardNo) {
         AccountDetailResponseDto detail = new AccountDetailResponseDto();
-        AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByCardNoWithAssociation(cardNo)
-                .orElseThrow(() -> new BusinessException(ResultCode.DATA_ERROR, "卡账户信息不存在"));
-        //已经做了判null处理
+        AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByCardNoWithAssociation(cardNo);
         CustomerResponseDto customer = customerRpcResolver.findCustomerByIdWithConvert(cardAssociation.getPrimary().getCustomerId());
         //TODO 资金需要调用rpc
-        AccountFundResponseDto fund = new AccountFundResponseDto();
+        BalanceResponseDto fund = new BalanceResponseDto();
         fund.setBalance(1L);
         fund.setAvailableAmount(1L);
         fund.setFrozenAmount(1000L);

@@ -450,7 +450,8 @@ let tab = {
                     let newId = e.target.getAttribute("id");
                     let targetTab = tab.tabMap.get(newId);
                     targetTab.isActive = true;
-
+                    //加载数据
+                    $(targetTab.href).load(targetTab.url);
                     if (typeof callback == 'function') {
                         callback(targetTab, relatedTargetTab)
                     }

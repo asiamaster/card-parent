@@ -51,10 +51,7 @@
         };
         $.tab.init(options);
         //监听tab切换
-        $.tab.onChange((targetTab) => {
-            //加载数据
-            $(targetTab.href).load(targetTab.url);
-        })
+        $.tab.onChange()
     });
 
 </script>
