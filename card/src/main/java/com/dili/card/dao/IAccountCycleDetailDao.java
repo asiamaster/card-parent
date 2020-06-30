@@ -14,13 +14,6 @@ import com.dili.card.entity.AccountCycleDetailDo;
  */
 @Mapper
 public interface IAccountCycleDetailDao {
-	/**
-     * 列表查询
-     * @param page
-     * @param search
-     * @return
-     */
-	List<AccountCycleDetailDo> selectList(AccountCycleDetailDo accountCycleDetail);
 
     /**
      * 新增

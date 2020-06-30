@@ -35,7 +35,7 @@ public class AccountCycleManagementController {
 	/**
 	 * 账务列表
 	 */
-	@PostMapping("/list.action")
+	@PostMapping("/page.action")
 	public PageOutput<List<AccountCycleDto>> page(@RequestBody AccountCycleDto accountCycleDto) {
 		return iAccountCycleService.page(accountCycleDto);
 	}
