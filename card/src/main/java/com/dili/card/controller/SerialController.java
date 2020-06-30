@@ -3,6 +3,7 @@ package com.dili.card.controller;
 import cn.hutool.core.util.StrUtil;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
@@ -47,23 +48,23 @@ public class SerialController implements IControllerHandler {
 
     /**
      * 分页加载操作流水
-     * @param serialDto
+     * @param serialQueryDto
      * @return
      */
     @RequestMapping(value = "/account/listPage.action")
     @ResponseBody
-    public Map<String, Object> listPage(SerialDto serialDto) {
+    public Map<String, Object> listPage(SerialQueryDto serialQueryDto) {
         Map<String, Object> result = new HashMap<>();
         try {
             UserTicket userTicket = getUserTicket();
-            serialDto.setFirmId(userTicket.getFirmId());
-            if (StrUtil.isBlank(serialDto.getSort())) {
-                serialDto.setSort("operate_time");
+            serialQueryDto.setFirmId(userTicket.getFirmId());
+            if (StrUtil.isBlank(serialQueryDto.getSort())) {
+                serialQueryDto.setSort("operate_time");
             }
-            if (StrUtil.isBlank(serialDto.getOrder())) {
-                serialDto.setSort("desc");
+            if (StrUtil.isBlank(serialQueryDto.getOrder())) {
+                serialQueryDto.setSort("desc");
             }
-            PageOutput<List<SerialRecordDo>> pageOutput = serialRecordRpcResolver.listPage(serialDto);
+            PageOutput<List<SerialRecordDo>> pageOutput = serialRecordRpcResolver.listPage(serialQueryDto);
             if (pageOutput.isSuccess()) {
                 result.put("rows", pageOutput.getData());
                 result.put("total", pageOutput.getTotal());
@@ -76,17 +77,17 @@ public class SerialController implements IControllerHandler {
 
     /**
      * 获取操作员当前账期内用于补打的操作记录列表 默认20条，按操作时间倒序排列
-     * @param serialDto
+     * @param serialQueryDto
      * @return
      */
     @RequestMapping(value = "/business/cycleReprintList.action")
     @ResponseBody
-    public BaseOutput<List<BusinessRecordDo>> cycleReprintList(@RequestBody SerialDto serialDto) {
+    public BaseOutput<List<BusinessRecordDo>> cycleReprintList(@RequestBody SerialQueryDto serialQueryDto) {
         try {
             UserTicket userTicket = getUserTicket();
-            serialDto.setOperatorId(userTicket.getId());
-            serialDto.setFirmId(userTicket.getFirmId());
-            List<BusinessRecordDo> itemList = serialService.cycleReprintList(serialDto);
+            serialQueryDto.setOperatorId(userTicket.getId());
+            serialQueryDto.setFirmId(userTicket.getFirmId());
+            List<BusinessRecordDo> itemList = serialService.cycleReprintList(serialQueryDto);
             return BaseOutput.success().setData(itemList);
         } catch (CardAppBizException e) {
             return BaseOutput.failure(e.getMessage());
@@ -98,19 +99,19 @@ public class SerialController implements IControllerHandler {
 
     /**
      * 查询客户今日充值记录
-     * @param serialDto
+     * @param serialQueryDto
      * @return
      */
     @RequestMapping(value = "/business/todayChargeList.action")
     @ResponseBody
-    public BaseOutput<List<BusinessRecordDo>> todayChargeList(@RequestBody SerialDto serialDto) {
+    public BaseOutput<List<BusinessRecordDo>> todayChargeList(@RequestBody SerialQueryDto serialQueryDto) {
         try {
-            if (serialDto.getAccountId() == null) {
+            if (serialQueryDto.getAccountId() == null) {
                 return BaseOutput.failure("账户ID为空");
             }
             UserTicket userTicket = getUserTicket();
-            serialDto.setFirmId(userTicket.getFirmId());
-            List<BusinessRecordDo> itemList = serialService.todayChargeList(serialDto);
+            serialQueryDto.setFirmId(userTicket.getFirmId());
+            List<BusinessRecordDo> itemList = serialService.todayChargeList(serialQueryDto);
             return BaseOutput.success().setData(itemList);
         } catch (CardAppBizException e) {
             return BaseOutput.failure(e.getMessage());

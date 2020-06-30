@@ -3,10 +3,7 @@ package com.dili.card.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.dili.card.dao.IBusinessRecordDao;
-import com.dili.card.dto.AccountWithAssociationResponseDto;
-import com.dili.card.dto.CardRequestDto;
-import com.dili.card.dto.SerialDto;
-import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.*;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
@@ -151,11 +148,11 @@ public class SerialServiceImpl implements ISerialService {
     }
 
     @Override
-    public List<BusinessRecordDo> cycleReprintList(SerialDto serialDto) {
-        SerialDto query = new SerialDto();
-        query.setFirmId(serialDto.getFirmId());
-        query.setOperatorId(serialDto.getOperatorId());
-        AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(serialDto.getOperatorId());
+    public List<BusinessRecordDo> cycleReprintList(SerialQueryDto serialQueryDto) {
+        SerialQueryDto query = new SerialQueryDto();
+        query.setFirmId(serialQueryDto.getFirmId());
+        query.setOperatorId(serialQueryDto.getOperatorId());
+        AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(serialQueryDto.getOperatorId());
         if (accountCycle == null) {
             throw new CardAppBizException("", "未查询到操作员账期");
         }
@@ -164,17 +161,17 @@ public class SerialServiceImpl implements ISerialService {
         query.setOrder("desc");
         query.setState(OperateState.SUCCESS.getCode());
         query.setOperateTypeList(OperateType.createReprintList());
-        query.setLimit(serialDto.getLimit() != null ? serialDto.getLimit() : 20);
+        query.setLimit(serialQueryDto.getLimit() != null ? serialQueryDto.getLimit() : 20);
         return businessRecordDao.list(query);
     }
 
     @Override
-    public List<BusinessRecordDo> todayChargeList(SerialDto serialDto) {
-        SerialDto query = new SerialDto();
-        query.setFirmId(serialDto.getFirmId());
+    public List<BusinessRecordDo> todayChargeList(SerialQueryDto serialQueryDto) {
+        SerialQueryDto query = new SerialQueryDto();
+        query.setFirmId(serialQueryDto.getFirmId());
         List<Long> accountIdList = new ArrayList<>();
-        accountIdList.add(serialDto.getAccountId());
-        AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByAccountIdWithAssociation(serialDto.getAccountId())
+        accountIdList.add(serialQueryDto.getAccountId());
+        AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByAccountIdWithAssociation(serialQueryDto.getAccountId())
                 .orElseThrow(() -> new CardAppBizException(ResultCode.DATA_ERROR, "卡账户信息不存在"));
         if (!CollUtil.isEmpty(cardAssociation.getAssociation())) {
             accountIdList.addAll(cardAssociation.getAssociation().stream().map(UserAccountCardResponseDto::getAccountId).collect(Collectors.toList()));
@@ -186,6 +183,6 @@ public class SerialServiceImpl implements ISerialService {
         query.setOperateTimeEnd(DateUtil.formatDate("yyyy-MM-dd") + " 23:59:59");
         query.setSort("operate_time");
         query.setOrder("desc");
-        return businessRecordDao.list(serialDto);
+        return businessRecordDao.list(serialQueryDto);
     }
 }

@@ -2,6 +2,7 @@ package com.dili.card.service;
 
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 
@@ -60,15 +61,15 @@ public interface ISerialService {
 
     /**
      * 获取操作员当前账期内用于补打的操作记录
-     * @param serialDto
+     * @param serialQueryDto
      * @return
      */
-    List<BusinessRecordDo> cycleReprintList(SerialDto serialDto);
+    List<BusinessRecordDo> cycleReprintList(SerialQueryDto serialQueryDto);
 
     /**
      * 获取客户今日充值记录列表
-     * @param serialDto
+     * @param serialQueryDto
      * @return
      */
-    List<BusinessRecordDo> todayChargeList(SerialDto serialDto);
+    List<BusinessRecordDo> todayChargeList(SerialQueryDto serialQueryDto);
 }
