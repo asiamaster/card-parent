@@ -1,8 +1,6 @@
 package com.dili.card.service;
 
-import com.dili.card.dto.pay.CreateTradeRequestDto;
-import com.dili.card.dto.pay.WithdrawRequestDto;
-import com.dili.card.dto.pay.WithdrawResponseDto;
+import com.dili.card.dto.pay.*;
 import com.dili.ss.domain.BaseOutput;
 
 /**
@@ -24,4 +22,11 @@ public interface IPayService {
      * @return
      */
     BaseOutput<WithdrawResponseDto> commitWithdraw(WithdrawRequestDto withdrawRequest);
+
+    /**
+     * 余额查询
+     * @param balanceRequestDto
+     * @return
+     */
+    BalanceResponseDto queryBalance(BalanceRequestDto balanceRequestDto);
 }

@@ -6,9 +6,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.dili.card.config.PayProperties;
-import com.dili.card.dto.pay.CreateTradeRequestDto;
-import com.dili.card.dto.pay.WithdrawRequestDto;
-import com.dili.card.dto.pay.WithdrawResponseDto;
+import com.dili.card.dto.pay.*;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IPayService;
 import com.dili.ss.domain.BaseOutput;
@@ -58,6 +56,19 @@ public class PayServiceImpl implements IPayService {
         return baseOutput;
     }
 
+
+    @Override
+    public BalanceResponseDto queryBalance(BalanceRequestDto balanceRequestDto) {
+        String jsonResult = doPost(JSON.toJSONString(balanceRequestDto), "payment.fund.service:query");
+        if (StrUtil.isBlank(jsonResult)) {
+            throw new CardAppBizException("", "支付系统返回内容为空");
+        }
+        BaseOutput<BalanceResponseDto> baseOutput = JSON.parseObject(jsonResult, new TypeReference<BaseOutput<BalanceResponseDto>>(){}.getType());
+        if (!baseOutput.isSuccess()) {
+            throw new CardAppBizException("", "支付系统查询余额失败");
+        }
+        return baseOutput.getData();
+    }
 
     /**
      * http 请求；暂时写在此处
