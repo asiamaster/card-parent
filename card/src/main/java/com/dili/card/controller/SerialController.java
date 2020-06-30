@@ -5,6 +5,7 @@ import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.service.ISerialService;
 import com.dili.ss.domain.BaseOutput;
@@ -83,6 +84,8 @@ public class SerialController implements IControllerHandler {
             serialDto.setFirmId(userTicket.getFirmId());
             List<BusinessRecordDo> itemList = serialService.cycleReprintList(serialDto);
             return BaseOutput.success().setData(itemList);
+        } catch (CardAppBizException e) {
+            return BaseOutput.failure(e.getMessage());
         } catch (Exception e) {
             LOGGER.error("reprintList", e);
             return BaseOutput.failure();
@@ -101,9 +104,13 @@ public class SerialController implements IControllerHandler {
             if (serialDto.getAccountId() == null) {
                 return BaseOutput.failure("账户ID为空");
             }
+            UserTicket userTicket = getUserTicket();
+            serialDto.setFirmId(userTicket.getFirmId());
             List<BusinessRecordDo> itemList = serialService.todayChargeList(serialDto);
             return BaseOutput.success().setData(itemList);
-        } catch (Exception e) {
+        } catch (CardAppBizException e) {
+            return BaseOutput.failure(e.getMessage());
+        }catch (Exception e) {
             LOGGER.error("todayChargeList", e);
             return BaseOutput.failure();
         }

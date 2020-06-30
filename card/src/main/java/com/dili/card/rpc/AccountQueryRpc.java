@@ -34,6 +34,14 @@ public interface AccountQueryRpc {
     BaseOutput<AccountWithAssociationResponseDto> findAssociation(@PathVariable String cardNo);
 
     /**
+     *  根据accountId查询包含关联卡的信息
+     * @author miaoguoxin
+     * @date 2020/6/28
+     */
+    @RequestMapping(value = "/getAssociationByAccountId/{accountId}", method = RequestMethod.GET)
+    BaseOutput<AccountWithAssociationResponseDto> findAssociation(@PathVariable Long accountId);
+
+    /**
      * 查询分页
      * @author miaoguoxin
      * @date 2020/6/22

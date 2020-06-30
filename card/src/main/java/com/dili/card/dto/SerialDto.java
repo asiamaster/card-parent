@@ -45,6 +45,8 @@ public class SerialDto extends BaseDomain {
     private List<SerialRecordDo> serialRecordList;
     /** 操作类型列表*/
     private List<Integer> operateTypeList;
+    /** 账户id列表*/
+    private List<Long> accountIdList;
 
     public String getSerialNo() {
         return serialNo;
@@ -180,5 +182,13 @@ public class SerialDto extends BaseDomain {
 
     public void setOperateTypeList(List<Integer> operateTypeList) {
         this.operateTypeList = operateTypeList;
+    }
+
+    public List<Long> getAccountIdList() {
+        return accountIdList;
+    }
+
+    public void setAccountIdList(List<Long> accountIdList) {
+        this.accountIdList = accountIdList;
     }
 }

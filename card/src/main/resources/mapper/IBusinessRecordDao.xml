@@ -283,6 +283,12 @@
 				#{temp}
 			</foreach>
 		</if>
+		<if test="accountIdList != null and accountIdList.size() > 0">
+			and `account_id` in
+			<foreach collection="accountIdList" item="temp" separator="," open="(" close=")">
+				#{temp}
+			</foreach>
+		</if>
 		<if test="sort != null and sort != '' and order != null and order != ''">
 			ORDER BY ${sort} ${order}
 		</if>

@@ -1,13 +1,17 @@
 package com.dili.card.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.dili.card.dao.IBusinessRecordDao;
+import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
@@ -18,6 +22,7 @@ import com.dili.card.type.OperateState;
 import com.dili.card.type.OperateType;
 import com.dili.card.util.DateUtil;
 import com.dili.customer.sdk.domain.Customer;
+import com.dili.ss.constant.ResultCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,7 +31,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 操作流水service实现类
@@ -46,6 +53,8 @@ public class SerialServiceImpl implements ISerialService {
     private IAccountCycleService accountCycleService;
     @Resource
     private SerialRecordRpcResolver serialRecordRpcResolver;
+    @Resource
+    private AccountQueryRpcResolver accountQueryRpcResolver;
 
     @Override
     public void buildCommonInfo(CardRequestDto cardParam, BusinessRecordDo businessRecord) {
@@ -129,23 +138,37 @@ public class SerialServiceImpl implements ISerialService {
 
     @Override
     public List<BusinessRecordDo> cycleReprintList(SerialDto serialDto) {
+        SerialDto query = new SerialDto();
+        query.setFirmId(serialDto.getFirmId());
+        query.setOperatorId(serialDto.getOperatorId());
         AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(serialDto.getOperatorId());
-        serialDto.setCycleNo(accountCycle.getCycleNo());
-        serialDto.setSort("operate_time");
-        serialDto.setOrder("desc");
-        serialDto.setState(OperateState.SUCCESS.getCode());
-        serialDto.setOperateTypeList(OperateType.createReprintList());
-        return businessRecordDao.list(serialDto);
+        query.setCycleNo(accountCycle.getCycleNo());
+        query.setSort("operate_time");
+        query.setOrder("desc");
+        query.setState(OperateState.SUCCESS.getCode());
+        query.setOperateTypeList(OperateType.createReprintList());
+        query.setLimit(serialDto.getLimit() != null ? serialDto.getLimit() : 20);
+        return businessRecordDao.list(query);
     }
 
     @Override
     public List<BusinessRecordDo> todayChargeList(SerialDto serialDto) {
-        serialDto.setType(OperateType.ACCOUNT_CHARGE.getCode());
-        serialDto.setState(OperateState.SUCCESS.getCode());
-        serialDto.setOperateTimeStart(DateUtil.formatDate("yyyy-MM-dd") + " 00:00:00");
-        serialDto.setOperateTimeEnd(DateUtil.formatDate("yyyy-MM-dd") + " 23:59:59");
-        serialDto.setSort("operate_time");
-        serialDto.setOrder("desc");
+        SerialDto query = new SerialDto();
+        query.setFirmId(serialDto.getFirmId());
+        List<Long> accountIdList = new ArrayList<>();
+        accountIdList.add(serialDto.getAccountId());
+        AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByAccountIdWithAssociation(serialDto.getAccountId())
+                .orElseThrow(() -> new CardAppBizException(ResultCode.DATA_ERROR, "卡账户信息不存在"));
+        if (!CollUtil.isEmpty(cardAssociation.getAssociation())) {
+            accountIdList.addAll(cardAssociation.getAssociation().stream().map(UserAccountCardResponseDto::getAccountId).collect(Collectors.toList()));
+        }
+        query.setAccountIdList(accountIdList);
+        query.setType(OperateType.ACCOUNT_CHARGE.getCode());
+        query.setState(OperateState.SUCCESS.getCode());
+        query.setOperateTimeStart(DateUtil.formatDate("yyyy-MM-dd") + " 00:00:00");
+        query.setOperateTimeEnd(DateUtil.formatDate("yyyy-MM-dd") + " 23:59:59");
+        query.setSort("operate_time");
+        query.setOrder("desc");
         return businessRecordDao.list(serialDto);
     }
 }

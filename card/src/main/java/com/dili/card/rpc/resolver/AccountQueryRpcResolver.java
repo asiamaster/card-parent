@@ -98,6 +98,20 @@ public class AccountQueryRpcResolver {
     }
 
     /**
+     * 根据账户ID查询包含关联卡的信息
+     * @author miaoguoxin
+     * @date 2020/6/28
+     */
+    public Optional<AccountWithAssociationResponseDto> findByAccountIdWithAssociation(Long accountId) {
+        BaseOutput<AccountWithAssociationResponseDto> result = accountQueryRpc.findAssociation(accountId);
+        if (!result.isSuccess()) {
+            LOGGER.warn("调用账户服务错误:{}", result.getMessage());
+            return Optional.empty();
+        }
+        return Optional.ofNullable(result.getData());
+    }
+
+    /**
      * 校验
      * @author miaoguoxin
      * @date 2020/6/22
