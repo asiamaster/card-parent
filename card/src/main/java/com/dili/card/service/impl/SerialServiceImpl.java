@@ -142,6 +142,9 @@ public class SerialServiceImpl implements ISerialService {
         query.setFirmId(serialDto.getFirmId());
         query.setOperatorId(serialDto.getOperatorId());
         AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(serialDto.getOperatorId());
+        if (accountCycle == null) {
+            throw new CardAppBizException("", "未查询到操作员账期");
+        }
         query.setCycleNo(accountCycle.getCycleNo());
         query.setSort("operate_time");
         query.setOrder("desc");
