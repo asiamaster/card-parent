@@ -129,7 +129,7 @@
 	</update>
 	
 	<update id="updateStateByCycle">
-		UPDATE card_user_cash
+		UPDATE card_user_cash SET
 			`state` = #{state}
 		WHERE
 			`cycle_no` = #{cycleNo}
