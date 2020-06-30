@@ -34,7 +34,7 @@ public interface IAccountCycleService {
 	/**
 	 * 创建账务周期号
 	 */
-	AccountCycleDo createCycleRecord(Long userId, String userName);
+	AccountCycleDo findActiveCycleByUserId(Long userId, String userName);
 	
 	/**
 	 * 通过用户id查询账务周期

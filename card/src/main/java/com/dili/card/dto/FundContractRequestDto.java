@@ -3,6 +3,7 @@ package com.dili.card.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -40,6 +41,7 @@ public class FundContractRequestDto{
 	/** 被委托人列表 */
 	@NotNull(message = "被委托人集合不能为空")
 	@Size(min = 1, message = "被委托人集合不能为空")
+	@Valid
 	private List<FundConsignorDto> consignors;
 	/** 委托人姓名或者编号 */
 	private String consignorCustomerCode;

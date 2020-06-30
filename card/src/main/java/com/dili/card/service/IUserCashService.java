@@ -5,6 +5,7 @@ import java.util.List;
 import com.dili.card.dto.UserCashDto;
 import com.dili.card.entity.UserCashDo;
 import com.dili.card.type.CashAction;
+import com.dili.ss.domain.PageOutput;
 
 /**
  * 领款取款操作
@@ -39,7 +40,7 @@ public interface IUserCashService {
 	/**
 	 * 现金领款记录列表
 	 */
-	List<UserCashDto> listPayee(UserCashDto userCashDto);
+	PageOutput<List<UserCashDto>> listPayee(UserCashDto userCashDto);
 
 	/**
 	 * 保存现金领款记录
@@ -54,7 +55,7 @@ public interface IUserCashService {
 	/**
 	 * 现金交款记录列表
 	 */
-	List<UserCashDto> listPayer(UserCashDto userCashDto);
+	PageOutput<List<UserCashDto>> listPayer(UserCashDto userCashDto);
 
 	/**
 	 * 修改更新
