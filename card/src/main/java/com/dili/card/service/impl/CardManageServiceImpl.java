@@ -44,7 +44,7 @@ public class CardManageServiceImpl implements ICardManageService {
         BusinessRecordDo businessRecord = new BusinessRecordDo();
         serialService.buildCommonInfo(cardParam, businessRecord);
         businessRecord.setType(OperateType.LOSS_REMOVE.getCode());
-        businessRecord.setAmount(0L);
+        //businessRecord.setAmount(0L);
         serialService.saveBusinessRecord(businessRecord);
         BaseOutput<?> baseOutput = cardManageRpc.unLostCard(cardParam);
         if (!baseOutput.isSuccess()) {
