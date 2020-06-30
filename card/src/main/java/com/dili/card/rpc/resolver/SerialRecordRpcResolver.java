@@ -1,6 +1,7 @@
 package com.dili.card.rpc.resolver;
 
 import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.SerialRecordRpc;
@@ -35,10 +36,10 @@ public class SerialRecordRpcResolver {
 
     /**
      * 分页查询操作流水记录
-     * @param serialDto
+     * @param serialQueryDto
      * @return
      */
-    public PageOutput<List<SerialRecordDo>> listPage(SerialDto serialDto) {
-        return serialRecordRpc.listPage(serialDto);
+    public PageOutput<List<SerialRecordDo>> listPage(SerialQueryDto serialQueryDto) {
+        return serialRecordRpc.listPage(serialQueryDto);
     }
 }

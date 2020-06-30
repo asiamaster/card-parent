@@ -213,7 +213,7 @@
 	</update>
 
 	<!-- 查询业务操作记录列表 -->
-	<select id="list" parameterType="com.dili.card.dto.SerialDto" resultType="com.dili.card.entity.BusinessRecordDo">
+	<select id="list" parameterType="com.dili.card.dto.SerialQueryDto" resultType="com.dili.card.entity.BusinessRecordDo">
 		SELECT
 			`id`,
 			`serial_no`,

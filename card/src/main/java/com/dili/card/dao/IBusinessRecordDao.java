@@ -1,6 +1,6 @@
 package com.dili.card.dao;
 
-import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.entity.BusinessRecordDo;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -62,8 +62,8 @@ public interface IBusinessRecordDao {
 
 	/**
 	 * 查询业务操作记录列表
-	 * @param serialDto
+	 * @param serialQueryDto
 	 * @return
 	 */
-    List<BusinessRecordDo> list(SerialDto serialDto);
+    List<BusinessRecordDo> list(SerialQueryDto serialQueryDto);
 }
