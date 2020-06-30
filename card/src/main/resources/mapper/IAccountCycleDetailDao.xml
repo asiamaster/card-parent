@@ -108,7 +108,18 @@
  		FROM
  			card_business_record
  		WHERE
- 			operator_id = #{operatorId} AND `cycle_no` = #{cycleNo} AND type IN (11,12,25,26)
+ 			operator_id = #{operatorId} AND `cycle_no` = #{cycleNo} AND type IN (11,12)
  		GROUP BY type,trade_channel
+ 		
+ 		UNION ALL
+ 		
+ 		SELECT
+ 			action,2  AS tradeChannel, COUNT(*) AS times, SUM(amount) AS amount
+ 		FROM
+ 			card_user_cash
+ 		WHERE
+ 			`cycle_no` = #{cycleNo}
+ 		GROUP BY action;
+ 			
 	</select>
 </mapper>
