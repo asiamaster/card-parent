@@ -69,6 +69,9 @@ public class SerialServiceImpl implements ISerialService {
         businessRecord.setCustomerName(customer.getName());
         //账务周期
         AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(cardParam.getOpId());
+        if (accountCycle == null) {
+            throw new CardAppBizException("", "未查询到操作员账期");
+        }
         businessRecord.setCycleNo(accountCycle.getCycleNo());
         //操作员信息
         businessRecord.setOperatorId(cardParam.getOpId());
