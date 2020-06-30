@@ -38,14 +38,19 @@ public interface IAccountCycleService {
 	AccountCycleDto detail(Long id);
 
 	/**
-	 * 获取当前活跃的账务周期号
+	 * 获取当前活跃的账务周期号 没有就创建
 	 */
 	AccountCycleDo findActiveCycleByUserId(Long userId, String userName);
 
 	/**
-	 * 根据账务周期编号查询账务周期
+	 * 根据主键id查询账务周期
 	 * @param cycleNo
 	 */
 	AccountCycleDo findById(Long id);
+
+	/**
+	 * 获取当前活跃的账务周期号  非创建
+	 */
+	AccountCycleDo findActiveCycleByUserId(Long userId);
 
 }

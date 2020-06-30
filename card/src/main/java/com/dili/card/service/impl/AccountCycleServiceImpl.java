@@ -99,11 +99,11 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		if (userId == null || StringUtils.isBlank(userName)) {
 			throw new CardAppBizException("参数错误");
 		}
-		AccountCycleDo accountCycle = this.querySettledCycleByUserId(userId);
+		AccountCycleDo accountCycle = this.findSettledCycleByUserId(userId);
 		if (accountCycle != null) {
 			throw new CardAppBizException("当前账务周期正在对账中,不能操作");
 		}
-		accountCycle = this.queryActiveCycleByUserId(userId);
+		accountCycle = this.findActiveCycleByUserId(userId);
 		if (accountCycle == null) {
 			accountCycle = new AccountCycleDo();
 			accountCycle.setUserId(userId);
@@ -127,14 +127,15 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	/**
 	 * 获取活跃的账务周期
 	 */
-	private AccountCycleDo queryActiveCycleByUserId(Long userId) {
+	@Override
+	public AccountCycleDo findActiveCycleByUserId(Long userId) {
 		return accountCycleDao.findByUserIdAndState(userId, CycleState.ACTIVE.getCode());
 	}
 
 	/**
 	 * 获取对账的账务周期
 	 */
-	private AccountCycleDo querySettledCycleByUserId(Long userId) {
+	private AccountCycleDo findSettledCycleByUserId(Long userId) {
 		return accountCycleDao.findByUserIdAndState(userId, CycleState.SETTLED.getCode());
 	}
 
