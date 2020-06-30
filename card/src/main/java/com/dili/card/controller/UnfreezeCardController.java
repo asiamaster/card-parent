@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.dili.card.dto.FreezeFundDto;
+import com.dili.card.dto.FundOpRequestDto;
 
 /**
  * @description：
@@ -25,7 +25,7 @@ public class UnfreezeCardController {
 	*/
 	@RequestMapping(value = "/confirm.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public ModelAndView confirm(FreezeFundDto freezeInfo){
+	public ModelAndView confirm(FundOpRequestDto freezeInfo){
 		return null;
 	}
 }

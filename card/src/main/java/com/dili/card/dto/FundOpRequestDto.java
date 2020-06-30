@@ -1,18 +1,23 @@
 package com.dili.card.dto;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * @description：
- * 			解冻资金操作
+ * 解、冻资金操作
  * @author ：WangBo
  * @time ：2020年6月29日上午10:15:19
  */
-public class FreezeFundDto {
+public class FundOpRequestDto implements Serializable {
+	/**卡账户id*/
 	private Long accountId;
 	private Long fundAccountId;
 	private BigDecimal extraFee;
 	private String serialNo;
+	/**解冻、冻结的资金*/
+	private Long fee;
+	/**备注*/
+	private String mark;
 
 	public Long getAccountId() {
 		return accountId;
@@ -46,4 +51,19 @@ public class FreezeFundDto {
 		this.serialNo = serialNo;
 	}
 
+	public Long getFee() {
+		return fee;
+	}
+
+	public void setFee(Long fee) {
+		this.fee = fee;
+	}
+
+	public String getMark() {
+		return mark;
+	}
+
+	public void setMark(String mark) {
+		this.mark = mark;
+	}
 }

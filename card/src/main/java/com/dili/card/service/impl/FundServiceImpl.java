@@ -1,5 +1,6 @@
 package com.dili.card.service.impl;
 
+import com.dili.card.dto.FundOpRequestDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
@@ -88,6 +89,12 @@ public class FundServiceImpl implements IFundService {
         } catch (Exception e) {
             LOGGER.error("withdraw", e);
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void frozen(FundOpRequestDto fundOpRequestDto) {
+
     }
 
     /**

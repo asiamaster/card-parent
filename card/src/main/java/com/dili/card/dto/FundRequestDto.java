@@ -14,6 +14,7 @@ public class FundRequestDto extends CardRequestDto{
     private String tradePwd;
     /** 手续费*/
     private Long serviceCost;
+
     public Integer getTradeChannel() {
         return tradeChannel;
     }

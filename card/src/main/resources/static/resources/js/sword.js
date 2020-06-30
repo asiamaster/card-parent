@@ -1,5 +1,5 @@
 // 当前table相关信息
-var table = {
+let table = {
     config: {},
     // 当前实例配置
     options: {},
@@ -22,6 +22,11 @@ var table = {
     rememberSelectedIds: {}
 };
 
+//当前tab标签信息
+let tab = {
+    tabMap: new Map(),
+    options: {}
+};
 (function ($) {
     $.extend({
         _tree: {},
@@ -294,35 +299,6 @@ var table = {
                     return _text;
                 }
             },
-            // 下拉按钮切换
-            dropdownToggle: function (value) {
-                var actions = [];
-                actions.push('<div class="btn-group">');
-                actions.push('<button type="button" class="btn btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">');
-                actions.push('<i class="fa fa-cog"></i>&nbsp;<span class="fa fa-chevron-down"></span></button>');
-                actions.push('<ul class="dropdown-menu">');
-                actions.push(value.replace(/<a/g, "<li><a").replace(/<\/a>/g, "</a></li>"));
-                actions.push('</ul>');
-                actions.push('</div>');
-                return actions.join('');
-            },
-            // 图片预览
-            imageView: function (value, height, width, target) {
-                if ($.common.isEmpty(width)) {
-                    width = 'auto';
-                }
-                if ($.common.isEmpty(height)) {
-                    height = 'auto';
-                }
-                // blank or self
-                var _target = $.common.isEmpty(target) ? 'self' : target;
-                if ($.common.isNotEmpty(value)) {
-                    return $.common.sprintf("<img class='img-circle img-xs' data-height='%s' data-width='%s' data-target='%s' src='%s'/>", height, width, _target, value);
-                } else {
-                    return $.common.nullToStr(value);
-                }
-            },
-
             // 搜索-默认第一个form
             search: function (formId, tableId, data) {
                 table.set(tableId);
@@ -355,19 +331,6 @@ var table = {
             exportExcel: function (formId) {
                 table.set();
                 bui.util.doExport(table.options.id, formId)
-            },
-            // 下载模板
-            importTemplate: function () {
-                table.set();
-                $.get(table.options.importTemplateUrl, function (result) {
-                    if (result.code == web_status.SUCCESS) {
-                        window.location.href = ctx + "common/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
-                    } else if (result.code == web_status.WARNING) {
-                        $.modal.alertWarning(result.msg)
-                    } else {
-                        $.modal.alertError(result.msg);
-                    }
-                });
             },
             // 刷新表格
             refresh: function (tableId) {
@@ -419,18 +382,6 @@ var table = {
                 }
                 return $.common.uniqueFn(rows);
             },
-            // 回显数据字典
-            selectDictLabel: function (datas, value) {
-                var actions = [];
-                $.each(datas, function (index, dict) {
-                    if (dict.dictValue == ('' + value)) {
-                        var listClass = $.common.equals("default", dict.listClass) || $.common.isEmpty(dict.listClass) ? "" : "badge badge-" + dict.listClass;
-                        actions.push($.common.sprintf("<span class='%s'>%s</span>", listClass, dict.dictLabel));
-                        return false;
-                    }
-                });
-                return actions.join('');
-            },
             // 显示表格指定列
             showColumn: function (column, tableId) {
                 var currentId = $.common.isEmpty(tableId) ? table.options.id : tableId;
@@ -440,6 +391,70 @@ var table = {
             hideColumn: function (column, tableId) {
                 var currentId = $.common.isEmpty(tableId) ? table.options.id : tableId;
                 $("#" + currentId).bootstrapTable('hideColumn', column);
+            }
+        },
+        //tab标签页操作
+        tab: {
+            init: (options) => {
+                let defaults = {
+                    id: 'tab',
+                    prefixUrl: '',
+                    activeId: undefined,
+                    params: {}
+                };
+                options = $.extend(defaults, options);
+                tab.options = options;
+                let hasActiveId = $.common.isNotEmpty(options.activeId);
+                //初始化页签资源
+                let urlParams = $.common.jsonObj2UrlParams(options.params);
+                $('#' + options.id).find('a').each((i, ele) => {
+                    let id = $(ele).attr('id');
+                    let uri = $(ele).attr('uri');
+                    let href = $(ele).attr('href');
+                    let isActive = false;
+                    //如果没有指定初始激活的id，那就默认第一个元素元素
+                    if (!hasActiveId && i == 0) {
+                        isActive = true;
+                    }
+                    if (hasActiveId && options.activeId == id) {
+                        isActive = true;
+                    }
+                    tab.tabMap.set(id, {
+                        id: id,
+                        url: options.prefixUrl + uri + "?" + urlParams,
+                        href: href,
+                        isActive: isActive
+                    })
+                });
+
+                //加载已active的选项卡
+                for (let item of tab.tabMap.values()) {
+                    if (item.isActive) {
+                        //激活选项卡
+                        let $ele = $('#' + item.id);
+                        $ele.addClass('active');
+                        $(item.href).addClass('show active');
+
+                        $(item.href).load(item.url);
+                        break;
+                    }
+                }
+            },
+            //选项卡切换加载数据
+            onChange: (callback) => {
+                let id = '#' + tab.options.id + ' a[data-toggle="tab"]';
+                $(id).on('shown.bs.tab', (e) => {
+                    let oldId = e.relatedTarget.getAttribute("id");
+                    let relatedTargetTab = tab.tabMap.get(oldId);
+                    relatedTargetTab.isActive = false;
+                    let newId = e.target.getAttribute("id");
+                    let targetTab = tab.tabMap.get(newId);
+                    targetTab.isActive = true;
+
+                    if (typeof callback == 'function') {
+                        callback(targetTab, relatedTargetTab)
+                    }
+                });
             }
         },
         // 表格树封装处理
@@ -722,47 +737,6 @@ var table = {
                         return true;
                     }
                 });
-            },
-            // 弹出层全屏
-            openFull: function (title, url, width, height) {
-                //如果是移动端，就使用自适应大小弹窗
-                if ($.common.isMobile()) {
-                    width = 'auto';
-                    height = 'auto';
-                }
-                if ($.common.isEmpty(title)) {
-                    title = false;
-                }
-                if ($.common.isEmpty(url)) {
-                    url = "/404.html";
-                }
-                if ($.common.isEmpty(width)) {
-                    width = 800;
-                }
-                if ($.common.isEmpty(height)) {
-                    height = ($(window).height() - 50);
-                }
-                var index = layer.open({
-                    type: 2,
-                    area: [width + 'px', height + 'px'],
-                    fix: false,
-                    //不固定
-                    maxmin: true,
-                    shade: 0.3,
-                    title: title,
-                    content: url,
-                    btn: ['确定', '关闭'],
-                    // 弹层外区域关闭
-                    shadeClose: true,
-                    yes: function (index, layero) {
-                        var iframeWin = layero.find('iframe')[0];
-                        iframeWin.contentWindow.submitHandler(index, layero);
-                    },
-                    cancel: function (index) {
-                        return true;
-                    }
-                });
-                layer.full(index);
             },
             // 禁用按钮
             disable: function () {
@@ -1270,6 +1244,7 @@ var table = {
                 }
                 return false;
             },
+            //form表单转json
             form2JsonString: function (formId) {
                 var paramArray = $('#' + formId).serializeArray();
                 /*请求参数转json对象*/
@@ -1280,6 +1255,20 @@ var table = {
                 });
                 // json对象再转换成json字符串
                 return JSON.stringify(jsonObj);
+            },
+            //json对象转url参数
+            jsonObj2UrlParams: (jsonObj) => {
+                try {
+                    let tempArr = [];
+                    for (let i in jsonObj) {
+                        let key = encodeURIComponent(i);
+                        let value = encodeURIComponent(jsonObj[i]);
+                        tempArr.push(key + '=' + value);
+                    }
+                    return tempArr.join('&');
+                } catch (err) {
+                    return '';
+                }
             },
             // 空格截取
             trim: function (value) {

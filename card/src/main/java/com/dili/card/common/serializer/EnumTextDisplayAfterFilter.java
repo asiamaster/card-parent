@@ -28,7 +28,7 @@ public class EnumTextDisplayAfterFilter extends AfterFilter {
     @Override
     public void writeAfter(Object object) {
         String packageName = object.getClass().getPackageName();
-        if (!NEED_SCAN_PACKAGE.equalsIgnoreCase(packageName)) {
+        if (!packageName.startsWith(NEED_SCAN_PACKAGE)) {
             return;
         }
 

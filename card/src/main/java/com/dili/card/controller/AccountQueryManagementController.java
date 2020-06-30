@@ -73,21 +73,7 @@ public class AccountQueryManagementController {
         return "accountquery/accountDetail";
     }
 
-    /**
-    *
-    * @author miaoguoxin
-    * @date 2020/6/29
-    */
-    @GetMapping("/frozenFund.html")
-    public String frozenFundView(String cardNo, ModelMap map){
-        if (StringUtils.isBlank(cardNo)) {
-            throw new CardAppBizException(ResultCode.PARAMS_ERROR, "卡号不能为空");
-        }
-        String json = JSON.toJSONString(accountQueryService.getDetailByCardNo(cardNo),
-                new EnumTextDisplayAfterFilter());
-        map.put("detail", JSON.parseObject(json));
-        return "fund/frozen";
-    }
+
 
 
     /**

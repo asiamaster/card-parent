@@ -17,31 +17,80 @@
 <div class="main-container container-fluid">
     <div>
         <div class="panel-body" style="display: block;">
-            <table id="baseInfo" class="table table-bordered">
-                <tbody>
-                <tr>
-                    <td class="info-column-frozen-fund">园区卡号</td>
-                    <td class="info-cell-frozen-fund">${detail.cardAssociation.primary.cardNo!}</td>
-                    <td class="info-column-frozen-fund">客户名称</td>
-                    <td class="info-cell-frozen-fund">${detail.customer.name!}</td>
-                </tr>
-                <tr>
-                    <td class="info-column-frozen-fund">可用余额</td>
-                    <td class="info-cell-frozen-fund">${detail.accountFund.availableAmountText!}</td>
-                    <td class="info-column-frozen-fund">手动冻结金额</td>
-                    <td class="info-cell-frozen-fund">${detail.accountFund.frozenAmountText!}</td>
-                </tr>
-                <tr>
-                    <td class="info-column-frozen-fund">冻结金额</td>
-                    <td><input id="frozenFund" name="frozenFund" type="text" class="form-control"/></td>
-                </tr>
-                <tr>
-                    <td class="vertical-td info-column-frozen-fund ">备注</td>
-                    <td><textarea id="mark" name="mark" class="form-control" rows="3" placeholder="不超过30个字符"></textarea></td>
-                </tr>
-                </tbody>
-            </table>
+            <form id="frozen-fund-form">
+                <table id="baseInfo" class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <td class="info-column-frozen-fund">园区卡号</td>
+                        <td class="info-cell-frozen-fund">${detail.cardAssociation.primary.cardNo!}</td>
+                        <td class="info-column-frozen-fund">客户名称</td>
+                        <td class="info-cell-frozen-fund">${detail.customer.name!}</td>
+                    </tr>
+                    <tr>
+                        <td class="info-column-frozen-fund">可用余额</td>
+                        <td class="info-cell-frozen-fund">${detail.accountFund.availableAmountText!}</td>
+                        <td class="info-column-frozen-fund">手动冻结金额</td>
+                        <td class="info-cell-frozen-fund">${detail.accountFund.frozenAmountText!}</td>
+                    </tr>
+                    <tr>
+                        <td class="vertical-td info-column-frozen-fund">冻结金额<i class="red">*</i></td>
+                        <td><input id="frozenFund" name="frozenFund" type="number" value="0"
+                                   oninput="limitNum(this)" step="0.1"
+                                   class="form-control"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="vertical-td info-column-frozen-fund ">备注</td>
+                        <td><textarea id="mark" name="mark" class="form-control" rows="3" placeholder="不超过30个字符"></textarea></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div style="margin: auto" align="center">
+                    <button id="query" type="button" class="btn btn-outline-primary" onclick="submitFrozen()">
+                        <i class="fa fa-search"></i>
+                        冻结资金
+                    </button>
+                </div>
+            </form>
         </div>
-
     </div>
 </div>
+<script>
+    function limitNum(obj) {
+        //只能输入两个小数
+        obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');
+        //只能输入大于0
+        if (obj.value && obj.value <= 0) {
+            obj.value = 0;
+        }
+    }
+
+    $("#frozen-fund-form").validate({
+        onkeyup: false,
+        rules: {
+            frozenFund: {
+                required: true,
+                gt: 0.01
+            },
+            mark: {
+                maxlength: 30
+            },
+        },
+        messages: {
+            frozenFund: {
+                required: "冻结金额必填",
+                gt: "冻结金额至少{0}"
+            },
+            mark: {
+                maxlength: "最多可以输入{0}个字符"
+            }
+        },
+        focusCleanup: true
+    });
+
+    function submitFrozen() {
+        if ($.validate.form('frozen-fund-form')) {
+            console.log("通过" +${detail.cardAssociation.primary.cardNo!})
+        }
+    }
+</script>
