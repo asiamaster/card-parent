@@ -26,6 +26,23 @@ public class FundContractQueryDto extends BaseDto{
 	private Integer days;
 	/** 距离到期时间 */
 	private String expirationTime;
+	/** 市场编号*/
+	private Long firmId;
+	
+	 /**
+     * setter for 市场编号
+     */
+	public void setFirmId(Long firmId) {
+		this.firmId = firmId;
+	}
+
+    /**
+     * getter for 市场编号 
+     */
+	public Long getFirmId() {
+		return firmId;
+	}
+	
     /**
      * setter for 委托人账号ID
      */

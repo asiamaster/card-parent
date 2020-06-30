@@ -64,5 +64,5 @@ public interface IUserCashDao {
 	/**
 	 * 根据账务周期更新状态
 	 */
-	int updateStateByCycle(Long cycleNo, int code);
+	int updateStateByCycle(@Param("cycleNo") Long cycleNo, @Param("state") Integer state);
 }

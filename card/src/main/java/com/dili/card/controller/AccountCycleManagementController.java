@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dili.card.dto.AccountCycleDto;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.PageOutput;
 
 /**
  * 账务管理
@@ -25,24 +26,33 @@ public class AccountCycleManagementController {
 	/**
 	 * 对账
 	 */
-	@PostMapping("/settle")
+	@PostMapping("/settle.action")
 	public BaseOutput<Boolean> settle(@RequestBody AccountCycleDto accountCycleDto) {
 		iAccountCycleService.settle(accountCycleDto.getId());
+		return BaseOutput.success();
+	}
+	
+	/**
+	 * 平账
+	 */
+	@PostMapping("/flated.action")
+	public BaseOutput<Boolean> flated(@RequestBody AccountCycleDto accountCycleDto) {
+		iAccountCycleService.flated(accountCycleDto.getId());
 		return BaseOutput.success();
 	}
 
 	/**
 	 * 账务列表
 	 */
-	@PostMapping("/list")
-	public BaseOutput<List<AccountCycleDto>> list(@RequestBody AccountCycleDto accountCycleDto) {
-		return BaseOutput.successData(iAccountCycleService.list(accountCycleDto));
+	@PostMapping("/page.action")
+	public PageOutput<List<AccountCycleDto>> page(@RequestBody AccountCycleDto accountCycleDto) {
+		return iAccountCycleService.page(accountCycleDto);
 	}
 
 	/**
 	 * 账务详情
 	 */
-	@PostMapping("/detail")
+	@PostMapping("/detail.action")
 	public BaseOutput<AccountCycleDto> detail(@RequestBody AccountCycleDto accountCycleDto) {
 		return BaseOutput.successData(iAccountCycleService.detail(accountCycleDto.getId()));
 	}

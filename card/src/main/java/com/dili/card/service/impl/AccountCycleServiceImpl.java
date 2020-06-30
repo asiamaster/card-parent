@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,14 +24,18 @@ import com.dili.card.service.IUserCashService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CycleState;
 import com.dili.card.type.CycleStatisticType;
+import com.dili.card.util.PageUtils;
+import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 
 import cn.hutool.core.util.NumberUtil;
 
 @Service("accountCycleService")
 public class AccountCycleServiceImpl implements IAccountCycleService {
-	
+
 	@Autowired
 	private IAccountCycleDao accountCycleDao;
 	@Autowired
@@ -39,41 +44,48 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	private UidRpcResovler uidRpcResovler;
 	@Autowired
 	private IUserCashService userCashService;
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void settle(Long id) {
 		AccountCycleDo accountCycle = this.findById(id);
-		//对账状态校验
+		// 对账状态校验
 		this.validateCycleSettledState(accountCycle);
-		//更新账务周期状态
+		// 更新账务周期状态
 		this.updateStateById(id, CycleState.SETTLED.getCode(), accountCycle.getVersion());
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void flated(Long id) {
 		AccountCycleDo cycle = this.findById(id);
-		//平账状态校验
+		// 平账状态校验
 		this.validateCycleFlatedState(cycle);
-		//账务周期详情统计信息
+		// 账务周期详情统计信息
 		AccountCycleDetailDo accountCycleDetail = this.buildCycleDetail(cycle);
-		//构建商户相关信息
+		// 构建商户相关信息
 		this.buildFirmInfo(accountCycleDetail);
-		//更新账务周期状态
+		// 更新账务周期状态
 		this.updateStateById(id, CycleState.FLATED.getCode(), cycle.getVersion());
-		//保存账务周期详情信息
+		// 保存账务周期详情信息
 		accountCycleDetailDao.save(accountCycleDetail);
-		//更新领取款记录
+		// 更新领取款记录
 		userCashService.flatedByCycle(cycle.getCycleNo());
 	}
 
 	@Override
 	public List<AccountCycleDto> list(AccountCycleDto accountCycleDto) {
-		//构建查询条件
+		// 构建查询条件
 		this.buildQueryCondition(accountCycleDto);
-		//封装返回数据
-		return this.buildAccountCycleList(accountCycleDao.findBYCondition(accountCycleDto));
+		// 封装返回数据
+		return this.buildAccountCycleList(accountCycleDao.findByCondition(accountCycleDto));
+	}
+
+	@Override
+	public PageOutput<List<AccountCycleDto>> page(AccountCycleDto accountCycleDto) {
+		Page<?> page = PageHelper.startPage(accountCycleDto.getPageNum(), accountCycleDto.getPageSize());
+		List<AccountCycleDto> accountCycles = this.list(accountCycleDto);
+		return PageUtils.convert2PageOutput(page, accountCycles);
 	}
 
 	@Override
@@ -84,6 +96,9 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public AccountCycleDo findActiveCycleByUserId(Long userId, String userName) {
+		if (userId == null || StringUtils.isBlank(userName)) {
+			throw new CardAppBizException("参数错误");
+		}
 		AccountCycleDo accountCycle = this.findSettledCycleByUserId(userId);
 		if (accountCycle != null) {
 			throw new CardAppBizException("当前账务周期正在对账中,不能操作");
@@ -97,7 +112,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			accountCycle.setCashBox(0L);
 			accountCycle.setCashAmount(0L);
 			accountCycle.setState(CycleState.ACTIVE.getCode());
-			//构建商户信息
+			// 构建商户信息
 			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 			accountCycle.setAuditorId(userTicket.getId());
 			accountCycle.setAuditorName(userTicket.getRealName());
@@ -118,7 +133,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	public AccountCycleDo findActiveCycleByUserId(Long userId) {
 		return accountCycleDao.findByUserIdAndState(userId, CycleState.ACTIVE.getCode());
 	}
-	
+
 	@Override
 	public AccountCycleDo findSettledCycleByUserId(Long userId) {
 		return accountCycleDao.findByUserIdAndState(userId, CycleState.SETTLED.getCode());
@@ -132,7 +147,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}
 		return accountCycle;
 	}
-	
+
 	/**
 	 * 构造页面响应实体列表
 	 */
@@ -143,7 +158,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}
 		return accountCycleDtos;
 	}
-	
+
 	/**
 	 * 构建商户相关信息
 	 */
@@ -162,7 +177,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			throw new CardAppBizException("操作频繁,平账失败");
 		}
 	}
-	
+
 	/**
 	 * 对账前状态校验
 	 */
@@ -174,7 +189,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			throw new CardAppBizException("当前账务周期已平账,不能进行结账操作");
 		}
 	}
-	
+
 	/**
 	 * 平账前状态校验
 	 */
@@ -186,7 +201,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			throw new CardAppBizException("当前账务周期已平账,不能重复操作");
 		}
 	}
-	
 
 	/**
 	 * 账务周期详情统计信息
@@ -194,9 +208,11 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	private AccountCycleDetailDo buildCycleDetail(AccountCycleDo cycle) {
 		AccountCycleDetailDo accountCycleDetail = new AccountCycleDetailDo();
 		accountCycleDetail.setCycleNo(cycle.getCycleNo());
-		List<CycleStatistcDto> cycleStatistcs = accountCycleDetailDao.statisticCycleRecord(cycle.getCycleNo(), cycle.getUserId());
+		List<CycleStatistcDto> cycleStatistcs = accountCycleDetailDao.statisticCycleRecord(cycle.getCycleNo(),
+				cycle.getUserId());
 		for (CycleStatistcDto cycleStatistc : cycleStatistcs) {
-			CycleStatisticType cycleStatisticType = CycleStatisticType.getCycleStatisticType(cycleStatistc.getType(), cycleStatistc.getTradeChannel());
+			CycleStatisticType cycleStatisticType = CycleStatisticType.getCycleStatisticType(cycleStatistc.getType(),
+					cycleStatistc.getTradeChannel());
 			Field times;
 			Field amount;
 			try {
@@ -213,31 +229,34 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		return accountCycleDetail;
 	}
 
-	
 	/**
 	 * 查询条件
 	 */
 	private void buildQueryCondition(AccountCycleDto accountCycleDto) {
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		accountCycleDto.setFirmId(userTicket.getFirmId());
-		accountCycleDto.setUserId(NumberUtil.isInteger(accountCycleDto.getUserName()) ? Long.valueOf(accountCycleDto.getUserName()) : null);
-		accountCycleDto.setAuditorId(NumberUtil.isInteger(accountCycleDto.getAuditorName()) ? Long.valueOf(accountCycleDto.getAuditorName()) : null);
+		accountCycleDto.setUserId(
+				NumberUtil.isInteger(accountCycleDto.getUserName()) ? Long.valueOf(accountCycleDto.getUserName())
+						: null);
+		accountCycleDto.setAuditorId(
+				NumberUtil.isInteger(accountCycleDto.getAuditorName()) ? Long.valueOf(accountCycleDto.getAuditorName())
+						: null);
 	}
-	
+
 	/**
 	 * 构建账务周期包装实体实体
 	 */
 	private AccountCycleDto buildAccountCycleWrapper(AccountCycleDo cycle) {
-		AccountCycleDto accountCycleDto =  this.buildAccountCycleDto(cycle);
+		AccountCycleDto accountCycleDto = this.buildAccountCycleDto(cycle);
 		accountCycleDto.setAccountCycleDetailDto(this.buildAccountCycleDetailDto(this.buildCycleDetail(cycle)));
 		return accountCycleDto;
 	}
-	
+
 	/**
 	 * 构建账务周期相应实体
 	 */
 	private AccountCycleDto buildAccountCycleDto(AccountCycleDo cycle) {
-		AccountCycleDto accountCycleDto =  new AccountCycleDto();
+		AccountCycleDto accountCycleDto = new AccountCycleDto();
 		accountCycleDto.setId(cycle.getId());
 		accountCycleDto.setUserId(cycle.getUserId());
 		accountCycleDto.setUserName(cycle.getUserName());
@@ -248,7 +267,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		accountCycleDto.setState(cycle.getState());
 		return accountCycleDto;
 	}
-	
+
 	/**
 	 * 构建账务周期详情相应实体
 	 */
@@ -256,6 +275,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		AccountCycleDetailDto accountCycleDetailDto = new AccountCycleDetailDto();
 		BeanUtils.copyProperties(accountCycleDetail, accountCycleDetailDto);
 		return accountCycleDetailDto;
-	} 
+	}
 
 }

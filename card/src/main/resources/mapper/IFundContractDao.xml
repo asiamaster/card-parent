@@ -101,7 +101,7 @@
 		FROM
 			card_fund_contract
 		WHERE
-			1=1
+			firm_id = #{firmId}
 			<if test="contractNo != null and contractNo != '' ">
 				AND contract_no = #{contractNo}
 			</if>

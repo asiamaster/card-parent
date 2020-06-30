@@ -112,6 +112,8 @@ public class ContractServiceImpl implements IContractService {
 	 * 构建查询条件
 	 */
 	private void buildQueryContractConditon(FundContractQueryDto contractQueryDto) {
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		contractQueryDto.setFirmId(userTicket.getFirmId());
 		if (!StringUtils.isBlank(contractQueryDto.getCardNo())) {
 			//构建卡数据
 			UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver.findByCardNo(contractQueryDto.getCardNo());
