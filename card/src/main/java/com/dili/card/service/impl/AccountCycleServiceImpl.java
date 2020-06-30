@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -95,6 +96,9 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public AccountCycleDo findActiveCycleByUserId(Long userId, String userName) {
+		if (userId == null || StringUtils.isBlank(userName)) {
+			throw new CardAppBizException("参数错误");
+		}
 		AccountCycleDo accountCycle = this.findSettledCycleByUserId(userId);
 		if (accountCycle != null) {
 			throw new CardAppBizException("当前账务周期正在对账中,不能操作");
