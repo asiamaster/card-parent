@@ -146,9 +146,6 @@ public class FundServiceImpl implements IFundService {
                 serialRecord.setStartBalance(feeItem.getBalance());
                 serialRecord.setAmount(Math.abs(feeItem.getAmount()));//由于是通过标记位表示收入或支出，固取绝对值
                 serialRecord.setEndBalance(feeItem.getBalance() + feeItem.getAmount());
-                //serialRecord.setTradeType();
-                //serialRecord.setTradeChannel();
-                serialRecord.setTradeNo(businessRecord.getTradeNo());
                 if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeItem.getType())) {//账户资金
                     if (Integer.valueOf(TradeChannel.CASH.getCode()).equals(fundRequestDto.getTradeChannel())) {
                         serialRecord.setFundItem(FundItem.CASH_WITHDRAW.getCode());
