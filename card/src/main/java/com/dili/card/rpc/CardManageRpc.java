@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 /**
  * 卡相关rpc
  */
-@FeignClient(name = "account-service", contextId = "cardManageRpc")
+@FeignClient(name = "account-service", contextId = "cardManageRpc", url = "http://127.0.0.1:8386")
 public interface CardManageRpc {
 
     /**

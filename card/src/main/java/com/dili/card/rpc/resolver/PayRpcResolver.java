@@ -1,9 +1,6 @@
 package com.dili.card.rpc.resolver;
 
-import com.dili.card.dto.pay.BalanceResponseDto;
-import com.dili.card.dto.pay.CreateTradeRequestDto;
-import com.dili.card.dto.pay.WithdrawRequestDto;
-import com.dili.card.dto.pay.WithdrawResponseDto;
+import com.dili.card.dto.pay.*;
 import com.dili.card.rpc.PayRpc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,7 +28,7 @@ public class PayRpcResolver {
     * @author miaoguoxin
     * @date 2020/7/1
     */
-    public String prePay(CreateTradeRequestDto createTradeRequest){
+    public CreateTradeResponseDto prePay(CreateTradeRequestDto createTradeRequest){
        return GenericRpcResolver.resolver(payRpc.preparePay(createTradeRequest));
     }
     /**
