@@ -25,16 +25,16 @@ public class BaseDto implements Serializable {
     /**页码*/
     @NotNull(message = "页码不能为空", groups = ConstantValidator.Page.class)
     @Min(value = 1, message = "页码最小为1", groups = ConstantValidator.Page.class)
-    private Integer pageNum;
-    /**每页多少条*/
+    private Integer page;
+    /**页码*/
     @NotNull(message = "分页条数不能为空", groups = ConstantValidator.Page.class)
     @Range(min = 1, max = 100, message = "每页最少1条，最多100条", groups = ConstantValidator.Page.class)
-    private Integer pageSize;
+    private Integer rows;
     /**顺序or降序 ASC、DESC*/
     @IsOrderBy(message = "排序不正确", groups = ConstantValidator.Page.class)
-    private String sort;
+    private String order;
     /**排序字段*/
-    private String orderByColumn;
+    private String sort;
 
     public Long getOpId() {
         return opId;
@@ -60,22 +60,6 @@ public class BaseDto implements Serializable {
         this.opNo = opNo;
     }
 
-    public Integer getPageNum() {
-        return pageNum;
-    }
-
-    public void setPageNum(Integer pageNum) {
-        this.pageNum = pageNum;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
     public Long getFirmId() {
         return firmId;
     }
@@ -92,11 +76,27 @@ public class BaseDto implements Serializable {
         this.sort = sort;
     }
 
-    public String getOrderByColumn() {
-        return orderByColumn;
+    public Integer getRows() {
+        return rows;
     }
 
-    public void setOrderByColumn(String orderByColumn) {
-        this.orderByColumn = orderByColumn;
+    public void setRows(Integer rows) {
+        this.rows = rows;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
     }
 }

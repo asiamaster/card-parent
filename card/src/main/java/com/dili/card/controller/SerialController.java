@@ -174,4 +174,14 @@ public class SerialController implements IControllerHandler {
             return BaseOutput.failure();
         }
     }
+    /**
+    *
+    * @param
+    * @return
+    * @author miaoguoxin
+    * @date 2020/7/1
+    */
+    public PageOutput<List<BusinessRecordDo>> businessPage(@RequestBody SerialQueryDto queryDto){
+        return null;
+    }
 }

@@ -83,7 +83,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	public PageOutput<List<AccountCycleDto>> page(AccountCycleDto accountCycleDto) {
-		Page<?> page = PageHelper.startPage(accountCycleDto.getPageNum(), accountCycleDto.getPageSize());
+		Page<?> page = PageHelper.startPage(accountCycleDto.getPage(), accountCycleDto.getRows());
 		List<AccountCycleDto> accountCycles = this.list(accountCycleDto);
 		return PageUtils.convert2PageOutput(page, accountCycles);
 	}

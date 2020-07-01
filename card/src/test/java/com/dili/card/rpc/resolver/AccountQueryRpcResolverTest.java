@@ -34,8 +34,8 @@ class AccountQueryRpcResolverTest extends BaseTest {
     @Test
     void findPageByCondition() {
         UserAccountCardQuery param = new UserAccountCardQuery();
-        param.setPageNum(1);
-        param.setPageSize(20);
+        param.setPage(1);
+        param.setRows(20);
         param.setAccountIds(Lists.newArrayList(768141L));
         doCallRealMethod().when(accountQueryRpcResolver).findPageByCondition(param);
 

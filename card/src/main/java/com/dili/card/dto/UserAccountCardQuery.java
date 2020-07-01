@@ -45,8 +45,8 @@ public class UserAccountCardQuery extends BaseDto {
     }
 
     public UserAccountCardQuery setDefOrderByColumn(String defColumn) {
-        if (StringUtils.isBlank(super.getOrderByColumn())) {
-            super.setOrderByColumn(defColumn);
+        if (StringUtils.isBlank(super.getOrder())) {
+            super.setOrder(defColumn);
         }
         return this;
     }
