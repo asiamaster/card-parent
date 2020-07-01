@@ -1,23 +1,18 @@
 package com.dili.card.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
-import com.dili.card.dto.pay.BalanceRequestDto;
-import com.dili.card.dto.pay.BalanceResponseDto;
-import com.dili.card.dto.pay.CreateTradeRequestDto;
-import com.dili.card.dto.pay.FeeItemDto;
-import com.dili.card.dto.pay.WithdrawRequestDto;
-import com.dili.card.dto.pay.WithdrawResponseDto;
+import com.dili.card.dto.pay.*;
 import com.dili.card.entity.BusinessRecordDo;
+import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
-import com.dili.card.type.FeeType;
-import com.dili.card.type.OperateType;
-import com.dili.card.type.TradeType;
+import com.dili.card.type.*;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
@@ -133,7 +128,45 @@ public class FundServiceImpl implements IFundService {
      */
     private SerialDto buildWithdrawSerial(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, WithdrawResponseDto withdrawResponse) {
         SerialDto serialDto = new SerialDto();
-        //TODO 待完善流水数据封装
+        serialDto.setSerialNo(businessRecord.getSerialNo());
+        serialDto.setStartBalance(withdrawResponse.getBalance());
+        serialDto.setEndBalance(withdrawResponse.getBalance() + withdrawResponse.getAmount());
+        if (!CollUtil.isEmpty(withdrawResponse.getStreams())) {
+            List<FeeItemDto> feeItemList = withdrawResponse.getStreams();
+            List<SerialRecordDo> serialRecordList = new ArrayList<>(feeItemList.size());
+            for (FeeItemDto feeItem : feeItemList) {
+                SerialRecordDo serialRecord = new SerialRecordDo();
+                serialService.copyCommonFields(serialRecord, businessRecord);
+                serialRecord.setAction(feeItem.getAmount() < 0L ? ActionType.EXPENSE.getCode() : ActionType.INCOME.getCode());
+                serialRecord.setStartBalance(feeItem.getBalance());
+                serialRecord.setAmount(Math.abs(feeItem.getAmount()));//由于是通过标记位表示收入或支出，固取绝对值
+                serialRecord.setEndBalance(feeItem.getBalance() + feeItem.getAmount());
+                //serialRecord.setTradeType();
+                //serialRecord.setTradeChannel();
+                serialRecord.setTradeNo(businessRecord.getTradeNo());
+                if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeItem.getType())) {//账户资金
+                    if (Integer.valueOf(TradeChannel.CASH.getCode()).equals(fundRequestDto.getTradeChannel())) {
+                        serialRecord.setFundItem(FundItem.CASH_WITHDRAW.getCode());
+                        serialRecord.setFundItemName(FundItem.CASH_WITHDRAW.getName());
+                    }
+                    if (Integer.valueOf(TradeChannel.E_BANK.getCode()).equals(fundRequestDto.getTradeChannel())) {
+                        serialRecord.setFundItem(FundItem.EBANK_WITHDRAW.getCode());
+                        serialRecord.setFundItemName(FundItem.EBANK_WITHDRAW.getName());
+                    }
+                }
+                if (Integer.valueOf(FeeType.SERVICE.getCode()).equals(feeItem.getType())) {//手续费
+                    if (Integer.valueOf(TradeChannel.E_BANK.getCode()).equals(fundRequestDto.getTradeChannel())) {
+                        serialRecord.setFundItem(FundItem.EBANK_SERVICE.getCode());
+                        serialRecord.setFundItemName(FundItem.EBANK_SERVICE.getName());
+                    }
+                }
+                /** 操作时间-与支付系统保持一致 */
+                serialRecord.setOperateTime(withdrawResponse.getWhen());
+                //serialRecord.setNotes();
+                serialRecordList.add(serialRecord);
+            }
+            serialDto.setSerialRecordList(serialRecordList);
+        }
         return serialDto;
     }
 }
