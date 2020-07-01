@@ -86,11 +86,7 @@ public class FundServiceImpl implements IFundService {
             fees.add(feeItem);
             withdrawRequest.setFees(fees);
         }
-        BaseOutput<WithdrawResponseDto> baseOutput = payService.commitWithdraw(withdrawRequest);
-        if (!baseOutput.isSuccess()) {
-            throw new CardAppBizException("", baseOutput.getMessage());
-        }
-        WithdrawResponseDto withdrawResponse = baseOutput.getData();
+        WithdrawResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
         try {
             SerialDto serialDto = buildWithdrawSerial(fundRequestDto, businessRecord, withdrawResponse);
             serialService.handleSuccess(serialDto);

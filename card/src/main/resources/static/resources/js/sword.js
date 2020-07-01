@@ -769,9 +769,10 @@ let tab = {
         operate: {
             // 提交数据
             submit: function (url, type, dataType, data, callback) {
-                var config = {
+                let config = {
                     url: url,
                     type: type,
+                    contentType: "application/json; charset=utf-8",
                     dataType: dataType,
                     data: data,
                     beforeSend: () => {
@@ -787,6 +788,11 @@ let tab = {
                         $.modal.closeLoading();
                     }
                 };
+                //非get请求都转json
+                if (!$.common.equalsIgnoreCase("get",type)){
+                    config.contentType="application/json; charset=utf-8";
+                    config.data=JSON.stringify(data)
+                }
                 $.ajax(config)
             },
             // post请求传输
@@ -969,20 +975,22 @@ let tab = {
             },
             // 保存结果弹出msg刷新table表格
             ajaxSuccess: function (result) {
+                $.modal.closeLoading();
                 if (result.code == web_status.SUCCESS && table.options.type == table_type.bootstrapTable) {
-                    $.modal.msgSuccess(result.msg);
+                    $.modal.msgSuccess(result.message);
                     $.table.refresh();
                 } else if (result.code == web_status.SUCCESS && table.options.type == table_type.bootstrapTreeTable) {
-                    $.modal.msgSuccess(result.msg);
+                    $.modal.msgSuccess(result.message);
                     $.treeTable.refresh();
-                } else if (result.code == web_status.SUCCESS && table.option.type == undefined) {
-                    $.modal.msgSuccess(result.msg)
+                    $.common.isEmpty()
+                } else if (result.code == web_status.SUCCESS && table.option == undefined) {
+                    $.modal.alertSuccess(result.message)
                 } else if (result.code == web_status.WARNING) {
-                    $.modal.alertWarning(result.msg)
+                    $.modal.alertWarning(result.message)
                 } else {
-                    $.modal.alertError(result.msg);
+                    $.modal.alertError(result.message);
                 }
-                $.modal.closeLoading();
+
             },
             // 成功结果提示msg（父窗体全局更新）
             saveSuccess: function (result) {
@@ -1362,7 +1370,6 @@ let tab = {
                     if ($.common.isEmpty(json[name])) {
                         continue;
                     }
-
                     //如果是以 s 为结尾，那么直接转成数组形式
                     if (id.indexOf("-multiple") == -1) {
                         continue;
@@ -1409,7 +1416,7 @@ table_type = {
 
 /** 消息状态码 */
 web_status = {
-    SUCCESS: 0,
+    SUCCESS: 200,
     FAIL: 500,
     WARNING: 301
 };
