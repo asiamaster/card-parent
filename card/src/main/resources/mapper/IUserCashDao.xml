@@ -3,31 +3,9 @@
 
 <mapper namespace="com.dili.card.dao.IUserCashDao">
 	
-	<select id="selectList" resultType="com.dili.card.entity.UserCashDo">
-		SELECT
-			`id`, 
-			`user_id`, 
-			`user_code`,
-			`user_name`, 
-			`action`, 
-			`cycle_no`, 
-			`amount`, 
-			`state`, 
-			`notes`, 
-			`firm_id`, 
-			`firm_name`, 
-			`creator_id`, 
-			`creator`, 
-			`create_time`, 
-			`modify_time`
-		FROM
-			card_user_cash
-		ORDER BY
-			id DESC
-	</select>
-	
 	<insert id="save">
 		INSERT INTO card_user_cash (
+			cash_no,
 			`user_id`, 
 			`user_code`,
 			`user_name`, 
@@ -39,11 +17,13 @@
 			`firm_id`, 
 			`firm_name`, 
 			`creator_id`, 
+			`creator_code`, 
 			`creator`, 
 			`create_time`, 
 			`modify_time`
 		)
 		VALUES (
+			#{cashNo},
 			#{userId}, 
 			#{userCode},
 			#{userName}, 
@@ -55,6 +35,7 @@
 			#{firmId}, 
 			#{firmName}, 
 			#{creatorId}, 
+			#{creatorCode},
 			#{creator}, 
 			NOW(), 
 			NOW()
@@ -64,6 +45,7 @@
 	<select id="getById" resultType="com.dili.card.entity.UserCashDo">
 		SELECT
 			`id`, 
+			cash_no,
 			`user_id`, 
 			`user_code`,
 			`user_name`, 
@@ -74,7 +56,8 @@
 			`notes`, 
 			`firm_id`, 
 			`firm_name`, 
-			`creator_id`, 
+			`creator_id`,
+			`creator_code`,  
 			`creator`, 
 			`create_time`, 
 			`modify_time`
@@ -87,6 +70,7 @@
 	<select id="findEntityByCondition" parameterType="com.dili.card.dto.UserCashDto" resultType="com.dili.card.entity.UserCashDo">
 		SELECT
 			`id`, 
+			cash_no,
 			`user_id`, 
 			`user_code`,
 			`user_name`, 
@@ -96,6 +80,7 @@
 			`state`, 
 			`notes`, 
 			`creator_id`, 
+			`creator_code`, 
 			`creator`, 
 			`create_time`
 		FROM
