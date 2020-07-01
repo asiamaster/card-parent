@@ -97,7 +97,7 @@ public class UserCashServiceImpl implements IUserCashService {
 
 	@Override
 	public PageOutput<List<UserCashDto>> listPayee(UserCashDto userCashDto) {
-		Page<?> page = PageHelper.startPage(userCashDto.getPageNum(), userCashDto.getPageSize());
+		Page<?> page = PageHelper.startPage(userCashDto.getPage(), userCashDto.getRows());
 		List<UserCashDto> userCashs = this.list(userCashDto, CashAction.PAYEE);
 		return PageUtils.convert2PageOutput(page, userCashs);
 	}
@@ -114,7 +114,7 @@ public class UserCashServiceImpl implements IUserCashService {
 
 	@Override
 	public PageOutput<List<UserCashDto>> listPayer(UserCashDto userCashDto) {
-		Page<?> page = PageHelper.startPage(userCashDto.getPageNum(), userCashDto.getPageSize());
+		Page<?> page = PageHelper.startPage(userCashDto.getPage(), userCashDto.getRows());
 		List<UserCashDto> userCashs = this.list(userCashDto, CashAction.PAYER);
 		return PageUtils.convert2PageOutput(page, userCashs);
 	}

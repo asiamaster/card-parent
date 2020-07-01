@@ -76,7 +76,7 @@ public class ContractServiceImpl implements IContractService {
 
 	@Override
 	public PageOutput<List<FundContractResponseDto>> page(FundContractQueryDto contractQueryDto) {
-		Page<?> page = PageHelper.startPage(contractQueryDto.getPageNum(), contractQueryDto.getPageSize());
+		Page<?> page = PageHelper.startPage(contractQueryDto.getPage(), contractQueryDto.getRows());
 		List<FundContractResponseDto> contractResponses = this.list(contractQueryDto);
 		return PageUtils.convert2PageOutput(page, contractResponses);
 	}
@@ -115,8 +115,8 @@ public class ContractServiceImpl implements IContractService {
 	 * 构建查询条件
 	 */
 	private void buildQueryContractConditon(FundContractQueryDto contractQueryDto) {
-		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		contractQueryDto.setFirmId(userTicket.getFirmId());
+//		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+//		contractQueryDto.setFirmId(userTicket.getFirmId());
 		if (!StringUtils.isBlank(contractQueryDto.getCardNo())) {
 			// 构建卡数据
 			UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver

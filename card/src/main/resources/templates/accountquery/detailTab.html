@@ -13,7 +13,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" id="frozen-tab" uri="/fund/frozen.html" data-toggle="tab" href="#freeze" role="tab">
+            <a class="nav-link" id="frozen-tab" uri="/fund/frozen.html" data-toggle="tab" href="#freeze" role="tab">
                 <h5>冻结资金</h5>
             </a>
         </li>
@@ -43,7 +43,7 @@
     $(() => {
         let options = {
             id: 'detailTab',
-            activeId: 'frozen-tab',
+            activeId: 'card-tab',
             prefixUrl: prefix,
             params: {
                 cardNo: cardNo

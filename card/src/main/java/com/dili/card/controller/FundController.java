@@ -82,8 +82,6 @@ public class FundController implements IControllerHandler {
 
     /**
      * 冻结资金
-     * @param
-     * @return
      * @author miaoguoxin
      * @date 2020/6/30
      */
