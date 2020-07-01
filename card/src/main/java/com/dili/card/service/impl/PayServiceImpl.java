@@ -73,15 +73,7 @@ public class PayServiceImpl implements IPayService {
 
     @Override
     public BalanceResponseDto queryBalance(BalanceRequestDto balanceRequestDto) {
-        String jsonResult = doPost(JSON.toJSONString(balanceRequestDto), "payment.fund.service:query");
-        if (StrUtil.isBlank(jsonResult)) {
-            throw new CardAppBizException("", "支付系统返回内容为空");
-        }
-        BaseOutput<BalanceResponseDto> baseOutput = JSON.parseObject(jsonResult, new TypeReference<BaseOutput<BalanceResponseDto>>(){}.getType());
-        if (!baseOutput.isSuccess()) {
-            throw new CardAppBizException("", "支付系统查询余额失败");
-        }
-        return baseOutput.getData();
+        return payRpcResolver.findBalanceByFundAccountId(balanceRequestDto.getAccountId());
     }
 
     /**
