@@ -97,6 +97,10 @@ public class SerialServiceImpl implements ISerialService {
         serialRecord.setOperatorNo(businessRecord.getOperatorNo());
         serialRecord.setOperatorName(businessRecord.getOperatorName());
         serialRecord.setFirmId(businessRecord.getFirmId());
+        serialRecord.setType(businessRecord.getType());
+        serialRecord.setTradeType(businessRecord.getTradeType());
+        serialRecord.setTradeChannel(businessRecord.getTradeChannel());
+        serialRecord.setTradeNo(businessRecord.getTradeNo());
     }
 
     @Override

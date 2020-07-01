@@ -20,7 +20,9 @@ public class SerialRecordDo implements Serializable {
 	/**  */
 	private Long id; 
 	/** 流水号 */
-	private String serialNo; 
+	private String serialNo;
+	/** 操作类型*/
+	private Integer type;
 	/** 账户ID */
 	private Long accountId; 
 	/** 关联卡号 */
@@ -99,7 +101,23 @@ public class SerialRecordDo implements Serializable {
 		return serialNo;
 	}
 
-    /**
+	/**
+	 *
+	 * @return
+	 */
+	public Integer getType() {
+		return type;
+	}
+
+	/**
+	 *
+	 * @param type
+	 */
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	/**
      * setter for 账户ID
      */
 	public void setAccountId(Long accountId) {
