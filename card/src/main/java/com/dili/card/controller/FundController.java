@@ -110,9 +110,6 @@ public class FundController implements IControllerHandler {
      * @param fundRequestDto
      */
     private void validateWithdrawParam(FundRequestDto fundRequestDto) {
-        if (fundRequestDto.getFundAccountId() == null) {
-            throw new CardAppBizException("", "资金账户ID为空");
-        }
         if (fundRequestDto.getTradeChannel() == null) {
             throw new CardAppBizException("", "请选择提款方式");
         }

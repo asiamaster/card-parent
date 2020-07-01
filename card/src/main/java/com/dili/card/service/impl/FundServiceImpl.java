@@ -16,7 +16,6 @@ import com.dili.card.type.*;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
-import com.dili.ss.domain.BaseOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +44,22 @@ public class FundServiceImpl implements IFundService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void withdraw(FundRequestDto fundRequestDto) {
+        UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findByAccountId(fundRequestDto.getAccountId());
+        AccountValidator.validateMatchAccount(fundRequestDto, accountCard);
+        if (!Integer.valueOf(CardStatus.NORMAL.getCode()).equals(accountCard.getCardState())) {
+            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行提现", CardStatus.getName(accountCard.getCardState())));
+        }
+        BalanceResponseDto balance = payService.queryBalance(new BalanceRequestDto(accountCard.getFundAccountId()));
+        long totalAmount = fundRequestDto.getAmount() + (fundRequestDto.getServiceCost() != null ? fundRequestDto.getServiceCost() : 0L);
+        if (totalAmount > balance.getAvailableAmount()) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "可用余额不足");
+        }
         BusinessRecordDo businessRecord = new BusinessRecordDo();
         serialService.buildCommonInfo(fundRequestDto, businessRecord);
         //构建创建交易参数
         CreateTradeRequestDto createTradeRequest = new CreateTradeRequestDto();
         createTradeRequest.setType(TradeType.WITHDRAW.getCode());
-        createTradeRequest.setAccountId(fundRequestDto.getFundAccountId());
+        createTradeRequest.setAccountId(accountCard.getFundAccountId());
         createTradeRequest.setAmount(fundRequestDto.getAmount());
         createTradeRequest.setSerialNo(businessRecord.getSerialNo());
         createTradeRequest.setCycleNo(String.valueOf(businessRecord.getCycleNo()));
@@ -69,10 +78,10 @@ public class FundServiceImpl implements IFundService {
         //提现提交
         WithdrawRequestDto withdrawRequest = new WithdrawRequestDto();
         withdrawRequest.setTradeId(tradeNo);
-        withdrawRequest.setAccountId(fundRequestDto.getFundAccountId());
+        withdrawRequest.setAccountId(accountCard.getFundAccountId());
         withdrawRequest.setChannelId(fundRequestDto.getTradeChannel());
         withdrawRequest.setPassword(fundRequestDto.getTradePwd());
-        if (fundRequestDto.getServiceCost() > 0) {
+        if (fundRequestDto.getServiceCost() != null && fundRequestDto.getServiceCost() > 0) {
             List<FeeItemDto> fees = new ArrayList<>();
             FeeItemDto feeItem = new FeeItemDto();
             feeItem.setAmount(fundRequestDto.getServiceCost());
