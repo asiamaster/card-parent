@@ -72,4 +72,11 @@ public interface ISerialService {
      * @return
      */
     List<BusinessRecordDo> todayChargeList(SerialQueryDto serialQueryDto);
+
+    /**
+     * 根据条件查询业务办理记录
+     * @param serialQueryDto
+     * @return
+     */
+    List<BusinessRecordDo> queryBusinessRecord(SerialQueryDto serialQueryDto);
 }

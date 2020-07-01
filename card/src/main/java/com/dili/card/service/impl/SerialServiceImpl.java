@@ -185,4 +185,9 @@ public class SerialServiceImpl implements ISerialService {
         query.setOrder("desc");
         return businessRecordDao.list(serialQueryDto);
     }
+
+    @Override
+    public List<BusinessRecordDo> queryBusinessRecord(SerialQueryDto serialQueryDto) {
+        return businessRecordDao.list(serialQueryDto);
+    }
 }
