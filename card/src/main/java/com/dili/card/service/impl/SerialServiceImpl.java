@@ -20,6 +20,8 @@ import com.dili.card.type.OperateType;
 import com.dili.card.util.DateUtil;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.ss.constant.ResultCode;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -97,6 +99,10 @@ public class SerialServiceImpl implements ISerialService {
         serialRecord.setOperatorNo(businessRecord.getOperatorNo());
         serialRecord.setOperatorName(businessRecord.getOperatorName());
         serialRecord.setFirmId(businessRecord.getFirmId());
+        serialRecord.setType(businessRecord.getType());
+        serialRecord.setTradeType(businessRecord.getTradeType());
+        serialRecord.setTradeChannel(businessRecord.getTradeChannel());
+        serialRecord.setTradeNo(businessRecord.getTradeNo());
     }
 
     @Override
@@ -189,5 +195,12 @@ public class SerialServiceImpl implements ISerialService {
     @Override
     public List<BusinessRecordDo> queryBusinessRecord(SerialQueryDto serialQueryDto) {
         return businessRecordDao.list(serialQueryDto);
+    }
+
+    @Override
+    public Page<List<BusinessRecordDo>> queryPage(SerialQueryDto serialQueryDto) {
+        Page<List<BusinessRecordDo>> page = PageHelper.startPage(serialQueryDto.getPage(), serialQueryDto.getRows());
+        this.queryBusinessRecord(serialQueryDto);
+        return page;
     }
 }

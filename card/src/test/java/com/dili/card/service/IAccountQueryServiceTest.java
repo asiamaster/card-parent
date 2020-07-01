@@ -42,8 +42,8 @@ class IAccountQueryServiceTest extends BaseTest {
     @Test
     void testGetPageWithCustomer() {
         UserAccountCardQuery param = new UserAccountCardQuery();
-        param.setPageNum(1);
-        param.setPageSize(20);
+        param.setPage(1);
+        param.setRows(20);
         param.setAccountIds(Lists.newArrayList(768141L));
         doCallRealMethod().when(accountQueryRpcResolver).findPageByCondition(param);
 
@@ -54,8 +54,8 @@ class IAccountQueryServiceTest extends BaseTest {
     @Test
     void testGetPageWithMockCustomer() {
         UserAccountCardQuery param = new UserAccountCardQuery();
-        param.setPageNum(1);
-        param.setPageSize(20);
+        param.setPage(1);
+        param.setRows(20);
         param.setAccountIds(Lists.newArrayList(862066L));
 
         doCallRealMethod().when(accountQueryRpcResolver).findPageByCondition(param);

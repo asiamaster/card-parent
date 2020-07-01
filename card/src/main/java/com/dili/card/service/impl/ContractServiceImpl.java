@@ -76,7 +76,7 @@ public class ContractServiceImpl implements IContractService {
 
 	@Override
 	public PageOutput<List<FundContractResponseDto>> page(FundContractQueryDto contractQueryDto) {
-		Page<?> page = PageHelper.startPage(contractQueryDto.getPageNum(), contractQueryDto.getPageSize());
+		Page<?> page = PageHelper.startPage(contractQueryDto.getPage(), contractQueryDto.getRows());
 		List<FundContractResponseDto> contractResponses = this.list(contractQueryDto);
 		return PageUtils.convert2PageOutput(page, contractResponses);
 	}

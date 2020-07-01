@@ -35,7 +35,7 @@ let tab = {
         table: {
             // 初始化表格参数
             init: function (options) {
-                var defaults = {
+                let defaults = {
                     id: "grid",
                     type: 0, // 0 代表bootstrapTable 1代表bootstrapTreeTable
                     height: undefined,
@@ -149,11 +149,11 @@ let tab = {
             queryParams: function (params) {
                 let curParams = {
                     // 传递参数查询参数
-                    pageSize: params.limit,
-                    pageNum: params.offset / params.limit + 1,
+                    rows: params.limit,
+                    page: params.offset / params.limit + 1,
                     searchValue: params.search,
-                    orderByColumn: params.sort,
-                    sort: params.order
+                    sort: params.sort,
+                    order: params.order
                 };
                 var currentId = $.common.isEmpty(table.options.formId) ? 'queryForm' : table.options.formId;
                 return $.extend(curParams, $.common.formToJSON(currentId));
@@ -436,6 +436,8 @@ let tab = {
                         $(item.href).addClass('show active');
 
                         $(item.href).load(item.url);
+                        //加载过一次不再重复加载
+                        item.hasLoad = true;
                         break;
                     }
                 }
@@ -450,8 +452,12 @@ let tab = {
                     let newId = e.target.getAttribute("id");
                     let targetTab = tab.tabMap.get(newId);
                     targetTab.isActive = true;
-                    //加载数据
-                    $(targetTab.href).load(targetTab.url);
+                    //加载过一次不再重复加载
+                    if (!targetTab.hasLoad) {
+                        $(targetTab.href).load(targetTab.url);
+                        targetTab.hasLoad = true;
+                    }
+
                     if (typeof callback == 'function') {
                         callback(targetTab, relatedTargetTab)
                     }
@@ -789,9 +795,9 @@ let tab = {
                     }
                 };
                 //非get请求都转json
-                if (!$.common.equalsIgnoreCase("get",type)){
-                    config.contentType="application/json; charset=utf-8";
-                    config.data=JSON.stringify(data)
+                if (!$.common.equalsIgnoreCase("get", type)) {
+                    config.contentType = "application/json; charset=utf-8";
+                    config.data = JSON.stringify(data)
                 }
                 $.ajax(config)
             },
