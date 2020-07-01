@@ -5,6 +5,7 @@ package com.dili.card.type;
  */
 public enum FeeType {
 
+    ACCOUNT(0, "账户资金"),
     DEPOSIT(1, "押金"),
     CARD_COST(2, "工本费"),
     SERVICE(3, "手续费");

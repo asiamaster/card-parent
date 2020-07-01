@@ -14,8 +14,10 @@ import com.dili.card.dto.UserCashDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.UserCashDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IUserCashService;
+import com.dili.card.type.BizNoType;
 import com.dili.card.type.CashAction;
 import com.dili.card.type.CashState;
 import com.dili.card.util.CurrencyUtils;
@@ -36,6 +38,8 @@ public class UserCashServiceImpl implements IUserCashService {
 	private IUserCashDao userCashDao;
 	@Autowired
 	private IAccountCycleService accountCycleService;
+	@Autowired
+	private UidRpcResovler uidRpcResovler;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -97,7 +101,7 @@ public class UserCashServiceImpl implements IUserCashService {
 
 	@Override
 	public PageOutput<List<UserCashDto>> listPayee(UserCashDto userCashDto) {
-		Page<?> page = PageHelper.startPage(userCashDto.getPageNum(), userCashDto.getPageSize());
+		Page<?> page = PageHelper.startPage(userCashDto.getPage(), userCashDto.getRows());
 		List<UserCashDto> userCashs = this.list(userCashDto, CashAction.PAYEE);
 		return PageUtils.convert2PageOutput(page, userCashs);
 	}
@@ -114,7 +118,7 @@ public class UserCashServiceImpl implements IUserCashService {
 
 	@Override
 	public PageOutput<List<UserCashDto>> listPayer(UserCashDto userCashDto) {
-		Page<?> page = PageHelper.startPage(userCashDto.getPageNum(), userCashDto.getPageSize());
+		Page<?> page = PageHelper.startPage(userCashDto.getPage(), userCashDto.getRows());
 		List<UserCashDto> userCashs = this.list(userCashDto, CashAction.PAYER);
 		return PageUtils.convert2PageOutput(page, userCashs);
 	}
@@ -124,6 +128,7 @@ public class UserCashServiceImpl implements IUserCashService {
 	 */
 	private UserCashDo buildUserCashEntity(UserCashDto userCashDto, CashAction cashAction) {
 		UserCashDo userCash = new UserCashDo();
+		userCash.setCashNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CASH_NO.getCode())));
 		userCash.setAction(cashAction.getCode());
 		userCash.setAmount(CurrencyUtils.yuan2Cent(new BigDecimal(userCashDto.getAmountYuan())));
 		userCash.setUserId(userCashDto.getUserId());
@@ -133,6 +138,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		// 构建商户信息和创建者
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		userCash.setCreatorId(userTicket.getId());
+		userCash.setCreatorCode(userTicket.getUserName());
 		userCash.setCreator(userTicket.getRealName());
 		userCash.setFirmId(userTicket.getFirmId());
 		userCash.setFirmName(userTicket.getFirmName());
@@ -174,8 +180,10 @@ public class UserCashServiceImpl implements IUserCashService {
 	 */
 	private UserCashDto buildSingleCashDtoy(UserCashDo userCashDo) {
 		UserCashDto cashDto = new UserCashDto();
+		cashDto.setCashNo(userCashDo.getCashNo());
 		cashDto.setAmountYuan(CurrencyUtils.toYuanWithStripTrailingZeros(userCashDo.getAmount()));
 		cashDto.setCreatorId(userCashDo.getCreatorId());
+		cashDto.setCreatorCode(userCashDo.getCreatorCode());
 		cashDto.setCreator(userCashDo.getCreator());
 		cashDto.setUserId(userCashDo.getUserId());
 		cashDto.setUserCode(userCashDo.getUserCode());

@@ -21,7 +21,7 @@ public interface IPayService {
      * @param withdrawRequest
      * @return
      */
-    BaseOutput<WithdrawResponseDto> commitWithdraw(WithdrawRequestDto withdrawRequest);
+    WithdrawResponseDto commitWithdraw(WithdrawRequestDto withdrawRequest);
 
     /**
      * 余额查询

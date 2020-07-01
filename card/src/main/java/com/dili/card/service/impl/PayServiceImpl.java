@@ -1,20 +1,11 @@
 package com.dili.card.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.dili.card.config.PayProperties;
-import com.dili.card.dto.pay.BalanceRequestDto;
-import com.dili.card.dto.pay.BalanceResponseDto;
-import com.dili.card.dto.pay.CreateTradeRequestDto;
-import com.dili.card.dto.pay.WithdrawRequestDto;
-import com.dili.card.dto.pay.WithdrawResponseDto;
-import com.dili.card.exception.CardAppBizException;
+import com.dili.card.dto.pay.*;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IPayService;
-import com.dili.ss.domain.BaseOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,27 +32,13 @@ public class PayServiceImpl implements IPayService {
 
     @Override
     public String createTrade(CreateTradeRequestDto createTradeRequest) {
-        String jsonResult = doPost(JSON.toJSONString(createTradeRequest), "payment.trade.service:prepare");
-        if (StrUtil.isBlank(jsonResult)) {
-            throw new CardAppBizException("", "支付系统返回内容为空");
-        }
-        BaseOutput<String> baseOutput = JSON.parseObject(jsonResult, new TypeReference<BaseOutput<String>>() {
-        }.getType());
-        if (!baseOutput.isSuccess()) {
-            throw new CardAppBizException("", "支付系统创建交易失败");
-        }
-        return baseOutput.getData();
+        CreateTradeResponseDto createTradeResponse = payRpcResolver.prePay(createTradeRequest);
+        return createTradeResponse.getTradeId();
     }
 
     @Override
-    public BaseOutput<WithdrawResponseDto> commitWithdraw(WithdrawRequestDto withdrawRequest) {
-        String jsonResult = doPost(JSON.toJSONString(withdrawRequest), "payment.trade.service:commit3");
-        if (StrUtil.isBlank(jsonResult)) {
-            throw new CardAppBizException("", "支付系统返回内容为空");
-        }
-        BaseOutput<WithdrawResponseDto> baseOutput = JSON.parseObject(jsonResult, new TypeReference<BaseOutput<WithdrawResponseDto>>() {
-        }.getType());
-        return baseOutput;
+    public WithdrawResponseDto commitWithdraw(WithdrawRequestDto withdrawRequest) {
+        return payRpcResolver.withdraw(withdrawRequest);
     }
 
 

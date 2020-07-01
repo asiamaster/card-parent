@@ -11,8 +11,6 @@ import javax.validation.constraints.NotNull;
  */
 public class FundRequestDto extends CardRequestDto {
 
-    /** 资金账户ID*/
-    private Long fundAccountId;
     /** 交易渠道*/
     private Integer tradeChannel;
     /** 金额*/
@@ -25,14 +23,6 @@ public class FundRequestDto extends CardRequestDto {
     private Long serviceCost;
     /**备注*/
     private String mark;
-
-    public Long getFundAccountId() {
-        return fundAccountId;
-    }
-
-    public void setFundAccountId(Long fundAccountId) {
-        this.fundAccountId = fundAccountId;
-    }
 
     public Integer getTradeChannel() {
         return tradeChannel;

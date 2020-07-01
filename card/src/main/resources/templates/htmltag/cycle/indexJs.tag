@@ -1,7 +1,8 @@
 <script>
+    var prefix = "${contextPath}/accountQuery";
     $(function () {
-        let options = {
-            url: "${contextPath}/accountQuery" + "/page.action",
+        var options = {
+            url: prefix + "/page.action",
             sortName: "card_create_time",
             modalName: "卡查询"
         };
@@ -14,7 +15,7 @@
 
     /*每隔4位空格一下*/
     function insertSpace(value) {
-        let out = [];
+        var out = [];
         for (let i = 0; i < value.length; i++) {
             out.push(value.charAt(i))
             if ((i + 1) % 4 === 0) {

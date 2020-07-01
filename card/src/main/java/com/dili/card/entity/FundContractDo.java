@@ -19,6 +19,8 @@ public class FundContractDo implements Serializable {
 	private Long consignorAccountId; 
 	/** 委托人编号 */
 	private String consignorCustomerCode; 
+	/** 委托人id */
+	private Long consignorCustomerId; 
 	/** 合同开始日期 */
 	private LocalDateTime startTime; 
 	/** 合同结束日期 */
@@ -303,6 +305,14 @@ public class FundContractDo implements Serializable {
 
 	public void setTerminateTime(LocalDateTime terminateTime) {
 		this.terminateTime = terminateTime;
+	}
+
+	public Long getConsignorCustomerId() {
+		return consignorCustomerId;
+	}
+
+	public void setConsignorCustomerId(Long consignorCustomerId) {
+		this.consignorCustomerId = consignorCustomerId;
 	}
 
 }

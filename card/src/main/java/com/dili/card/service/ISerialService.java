@@ -5,6 +5,8 @@ import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
+import com.dili.ss.domain.PageOutput;
+import com.github.pagehelper.Page;
 
 import java.util.List;
 
@@ -72,4 +74,18 @@ public interface ISerialService {
      * @return
      */
     List<BusinessRecordDo> todayChargeList(SerialQueryDto serialQueryDto);
+
+    /**
+     * 根据条件查询业务办理记录
+     * @param serialQueryDto
+     * @return
+     */
+    List<BusinessRecordDo> queryBusinessRecord(SerialQueryDto serialQueryDto);
+
+    /**
+    * 分页查询
+    * @author miaoguoxin
+    * @date 2020/7/1
+    */
+    Page<List<BusinessRecordDo>> queryPage(SerialQueryDto serialQueryDto);
 }

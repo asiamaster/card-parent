@@ -11,8 +11,10 @@ public class UserCashDo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	/**  */
+	/** 数据主键 */
 	private Long id; 
+	/**领取款编号*/
+	private Long cashNo;
 	/** 领款或收款人主键 */
 	private Long userId; 
 	/** 领款或收款人 编号*/
@@ -35,6 +37,8 @@ public class UserCashDo implements Serializable {
 	private String firmName; 
 	/** 经办人 */
 	private Long creatorId; 
+	/** 经办人工号 */
+	private String creatorCode; 
 	/** 经办人姓名 */
 	private String creator; 
 	/** 创建时间 */
@@ -273,6 +277,22 @@ public class UserCashDo implements Serializable {
 
 	public void setUserCode(String userCode) {
 		this.userCode = userCode;
+	}
+
+	public Long getCashNo() {
+		return cashNo;
+	}
+
+	public void setCashNo(Long cashNo) {
+		this.cashNo = cashNo;
+	}
+
+	public String getCreatorCode() {
+		return creatorCode;
+	}
+
+	public void setCreatorCode(String creatorCode) {
+		this.creatorCode = creatorCode;
 	}
 
 }

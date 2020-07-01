@@ -14,13 +14,6 @@ import com.dili.card.entity.UserCashDo;
  */
 @Mapper
 public interface IUserCashDao {
-	/**
-     * 列表查询
-     * @param page
-     * @param search
-     * @return
-     */
-	List<UserCashDo> selectList(UserCashDo userCash);
 
     /**
      * 新增

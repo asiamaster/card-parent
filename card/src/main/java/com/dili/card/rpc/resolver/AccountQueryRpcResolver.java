@@ -8,6 +8,7 @@ import com.dili.card.rpc.AccountQueryRpc;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 账户查询解析器
@@ -38,7 +41,17 @@ public class AccountQueryRpcResolver {
         this.validateSuccess(page);
         return page;
     }
-
+    
+    /**
+     * 通过账号批量查询map结构数据
+     */
+    public Map<Long, UserAccountCardResponseDto> findAccountCardsMapByAccountIds(List<Long> accountIds) {
+    	List<UserAccountCardResponseDto> userAccountCards = findBacthByAccountIds(accountIds);
+    	return userAccountCards.stream()
+                .collect(Collectors.toMap(UserAccountCardResponseDto::getAccountId,
+                        a -> a,
+                        (k1, k2) -> k1));
+    }
 
     /**
      * 通过账号批量查询

@@ -51,7 +51,6 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		SerialDto serialDto = new SerialDto();
 		GenericRpcResolver.resolver(serialRecordRpc.batchSave(serialDto));
 		// 保存卡务柜台操作记录
-
 		return openCardResponse;
 	}
 
@@ -72,7 +71,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 //		serial.setFirmId(openCardInfo.getFirmId());
 //		serial.setOperatorId(openCardInfo.getCreatorId());
 //		serial.setSerialNo(serialNo);
-		return serial;
+		return null;
 	}
 	private SerialRecordDo buildSerialRecord(OpenCardDto openCardInfo, Long accountId) {
 		SerialRecordDo record = new SerialRecordDo();
@@ -90,10 +89,5 @@ public class OpenCardServiceImpl implements IOpenCardService {
 //		record.setTradeType(TradeType);
 		
 		return record;
-	}
-	public static void main(String[] args) {
-		List<SerialRecordDo> serialRecordList = new ArrayList<>();
-		serialRecordList.add(new SerialRecordDo());
-		System.out.println(serialRecordList.size());
 	}
 }

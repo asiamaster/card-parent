@@ -34,7 +34,7 @@
                     </tr>
                     <tr>
                         <td class="vertical-td info-column-frozen-fund">冻结金额<i class="red">*</i></td>
-                        <td><input id="frozenFund" name="frozenFund" type="number" value="0"
+                        <td><input id="amount" name="amount" type="number" value="2"
                                    oninput="limitNum(this)" step="0.1"
                                    class="form-control"/>
                         </td>
@@ -46,52 +46,48 @@
                     </tbody>
                 </table>
                 <div style="margin: auto" align="center">
-                    <button id="query" type="button" class="btn btn-outline-primary" onclick="submitFrozen()">
-                        <i class="fa fa-search"></i>
+                    <button id="frozen" type="button" class="btn btn-outline-primary" onclick="submitFrozen()">
                         冻结资金
+                    </button>
+                    <button id="record" style="margin-left: 50px" type="button" class="btn btn-outline-primary" onclick="showOrHide()">
+                        冻结记录
                     </button>
                 </div>
             </form>
         </div>
     </div>
+    <div class="row" id="table-div" style="display: none">
+        <div class="col-12">
+            <table id="grid"
+                   data-title="冻结记录"
+                   data-buttons-class="primary"
+                   data-icons="bui.variable.icons">
+                <thead>
+                <tr>
+                    <th data-field="amount"  data-sortable="true" data-sort-name="amount"
+                        data-align="center">
+                        冻结金额
+                    </th>
+                    <th data-field="operateTime" data-sortable="true" data-align="center" data-sort-name="operate_time">
+                        冻结时间
+                    </th>
+                    <th data-field="operatorNo" data-align="center">
+                        操作员工号
+                    </th>
+                    <th data-field="operatorName" data-align="center">
+                        操作员
+                    </th>
+                    <th data-field="notes" data-align="center">
+                        备注
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <form id="queryForm">
+        <input type="hidden" id="cardNo" name="cardNo" value="${detail.cardAssociation.primary.cardNo!}">
+        <input type="hidden" id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}">
+    </form>
 </div>
-<script>
-    function limitNum(obj) {
-        //只能输入两个小数
-        obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');
-        //只能输入大于0
-        if (obj.value && obj.value <= 0) {
-            obj.value = 0;
-        }
-    }
-
-    $("#frozen-fund-form").validate({
-        onkeyup: false,
-        rules: {
-            frozenFund: {
-                required: true,
-                gt: 0.01
-            },
-            mark: {
-                maxlength: 30
-            },
-        },
-        messages: {
-            frozenFund: {
-                required: "冻结金额必填",
-                gt: "冻结金额至少{0}"
-            },
-            mark: {
-                maxlength: "最多可以输入{0}个字符"
-            }
-        },
-        focusCleanup: true
-    });
-
-
-    function submitFrozen() {
-        if ($.validate.form('frozen-fund-form')) {
-            console.log("通过" +${detail.cardAssociation.primary.cardNo!})
-        }
-    }
-</script>
+<#fund_indexJs/>

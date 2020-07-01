@@ -1,6 +1,17 @@
 package com.dili.card.rpc.resolver;
 
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.customer.sdk.domain.Customer;
@@ -8,15 +19,6 @@ import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 客户查询解析器
@@ -42,6 +44,17 @@ public class CustomerRpcResolver {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "客户信息不存在");
         }
         return baseOutput.getData().get(0);
+    }
+    
+    /**
+     * 通过账号批量查询客户map结构数据
+     */
+    public Map<Long, Customer> findCustomerMapByCustomerIds(List<Long> customerIds) {
+    	List<Customer> customers = findCustomerByIds(customerIds);
+    	return customers.stream()
+                .collect(Collectors.toMap(Customer::getId,
+                        a -> a,
+                        (k1, k2) -> k1));
     }
 
     /**

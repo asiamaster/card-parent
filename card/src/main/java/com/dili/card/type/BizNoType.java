@@ -8,7 +8,8 @@ public enum BizNoType {
 
 	CONTRACT_NO("合同编号", "fundContractNo"),
 	CYCLET_NO("账务周期编号", "cycleNo"),
-	OPERATE_SERIAL_NO("卡务操作流水号", "cardOperateSerialNo");
+	OPERATE_SERIAL_NO("卡务操作流水号", "cardOperateSerialNo"),
+	CASH_NO("领取款编号", "cashNo");
 
 	private String name;
 	private String code;

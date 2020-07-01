@@ -9,6 +9,7 @@ import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
 import com.dili.card.type.TradeChannel;
+import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +21,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -82,16 +82,25 @@ public class FundController implements IControllerHandler {
 
     /**
      * 冻结资金
-     * @param
-     * @return
      * @author miaoguoxin
      * @date 2020/6/30
      */
     @PostMapping("frozen.action")
     @ResponseBody
-    public BaseOutput<?> frozen(@RequestBody @Validated FundRequestDto requestDto) {
-        validateCommonParam(requestDto);
-        return null;
+    public BaseOutput<?> frozen(@RequestBody @Validated(ConstantValidator.Update.class)
+                                            FundRequestDto requestDto) {
+        this.validateCommonParam(requestDto);
+        this.buildOperatorInfo(requestDto);
+        try {
+            fundService.frozen(requestDto);
+            return BaseOutput.success();
+        } catch (CardAppBizException e) {
+            return BaseOutput.failure(e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("冻结资金", e);
+            LOGGER.error("冻结资金请求参数:{}", JSON.toJSONString(requestDto));
+            return BaseOutput.failure();
+        }
     }
 
     /**
@@ -99,9 +108,6 @@ public class FundController implements IControllerHandler {
      * @param fundRequestDto
      */
     private void validateWithdrawParam(FundRequestDto fundRequestDto) {
-        if (fundRequestDto.getFundAccountId() == null) {
-            throw new CardAppBizException("", "资金账户ID为空");
-        }
         if (fundRequestDto.getTradeChannel() == null) {
             throw new CardAppBizException("", "请选择提款方式");
         }

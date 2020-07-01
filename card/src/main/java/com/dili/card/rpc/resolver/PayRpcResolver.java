@@ -1,7 +1,6 @@
 package com.dili.card.rpc.resolver;
 
-import com.dili.card.dto.pay.BalanceResponseDto;
-import com.dili.card.dto.pay.CreateTradeRequestDto;
+import com.dili.card.dto.pay.*;
 import com.dili.card.rpc.PayRpc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +14,23 @@ public class PayRpcResolver {
     @Autowired
     private PayRpc payRpc;
 
+    /**
+    *  提交提现
+    * @author miaoguoxin
+    * @date 2020/7/1
+    */
+    public WithdrawResponseDto withdraw(WithdrawRequestDto withdrawRequest){
+        return GenericRpcResolver.resolver(payRpc.withdraw(withdrawRequest));
+    }
+
+    /**
+    * 创建交易
+    * @author miaoguoxin
+    * @date 2020/7/1
+    */
+    public CreateTradeResponseDto prePay(CreateTradeRequestDto createTradeRequest){
+       return GenericRpcResolver.resolver(payRpc.preparePay(createTradeRequest));
+    }
     /**
      *  查询余额
      * @author miaoguoxin

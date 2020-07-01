@@ -20,7 +20,9 @@ public class SerialRecordDo implements Serializable {
 	/**  */
 	private Long id; 
 	/** 流水号 */
-	private String serialNo; 
+	private String serialNo;
+	/** 操作类型*/
+	private Integer type;
 	/** 账户ID */
 	private Long accountId; 
 	/** 关联卡号 */
@@ -99,7 +101,23 @@ public class SerialRecordDo implements Serializable {
 		return serialNo;
 	}
 
-    /**
+	/**
+	 *
+	 * @return
+	 */
+	public Integer getType() {
+		return type;
+	}
+
+	/**
+	 *
+	 * @param type
+	 */
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	/**
      * setter for 账户ID
      */
 	public void setAccountId(Long accountId) {
@@ -415,10 +433,7 @@ public class SerialRecordDo implements Serializable {
 	 * @return
 	 */
 	public String getStartBalanceView() {
-    	if (this.startBalance == null || this.startBalance.equals(0L)) {
-    		return "0";
-		}
-    	return CurrencyUtils.toYuanWithStripTrailingZeros(this.startBalance);
+    	return this.startBalance != null ? CurrencyUtils.toYuanWithStripTrailingZeros(this.startBalance) : null;
 	}
 
 	/**
@@ -426,11 +441,8 @@ public class SerialRecordDo implements Serializable {
 	 * @return
 	 */
 	public String getAmountView() {
-		if (this.amount == null || this.amount.equals(0L)) {
-			return "0";
-		}
 		String symbol = Integer.valueOf(ActionType.INCOME.getCode()).equals(this.action) ? "+" : "-";
-		return symbol + CurrencyUtils.toYuanWithStripTrailingZeros(this.amount);
+		return this.amount != null ? symbol + CurrencyUtils.toYuanWithStripTrailingZeros(this.amount) : null;
 	}
 
 	/**
@@ -438,9 +450,6 @@ public class SerialRecordDo implements Serializable {
 	 * @return
 	 */
 	public String getEndBalanceView() {
-		if (this.endBalance == null || this.endBalance.equals(0L)) {
-			return "0";
-		}
-		return CurrencyUtils.toYuanWithStripTrailingZeros(this.endBalance);
+		return this.endBalance != null ? CurrencyUtils.toYuanWithStripTrailingZeros(this.endBalance) : null;
 	}
 }

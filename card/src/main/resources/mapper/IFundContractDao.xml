@@ -8,6 +8,7 @@
 			`contract_no`, 
 			`consignor_account_id`, 
 			`consignor_customer_code`,
+			`consignor_customer_id`,
 			`start_time`, 
 			`end_time`, 
 			`state`, 
@@ -24,6 +25,7 @@
 			#{contractNo}, 
 			#{consignorAccountId},
 			#{consignorCustomerCode},
+			#{consignorCustomerId},
 			#{startTime}, 
 			#{endTime}, 
 			#{state}, 
@@ -44,6 +46,7 @@
 			`contract_no`, 
 			`consignor_account_id`,
 			`consignor_customer_code`, 
+			`consignor_customer_id`,
 			`start_time`, 
 			`end_time`, 
 			`state`, 
@@ -93,6 +96,7 @@
 			`contract_no`, 
 			`consignor_account_id`, 
 			`consignor_customer_code`,
+			`consignor_customer_id`,
 			`start_time`, 
 			`end_time`, 
 			`state`, 
@@ -101,7 +105,7 @@
 		FROM
 			card_fund_contract
 		WHERE
-			firm_id = #{firmId}
+			firm_id = 1
 			<if test="contractNo != null and contractNo != '' ">
 				AND contract_no = #{contractNo}
 			</if>
