@@ -1,5 +1,9 @@
 package com.dili.card.type;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 领款曲矿记录状态
  * @author wb
@@ -41,6 +45,10 @@ public enum CashState {
 			}
 		}
 		return null;
+	}
+	
+	public static List<CashState> getAll() {
+		return new ArrayList<>(Arrays.asList(CashState.values()));
 	}
 
 }

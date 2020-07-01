@@ -1,5 +1,9 @@
 package com.dili.card.type;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 账务周期状态
  * @author apache
@@ -40,6 +44,11 @@ public enum CycleState {
 			}
 		}
 		return null;
+	}
+	
+
+	public static List<CycleState> getAll() {
+		return new ArrayList<>(Arrays.asList(CycleState.values()));
 	}
 
 }
