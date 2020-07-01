@@ -1,5 +1,12 @@
 package com.dili.card.dto.pay;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
 /**
  * 提现返回值
  * @author xuliang
