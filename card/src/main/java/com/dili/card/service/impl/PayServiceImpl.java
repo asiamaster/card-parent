@@ -3,11 +3,7 @@ package com.dili.card.service.impl;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import com.dili.card.config.PayProperties;
-import com.dili.card.dto.pay.BalanceRequestDto;
-import com.dili.card.dto.pay.BalanceResponseDto;
-import com.dili.card.dto.pay.CreateTradeRequestDto;
-import com.dili.card.dto.pay.WithdrawRequestDto;
-import com.dili.card.dto.pay.WithdrawResponseDto;
+import com.dili.card.dto.pay.*;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IPayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +32,8 @@ public class PayServiceImpl implements IPayService {
 
     @Override
     public String createTrade(CreateTradeRequestDto createTradeRequest) {
-        return payRpcResolver.prePay(createTradeRequest);
+        CreateTradeResponseDto createTradeResponse = payRpcResolver.prePay(createTradeRequest);
+        return createTradeResponse.getTradeId();
     }
 
     @Override

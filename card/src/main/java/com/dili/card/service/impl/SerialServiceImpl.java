@@ -189,7 +189,7 @@ public class SerialServiceImpl implements ISerialService {
         query.setOperateTimeEnd(DateUtil.formatDate("yyyy-MM-dd") + " 23:59:59");
         query.setSort("operate_time");
         query.setOrder("desc");
-        return businessRecordDao.list(serialQueryDto);
+        return businessRecordDao.list(query);
     }
 
     @Override
