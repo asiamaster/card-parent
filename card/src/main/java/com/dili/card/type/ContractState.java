@@ -1,24 +1,26 @@
 package com.dili.card.type;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 合同状态
+ * 
  * @author wb
  */
 public enum ContractState {
-	
-	UNSTARTED(1, "未开始"),
-	ENTUST(2, "委托中"),
-	ENDED(3, "结束"),
-	REMOVED(4, "解除");
-	
+
+	UNSTARTED(1, "未开始"), ENTUST(2, "委托中"), ENDED(3, "结束"), REMOVED(4, "解除");
+
 	private int code;
 	private String name;
-	
+
 	private ContractState(int code, String name) {
 		this.code = code;
 		this.name = name;
 	}
-	
+
 	public int getCode() {
 		return code;
 	}
@@ -43,6 +45,10 @@ public enum ContractState {
 			}
 		}
 		return null;
+	}
+
+	public static List<ContractState> getAll() {
+		return new ArrayList<>(Arrays.asList(ContractState.values()));
 	}
 
 }

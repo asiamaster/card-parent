@@ -34,7 +34,7 @@
                     </tr>
                     <tr>
                         <td class="vertical-td info-column-frozen-fund">冻结金额<i class="red">*</i></td>
-                        <td><input id="frozenFund" name="frozenFund" type="number" value="0"
+                        <td><input id="amount" name="amount" type="number" value="2"
                                    oninput="limitNum(this)" step="0.1"
                                    class="form-control"/>
                         </td>
@@ -88,10 +88,25 @@
         focusCleanup: true
     });
 
+    let url = '${contextPath}/fund/frozen.action';
+
+    let requestData = {
+        cardNo:${detail.cardAssociation.primary.cardNo!},
+        accountId:${detail.cardAssociation.primary.accountId!},
+        customerId:${detail.cardAssociation.primary.customerId!},
+    };
 
     function submitFrozen() {
-        if ($.validate.form('frozen-fund-form')) {
-            console.log("通过" +${detail.cardAssociation.primary.cardNo!})
+        if (!$.validate.form('frozen-fund-form')) {
+            return;
         }
+        $.modal.confirm("确认冻结卡号【" + ${detail.cardAssociation.primary.cardNo!} + "】的资金吗?", function (sure) {
+            if (!sure){
+                return;
+            }
+            let data = $.common.formToJSON('frozen-fund-form');
+            data.amount = data.amount * 100;
+            $.operate.post(url, $.extend(requestData, data));
+        });
     }
 </script>

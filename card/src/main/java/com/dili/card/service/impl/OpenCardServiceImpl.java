@@ -16,7 +16,7 @@ import com.dili.ss.domain.BaseOutput;
 
 /**
  * @description： 开卡service实现
- * 
+ *
  * @author ：WangBo
  * @time ：2020年6月19日下午5:54:23
  */
@@ -37,11 +37,11 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		SerialDto serialDto=new SerialDto();
 		GenericRpcResolver.resolver(serialRecordRpc.batchSave(serialDto));
 		// 保存卡务柜台操作记录
-		
-		
+
+
 		return openCardResponse;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public OpenCardResponseDto openSlaveCard(OpenCardDto openCardInfo) {
@@ -49,10 +49,10 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut);
 		return openCardResponse;
 	}
-	
+
 	private SerialDto buildSerialRecord(OpenCardDto openCardInfo,Long accountId) {
 		SerialDto serial=new SerialDto();
-		serial.setAccountId(accountId);
+		//serial.setAccountId(accountId);
 		return serial;
 	}
 }
