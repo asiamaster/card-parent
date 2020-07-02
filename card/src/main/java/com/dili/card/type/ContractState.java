@@ -28,6 +28,15 @@ public enum ContractState {
 	public String getName() {
 		return name;
 	}
+	
+    public static String getName(int code) {
+        for (ContractState status : ContractState.values()) {
+            if (status.getCode() == code) {
+                return status.name;
+            }
+        }
+        return null;
+    }
 
 	public static ContractState getByCode(int code) {
 		for (ContractState ContractState : values()) {

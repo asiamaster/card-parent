@@ -36,6 +36,10 @@ public class AccountCycleDetailDto {
 	private Long bankOutAmount;
 	/** 现金收益金额-分 */
 	private Long revenueAmount;
+	/** 未交现金金额-分 */
+	private Long unDeliverAmount;
+	/** 结账交现金金额-分 */
+	private Long lastDeliverAmount;
 
 	public Integer getReceiveTimes() {
 		return receiveTimes;
@@ -155,6 +159,22 @@ public class AccountCycleDetailDto {
 
 	public void setRevenueAmount(Long revenueAmount) {
 		this.revenueAmount = revenueAmount;
+	}
+
+	public Long getUnDeliverAmount() {
+		return unDeliverAmount;
+	}
+
+	public void setUnDeliverAmount(Long unDeliverAmount) {
+		this.unDeliverAmount = unDeliverAmount;
+	}
+
+	public Long getLastDeliverAmount() {
+		return lastDeliverAmount;
+	}
+
+	public void setLastDeliverAmount(Long lastDeliverAmount) {
+		this.lastDeliverAmount = lastDeliverAmount;
 	}
 
 }

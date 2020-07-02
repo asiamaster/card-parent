@@ -115,8 +115,8 @@ public class ContractServiceImpl implements IContractService {
 	 * 构建查询条件
 	 */
 	private void buildQueryContractConditon(FundContractQueryDto contractQueryDto) {
-//		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-//		contractQueryDto.setFirmId(userTicket.getFirmId());
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		contractQueryDto.setFirmId(userTicket.getFirmId());
 		if (!StringUtils.isBlank(contractQueryDto.getCardNo())) {
 			// 构建卡数据
 			UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver
@@ -183,6 +183,7 @@ public class ContractServiceImpl implements IContractService {
 		contractResponseDto.setTerminater(fundContractDo.getTerminater());
 		contractResponseDto.setTerminateNotes(fundContractDo.getTerminateNotes());
 		contractResponseDto.setTerminateTime(fundContractDo.getTerminateTime());
+		contractResponseDto.setState(fundContractDo.getState());
 
 		List<FundConsignorDo> consignors = fundConsignorDao.findConsignorsByContractNo(fundContractDo.getContractNo());
 		if (!detail) {
@@ -190,8 +191,8 @@ public class ContractServiceImpl implements IContractService {
 			StringBuilder mobiles = new StringBuilder();
 			StringBuilder names = new StringBuilder();
 			for (FundConsignorDo fundConsignorDo : consignors) {
-				mobiles.append(fundConsignorDo.getConsigneeName() + "、");
-				names.append(fundConsignorDo.getConsigneeIdMobile() + "、");
+				mobiles.append(fundConsignorDo.getConsigneeIdMobile() + "、");
+				names.append(fundConsignorDo.getConsigneeName() + "、");
 			}
 			contractResponseDto.setConsigneeNames(names.substring(0, names.lastIndexOf("、")));
 			contractResponseDto.setConsigneeMobiles(mobiles.substring(0, mobiles.lastIndexOf("、")));
