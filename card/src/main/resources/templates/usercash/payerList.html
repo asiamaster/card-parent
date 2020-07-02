@@ -3,13 +3,13 @@
     <#bs4nav>
     <form  id="queryForm" role="form" >
         <div class="row row-cols-6">
-             <div class="form-group col-auto">
-                <label for="userId">柜员</label>
-                <input param-multiple="true" name="userId" type="text" class="form-control"  id="userId" maxlength="50"/>
+            <div class="form-group col">
+                <label for="userName" class="">柜员</label>
+                <#bautoCompleteProvider _hiddenDomainId="userId" _hiddenDomainName="userId" _displayDomainId="userName" _displayDomainName="userName" _placeholder="" _optionVariable="userNameQueryAutoCompleteOption"/>
             </div>
-            <div class="form-group col-auto">
-                <label for="creatorId">财务员</label>
-                <input param-multiple="true" name="creatorId" type="text" class="form-control"  id="creatorId" maxlength="50"/>
+            <div class="form-group col">
+                <label for="creatorName" class="">财务员</label>
+                <#bautoCompleteProvider _hiddenDomainId="creatorId" _hiddenDomainName="creatorId" _displayDomainId="creatorName" _displayDomainName="creatorName" _placeholder="" _optionVariable="userNameQueryAutoCompleteOption"/>
             </div>
             <div class="form-group col-auto">
                 <label for="state">当前状态</label>
@@ -69,7 +69,7 @@
                 <th data-field="creator"  data-align="center">
                     财务员工姓名
                 </th>
-                <th data-field="state" data-align="center">
+                <th data-field="stateText" data-align="center">
                     状态标识
                 </th>
                  <th data-field="notes" data-align="center">
@@ -83,5 +83,5 @@
 
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
-<#contract_payerListJs/>
+<#usercash_payerListJs/>
 <#common_userJs/>
