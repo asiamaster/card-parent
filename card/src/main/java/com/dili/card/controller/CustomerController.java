@@ -1,12 +1,11 @@
 package com.dili.card.controller;
 
 import com.dili.card.common.handler.IControllerHandler;
-import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.CustomerResponseDto;
-import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.ICustomerService;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
 import com.dili.ss.domain.BaseOutput;
@@ -29,46 +28,46 @@ import java.util.List;
 @RequestMapping(value = "/customer")
 public class CustomerController implements IControllerHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
-
     @Resource
     private CustomerRpcResolver customerRpcResolver;
     @Autowired
     private IAccountQueryService accountQueryService;
+    @Autowired
+    private ICustomerService customerService;
+
     /**
      * 查询客户列表
-     * @param name
+     * @param keyword
      * @return
      */
-    @RequestMapping(value = "/listByName.action")
+    @RequestMapping(value = "/listByKeyword.action")
     @ResponseBody
-    public BaseOutput<List<Customer>> listByName(String name) {
+    public BaseOutput<List<Customer>> listByKeyword(String keyword) {
         try {
             CustomerQueryInput query = new CustomerQueryInput();
             UserTicket userTicket = getUserTicket();
             query.setMarketId(userTicket.getFirmId());
-            query.setName(name);
+            query.setKeyword(keyword);
             List<Customer> itemList = customerRpcResolver.list(query);
             return BaseOutput.success().setData(itemList);
         } catch (CardAppBizException e) {
             return BaseOutput.failure(e.getMessage());
         } catch (Exception e) {
-            LOGGER.error("list", e);
+            LOGGER.error("listByKeyword", e);
             return BaseOutput.failure();
         }
     }
 
     /**
-    * 根据卡号查询客户信息
-    * @param
-    * @return
-    * @author miaoguoxin
-    * @date 2020/7/2
-    */
-    @RequestMapping(value = "/infoByCardNo.action/{cardNo}")
+     * 根据卡号查询客户信息
+     * @param
+     * @return
+     * @author miaoguoxin
+     * @date 2020/7/2
+     */
+    @RequestMapping(value = "/infoByCardNo.action")
     @ResponseBody
-    public BaseOutput<CustomerResponseDto> getByCardNo(@PathVariable String cardNo){
-        UserAccountCardResponseDto byCardNo = accountQueryService.getByCardNo(cardNo);
-        CustomerResponseDto responseDto = customerRpcResolver.findCustomerByIdWithConvert(byCardNo.getCustomerId());
-        return BaseOutput.successData(responseDto);
+    public BaseOutput<CustomerResponseDto> getByCardNo(String cardNo) {
+        return BaseOutput.successData(customerService.getByCardNoWithCache(cardNo));
     }
 }

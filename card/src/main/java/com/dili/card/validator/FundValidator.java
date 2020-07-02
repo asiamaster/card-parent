@@ -6,4 +6,6 @@ package com.dili.card.validator;
  * @Date: 2020/6/30 10:21
  */
 public class FundValidator {
+    public interface Trade {
+    }
 }
