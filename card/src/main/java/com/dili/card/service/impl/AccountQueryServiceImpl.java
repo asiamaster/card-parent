@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * @Description:
  */
 @Service
-public class IAccountQueryServiceImpl implements IAccountQueryService {
+public class AccountQueryServiceImpl implements IAccountQueryService {
     @Autowired
     private CustomerRpcResolver customerRpcResolver;
     @Autowired
