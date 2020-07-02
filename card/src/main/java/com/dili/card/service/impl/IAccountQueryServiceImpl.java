@@ -71,6 +71,12 @@ public class IAccountQueryServiceImpl implements IAccountQueryService {
         return detail;
     }
 
+    @Override
+    public UserAccountCardResponseDto getByCardNo(String cardNo) {
+
+        return  accountQueryRpcResolver.findByCardNo(cardNo);
+    }
+
     private List<AccountListResponseDto> addCustomer2AccountList(List<UserAccountCardResponseDto> accountCards,
                                                                  List<CustomerResponseDto> customers) {
         Map<Long, CustomerResponseDto> customerMap = customers.stream()
