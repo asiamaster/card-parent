@@ -3,6 +3,8 @@ package com.dili.card.dto;
 import java.time.LocalDateTime;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.dili.card.common.annotation.TextDisplay;
+import com.dili.card.common.provider.ContractStateProvider;
 
 /**
  * 资金委托合同
@@ -25,6 +27,7 @@ public class FundContractResponseDto{
 	@JSONField(format = "yyyy-MM-dd")
 	private LocalDateTime endTime; 
 	/** 状态(委托中、已解除、已到期) */
+	@TextDisplay(ContractStateProvider.class)
 	private Integer state; 
 	/** 备注 */
 	private String notes; 

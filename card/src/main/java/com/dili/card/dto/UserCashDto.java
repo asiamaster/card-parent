@@ -20,6 +20,8 @@ public class UserCashDto extends BaseDto implements Serializable {
 	/**主键id*/
 	@NotNull(message = "数据id不为空", groups = {ConstantValidator.Update.class})
 	private Long id; 
+	/**领取款编号*/
+	private Long cashNo;
 	/** 领款或收款人 */
 	@NotNull(message = "员工id不为空", groups = {ConstantValidator.Insert.class})
 	private Long userId;
@@ -42,6 +44,8 @@ public class UserCashDto extends BaseDto implements Serializable {
 	private String notes; 
 	/** 经办人 */
 	private Long creatorId; 
+	/** 经办人工号 */
+	private String creatorCode; 
 	/** 经办人姓名 */
 	private String creator;
 	/** 创建时间 */
@@ -54,7 +58,7 @@ public class UserCashDto extends BaseDto implements Serializable {
 	/** 创建结束时间 */
 	private LocalDateTime createEndTime;
 	
-	/** 创建结束时间 */
+	/** 市场id */
 	private Long firmId;
 
     /**
@@ -236,6 +240,22 @@ public class UserCashDto extends BaseDto implements Serializable {
 
 	public void setAmountYuan(String amountYuan) {
 		this.amountYuan = amountYuan;
+	}
+
+	public Long getCashNo() {
+		return cashNo;
+	}
+
+	public void setCashNo(Long cashNo) {
+		this.cashNo = cashNo;
+	}
+
+	public String getCreatorCode() {
+		return creatorCode;
+	}
+
+	public void setCreatorCode(String creatorCode) {
+		this.creatorCode = creatorCode;
 	}
 
 }
