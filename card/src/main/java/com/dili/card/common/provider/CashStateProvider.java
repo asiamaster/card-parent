@@ -37,7 +37,7 @@ public class CashStateProvider implements ValueProvider {
             return null;
         }
         Integer state = (Integer) obj;
-        return CardStatus.getName(state);
+        return CashState.getName(state);
     }
 
 }

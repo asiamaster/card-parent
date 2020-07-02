@@ -27,6 +27,15 @@ public enum CycleState {
 	public String getName() {
 		return name;
 	}
+	
+	public static String getName(int code) {
+		for (CycleState status : CycleState.values()) {
+			if (status.getCode() == code) {
+				return status.name;
+			}
+		}
+		return null;
+	}
 
 	public static CycleState getByCode(int code) {
 		for (CycleState CycleState : values()) {

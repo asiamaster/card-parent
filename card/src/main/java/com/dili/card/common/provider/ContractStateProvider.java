@@ -36,7 +36,7 @@ public class ContractStateProvider implements ValueProvider {
             return null;
         }
         Integer state = (Integer) obj;
-        return CardStatus.getName(state);
+        return ContractState.getName(state);
     }
 
 }

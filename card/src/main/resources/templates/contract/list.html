@@ -8,9 +8,9 @@
                 <select name="state" id="state"  class="form-control"></select>
                 <#bcomboProvider _id="state" _provider="contractStateProvider" _queryParams='{emptyText:"-- 状态 --"}'/>
             </div>
-            <div class="form-group col-auto">
-                <label for="consignorCustomerCode">委托人</label>
-                <input param-multiple="true" name="consignorCustomerCode" type="text" class="form-control"  id="consignorCustomerCode" maxlength="50"/>
+            <div class="form-group col">
+                <label for="customerName" class="">委托人</label>
+                <#bautoCompleteProvider _hiddenDomainId="customerId" _hiddenDomainName="customerId" _displayDomainId="customerName" _displayDomainName="customerName" _placeholder="" _optionVariable="customerNameQueryAutoCompleteOption"/>
             </div>
             <div class="form-group col-auto">
                 <label for="cardNo">委托卡</label>
@@ -68,7 +68,7 @@
                 <th data-field="consignorName" data-align="center">
                     委托人
                 </th>
-                <th data-field="cardNo" data-align="center">
+                <th data-field="consignorCard" data-align="center">
                     委托卡
                 </th>
                 <th data-field="consigneeNames" data-align="center">
@@ -83,7 +83,7 @@
                 <th data-field="endTime" data-align="center">
                     合同结束日期
                 </th>
-                <th data-field="state" data-align="center">
+                <th data-field="stateText" data-align="center">
                    委托状态
                 </th>
                 <th data-field="createTime" data-sortable="true" data-align="center">
