@@ -659,7 +659,7 @@ let tab = {
                 bs4pop.confirm(content, {title: "确认提示"}, callBack);
             },
             // 弹出层指定宽度
-            open: function (title, url, width, height, callback) {
+            open: function (title, url, width, height, isFrame) {
                 //如果是移动端，就使用自适应大小弹窗
                 if ($.common.isMobile()) {
                     width = 'auto';
@@ -677,65 +677,39 @@ let tab = {
                 if ($.common.isEmpty(height)) {
                     height = ($(window).height() - 50);
                 }
-                if ($.common.isEmpty(callback)) {
-                    callback = function (index, layero) {
-                        var iframeWin = layero.find('iframe')[0];
-                        iframeWin.contentWindow.submitHandler(index, layero);
-                    }
+                if ($.common.isEmpty(isFrame)) {
+                    isFrame = true;
                 }
-             /*   layer.open({
-                    type: 2,
-                    area: [width + 'px', height + 'px'],
-                    fix: false,
-                    //不固定
-                    maxmin: true,
-                    shade: 0.3,
-                    title: title,
-                    content: url,
-                    btn: ['确定', '关闭'],
-                    // 弹层外区域关闭
-                    shadeClose: true,
-                    yes: callback,
-                    cancel: function (index) {
-                        return true;
-                    }
-                });*/
-                 bs4pop.dialog({
-                     title: title,//对话框title
-                     content: url, //对话框内容
-                     width: width,//宽度
-                     height: height,//高度
-                     isIframe: true,//默认是页面层，非iframe
-                 });
+                bs4pop.dialog({
+                    title: title,//对话框title
+                    content: url, //对话框内容
+                    width: width,//宽度
+                    height: height,//高度
+                    isIframe: isFrame,//默认是页面层，非iframe
+                });
             },
             // 弹出层指定参数选项
             openOptions: function (options) {
-                var _url = $.common.isEmpty(options.url) ? "/404.html" : options.url;
-                var _title = $.common.isEmpty(options.title) ? "系统窗口" : options.title;
-                var _width = $.common.isEmpty(options.width) ? "800" : options.width;
-                var _height = $.common.isEmpty(options.height) ? ($(window).height() - 50) : options.height;
+                let defaults = {
+                    title: "系统窗口",//对话框title
+                    content: "/404.html",//对话框内容
+                    width: '80%',//宽度
+                    height: '40%',//高度
+                    isIframe: true,//默认是页面层，非iframe
+                    btns: [{label: '取消',className: 'btn btn-secondary',onClick(e){
+                        }
+                    }, {label: '确定',className: 'btn btn-primary',onClick(e){
+                    }
+                    }]
+                };
+                options = $.extend(defaults, options);
                 var _btn = ['<i class="fa fa-check"></i> 确认', '<i class="fa fa-close"></i> 关闭'];
-                if ($.common.isEmpty(options.yes)) {
-                    options.yes = function (index, layero) {
-                        options.callBack(index, layero);
-                    }
-                }
-                layer.open({
-                    type: 2,
-                    maxmin: true,
-                    shade: 0.3,
-                    title: _title,
-                    fix: false,
-                    area: [_width + 'px', _height + 'px'],
-                    content: _url,
-                    shadeClose: $.common.isEmpty(options.shadeClose) ? true : options.shadeClose,
-                    skin: options.skin,
-                    btn: $.common.isEmpty(options.btn) ? _btn : options.btn,
-                    yes: options.yes,
-                    cancel: function () {
-                        return true;
-                    }
-                });
+                // if ($.common.isEmpty(options.yes)) {
+                //     options.yes = function (index, layero) {
+                //         options.callBack(index, layero);
+                //     }
+                // }
+                bs4pop.dialog(options);
             },
             // 禁用按钮
             disable: function () {
@@ -804,24 +778,25 @@ let tab = {
             // 详细信息
             detail: function (id, width, height) {
                 table.set();
-                var _url = $.operate.detailUrl(id);
-                var _width = $.common.isEmpty(width) ? "800" : width;
-                var _height = $.common.isEmpty(height) ? ($(window).height() - 50) : height;
+                let _url = $.operate.detailUrl(id);
+                if ($.common.isEmpty(_url)){
+                    return;
+                }
+                let _width = $.common.isEmpty(width) ? "800" : width;
+                let _height = $.common.isEmpty(height) ? ($(window).height() - 50) : height;
                 //如果是移动端，就使用自适应大小弹窗
                 if ($.common.isMobile()) {
                     _width = 'auto';
                     _height = 'auto';
                 }
-                var options = {
+                let options = {
                     title: table.options.modalName + "详细",
                     width: _width,
                     height: _height,
-                    url: _url,
-                    skin: 'layui-layer-gray',
-                    btn: ['关闭'],
-                    yes: function (index, layero) {
-                        layer.close(index);
-                    }
+                    content: _url,
+                    btns: [{label: '关闭', className: 'btn-secondary', onClick(e) {
+
+                        }}]
                 };
                 $.modal.openOptions(options);
             },

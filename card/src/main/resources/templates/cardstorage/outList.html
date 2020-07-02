@@ -1,4 +1,9 @@
 <#bs4Body>
+<style>
+    .h-100 {
+        height: 400px!important;
+    }
+</style>
 <div class="main-container container-fluid">
     <#bs4nav>
     <form id="queryForm" role="form">
@@ -32,11 +37,13 @@
     </form>
 </#bs4nav>
 </div>
+
+
 <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
-    <button id="btn_query" type="button" class="btn btn-primary" onclick="openUpdateHandler()"><i
+    <button id="btn_query" type="button" class="btn btn-primary" onclick="$.operate.add()"><i
             class="fa fa-save"></i> 新增出库
     </button>
-    <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
+    <button id="btn-out" type="button" class="btn btn-primary" onclick="$.operate.detail()"><i
             class="fa fa-list"></i>
         出库明细
     </button>
@@ -50,6 +57,7 @@
                data-icons="bui.variable.icons">
             <thead>
             <tr>
+                <th data-radio="true"></th>
                 <th data-field="applyTime" data-sortable="true" data-sort-name="apply_time"
                     data-align="center">
                     出库时间
@@ -78,11 +86,16 @@
 <script>
     $(function () {
         let options = {
-            url: "${contextPath}/cardStorage" + "/page.action",
+            //必须加这个唯一标识
+            uniqueId:"id",
+            url: "${contextPath}/cardStorage/outPage.action",
+            createUrl:"${contextPath}/cardStorage/outAdd.html",
+            detailUrl:"${contextPath}/cardStorage/outDetail.html/{id}",
             sortName: "apply_time",
             modalName: "卡片出库"
         };
         $.table.init(options);
     });
+
 </script>
 
