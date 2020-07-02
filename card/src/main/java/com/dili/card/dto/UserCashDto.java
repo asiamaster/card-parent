@@ -7,6 +7,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.dili.card.common.annotation.TextDisplay;
+import com.dili.card.common.provider.CashStateProvider;
+import com.dili.card.common.provider.ContractStateProvider;
 import com.dili.card.validator.ConstantValidator;
 
 /**
@@ -39,6 +42,7 @@ public class UserCashDto extends BaseDto implements Serializable {
 	@NotNull(message = "金额不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
 	private String amountYuan;
 	/** 状态-预留字段 */
+	@TextDisplay(CashStateProvider.class)
 	private Integer state; 
 	/** 备注 */
 	private String notes; 

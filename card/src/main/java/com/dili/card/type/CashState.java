@@ -3,6 +3,8 @@ package com.dili.card.type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * 领款曲矿记录状态
@@ -57,7 +59,8 @@ public enum CashState {
 	}
 
 	public static List<CashState> getAll() {
-		return new ArrayList<>(Arrays.asList(CashState.values()));
+		return new ArrayList<>(Arrays.asList(CashState.values())).stream().filter(c -> c.getCode() != -1)
+				.collect(Collectors.toList());
 	}
 
 }
