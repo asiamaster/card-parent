@@ -65,9 +65,9 @@ public class CustomerController implements IControllerHandler {
      * @author miaoguoxin
      * @date 2020/7/2
      */
-    @RequestMapping(value = "/infoByCardNo.action/{cardNo}")
+    @RequestMapping(value = "/infoByCardNo.action")
     @ResponseBody
-    public BaseOutput<CustomerResponseDto> getByCardNo(@PathVariable String cardNo) {
+    public BaseOutput<CustomerResponseDto> getByCardNo(String cardNo) {
         return BaseOutput.successData(customerService.getByCardNoWithCache(cardNo));
     }
 }
