@@ -8,9 +8,12 @@
                 <select id="fund_item" name="fundItem" class="form-control"></select>
                 <#bcomboProvider _id='fund_item' _provider='fundItemProvider' _queryParams='{emptyText:"全部"}'/>
             </div>
-            <div class="form-group col">
+            <div class="form-group col-3">
                 <label for="customerName" class="">客户</label>
-                <#bautoCompleteProvider _hiddenDomainId="customerId" _hiddenDomainName="customerId" _displayDomainId="customerName" _displayDomainName="customerName" _placeholder="" _optionVariable="customerNameQueryAutoCompleteOption"/>
+                <div class="input-group">
+                    <#bautoCompleteProvider _hiddenDomainId="customerId" _hiddenDomainName="customerId" _displayDomainId="customerName" _displayDomainName="customerName" _placeholder="" _optionVariable="customerNameQueryAutoCompleteOption"/>
+                    <input type="text" class="form-control" id="show_customer_name" readonly/>
+                </div>
             </div>
             <div class="form-group col">
                 <label for="cardNo" class="">业务卡号</label>

@@ -37,23 +37,23 @@ public class CustomerController implements IControllerHandler {
 
     /**
      * 查询客户列表
-     * @param name
+     * @param keyword
      * @return
      */
-    @RequestMapping(value = "/listByName.action")
+    @RequestMapping(value = "/listByKeyword.action")
     @ResponseBody
-    public BaseOutput<List<Customer>> listByName(String name) {
+    public BaseOutput<List<Customer>> listByKeyword(String keyword) {
         try {
             CustomerQueryInput query = new CustomerQueryInput();
             UserTicket userTicket = getUserTicket();
             query.setMarketId(userTicket.getFirmId());
-            query.setName(name);
+            query.setKeyword(keyword);
             List<Customer> itemList = customerRpcResolver.list(query);
             return BaseOutput.success().setData(itemList);
         } catch (CardAppBizException e) {
             return BaseOutput.failure(e.getMessage());
         } catch (Exception e) {
-            LOGGER.error("list", e);
+            LOGGER.error("listByKeyword", e);
             return BaseOutput.failure();
         }
     }
