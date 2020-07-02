@@ -25,7 +25,7 @@
             page: ((params.offset / params.limit) + 1) || 1, //页码
             sort: params.sort,
             order: params.order
-        }
+        };
         return $.extend(temp, bui.util.bindGridMeta2Form('grid', 'queryForm'));
     }
 </script>

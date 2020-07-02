@@ -1,5 +1,6 @@
 package com.dili.card.dao;
 
+import com.dili.card.dto.ApplyRecordQueryDto;
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 import com.dili.card.entity.ApplyRecordDo;
@@ -17,6 +18,13 @@ public interface IApplyRecordDao {
      * @return
      */
 	List<ApplyRecordDo> selectList(ApplyRecordDo applyRecord);
+
+	/**
+	* 多条件查询
+	* @author miaoguoxin
+	* @date 2020/7/1
+	*/
+	List<ApplyRecordDo> selectListByCondition(ApplyRecordQueryDto queryDto);
 
     /**
      * 新增

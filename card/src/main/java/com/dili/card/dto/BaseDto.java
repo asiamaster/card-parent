@@ -2,6 +2,7 @@ package com.dili.card.dto;
 
 import com.dili.card.common.annotation.IsOrderBy;
 import com.dili.card.validator.ConstantValidator;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Min;
@@ -35,6 +36,20 @@ public class BaseDto implements Serializable {
     private String order;
     /**排序字段*/
     private String sort;
+
+    public BaseDto setDefSort(String defSort) {
+        if (StringUtils.isBlank(this.getSort())) {
+            this.setSort(defSort);
+        }
+        return this;
+    }
+
+    public BaseDto setDefOrder(String defColumn) {
+        if (StringUtils.isBlank(this.getOrder())) {
+            this.setOrder(defColumn);
+        }
+        return this;
+    }
 
     public Long getOpId() {
         return opId;

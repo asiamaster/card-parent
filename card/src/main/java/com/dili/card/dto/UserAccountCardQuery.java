@@ -37,19 +37,6 @@ public class UserAccountCardQuery extends BaseDto {
     /**是否排除禁用状态*/
     private Integer excludeDisabled;
 
-    public UserAccountCardQuery setDefSort(String defSort) {
-        if (StringUtils.isBlank(super.getSort())) {
-            super.setSort(defSort);
-        }
-        return this;
-    }
-
-    public UserAccountCardQuery setDefOrderByColumn(String defColumn) {
-        if (StringUtils.isBlank(super.getOrder())) {
-            super.setOrder(defColumn);
-        }
-        return this;
-    }
 
     public UserAccountCardQuery setDefExcludeReturn(Integer defExcludeReturn) {
         if (this.getExcludeReturn() == null) {

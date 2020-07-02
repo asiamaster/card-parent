@@ -9,13 +9,16 @@ import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.service.ISerialService;
+import com.dili.card.util.PageUtils;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
+import com.github.pagehelper.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -175,13 +178,15 @@ public class SerialController implements IControllerHandler {
         }
     }
     /**
-    *
-    * @param
-    * @return
+    * 业务日志分页
     * @author miaoguoxin
     * @date 2020/7/1
     */
+    @PostMapping("/business/page.action")
+    @ResponseBody
     public PageOutput<List<BusinessRecordDo>> businessPage(@RequestBody SerialQueryDto queryDto){
-        return null;
+
+        Page<BusinessRecordDo> lists = serialService.queryPage(queryDto);
+        return PageUtils.convert2PageOutput(lists,lists.getResult());
     }
 }

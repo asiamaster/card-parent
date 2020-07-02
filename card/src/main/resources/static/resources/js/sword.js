@@ -155,7 +155,7 @@ let tab = {
                     sort: params.sort,
                     order: params.order
                 };
-                var currentId = $.common.isEmpty(table.options.formId) ? 'queryForm' : table.options.formId;
+                let currentId = $.common.isEmpty(table.options.formId) ? 'queryForm' : table.options.formId;
                 return $.extend(curParams, $.common.formToJSON(currentId));
             },
             // 请求获取数据后处理回调函数
@@ -657,14 +657,6 @@ let tab = {
             // 确认窗体
             confirm: function (content, callBack) {
                 bs4pop.confirm(content, {title: "确认提示"}, callBack);
-                // layer.confirm(content, {
-                //     icon: 3,
-                //     title: "系统提示",
-                //     btn: ['确认', '取消']
-                // }, function (index) {
-                //     layer.close(index);
-                //     callBack(true);
-                // });
             },
             // 弹出层指定宽度
             open: function (title, url, width, height, callback) {
@@ -691,7 +683,7 @@ let tab = {
                         iframeWin.contentWindow.submitHandler(index, layero);
                     }
                 }
-                layer.open({
+             /*   layer.open({
                     type: 2,
                     area: [width + 'px', height + 'px'],
                     fix: false,
@@ -707,14 +699,14 @@ let tab = {
                     cancel: function (index) {
                         return true;
                     }
-                });
-                /* bs4pop.dialog({
+                });*/
+                 bs4pop.dialog({
                      title: title,//对话框title
                      content: url, //对话框内容
-                     width: 800,//宽度
-                     height: 600,//高度
+                     width: width,//宽度
+                     height: height,//高度
                      isIframe: true,//默认是页面层，非iframe
-                 });*/
+                 });
             },
             // 弹出层指定参数选项
             openOptions: function (options) {
@@ -1370,13 +1362,17 @@ let tab = {
                     }
                 });
                 var jQuery = $(form).find('input,textarea,hidden');
-                for (var i = 0; i < jQuery.length; i++) {
-                    var name = jQuery[i].getAttribute("name");
-                    var id = jQuery[i].getAttribute("id");
+                for (let i = 0; i < jQuery.length; i++) {
+                    let name = jQuery[i].getAttribute("name");
+                    let id = jQuery[i].getAttribute("id");
+                    let formatter = jQuery[i].getAttribute("val-formatter");
                     if ($.common.isEmpty(json[name])) {
                         continue;
                     }
-                    //如果是以 s 为结尾，那么直接转成数组形式
+                    if ($.common.isNotEmpty(formatter)) {
+                        json[name] = eval(formatter + "(" + json[name] + ")");
+                    }
+                    //如果是以 -multiple 为结尾，那么直接转成数组形式
                     if (id.indexOf("-multiple") == -1) {
                         continue;
                     }

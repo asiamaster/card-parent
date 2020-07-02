@@ -87,5 +87,5 @@ public interface ISerialService {
     * @author miaoguoxin
     * @date 2020/7/1
     */
-    Page<List<BusinessRecordDo>> queryPage(SerialQueryDto serialQueryDto);
+    Page<BusinessRecordDo> queryPage(SerialQueryDto serialQueryDto);
 }

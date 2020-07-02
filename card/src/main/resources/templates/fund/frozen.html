@@ -36,7 +36,7 @@
                         <td class="vertical-td info-column-frozen-fund">冻结金额<i class="red">*</i></td>
                         <td><input id="amount" name="amount" type="number" value="2"
                                    oninput="limitNum(this)" step="0.1"
-                                   class="form-control"/>
+                                   class="form-control" val-formatter="yuanToFen"/>
                         </td>
                     </tr>
                     <tr>
@@ -57,6 +57,9 @@
         </div>
     </div>
     <div class="row" id="table-div" style="display: none">
+        <form id="queryForm">
+            <input type="hidden" id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}">
+        </form>
         <div class="col-12">
             <table id="grid"
                    data-title="冻结记录"
@@ -85,9 +88,6 @@
             </table>
         </div>
     </div>
-    <form id="queryForm">
-        <input type="hidden" id="cardNo" name="cardNo" value="${detail.cardAssociation.primary.cardNo!}">
-        <input type="hidden" id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}">
-    </form>
+
 </div>
 <#fund_indexJs/>

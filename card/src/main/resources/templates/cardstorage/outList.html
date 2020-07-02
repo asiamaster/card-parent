@@ -1,0 +1,88 @@
+<#bs4Body>
+<div class="main-container container-fluid">
+    <#bs4nav>
+    <form id="queryForm" role="form">
+        <div class="row row-cols-6">
+            <div class="form-group col-auto">
+                <label for="cardNo-multiple">卡号</label>
+                <input id="cardNo-multiple" name="cardNos" type="text" class="form-control"/>
+            </div>
+            <div class="form-group col">
+                <label for="applyUserName">领取人</label>
+                <#bautoCompleteProvider
+                _hiddenDomainId="applyUserId"
+                _hiddenDomainName="applyUserId"
+                _displayDomainId="applyUserName"
+                _displayDomainName="applyUserName" _placeholder=""
+                _optionVariable="userNameQueryAutoCompleteOption"/>
+            </div>
+            <#component_dateControls
+            _labelText="出库日期:"
+            _startDateParam="startDate"
+            _endDateParam="endDate"/>
+            <div class="col align-self-center mt-3">
+                <button id="clear" type="button" class="btn btn-outline-primary mr-2" onclick="$.form.reset()"><i
+                        class="fa fa-refresh"></i> 清空
+                </button>
+                <button id="query" type="button" class="btn btn-outline-primary" onclick="$.table.search()"><i
+                        class="fa fa-search"></i> 查询
+                </button>
+            </div>
+        </div>
+    </form>
+</#bs4nav>
+</div>
+<div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
+    <button id="btn_query" type="button" class="btn btn-primary" onclick="openUpdateHandler()"><i
+            class="fa fa-save"></i> 新增出库
+    </button>
+    <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
+            class="fa fa-list"></i>
+        出库明细
+    </button>
+</div>
+<div class="row">
+    <div class="col-12">
+        <table id="grid"
+               data-title="卡片出库"
+               data-show-fullscreen="true"
+               data-buttons-class="primary"
+               data-icons="bui.variable.icons">
+            <thead>
+            <tr>
+                <th data-field="applyTime" data-sortable="true" data-sort-name="apply_time"
+                    data-align="center">
+                    出库时间
+                </th>
+                <th data-field="amount" data-sortable="true" data-align="center" data-sort-name="amount">
+                    出库张数
+                </th>
+                <th data-field="applyUserId" data-align="center">
+                    领取人工号
+                </th>
+                <th data-field="applyUserName" data-align="center">
+                    领取人
+                </th>
+                <th data-field="creator" data-align="center">
+                    操作员
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<#common_userJs/>
+
+<script>
+    $(function () {
+        let options = {
+            url: "${contextPath}/cardStorage" + "/page.action",
+            sortName: "apply_time",
+            modalName: "卡片出库"
+        };
+        $.table.init(options);
+    });
+</script>
+

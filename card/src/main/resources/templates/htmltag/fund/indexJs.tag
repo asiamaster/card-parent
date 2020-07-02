@@ -38,6 +38,7 @@
     };
 
     let url = '${contextPath}/fund/frozen.action';
+
     //提交冻结资金操作
     function submitFrozen() {
         if (!$.validate.form('frozen-fund-form')) {
@@ -48,28 +49,27 @@
                 return;
             }
             let data = $.common.formToJSON('frozen-fund-form');
-            data.amount = data.amount * 100;
-            console.log(JSON.stringify(requestData))
+            console.log(JSON.stringify(data))
             // $.operate.post(url, $.extend(requestData, data));
         });
     }
 
     //表格隐藏、显示状态切换
-    function showOrHide(){
+    function showOrHide() {
         let $table = $("#table-div");
-        if($table.is(":hidden")){
+        if ($table.is(":hidden")) {
             $table.show();
-        }else{
+        } else {
             $table.hide();
         }
     }
 
     //初始化表格
-    $(function () {
+    $(() => {
         let options = {
-            url: "${contextPath}/accountQuery" + "/page.action",
-            sortName: "card_create_time",
-            modalName: "卡查询"
+            url: "${contextPath}/serial/business/page.action",
+            sortName: "operate_time",
+            modalName: "冻结资金记录"
         };
         $.table.init(options);
     });
