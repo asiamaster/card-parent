@@ -3,7 +3,7 @@
     <#bs4nav>
     <form  id="queryForm" role="form" >
         <div class="row row-cols-6">
-             <div class="form-group col-auto">
+              <div class="form-group col-auto">
                 <label for="userId">柜员</label>
                 <input param-multiple="true" name="userId" type="text" class="form-control"  id="userId" maxlength="50"/>
             </div>
@@ -72,10 +72,13 @@
                 <th data-field="accountCycleDetailDto.deliverAmount" data-align="center">
                     交款金额
                 </th>
-                 <th data-field="accountCycleDetailDto.lastDeliverAmount" data-align="center">
+                 <th data-field="accountCycleDetailDto.uneliverAmount" data-align="center">
                     未交现金金额
                 </th>
-                 <th data-field="state" data-align="center">
+                <th data-field="accountCycleDetailDto.lastDeliverAmount" data-align="center">
+                    结账交款现金金额
+                </th>
+                 <th data-field="stateText" data-align="center">
                     账期状态
                 </th>
             </tr>
@@ -86,5 +89,5 @@
 
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
-<#contract_indexJsJs/>
+<#cycle_indexJs/>
 <#common_userJs/>

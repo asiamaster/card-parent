@@ -132,6 +132,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		userCash.setAction(cashAction.getCode());
 		userCash.setAmount(CurrencyUtils.yuan2Cent(new BigDecimal(userCashDto.getAmountYuan())));
 		userCash.setUserId(userCashDto.getUserId());
+		userCash.setUserCode(userCashDto.getUserCode());
 		userCash.setUserName(userCashDto.getUserName());
 		userCash.setState(CashState.UNSETTLED.getCode());
 		userCash.setNotes(userCashDto.getNotes());
@@ -143,7 +144,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		userCash.setFirmId(userTicket.getFirmId());
 		userCash.setFirmName(userTicket.getFirmName());
 		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDto.getUserId(),
-				userCashDto.getUserName());
+				userCashDto.getUserName(), userCash.getUserCode());
 		userCash.setCycleNo(accountCycle.getCycleNo());
 		return userCash;
 	}

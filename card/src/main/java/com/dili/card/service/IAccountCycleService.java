@@ -40,7 +40,7 @@ public interface IAccountCycleService {
 	/**
 	 * 获取当前活跃的账务周期号 没有就创建
 	 */
-	AccountCycleDo findActiveCycleByUserId(Long userId, String userName);
+	AccountCycleDo findActiveCycleByUserId(Long userId, String userName, String userCode);
 
 	/**
 	 * 根据主键id查询账务周期

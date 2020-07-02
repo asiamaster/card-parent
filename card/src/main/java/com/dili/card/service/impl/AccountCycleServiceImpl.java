@@ -95,7 +95,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public AccountCycleDo findActiveCycleByUserId(Long userId, String userName) {
+	public AccountCycleDo findActiveCycleByUserId(Long userId, String userName, String userCode) {
 		if (userId == null || StringUtils.isBlank(userName)) {
 			throw new CardAppBizException("参数错误");
 		}
@@ -107,6 +107,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		if (accountCycle == null) {
 			accountCycle = new AccountCycleDo();
 			accountCycle.setUserId(userId);
+			
 			accountCycle.setUserName(userName);
 			accountCycle.setCycleNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CYCLET_NO.getCode())));
 			accountCycle.setCashBox(0L);
@@ -258,6 +259,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	private AccountCycleDto buildAccountCycleDto(AccountCycleDo cycle) {
 		AccountCycleDto accountCycleDto = new AccountCycleDto();
 		accountCycleDto.setId(cycle.getId());
+		accountCycleDto.setUserCode(cycle.getUserCode());
 		accountCycleDto.setUserId(cycle.getUserId());
 		accountCycleDto.setUserName(cycle.getUserName());
 		accountCycleDto.setCycleNo(cycle.getCycleNo());

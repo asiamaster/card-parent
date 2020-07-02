@@ -15,6 +15,8 @@ public class AccountCycleDo implements Serializable {
 	private Long id; 
 	/** 员工ID */
 	private Long userId; 
+	/** 员工工号 编号 */
+	private String userCode;
 	/** 员工姓名 */
 	private String userName; 
 	/** 账务周期流水号 */
@@ -332,5 +334,13 @@ public class AccountCycleDo implements Serializable {
                ", modifyTime='" + modifyTime + '\'' +
                '}';
     }
+
+	public String getUserCode() {
+		return userCode;
+	}
+
+	public void setUserCode(String userCode) {
+		this.userCode = userCode;
+	}
 
 }
