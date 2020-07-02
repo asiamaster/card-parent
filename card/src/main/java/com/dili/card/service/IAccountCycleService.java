@@ -39,6 +39,10 @@ public interface IAccountCycleService {
 
 	/**
 	 * 获取当前活跃的账务周期号 没有就创建
+	 * @param userId 操作员id
+	 * @param userName 操作员姓名
+	 * @param userCode 操作员工号
+	 * @return
 	 */
 	AccountCycleDo findActiveCycleByUserId(Long userId, String userName, String userCode);
 
