@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.CashStateProvider;
-import com.dili.card.common.provider.ContractStateProvider;
 import com.dili.card.validator.ConstantValidator;
 
 /**
