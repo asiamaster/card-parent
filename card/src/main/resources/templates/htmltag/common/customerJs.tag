@@ -32,4 +32,26 @@
         }
     };
 
+    function queryCustomerByCardNo(cardNo, domId) {
+        $('#' + domId).val('');
+        if (!cardNo || $.trim(cardNo).length !== 12) {
+            return;
+        }
+        $.ajax({
+            type:'GET',
+            url:'/customer/infoByCardNo.action?cardNo=' + cardNo,
+            dataType:'json',
+            success:function(result) {
+                if (result.success) {
+                    $('#' + domId).val(result.data.name);
+                } else {
+
+                }
+            },
+            error:function(){
+
+            }
+        });
+    }
+
 </script>
