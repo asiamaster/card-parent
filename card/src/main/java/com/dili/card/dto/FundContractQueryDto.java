@@ -15,7 +15,7 @@ public class FundContractQueryDto extends BaseDto{
 	/** 委托人卡信息 */
 	private String cardNo;
 	/** 委托人id */
-	private Long customerId;
+	private Long consignorCustomerId;
 	/** 委托人编号 */
 	private String consignorCustomerCode;
 	/** 被委托人手机号 */
@@ -137,11 +137,11 @@ public class FundContractQueryDto extends BaseDto{
 		this.consignorCustomerCode = consignorCustomerCode;
 	}
 
-	public Long getCustomerId() {
-		return customerId;
+	public Long getConsignorCustomerId() {
+		return consignorCustomerId;
 	}
 
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
+	public void setConsignorCustomerId(Long consignorCustomerId) {
+		this.consignorCustomerId = consignorCustomerId;
 	}
 }
