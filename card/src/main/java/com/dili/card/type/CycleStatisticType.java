@@ -6,13 +6,13 @@ package com.dili.card.type;
  */
 public enum CycleStatisticType {
 	
-	ACCOUNT_CHARGE_CASH(11, 1, "depoCashTimes", "depoCashAmount"),
-	ACCOUNT_CHARGE_POS(11, 2, "depoPosTimes", "depoPosAmount"),
-	ACCOUNT_CHARGE_BANK(11, 3, "bankInTimes", "bankInAmount"),
-	ACCOUNT_WITHDRAW_CASH(12, 1, "drawCashTimes", "drawCashAmount"),
-	ACCOUNT_WITHDRAW_BANK(12, 3, "bankOutTimes", "bankOutAmount"),
-	RECIEVE_CASH(25, 3, "receiveTimes", "receiveAmount"),
-	DELIVER_CASH(26, 3, "deliverTimes", "deliverAmount");
+	ACCOUNT_CHARGE_CASH(11, 2, "depoCashTimes", "depoCashAmount"),
+	ACCOUNT_CHARGE_POS(11, 3, "depoPosTimes", "depoPosAmount"),
+	ACCOUNT_CHARGE_BANK(11, 4, "bankInTimes", "bankInAmount"),
+	ACCOUNT_WITHDRAW_CASH(12, 2, "drawCashTimes", "drawCashAmount"),
+	ACCOUNT_WITHDRAW_BANK(12, 4, "bankOutTimes", "bankOutAmount"),
+	RECIEVE_CASH(1, 2, "receiveTimes", "receiveAmount"),
+	DELIVER_CASH(2, 2, "deliverTimes", "deliverAmount");
 	
 	private int type;
 	private int tradeChannel;
