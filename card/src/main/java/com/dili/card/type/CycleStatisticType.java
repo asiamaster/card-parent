@@ -22,6 +22,10 @@ public enum CycleStatisticType {
 	
 
 	CycleStatisticType(int type, int tradeChannel, String times, String amount) {
+		this.type = type;
+		this.tradeChannel = tradeChannel;
+		this.times = times;
+		this.amount = amount;
 	}
 	
 	public static CycleStatisticType getCycleStatisticType(int type, int tradeChannel)
