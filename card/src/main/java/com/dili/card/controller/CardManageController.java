@@ -57,4 +57,25 @@ public class CardManageController implements IControllerHandler {
             return BaseOutput.failure();
         }
     }
+
+    /**
+     * 解锁卡片
+     */
+    @PostMapping("/unLockCard.action")
+    public BaseOutput<?> unLockCard(@RequestBody CardRequestDto cardParam) {
+        try {
+            validateCommonParam(cardParam);
+            if (StrUtil.isBlank(cardParam.getLoginPwd())) {
+                return BaseOutput.failure("密码为空");
+            }
+            buildOperatorInfo(cardParam);
+            cardManageService.unLockCard(cardParam);
+            return BaseOutput.success();
+        } catch (CardAppBizException e) {
+            return BaseOutput.failure(e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("unLockCard", e);
+            return BaseOutput.failure();
+        }
+    }
 }
