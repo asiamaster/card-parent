@@ -16,35 +16,35 @@ public class AccountCycleDetailDo implements Serializable {
 	/** 账务周期流水号 */
 	private Long cycleNo; 
 	/** 领款次数 */
-	private Integer receiveTimes = 0; 
+	private Integer receiveTimes; 
 	/** 领款金额-分 */
-	private Long receiveAmount = 0L;  
+	private Long receiveAmount;  
 	/** 交款次数 */
-	private Integer deliverTimes = 0;
+	private Integer deliverTimes;
 	/** 交款金额-分 */
-	private Long deliverAmount = 0L; 
+	private Long deliverAmount; 
 	/** 现金充值次数 */
-	private Integer depoCashTimes = 0;
+	private Integer depoCashTimes;
 	/** 现金充值金额-分 */
-	private Long depoCashAmount = 0L;
+	private Long depoCashAmount;
 	/** POS充值次数 */
-	private Integer depoPosTimes = 0; 
+	private Integer depoPosTimes; 
 	/** POS充值金额-分 */
-	private Long depoPosAmount = 0L;
+	private Long depoPosAmount;
 	/** 网银充值次数 */
-	private Integer bankInTimes = 0;
+	private Integer bankInTimes;
 	/** 网银充值金额-分 */
-	private Long bankInAmount = 0L;
+	private Long bankInAmount;
 	/** 现金提现次数 */
-	private Integer drawCashTimes = 0;
+	private Integer drawCashTimes;
 	/** 现金提现金额-分 */
-	private Long drawCashAmount = 0L;
+	private Long drawCashAmount;
 	/** 网银提现次数 */
-	private Integer bankOutTimes = 0; 
+	private Integer bankOutTimes; 
 	/** 网银提现金额-分 */
-	private Long bankOutAmount = 0L; 
+	private Long bankOutAmount; 
 	/** 现金收益金额-分 */
-	private Long revenueAmount = 0L; 
+	private Long revenueAmount; 
 	/** 商户编码 */
 	private Long firmId; 
 	/** 商户名称 */

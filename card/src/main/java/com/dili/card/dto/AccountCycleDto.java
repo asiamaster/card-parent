@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.dili.card.common.annotation.TextDisplay;
-import com.dili.card.common.provider.CashStateProvider;
 import com.dili.card.common.provider.CycleStateProvider;
 
 /**
