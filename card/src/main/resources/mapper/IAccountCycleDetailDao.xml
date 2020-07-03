@@ -114,12 +114,12 @@
  		UNION ALL
  		
  		SELECT
- 			action,2  AS tradeChannel, COUNT(*) AS times, SUM(amount) AS amount
+ 			action AS type,2  AS tradeChannel, COUNT(*) AS times, SUM(amount) AS amount
  		FROM
  			card_user_cash
  		WHERE
  			`cycle_no` = #{cycleNo}
- 		GROUP BY action;
+ 		GROUP BY type, tradeChannel;
  			
 	</select>
 </mapper>

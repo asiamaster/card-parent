@@ -3,6 +3,10 @@ package com.dili.card.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.dili.card.common.annotation.TextDisplay;
+import com.dili.card.common.provider.CashStateProvider;
+import com.dili.card.common.provider.CycleStateProvider;
+
 /**
  * 柜员账务周期
  * 
@@ -16,6 +20,8 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 	private Long id;
 	/** 员工ID */
 	private Long userId;
+	/** 员工编号 */
+	private String userCode;
 	/** 员工姓名 */
 	private String userName;
 	/** 账务周期流水号 */
@@ -27,6 +33,7 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 	/** 账务结束时间 */
 	private LocalDateTime endTime;
 	/** 账务状态-激活 结账 平账 */
+	@TextDisplay(CycleStateProvider.class)
 	private Integer state;
 	/** 交付现金金额-分 */
 	private Long cashAmount;
@@ -141,6 +148,14 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 
 	public void setFirmId(Long firmId) {
 		this.firmId = firmId;
+	}
+
+	public String getUserCode() {
+		return userCode;
+	}
+
+	public void setUserCode(String userCode) {
+		this.userCode = userCode;
 	}
 
 }

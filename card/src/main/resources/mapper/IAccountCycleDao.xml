@@ -16,6 +16,7 @@
 		SELECT
 			`id`, 
 			`user_id`, 
+			`user_code`, 
 			`user_name`, 
 			`cycle_no`, 
 			`cash_box`, 
@@ -48,6 +49,7 @@
 	<insert id="save">
 		INSERT INTO card_account_cycle (
 			`user_id`, 
+			`user_code`, 
 			`user_name`, 
 			`cycle_no`, 
 			`cash_box`, 
@@ -67,6 +69,7 @@
 		)
 		VALUES (
 			#{userId}, 
+			#{userCode}, 
 			#{userName}, 
 			#{cycleNo}, 
 			#{cashBox}, 
