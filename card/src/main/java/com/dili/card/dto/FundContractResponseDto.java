@@ -13,6 +13,8 @@ import com.dili.card.common.provider.ContractStateProvider;
 public class FundContractResponseDto{
 	
 	/** 委托人编号 */
+	private Long id;
+	/** 委托人编号 */
 	private String consignorCode; 
 	/** 委托人姓名 */
 	private String consignorName; 
@@ -195,5 +197,13 @@ public class FundContractResponseDto{
 
 	public void setTerminateTime(LocalDateTime terminateTime) {
 		this.terminateTime = terminateTime;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }
