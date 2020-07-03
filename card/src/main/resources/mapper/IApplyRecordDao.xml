@@ -8,6 +8,7 @@
 			`card_no`,
 			`amount`,
 			`apply_user_id`,
+            `apply_user_code`,
 			`apply_user_name`,
 			`creator_id`,
 			`creator`,
@@ -20,11 +21,14 @@
 
     <sql id="Where_Column">
         <where>
+            <if test="firmId!=null">
+                AND  firm_id = #{firmId}
+            </if>
             <if test="cardNo!=null and cardNo!=''">
                 AND card_no=#{cardNo}
             </if>
-            <if test="applyUserId!=null">
-                AND apply_user_id =#{applyUserId}
+            <if test="applyUserCode!=null">
+                AND apply_user_code =#{applyUserCode}
             </if>
             <if test="startDate !=null">
                 AND apply_time &gt;= #{startDate}
@@ -48,6 +52,7 @@
                                        `card_no`,
                                        `amount`,
                                        `apply_user_id`,
+                                       `apply_user_code`,
                                        `apply_user_name`,
                                        `creator_id`,
                                        `creator`,
@@ -60,6 +65,7 @@
                 #{cardNo},
                 #{amount},
                 #{applyUserId},
+                #{applyUserCode},
                 #{applyUserName},
                 #{creatorId},
                 #{creator},
@@ -95,6 +101,7 @@
             <if test="cardNo != null">`card_no` = #{cardNo},</if>
             <if test="amount != null">`amount` = #{amount},</if>
             <if test="applyUserId != null">`apply_user_id` = #{applyUserId},</if>
+            <if test="applyUserId != null">`apply_user_code` = #{applyUserCode},</if>
             <if test="applyUserName != null">`apply_user_name` = #{applyUserName},</if>
             <if test="creatorId != null">`creator_id` = #{creatorId},</if>
             <if test="creator != null">`creator` = #{creator},</if>

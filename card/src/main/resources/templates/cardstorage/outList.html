@@ -1,8 +1,5 @@
 <#bs4Body>
 <style>
-    .h-100 {
-        height: 400px!important;
-    }
 </style>
 <div class="main-container container-fluid">
     <#bs4nav>
@@ -15,8 +12,8 @@
             <div class="form-group col">
                 <label for="applyUserName">领取人</label>
                 <#bautoCompleteProvider
-                _hiddenDomainId="applyUserId"
-                _hiddenDomainName="applyUserId"
+                _hiddenDomainId="applyUserCode"
+                _hiddenDomainName="applyUserCode"
                 _displayDomainId="applyUserName"
                 _displayDomainName="applyUserName" _placeholder=""
                 _optionVariable="userNameQueryAutoCompleteOption"/>
@@ -40,10 +37,10 @@
 
 
 <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
-    <button id="btn_query" type="button" class="btn btn-primary" onclick="$.operate.add()"><i
+    <button id="btn_query" type="button" class="btn btn-primary" onclick="$.operate.add(null,'40%','60%')"><i
             class="fa fa-save"></i> 新增出库
     </button>
-    <button id="btn-out" type="button" class="btn btn-primary" onclick="$.operate.detail()"><i
+    <button id="btn-out" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'40%','70%')"><i
             class="fa fa-list"></i>
         出库明细
     </button>
@@ -65,7 +62,7 @@
                 <th data-field="amount" data-sortable="true" data-align="center" data-sort-name="amount">
                     出库张数
                 </th>
-                <th data-field="applyUserId" data-align="center">
+                <th data-field="applyUserCode" data-align="center">
                     领取人工号
                 </th>
                 <th data-field="applyUserName" data-align="center">
@@ -87,15 +84,16 @@
     $(function () {
         let options = {
             //必须加这个唯一标识
-            uniqueId:"id",
+            uniqueId: "id",
             url: "${contextPath}/cardStorage/outPage.action",
-            createUrl:"${contextPath}/cardStorage/outAdd.html",
-            detailUrl:"${contextPath}/cardStorage/outDetail.html/{id}",
+            createUrl: "${contextPath}/cardStorage/outAdd.html",
+            detailUrl: "${contextPath}/cardStorage/outDetail.html/{id}",
             sortName: "apply_time",
             modalName: "卡片出库"
         };
         $.table.init(options);
     });
+
 
 </script>
 

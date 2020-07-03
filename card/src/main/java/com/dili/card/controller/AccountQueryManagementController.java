@@ -34,7 +34,7 @@ public class AccountQueryManagementController {
     private IAccountQueryService accountQueryService;
 
     /**
-     * 列表页面
+     * 跳转列表页面
      * @param
      * @return
      * @author miaoguoxin

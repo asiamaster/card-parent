@@ -20,4 +20,11 @@ public interface IFundService {
     * @date 2020/6/29
     */
     void frozen(FundRequestDto fundRequestDto);
+
+    /**
+    * 充值
+    * @author miaoguoxin
+    * @date 2020/7/2
+    */
+    void recharge(FundRequestDto fundRequestDto);
 }
