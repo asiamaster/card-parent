@@ -48,5 +48,6 @@ public interface IControllerHandler {
         cardRequestDto.setOpName(userTicket.getRealName());
         cardRequestDto.setOpNo(userTicket.getUserName());
         cardRequestDto.setFirmId(userTicket.getFirmId());
+        cardRequestDto.setFirmName(userTicket.getFirmName());
     }
 }

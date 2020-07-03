@@ -693,14 +693,9 @@ let tab = {
                 let defaults = {
                     title: "系统窗口",//对话框title
                     content: "/404.html",//对话框内容
-                    width: '80%',//宽度
-                    height: '40%',//高度
+                    width: '50%',//宽度
+                    height: '60%',//高度
                     isIframe: true,//默认是页面层，非iframe
-                    btns: [{label: '取消',className: 'btn btn-secondary',onClick(e){
-                        }
-                    }, {label: '确定',className: 'btn btn-primary',onClick(e){
-                    }
-                    }]
                 };
                 options = $.extend(defaults, options);
                 var _btn = ['<i class="fa fa-check"></i> 确认', '<i class="fa fa-close"></i> 关闭'];
@@ -857,9 +852,32 @@ let tab = {
                 });
             },
             // 添加信息
-            add: function (id) {
+            add: function (id, width, height) {
                 table.set();
-                $.modal.open("添加" + table.options.modalName, $.operate.addUrl(id));
+                let options = {
+                    title: "添加" + table.options.modalName,
+                    width: width,
+                    height: height,
+                    content: $.operate.addUrl(id),
+                    btns: [{
+                        label: '取消', className: 'btn btn-secondary', onClick(e, $iframe) {
+                            try {
+                                return $iframe[0].contentWindow.cancelHandler(e)
+                            } catch (ex) {
+                                return true;
+                            }
+                        }
+                    }, {
+                        label: '确定', className: 'btn btn-primary', onClick(e, $iframe) {
+                            try {
+                                return $iframe[0].contentWindow.submitHandler(e)
+                            } catch (ex) {
+                                return false;
+                            }
+                        }
+                    }]
+                };
+                $.modal.openOptions(options);
             },
             // 添加访问地址
             addUrl: function (id) {

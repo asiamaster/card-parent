@@ -49,8 +49,8 @@
                 return;
             }
             let data = $.common.formToJSON('frozen-fund-form');
-            console.log(JSON.stringify(data))
-            // $.operate.post(url, $.extend(requestData, data));
+            //console.log(JSON.stringify(data))
+            $.operate.post(url, $.extend(requestData, data));
         });
     }
 

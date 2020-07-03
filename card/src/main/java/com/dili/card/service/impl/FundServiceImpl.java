@@ -125,6 +125,11 @@ public class FundServiceImpl implements IFundService {
         serialService.handleSuccess(serialDto);
     }
 
+    @Override
+    public void recharge(FundRequestDto fundRequestDto) {
+
+    }
+
 
     /**
      * 构建提现流水 后期根据各业务代码调整优化

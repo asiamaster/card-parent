@@ -1,23 +1,44 @@
 <#bs4Body>
 <div class="container-fluid">
     <div id="add-modal">
-        <table id="add-table" class="table table-bordered">
-            <tbody>
-            <tr>
-                <td class="info-column-card-out">领取人</td>
-                <td class="info-cell-card-out">
-                    <input id="applyUserName" name="applyUserName" type="text" class="form-control"/>
-                </td>
-            </tr>
-            <tr>
-                <td class="info-column-card-out">工号</td>
-                <td class="info-cell-card-out">{detail.applyUserId!}</td>
-            </tr>
-            <tr>
-                <td class="info-column-card-out">已读数量</td>
-                <td class="info-cell-card-out">{detail.amount!}</td>
-            </tr>
-        </table>
+        <form id="save-form">
+            <table id="add-table" class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td class="info-column-card-out">领取人</td>
+                    <td class="info-cell-card-out">
+                        <input id="applyUserName" name="applyUserName" type="text" class="form-control"/>
+                        <input id="applyUserCode" name="applyUserCode" type="hidden" class="form-control"/>
+                        <input id="applyUserId" name="applyUserId" type="hidden" class="form-control"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="info-column-card-out">工号</td>
+                    <td class="info-cell-card-out">{detail.applyUserCode!}</td>
+                </tr>
+                <tr>
+                    <td class="info-column-card-out">已读数量</td>
+                    <td class="info-cell-card-out">
+                    <span>
+                        <input type="hidden">11111,2222</input>
+                    </span>
+                        <span>fffff</span>
+                        <span style="float: right">  <button id="btn-out" type="button" class="btn btn-primary">
+                        开启读卡器
+                    </button></span>
+                    </td>
+                </tr>
+            </table>
+        </form>
     </div>
 </div>
 </#bs4Body>
+<script>
+
+    function submitHandler(e) {
+        let url = "${contextPath}/cardStorage/addOut.action";
+        let data = $.common.formToJSON("save-form");
+        $.operate.post(url,data)
+        return true;
+    }
+</script>

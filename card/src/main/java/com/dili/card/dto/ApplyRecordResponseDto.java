@@ -2,10 +2,13 @@ package com.dili.card.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,8 +23,10 @@ public class ApplyRecordResponseDto implements Serializable {
     private List<String> applyCards;
     /**领取数量*/
     private Integer amount;
-    /**领取人工号*/
+    /**领取人id*/
     private Long applyUserId;
+    /**领取人工号*/
+    private String applyUserCode;
     /**领取人名字*/
     private String applyUserName;
     /**操作员id*/
@@ -35,6 +40,28 @@ public class ApplyRecordResponseDto implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime applyTime;
+
+    /**
+    *  转换数据库字符串cardNos
+    * @author miaoguoxin
+    * @date 2020/7/2
+    */
+    public void setConvertCardNo(String cardNos){
+        if (StringUtils.isBlank(cardNos)){
+            this.applyCards = new ArrayList<>();
+        }else {
+            this.applyCards = new ArrayList<>();
+            applyCards.addAll(Arrays.asList(cardNos.split(",")));
+        }
+    }
+
+    public String getApplyUserCode() {
+        return applyUserCode;
+    }
+
+    public void setApplyUserCode(String applyUserCode) {
+        this.applyUserCode = applyUserCode;
+    }
 
     public Long getId() {
         return id;
