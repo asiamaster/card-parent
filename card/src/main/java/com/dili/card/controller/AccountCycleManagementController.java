@@ -33,6 +33,11 @@ public class AccountCycleManagementController {
     public String listView() {
         return "cycle/list";
     }
+    
+    @GetMapping("/detail.html")
+    public String detailFacadeView() {
+        return "cycle/detail";
+    }
 
 	/**
 	 * 对账

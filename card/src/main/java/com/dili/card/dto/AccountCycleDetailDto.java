@@ -50,17 +50,17 @@ public class AccountCycleDetailDto {
 	private Long revenueAmount = 0L;
 	/** 未交现金金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
-	private Long unDeliverAmount;
+	private Long unDeliverAmount = 0L;
 	/** 结账交现金金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
-	private Long lastDeliverAmount;
+	private Long lastDeliverAmount = 0L;
 	/** 银行存取款 */
 	@TextDisplay(FenToYuanProvider.class)
-	private Long inOutBankAmount;
+	private Long inOutBankAmount = 0L;
 	/** 工本费次数 */
-	private Integer costFeetimes;
+	private Integer costFeetimes = 0;
 	/** 工本费-分 */
-	private Long costAmount;
+	private Long costAmount = 0L;
 
 	public Integer getReceiveTimes() {
 		return receiveTimes;

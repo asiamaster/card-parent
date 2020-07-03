@@ -21,7 +21,7 @@ public enum CycleStatisticType {
 	/** 交款 */
 	DELIVER_CASH(2, 2, "deliverTimes", "deliverAmount"),
 	/** 工本费 */
-	COST_FEE_CASH(2, 2, "costFeetimes", "costFee");
+	COST_FEE_CASH(10, 2, "costFeetimes", "costAmount");
 	
 	private int type;
 	private int tradeChannel;

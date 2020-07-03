@@ -222,7 +222,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 				times.set(accountCycleDetail, cycleStatistc.getTimes());
 				amount = accountCycleDetail.getClass().getDeclaredField(cycleStatisticType.getAmount());
 				amount.setAccessible(true);
-				amount.set(accountCycleDetail, cycleStatistc.getAmount());
+				amount.set(accountCycleDetail, cycleStatistc.getAmount() == null ? 0 : cycleStatistc.getAmount());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
