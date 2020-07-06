@@ -107,7 +107,7 @@ public class ContractServiceImpl implements IContractService {
 		}
 		UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver
 				.findByAccountId(fundContract.getConsignorAccountId());
-		Customer customer = customerRpcResolver.findCustomerById(userAccountCard.getCustomerId());
+		Customer customer = customerRpcResolver.getWithNotNull(userAccountCard.getCustomerId(), fundContract.getFirmId());
 		return this.buildContractDetail(fundContract, userAccountCard, customer);
 	}
 
