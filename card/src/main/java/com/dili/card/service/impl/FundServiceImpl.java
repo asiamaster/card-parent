@@ -81,7 +81,7 @@ public class FundServiceImpl implements IFundService {
         withdrawRequest.setAccountId(accountCard.getFundAccountId());
         withdrawRequest.setChannelId(fundRequestDto.getTradeChannel());
         withdrawRequest.setPassword(fundRequestDto.getTradePwd());
-        if (Integer.valueOf(TradeChannel.E_BANK.getCode()).equals(fundRequestDto.getTradeChannel())) {
+        if (Integer.valueOf(TradeChannel.E_BANK.getCode()).equals(fundRequestDto.getTradeChannel()) && fundRequestDto.getServiceCost() > 0L) {
             List<FeeItemDto> fees = new ArrayList<>();
             FeeItemDto feeItem = new FeeItemDto();
             feeItem.setAmount(fundRequestDto.getServiceCost());
