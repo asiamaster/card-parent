@@ -1,14 +1,23 @@
 <#bs4Body>
 <style>
+	.div_model{
+		width:400px;
+		height:200px;
+		text-align: center;
+	}
+	.textarea_model{
+		width:280px;
+		height:60px;
+	}
 </style>
-<div id="detail-modal">
-	<form  id="queryForm" role="form" >
-        <div class="row row-cols-6">
-            <div class="form-group col-auto">
+<div id="detail-modal" style="text-align: center;">
+	<div id="div_model">
+		<form  id="queryForm" role="form" >
+        	<div class="form-group col-auto">
                 <label for="cardNo">确认解除<font color="#FC1D24">${detail.consignorName!}</font>和<font color="#FC1D24">${detail.consigneeNames!}</font>的委托关系？</label>
-                <div><textarea></textarea></div>
+                <div><textarea class="textarea_model"></textarea></div>
             </div>
-        </div>
-    </form>
+    	</form>
+	</div>
 </div>    
 </#bs4Body>
