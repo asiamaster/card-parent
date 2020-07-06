@@ -14,6 +14,7 @@ import com.dili.card.dto.pay.WithdrawResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.service.*;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.IPayService;
@@ -56,6 +57,8 @@ public class FundServiceImpl implements IFundService {
     private IPayService payService;
     @Autowired
     private IAccountQueryService accountQueryService;
+    @Resource
+    private IAccountCycleService accountCycleService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -91,6 +94,9 @@ public class FundServiceImpl implements IFundService {
         businessRecord.setServiceCost(fundRequestDto.getServiceCost());
         businessRecord.setNotes(fundRequestDto.getServiceCost() == null ? null : String.format("手续费%s元", CurrencyUtils.toYuanWithStripTrailingZeros(fundRequestDto.getServiceCost())));
         serialService.saveBusinessRecord(businessRecord);
+        if (Integer.valueOf(TradeChannel.CASH.getCode()).equals(fundRequestDto.getTradeChannel())) {
+            accountCycleService.decreaseeCashBox(businessRecord.getCycleNo(), fundRequestDto.getAmount());
+        }
         //提现提交
         WithdrawRequestDto withdrawRequest = new WithdrawRequestDto();
         withdrawRequest.setTradeId(tradeNo);
