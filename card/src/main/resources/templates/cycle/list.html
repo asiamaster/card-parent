@@ -11,7 +11,7 @@
                 <label for="creatorId">财务员</label>
                 <input param-multiple="true" name="creatorId" type="text" class="form-control"  id="creatorId" maxlength="50"/>
             </div>
-            <div class="form-group col-auto">
+            <div class="form-group col">
                 <label for="state">状态</label>
                 <select name="state" id="state"  class="form-control"></select>
                 <#bcomboProvider _id="state" _provider="cycleStateProvider" _queryParams='{emptyText:"-- 状态 --"}'/>
@@ -31,9 +31,9 @@
 </div>
 
 <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
-   <button id="btn_add" type="button" class="btn btn-primary" onclick="addHandler()"><i class="fa fa-pencil-square-o"></i> 查看详情</button>
+   <button id="btn_add" type="button" class="btn btn-primary" onclick="addHandler()"><i class="fa fa-tasks"></i> 查看详情</button>
 	<button id="btn_modify" type="button" class="btn btn-primary" onclick="removeHandler()"><i class="fa fa-pencil-square-o"></i> 发起交款</button>
-	<button id="btn_delete" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-pencil-square-o"></i> 平账</button>
+	<button id="btn_delete" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-paypal"></i> 平账</button>
         <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
             class="fa fa-file-excel-o"></i>
         导出
@@ -48,6 +48,7 @@
                data-icons="bui.variable.icons">
             <thead>
             <tr>
+            	<th data-radio="true"></th>
                 <th data-field="cycleNo"data-align="center" >
                     结账编号
                 </th>
@@ -57,25 +58,25 @@
                 <th data-field="userName" data-align="center">
                     柜员姓名
                 </th>
-                <th data-field="accountCycleDetailDto.receiveAmount" data-align="center">
+                <th data-field="accountCycleDetailDto.receiveAmountText" data-align="center">
                    领款金额
                 </th>
-                <th data-field="cashBox" data-align="center">
+                <th data-field="accountCycleDetailDto.revenueAmountText" data-align="center">
                    现金余额
                 </th>
-                <th data-field="accountCycleDetailDto.depoPosAmount" data-align="center" >
+                <th data-field="accountCycleDetailDto.depoPosAmountText" data-align="center" >
         POS存款
                 </th>
-                <th data-field="creator"  data-align="center">
+                <th data-field="accountCycleDetailDto.inOutBankAmountText"  data-align="center">
                    网银存取款
                 </th>
-                <th data-field="accountCycleDetailDto.deliverAmount" data-align="center">
+                <th data-field="accountCycleDetailDto.deliverAmountText" data-align="center">
                     交款金额
                 </th>
-                 <th data-field="accountCycleDetailDto.uneliverAmount" data-align="center">
+                 <th data-field="accountCycleDetailDto.unDeliverAmountText" data-align="center">
                     未交现金金额
                 </th>
-                <th data-field="accountCycleDetailDto.lastDeliverAmount" data-align="center">
+                <th data-field="accountCycleDetailDto.lastDeliverAmountText" data-align="center">
                     结账交款现金金额
                 </th>
                  <th data-field="stateText" data-align="center">

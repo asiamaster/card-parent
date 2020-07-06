@@ -1,45 +1,66 @@
 package com.dili.card.dto;
 
+import com.dili.card.common.annotation.TextDisplay;
+import com.dili.card.common.provider.FenToYuanProvider;
+
 /**
  * 柜员账务周期详情
  * @author zx
  */
 public class AccountCycleDetailDto {
-
-	/** 领款次数 */
-	private Integer receiveTimes;
+	
+	/** 账务周期流水号 */
+	private Long cycleNo;
+	private Integer receiveTimes = 0; 
 	/** 领款金额-分 */
-	private Long receiveAmount;
+	@TextDisplay(FenToYuanProvider.class)
+	private Long receiveAmount = 0L;  
 	/** 交款次数 */
-	private Integer deliverTimes;
+	private Integer deliverTimes = 0;
 	/** 交款金额-分 */
-	private Long deliverAmount;
+	@TextDisplay(FenToYuanProvider.class)
+	private Long deliverAmount = 0L; 
 	/** 现金充值次数 */
-	private Integer depoCashTimes;
+	private Integer depoCashTimes = 0;
 	/** 现金充值金额-分 */
-	private Long depoCashAmount;
+	@TextDisplay(FenToYuanProvider.class)
+	private Long depoCashAmount = 0L;
 	/** POS充值次数 */
-	private Integer depoPosTimes;
+	private Integer depoPosTimes = 0; 
 	/** POS充值金额-分 */
-	private Long depoPosAmount;
+	@TextDisplay(FenToYuanProvider.class)
+	private Long depoPosAmount = 0L;
 	/** 网银充值次数 */
-	private Integer bankInTimes;
+	private Integer bankInTimes = 0;
 	/** 网银充值金额-分 */
-	private Long bankInAmount;
+	@TextDisplay(FenToYuanProvider.class)
+	private Long bankInAmount = 0L;
 	/** 现金提现次数 */
-	private Integer drawCashTimes;
+	private Integer drawCashTimes = 0;
 	/** 现金提现金额-分 */
-	private Long drawCashAmount;
+	@TextDisplay(FenToYuanProvider.class)
+	private Long drawCashAmount = 0L;
 	/** 网银提现次数 */
-	private Integer bankOutTimes;
+	private Integer bankOutTimes = 0; 
 	/** 网银提现金额-分 */
-	private Long bankOutAmount;
+	@TextDisplay(FenToYuanProvider.class)
+	private Long bankOutAmount = 0L; 
 	/** 现金收益金额-分 */
-	private Long revenueAmount;
+	@TextDisplay(FenToYuanProvider.class)
+	private Long revenueAmount = 0L;
 	/** 未交现金金额-分 */
-	private Long unDeliverAmount;
+	@TextDisplay(FenToYuanProvider.class)
+	private Long unDeliverAmount = 0L;
 	/** 结账交现金金额-分 */
-	private Long lastDeliverAmount;
+	@TextDisplay(FenToYuanProvider.class)
+	private Long lastDeliverAmount = 0L;
+	/** 银行存取款 */
+	@TextDisplay(FenToYuanProvider.class)
+	private Long inOutBankAmount = 0L;
+	/** 工本费次数 */
+	private Integer costFeetimes = 0;
+	/** 工本费-分 */
+	private Long costAmount = 0L;
 
 	public Integer getReceiveTimes() {
 		return receiveTimes;
@@ -175,6 +196,38 @@ public class AccountCycleDetailDto {
 
 	public void setLastDeliverAmount(Long lastDeliverAmount) {
 		this.lastDeliverAmount = lastDeliverAmount;
+	}
+
+	public Long getInOutBankAmount() {
+		return inOutBankAmount;
+	}
+
+	public void setInOutBankAmount(Long inOutBankAmount) {
+		this.inOutBankAmount = inOutBankAmount;
+	}
+
+	public Integer getCostFeetimes() {
+		return costFeetimes;
+	}
+
+	public void setCostFeetimes(Integer costFeetimes) {
+		this.costFeetimes = costFeetimes;
+	}
+
+	public Long getCostAmount() {
+		return costAmount;
+	}
+
+	public void setCostAmount(Long costAmount) {
+		this.costAmount = costAmount;
+	}
+
+	public Long getCycleNo() {
+		return cycleNo;
+	}
+
+	public void setCycleNo(Long cycleNo) {
+		this.cycleNo = cycleNo;
 	}
 
 }

@@ -20,4 +20,9 @@ public interface ICardManageService {
 	 */
 	void returnCard(CardRequestDto cardParam);
 
+	/**
+	 * 解锁卡片
+	 * @param cardParam
+	 */
+    void unLockCard(CardRequestDto cardParam);
 }

@@ -52,7 +52,7 @@ public class CardManageServiceImpl implements ICardManageService {
             throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         }
         try {//成功则修改状态及期初期末金额，存储操作流水
-            SerialDto serialDto = buildUnLostCardSerial(cardParam, businessRecord);
+            SerialDto serialDto = buildNoFundSerial(cardParam, businessRecord);
             serialService.handleSuccess(serialDto);
         } catch (Exception e) {
             LOGGER.error("unLostCard", e);
@@ -65,12 +65,31 @@ public class CardManageServiceImpl implements ICardManageService {
 		cardManageRpc.returnCard(cardParam);
 	}
 
+	@Transactional(rollbackFor = Exception.class)
+    @Override
+    public void unLockCard(CardRequestDto cardParam) {
+        BusinessRecordDo businessRecord = new BusinessRecordDo();
+        serialService.buildCommonInfo(cardParam, businessRecord);
+        businessRecord.setType(OperateType.LIFT_LOCKED.getCode());
+        serialService.saveBusinessRecord(businessRecord);
+        BaseOutput<?> baseOutput = cardManageRpc.unLockCard(cardParam);
+        if (!baseOutput.isSuccess()) {
+            throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
+        }
+        try {//成功则修改状态及期初期末金额，存储操作流水
+            SerialDto serialDto = buildNoFundSerial(cardParam, businessRecord);
+            serialService.handleSuccess(serialDto);
+        } catch (Exception e) {
+            LOGGER.error("unLockCard", e);
+        }
+    }
+
     /**
-     * 构建操作流水 后期根据各业务代码调整优化
+     * 构建操作流水 后期根据各业务代码调整优化(针对无资金操作的流水构建)
      * @param cardParam
      * @return
      */
-    private SerialDto buildUnLostCardSerial(CardRequestDto cardParam, BusinessRecordDo businessRecord) {
+    private SerialDto buildNoFundSerial(CardRequestDto cardParam, BusinessRecordDo businessRecord) {
         SerialDto serialDto = new SerialDto();
         serialDto.setSerialNo(businessRecord.getSerialNo());
         //serialDto.setStartBalance(0L);

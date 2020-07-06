@@ -175,6 +175,7 @@ public class ContractServiceImpl implements IContractService {
 			UserAccountCardResponseDto accountCard, Customer customer, boolean detail) {
 		FundContractResponseDto contractResponseDto = new FundContractResponseDto();
 		// 构建合同核心数据
+		contractResponseDto.setId(fundContractDo.getId());
 		contractResponseDto.setContractNo(fundContractDo.getContractNo());
 		contractResponseDto.setCreator(fundContractDo.getCreator());
 		contractResponseDto.setCreateTime(fundContractDo.getCreateTime());

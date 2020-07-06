@@ -62,7 +62,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		// 平账状态校验
 		this.validateCycleFlatedState(cycle);
 		// 账务周期详情统计信息
-		AccountCycleDetailDo accountCycleDetail = this.buildCycleDetail(cycle);
+		AccountCycleDetailDo accountCycleDetail = this.buildAccountCycleDetailDo(this.buildCycleDetail(cycle));
 		// 构建商户相关信息
 		this.buildFirmInfo(accountCycleDetail);
 		// 更新账务周期状态
@@ -206,8 +206,8 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	/**
 	 * 账务周期详情统计信息
 	 */
-	private AccountCycleDetailDo buildCycleDetail(AccountCycleDo cycle) {
-		AccountCycleDetailDo accountCycleDetail = new AccountCycleDetailDo();
+	private AccountCycleDetailDto buildCycleDetail(AccountCycleDo cycle) {
+		AccountCycleDetailDto accountCycleDetail = new AccountCycleDetailDto();
 		accountCycleDetail.setCycleNo(cycle.getCycleNo());
 		List<CycleStatistcDto> cycleStatistcs = accountCycleDetailDao.statisticCycleRecord(cycle.getCycleNo(),
 				cycle.getUserId());
@@ -222,11 +222,14 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 				times.set(accountCycleDetail, cycleStatistc.getTimes());
 				amount = accountCycleDetail.getClass().getDeclaredField(cycleStatisticType.getAmount());
 				amount.setAccessible(true);
-				amount.set(accountCycleDetail, cycleStatistc.getAmount());
+				amount.set(accountCycleDetail, cycleStatistc.getAmount() == null ? 0 : cycleStatistc.getAmount());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+		// 计算现金收支余额 工本费+ 现金充值 -现金取款
+		accountCycleDetail.setRevenueAmount(accountCycleDetail.getCostAmount() + accountCycleDetail.getDepoCashAmount()
+				- accountCycleDetail.getDrawCashAmount());
 		return accountCycleDetail;
 	}
 
@@ -248,8 +251,22 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	 * 构建账务周期包装实体实体
 	 */
 	private AccountCycleDto buildAccountCycleWrapper(AccountCycleDo cycle) {
+		// 构建账务周期实体
 		AccountCycleDto accountCycleDto = this.buildAccountCycleDto(cycle);
-		accountCycleDto.setAccountCycleDetailDto(this.buildAccountCycleDetailDto(this.buildCycleDetail(cycle)));
+		// 构建账务周期详情
+		AccountCycleDetailDto accountCycleDetail = this.buildCycleDetail(cycle);
+		// 计算网银存取款
+		accountCycleDetail
+				.setInOutBankAmount(accountCycleDetail.getBankInAmount() - accountCycleDetail.getBankOutAmount());
+		// 计算未交现金金额  领款金额 + 现金收支收益金额 - 现金交款金额
+		Long unDeliverAmount = accountCycleDetail.getReceiveAmount() + accountCycleDetail.getRevenueAmount()
+				- accountCycleDetail.getDeliverAmount();
+		if (CycleState.ACTIVE.getCode() == cycle.getState()) {//活跃期
+			accountCycleDetail.setUnDeliverAmount(unDeliverAmount);
+		}else {//非活跃期 未交现金金额就是最终交款金额
+			accountCycleDetail.setLastDeliverAmount(unDeliverAmount);
+		}
+		accountCycleDto.setAccountCycleDetailDto(accountCycleDetail);
 		return accountCycleDto;
 	}
 
@@ -271,12 +288,13 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	}
 
 	/**
-	 * 构建账务周期详情相应实体
+	 * 构建账务周期详情相应实体从dto复制数据到do
 	 */
-	private AccountCycleDetailDto buildAccountCycleDetailDto(AccountCycleDetailDo accountCycleDetail) {
-		AccountCycleDetailDto accountCycleDetailDto = new AccountCycleDetailDto();
-		BeanUtils.copyProperties(accountCycleDetail, accountCycleDetailDto);
-		return accountCycleDetailDto;
+	private AccountCycleDetailDo buildAccountCycleDetailDo(AccountCycleDetailDto accountCycleDetail) {
+		AccountCycleDetailDo accountCycleDetailDo = new AccountCycleDetailDo();
+		// 数据复制
+		BeanUtils.copyProperties(accountCycleDetail, accountCycleDetailDo);
+		return accountCycleDetailDo;
 	}
 
 }

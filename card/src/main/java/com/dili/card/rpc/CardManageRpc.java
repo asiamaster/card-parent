@@ -4,6 +4,7 @@ import com.dili.card.dto.CardRequestDto;
 import com.dili.ss.domain.BaseOutput;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
 /**
@@ -29,4 +30,12 @@ public interface CardManageRpc {
      */
     @PostMapping("/api/card/resetLoginPwd")
     BaseOutput<?> resetLoginPwd(CardRequestDto cardParam);
+
+    /**
+     * 解锁卡片
+     * @param cardParam
+     * @return
+     */
+    @RequestMapping("/api/card/unLockCard")
+    BaseOutput<?> unLockCard(CardRequestDto cardParam);
 }
