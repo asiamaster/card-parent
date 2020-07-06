@@ -1,6 +1,7 @@
 package com.dili.card.service.recharge;
 
 import com.dili.card.dto.FundRequestDto;
+import com.dili.card.dto.pay.RechargeRequestDto;
 
 /**
  * @Auther: miaoguoxin
@@ -8,9 +9,15 @@ import com.dili.card.dto.FundRequestDto;
  */
 public interface IRechargeManager {
     /**
+    * 预创建
+    * @author miaoguoxin
+    * @date 2020/7/6
+    */
+    Long getRechargeAmount(FundRequestDto requestDto);
+    /**
     * 充值顶层方法定义
     * @author miaoguoxin
     * @date 2020/7/2
     */
-    void recharge(FundRequestDto requestDto);
+    RechargeRequestDto recharge(FundRequestDto requestDto);
 }

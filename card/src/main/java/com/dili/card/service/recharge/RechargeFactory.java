@@ -46,11 +46,11 @@ public class RechargeFactory implements InitializingBean {
         for (AbstractRechargeManager value : allRechargeBean.values()) {
             TradeChannelMark mark = value.getClass().getAnnotation(TradeChannelMark.class);
             if (mark == null) {
-                continue;
+                throw new RuntimeException("can not allowed empty trade mark");
             }
             AbstractRechargeManager old = RECHARGE_MAP.putIfAbsent(mark.value().getCode(), value);
             if (old != null) {
-                LOGGER.warn("the key [{}] has loaded which bean named [{}],but the new one [{}] putting again ",
+                LOGGER.warn("the key [{}] has loaded which bean named [{}],but the new one [{}] putted again ",
                         mark.value().getCode(), old.getClass().getSimpleName(), value.getClass().getSimpleName());
             }
         }

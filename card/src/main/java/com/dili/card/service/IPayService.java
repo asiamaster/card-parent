@@ -36,4 +36,11 @@ public interface IPayService {
     * @date 2020/6/30
     */
     Long frozenFund(Long fundAccountId, Long amount);
+
+    /**
+    * 提交充值操作
+    * @author miaoguoxin
+    * @date 2020/7/6
+    */
+    void commitRecharge(RechargeRequestDto requestDto);
 }

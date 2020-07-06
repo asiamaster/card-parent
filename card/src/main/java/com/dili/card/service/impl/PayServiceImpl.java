@@ -47,6 +47,11 @@ public class PayServiceImpl implements IPayService {
         return payRpcResolver.postFrozenFund(fundAccountId, amount);
     }
 
+    @Override
+    public void commitRecharge(RechargeRequestDto requestDto) {
+
+    }
+
 
     @Override
     public BalanceResponseDto queryBalance(BalanceRequestDto balanceRequestDto) {

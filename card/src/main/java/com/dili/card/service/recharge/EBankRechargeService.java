@@ -1,7 +1,9 @@
 package com.dili.card.service.recharge;
 
+import cn.hutool.core.util.NumberUtil;
 import com.dili.card.common.annotation.TradeChannelMark;
 import com.dili.card.dto.FundRequestDto;
+import com.dili.card.dto.pay.RechargeRequestDto;
 import com.dili.card.type.TradeChannel;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,14 @@ import org.springframework.stereotype.Service;
 public class EBankRechargeService extends AbstractRechargeManager {
 
     @Override
-    public void recharge(FundRequestDto requestDto) {
+    public Long getRechargeAmount(FundRequestDto requestDto) {
+        return NumberUtil.add(requestDto.getAmount(), requestDto.getServiceCost()).longValue();
+    }
 
+    @Override
+    public RechargeRequestDto recharge(FundRequestDto requestDto) {
+        RechargeRequestDto rechargeRequestDto = super.createRechargeRequestDto(requestDto);
+        rechargeRequestDto.addServiceFeeItem(requestDto.getServiceCost());
+        return rechargeRequestDto;
     }
 }

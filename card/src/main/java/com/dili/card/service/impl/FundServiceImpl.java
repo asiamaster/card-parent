@@ -1,6 +1,7 @@
 package com.dili.card.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -17,6 +18,8 @@ import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
+import com.dili.card.service.recharge.AbstractRechargeManager;
+import com.dili.card.service.recharge.RechargeFactory;
 import com.dili.card.service.recharge.TradeContextHolder;
 import com.dili.card.type.ActionType;
 import com.dili.card.type.CardStatus;
@@ -45,6 +48,8 @@ import java.util.List;
 public class FundServiceImpl implements IFundService {
     private static final Logger LOGGER = LoggerFactory.getLogger(FundServiceImpl.class);
 
+    @Autowired
+    private RechargeFactory rechargeFactory;
     @Resource
     private ISerialService serialService;
     @Resource
@@ -138,39 +143,15 @@ public class FundServiceImpl implements IFundService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void recharge(FundRequestDto fundRequestDto) {
-
+        AbstractRechargeManager rechargeManager = rechargeFactory.getRechargeManager(fundRequestDto.getTradeChannel());
+        rechargeManager.doRecharge(fundRequestDto);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createRecharge(FundRequestDto requestDto) {
-        BusinessRecordDo businessRecord = new BusinessRecordDo();
-        serialService.buildCommonInfo(requestDto, businessRecord);
-        //真正充值的金额
-        long amount = requestDto.getAmount() - requestDto.getServiceCost();
-
-        CreateTradeRequestDto createTradeRequest = new CreateTradeRequestDto();
-        createTradeRequest.setType(TradeType.DEPOSIT.getCode());
-        createTradeRequest.setAccountId(amount);
-        createTradeRequest.setAmount(requestDto.getAmount());
-        createTradeRequest.setSerialNo(businessRecord.getSerialNo());
-        createTradeRequest.setCycleNo(String.valueOf(businessRecord.getCycleNo()));
-        createTradeRequest.setDescription("");
-        //创建交易
-
-        String tradeNo = payService.createTrade(createTradeRequest);
-        //保存业务办理记录
-        businessRecord.setTradeNo(tradeNo);
-        businessRecord.setType(OperateType.ACCOUNT_CHARGE.getCode());
-        businessRecord.setAmount(amount);
-        businessRecord.setTradeType(TradeType.DEPOSIT.getCode());
-        businessRecord.setTradeChannel(requestDto.getTradeChannel());
-        businessRecord.setServiceCost(requestDto.getServiceCost());
-        businessRecord.setNotes(requestDto.getServiceCost() == null ? null : String.format("手续费%s元", CurrencyUtils.toYuanWithStripTrailingZeros(requestDto.getServiceCost())));
-        serialService.saveBusinessRecord(businessRecord);
-
-        TradeContextHolder.putVal(TradeContextHolder.TRADE_ID_KEY, tradeNo);
-        TradeContextHolder.putVal(TradeContextHolder.BUSINESS_RECORD_KEY, businessRecord);
+        AbstractRechargeManager rechargeManager = rechargeFactory.getRechargeManager(requestDto.getTradeChannel());
+        rechargeManager.doPreRecharge(requestDto);
     }
 
 

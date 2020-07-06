@@ -118,12 +118,13 @@ public class FundController implements IControllerHandler {
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
         //由于需要两阶段提交，所以这里的充值逻辑需要分成两个事务
-
         UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForRecharge(requestDto);
         try {
+            //传递线程变量
             TradeContextHolder.putVal(TradeContextHolder.USER_ACCOUNT, userAccount);
-            fundService.createRecharge(requestDto);
 
+            fundService.createRecharge(requestDto);
+            fundService.recharge(requestDto);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
