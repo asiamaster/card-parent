@@ -15,7 +15,7 @@ public interface IUserCashService {
 	/**
 	 * 保存现金操作记录
 	 */
-	void save(UserCashDto userCashDto, CashAction cashAction);
+	void save(UserCashDto userCashDto);
 
 	/**
 	 * 现金操作记录列表
@@ -41,16 +41,6 @@ public interface IUserCashService {
 	 * 现金领款记录列表
 	 */
 	PageOutput<List<UserCashDto>> listPayee(UserCashDto userCashDto);
-
-	/**
-	 * 保存现金领款记录
-	 */
-	void savePayee(UserCashDto userCashDto);
-
-	/**
-	 * 保存现金交款记录
-	 */
-	void savePayer(UserCashDto userCashDto);
 
 	/**
 	 * 现金交款记录列表

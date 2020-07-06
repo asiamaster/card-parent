@@ -4,16 +4,17 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.dili.card.dto.UserCashDto;
 import com.dili.card.service.IUserCashService;
+import com.dili.card.type.CashAction;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
@@ -43,14 +44,33 @@ public class UserCashManagementController {
     public String payerList() {
         return "usercash/payerList";
     }
+    
+    /**
+     * 领款新增
+     */
+    @GetMapping("/addPayee.html")
+    public String addPayee(ModelMap modelMap) {
+    	modelMap.put("action", CashAction.PAYEE.getCode());
+        return "usercash/add";
+    }
+    
+    /**
+     * 取款新增
+     */
+    @GetMapping("/addPayer.html")
+    public String addPayer(ModelMap modelMap) {
+    	modelMap.put("action", CashAction.PAYER.getCode());
+        return "usercash/add";
+    }
+    
 	
 	/**
 	 * 新增领款
 	 */
-	@PostMapping("/savePayee.action")
+	@PostMapping("/save.action")
 	@ResponseBody
 	public BaseOutput<Boolean> savePayee(@RequestBody @Validated(value = ConstantValidator.Insert.class)UserCashDto userCashDto) {
-		iUserCashService.savePayee(userCashDto);
+		iUserCashService.save(userCashDto);
 		return BaseOutput.success();
 	}
 	
@@ -61,16 +81,6 @@ public class UserCashManagementController {
 	@ResponseBody
 	public PageOutput<List<UserCashDto>> listPayee(@RequestBody UserCashDto userCashDto) {
 		return iUserCashService.listPayee(userCashDto);
-	}
-	
-	/**
-	 * 新增交款
-	 */
-	@PostMapping("/savePayer.action")
-	@ResponseBody
-	public BaseOutput<Boolean> savePayer(@RequestBody @Validated(value = ConstantValidator.Insert.class) UserCashDto userCashDto) {
-		iUserCashService.savePayer(userCashDto);
-		return BaseOutput.success();
 	}
 	
 	/**
