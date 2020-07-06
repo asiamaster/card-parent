@@ -24,8 +24,8 @@ public class AccountCycleManagementController {
 
 	@Autowired
 	private IAccountCycleService iAccountCycleService;
-	
-	
+
+
     /**
      * 列表页面
      */
@@ -33,7 +33,11 @@ public class AccountCycleManagementController {
     public String listView() {
         return "cycle/list";
     }
-    
+
+    /**
+    * 跳转详情
+    * @date 2020/7/6
+    */
     @GetMapping("/detail.html")
     public String detailFacadeView() {
         return "cycle/detail";
@@ -48,7 +52,7 @@ public class AccountCycleManagementController {
 		iAccountCycleService.settle(accountCycleDto.getId());
 		return BaseOutput.success();
 	}
-	
+
 	/**
 	 * 平账
 	 */

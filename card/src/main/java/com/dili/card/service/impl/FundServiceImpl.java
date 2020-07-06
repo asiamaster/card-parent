@@ -4,17 +4,28 @@ import cn.hutool.core.collection.CollUtil;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
-import com.dili.card.dto.pay.*;
+import com.dili.card.dto.pay.BalanceRequestDto;
+import com.dili.card.dto.pay.BalanceResponseDto;
+import com.dili.card.dto.pay.CreateTradeRequestDto;
+import com.dili.card.dto.pay.FeeItemDto;
+import com.dili.card.dto.pay.WithdrawRequestDto;
+import com.dili.card.dto.pay.WithdrawResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
-import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
+import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
-import com.dili.card.type.*;
+import com.dili.card.service.recharge.TradeContextHolder;
+import com.dili.card.type.ActionType;
+import com.dili.card.type.CardStatus;
+import com.dili.card.type.FeeType;
+import com.dili.card.type.FundItem;
+import com.dili.card.type.OperateType;
+import com.dili.card.type.TradeChannel;
+import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
-import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,13 +50,12 @@ public class FundServiceImpl implements IFundService {
     @Resource
     private IPayService payService;
     @Autowired
-    private AccountQueryRpcResolver accountQueryRpcResolver;
+    private IAccountQueryService accountQueryService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void withdraw(FundRequestDto fundRequestDto) {
-        UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findByAccountId(fundRequestDto.getAccountId());
-        AccountValidator.validateMatchAccount(fundRequestDto, accountCard);
+        UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(fundRequestDto);
         if (!Integer.valueOf(CardStatus.NORMAL.getCode()).equals(accountCard.getCardState())) {
             throw new CardAppBizException("", String.format("该卡为%s状态,不能进行提现", CardStatus.getName(accountCard.getCardState())));
         }
@@ -102,9 +112,7 @@ public class FundServiceImpl implements IFundService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void frozen(FundRequestDto requestDto) {
-        Long accountId = requestDto.getAccountId();
-        UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findByAccountId(accountId);
-        AccountValidator.validateMatchAccount(requestDto, accountCard);
+        UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(requestDto);
 
         BalanceResponseDto balance = payService.queryBalance(new BalanceRequestDto(accountCard.getFundAccountId()));
         if (requestDto.getAmount() >= balance.getAvailableAmount()) {
@@ -126,22 +134,41 @@ public class FundServiceImpl implements IFundService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void recharge(FundRequestDto fundRequestDto) {
 
     }
 
     @Override
-    public Long createRecharge(FundRequestDto requestDto) {
+    @Transactional(rollbackFor = Exception.class)
+    public void createRecharge(FundRequestDto requestDto) {
+        BusinessRecordDo businessRecord = new BusinessRecordDo();
+        serialService.buildCommonInfo(requestDto, businessRecord);
+        //真正充值的金额
+        long amount = requestDto.getAmount() - requestDto.getServiceCost();
+
         CreateTradeRequestDto createTradeRequest = new CreateTradeRequestDto();
         createTradeRequest.setType(TradeType.DEPOSIT.getCode());
-//        createTradeRequest.setAccountId(accountCard.getFundAccountId());
-//        createTradeRequest.setAmount(fundRequestDto.getAmount());
-//        createTradeRequest.setSerialNo(businessRecord.getSerialNo());
-//        createTradeRequest.setCycleNo(String.valueOf(businessRecord.getCycleNo()));
+        createTradeRequest.setAccountId(amount);
+        createTradeRequest.setAmount(requestDto.getAmount());
+        createTradeRequest.setSerialNo(businessRecord.getSerialNo());
+        createTradeRequest.setCycleNo(String.valueOf(businessRecord.getCycleNo()));
         createTradeRequest.setDescription("");
         //创建交易
+
         String tradeNo = payService.createTrade(createTradeRequest);
-        return null;
+        //保存业务办理记录
+        businessRecord.setTradeNo(tradeNo);
+        businessRecord.setType(OperateType.ACCOUNT_CHARGE.getCode());
+        businessRecord.setAmount(amount);
+        businessRecord.setTradeType(TradeType.DEPOSIT.getCode());
+        businessRecord.setTradeChannel(requestDto.getTradeChannel());
+        businessRecord.setServiceCost(requestDto.getServiceCost());
+        businessRecord.setNotes(requestDto.getServiceCost() == null ? null : String.format("手续费%s元", CurrencyUtils.toYuanWithStripTrailingZeros(requestDto.getServiceCost())));
+        serialService.saveBusinessRecord(businessRecord);
+
+        TradeContextHolder.putVal(TradeContextHolder.TRADE_ID_KEY, tradeNo);
+        TradeContextHolder.putVal(TradeContextHolder.BUSINESS_RECORD_KEY, businessRecord);
     }
 
 

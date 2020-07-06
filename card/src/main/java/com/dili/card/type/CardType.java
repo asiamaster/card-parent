@@ -44,6 +44,26 @@ public enum CardType {
     }
 
 
+    /**
+     * 判断是否为主卡
+     * @author miaoguoxin
+     * @date 2020/6/28
+     */
+    public static boolean isMaster(int code) {
+        return code == CardType.MASTER.getCode()
+                || code == CardType.UNION.getCode()
+                || code == CardType.BANK.getCode();
+    }
+
+    /**
+     * 判断是否为副卡
+     * @author miaoguoxin
+     * @date 2020/6/28
+     */
+    public static boolean isSlave(int code) {
+        return code == CardType.SLAVE.getCode();
+    }
+
     public static String getName(int code) {
         for (CardType category : CardType.values()) {
             if (category.getCode() == code) {

@@ -3,16 +3,22 @@ package com.dili.card.service.impl;
 import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.AccountWithAssociationResponseDto;
+import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.BalanceRequestDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IPayService;
+import com.dili.card.type.CardStatus;
+import com.dili.card.type.CardType;
 import com.dili.card.util.PageUtils;
+import com.dili.card.validator.AccountValidator;
+import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +84,37 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     @Override
     public UserAccountCardResponseDto getByCardNo(String cardNo) {
 
-        return  accountQueryRpcResolver.findByCardNo(cardNo);
+        return accountQueryRpcResolver.findByCardNo(cardNo);
+    }
+
+    @Override
+    public UserAccountCardResponseDto getByAccountId(CardRequestDto requestDto) {
+        UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findByAccountId(requestDto.getAccountId());
+        AccountValidator.validateMatchAccount(requestDto, accountCard);
+        return accountCard;
+    }
+
+    @Override
+    public UserAccountCardResponseDto getByAccountIdForRecharge(CardRequestDto requestDto) {
+        //不需要校验账户是否存在，因为对端已经做过了判断
+        AccountWithAssociationResponseDto result = accountQueryRpcResolver.findByAccountIdWithAssociation(requestDto.getAccountId());
+        AccountValidator.validateMatchAccount(requestDto, result.getPrimary());
+
+        UserAccountCardResponseDto primary = result.getPrimary();
+        //挂失状态不能进行操作
+        if (CardStatus.LOSS.getCode() == primary.getCardState()) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡为挂失状态，不能进行此操作");
+        }
+        //该卡为副卡的时候需要校验关联主卡是否为挂失
+        if (CardType.isSlave(primary.getCardType())) {
+            //副卡肯定有关联的主卡，要是没的就是数据有问题，直接抛错，所以这里直接get(0)
+            UserAccountCardResponseDto master = result.getAssociation().get(0);
+            if (CardStatus.LOSS.getCode() == master.getCardState()) {
+                throw new CardAppBizException(ResultCode.DATA_ERROR,
+                        String.format("该卡关联的主卡【%s】为挂失状态，不能进行此操作", master.getCardNo()));
+            }
+        }
+        return primary;
     }
 
     private List<AccountListResponseDto> addCustomer2AccountList(List<UserAccountCardResponseDto> accountCards,

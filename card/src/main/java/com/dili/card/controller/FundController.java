@@ -5,10 +5,11 @@ import com.alibaba.fastjson.JSON;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.FundRequestDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.exception.CardAppBizException;
-import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
+import com.dili.card.service.recharge.TradeContextHolder;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.card.validator.FundValidator;
@@ -42,8 +43,6 @@ public class FundController implements IControllerHandler {
     private IFundService fundService;
     @Autowired
     private IAccountQueryService accountQueryService;
-    @Autowired
-    private AccountQueryRpcResolver accountQueryRpcResolver;
 
 
     /**
@@ -108,18 +107,28 @@ public class FundController implements IControllerHandler {
     }
 
     /**
-    * 充值
-    * @author miaoguoxin
-    * @date 2020/7/6
-    */
+     * 充值
+     * @author miaoguoxin
+     * @date 2020/7/6
+     */
     @PostMapping("recharge.action")
     @ResponseBody
     public BaseOutput<?> recharge(@RequestBody @Validated({ConstantValidator.Update.class, FundValidator.Trade.class})
                                           FundRequestDto requestDto) {
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
+        //由于需要两阶段提交，所以这里的充值逻辑需要分成两个事务
 
-        accountQueryRpcResolver.findByAccountIdWithAssociation(requestDto.getAccountId());
+        UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForRecharge(requestDto);
+        try {
+            TradeContextHolder.putVal(TradeContextHolder.USER_ACCOUNT, userAccount);
+            fundService.createRecharge(requestDto);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            TradeContextHolder.remove();
+        }
         return BaseOutput.success();
     }
 
