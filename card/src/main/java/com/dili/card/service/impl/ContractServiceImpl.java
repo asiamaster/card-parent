@@ -111,6 +111,18 @@ public class ContractServiceImpl implements IContractService {
 		return this.buildContractDetail(fundContract, userAccountCard, customer);
 	}
 
+	@Override
+	public FundContractResponseDto removeToPage(Long id) {
+		FundContractDo fundContract = contractDao.getById(id);
+		if (fundContract == null) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "该合同号不存在");
+		}
+		UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver
+				.findByAccountId(fundContract.getConsignorAccountId());
+		Customer customer = customerRpcResolver.getWithNotNull(userAccountCard.getCustomerId(), fundContract.getFirmId());
+		return this.buildContractResponse(fundContract, userAccountCard, customer, false);
+	}
+	
 	/**
 	 * 构建查询条件
 	 */
@@ -273,5 +285,4 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setConsignorCustomerCode(customer.getCode());
 		return fundContractDo;
 	}
-
 }

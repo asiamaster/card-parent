@@ -67,6 +67,15 @@ public class ContractManagementController {
 	}
 	
 	/**
+	 * 解除页面
+	 */
+	@GetMapping("/remove.html/{id}")
+	public String removeToPage(@PathVariable Long id, ModelMap modelMap) {
+		modelMap.put("detail", iContractService.removeToPage(id));
+		return "contract/remove";
+	}
+	
+	/**
 	 * 解除合同
 	 */
 	@PostMapping("/remove.action")
