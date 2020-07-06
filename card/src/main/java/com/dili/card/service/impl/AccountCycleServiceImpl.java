@@ -109,7 +109,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Transactional(rollbackFor = Exception.class)
 	public AccountCycleDo findActiveCycleByUserId(Long userId, String userName, String userCode) {
 		if (userId == null || StringUtils.isBlank(userName) || StringUtils.isBlank(userCode)) {
-			throw new CardAppBizException("参数错误");
+			throw new CardAppBizException("查询账务周期参数错误");
 		}
 		AccountCycleDo accountCycle = this.findSettledCycleByUserId(userId);
 		if (accountCycle != null) {
