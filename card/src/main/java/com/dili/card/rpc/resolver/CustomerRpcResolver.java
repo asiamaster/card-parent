@@ -1,17 +1,6 @@
 package com.dili.card.rpc.resolver;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.customer.sdk.domain.Customer;
@@ -19,6 +8,16 @@ import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 客户查询解析器
@@ -27,8 +26,8 @@ import com.dili.ss.domain.BaseOutput;
 @Component
 public class CustomerRpcResolver {
 
-	@Autowired
-	private CustomerRpc customerRpc;
+    @Autowired
+    private CustomerRpc customerRpc;
 
     /**
      * 根据客户id查询客户信息
@@ -48,8 +47,8 @@ public class CustomerRpcResolver {
      * 通过账号批量查询客户map结构数据
      */
     public Map<Long, Customer> findCustomerMapByCustomerIds(List<Long> customerIds) {
-    	List<Customer> customers = findCustomerByIds(customerIds);
-    	return customers.stream()
+        List<Customer> customers = findCustomerByIds(customerIds);
+        return customers.stream()
                 .collect(Collectors.toMap(Customer::getId,
                         a -> a,
                         (k1, k2) -> k1));
@@ -72,22 +71,22 @@ public class CustomerRpcResolver {
     }
 
     /**
-    * 根据客户id查询然后转换一下
-    * @param
-    * @return
-    * @author miaoguoxin
-    * @date 2020/6/28
-    */
-    public CustomerResponseDto findCustomerByIdWithConvert(Long id){
-        Customer customer = this.findCustomerById(id);
+     * 根据客户id查询然后转换一下
+     * @param
+     * @return
+     * @author miaoguoxin
+     * @date 2020/6/28
+     */
+    public CustomerResponseDto findCustomerByIdWithConvert(Long id, Long firmId) {
+        Customer customer = this.getWithNotNull(id, firmId);
         return this.convertFromCustomer(customer);
     }
 
     /**
-    *  根据id批量查客户然后转换一下
-    * @author miaoguoxin
-    * @date 2020/6/22
-    */
+     *  根据id批量查客户然后转换一下
+     * @author miaoguoxin
+     * @date 2020/6/22
+     */
     public List<CustomerResponseDto> findCustomerByIdsWithConvert(List<Long> ids) {
         List<Customer> customers = this.findCustomerByIds(ids);
         return customers.stream()

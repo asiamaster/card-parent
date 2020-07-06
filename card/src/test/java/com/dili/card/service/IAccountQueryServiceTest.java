@@ -85,7 +85,7 @@ class IAccountQueryServiceTest extends BaseTest {
         AccountDetailResponseDto detail = accountQueryService.getDetailByCardNo("888800034670");
         doReturn(this.createCustomerResponse(Lists.newArrayList(105L)).get(0))
                 .when(customerRpcResolver)
-                .findCustomerByIdWithConvert(105L);
+                .findCustomerByIdWithConvert(105L,1L);
         assertNotNull(detail);
         assertNotNull(detail.getCardAssociation());
         assertNotNull(detail.getCardAssociation().getPrimary());

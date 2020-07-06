@@ -38,7 +38,7 @@ public class CustomerServiceImpl implements ICustomerService {
             return customerInfo;
         }
         UserAccountCardResponseDto byCardNo = accountQueryService.getByCardNo(cardNo);
-        CustomerResponseDto responseDto = customerRpcResolver.findCustomerByIdWithConvert(byCardNo.getCustomerId());
+        CustomerResponseDto responseDto = customerRpcResolver.findCustomerByIdWithConvert(byCardNo.getCustomerId(), byCardNo.getFirmId());
         customerCache.put(key, responseDto);
         return responseDto;
     }
