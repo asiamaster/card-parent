@@ -130,6 +130,20 @@ public class FundServiceImpl implements IFundService {
 
     }
 
+    @Override
+    public Long createRecharge(FundRequestDto requestDto) {
+        CreateTradeRequestDto createTradeRequest = new CreateTradeRequestDto();
+        createTradeRequest.setType(TradeType.DEPOSIT.getCode());
+//        createTradeRequest.setAccountId(accountCard.getFundAccountId());
+//        createTradeRequest.setAmount(fundRequestDto.getAmount());
+//        createTradeRequest.setSerialNo(businessRecord.getSerialNo());
+//        createTradeRequest.setCycleNo(String.valueOf(businessRecord.getCycleNo()));
+        createTradeRequest.setDescription("");
+        //创建交易
+        String tradeNo = payService.createTrade(createTradeRequest);
+        return null;
+    }
+
 
     /**
      * 构建提现流水 后期根据各业务代码调整优化

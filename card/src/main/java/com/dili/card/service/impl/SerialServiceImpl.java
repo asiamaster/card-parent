@@ -177,8 +177,7 @@ public class SerialServiceImpl implements ISerialService {
         query.setFirmId(serialQueryDto.getFirmId());
         List<Long> accountIdList = new ArrayList<>();
         accountIdList.add(serialQueryDto.getAccountId());
-        AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByAccountIdWithAssociation(serialQueryDto.getAccountId())
-                .orElseThrow(() -> new CardAppBizException(ResultCode.DATA_ERROR, "卡账户信息不存在"));
+        AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByAccountIdWithAssociation(serialQueryDto.getAccountId());
         if (!CollUtil.isEmpty(cardAssociation.getAssociation())) {
             accountIdList.addAll(cardAssociation.getAssociation().stream().map(UserAccountCardResponseDto::getAccountId).collect(Collectors.toList()));
         }

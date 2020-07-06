@@ -27,4 +27,10 @@ public interface IFundService {
     * @date 2020/7/2
     */
     void recharge(FundRequestDto fundRequestDto);
+    /**
+    * 预创建充值订单
+    * @author miaoguoxin
+    * @date 2020/7/6
+    */
+    Long createRecharge(FundRequestDto fundRequestDto);
 }

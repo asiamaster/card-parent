@@ -41,7 +41,7 @@ public class AccountQueryRpcResolver {
         this.validateSuccess(page);
         return page;
     }
-    
+
     /**
      * 通过账号批量查询map结构数据
      */
@@ -103,8 +103,7 @@ public class AccountQueryRpcResolver {
      */
     public AccountWithAssociationResponseDto findByCardNoWithAssociation(String cardNo) {
         BaseOutput<AccountWithAssociationResponseDto> result = accountQueryRpc.findAssociation(cardNo);
-        this.validateSuccess(result);
-        return result.getData();
+        return GenericRpcResolver.resolver(result);
     }
 
     /**
@@ -112,13 +111,9 @@ public class AccountQueryRpcResolver {
      * @author miaoguoxin
      * @date 2020/6/28
      */
-    public Optional<AccountWithAssociationResponseDto> findByAccountIdWithAssociation(Long accountId) {
+    public AccountWithAssociationResponseDto findByAccountIdWithAssociation(Long accountId) {
         BaseOutput<AccountWithAssociationResponseDto> result = accountQueryRpc.findAssociation(accountId);
-        if (!result.isSuccess()) {
-            LOGGER.warn("调用账户服务错误:{}", result.getMessage());
-            return Optional.empty();
-        }
-        return Optional.ofNullable(result.getData());
+        return GenericRpcResolver.resolver(result);
     }
 
     /**

@@ -37,15 +37,13 @@ public class CustomerRpcResolver {
         CustomerQueryInput customer = new CustomerQueryInput();
         customer.setId(id);
         BaseOutput<List<Customer>> baseOutput = customerRpc.list(customer);
-        if (!baseOutput.isSuccess()) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, baseOutput.getMessage());
-        }
-        if (CollectionUtils.isEmpty(baseOutput.getData())) {
+        List<Customer> customers = GenericRpcResolver.resolver(baseOutput);
+        if (CollectionUtils.isEmpty(customers)) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "客户信息不存在");
         }
         return baseOutput.getData().get(0);
     }
-    
+
     /**
      * 通过账号批量查询客户map结构数据
      */
@@ -66,10 +64,8 @@ public class CustomerRpcResolver {
         CustomerQueryInput customer = new CustomerQueryInput();
         customer.setIdList(ids);
         BaseOutput<List<Customer>> baseOutput = customerRpc.list(customer);
-        if (!baseOutput.isSuccess()) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, baseOutput.getMessage());
-        }
-        if (CollectionUtils.isEmpty(baseOutput.getData())) {
+        List<Customer> customers = GenericRpcResolver.resolver(baseOutput);
+        if (CollectionUtils.isEmpty(customers)) {
             return new ArrayList<>();
         }
         return baseOutput.getData();

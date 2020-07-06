@@ -6,10 +6,12 @@ import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.validator.ConstantValidator;
+import com.dili.card.validator.FundValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +42,8 @@ public class FundController implements IControllerHandler {
     private IFundService fundService;
     @Autowired
     private IAccountQueryService accountQueryService;
+    @Autowired
+    private AccountQueryRpcResolver accountQueryRpcResolver;
 
 
     /**
@@ -88,7 +92,7 @@ public class FundController implements IControllerHandler {
     @PostMapping("frozen.action")
     @ResponseBody
     public BaseOutput<?> frozen(@RequestBody @Validated(ConstantValidator.Update.class)
-                                            FundRequestDto requestDto) {
+                                        FundRequestDto requestDto) {
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
         try {
@@ -97,10 +101,26 @@ public class FundController implements IControllerHandler {
         } catch (CardAppBizException e) {
             return BaseOutput.failure(e.getMessage());
         } catch (Exception e) {
-            LOGGER.error("冻结资金", e);
+            LOGGER.error("冻结资金失败", e);
             LOGGER.error("冻结资金请求参数:{}", JSON.toJSONString(requestDto));
             return BaseOutput.failure();
         }
+    }
+
+    /**
+    * 充值
+    * @author miaoguoxin
+    * @date 2020/7/6
+    */
+    @PostMapping("recharge.action")
+    @ResponseBody
+    public BaseOutput<?> recharge(@RequestBody @Validated({ConstantValidator.Update.class, FundValidator.Trade.class})
+                                          FundRequestDto requestDto) {
+        this.validateCommonParam(requestDto);
+        this.buildOperatorInfo(requestDto);
+
+        accountQueryRpcResolver.findByAccountIdWithAssociation(requestDto.getAccountId());
+        return BaseOutput.success();
     }
 
     /**

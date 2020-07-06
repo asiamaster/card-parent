@@ -6,10 +6,12 @@ import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.pay.BalanceRequestDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.IPayService;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.domain.PageOutput;
 import org.springframework.beans.BeanUtils;
@@ -32,6 +34,8 @@ import java.util.stream.Collectors;
 public class AccountQueryServiceImpl implements IAccountQueryService {
     @Autowired
     private CustomerRpcResolver customerRpcResolver;
+    @Autowired
+    private IPayService payService;
     @Autowired
     private AccountQueryRpcResolver accountQueryRpcResolver;
 
@@ -59,11 +63,11 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         AccountDetailResponseDto detail = new AccountDetailResponseDto();
         AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByCardNoWithAssociation(cardNo);
         CustomerResponseDto customer = customerRpcResolver.findCustomerByIdWithConvert(cardAssociation.getPrimary().getCustomerId());
-        //TODO 资金需要调用rpc
-        BalanceResponseDto fund = new BalanceResponseDto();
-        fund.setBalance(1L);
-        fund.setAvailableAmount(1L);
-        fund.setFrozenAmount(1000L);
+        BalanceResponseDto fund = payService.queryBalance(new BalanceRequestDto(cardAssociation.getPrimary().getFundAccountId()));
+//        BalanceResponseDto fund = new BalanceResponseDto();
+//        fund.setBalance(1L);
+//        fund.setAvailableAmount(1L);
+//        fund.setFrozenAmount(1000L);
 
         detail.setAccountFund(fund);
         detail.setCustomer(customer);

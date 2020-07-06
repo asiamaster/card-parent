@@ -10,6 +10,10 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,6 +89,42 @@ public class CardStorageManagementController implements IControllerHandler {
     @PostMapping("addOut.action")
     public BaseOutput<?> addOutRecord(@RequestBody ApplyRecordRequestDto requestDto){
         this.buildOperatorInfo(requestDto);
+        cardStorageService.saveOutRecord(requestDto);
         return BaseOutput.success();
+    }
+
+    @Autowired
+    private PlatformTransactionManager transactionManager;
+    /**
+    *
+    * @author miaoguoxin
+    * @date 2020/7/3
+    */
+    @PostMapping("test.action")
+    @ResponseBody
+    public BaseOutput<?> test(){
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW); // 事物隔离级别，开启新事务，这样会比较安全些。
+        TransactionStatus status = transactionManager.getTransaction(def);
+        try {
+            ApplyRecordRequestDto requestDto = new ApplyRecordRequestDto();
+            requestDto.setAmount(2);
+            requestDto.setCardNos("1233,44444");
+            requestDto.setOpId(1L);
+            requestDto.setOpName("test");
+            requestDto.setFirmId(1L);
+            requestDto.setFirmName("测试市场");
+            requestDto.setApplyUserCode("1234");
+            requestDto.setApplyUserId(1L);
+            requestDto.setApplyUserName("ttttt");
+            cardStorageService.saveOutRecord(requestDto);
+            transactionManager.commit(status);
+            return BaseOutput.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(status.isRollbackOnly());
+            transactionManager.rollback(status);
+            return BaseOutput.failure();
+        }
     }
 }
