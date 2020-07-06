@@ -18,6 +18,8 @@ public class WithdrawRequestDto {
     private String password;
     /** 费用项*/
     private List<FeeItemDto> fees;
+    /** 业务账号ID*/
+    private Long businessId;
 
     public String getTradeId() {
         return tradeId;
@@ -57,5 +59,13 @@ public class WithdrawRequestDto {
 
     public void setFees(List<FeeItemDto> fees) {
         this.fees = fees;
+    }
+
+    public Long getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(Long businessId) {
+        this.businessId = businessId;
     }
 }

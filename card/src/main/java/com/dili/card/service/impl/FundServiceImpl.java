@@ -74,6 +74,7 @@ public class FundServiceImpl implements IFundService {
         createTradeRequest.setSerialNo(businessRecord.getSerialNo());
         createTradeRequest.setCycleNo(String.valueOf(businessRecord.getCycleNo()));
         createTradeRequest.setDescription("");
+        createTradeRequest.setBusinessId(accountCard.getAccountId());
         //创建交易
         String tradeNo = payService.createTrade(createTradeRequest);
         //保存业务办理记录
@@ -91,6 +92,7 @@ public class FundServiceImpl implements IFundService {
         withdrawRequest.setAccountId(accountCard.getFundAccountId());
         withdrawRequest.setChannelId(fundRequestDto.getTradeChannel());
         withdrawRequest.setPassword(fundRequestDto.getTradePwd());
+        withdrawRequest.setBusinessId(accountCard.getAccountId());
         if (Integer.valueOf(TradeChannel.E_BANK.getCode()).equals(fundRequestDto.getTradeChannel()) && fundRequestDto.getServiceCost() > 0L) {
             List<FeeItemDto> fees = new ArrayList<>();
             FeeItemDto feeItem = new FeeItemDto();

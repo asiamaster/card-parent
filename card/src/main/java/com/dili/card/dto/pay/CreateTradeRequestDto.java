@@ -18,6 +18,8 @@ public class CreateTradeRequestDto {
     private String cycleNo;
     /** 交易备注*/
     private String description;
+    /** 业务账号ID*/
+    private Long businessId;
 
     public Integer getType() {
         return type;
@@ -65,5 +67,13 @@ public class CreateTradeRequestDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(Long businessId) {
+        this.businessId = businessId;
     }
 }
