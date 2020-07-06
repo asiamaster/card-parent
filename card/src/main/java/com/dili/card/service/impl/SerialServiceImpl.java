@@ -19,7 +19,6 @@ import com.dili.card.type.OperateState;
 import com.dili.card.type.OperateType;
 import com.dili.card.util.DateUtil;
 import com.dili.customer.sdk.domain.Customer;
-import com.dili.ss.constant.ResultCode;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
@@ -149,7 +148,7 @@ public class SerialServiceImpl implements ISerialService {
             serialRecordRpcResolver.batchSave(serialDto);
         } catch (Exception e) {
             LOGGER.error(JSON.toJSONString(serialDto), e);//记录数据方便后期处理
-            throw new CardAppBizException("修改办理状态失败");
+            throw new CardAppBizException("保存操作交易流水失败");
         }
     }
 
