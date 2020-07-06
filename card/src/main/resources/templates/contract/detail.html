@@ -1,11 +1,11 @@
 <#bs4Body>
 <style>
-    .info-column-card-out {
-        width: 30%;
-        font-weight: bold;
+    .info-column {
+        width: 28%;
+        font-weight: normal;
         text-align: right;
     }
-    .info-cell-card-out{
+    .info-cell-out{
         width: 70%;
         text-align: center;
     }
@@ -15,31 +15,109 @@
         vertical-align: middle !important;
     }
 </style>
-    <div id="detail-modal">
-        <table id="out-detail" class="table table-bordered">
-            <tbody>
-            <tr>
-                <td class="info-column-card-out">领取人</td>
-                <td class="info-cell-card-out">${detail.applyUserName!}</td>
-            </tr>
-            <tr>
-                <td class="info-column-card-out">工号</td>
-                <td class="info-cell-card-out">${detail.applyUserCode!}
-
-                </td>
-            </tr>
-            <tr>
-                <td class="info-column-card-out">领取数量</td>
-                <td class="info-cell-card-out">${detail.amount!}</td>
-            </tr>
-            <tr>
-                <td class="info-column-card-out vertical-td">卡明细</td>
-                <td class="info-cell-card-out">
-                    <% for(item in detail.applyCards) { %>
-                    <ul>${item!}</ul>
-                    <% } %>
-                </td>
-            </tr>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">查看资金委托信息</li>
+  </ol>
+</nav>
+<div id="detail-modal">
+	<div>
+        <table>
+            <thead >
+	            <tr>
+	                <th  class="info-column text-left">合同编号</th>
+	                <th  class="info-column  text-left">状态</th>
+	                <th  class="info-column text-left">合同开始日期</th>
+	                <th  class="info-column vertical-td text-left">合同结束日期</th>
+	            </tr>
+        	</thead>
+        	<tbody>
+        		<tr>
+	                <td class="info-column text-left">${detail.contractNo!}</td>
+	                <td class="info-column text-left">${detail.state!}</td>
+	                <td class="info-column text-left">${detail.startTime!}</td>
+	                <td class="info-column vertical-td text-left">${detail.endTime!}</td>
+	            </tr>
+        	</tbody>
         </table>
-    </div>
+      </div>
+      <div>
+        <table>
+            <thead>
+	            <tr>
+	                <th class="info-column text-left">委托人信息</th>
+	                <th class="info-column text-left">名称</th>
+	                <th class="info-column text-left">委托园区卡</th>
+	                <th class="info-column text-left"></th>
+	            </tr>
+        	</thead>
+        	<tbody>
+        		<tr>
+	                <td class="info-column text-left">${detail.consignorCode!}</td>
+	                <td class="info-column text-left">${detail.consignorName!}</td>
+	                <td class="info-column text-left">${detail.consignorCard!}</td>
+	                <td class="info-column text-left"></td>
+	            </tr>
+        	</tbody>
+        </table>
+      </div>
+      <div>
+        <table>
+            <% for(item in detail.consignorDtos) { %>
+            <thead>
+	            <tr>
+	                <th class="info-column text-left">名称</th>
+	                <th class="info-column text-left">电话</th>
+	                <th class="info-column text-left">身份证号</th>
+	                <th class="info-column text-left"></th>
+	            </tr>
+        	</thead>
+        	<tbody>
+        		<tr>
+	                <td class="info-column text-left">${item.consigneeName!}</td>
+	                <td class="info-column text-left">${item.consigneeIdMobile!}</td>
+	                <td class="info-column text-left">${item.consigneeIdCode!}</td>
+	                <td class="info-column text-left"></td>
+	            </tr>
+        	</tbody>
+        	<% } %>
+        </table>
+      </div>
+      <div>
+        <table >
+            <thead>
+	            <tr>
+	                <th class="info-column text-left">创建人</th>
+	                <th class="info-column text-left">创建时间</th>
+	                <th class="info-column text-left"></th>
+	                <th class="info-column text-left"></th>
+	            </tr>
+        	</thead>
+        	<tbody>
+        		<tr>
+	                <td class="info-column text-left">${detail.creator!}</td>
+	                <td class="info-column text-left">${detail.createTime!}</td>
+	                <td class="info-column text-left"></td>
+	                <td class="info-column text-left"></td>
+	            </tr>
+        	</tbody>
+        	<thead>
+	            <tr>
+	                <th class="info-column text-left">解除人</th>
+	                <th class="info-column vertical-td text-left">解除时间</th>
+	                <th class="info-column vertical-td text-left">解除说明</th>
+	                <th class="info-column text-left"></th>
+	            </tr>
+        	</thead>
+        	<tbody>
+        		<tr>
+	                <td class="info-column text-left"><input disabled="disabled" value="${detail.terminater!}" type="text"></td>
+	                <td class="info-column vertical-td text-left"><input disabled="disabled" value="${detail.terminateTime!}" type="text"></td>
+	                <td class="info-column vertical-td text-left"></td>
+	                <td class="info-column text-left"></td>
+	            </tr>
+        	</tbody>
+        </table>
+      </div>
+</div>    
 </#bs4Body>

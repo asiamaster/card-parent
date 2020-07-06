@@ -56,5 +56,19 @@ public interface IAccountCycleService {
 	 * 获取当前活跃的账务周期号  非创建
 	 */
 	AccountCycleDo findActiveCycleByUserId(Long userId);
-
+	
+	/**
+	 * 增加现金池金额
+	 * @param cycleNo z账务周期号
+	 * @param amount 金额
+	 */
+	void increaseCashBox(Long cycleNo, Long amount);
+	
+	/**
+	 * 减少现金池金额
+	 * @param cycleNo z账务周期号
+	 * @param amount 金额
+	 */
+	void decreaseeCashBox(Long cycleNo, Long amount);
+	
 }
