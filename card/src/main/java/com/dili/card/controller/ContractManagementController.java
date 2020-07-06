@@ -60,7 +60,7 @@ public class ContractManagementController {
 	/**
 	 * 详情合同
 	 */
-	@GetMapping("/detail.html")
+	@GetMapping("/detail.html/{id}")
 	public String detail(@PathVariable Long id, ModelMap modelMap) {
 		modelMap.put("detail", iContractService.detail(id));
 		return "contract/detail";

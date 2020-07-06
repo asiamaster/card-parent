@@ -54,6 +54,13 @@ public interface IAccountCycleDao {
 	 * @param state
 	 */
 	AccountCycleDo findByUserIdAndState(Long userId, Integer state);
+	
+	/**
+	 * 更新现金池金额
+	 * @param cycleNo z账务周期号
+	 * @param amount 金额
+	 */
+	void updateCashBox(Long cycleNo, Long amount);
 
 	/**
 	 * 通过条件查询

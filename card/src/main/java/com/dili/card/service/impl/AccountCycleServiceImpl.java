@@ -92,6 +92,18 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	public AccountCycleDto detail(Long id) {
 		return this.buildAccountCycleWrapper(accountCycleDao.getById(id));
 	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void increaseCashBox(Long cycleNo, Long amount) {
+		accountCycleDao.updateCashBox(cycleNo, amount);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void decreaseeCashBox(Long cycleNo, Long amount) {
+		accountCycleDao.updateCashBox(cycleNo, -amount);
+	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)

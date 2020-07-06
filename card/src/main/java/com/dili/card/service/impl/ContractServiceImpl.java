@@ -207,6 +207,7 @@ public class ContractServiceImpl implements IContractService {
 				fundConsignorDto.setConsigneeIdCode(fundConsignorDo.getConsigneeIdCode());
 				consignorDtos.add(fundConsignorDto);
 			}
+			contractResponseDto.setConsignorDtos(consignorDtos);
 		}
 		// 构建卡数据
 		contractResponseDto.setConsignorCard(accountCard.getCardNo());
