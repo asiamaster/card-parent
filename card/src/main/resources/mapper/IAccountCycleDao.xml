@@ -137,4 +137,8 @@
 		WHERE
 			id = #{id} and version = #{version}
 	</update>
+	
+	<update id="updateCashBox" >
+		UPDATE card_account_cycle SET cash_box = cash_box + #{amount} WHERE cycle_no = #{cycleNo}
+	</update>
 </mapper>
