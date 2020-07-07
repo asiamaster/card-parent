@@ -13,10 +13,9 @@
 <div id="detail-modal" style="text-align: center;">
 	<div id="div_model">
 		<form  id="queryForm" role="form" >
-		<input id="id" name="id" type="hidden" value="${detail.id!}" class="form-control"/>
+			<input id="id" name="id" type="hidden" value="${usercash.id!}" class="form-control"/>
         	<div class="form-group col-auto">
-                <label for="cardNo">确认解除<font color="#FC1D24">${detail.consignorName!}</font>和<font color="#FC1D24">${detail.consigneeNames!}</font>的委托关系？</label>
-                <div><textarea class="textarea_model"></textarea></div>
+                <label for="cardNo">确认删除对<font color="#FC1D24">${usercash.userName!}</font>发起的领款记录吗？</label>
             </div>
     	</form>
 	</div>

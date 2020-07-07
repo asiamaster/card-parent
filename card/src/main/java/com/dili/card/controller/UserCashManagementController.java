@@ -76,6 +76,16 @@ public class UserCashManagementController {
     	modelMap.put("usercash", iUserCashService.detail(id));
         return "usercash/modify";
     }
+    
+    
+    /**
+     * 修改数据页面
+     */
+    @GetMapping("/delete.html/{id}")
+    public String delete(@PathVariable Long id, ModelMap modelMap) {
+    	modelMap.put("usercash", iUserCashService.detail(id));
+        return "usercash/delete";
+    }
 	
 	/**
 	 * 新增领款
