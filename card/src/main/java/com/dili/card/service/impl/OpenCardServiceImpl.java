@@ -51,7 +51,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	public OpenCardResponseDto openMasterCard(OpenCardDto openCardInfo) {
 		// 调用账户服务开卡
 		BaseOutput<OpenCardResponseDto> baseOutPut = openCardRpc.openMasterCard(openCardInfo);
-		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, ServiceName.ACCOUNT);
+		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, "账户服务开卡");
 		// 保存卡务柜台操作记录
 		BusinessRecordDo buildBusinessRecordDo = buildBusinessRecordDo(openCardInfo, openCardResponse.getAccountId());
 		serialService.saveBusinessRecord(buildBusinessRecordDo);
@@ -69,7 +69,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@Transactional(rollbackFor = Exception.class)
 	public OpenCardResponseDto openSlaveCard(OpenCardDto openCardInfo) {
 		BaseOutput<OpenCardResponseDto> baseOutPut = openCardRpc.openSlaveCard(openCardInfo);
-		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, ServiceName.ACCOUNT);
+		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, "账户服务开卡");
 		// 保存卡务柜台操作记录
 		BusinessRecordDo buildBusinessRecordDo = buildBusinessRecordDo(openCardInfo, openCardResponse.getAccountId());
 		serialService.saveBusinessRecord(buildBusinessRecordDo);
