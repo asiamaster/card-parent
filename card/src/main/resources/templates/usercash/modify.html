@@ -1,0 +1,55 @@
+<#bs4Body>
+<style>
+    .info-column-card-out {
+        width: 30%;
+        font-weight: bold;
+        text-align: right;
+    }
+    .info-cell-card-out{
+        width: 70%;
+        text-align: center;
+    }
+
+    .vertical-td {
+        display: table-cell;
+        vertical-align: middle !important;
+    }
+</style>
+    <div id="detail-modal" >
+    	<form id="save-form" style="width: 300px;height: 300px;">
+    		<input id="id" name="id" type="hidden" value="${usercash.id!}" class="form-control"/>
+    		<input id="action" name="action" type="hidden" value="${usercash.action!}" class="form-control"/>
+	        <table id="out-detail" class="table table-bordered" >
+	            <tbody>
+	            <tr>
+	                <td class="info-column-card-out">柜员工号</td>
+	                <td class="info-cell-card-out">
+	                	<input param-multiple="true" name="userId" style="text-align: left;" type="text" value="${usercash.userId!}" class="form-control"  id="userId" maxlength="50"/>
+	                </td>
+	            </tr>
+	            <tr>
+	                <td class="info-column-card-out">柜员姓名</td>
+	                <td class="info-cell-card-out" style="text-align: left;">${usercash.userName!}</td>
+	            </tr>
+	            <tr>
+	                <td class="info-column-card-out">交款金额</td>
+	                <td class="info-cell-card-out">
+	                	<input style="text-align: left;" id="amount" name="amount" type="text" value="${usercash.amountYuan!}" class="form-control"/>
+	                </td>
+	            </tr>
+	            <tr>
+	                <td class="info-column-card-out vertical-td">大写金额</td>
+	                <td class="info-cell-card-out"></td>
+	            </tr>
+	             <tr>
+	                <td class="info-column-card-out vertical-td">备注</td>
+	                <td class="info-cell-card-out">
+	                	<textarea style="width: 180px;">${usercash.notes!}</textarea>
+	                </td>
+	            </tr>
+	        </table>
+        </form>
+    </div>
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<#common_userJs/>

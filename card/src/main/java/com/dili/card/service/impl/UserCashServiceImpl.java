@@ -43,8 +43,8 @@ public class UserCashServiceImpl implements IUserCashService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void save(UserCashDto userCashDto, CashAction cashAction) {
-		UserCashDo userCashDo = this.buildUserCashEntity(userCashDto, cashAction);
+	public void save(UserCashDto userCashDto) {
+		UserCashDo userCashDo = this.buildUserCashEntity(userCashDto);
 		userCashDao.save(userCashDo);
 	}
 
@@ -58,7 +58,7 @@ public class UserCashServiceImpl implements IUserCashService {
 	@Override
 	public void delete(Long id) {
 		UserCashDo userCashDo = this.findById(id);
-		if (CashState.SETTLED.getCode() == userCashDo.getState()) {
+		if (CashState.UNSETTLED.getCode() != userCashDo.getState()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能删除");
 		}
 		userCashDao.delete(id);
@@ -67,7 +67,7 @@ public class UserCashServiceImpl implements IUserCashService {
 	@Override
 	public void modify(UserCashDto userCashDto) {
 		UserCashDo userCashDo = this.findById(userCashDto.getId());
-		if (CashState.SETTLED.getCode() == userCashDo.getState()) {
+		if (CashState.UNSETTLED.getCode() != userCashDo.getState()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能修改");
 		}
 		userCashDo = new UserCashDo();
@@ -107,16 +107,6 @@ public class UserCashServiceImpl implements IUserCashService {
 	}
 
 	@Override
-	public void savePayee(UserCashDto userCashDto) {
-		this.save(userCashDto, CashAction.PAYEE);
-	}
-
-	@Override
-	public void savePayer(UserCashDto userCashDto) {
-		this.save(userCashDto, CashAction.PAYER);
-	}
-
-	@Override
 	public PageOutput<List<UserCashDto>> listPayer(UserCashDto userCashDto) {
 		Page<?> page = PageHelper.startPage(userCashDto.getPage(), userCashDto.getRows());
 		List<UserCashDto> userCashs = this.list(userCashDto, CashAction.PAYER);
@@ -126,10 +116,10 @@ public class UserCashServiceImpl implements IUserCashService {
 	/**
 	 * 封装领取款记录
 	 */
-	private UserCashDo buildUserCashEntity(UserCashDto userCashDto, CashAction cashAction) {
+	private UserCashDo buildUserCashEntity(UserCashDto userCashDto) {
 		UserCashDo userCash = new UserCashDo();
 		userCash.setCashNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CASH_NO.getCode())));
-		userCash.setAction(cashAction.getCode());
+		userCash.setAction(userCashDto.getAction());
 		userCash.setAmount(CurrencyUtils.yuan2Cent(new BigDecimal(userCashDto.getAmountYuan())));
 		userCash.setUserId(userCashDto.getUserId());
 		userCash.setUserCode(userCashDto.getUserCode());
@@ -192,6 +182,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		cashDto.setCreateTime(userCashDo.getCreateTime());
 		cashDto.setNotes(userCashDo.getNotes());
 		cashDto.setState(userCashDo.getState());
+		cashDto.setId(userCashDo.getId());
 		return cashDto;
 	}
 

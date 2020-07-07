@@ -39,4 +39,9 @@ public interface IContractService {
 	 */
 	FundContractResponseDto detail(Long id);
 
+	/**
+	 * 获取解除双方的信息
+	 */
+	FundContractResponseDto removeToPage(Long id);
+
 }
