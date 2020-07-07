@@ -1,0 +1,69 @@
+<#bs4Body>
+<style>
+    .info-column {
+        width: 25%;
+        font-weight: bold;
+        text-align: right;
+    }
+    .info-cell{
+        width: 25%;
+        text-align: left;
+    }
+
+    .vertical-td {
+        display: table-cell;
+        vertical-align: middle !important;
+    }
+</style>
+    <div id="detail-modal" class="main-container container-fluid">
+    	<form id="save-form">
+    		<input id="action" name="action" type="hidden" value="${usercash.action!}" class="form-control"/>
+	        <table id="out-detail" class="table table-bordered" >
+	            <tbody>
+	            <tr>
+	                <td class="info-column">结账单号</td>
+	                <td class="info-cell">${detail.cycleNo!}</td>
+	                <td class="info-column">账期时间</td>
+	                <td class="info-cell">${detail.startTime!}至${detail.endTime!}</td>
+	            </tr>
+	             <tr>
+	                <td class="info-column">柜员工号</td>
+	                <td class="info-cell">${detail.userCode!}</td>
+	                <td class="info-column">柜员名称</td>
+	                <td class="info-cell">${detail.userName!}</td>
+	            </tr>
+	            <tr>
+	                <td class="info-column">领款金额|${detail.accountCycleDetailDto.receiveTimes!}笔</td>
+	                <td class="info-cell">${detail.accountCycleDetailDto.receiveAmountText!}</td>
+	                <td class="info-column">网银收款|${detail.accountCycleDetailDto.bankInTimes!}笔</td>
+	                <td class="info-cell">${detail.accountCycleDetailDto.bankInAmountText!}</td>
+	            </tr>
+	             <tr>
+	                <td class="info-column">交款金额|${detail.accountCycleDetailDto.deliverTimes!}笔</td>
+	                <td class="info-cell">${detail.accountCycleDetailDto.deliverAmountText!}</td>
+	                <td class="info-column">网银支出|${detail.accountCycleDetailDto.bankOutTimes!}笔</td>
+	                <td class="info-cell">${detail.accountCycleDetailDto.bankOutAmountText!}</td>
+	            </tr>
+	              <tr>
+	                <td class="info-column">现金收款|${detail.accountCycleDetailDto.depoCashTimes!}笔</td>
+	                <td class="info-cell">${detail.accountCycleDetailDto.depoCashAmountText!}</td>
+	                <td class="info-column">POS收款|${detail.accountCycleDetailDto.depoPosTimes!}笔</td>
+	                <td class="info-cell">${detail.accountCycleDetailDto.depoPosAmountText!}</td>
+	            </tr>
+	             <tr>
+	                <td class="info-column">现金支出|${detail.accountCycleDetailDto.drawCashTimes!}笔</td>
+	                <td class="info-cell">${detail.accountCycleDetailDto.drawCashAmountText!}</td>
+	                <td class="info-column"></td>
+	                <td class="info-cell"></td>
+	            </tr>
+	             <tr>
+	                <td class="info-column">现金余额</td>
+	                <td class="info-cell">${detail.accountCycleDetailDto.unDeliverAmountText!}</td>
+	                <td class="info-column">结账交款金额</td>
+	                <td class="info-cell">${detail.accountCycleDetailDto.lastDeliverAmountText!}</td>
+	            </tr>
+	        </table>
+        </form>
+    </div>
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
