@@ -3,8 +3,12 @@ package com.dili.card.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.CycleStateProvider;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * 柜员账务周期
@@ -28,8 +32,14 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 	/** 工位现金柜 */
 	private Long cashBox;
 	/** 账务开始时间 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime startTime;
 	/** 账务结束时间 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime endTime;
 	/** 账务状态-激活 结账 平账 */
 	@TextDisplay(CycleStateProvider.class)

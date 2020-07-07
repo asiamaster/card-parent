@@ -1,23 +1,17 @@
 <#bs4Body>
 <style>
     .info-column {
-        width: 25%;
+        width: 15%;
         font-weight: bold;
         text-align: right;
     }
     .info-cell{
-        width: 25%;
+        width: 35%;
         text-align: left;
     }
-
-    .vertical-td {
-        display: table-cell;
-        vertical-align: middle !important;
-    }
 </style>
-    <div id="detail-modal" class="main-container container-fluid">
+    <div id="detail-modal" class="main-container container-fluid" style="height: 400px;width: 1000px;">
     	<form id="save-form">
-    		<input id="action" name="action" type="hidden" value="${usercash.action!}" class="form-control"/>
 	        <table id="out-detail" class="table table-bordered" >
 	            <tbody>
 	            <tr>
@@ -63,6 +57,13 @@
 	                <td class="info-cell">${detail.accountCycleDetailDto.lastDeliverAmountText!}</td>
 	            </tr>
 	        </table>
+	        <div class="col align-self-center" style="text-align: center">
+	        	@if(${settled!} == 2){
+	        		<button id="back" style="height: 40px;width: 100px;border-color:#FB0E12" type="button" class="btn btn-light" onclick="$.table.search()">返回</button>
+				@} else {
+					<button id="back" style="height: 40px;width: 100px;" type="button" class="btn btn-primary" onclick="$.table.search()">申请结账</button>
+				@}
+            </div>
         </form>
     </div>
 </#bs4Body>

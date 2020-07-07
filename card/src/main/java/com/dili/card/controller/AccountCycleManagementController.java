@@ -18,9 +18,12 @@ import com.dili.card.dto.AccountCycleDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.type.CashAction;
+import com.dili.card.type.CycleState;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
 
 /**
  * 账务管理
@@ -32,56 +35,72 @@ public class AccountCycleManagementController {
 	@Autowired
 	private IAccountCycleService iAccountCycleService;
 
+	/**
+	 * 列表页面
+	 */
+	@GetMapping("/list.html")
+	public String listView() {
+		return "cycle/list";
+	}
 
-    /**
-     * 列表页面
-     */
-    @GetMapping("/list.html")
-    public String listView() {
-        return "cycle/list";
-    }
-
-    /**
-    * 跳转详情
-    * @date 2020/7/6
-    */
-    @GetMapping("/detail.html/{id}")
-    public String detailFacadeView(@PathVariable Long id, ModelMap map) {
-    	if (id == null || id < 0L) {
-    		 throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期详情请求参数错误");
+	/**
+	 * 跳转详情
+	 * 
+	 * @date 2020/7/6
+	 */
+	@GetMapping("/detail.html/{id}")
+	public String detailFacadeView(@PathVariable Long id, ModelMap map) {
+		if (id == null || id < 0L) {
+			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期详情请求参数错误");
 		}
-    	String json = JSON.toJSONString(iAccountCycleService.detail(id),
-                new EnumTextDisplayAfterFilter());
-        map.put("detail", JSON.parseObject(json));   
-        return "cycle/detail";
-    }
-    
-    /**
-     * 跳转对账页面
-     * @date 2020/7/6
-     */
-     @GetMapping("/flated.html/{id}")
-     public String flatedHtml(@PathVariable Long id, ModelMap map) {
-     	if (id == null || id < 0L) {
-     		 throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期对账请求参数错误");
- 		}
-        map.put("detail", iAccountCycleService.findById(id));
-        return "cycle/flated";
-     }
-     
-     /**
-      * 跳转发起交款页面
-      * @date 2020/7/6
-      */
-      @GetMapping("/addPayer.html/{id}")
-      public String addPayer(@PathVariable Long id, ModelMap map) {
-      	if (id == null || id < 0L) {
-      		 throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期发起交款请求参数错误");
-  		}
-         map.put("detail", iAccountCycleService.findById(id));
-         map.put("action", CashAction.PAYER.getCode());
-         return "cycle/addPayer";
-      }
+		String json = JSON.toJSONString(iAccountCycleService.detail(id), new EnumTextDisplayAfterFilter());
+		map.put("detail", JSON.parseObject(json));
+		map.put("settled", CycleState.SETTLED.getCode());
+		return "cycle/detail";
+	}
+
+	/**
+	 * 跳转结账申请
+	 * 
+	 * @date 2020/7/6
+	 */
+	@GetMapping("/applyDetail.html")
+	public String applyDetail(ModelMap map) {
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		String json = JSON.toJSONString(iAccountCycleService.applyDetail(3L), new EnumTextDisplayAfterFilter());
+		map.put("detail", JSON.parseObject(json));
+		map.put("settled", CycleState.ACTIVE.getCode());
+		return "cycle/detail";
+	}
+
+	/**
+	 * 跳转对账页面
+	 * 
+	 * @date 2020/7/6
+	 */
+	@GetMapping("/flated.html/{id}")
+	public String flatedHtml(@PathVariable Long id, ModelMap map) {
+		if (id == null || id < 0L) {
+			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期对账请求参数错误");
+		}
+		map.put("detail", iAccountCycleService.findById(id));
+		return "cycle/flated";
+	}
+
+	/**
+	 * 跳转发起交款页面
+	 * 
+	 * @date 2020/7/6
+	 */
+	@GetMapping("/addPayer.html/{id}")
+	public String addPayer(@PathVariable Long id, ModelMap map) {
+		if (id == null || id < 0L) {
+			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期发起交款请求参数错误");
+		}
+		map.put("detail", iAccountCycleService.findById(id));
+		map.put("action", CashAction.PAYER.getCode());
+		return "cycle/addPayer";
+	}
 
 	/**
 	 * 对账
