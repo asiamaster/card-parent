@@ -17,6 +17,7 @@ import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.AccountCycleDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountCycleService;
+import com.dili.card.type.CashAction;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
@@ -54,6 +55,33 @@ public class AccountCycleManagementController {
         map.put("detail", JSON.parseObject(json));   
         return "cycle/detail";
     }
+    
+    /**
+     * 跳转对账页面
+     * @date 2020/7/6
+     */
+     @GetMapping("/flated.html/{id}")
+     public String flatedHtml(@PathVariable Long id, ModelMap map) {
+     	if (id == null || id < 0L) {
+     		 throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期对账请求参数错误");
+ 		}
+        map.put("detail", iAccountCycleService.findById(id));
+        return "cycle/flated";
+     }
+     
+     /**
+      * 跳转发起交款页面
+      * @date 2020/7/6
+      */
+      @GetMapping("/addPayer.html/{id}")
+      public String addPayer(@PathVariable Long id, ModelMap map) {
+      	if (id == null || id < 0L) {
+      		 throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期发起交款请求参数错误");
+  		}
+         map.put("detail", iAccountCycleService.findById(id));
+         map.put("action", CashAction.PAYER.getCode());
+         return "cycle/addPayer";
+      }
 
 	/**
 	 * 对账
