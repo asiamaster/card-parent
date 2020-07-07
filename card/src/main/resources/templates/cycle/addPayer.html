@@ -17,24 +17,21 @@
 </style>
     <div id="detail-modal" >
     	<form id="save-form" style="width: 300px;height: 300px;">
-    		<input id="id" name="id" type="hidden" value="${usercash.id!}" class="form-control"/>
-    		<input id="action" name="action" type="hidden" value="${usercash.action!}" class="form-control"/>
+    		<input id="action" name="action" type="hidden" value="${action!}" class="form-control"/>
 	        <table id="out-detail" class="table table-bordered" >
 	            <tbody>
 	            <tr>
 	                <td class="info-column">柜员工号</td>
-	                <td class="info-cell">
-	                	<input param-multiple="true" name="userId" type="text" value="${usercash.userId!}" class="form-control"  id="userId" maxlength="50"/>
-	                </td>
+	                <td class="info-cell">${detail.userCode!}</td>
 	            </tr>
 	            <tr>
 	                <td class="info-column">柜员姓名</td>
-	                <td class="info-cell">${usercash.userName!}</td>
+	                <td class="info-cell">${detail.userName!}</td>
 	            </tr>
 	            <tr>
 	                <td class="info-column">交款金额</td>
 	                <td class="info-cell">
-	                	<input id="amount" name="amount" type="text" value="${usercash.amountYuan!}" class="form-control"/>
+	                	<input id="amount" name="amount" type="text" class="form-control"/>
 	                </td>
 	            </tr>
 	            <tr>
@@ -44,7 +41,7 @@
 	             <tr>
 	                <td class="info-column vertical-td">备注</td>
 	                <td class="info-cell">
-	                	<textarea style="width: 180px;">${usercash.notes!}</textarea>
+	                	<textarea style="width: 180px;"></textarea>
 	                </td>
 	            </tr>
 	        </table>
@@ -52,4 +49,3 @@
     </div>
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
-<#common_userJs/>

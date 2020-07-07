@@ -94,6 +94,15 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	}
 	
 	@Override
+	public AccountCycleDto applyDetail(Long userId) {
+		AccountCycleDo accountCycleDo = findActiveCycleByUserId(userId);
+		if (accountCycleDo == null) {
+			throw new CardAppBizException("当前没有可以申请的账务周期");
+		}
+		return this.buildAccountCycleWrapper(accountCycleDo);
+	}
+	
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void increaseCashBox(Long cycleNo, Long amount) {
 		accountCycleDao.updateCashBox(cycleNo, amount);

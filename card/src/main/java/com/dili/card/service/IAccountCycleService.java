@@ -70,5 +70,10 @@ public interface IAccountCycleService {
 	 * @param amount 金额
 	 */
 	void decreaseeCashBox(Long cycleNo, Long amount);
+
+	/**
+	 * 账务周期结账申请详情
+	 */
+	AccountCycleDto applyDetail(Long userId);
 	
 }
