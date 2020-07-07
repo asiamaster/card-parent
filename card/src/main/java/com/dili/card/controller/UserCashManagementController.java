@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,19 +51,31 @@ public class UserCashManagementController {
      */
     @GetMapping("/addPayee.html")
     public String addPayee(ModelMap modelMap) {
-    	modelMap.put("action", CashAction.PAYEE.getCode());
+    	UserCashDto userCashDto = new UserCashDto();
+    	userCashDto.setAction(CashAction.PAYEE.getCode());
+    	modelMap.put("usercash", userCashDto);
         return "usercash/add";
     }
     
     /**
-     * 取款新增
+     * 取款新增iUserCashService.detail(userCashDto.getId())
      */
     @GetMapping("/addPayer.html")
     public String addPayer(ModelMap modelMap) {
-    	modelMap.put("action", CashAction.PAYER.getCode());
+    	UserCashDto userCashDto = new UserCashDto();
+    	userCashDto.setAction(CashAction.PAYER.getCode());
+    	modelMap.put("usercash", userCashDto);
         return "usercash/add";
     }
     
+    /**
+     * 修改数据页面
+     */
+    @GetMapping("/modify.html/{id}")
+    public String modify(@PathVariable Long id, ModelMap modelMap) {
+    	modelMap.put("usercash", iUserCashService.detail(id));
+        return "usercash/modify";
+    }
 	
 	/**
 	 * 新增领款
@@ -101,15 +114,6 @@ public class UserCashManagementController {
 	public BaseOutput<Boolean> delete(@RequestBody UserCashDto userCashDto) {
 		iUserCashService.delete(userCashDto.getId());
 		return BaseOutput.success();
-	}
-	
-	/**
-	 * 获取详情
-	 */
-	@PostMapping("/detail.action")
-	@ResponseBody
-	public BaseOutput<UserCashDto> detail(@RequestBody UserCashDto userCashDto) {
-		return BaseOutput.successData(iUserCashService.detail(userCashDto.getId()));
 	}
 	
 	/**

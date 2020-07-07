@@ -182,6 +182,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		cashDto.setCreateTime(userCashDo.getCreateTime());
 		cashDto.setNotes(userCashDo.getNotes());
 		cashDto.setState(userCashDo.getState());
+		cashDto.setId(userCashDo.getId());
 		return cashDto;
 	}
 
