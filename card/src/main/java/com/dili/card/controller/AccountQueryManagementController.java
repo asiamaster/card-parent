@@ -3,11 +3,13 @@ package com.dili.card.controller;
 import com.alibaba.fastjson.JSON;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.AccountListResponseDto;
+import com.dili.card.dto.AccountSimpleResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
+import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +89,17 @@ public class AccountQueryManagementController {
         return accountQueryService.getPage(param);
     }
 
-
+    /**
+     * 账户信息，包含余额
+     * @author miaoguoxin
+     * @date 2020/7/7
+     */
+    @GetMapping("simpleInfo")
+    public BaseOutput<AccountSimpleResponseDto> getInfoByCardNo(String cardNo) {
+        if (StringUtils.isBlank(cardNo)) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "卡号不能为空");
+        }
+        return BaseOutput.successData(accountQueryService.getByCardNoWithBalance(cardNo));
+    }
 }
 

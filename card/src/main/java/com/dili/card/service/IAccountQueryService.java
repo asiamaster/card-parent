@@ -2,6 +2,7 @@ package com.dili.card.service;
 
 import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
+import com.dili.card.dto.AccountSimpleResponseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -55,4 +56,11 @@ public interface IAccountQueryService {
     * @date 2020/7/6
     */
     UserAccountCardResponseDto getByAccountIdForRecharge(CardRequestDto requestDto);
+
+    /**
+    * 查询账户信息（包含余额）
+    * @author miaoguoxin
+    * @date 2020/7/7
+    */
+    AccountSimpleResponseDto getByCardNoWithBalance(String cardNo);
 }
