@@ -4,7 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.dili.card.BaseTest;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.data.redis.core.StringRedisTemplate;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Auther: miaoguoxin
@@ -12,6 +16,8 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
  * @Description:
  */
 class PayRpcResolverTest extends BaseTest {
+    @Autowired
+    private StringRedisTemplate redisTemplate;
     @SpyBean
     private PayRpcResolver payRpcResolver;
 
@@ -26,6 +32,5 @@ class PayRpcResolverTest extends BaseTest {
 
     @Test
     void postFrozenFund() {
-
     }
 }

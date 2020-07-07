@@ -2,6 +2,7 @@ package com.dili.card.service.impl;
 
 import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
+import com.dili.card.dto.AccountSimpleResponseDto;
 import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.CustomerResponseDto;
@@ -116,6 +117,14 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
             }
         }
         return primary;
+    }
+
+    @Override
+    public AccountSimpleResponseDto getByCardNoWithBalance(String cardNo) {
+        UserAccountCardResponseDto userAccount = this.getByCardNo(cardNo);
+        BalanceResponseDto fund = payService.queryBalance(new BalanceRequestDto(userAccount.getFundAccountId()));
+
+        return new AccountSimpleResponseDto(fund, userAccount);
     }
 
     private List<AccountListResponseDto> addCustomer2AccountList(List<UserAccountCardResponseDto> accountCards,
