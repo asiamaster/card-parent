@@ -8,7 +8,6 @@ import com.alibaba.fastjson.JSONObject;
  * @Date: 2020/7/6 10:27
  */
 public class TradeContextHolder {
-    public static final String PRE_PAY_SUCCESS = "pre_pay_success";
     public static final String TRADE_ID_KEY = "tradeId";
     public static final String BUSINESS_RECORD_KEY = "businessRecord";
     public static final String USER_ACCOUNT = "userAccount";

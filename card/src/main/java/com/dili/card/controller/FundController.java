@@ -115,6 +115,7 @@ public class FundController implements IControllerHandler {
     @ResponseBody
     public BaseOutput<?> recharge(@RequestBody @Validated({ConstantValidator.Update.class, FundValidator.Trade.class})
                                           FundRequestDto requestDto) {
+        //TODO 防重处理，传入token
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
         //由于需要两阶段提交，所以这里的充值逻辑需要分成两个事务
@@ -126,7 +127,8 @@ public class FundController implements IControllerHandler {
             fundService.createRecharge(requestDto);
             fundService.recharge(requestDto);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("充值失败", e);
+            LOGGER.error("充值请求参数:{}", JSON.toJSONString(requestDto));
         } finally {
             TradeContextHolder.remove();
         }

@@ -22,8 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public abstract class AbstractRechargeManager implements IRechargeManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRechargeManager.class);
-
-
     @Autowired
     protected IPayService payService;
     @Autowired
