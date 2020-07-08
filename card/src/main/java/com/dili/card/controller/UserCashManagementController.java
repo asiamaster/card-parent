@@ -79,7 +79,7 @@ public class UserCashManagementController {
     
     
     /**
-     * 修改数据页面
+     * 删除数据页面
      */
     @GetMapping("/delete.html/{id}")
     public String delete(@PathVariable Long id, ModelMap modelMap) {

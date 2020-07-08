@@ -44,7 +44,7 @@
 
 <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
 	<button id="btn_add" type="button" class="btn btn-primary" onclick="addHandler()"><i class="fa fa-plus"></i> 新增</button>
-	<button id="btn_remove" type="button" class="btn btn-primary" onclick="$.operate.terminate(null,'40%','60%','信息确认')"><i class="fa fa-trash-o"></i> 解除</button>
+	<button id="btn_remove" type="button" class="btn btn-primary" onclick="$.operate.removeWithTitle(null,'40%','60%','信息确认')"><i class="fa fa-trash-o"></i> 解除</button>
 	<button id="btn_preview" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 合同预览</button>
 	<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'75%','80%')"><i class="fa fa-list"></i> 查看</button>
     <button id="btn_reprint" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 补打</button>
@@ -111,7 +111,7 @@
             url: "${contextPath}/cardStorage/outPage.action",
             createUrl: "${contextPath}/cardStorage/outAdd.html",
             detailUrl: "${contextPath}/contract/detail.html/{id}",
-            terminateUrl: "${contextPath}/contract/remove.html/{id}",
+            removeUrl: "${contextPath}/contract/remove.html/{id}",
             sortName: "apply_time",
             modalName: "查看资金委托信息"
         };
