@@ -5,15 +5,22 @@ import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.TradeRequestDto;
+import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
+import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
+import com.dili.card.type.ActionType;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Auther: miaoguoxin
@@ -27,11 +34,11 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
     protected ISerialService serialService;
 
     /**
-    *  预创建充值订单
-    * @author miaoguoxin
-    * @date 2020/7/6
-    */
-    public final void doPreRecharge(FundRequestDto requestDto){
+     *  预创建充值订单
+     * @author miaoguoxin
+     * @date 2020/7/6
+     */
+    public final void doPreRecharge(FundRequestDto requestDto) {
         //真正充值的金额
         Long rechargeAmount = this.getRechargeAmount(requestDto);
         BusinessRecordDo businessRecord = new BusinessRecordDo();
@@ -66,17 +73,46 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
      * @date 2020/7/2
      */
     public final void doRecharge(FundRequestDto requestDto) {
+        BusinessRecordDo record = TradeContextHolder.getVal(TradeContextHolder.BUSINESS_RECORD_KEY, BusinessRecordDo.class);
         TradeRequestDto dto = this.recharge(requestDto);
-        payService.commitTrade(dto);
+        //务必设置bizId
+        dto.setBusinessId(record.getAccountId());
+        TradeResponseDto tradeResponseDto = payService.commitTrade(dto);
         //记录日志
         try {
-            //TODO 完善构建数据
-            SerialDto serialDto = new SerialDto();
+            SerialDto serialDto = this.buildRechargeSerial(requestDto, record, tradeResponseDto);
             serialService.handleSuccess(serialDto);
         } catch (Exception e) {
-            LOGGER.error("withdraw", e);
+            LOGGER.error("recharge", e);
         }
+    }
 
+    /**
+     * 按需进行重写
+     * @author miaoguoxin
+     * @date 2020/7/8
+     */
+    protected SerialDto buildRechargeSerial(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto tradeResponseDto) {
+        SerialDto serialDto = new SerialDto();
+        serialDto.setSerialNo(businessRecord.getSerialNo());
+        serialDto.setStartBalance(tradeResponseDto.getBalance());
+        serialDto.setEndBalance(tradeResponseDto.getBalance() + tradeResponseDto.getAmount());
+        if (!CollectionUtils.isEmpty(tradeResponseDto.getStreams())) {
+            List<SerialRecordDo> serialRecordDos = tradeResponseDto.getStreams().stream().map(item -> {
+                SerialRecordDo recordDo = new SerialRecordDo();
+                serialService.copyCommonFields(recordDo, businessRecord);
+                recordDo.setAction(item.getAmount() < 0L ? ActionType.EXPENSE.getCode() : ActionType.INCOME.getCode());
+                recordDo.setStartBalance(item.getBalance());
+                recordDo.setAmount(Math.abs(item.getAmount()));
+                recordDo.setEndBalance(item.getBalance() + item.getAmount());
+                recordDo.setFundItem(item.getType());
+                recordDo.setFundItemName(item.getTypeName());
+                recordDo.setOperateTime(tradeResponseDto.getWhen());
+                return recordDo;
+            }).collect(Collectors.toList());
+            serialDto.setSerialRecordList(serialRecordDos);
+        }
+        return serialDto;
     }
 
 
@@ -91,4 +127,5 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         rechargeRequestDto.setPassword(requestDto.getTradePwd());
         return rechargeRequestDto;
     }
+
 }
