@@ -14,13 +14,14 @@ public class PayRpcResolver {
     @Autowired
     private PayRpc payRpc;
 
+    private static final String SERVICE_NAME = "pay-service";
     /**
     *  提交提现
     * @author miaoguoxin
     * @date 2020/7/1
     */
     public WithdrawResponseDto withdraw(WithdrawRequestDto withdrawRequest){
-        return GenericRpcResolver.resolver(payRpc.withdraw(withdrawRequest));
+        return GenericRpcResolver.resolver(payRpc.withdraw(withdrawRequest), SERVICE_NAME);
     }
 
     /**
@@ -29,7 +30,7 @@ public class PayRpcResolver {
     * @date 2020/7/1
     */
     public CreateTradeResponseDto prePay(CreateTradeRequestDto createTradeRequest){
-       return GenericRpcResolver.resolver(payRpc.preparePay(createTradeRequest));
+       return GenericRpcResolver.resolver(payRpc.preparePay(createTradeRequest), SERVICE_NAME);
     }
     /**
      *  查询余额
@@ -39,7 +40,7 @@ public class PayRpcResolver {
     public BalanceResponseDto findBalanceByFundAccountId(Long fundAccountId) {
         CreateTradeRequestDto requestDto = new CreateTradeRequestDto();
         requestDto.setAccountId(fundAccountId);
-        return GenericRpcResolver.resolver(payRpc.getAccountBalance(requestDto));
+        return GenericRpcResolver.resolver(payRpc.getAccountBalance(requestDto), SERVICE_NAME);
     }
 
     /**
@@ -51,7 +52,7 @@ public class PayRpcResolver {
         CreateTradeRequestDto requestDto = new CreateTradeRequestDto();
         requestDto.setAccountId(fundAccountId);
         requestDto.setAmount(amount);
-        return GenericRpcResolver.resolver(payRpc.frozenFund(requestDto));
+        return GenericRpcResolver.resolver(payRpc.frozenFund(requestDto), SERVICE_NAME);
     }
 }
 
