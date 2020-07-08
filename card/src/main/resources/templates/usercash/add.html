@@ -1,18 +1,15 @@
 <#bs4Body>
 <style>
-    .info-column-card-out {
+    .info-column {
         width: 30%;
         font-weight: bold;
         text-align: right;
+        vertical-align: middle;
     }
-    .info-cell-card-out{
+    .info-cell{
         width: 70%;
         text-align: left;
-    }
-
-    .vertical-td {
-        display: table-cell;
-        vertical-align: middle !important;
+        vertical-align: middle;
     }
 </style>
     <div id="detail-modal" >
@@ -21,29 +18,29 @@
 	        <table id="out-detail" class="table table-bordered" >
 	            <tbody>
 	            <tr>
-	                <td class="info-column-card-out">柜员工号</td>
-	                <td class="info-cell-card-out">
+	                <td class="info-column" >柜员工号</td>
+	                <td class="info-cell">
 	                	<input param-multiple="true" name="userId" type="text" class="form-control"  id="userId" maxlength="50"/>
 	                </td>
 	            </tr>
 	            <tr>
-	                <td class="info-column-card-out">柜员姓名</td>
-	                <td class="info-cell-card-out"></td>
+	                <td class="info-column">柜员姓名</td>
+	                <td class="info-cell"></td>
 	            </tr>
 	            <tr>
-	                <td class="info-column-card-out">交款金额</td>
-	                <td class="info-cell-card-out">
+	                <td class="info-column">交款金额</td>
+	                <td class="info-cell">
 	                	<input id="amount" name="amount" type="text" class="form-control"/>
 	                </td>
 	            </tr>
 	            <tr>
-	                <td class="info-column-card-out vertical-td">大写金额</td>
-	                <td class="info-cell-card-out">></td>
+	                <td class="info-column">大写金额</td>
+	                <td class="info-cell"></td>
 	            </tr>
 	             <tr>
-	                <td class="info-column-card-out vertical-td">备注</td>
-	                <td class="info-cell-card-out">
-	                	<textarea ></textarea>
+	                <td class="info-column">备注</td>
+	                <td class="info-cell">
+	                	<textarea style="width:200px; " id="notes" name="notes"></textarea>
 	                </td>
 	            </tr>
 	        </table>

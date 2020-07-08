@@ -25,15 +25,14 @@
                 <button id="query" type="button" class="btn btn-outline-primary" onclick="$.table.search()"><i class="fa fa-search"></i> 查询</button>
             </div>
         </div>
-
     </form>
 </#bs4nav>
 </div>
 
 <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
-   <button id="btn_add" type="button" class="btn btn-primary" onclick="addHandler()"><i class="fa fa-list"></i> 新增</button>
-	<button id="btn_modify" type="button" class="btn btn-primary" onclick="removeHandler()"><i class="fa fa-pencil-square-o"></i> 修改</button>
-	<button id="btn_delete" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-trash-o"></i> 删除</button>
+   <button id="btn_add" type="button" class="btn btn-primary" onclick="$.operate.addWithTitle(null,'30%','91%','新增领款')"><i class="fa fa-list"></i> 新增</button>
+	<button id="btn_modify" type="button" class="btn btn-primary" onclick="$.operate.editWithTitle(null,'30%','91%','修改领款')"><i class="fa fa-pencil-square-o"></i> 修改</button>
+	<button id="btn_delete" type="button" class="btn btn-primary" onclick="$.operate.removeWithTitle(null,'30%','60%','信息确认')"><i class="fa fa-trash-o"></i> 删除</button>
         <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
             class="fa fa-file-excel-o"></i>
         导出
@@ -86,3 +85,16 @@
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <#usercash_payeeListJs/>
 <#common_userJs/>
+<script>
+    $(function () {
+        let options = {
+            //必须加这个唯一标识
+            uniqueId: "id",
+            url: "${contextPath}/cardStorage/outPage.action",
+            createUrl: "${contextPath}/cash/addPayee.html",
+            updateUrl: "${contextPath}/cash/modify.html/{id}",
+            removeUrl: "${contextPath}/cash/delete.html/{id}"
+        };
+        $.table.init(options);
+    });
+</script>

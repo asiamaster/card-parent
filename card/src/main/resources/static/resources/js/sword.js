@@ -770,9 +770,9 @@ let tab = {
             get: function (url, callback) {
                 $.operate.submit(url, "get", "json", "", callback);
             },
-            terminate: function (id, width, height,modalName) {
+            removeWithTitle: function (id, width, height,modalName) {
                 table.set();
-                let _url = $.operate.terminateUrl(id);
+                let _url = $.operate.removeUrl(id);
                 if ($.common.isEmpty(_url)){
                     return;
                 }
@@ -809,17 +809,17 @@ let tab = {
                 $.modal.openOptions(options);
             },
             // 详细访问地址
-            terminateUrl: function (id) {
+            removeUrl: function (id) {
                 var url = "/404.html";
                 if ($.common.isNotEmpty(id)) {
-                    url = table.options.terminateUrl.replace("{id}", id);
+                    url = table.options.removeUrl.replace("{id}", id);
                 } else {
                     var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
                     if (id.length == 0) {
                         $.modal.alertWarning("请至少选择一条记录");
                         return;
                     }
-                    url = table.options.terminateUrl.replace("{id}", id);
+                    url = table.options.removeUrl.replace("{id}", id);
                 }
                 return url;
             },
@@ -905,22 +905,14 @@ let tab = {
                 });
             },
             // 添加信息
-            add: function (id, width, height) {
+            addWithTitle: function (id, width, height, modalName) {
                 table.set();
                 let options = {
-                    title: "添加" + table.options.modalName,
+                    title: modalName,
                     width: width,
                     height: height,
                     content: $.operate.addUrl(id),
                     btns: [{
-                        label: '取消', className: 'btn btn-secondary', onClick(e, $iframe) {
-                            try {
-                                return $iframe[0].contentWindow.cancelHandler(e)
-                            } catch (ex) {
-                                return true;
-                            }
-                        }
-                    }, {
                         label: '确定', className: 'btn btn-primary', onClick(e, $iframe) {
                             try {
                                 return $iframe[0].contentWindow.submitHandler(e)
@@ -928,14 +920,65 @@ let tab = {
                                 return false;
                             }
                         }
+                    },{
+                        label: '取消', className: 'btn btn-secondary', onClick(e, $iframe) {
+                            try {
+                                return $iframe[0].contentWindow.cancelHandler(e)
+                            } catch (ex) {
+                                return true;
+                            }
+                        }
                     }]
                 };
                 $.modal.openOptions(options);
+            },
+            // 添加信息
+            add: function (id, width, height) {
+            	$.operate.addWithTitle(id, width, height, '添加' + table.options.modalName);
             },
             // 添加访问地址
             addUrl: function (id) {
                 var url = $.common.isEmpty(id) ? table.options.createUrl.replace("{id}", "") : table.options.createUrl.replace("{id}", id);
                 return url;
+            },
+            // 修改信息
+            editWithTitle: function (id, width, height, modalName) {
+            	table.set();
+            	let _url = $.operate.editUrl(id);
+                if ($.common.isEmpty(_url)){
+                    return;
+                }
+                let _width = $.common.isEmpty(width) ? "800" : width;
+                let _height = $.common.isEmpty(height) ? ($(window).height() - 50) : height;
+                //如果是移动端，就使用自适应大小弹窗
+                if ($.common.isMobile()) {
+                    _width = 'auto';
+                    _height = 'auto';
+                } 
+                let options = {
+                    title: modalName,
+                    width: _width,
+                    height: _height,
+                    content: _url,
+                    btns: [{
+                        label: '保存', className: 'btn btn-primary', onClick(e, $iframe) {
+                            try {
+                                return $iframe[0].contentWindow.submitHandler(e)
+                            } catch (ex) {
+                                return false;
+                            }
+                        }
+                    },{
+                        label: '取消', className: 'btn btn-secondary', onClick(e, $iframe) {
+                            try {
+                                return $iframe[0].contentWindow.cancelHandler(e)
+                            } catch (ex) {
+                                return true;
+                            }
+                        }
+                    }]
+                };
+                $.modal.openOptions(options);
             },
             // 修改信息
             edit: function (id) {
