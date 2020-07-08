@@ -51,7 +51,6 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>account-service</finalName>
 		<!-- 资源文件过滤 -->
 		<resources>
 			<resource>
