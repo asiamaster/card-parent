@@ -21,6 +21,23 @@ public class CreateTradeRequestDto {
     /** 业务账号ID*/
     private Long businessId;
 
+    public static CreateTradeRequestDto createTrade(Integer type,
+                                                    Long bizId,
+                                                    Long accountId,
+                                                    Long amount,
+                                                    String serialNo,
+                                                    String cycleNo) {
+        CreateTradeRequestDto requestDto = new CreateTradeRequestDto();
+        requestDto.setType(type);
+        requestDto.setBusinessId(bizId);
+        requestDto.setAccountId(accountId);
+        requestDto.setAmount(amount);
+        requestDto.setSerialNo(serialNo);
+        requestDto.setCycleNo(cycleNo);
+        requestDto.setDescription("");
+        return requestDto;
+    }
+
     public Integer getType() {
         return type;
     }

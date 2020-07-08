@@ -6,7 +6,7 @@ import java.util.List;
  * 提现
  * @author xuliang
  */
-public class WithdrawRequestDto {
+public class TradeRequestDto {
 
     /** 交易号*/
     private String tradeId;

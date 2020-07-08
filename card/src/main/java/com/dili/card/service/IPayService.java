@@ -1,7 +1,6 @@
 package com.dili.card.service;
 
 import com.dili.card.dto.pay.*;
-import com.dili.ss.domain.BaseOutput;
 
 /**
  * 用于处理支付对接的service接口
@@ -21,7 +20,7 @@ public interface IPayService {
      * @param withdrawRequest
      * @return
      */
-    WithdrawResponseDto commitWithdraw(WithdrawRequestDto withdrawRequest);
+    TradeResponseDto commitWithdraw(TradeRequestDto withdrawRequest);
 
     /**
      * 余额查询

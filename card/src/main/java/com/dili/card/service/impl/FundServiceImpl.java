@@ -1,7 +1,6 @@
 package com.dili.card.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.NumberUtil;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -9,8 +8,8 @@ import com.dili.card.dto.pay.BalanceRequestDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.FeeItemDto;
-import com.dili.card.dto.pay.WithdrawRequestDto;
-import com.dili.card.dto.pay.WithdrawResponseDto;
+import com.dili.card.dto.pay.TradeRequestDto;
+import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
@@ -21,7 +20,6 @@ import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.recharge.AbstractRechargeManager;
 import com.dili.card.service.recharge.RechargeFactory;
-import com.dili.card.service.recharge.TradeContextHolder;
 import com.dili.card.type.ActionType;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.FeeType;
@@ -98,7 +96,7 @@ public class FundServiceImpl implements IFundService {
             accountCycleService.decreaseeCashBox(businessRecord.getCycleNo(), fundRequestDto.getAmount());
         }
         //提现提交
-        WithdrawRequestDto withdrawRequest = new WithdrawRequestDto();
+        TradeRequestDto withdrawRequest = new TradeRequestDto();
         withdrawRequest.setTradeId(tradeNo);
         withdrawRequest.setAccountId(accountCard.getFundAccountId());
         withdrawRequest.setChannelId(fundRequestDto.getTradeChannel());
@@ -113,7 +111,7 @@ public class FundServiceImpl implements IFundService {
             fees.add(feeItem);
             withdrawRequest.setFees(fees);
         }
-        WithdrawResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
+        TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
         try {
             SerialDto serialDto = buildWithdrawSerial(fundRequestDto, businessRecord, withdrawResponse);
             serialService.handleSuccess(serialDto);
@@ -166,7 +164,7 @@ public class FundServiceImpl implements IFundService {
      * @param fundRequestDto
      * @return
      */
-    private SerialDto buildWithdrawSerial(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, WithdrawResponseDto withdrawResponse) {
+    private SerialDto buildWithdrawSerial(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
         SerialDto serialDto = new SerialDto();
         serialDto.setSerialNo(businessRecord.getSerialNo());
         serialDto.setStartBalance(withdrawResponse.getBalance());

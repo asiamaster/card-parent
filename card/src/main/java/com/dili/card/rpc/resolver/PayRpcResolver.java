@@ -20,7 +20,7 @@ public class PayRpcResolver {
     * @author miaoguoxin
     * @date 2020/7/1
     */
-    public WithdrawResponseDto withdraw(WithdrawRequestDto withdrawRequest){
+    public TradeResponseDto withdraw(TradeRequestDto withdrawRequest){
         return GenericRpcResolver.resolver(payRpc.withdraw(withdrawRequest), SERVICE_NAME);
     }
 
