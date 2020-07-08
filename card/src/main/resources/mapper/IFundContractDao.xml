@@ -101,7 +101,8 @@
 			`end_time`, 
 			`state`, 
 			`creator`, 
-			`create_time`
+			`create_time`,
+			`firm_id`
 		FROM
 			card_fund_contract
 		WHERE

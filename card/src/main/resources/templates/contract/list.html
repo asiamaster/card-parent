@@ -3,7 +3,7 @@
     <#bs4nav>
     <form  id="queryForm" role="form" >
         <div class="row row-cols-6">
-            <div class="form-group col-auto">
+            <div class="form-group col">
                 <label for="state">委托状态</label>
                 <select name="state" id="state"  class="form-control"></select>
                 <#bcomboProvider _id="state" _provider="contractStateProvider" _queryParams='{emptyText:"-- 状态 --"}'/>
@@ -44,9 +44,9 @@
 
 <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
 	<button id="btn_add" type="button" class="btn btn-primary" onclick="addHandler()"><i class="fa fa-plus"></i> 新增</button>
-	<button id="btn_remove" type="button" class="btn btn-primary" onclick="removeHandler()"><i class="fa fa-trash-o"></i> 解除</button>
+	<button id="btn_remove" type="button" class="btn btn-primary" onclick="$.operate.terminate(null,'40%','60%','信息确认')"><i class="fa fa-trash-o"></i> 解除</button>
 	<button id="btn_preview" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 合同预览</button>
-	<button id="btn_detail" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 查看</button>
+	<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'75%','80%')"><i class="fa fa-list"></i> 查看</button>
     <button id="btn_reprint" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 补打</button>
     <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
             class="fa fa-file-excel-o"></i>
@@ -103,4 +103,18 @@
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <#contract_indexJs/>
 <#common_customerJs/>
-
+<script>
+    $(function () {
+        let options = {
+            //必须加这个唯一标识
+            uniqueId: "id",
+            url: "${contextPath}/cardStorage/outPage.action",
+            createUrl: "${contextPath}/cardStorage/outAdd.html",
+            detailUrl: "${contextPath}/contract/detail.html/{id}",
+            terminateUrl: "${contextPath}/contract/remove.html/{id}",
+            sortName: "apply_time",
+            modalName: "查看资金委托信息"
+        };
+        $.table.init(options);
+    });
+</script>

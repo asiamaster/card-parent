@@ -155,7 +155,7 @@ public class ContractServiceImpl implements IContractService {
 				.collect(Collectors.toList());
 		Map<Long, UserAccountCardResponseDto> userAccountCardMsp = accountQueryRpcResolver
 				.findAccountCardsMapByAccountIds(accountIds);
-		Map<Long, Customer> customerMap = customerRpcResolver.findCustomerMapByCustomerIds(customerIds);
+		Map<Long, Customer> customerMap = customerRpcResolver.findCustomerMapByCustomerIds(customerIds, fundContracts.get(0).getFirmId());
 		for (FundContractDo fundContractDo : fundContracts) {
 			contractResponseDtos.add(this.buildPageContracts(fundContractDo,
 					userAccountCardMsp.get(fundContractDo.getConsignorAccountId()),

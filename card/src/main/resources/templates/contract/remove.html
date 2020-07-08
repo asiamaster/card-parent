@@ -6,19 +6,30 @@
 		text-align: center;
 	}
 	.textarea_model{
-		width:280px;
-		height:60px;
+		width:320px;
+		height:80px;
 	}
 </style>
-<div id="detail-modal" style="text-align: center;">
-	<div id="div_model">
-		<form  id="queryForm" role="form" >
+<div style="text-align: center;">
+	<div >
+		<form  id="saveForm">
 		<input id="id" name="id" type="hidden" value="${detail.id!}" class="form-control"/>
         	<div class="form-group col-auto">
-                <label for="cardNo">确认解除<font color="#FC1D24">${detail.consignorName!}</font>和<font color="#FC1D24">${detail.consigneeNames!}</font>的委托关系？</label>
-                <div><textarea class="textarea_model"></textarea></div>
+                <label>确认解除<font color="#FC1D24">${detail.consignorName!}</font>和<font color="#FC1D24">${detail.consigneeNames!}</font>的委托关系？</label>
+                <div><textarea class="textarea_model" id="notes" name="notes"></textarea></div>
             </div>
     	</form>
 	</div>
 </div>    
 </#bs4Body>
+<script>
+    function submitHandler(e) {
+    	alert("b");
+        let url = "${contextPath}/contract/remove.action";
+        let data = $.common.formToJSON("saveForm");
+        alert(data);
+        $.operate.post(url,data);
+        alert("b");
+        return true;
+    }
+</script>

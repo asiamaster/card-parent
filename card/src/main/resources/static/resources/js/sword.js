@@ -770,6 +770,59 @@ let tab = {
             get: function (url, callback) {
                 $.operate.submit(url, "get", "json", "", callback);
             },
+            terminate: function (id, width, height,modalName) {
+                table.set();
+                let _url = $.operate.terminateUrl(id);
+                if ($.common.isEmpty(_url)){
+                    return;
+                }
+                let _width = $.common.isEmpty(width) ? "800" : width;
+                let _height = $.common.isEmpty(height) ? ($(window).height() - 50) : height;
+                //如果是移动端，就使用自适应大小弹窗
+                if ($.common.isMobile()) {
+                    _width = 'auto';
+                    _height = 'auto';
+                }
+                let options = {
+                    title: modalName,
+                    width: _width,
+                    height: _height,
+                    content: _url,
+                    btns: [{
+                        label: '确定', className: 'btn btn-primary', onClick(e, $iframe) {
+                            try {
+                                return $iframe[0].contentWindow.submitHandler(e)
+                            } catch (ex) {
+                                return false;
+                            }
+                        }
+                    },{
+                        label: '取消', className: 'btn btn-secondary', onClick(e, $iframe) {
+                            try {
+                                return $iframe[0].contentWindow.cancelHandler(e)
+                            } catch (ex) {
+                                return true;
+                            }
+                        }
+                    }]
+                };
+                $.modal.openOptions(options);
+            },
+            // 详细访问地址
+            terminateUrl: function (id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = table.options.terminateUrl.replace("{id}", id);
+                } else {
+                    var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+                    if (id.length == 0) {
+                        $.modal.alertWarning("请至少选择一条记录");
+                        return;
+                    }
+                    url = table.options.terminateUrl.replace("{id}", id);
+                }
+                return url;
+            },
             // 详细信息
             detail: function (id, width, height) {
                 table.set();
@@ -785,7 +838,7 @@ let tab = {
                     _height = 'auto';
                 }
                 let options = {
-                    title: table.options.modalName + "详细",
+                    title: table.options.modalName,
                     width: _width,
                     height: _height,
                     content: _url,
