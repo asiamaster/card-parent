@@ -24,12 +24,10 @@
 </#bs4Body>
 <script>
     function submitHandler(e) {
-    	alert("b");
         let url = "${contextPath}/contract/remove.action";
         let data = $.common.formToJSON("saveForm");
         alert(data);
         $.operate.post(url,data);
-        alert("b");
         return true;
     }
 </script>
