@@ -94,7 +94,8 @@ public class AccountQueryManagementController {
      * @author miaoguoxin
      * @date 2020/7/7
      */
-    @GetMapping("simpleInfo")
+    @GetMapping("simpleInfo.action")
+    @ResponseBody
     public BaseOutput<AccountSimpleResponseDto> getInfoByCardNo(String cardNo) {
         if (StringUtils.isBlank(cardNo)) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "卡号不能为空");

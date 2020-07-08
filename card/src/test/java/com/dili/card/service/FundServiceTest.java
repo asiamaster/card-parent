@@ -4,18 +4,23 @@ import com.alibaba.fastjson.JSON;
 import com.dili.card.BaseTest;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
+import com.dili.card.service.recharge.TradeContextHolder;
+import com.dili.card.type.TradeChannel;
 import com.dili.customer.sdk.domain.Customer;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 
 /**
  * @Auther: miaoguoxin
@@ -29,8 +34,10 @@ class FundServiceTest extends BaseTest {
     private ISerialService serialService;
     @SpyBean
     private CustomerRpcResolver customerRpcResolver;
-    @SpyBean
+    @MockBean
     private IAccountCycleService accountCycleService;
+    @SpyBean
+    private IAccountQueryService accountQueryService;
 
     @Test
     @Transactional
@@ -51,7 +58,7 @@ class FundServiceTest extends BaseTest {
         doCallRealMethod().when(serialService).buildCommonInfo(requestDto, businessRecordDo);
         doNothing().when(serialService).handleSuccess(new SerialDto());
         doReturn(this.createCustomer()).when(customerRpcResolver)
-                .getWithNotNull(requestDto.getCustomerId(),requestDto.getFirmId());
+                .getWithNotNull(requestDto.getCustomerId(), requestDto.getFirmId());
 
         fundService.frozen(requestDto);
         LOGGER.info("结果:{}", JSON.toJSONString(businessRecordDo));
@@ -59,7 +66,47 @@ class FundServiceTest extends BaseTest {
         //serialService.buildCommonInfo(requestDto,businessRecordDo);
     }
 
-    private Customer createCustomer(){
+    @Test
+    void testRecharge() {
+    }
+
+    @Test
+    void testCreateRecharge() {
+        FundRequestDto fundRequestDto = this.createRechargeRequest();
+        fundRequestDto.setTradeChannel(TradeChannel.CASH.getCode());
+        //fundRequestDto.setTradePwd("123456");
+
+        doReturn(createAccountCycle()).when(accountCycleService)
+                .findActiveCycleByUserId(fundRequestDto.getOpId(),
+                        fundRequestDto.getOpName(),
+                        fundRequestDto.getOpNo());
+
+        UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForRecharge(fundRequestDto);
+        try {
+            TradeContextHolder.putVal(TradeContextHolder.USER_ACCOUNT, userAccount);
+            fundService.createRecharge(fundRequestDto);
+        } finally {
+            TradeContextHolder.remove();
+        }
+
+    }
+
+    private FundRequestDto createRechargeRequest() {
+        FundRequestDto fundRequestDto = new FundRequestDto();
+        fundRequestDto.setAccountId(174L);
+        fundRequestDto.setCardNo("888889690048");
+        fundRequestDto.setCustomerId(105L);
+        fundRequestDto.setAmount(1L);
+        fundRequestDto.setOpId(73L);
+        fundRequestDto.setOpName("王波");
+        fundRequestDto.setOpNo("");
+        fundRequestDto.setFirmId(1L);
+        fundRequestDto.setFirmName("集团");
+        fundRequestDto.setAmount(1L);
+        return fundRequestDto;
+    }
+
+    private Customer createCustomer() {
         Customer customer = new Customer();
         customer.setId(105L);
         customer.setName("ffff");
@@ -67,9 +114,11 @@ class FundServiceTest extends BaseTest {
         return customer;
     }
 
-    private AccountCycleDo createAccountCycle(){
+    private AccountCycleDo createAccountCycle() {
         AccountCycleDo accountCycleDo = new AccountCycleDo();
-        accountCycleDo.setCycleNo(1L);
+        accountCycleDo.setCycleNo(123L);
         return accountCycleDo;
     }
+
+
 }

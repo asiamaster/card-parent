@@ -17,6 +17,7 @@ public class TradeContextHolder {
     public static void putVal(String key, Object val) {
         JSONObject jsonObject = initIfNecessary();
         jsonObject.put(key, val);
+        LOCAL.set(jsonObject);
     }
 
     public static <T> T getVal(String key, Class<T> clazz) {
