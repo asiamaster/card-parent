@@ -2,6 +2,7 @@ package com.dili.card.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.dili.card.common.annotation.ForbidDuplicateCommit;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.FundRequestDto;
@@ -113,9 +114,9 @@ public class FundController implements IControllerHandler {
      */
     @PostMapping("recharge.action")
     @ResponseBody
+    @ForbidDuplicateCommit
     public BaseOutput<?> recharge(@RequestBody @Validated({ConstantValidator.Update.class, FundValidator.Trade.class})
                                           FundRequestDto requestDto) {
-        //TODO 防重处理，传入token
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
         //由于需要两阶段提交，所以这里的充值逻辑需要分成两个事务

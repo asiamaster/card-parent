@@ -29,8 +29,6 @@ public class FundRequestDto extends CardRequestDto {
     private Long serviceCost;
     /**备注*/
     private String mark;
-    /**预支付返回的交易号*/
-    private transient Long tradeId;
     /**额外字段，由各业务逻辑自行决定*/
     private Map<String, Object> extra;
 
@@ -82,11 +80,4 @@ public class FundRequestDto extends CardRequestDto {
         this.extra = extra;
     }
 
-    public Long getTradeId() {
-        return tradeId;
-    }
-
-    public void setTradeId(Long tradeId) {
-        this.tradeId = tradeId;
-    }
 }

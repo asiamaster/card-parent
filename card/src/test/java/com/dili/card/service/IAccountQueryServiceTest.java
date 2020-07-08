@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.dili.card.BaseTest;
 import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
+import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -11,6 +12,7 @@ import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.ss.domain.PageOutput;
 import org.assertj.core.util.Lists;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -105,4 +107,13 @@ class IAccountQueryServiceTest extends BaseTest {
     }
 
 
+    @Test
+    void testGetByAccountIdForRecharge() {
+        CardRequestDto cardRequestDto = new CardRequestDto();
+        cardRequestDto.setAccountId(174L);
+        cardRequestDto.setCardNo("888889690048");
+        cardRequestDto.setCustomerId(105L);
+        UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForRecharge(cardRequestDto);
+        assertNotNull(userAccount);
+    }
 }
