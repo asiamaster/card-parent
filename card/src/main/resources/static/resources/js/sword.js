@@ -824,6 +824,32 @@ let tab = {
                 return url;
             },
             // 详细信息
+            detailToPage: function (id, width, height) {
+                table.set();
+                let _url = $.operate.detailUrl(id);
+                if ($.common.isEmpty(_url)){
+                    return;
+                }
+                let _width = $.common.isEmpty(width) ? "800" : width;
+                let _height = $.common.isEmpty(height) ? ($(window).height() - 50) : height;
+                //如果是移动端，就使用自适应大小弹窗
+                if ($.common.isMobile()) {
+                    _width = 'auto';
+                    _height = 'auto';
+                }
+                let options = {
+                    title: table.options.modalName,
+                    width: _width,
+                    isIframe:false;
+                    height: _height,
+                    content: _url,
+                    btns: [{label: '关闭', className: 'btn-secondary', onClick(e) {
+
+                        }}]
+                };
+                $.modal.openOptions(options);
+            },
+            // 详细信息
             detail: function (id, width, height) {
                 table.set();
                 let _url = $.operate.detailUrl(id);
