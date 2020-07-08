@@ -31,9 +31,9 @@
 </div>
 
 <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
-   <button id="btn_add" type="button" class="btn btn-primary" onclick="addHandler()"><i class="fa fa-list"></i> 查看详情</button>
-	<button id="btn_modify" type="button" class="btn btn-primary" onclick="removeHandler()"><i class="fa fa-pencil-square-o"></i> 发起交款</button>
-	<button id="btn_delete" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-paypal"></i> 平账</button>
+   <button id="btn_add" type="button" class="btn btn-primary" onclick="$.operate.addWithTitle(null,'30%','91%','新增交款记录')"><i class="fa fa-list"></i> 查看详情</button>
+	<button id="btn_modify" type="button" class="btn btn-primary" onclick="$.operate.addWithTitleAndSelect(null,'30%','91%','新增交款记录')"><i class="fa fa-pencil-square-o"></i> 发起交款</button>
+	<button id="btn_delete" type="button" class="btn btn-primary" onclick="$.operate.editWithTitle(null,'30%','65%','信息确认')"><i class="fa fa-paypal"></i> 平账</button>
         <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
             class="fa fa-file-excel-o"></i>
         导出
@@ -92,3 +92,15 @@
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <#cycle_indexJs/>
 <#common_userJs/>
+<script>
+    $(function () {
+        let options = {
+            //必须加这个唯一标识
+            uniqueId: "id",
+            detailUrl: "${contextPath}/cycle/detail.html/{id}",
+            createUrl: "${contextPath}/cycle/addPayer.html/{id}",
+            updateUrl: "${contextPath}/cycle/flated.html/{id}"
+        };
+        $.table.init(options);
+    });
+</script>

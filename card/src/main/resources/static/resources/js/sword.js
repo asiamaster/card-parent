@@ -905,6 +905,45 @@ let tab = {
                 });
             },
             // 添加信息
+            addWithTitleAndSelect: function (id, width, height, modalName) {
+                table.set();
+                let _url = $.operate.addUrlSelect(id);
+                if ($.common.isEmpty(_url)){
+                    return;
+                }
+                let _width = $.common.isEmpty(width) ? "800" : width;
+                let _height = $.common.isEmpty(height) ? ($(window).height() - 50) : height;
+                //如果是移动端，就使用自适应大小弹窗
+                if ($.common.isMobile()) {
+                    _width = 'auto';
+                    _height = 'auto';
+                }
+                let options = {
+                    title: modalName,
+                    width: _width,
+                    height: _height,
+                    content: _url,
+                    btns: [{
+                        label: '确定', className: 'btn btn-primary', onClick(e, $iframe) {
+                            try {
+                                return $iframe[0].contentWindow.submitHandler(e)
+                            } catch (ex) {
+                                return false;
+                            }
+                        }
+                    },{
+                        label: '取消', className: 'btn btn-secondary', onClick(e, $iframe) {
+                            try {
+                                return $iframe[0].contentWindow.cancelHandler(e)
+                            } catch (ex) {
+                                return true;
+                            }
+                        }
+                    }]
+                };
+                $.modal.openOptions(options);
+            },
+            // 添加信息
             addWithTitle: function (id, width, height, modalName) {
                 table.set();
                 let options = {
@@ -941,6 +980,21 @@ let tab = {
                 var url = $.common.isEmpty(id) ? table.options.createUrl.replace("{id}", "") : table.options.createUrl.replace("{id}", id);
                 return url;
             },
+            // 添加访问地址
+            addUrlSelect: function (id) {
+            	 var url = "/404.html";
+                 if ($.common.isNotEmpty(id)) {
+                     url = table.options.createUrl.replace("{id}", id);
+                 } else {
+                     var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+                     if (id.length == 0) {
+                         $.modal.alertWarning("请至少选择一条记录");
+                         return;
+                     }
+                     url = table.options.createUrl.replace("{id}", id);
+                 }
+                 return url;
+            },
             // 修改信息
             editWithTitle: function (id, width, height, modalName) {
             	table.set();
@@ -961,7 +1015,7 @@ let tab = {
                     height: _height,
                     content: _url,
                     btns: [{
-                        label: '保存', className: 'btn btn-primary', onClick(e, $iframe) {
+                        label: '确定', className: 'btn btn-primary', onClick(e, $iframe) {
                             try {
                                 return $iframe[0].contentWindow.submitHandler(e)
                             } catch (ex) {
