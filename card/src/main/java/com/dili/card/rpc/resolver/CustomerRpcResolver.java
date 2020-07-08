@@ -46,8 +46,8 @@ public class CustomerRpcResolver {
     /**
      * 通过账号批量查询客户map结构数据
      */
-    public Map<Long, Customer> findCustomerMapByCustomerIds(List<Long> customerIds) {
-        List<Customer> customers = findCustomerByIds(customerIds);
+    public Map<Long, Customer> findCustomerMapByCustomerIds(List<Long> customerIds, Long firmId) {
+        List<Customer> customers = findCustomerByIds(customerIds, firmId);
         return customers.stream()
                 .collect(Collectors.toMap(Customer::getId,
                         a -> a,
@@ -59,9 +59,10 @@ public class CustomerRpcResolver {
      * @author miaoguoxin
      * @date 2020/6/22
      */
-    public List<Customer> findCustomerByIds(List<Long> ids) {
+    public List<Customer> findCustomerByIds(List<Long> ids, Long firmId) {
         CustomerQueryInput customer = new CustomerQueryInput();
         customer.setIdList(ids);
+        customer.setMarketId(firmId);
         BaseOutput<List<Customer>> baseOutput = customerRpc.list(customer);
         List<Customer> customers = GenericRpcResolver.resolver(baseOutput);
         if (CollectionUtils.isEmpty(customers)) {
