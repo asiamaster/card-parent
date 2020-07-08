@@ -63,7 +63,7 @@ public class OpenCardController implements IControllerHandler {
 			customerId = RandomUtil.getRandom().nextLong(210);
 		}
 		Customer customer = GenericRpcResolver.resolver(customerRpc.get(customerId, user.getFirmId()),
-				ServiceName.CUSTOMER);
+				"测试获取用户信息");
 		return BaseOutput.successData(customer);
 	}
 
