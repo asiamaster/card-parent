@@ -1,6 +1,7 @@
 <#bs4Body> <script type="text/javascript">
 	function createCard(url) {
 		var datas = $("#openInfoForm").serialize();
+		console.log(datas);
 		$.ajax({
 			url : "${contextPath}" + url,
 			type : 'POST',
@@ -107,8 +108,7 @@
 			</tr>
 			<tr>
 				<td class="vertical-td info-column-frozen-fund">父卡账号</td>
-				<td><input id="parentAccountId" name="parentAccountId"
-					value=23422 class="form-control" /></td>
+				<td><input id="parentAccountId" name="parentAccountId" class="form-control" /></td>
 			</tr>
 		</table>
 	</form>

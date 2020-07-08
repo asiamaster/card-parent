@@ -7,8 +7,8 @@ import com.dili.card.type.CardType;
 import com.dili.card.type.UsePermissionType;
 
 /**
- * @description： 
- *          开卡所需要的用户信息
+ * @description： 开卡所需要的用户信息
+ * 
  * @author ：WangBo
  * @time ：2020年7月3日下午3:38:26
  */
@@ -24,7 +24,7 @@ public class OpenCardDto extends BaseSerialLogDto {
 	/** 证件类型 */
 	private String credentialType;
 	/** 证件号 */
-	private String credentialNo;
+	private String certificateNumber;
 	/** 证件有效期 */
 	private LocalDateTime validityDate;
 	/** 手机号 */
@@ -89,12 +89,12 @@ public class OpenCardDto extends BaseSerialLogDto {
 		this.credentialType = credentialType;
 	}
 
-	public String getCredentialNo() {
-		return credentialNo;
+	public String getCertificateNumber() {
+		return certificateNumber;
 	}
 
-	public void setCredentialNo(String credentialNo) {
-		this.credentialNo = credentialNo;
+	public void setCertificateNumber(String certificateNumber) {
+		this.certificateNumber = certificateNumber;
 	}
 
 	public LocalDateTime getValidityDate() {
@@ -112,6 +112,7 @@ public class OpenCardDto extends BaseSerialLogDto {
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
+
 	public Integer getAccountType() {
 		return accountType;
 	}
