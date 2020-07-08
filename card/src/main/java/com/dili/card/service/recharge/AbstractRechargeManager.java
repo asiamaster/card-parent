@@ -39,17 +39,14 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         serialService.buildCommonInfo(requestDto, businessRecord);
 
         UserAccountCardResponseDto userAccount = TradeContextHolder.getVal(TradeContextHolder.USER_ACCOUNT, UserAccountCardResponseDto.class);
-
-        CreateTradeRequestDto createTradeRequest = new CreateTradeRequestDto();
-        createTradeRequest.setType(TradeType.DEPOSIT.getCode());
-        createTradeRequest.setAccountId(userAccount.getFundAccountId());
-        createTradeRequest.setBusinessId(userAccount.getAccountId());
-        createTradeRequest.setAmount(rechargeAmount);
-        createTradeRequest.setSerialNo(businessRecord.getSerialNo());
-        createTradeRequest.setCycleNo(String.valueOf(businessRecord.getCycleNo()));
-        createTradeRequest.setDescription("");
+        CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(
+                TradeType.DEPOSIT.getCode(),
+                userAccount.getAccountId(),
+                userAccount.getFundAccountId(),
+                rechargeAmount, businessRecord.getSerialNo(),
+                String.valueOf(businessRecord.getCycleNo()));
         //创建交易
-        String tradeId = payService.createTrade(createTradeRequest);
+        String tradeId = payService.createTrade(tradeRequest);
         //保存业务办理记录
         businessRecord.setTradeNo(tradeId);
         businessRecord.setType(OperateType.ACCOUNT_CHARGE.getCode());

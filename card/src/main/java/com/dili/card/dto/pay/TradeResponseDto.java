@@ -11,7 +11,7 @@ import java.util.List;
  * 提现返回值
  * @author xuliang
  */
-public class WithdrawResponseDto {
+public class TradeResponseDto {
 
     /** 账户ID*/
     private Long accountId;

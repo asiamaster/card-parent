@@ -37,7 +37,7 @@ public class PayServiceImpl implements IPayService {
     }
 
     @Override
-    public WithdrawResponseDto commitWithdraw(WithdrawRequestDto withdrawRequest) {
+    public TradeResponseDto commitWithdraw(TradeRequestDto withdrawRequest) {
         return payRpcResolver.withdraw(withdrawRequest);
     }
 
