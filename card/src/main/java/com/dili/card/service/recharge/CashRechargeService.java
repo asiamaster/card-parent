@@ -2,7 +2,7 @@ package com.dili.card.service.recharge;
 
 import com.dili.card.common.annotation.TradeChannelMark;
 import com.dili.card.dto.FundRequestDto;
-import com.dili.card.dto.pay.RechargeRequestDto;
+import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.type.TradeChannel;
@@ -27,7 +27,7 @@ public class CashRechargeService extends AbstractRechargeManager {
     }
 
     @Override
-    public RechargeRequestDto recharge(FundRequestDto requestDto) {
+    public TradeRequestDto recharge(FundRequestDto requestDto) {
         BusinessRecordDo businessRecordDo = TradeContextHolder.getVal(TradeContextHolder.BUSINESS_RECORD_KEY, BusinessRecordDo.class);
         //添加现金资金池
         accountCycleService.increaseCashBox(businessRecordDo.getCycleNo(), requestDto.getAmount());

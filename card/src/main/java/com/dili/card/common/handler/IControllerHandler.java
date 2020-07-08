@@ -1,6 +1,7 @@
 package com.dili.card.common.handler;
 
 import cn.hutool.core.util.StrUtil;
+import com.dili.card.dto.BaseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.ss.dto.DTOUtils;
@@ -43,6 +44,19 @@ public interface IControllerHandler {
      * @param cardRequestDto
      */
     default void buildOperatorInfo(CardRequestDto cardRequestDto) {
+        UserTicket userTicket = getUserTicket();
+        cardRequestDto.setOpId(userTicket.getId());
+        cardRequestDto.setOpName(userTicket.getRealName());
+        cardRequestDto.setOpNo(userTicket.getUserName());
+        cardRequestDto.setFirmId(userTicket.getFirmId());
+        cardRequestDto.setFirmName(userTicket.getFirmName());
+    }
+
+    /**
+     * 赋值操作员信息
+     * @param cardRequestDto
+     */
+    default void buildOperatorInfo(BaseDto cardRequestDto) {
         UserTicket userTicket = getUserTicket();
         cardRequestDto.setOpId(userTicket.getId());
         cardRequestDto.setOpName(userTicket.getRealName());

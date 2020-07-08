@@ -38,18 +38,18 @@ public class PayServiceImpl implements IPayService {
 
     @Override
     public TradeResponseDto commitWithdraw(TradeRequestDto withdrawRequest) {
-        return payRpcResolver.withdraw(withdrawRequest);
+        return payRpcResolver.trade(withdrawRequest);
+    }
+
+    @Override
+    public TradeResponseDto commitTrade(TradeRequestDto requestDto) {
+        return payRpcResolver.trade(requestDto);
     }
 
 
     @Override
     public Long frozenFund(Long fundAccountId, Long amount) {
         return payRpcResolver.postFrozenFund(fundAccountId, amount);
-    }
-
-    @Override
-    public void commitRecharge(RechargeRequestDto requestDto) {
-
     }
 
 

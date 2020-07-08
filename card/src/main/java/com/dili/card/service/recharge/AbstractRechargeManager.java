@@ -4,11 +4,10 @@ import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
-import com.dili.card.dto.pay.RechargeRequestDto;
+import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
-import com.dili.card.service.impl.FundServiceImpl;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
@@ -67,8 +66,8 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
      * @date 2020/7/2
      */
     public final void doRecharge(FundRequestDto requestDto) {
-        RechargeRequestDto dto = this.recharge(requestDto);
-        payService.commitRecharge(dto);
+        TradeRequestDto dto = this.recharge(requestDto);
+        payService.commitTrade(dto);
         //记录日志
         try {
             //TODO 完善构建数据
@@ -81,11 +80,11 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
     }
 
 
-    protected RechargeRequestDto createRechargeRequestDto(FundRequestDto requestDto) {
+    protected TradeRequestDto createRechargeRequestDto(FundRequestDto requestDto) {
         String tradeNo = TradeContextHolder.getVal(TradeContextHolder.TRADE_ID_KEY, String.class);
         UserAccountCardResponseDto userAccount = TradeContextHolder.getVal(TradeContextHolder.USER_ACCOUNT, UserAccountCardResponseDto.class);
 
-        RechargeRequestDto rechargeRequestDto = new RechargeRequestDto();
+        TradeRequestDto rechargeRequestDto = new TradeRequestDto();
         rechargeRequestDto.setTradeId(tradeNo);
         rechargeRequestDto.setAccountId(userAccount.getFundAccountId());
         rechargeRequestDto.setChannelId(requestDto.getTradeChannel());

@@ -1,6 +1,7 @@
 package com.dili.card.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.AccountSimpleResponseDto;
@@ -11,6 +12,7 @@ import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
+import com.dili.uap.sdk.domain.UserTicket;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +33,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/accountQuery")
-public class AccountQueryManagementController {
+public class AccountQueryManagementController implements IControllerHandler {
     @Autowired
     private IAccountQueryService accountQueryService;
 
@@ -86,6 +88,7 @@ public class AccountQueryManagementController {
     @ResponseBody
     public PageOutput<List<AccountListResponseDto>> page(@RequestBody @Validated(ConstantValidator.Page.class)
                                                                  UserAccountCardQuery param) {
+       // this.buildOperatorInfo(param);
         return accountQueryService.getPage(param);
     }
 

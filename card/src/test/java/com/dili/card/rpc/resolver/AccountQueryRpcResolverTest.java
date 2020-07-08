@@ -8,11 +8,6 @@ import com.dili.customer.sdk.domain.Customer;
 import com.dili.ss.domain.PageOutput;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.util.List;
@@ -45,8 +40,8 @@ class AccountQueryRpcResolverTest extends BaseTest {
     }
 
     @Test
-    void findCustomers(){
-        List<Customer> customerByIds = customerRpcResolver.findCustomerByIds(Lists.newArrayList(150L));
-        LOGGER.info("获取到的客户:{}",JSON.toJSONString(customerByIds));
+    void findCustomers() {
+        List<Customer> customerByIds = customerRpcResolver.findCustomerByIds(Lists.newArrayList(150L), 1L);
+        LOGGER.info("获取到的客户:{}", JSON.toJSONString(customerByIds));
     }
 }

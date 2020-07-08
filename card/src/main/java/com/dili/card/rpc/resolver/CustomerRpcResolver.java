@@ -88,8 +88,8 @@ public class CustomerRpcResolver {
      * @author miaoguoxin
      * @date 2020/6/22
      */
-    public List<CustomerResponseDto> findCustomerByIdsWithConvert(List<Long> ids) {
-        List<Customer> customers = this.findCustomerByIds(ids);
+    public List<CustomerResponseDto> findCustomerByIdsWithConvert(List<Long> ids, Long firmId) {
+        List<Customer> customers = this.findCustomerByIds(ids, firmId);
         return customers.stream()
                 .map(this::convertFromCustomer)
                 .collect(Collectors.toList());

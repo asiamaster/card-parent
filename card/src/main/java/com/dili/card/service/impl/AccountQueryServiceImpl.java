@@ -60,7 +60,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
                 .map(UserAccountCardResponseDto::getCustomerId)
                 .distinct()
                 .collect(Collectors.toList());
-        List<CustomerResponseDto> customers = customerRpcResolver.findCustomerByIdsWithConvert(customerIds);
+        List<CustomerResponseDto> customers = customerRpcResolver.findCustomerByIdsWithConvert(customerIds, param.getFirmId());
         List<AccountListResponseDto> result = this.addCustomer2AccountList(data, customers);
         return PageUtils.convert2PageOutput(page, result);
     }

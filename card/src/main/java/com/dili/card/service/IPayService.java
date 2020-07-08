@@ -23,6 +23,13 @@ public interface IPayService {
     TradeResponseDto commitWithdraw(TradeRequestDto withdrawRequest);
 
     /**
+    * 提交交易
+    * @author miaoguoxin
+    * @date 2020/7/8
+    */
+    TradeResponseDto commitTrade(TradeRequestDto requestDto);
+
+    /**
      * 余额查询
      * @param balanceRequestDto
      * @return
@@ -36,10 +43,4 @@ public interface IPayService {
     */
     Long frozenFund(Long fundAccountId, Long amount);
 
-    /**
-    * 提交充值操作
-    * @author miaoguoxin
-    * @date 2020/7/6
-    */
-    void commitRecharge(RechargeRequestDto requestDto);
 }

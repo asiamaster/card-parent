@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface PayRpc {
 
     /**
-    *  提交提现
+    * 提交交易(充值、提现)
     * @author miaoguoxin
     * @date 2020/7/1
     */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.trade.service:commit", method = RequestMethod.POST)
-    BaseOutput<TradeResponseDto> withdraw(TradeRequestDto withdrawRequest);
+    BaseOutput<TradeResponseDto> commitTrade(TradeRequestDto requestDto);
 
     /**
     * 创建交易（预支付）

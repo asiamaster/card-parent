@@ -1,7 +1,7 @@
 package com.dili.card.service.recharge;
 
 import com.dili.card.dto.FundRequestDto;
-import com.dili.card.dto.pay.RechargeRequestDto;
+import com.dili.card.dto.pay.TradeRequestDto;
 
 /**
  * @Auther: miaoguoxin
@@ -19,5 +19,5 @@ public interface IRechargeManager {
     * @author miaoguoxin
     * @date 2020/7/2
     */
-    RechargeRequestDto recharge(FundRequestDto requestDto);
+    TradeRequestDto recharge(FundRequestDto requestDto);
 }

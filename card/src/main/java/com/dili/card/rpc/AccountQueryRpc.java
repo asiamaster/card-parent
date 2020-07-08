@@ -17,7 +17,7 @@ import java.util.List;
  * 卡相关rpc
  */
 @FeignClient(name = "account-service", contextId = "accountQueryService",
-        path = "api/account", url = "http://127.0.0.1:8386")
+        path = "api/account"/*, url = "http://127.0.0.1:8386"*/)
 public interface AccountQueryRpc {
     /**
      *查询卡信息列表

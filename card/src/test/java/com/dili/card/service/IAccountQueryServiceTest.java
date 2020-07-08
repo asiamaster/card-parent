@@ -12,7 +12,6 @@ import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.ss.domain.PageOutput;
 import org.assertj.core.util.Lists;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doCallRealMethod;
@@ -72,7 +70,7 @@ class IAccountQueryServiceTest extends BaseTest {
                     .collect(Collectors.toList());
             doReturn(this.createCustomerResponse(customerIds))
                     .when(customerRpcResolver)
-                    .findCustomerByIdsWithConvert(customerIds);
+                    .findCustomerByIdsWithConvert(customerIds, 1L);
         }
 
         PageOutput<List<AccountListResponseDto>> page = accountQueryService.getPage(param);
@@ -87,11 +85,11 @@ class IAccountQueryServiceTest extends BaseTest {
         AccountDetailResponseDto detail = accountQueryService.getDetailByCardNo("888800034670");
         doReturn(this.createCustomerResponse(Lists.newArrayList(105L)).get(0))
                 .when(customerRpcResolver)
-                .findCustomerByIdWithConvert(105L,1L);
+                .findCustomerByIdWithConvert(105L, 1L);
         assertNotNull(detail);
         assertNotNull(detail.getCardAssociation());
         assertNotNull(detail.getCardAssociation().getPrimary());
-        LOGGER.info("获取到的详情:{}",JSON.toJSONString(detail));
+        LOGGER.info("获取到的详情:{}", JSON.toJSONString(detail));
     }
 
     private List<CustomerResponseDto> createCustomerResponse(List<Long> customerIds) {

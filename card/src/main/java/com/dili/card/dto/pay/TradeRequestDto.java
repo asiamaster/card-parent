@@ -1,5 +1,9 @@
 package com.dili.card.dto.pay;
 
+import com.dili.card.type.FeeType;
+import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +24,22 @@ public class TradeRequestDto {
     private List<FeeItemDto> fees;
     /** 业务账号ID*/
     private Long businessId;
+
+    /**
+     * 添加手续费
+     * @author miaoguoxin
+     * @date 2020/7/6
+     */
+    public void addServiceFeeItem(Long serviceCost){
+        if (CollectionUtils.isEmpty(this.fees)){
+            this.fees = new ArrayList<>();
+        }
+        FeeItemDto feeItem = new FeeItemDto();
+        feeItem.setAmount(serviceCost);
+        feeItem.setType(FeeType.SERVICE.getCode());
+        feeItem.setTypeName(FeeType.SERVICE.getName());
+        this.fees.add(feeItem);
+    }
 
     public String getTradeId() {
         return tradeId;
