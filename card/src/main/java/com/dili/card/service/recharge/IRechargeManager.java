@@ -20,4 +20,5 @@ public interface IRechargeManager {
     * @date 2020/7/2
     */
     TradeRequestDto recharge(FundRequestDto requestDto);
+
 }

@@ -2,7 +2,9 @@ package com.dili.card.service.recharge;
 
 import com.dili.card.common.annotation.TradeChannelMark;
 import com.dili.card.dto.FundRequestDto;
+import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.pay.TradeRequestDto;
+import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.type.TradeChannel;

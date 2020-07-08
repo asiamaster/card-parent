@@ -118,18 +118,20 @@ public class FundController implements IControllerHandler {
     public BaseOutput<?> recharge(@RequestBody @Validated({ConstantValidator.Update.class, FundValidator.Trade.class})
                                           FundRequestDto requestDto) {
         this.validateCommonParam(requestDto);
-        this.buildOperatorInfo(requestDto);
+        // this.buildOperatorInfo(requestDto);
         //由于需要两阶段提交，所以这里的充值逻辑需要分成两个事务
         UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForRecharge(requestDto);
         try {
             //传递线程变量
             TradeContextHolder.putVal(TradeContextHolder.USER_ACCOUNT, userAccount);
-
             fundService.createRecharge(requestDto);
             fundService.recharge(requestDto);
+        } catch (CardAppBizException e) {
+            return BaseOutput.failure(e.getMessage());
         } catch (Exception e) {
             LOGGER.error("充值失败", e);
             LOGGER.error("充值请求参数:{}", JSON.toJSONString(requestDto));
+            return BaseOutput.failure();
         } finally {
             TradeContextHolder.remove();
         }
