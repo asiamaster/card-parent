@@ -1,21 +1,30 @@
 package com.dili.card.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.OpenCardResponseDto;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IOpenCardService;
+import com.dili.card.type.CustomerType;
 import com.dili.card.type.ServiceName;
 import com.dili.card.util.AssertUtils;
 import com.dili.customer.sdk.domain.Customer;
+import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -54,17 +63,38 @@ public class OpenCardController implements IControllerHandler {
 	 * 
 	 * @throws InterruptedException
 	 */
-	@RequestMapping(value = "getCustomerInfo.action", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "getCustomerInfoTest.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public BaseOutput<Customer> getCustomerInfo(Long customerId) {
+	public BaseOutput<Customer> getCustomerInfoTest(Long customerId) {
 		// 操作人信息
 		UserTicket user = SessionContext.getSessionContext().getUserTicket();
 		if (customerId == null) {
 			customerId = RandomUtil.getRandom().nextLong(210);
 		}
-		Customer customer = GenericRpcResolver.resolver(customerRpc.get(customerId, user.getFirmId()),
-				"测试获取用户信息");
+		Customer customer = GenericRpcResolver.resolver(customerRpc.get(customerId, user.getFirmId()), "测试获取用户信息");
 		return BaseOutput.successData(customer);
+	}
+
+	/**
+	 * 主卡开卡
+	 * 
+	 * @throws InterruptedException
+	 */
+	@RequestMapping(value = "getCustomerInfo.action", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public BaseOutput<CustomerResponseDto> getCustomerInfo(@RequestBody OpenCardDto openCardInfo) {
+		// 操作人信息
+		UserTicket user = SessionContext.getSessionContext().getUserTicket();
+		if (user == null) {
+			return BaseOutput.failure("未获取到登录用户信息，请重新登录!");
+		}
+		AssertUtils.notEmpty(openCardInfo.getCertificateNumber(), "请输入证件号!");
+		Customer customer = GenericRpcResolver
+				.resolver(customerRpc.getByCertificateNumber(openCardInfo.getCertificateNumber(), user.getFirmId()), "开卡客户查询");
+		CustomerResponseDto response = new CustomerResponseDto();
+		BeanUtils.copyProperties(customer, response);
+		response.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
+		return BaseOutput.successData(response);
 	}
 
 	/**
@@ -100,7 +130,7 @@ public class OpenCardController implements IControllerHandler {
 		// 操作人信息
 		UserTicket user = SessionContext.getSessionContext().getUserTicket();
 		if (user == null) {
-			return BaseOutput.failure("未获取到用户信息，请重新登录!");
+			return BaseOutput.failure("未获取到登录用户信息，请重新登录!");
 		}
 		openCardInfo.setCreator(user.getRealName());
 		openCardInfo.setCreatorId(user.getId());
@@ -118,9 +148,8 @@ public class OpenCardController implements IControllerHandler {
 	 */
 	private void checkMasterParam(OpenCardDto openCardInfo) {
 		AssertUtils.notEmpty(openCardInfo.getName(), "开卡用户名不能为空!");
-//		AssertUtils.notEmpty(openCardInfo.getCredentialNo(), "开卡用户名证件号不能为空!");
-		AssertUtils.notEmpty(openCardInfo.getMobile(), "开卡手机号不能为空!");
-//		AssertUtils.notNull(openCardInfo.getFirmId(), "开卡市场编码不能为空!");
+		AssertUtils.notEmpty(openCardInfo.getCustomerNo(), "客户编号不能为空!");
+		AssertUtils.notNull(openCardInfo.getCustomerId(), "客户ID不能为空!");
 		AssertUtils.notEmpty(openCardInfo.getLoginPwd(), "账户密码不能为空!");
 	}
 }

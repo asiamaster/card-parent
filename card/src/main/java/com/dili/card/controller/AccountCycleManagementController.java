@@ -22,8 +22,6 @@ import com.dili.card.type.CycleState;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
-import com.dili.uap.sdk.domain.UserTicket;
-import com.dili.uap.sdk.session.SessionContext;
 
 /**
  * 账务管理
@@ -73,7 +71,7 @@ public class AccountCycleManagementController {
 	}
 
 	/**
-	 * 跳转对账页面
+	 * 跳转平账页面
 	 * 
 	 * @date 2020/7/6
 	 */
