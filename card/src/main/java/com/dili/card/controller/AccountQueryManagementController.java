@@ -88,7 +88,7 @@ public class AccountQueryManagementController implements IControllerHandler {
     @ResponseBody
     public PageOutput<List<AccountListResponseDto>> page(@RequestBody @Validated(ConstantValidator.Page.class)
                                                                  UserAccountCardQuery param) {
-       // this.buildOperatorInfo(param);
+        this.buildOperatorInfo(param);
         return accountQueryService.getPage(param);
     }
 
