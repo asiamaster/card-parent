@@ -59,7 +59,7 @@
 	        </table>
 	        <div class="col align-self-center" style="text-align: center">
 	        	<% if(settled == 2){ %>
-	        		<button id="back" style="height: 40px;width: 100px;border-color:#FB0E12" type="button" class="btn btn-light" onclick="$.table.search()">返回</button>
+	        		<button id="back" style="height: 40px;width: 100px;border-color:#FB0E12" type="button" class="btn btn-light" onclick="backList()">返回</button>
 				<% }else{ %>
 					<button id="back" style="height: 40px;width: 100px;" type="button" class="btn btn-primary" onclick="$.table.search()">申请结账</button>
 				<% } %>
@@ -68,3 +68,9 @@
     </div>
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script>
+
+    function backList() {
+    	window.location.href="${contextPath}/cycle/list.html";
+    }
+</script>
