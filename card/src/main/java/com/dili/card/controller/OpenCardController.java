@@ -105,6 +105,11 @@ public class OpenCardController implements IControllerHandler {
 		return BaseOutput.successData(response);
 	}
 
+	/**
+	 * 根据主卡卡号，查询主卡信息和客户信息
+	 * @param openCardInfo
+	 * @return
+	 */
 	@RequestMapping(value = "getAccountInfo.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public BaseOutput<AccountCustomerDto> getAccountInfo(@RequestBody OpenCardDto openCardInfo) {
