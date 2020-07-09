@@ -1,5 +1,6 @@
 package com.dili.card.service.impl;
 
+import com.dili.card.dto.AccountCustomerDto;
 import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.AccountSimpleResponseDto;
@@ -13,12 +14,16 @@ import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
+import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IPayService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
+import com.dili.card.type.CustomerType;
 import com.dili.card.util.PageUtils;
 import com.dili.card.validator.AccountValidator;
+import com.dili.customer.sdk.domain.Customer;
+import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
 import org.springframework.beans.BeanUtils;
@@ -31,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
 
 /**
  * @Auther: miaoguoxin
@@ -45,7 +52,8 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     private IPayService payService;
     @Autowired
     private AccountQueryRpcResolver accountQueryRpcResolver;
-
+    @Resource
+	CustomerRpc customerRpc;
 
     @Override
     public PageOutput<List<AccountListResponseDto>> getPage(UserAccountCardQuery param) {
@@ -142,4 +150,18 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         }
         return accountListResponseDtos;
     }
+
+	@Override
+	public AccountCustomerDto getAccountCustomerByCardNo(String cardNo) {
+		AccountCustomerDto detail = new AccountCustomerDto();
+        AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByCardNoWithAssociation(cardNo);
+        UserAccountCardResponseDto primary = cardAssociation.getPrimary();
+        Customer customer = GenericRpcResolver.resolver(customerRpc.get(primary.getCustomerId(), primary.getFirmId()), "测试获取用户信息");
+        detail.setName(customer.getName());
+        detail.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
+        detail.setAccountId(primary.getAccountId());
+        detail.setCustomerId(customer.getId());
+        detail.setCode(customer.getCode());
+		return detail;
+	}
 }

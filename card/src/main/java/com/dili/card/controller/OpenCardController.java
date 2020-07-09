@@ -15,10 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.dto.AccountCustomerDto;
+import com.dili.card.dto.AccountDetailResponseDto;
+import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.OpenCardResponseDto;
+import com.dili.card.rpc.AccountQueryRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
+import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IOpenCardService;
 import com.dili.card.type.CustomerType;
 import com.dili.card.type.ServiceName;
@@ -47,7 +52,10 @@ public class OpenCardController implements IControllerHandler {
 	private IOpenCardService openCardService;
 	@Resource
 	CustomerRpc customerRpc;
-
+	@Resource
+	AccountQueryRpc accountQueryRpc;
+	@Resource
+	IAccountQueryService accountQueryService;
 	/**
 	 * 主卡开卡
 	 * 
@@ -76,7 +84,7 @@ public class OpenCardController implements IControllerHandler {
 	}
 
 	/**
-	 * 主卡开卡
+	 * 查询客户信息
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -97,6 +105,15 @@ public class OpenCardController implements IControllerHandler {
 		return BaseOutput.successData(response);
 	}
 
+	@RequestMapping(value = "getAccountInfo.action", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public BaseOutput<AccountCustomerDto> getAccountInfo(@RequestBody OpenCardDto openCardInfo) {
+		AssertUtils.notNull(openCardInfo.getCardNo(), "请输入主卡卡号!");
+		AccountCustomerDto response = accountQueryService.getAccountCustomerByCardNo(openCardInfo.getCardNo());
+		return BaseOutput.successData(response);
+	}
+	
+	
 	/**
 	 * 主卡开卡
 	 * 
@@ -148,6 +165,7 @@ public class OpenCardController implements IControllerHandler {
 	 */
 	private void checkMasterParam(OpenCardDto openCardInfo) {
 		AssertUtils.notEmpty(openCardInfo.getName(), "开卡用户名不能为空!");
+		AssertUtils.notEmpty(openCardInfo.getCardNo(), "开卡卡号不能为空!");
 		AssertUtils.notEmpty(openCardInfo.getCustomerNo(), "客户编号不能为空!");
 		AssertUtils.notNull(openCardInfo.getCustomerId(), "客户ID不能为空!");
 		AssertUtils.notEmpty(openCardInfo.getLoginPwd(), "账户密码不能为空!");

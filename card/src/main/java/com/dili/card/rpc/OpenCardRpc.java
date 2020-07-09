@@ -14,7 +14,7 @@ import com.dili.ss.domain.BaseOutput;
  * @author ：WangBo
  * @time ：2020年6月30日下午2:19:18
  */
-@FeignClient(name = "account-service", contextId = "openCard"/*, url = "http://127.0.0.1:8386"*/)
+@FeignClient(name = "account-service", contextId = "openCard", url = "http://127.0.0.1:8386")
 public interface OpenCardRpc {
 
     /**
