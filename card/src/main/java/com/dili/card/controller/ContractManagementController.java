@@ -51,7 +51,7 @@ public class ContractManagementController implements IControllerHandler {
      */
     @PostMapping("/page.action")
     @ResponseBody
-    public Map<String, Object> page(@RequestBody @Validated(ConstantValidator.Page.class) FundContractQueryDto contractQueryDto) {
+    public Map<String, Object> page(@Validated(ConstantValidator.Page.class) FundContractQueryDto contractQueryDto) {
         return successPage(iContractService.page(contractQueryDto));
     }
 

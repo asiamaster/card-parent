@@ -126,7 +126,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 */
 	@PostMapping("/page.action")
 	@ResponseBody
-	public Map<String,Object> page(@RequestBody AccountCycleDto accountCycleDto) {
+	public Map<String,Object> page(AccountCycleDto accountCycleDto) {
 		return successPage(iAccountCycleService.page(accountCycleDto));
 	}
 

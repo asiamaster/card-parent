@@ -73,9 +73,9 @@ public class CardStorageManagementController implements IControllerHandler {
      */
     @PostMapping("outPage.action")
     @ResponseBody
-    public Map<String, Object> getPage(@RequestBody @Validated(ConstantValidator.Page.class)
+    public Map<String, Object> getPage(@Validated(ConstantValidator.Page.class)
                                                ApplyRecordQueryDto queryDto) {
-        this.buildOperatorInfo(queryDto);
+       // this.buildOperatorInfo(queryDto);
         return successPage(cardStorageService.getPage(queryDto));
     }
 

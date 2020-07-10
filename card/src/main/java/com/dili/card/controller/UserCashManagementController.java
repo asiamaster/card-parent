@@ -117,7 +117,7 @@ public class UserCashManagementController implements IControllerHandler {
      */
     @PostMapping("/payeeList.action")
     @ResponseBody
-    public Map<String, Object> listPayee(@RequestBody UserCashDto userCashDto) {
+    public Map<String, Object> listPayee(UserCashDto userCashDto) {
         return successPage(iUserCashService.listPayee(userCashDto));
     }
 
@@ -126,7 +126,7 @@ public class UserCashManagementController implements IControllerHandler {
      */
     @PostMapping("/payerList.action")
     @ResponseBody
-    public Map<String, Object> listPayer(@RequestBody UserCashDto userCashDto) {
+    public Map<String, Object> listPayer(UserCashDto userCashDto) {
         return successPage(iUserCashService.listPayer(userCashDto));
     }
 
