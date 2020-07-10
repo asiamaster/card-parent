@@ -44,4 +44,15 @@ public interface IContractService {
 	 */
 	FundContractResponseDto removeToPage(Long id);
 
+	/**
+	 * 关闭过期合同
+	 * @return
+	 */
+	void closeOverdueContract();
+
+	/**
+	 * 激活合同
+	 */
+	void activeOverdueContract();
+
 }

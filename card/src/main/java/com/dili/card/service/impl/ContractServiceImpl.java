@@ -123,6 +123,18 @@ public class ContractServiceImpl implements IContractService {
 		return this.buildContractResponse(fundContract, userAccountCard, customer, false);
 	}
 	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void closeOverdueContract() {
+		contractDao.closeOverdueContract();
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void activeOverdueContract() {
+		contractDao.activeOverdueContract();
+	}
+	
 	/**
 	 * 构建查询条件
 	 */
@@ -285,4 +297,5 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setConsignorCustomerCode(customer.getCode());
 		return fundContractDo;
 	}
+
 }

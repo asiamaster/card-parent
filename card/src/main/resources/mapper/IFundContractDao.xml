@@ -130,4 +130,12 @@
 			</if>
 		ORDER BY create_time DESC
 	</select>
+	
+	<update	id="activeOverdueContract">
+		<![CDATA[ UPDATE card_fund_contract `state` = 2 WHERE `state` = 1 and start_time <= NOW()]]>
+	</update>
+	
+	<update	id="closeOverdueContract">
+		<![CDATA[UPDATE card_fund_contract `state` = 3 WHERE `state` = 2 and end_time <= NOW()]]>
+	</update>
 </mapper>

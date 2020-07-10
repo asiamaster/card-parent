@@ -40,4 +40,14 @@ public interface IFundContractDao {
 	 * 通过条件查询
 	 */
 	List<FundContractDo> findEntityByCondition(FundContractQueryDto contractQueryDto);
+
+	/**
+	 * 关闭合同
+	 */
+	int closeOverdueContract();
+	
+	/**
+	 * 激活合同
+	 */
+	int activeOverdueContract();
 }

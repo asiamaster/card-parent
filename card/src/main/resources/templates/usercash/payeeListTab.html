@@ -1,0 +1,46 @@
+<#bs4Body>
+<div class="row">
+    <div class="col-12">
+        <table id="grid"
+               data-show-fullscreen="true"
+               data-buttons-class="primary"
+               data-icons="bui.variable.icons">
+            <thead>
+            <tr>
+            	<th data-radio="true"></th>
+                <th data-field="cashNo"data-align="center" >
+                    领款编号
+                </th>
+                <th data-field="userCode" data-align="center"  >
+                    柜员工号
+                </th>
+                <th data-field="userName" data-align="center">
+                    柜员姓名
+                </th>
+                <th data-field="amountYuan" data-align="center">
+                   领款金额
+                </th>
+                <th data-field="createTime" data-align="center">
+                    创建时间
+                </th>
+                <th data-field="creatorCode" data-align="center" >
+                    财务员工编号
+                </th>
+                <th data-field="creator"  data-align="center">
+                    财务员工姓名
+                </th>
+                <th data-field="stateText" data-align="center">
+                    状态标识
+                </th>
+                 <th data-field="notes" data-align="center">
+                    说明
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<#usercash_payeeListJs/>

@@ -47,6 +47,22 @@ public class UserCashManagementController {
     }
     
     /**
+     * 领款列表tab
+     */
+    @GetMapping("/payeeListTab.html/{cycleNo}")
+    public String payeeListTab() {
+        return "usercash/payeeListTab";
+    }
+    
+    /**
+     * 交款列表页面tab
+     */
+    @GetMapping("/payerListTab.html/{cycleNo}")
+    public String payerListTab() {
+        return "usercash/payerListTab";
+    }
+    
+    /**
      * 领款新增
      */
     @GetMapping("/addPayee.html")
