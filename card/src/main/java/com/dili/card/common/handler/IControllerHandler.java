@@ -1,12 +1,15 @@
 package com.dili.card.common.handler;
 
 import cn.hutool.core.util.StrUtil;
+import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.BaseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  * 用于获取用户session、验证公共参数、赋值操作员信息
@@ -19,7 +22,12 @@ public interface IControllerHandler {
      * @return
      */
     default UserTicket getUserTicket() {
-        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        SessionContext sessionContext = SessionContext.getSessionContext();
+        UserTicket userTicket = sessionContext.getUserTicket();
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes != null) {
+            requestAttributes.setAttribute(Constant.SESSION, sessionContext, RequestAttributes.SCOPE_REQUEST);
+        }
         return userTicket != null ? userTicket : DTOUtils.newInstance(UserTicket.class);
     }
 
@@ -57,7 +65,7 @@ public interface IControllerHandler {
      * @param cardRequestDto
      */
     default void buildOperatorInfo(BaseDto cardRequestDto) {
-        UserTicket userTicket = getUserTicket();
+        UserTicket userTicket = this.getUserTicket();
         cardRequestDto.setOpId(userTicket.getId());
         cardRequestDto.setOpName(userTicket.getRealName());
         cardRequestDto.setOpNo(userTicket.getUserName());
