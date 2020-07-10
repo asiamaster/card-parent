@@ -301,7 +301,7 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setFirmId(userTicket.getFirmId());
 		fundContractDo.setFirmName(userTicket.getFirmName());
 		fundContractDo.setState(ContractState.UNSTARTED.getCode());
-		if (Timestamp.valueOf(fundContractRequest.getStartTime()).getTime() >= Timestamp.valueOf(LocalDateTime.now())
+		if (Timestamp.valueOf(fundContractRequest.getStartTime()).getTime() <= Timestamp.valueOf(LocalDateTime.now())
 				.getTime()) {
 			fundContractDo.setState(ContractState.ENTUST.getCode());
 		}
