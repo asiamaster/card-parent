@@ -24,7 +24,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 卡账户查询
@@ -79,17 +83,17 @@ public class AccountQueryManagementController implements IControllerHandler {
 
     /**
      * 分页查询
-     * @param
-     * @return
      * @author miaoguoxin
      * @date 2020/6/22
      */
     @PostMapping("/page.action")
     @ResponseBody
-    public PageOutput<List<AccountListResponseDto>> page(@RequestBody @Validated(ConstantValidator.Page.class)
+    public Map<String, Object> page(@Validated(ConstantValidator.Page.class)
                                                                  UserAccountCardQuery param) {
         this.buildOperatorInfo(param);
-        return accountQueryService.getPage(param);
+        PageOutput<List<AccountListResponseDto>> page = accountQueryService.getPage(param);
+        return successPage(page);
+
     }
 
     /**

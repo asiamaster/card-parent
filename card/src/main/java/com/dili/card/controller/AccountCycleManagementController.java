@@ -1,7 +1,9 @@
 package com.dili.card.controller;
 
 import java.util.List;
+import java.util.Map;
 
+import com.dili.card.common.handler.IControllerHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -28,7 +30,7 @@ import com.dili.ss.domain.PageOutput;
  */
 @Controller
 @RequestMapping(value = "/cycle")
-public class AccountCycleManagementController {
+public class AccountCycleManagementController implements IControllerHandler {
 
 	@Autowired
 	private IAccountCycleService iAccountCycleService;
@@ -43,7 +45,7 @@ public class AccountCycleManagementController {
 
 	/**
 	 * 跳转详情
-	 * 
+	 *
 	 * @date 2020/7/6
 	 */
 	@GetMapping("/detail.html/{id}")
@@ -59,7 +61,7 @@ public class AccountCycleManagementController {
 
 	/**
 	 * 跳转结账申请
-	 * 
+	 *
 	 * @date 2020/7/6
 	 */
 	@GetMapping("/applyDetail.html")
@@ -72,7 +74,7 @@ public class AccountCycleManagementController {
 
 	/**
 	 * 跳转平账页面
-	 * 
+	 *
 	 * @date 2020/7/6
 	 */
 	@GetMapping("/flated.html/{id}")
@@ -86,7 +88,7 @@ public class AccountCycleManagementController {
 
 	/**
 	 * 跳转发起交款页面
-	 * 
+	 *
 	 * @date 2020/7/6
 	 */
 	@GetMapping("/addPayer.html/{id}")
@@ -124,8 +126,8 @@ public class AccountCycleManagementController {
 	 */
 	@PostMapping("/page.action")
 	@ResponseBody
-	public PageOutput<List<AccountCycleDto>> page(@RequestBody AccountCycleDto accountCycleDto) {
-		return iAccountCycleService.page(accountCycleDto);
+	public Map<String,Object> page(@RequestBody AccountCycleDto accountCycleDto) {
+		return successPage(iAccountCycleService.page(accountCycleDto));
 	}
 
 	/**

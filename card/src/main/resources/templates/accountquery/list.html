@@ -15,14 +15,14 @@
             </div>
             <div class="form-group col-auto">
                 <label for="cardNo-multiple">卡号</label>
-                <input id="cardNo-multiple" name="cardNos" type="text" class="form-control"/>
+                <input id="cardNo-multiple" name="cardNos[0]" type="text" class="form-control"/>
             </div>
             <!--如果id以 -multiple 为结尾，那么该表单字段转为数组形式 -->
             <div class="form-group col">
                 <label for="customerName">客户</label>
                 <#bautoCompleteProvider
                 _hiddenDomainId="customerId-multiple"
-                _hiddenDomainName="customerIds"
+                _hiddenDomainName="customerIds[0]"
                 _displayDomainId="customerName"
                 _displayDomainName="customerName"
                 _placeholder=""

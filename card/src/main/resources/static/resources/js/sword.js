@@ -79,7 +79,7 @@ let tab = {
                 $('#' + options.id).bootstrapTable({
                     id: options.id,
                     url: options.url,                                   // 请求后台的URL（*）
-                    contentType: "application/json",   // 编码类型
+                    contentType: "application/x-www-form-urlencoded",   // 编码类型
                     method: 'post',                                     // 请求方式（*）
                     cache: false,                                       // 是否使用缓存
                     height: options.height,                             // 表格的高度
@@ -156,7 +156,7 @@ let tab = {
                     order: params.order
                 };
                 let currentId = $.common.isEmpty(table.options.formId) ? 'queryForm' : table.options.formId;
-                return $.extend(curParams, $.common.formToJSON(currentId));
+                return $.extend(curParams, $.common.formToPairValue(currentId));
             },
             // 请求获取数据后处理回调函数
             responseHandler: function (res) {
@@ -174,7 +174,7 @@ let tab = {
                                 row.state = $.inArray(row[column], table.rememberSelectedIds[table.options.id]) !== -1;
                             })
                         }
-                        return {rows: res.data, total: res.total};
+                        return {rows: res.rows, total: res.total};
                     }
                 } else {
                     $.modal.alertWarning(res.message);
@@ -1017,7 +1017,7 @@ let tab = {
                 if ($.common.isMobile()) {
                     _width = 'auto';
                     _height = 'auto';
-                } 
+                }
                 let options = {
                     title: modalName,
                     width: _width,
@@ -1498,11 +1498,9 @@ let tab = {
                 }
                 return array.join(separator);
             },
-            // 获取form下所有的字段并转换为json对象
-            formToJSON: function (formId) {
+            formToPairValue: function(formId){
                 var json = {};
                 var form = "#" + formId;
-
                 $.each($(form).serializeArray(), function (i, field) {
                     if ($.common.isEmpty(field.value)) {
                         return
@@ -1513,6 +1511,13 @@ let tab = {
                         json[field.name] = field.value;
                     }
                 });
+                return json;
+            },
+            // 获取form下所有的字段并转换为json对象
+            formToJSON: function (formId) {
+
+                var json =  $.common.formToPairValue(formId);
+
                 var jQuery = $(form).find('input,textarea,hidden');
                 for (let i = 0; i < jQuery.length; i++) {
                     let name = jQuery[i].getAttribute("name");

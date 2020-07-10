@@ -5,17 +5,30 @@ import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.BaseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.ss.constant.ResultCode;
+import com.dili.ss.domain.PageOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 用于获取用户session、验证公共参数、赋值操作员信息
  * @author xuliang
  */
 public interface IControllerHandler {
+
+    default Map<String, Object> successPage(PageOutput<?> page) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", ResultCode.OK);
+        result.put("rows", page.getData());
+        result.put("total", page.getTotal());
+        return result;
+    }
 
     /**
      * 获取登录用户信息 如为null则new一个，以免空指针

@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * 这个是feign的全局配置，
+ * 这个是feign的全局配置
  * @Auther: miaoguoxin
  * @Date: 2020/7/10 10:27
  */

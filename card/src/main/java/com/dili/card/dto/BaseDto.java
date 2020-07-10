@@ -31,7 +31,7 @@ public class BaseDto implements Serializable {
     private Integer page;
     /**页码*/
     @NotNull(message = "分页条数不能为空", groups = ConstantValidator.Page.class)
-    @Range(min = 1, max = 100, message = "每页最少1条，最多100条", groups = ConstantValidator.Page.class)
+    //@Range(min = 1, max = 100, message = "每页最少1条，最多100条", groups = ConstantValidator.Page.class)
     private Integer rows;
     /**顺序or降序 ASC、DESC*/
     @IsOrderBy(message = "排序不正确", groups = ConstantValidator.Page.class)
