@@ -1,5 +1,7 @@
 package com.dili.card.service.impl;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -107,7 +109,8 @@ public class ContractServiceImpl implements IContractService {
 		}
 		UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver
 				.findByAccountId(fundContract.getConsignorAccountId());
-		Customer customer = customerRpcResolver.getWithNotNull(userAccountCard.getCustomerId(), fundContract.getFirmId());
+		Customer customer = customerRpcResolver.getWithNotNull(userAccountCard.getCustomerId(),
+				fundContract.getFirmId());
 		return this.buildContractDetail(fundContract, userAccountCard, customer);
 	}
 
@@ -119,22 +122,23 @@ public class ContractServiceImpl implements IContractService {
 		}
 		UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver
 				.findByAccountId(fundContract.getConsignorAccountId());
-		Customer customer = customerRpcResolver.getWithNotNull(userAccountCard.getCustomerId(), fundContract.getFirmId());
+		Customer customer = customerRpcResolver.getWithNotNull(userAccountCard.getCustomerId(),
+				fundContract.getFirmId());
 		return this.buildContractResponse(fundContract, userAccountCard, customer, false);
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void closeOverdueContract() {
 		contractDao.closeOverdueContract();
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void activeOverdueContract() {
 		contractDao.activeOverdueContract();
 	}
-	
+
 	/**
 	 * 构建查询条件
 	 */
@@ -167,7 +171,8 @@ public class ContractServiceImpl implements IContractService {
 				.collect(Collectors.toList());
 		Map<Long, UserAccountCardResponseDto> userAccountCardMsp = accountQueryRpcResolver
 				.findAccountCardsMapByAccountIds(accountIds);
-		Map<Long, Customer> customerMap = customerRpcResolver.findCustomerMapByCustomerIds(customerIds, fundContracts.get(0).getFirmId());
+		Map<Long, Customer> customerMap = customerRpcResolver.findCustomerMapByCustomerIds(customerIds,
+				fundContracts.get(0).getFirmId());
 		for (FundContractDo fundContractDo : fundContracts) {
 			contractResponseDtos.add(this.buildPageContracts(fundContractDo,
 					userAccountCardMsp.get(fundContractDo.getConsignorAccountId()),
@@ -277,6 +282,14 @@ public class ContractServiceImpl implements IContractService {
 		FundContractDo fundContractDo = new FundContractDo();
 		// 构建合同委托人核心数据
 		fundContractDo.setConsignorAccountId(fundContractRequest.getConsignorAccountId());
+		if (Timestamp.valueOf(fundContractRequest.getEndTime()).getTime() < Timestamp.valueOf(LocalDateTime.now())
+				.getTime()) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "合同结束时间不低于今天");
+		}
+		if (Timestamp.valueOf(fundContractRequest.getEndTime()).getTime() < Timestamp
+				.valueOf(fundContractRequest.getStartTime()).getTime()) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "合同结束时间不低于开始时间");
+		}
 		fundContractDo.setStartTime(fundContractRequest.getStartTime());
 		fundContractDo.setEndTime(fundContractRequest.getEndTime());
 		fundContractDo.setSignatureImagePath(fundContractRequest.getSignatureImagePath());
@@ -288,6 +301,10 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setFirmId(userTicket.getFirmId());
 		fundContractDo.setFirmName(userTicket.getFirmName());
 		fundContractDo.setState(ContractState.UNSTARTED.getCode());
+		if (Timestamp.valueOf(fundContractRequest.getStartTime()).getTime() >= Timestamp.valueOf(LocalDateTime.now())
+				.getTime()) {
+			fundContractDo.setState(ContractState.ENTUST.getCode());
+		}
 		// 获取业务编号
 		String contractNo = uidRpcResovler.bizNumber(BizNoType.CONTRACT_NO.getCode());
 		fundContractDo.setContractNo(contractNo);
