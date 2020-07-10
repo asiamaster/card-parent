@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -39,6 +40,15 @@ public class GenericGlobalExceptionResolver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericGlobalExceptionResolver.class);
 
+    /**
+    * 表单参数校验
+    * @author miaoguoxin
+    * @date 2020/7/10
+    */
+    @ExceptionHandler({BindException.class})
+    public String handleFormArgException(BindException e) throws IOException {
+        return this.writeErrorResp(ResultCode.PARAMS_ERROR, errorMessage(e.getBindingResult()), e);
+    }
 
     /**
      * 方法参数校验处理，配合validator
