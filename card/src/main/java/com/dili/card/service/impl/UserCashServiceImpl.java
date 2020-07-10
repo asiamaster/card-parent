@@ -144,7 +144,7 @@ public class UserCashServiceImpl implements IUserCashService {
 	 */
 	private void buildUserCashCondition(UserCashDto userCashDto, CashAction cashAction) {
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		userCashDto.setFirmId(userTicket.getFirmId());
+		userCashDto.setFirmId(1L);
 		userCashDto.setState(cashAction.getCode());
 		userCashDto.setUserId(
 				NumberUtil.isInteger(userCashDto.getUserName()) ? Long.valueOf(userCashDto.getUserName()) : null);

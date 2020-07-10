@@ -23,7 +23,6 @@ import com.dili.card.type.CashAction;
 import com.dili.card.type.CycleState;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.domain.PageOutput;
 
 /**
  * 账务管理
@@ -58,6 +57,15 @@ public class AccountCycleManagementController implements IControllerHandler {
 		map.put("settled", CycleState.SETTLED.getCode());
 		return "cycle/detail";
 	}
+	
+    /**
+     * 跳转到操作流水页面
+     * @return
+     */
+    @RequestMapping(value = "/serialTab.html")
+    public String serialTab() {
+        return "cycle/serialTab";
+    }
 
 	/**
 	 * 跳转结账申请

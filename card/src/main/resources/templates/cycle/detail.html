@@ -16,7 +16,7 @@
 	            <tbody>
 	            <tr>
 	                <td class="info-column">结账单号</td>
-	                <td class="info-cell">${detail.cycleNo!}</td>
+	                <td class="info-cell" id="cycle">${detail.cycleNo!}</td>
 	                <td class="info-column">账期时间</td>
 	                <td class="info-cell">${detail.startTime!}至${detail.endTime!}</td>
 	            </tr>
@@ -69,18 +69,18 @@
     <div class="main-container container-fluid">
     <ul id="detailTab" class="nav nav-tabs" role="tablist">
         <li class="nav-item">
-            <a class="nav-link" id="payee-tab" uri="/cash/payeeListTab.html/${detail.cycleNo!}" data-toggle="tab" href="#payee"
+            <a class="nav-link" id="payee-tab" uri="/cash/payeeListTab.html" data-toggle="tab" href="#payee"
                role="tab" aria-selected="true">
                 <h5>领款明细</h5>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="payer-tab" uri="/cash/payerListTab.html/${detail.cycleNo!}" data-toggle="tab" href="#payer" role="tab">
+            <a class="nav-link" id="payer-tab" uri="/cash/payerListTab.html" data-toggle="tab" href="#payer" role="tab">
                 <h5>交款明细</h5>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="operation-tab" uri="fund/unfrozenFund.html" data-toggle="tab" href="#operation" role="tab">
+            <a class="nav-link" id="operation-tab" uri="/cycle/serialTab.html" data-toggle="tab" href="#operation" role="tab">
                 <h5>操作记录</h5>
             </a>
         </li>
@@ -103,11 +103,12 @@
     }
     
     let prefix = '${contextPath}';
+    let cycleNo = $.trim($("#cycle").text());
     //初始化函数
     $(() => {
         let options = {
             id: 'detailTab',
-            activeId: 'payee-tab',
+            activeId: 'payer-tab',
             prefixUrl: prefix
         };
         $.tab.init(options);

@@ -24,6 +24,8 @@ public class UserCashDto extends BaseDto implements Serializable {
 	private Long id; 
 	/**领取款编号*/
 	private Long cashNo;
+	/**领取款编号*/
+	private Long cycleNo;
 	/** 领款或收款人 */
 	@NotNull(message = "员工id不为空", groups = {ConstantValidator.Insert.class})
 	private Long userId;
@@ -259,6 +261,14 @@ public class UserCashDto extends BaseDto implements Serializable {
 
 	public void setCreatorCode(String creatorCode) {
 		this.creatorCode = creatorCode;
+	}
+
+	public Long getCycleNo() {
+		return cycleNo;
+	}
+
+	public void setCycleNo(Long cycleNo) {
+		this.cycleNo = cycleNo;
 	}
 
 }
