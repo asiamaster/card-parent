@@ -47,9 +47,9 @@ public class ContractManagementController implements IControllerHandler {
     /**
      * 添加页面 第二步
      */
-    @GetMapping("/addSecond.html")
+    @GetMapping("/addSec.html")
     public String addSecondHtml() {
-        return "contract/addSecond";
+        return "contract/addSec";
     }
 
     /**
