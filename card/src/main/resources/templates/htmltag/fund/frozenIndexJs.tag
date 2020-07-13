@@ -2,7 +2,7 @@
     $("#frozen-fund-form").validate({
         onkeyup: false,
         rules: {
-            frozenFund: {
+            amount: {
                 required: true,
                 gt: 0.01
             },
@@ -11,7 +11,7 @@
             },
         },
         messages: {
-            frozenFund: {
+            amount: {
                 required: "冻结金额必填",
                 gt: "冻结金额至少{0}"
             },
@@ -49,7 +49,6 @@
                 return;
             }
             let data = $.common.formToJSON('frozen-fund-form');
-            //console.log(JSON.stringify(data))
             $.operate.post(url, $.extend(requestData, data));
         });
     }

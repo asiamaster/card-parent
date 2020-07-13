@@ -85,7 +85,9 @@ public class CardStorageManagementController implements IControllerHandler {
      * @date 2020/7/3
      */
     @PostMapping("addOut.action")
-    public BaseOutput<?> addOutRecord(@RequestBody ApplyRecordRequestDto requestDto) {
+    @ResponseBody
+    public BaseOutput<?> addOutRecord(@RequestBody @Validated(ConstantValidator.Insert.class)
+                                                  ApplyRecordRequestDto requestDto) {
         this.buildOperatorInfo(requestDto);
         cardStorageService.saveOutRecord(requestDto);
         return BaseOutput.success();

@@ -23,14 +23,16 @@
                 </tr>
                 <tr>
                     <td class="info-column-card-out">已读数量</td>
-                    <td class="info-cell-card-out">
-                    <span>
-                        <input type="hidden">11111,2222</input>
-                    </span>
-                        <span>fffff</span>
-                        <span style="float: right">  <button id="btn-out" type="button" class="btn btn-primary">
-                        开启读卡器
-                    </button></span>
+                    <td>
+                        <input id="amount" name="amount" type="text" class="form-control" value="2" readonly/>
+                        <input id="cardNos" name="cardNos" type="hidden" class="form-control"
+                               value="888889688902,888889688903"/>
+                    </td>
+                    <td>
+                        <button id="btn-out" type="button" class="btn btn-primary">
+                            开启读卡器
+                        </button>
+                    </td>
                     </td>
                 </tr>
             </table>
@@ -38,12 +40,41 @@
     </div>
 </div>
 </#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <#common_autoCompleteUser/>
 <script>
+    let formId = "save-form";
+    $("#" + formId).validate({
+        onkeyup: false,
+        rules: {
+            applyUserName: {
+                required: true,
+            },
+            amount: {
+                required: true,
+                gt: 1,
+            }
+        },
+        messages: {
+            applyUserName: {
+                required: "领取人必填",
+            },
+            amount: {
+                required: "领取数量必填",
+                gt: "领取数量至少{0}"
+            }
+        },
+        focusCleanup: true
+    });
+
     function submitHandler(e) {
+        if (!$.validate.form(formId)) {
+            return false;
+        }
         let url = "${contextPath}/cardStorage/addOut.action";
-        let data = $.common.formToJSON("save-form");
-        $.operate.post(url,data);
+        let data = $.common.formToJSON(formId);
+        $.operate.save(url, JSON.stringify(data));
         return true;
     }
 </script>
