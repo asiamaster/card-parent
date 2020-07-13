@@ -3,19 +3,6 @@
     .model-div{
     	width:50%;
     }
-    #nav {
-    	height: 50px;
-	}
-	#nav ul {
-	    list-style: none;
-	    height: 50px;
-	    text-align: left;
-		}
-	 
-	#nav li {
-	    display:inline-block;
-	    float:left;
-		}
 	.per_div{
 		display: flex;
     	justify-content: flex-start;
@@ -30,7 +17,7 @@
         align-items:center;
 	}
 	.div_container_content{
-		height: 20px;width: 100px;
+		height: 20px;width: 100px;text-align: center;line-height:20px;
 	}
 	.triangle {
            border: 1px solid #333;
@@ -72,16 +59,16 @@
 		   		<div class="per_div">
 			   		<div style="width: 100px;" class="per_div_child"><p style="height: 30px;line-height:30px;">委托人签名：</p></div>
 			   		<div class="triangle per_div_child div_container" >
-			   			<div class="div_container_content"><p style="height: 20px;line-height:20px;text-align: center;"><span style="background-color: #FFFFFF;">委托人额发发发</span></p></div>
+			   			<div class="div_container_content"><span style="background-color: #FFFFFF;">委托人额发发发</span></div>
 			   		</div>
-			   		<button id="query" style="height: 30px;" type="button" class="btn btn-primary per_div_child" onclick="$.table.search()">请签名</button>
+			   		<button id="signature" style="height: 30px;" type="button" class="btn btn-primary per_div_child" onclick="$.table.search()">请签名</button>
 		   		</div>
 			   	<div class="per_div">
 			   		<div style="width: 100px;" class="per_div_child"><p style="height: 30px;line-height:30px;">被委托人签名：</p></div>
 			   		<div class="triangle per_div_child div_container">
-			   			<div class="div_container_content"><p style="height: 20px;line-height:20px;text-align: center;"><span style="background-color: #FFFFFF;">委托人</span></p></div>
+			   			<div class="div_container_content"><span style="background-color: #FFFFFF;">委托人</span></div>
 			   		</div>
-			   		<button id="query" type="button" style="height: 30px;" class="btn btn-primary per_div_child" onclick="$.table.search()">请签名</button>
+			   		<button id="signature" type="button" style="height: 30px;" class="btn btn-primary per_div_child" onclick="$.table.search()">请签名</button>
 		   		</div>
 		   </div>
 	</div>
