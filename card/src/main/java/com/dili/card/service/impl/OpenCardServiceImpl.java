@@ -1,6 +1,10 @@
 package com.dili.card.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -8,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import com.dili.assets.sdk.dto.BusinessChargeItemDto;
+import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
 import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.OpenCardResponseDto;
 import com.dili.card.dto.SerialDto;
@@ -24,6 +30,9 @@ import com.dili.card.service.ISerialService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.ServiceName;
+import com.dili.rule.sdk.domain.input.QueryFeeInput;
+import com.dili.rule.sdk.domain.output.QueryFeeOutput;
+import com.dili.rule.sdk.rpc.ChargeRuleRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.google.common.collect.Lists;
 
@@ -45,16 +54,25 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	private UidRpcResovler uidRpcResovler;
 	@Resource
 	private ISerialService serialService;
-
+	@Resource
+	private ChargeRuleRpc chargeRuleRpc;
+	@Resource
+	BusinessChargeItemRpc businessChargeItemRpc;
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public OpenCardResponseDto openMasterCard(OpenCardDto openCardInfo) {
+		// 充值工本费
+		
+//		QueryFeeOutput ruleFee = GenericRpcResolver.resolver(chargeRuleRpc.queryFee(queryFeeInput), "开卡查询费用规则");
+		
 		// 调用账户服务开卡
 		BaseOutput<OpenCardResponseDto> baseOutPut = openCardRpc.openMasterCard(openCardInfo);
 		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, "账户服务开卡");
 		// 保存卡务柜台操作记录
 		BusinessRecordDo buildBusinessRecordDo = buildBusinessRecordDo(openCardInfo, openCardResponse.getAccountId());
 		serialService.saveBusinessRecord(buildBusinessRecordDo);
+		
+		
 		// 保存全局操作记录
 		SerialRecordDo serialRecord = buildSerialRecord(openCardInfo, openCardResponse.getAccountId());
 		serialService.copyCommonFields(serialRecord, buildBusinessRecordDo);
@@ -83,6 +101,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		return openCardResponse;
 	}
 
+	
 	/**
 	 * 构建柜员操作日志
 	 * 
@@ -135,5 +154,25 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		record.setType(OperateType.ACCOUNT_TRANSACT.getCode());
 		record.setOperateTime(LocalDateTime.now());
 		return record;
+	}
+
+	@Override
+	public Long getOpenCostFee(Long firmId) {
+		BusinessChargeItemDto businessChargeItemDto = new BusinessChargeItemDto();
+		businessChargeItemDto.setBusinessType("CARD_OPEN_CARD");
+		businessChargeItemDto.setMarketId(firmId);
+		BaseOutput<List<BusinessChargeItemDto>> businessChargeList = businessChargeItemRpc.listByExample(businessChargeItemDto);
+		List<BusinessChargeItemDto> chargeItemList = GenericRpcResolver.resolver(businessChargeList, "获取费用项");
+		List<QueryFeeInput> feeInputs=new ArrayList<QueryFeeInput>();
+		for(BusinessChargeItemDto item:chargeItemList) {
+			QueryFeeInput queryFeeInput =new QueryFeeInput();
+			queryFeeInput.setMarketId(firmId);
+			queryFeeInput.setBusinessType("CARD_OPEN_CARD");
+			queryFeeInput.setChargeItem(item.getId());
+			feeInputs.add(queryFeeInput);
+		}
+		BaseOutput<List<QueryFeeOutput>> batchQueryFee = chargeRuleRpc.batchQueryFee(feeInputs);
+		List<QueryFeeOutput> list = GenericRpcResolver.resolver(batchQueryFee,"开卡查询费用规则");
+		return null;
 	}
 }
