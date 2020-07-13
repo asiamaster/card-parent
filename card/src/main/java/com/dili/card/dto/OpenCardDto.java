@@ -56,6 +56,8 @@ public class OpenCardDto extends BaseSerialLogDto {
 	private Long firmId;
 	/** 商户名称 */
 	private String firmName;
+	/** 工本费 */
+	private Long costFee;
 
 	public String getName() {
 		return name;
@@ -227,6 +229,14 @@ public class OpenCardDto extends BaseSerialLogDto {
 
 	public void setOrganizationType(String organizationType) {
 		this.organizationType = organizationType;
+	}
+
+	public Long getCostFee() {
+		return costFee;
+	}
+
+	public void setCostFee(Long costFee) {
+		this.costFee = costFee;
 	}
 
 }

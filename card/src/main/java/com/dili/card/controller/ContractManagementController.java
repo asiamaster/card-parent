@@ -35,24 +35,21 @@ public class ContractManagementController implements IControllerHandler {
     public String listView() {
         return "contract/list";
     }
-
+    
     /**
-     * 新增合同
+     * 添加页面 第一步
      */
-    @PostMapping("/save.action")
-    @ResponseBody
-    public BaseOutput<Boolean> save(@RequestBody @Validated FundContractRequestDto fundContractRequest) {
-        iContractService.save(fundContractRequest);
-        return BaseOutput.success();
+    @GetMapping("/addFirst.html")
+    public String addFirstHtml() {
+        return "contract/addFirst";
     }
-
+    
     /**
-     * 列表合同
+     * 添加页面 第二步
      */
-    @PostMapping("/page.action")
-    @ResponseBody
-    public Map<String, Object> page(@Validated(ConstantValidator.Page.class) FundContractQueryDto contractQueryDto) {
-        return successPage(iContractService.page(contractQueryDto));
+    @GetMapping("/addSec.html")
+    public String addSecondHtml() {
+        return "contract/addSec";
     }
 
     /**
@@ -71,6 +68,25 @@ public class ContractManagementController implements IControllerHandler {
     public String removeToPage(@PathVariable Long id, ModelMap modelMap) {
         modelMap.put("detail", iContractService.removeToPage(id));
         return "contract/remove";
+    }
+    
+    /**
+     * 新增合同
+     */
+    @PostMapping("/save.action")
+    @ResponseBody
+    public BaseOutput<Boolean> save(@RequestBody @Validated FundContractRequestDto fundContractRequest) {
+        iContractService.save(fundContractRequest);
+        return BaseOutput.success();
+    }
+
+    /**
+     * 列表合同
+     */
+    @PostMapping("/page.action")
+    @ResponseBody
+    public Map<String, Object> page(@Validated(ConstantValidator.Page.class) FundContractQueryDto contractQueryDto) {
+        return successPage(iContractService.page(contractQueryDto));
     }
 
     /**
