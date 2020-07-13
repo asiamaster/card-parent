@@ -3,19 +3,16 @@ package com.dili.card.controller;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.ApplyRecordQueryDto;
 import com.dili.card.dto.ApplyRecordRequestDto;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.ICardStorageService;
 import com.dili.card.validator.ConstantValidator;
+import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,8 +47,11 @@ public class CardStorageManagementController implements IControllerHandler {
      * @author miaoguoxin
      * @date 2020/7/2
      */
-    @GetMapping("outDetail.html/{id}")
-    public String outDetailView(@PathVariable Long id, ModelMap modelMap) {
+    @GetMapping("outDetail.html")
+    public String outDetailView(Long id, ModelMap modelMap) {
+        if (id == null || id <= 0) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "id不能为空");
+        }
         modelMap.put("detail", cardStorageService.getById(id));
         return "cardstorage/outDetail";
     }
@@ -75,7 +75,7 @@ public class CardStorageManagementController implements IControllerHandler {
     @ResponseBody
     public Map<String, Object> getPage(@Validated(ConstantValidator.Page.class)
                                                ApplyRecordQueryDto queryDto) {
-       // this.buildOperatorInfo(queryDto);
+        // this.buildOperatorInfo(queryDto);
         return successPage(cardStorageService.getPage(queryDto));
     }
 
@@ -91,39 +91,4 @@ public class CardStorageManagementController implements IControllerHandler {
         return BaseOutput.success();
     }
 
-    @Autowired
-    private PlatformTransactionManager transactionManager;
-
-    /**
-     *
-     * @author miaoguoxin
-     * @date 2020/7/3
-     */
-    @PostMapping("test.action")
-    @ResponseBody
-    public BaseOutput<?> test() {
-        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW); // 事物隔离级别，开启新事务，这样会比较安全些。
-        TransactionStatus status = transactionManager.getTransaction(def);
-        try {
-            ApplyRecordRequestDto requestDto = new ApplyRecordRequestDto();
-            requestDto.setAmount(2);
-            requestDto.setCardNos("1233,44444");
-            requestDto.setOpId(1L);
-            requestDto.setOpName("test");
-            requestDto.setFirmId(1L);
-            requestDto.setFirmName("测试市场");
-            requestDto.setApplyUserCode("1234");
-            requestDto.setApplyUserId(1L);
-            requestDto.setApplyUserName("ttttt");
-            cardStorageService.saveOutRecord(requestDto);
-            transactionManager.commit(status);
-            return BaseOutput.success();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(status.isRollbackOnly());
-            transactionManager.rollback(status);
-            return BaseOutput.failure();
-        }
-    }
 }

@@ -17,7 +17,6 @@
                 <label for="cardNo-multiple">卡号</label>
                 <input id="cardNo-multiple" name="cardNos[0]" type="text" class="form-control"/>
             </div>
-            <!--如果id以 -multiple 为结尾，那么该表单字段转为数组形式 -->
             <div class="form-group col">
                 <label for="customerName">客户</label>
                 <#bautoCompleteProvider
@@ -45,13 +44,17 @@
 </#bs4nav>
 </div>
 <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
-    <button id="btn_query" type="button" class="btn btn-primary" onclick="openUpdateHandler()"><i
-            class="fa fa-pencil-square-o"></i> 查看
-    </button>
-    <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
-            class="fa fa-file-excel-o"></i>
-        导出
-    </button>
+    <#resource code="account-detail-tab">
+        <button id="btn_query" type="button" class="btn btn-primary" onclick="redirectToDetail()"><i
+                class="fa fa-search"></i> 查看
+        </button>
+    </#resource>
+    <#resource code="account-export">
+        <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
+                class="fa fa-file-excel-o"></i>
+            导出
+        </button>
+    </#resource>
 </div>
 <div class="row">
     <div class="col-12">
@@ -62,6 +65,7 @@
                data-icons="bui.variable.icons">
             <thead>
             <tr>
+                <th data-radio="true"></th>
                 <th data-field="cardNo" data-formatter="cardNoFormatter" data-sortable="true" data-sort-name="card_no"
                     data-align="center">
                     卡号

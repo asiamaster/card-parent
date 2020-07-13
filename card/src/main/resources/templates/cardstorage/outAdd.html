@@ -38,7 +38,7 @@
     function submitHandler(e) {
         let url = "${contextPath}/cardStorage/addOut.action";
         let data = $.common.formToJSON("save-form");
-        $.operate.post(url,data)
+        $.operate.post(url,data);
         return true;
     }
 </script>

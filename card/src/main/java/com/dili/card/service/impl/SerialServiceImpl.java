@@ -18,7 +18,9 @@ import com.dili.card.type.BizNoType;
 import com.dili.card.type.OperateState;
 import com.dili.card.type.OperateType;
 import com.dili.card.util.DateUtil;
+import com.dili.card.util.PageUtils;
 import com.dili.customer.sdk.domain.Customer;
+import com.dili.ss.domain.PageOutput;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
@@ -196,9 +198,9 @@ public class SerialServiceImpl implements ISerialService {
     }
 
     @Override
-    public Page<BusinessRecordDo> queryPage(SerialQueryDto serialQueryDto) {
+    public PageOutput<List<BusinessRecordDo>> queryPage(SerialQueryDto serialQueryDto) {
         Page<BusinessRecordDo> page = PageHelper.startPage(serialQueryDto.getPage(), serialQueryDto.getRows());
-        this.queryBusinessRecord(serialQueryDto);
-        return page;
+        List<BusinessRecordDo> businessRecordDos = this.queryBusinessRecord(serialQueryDto);
+        return PageUtils.convert2PageOutput(page,businessRecordDos);
     }
 }

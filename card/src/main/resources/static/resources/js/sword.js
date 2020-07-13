@@ -57,7 +57,7 @@ let tab = {
                     showColumns: false,
                     showToggle: false,
                     showExport: false,
-                    clickToSelect: false,
+                    clickToSelect: true,
                     singleSelect: false,
                     mobileResponsive: true,
                     rememberSelected: false,
@@ -66,6 +66,7 @@ let tab = {
                     rightFixedColumns: false,
                     rightFixedNumber: 0,
                     queryParams: $.table.queryParams,
+                    onClickRow: $.table.onClickRow,
                     rowStyle: {},
                     showLoading: true,
                 };
@@ -158,6 +159,18 @@ let tab = {
                 let currentId = $.common.isEmpty(table.options.formId) ? 'queryForm' : table.options.formId;
                 return $.extend(curParams, $.common.formToPairValue(currentId));
             },
+            //单击事件
+            onClickRow: function (row, $element, field) {
+                // //判断是否已选中
+                // if ($($element).hasClass("changeColor")) {
+                //     //已选中则移除 当前行的class='changeColor'
+                //     $($element).removeClass('changeColor');
+                // } else
+                // {
+                //     //未点击则，为当前行添加 class='changeColor'
+                //     $($element).addClass('changeColor');
+                // }
+            },
             // 请求获取数据后处理回调函数
             responseHandler: function (res) {
                 if (typeof table.options.responseHandler == "function") {
@@ -192,7 +205,7 @@ let tab = {
                     table.set($(this).attr("id"));
                 });
                 // 选中、取消、全部选中、全部取消（事件）
-                $(optionsIds).on("check.bs.table check-all.bs.table uncheck.bs.table uncheck-all.bs.table", function (e, rows) {
+                $(optionsIds).on("check.bs.table check-all.bs.table uncheck.bs.table uncheck-all.bs.table", function (e, rows , $element) {
                     // 复选框分页保留保存选中数组
                     var rowIds = $.table.affectedRowIds(rows);
                     if ($.common.isNotEmpty(table.options.rememberSelected) && table.options.rememberSelected) {
@@ -209,6 +222,7 @@ let tab = {
                         } else {
                             table.rememberSelecteds[table.options.id] = _[func]([], rows);
                         }
+
                     }
                 });
                 // 加载成功、选中、取消、全部选中、全部取消（事件）
@@ -334,7 +348,7 @@ let tab = {
             },
             // 刷新表格
             refresh: function (tableId) {
-                var currentId = $.common.isEmpty(tableId) ? table.options.id : tableId;
+                let currentId = $.common.isEmpty(tableId) ? table.options.id : tableId;
                 $("#" + currentId).bootstrapTable('refresh', {
                     silent: true
                 });
@@ -1499,8 +1513,8 @@ let tab = {
                 return array.join(separator);
             },
             formToPairValue: function(formId){
-                var json = {};
-                var form = "#" + formId;
+                let json = {};
+                let form = "#" + formId;
                 $.each($(form).serializeArray(), function (i, field) {
                     if ($.common.isEmpty(field.value)) {
                         return
@@ -1515,31 +1529,25 @@ let tab = {
             },
             // 获取form下所有的字段并转换为json对象
             formToJSON: function (formId) {
+                let json =  $.common.formToPairValue(formId);
 
-                var json =  $.common.formToPairValue(formId);
-
-                var jQuery = $(form).find('input,textarea,hidden');
+                let jQuery = $(form).find('input,textarea,hidden');
                 for (let i = 0; i < jQuery.length; i++) {
                     let name = jQuery[i].getAttribute("name");
-                    let id = jQuery[i].getAttribute("id");
                     let formatter = jQuery[i].getAttribute("val-formatter");
                     if ($.common.isEmpty(json[name])) {
                         continue;
                     }
+                    //通过在标签上加val-formatter指定方法名，可以对数据进行格式化
                     if ($.common.isNotEmpty(formatter)) {
                         json[name] = eval(formatter + "(" + json[name] + ")");
                     }
-                    //如果是以 -multiple 为结尾，那么直接转成数组形式
-                    if (id.indexOf("-multiple") == -1) {
-                        continue;
-                    }
-                    json[name] = [json[name]]
                 }
                 return json;
             },
             // 获取obj对象长度
             getLength: function (obj) {
-                var count = 0;
+                let count = 0;
                 for (var i in obj) {
                     if (obj.hasOwnProperty(i)) {
                         count++;

@@ -12,25 +12,34 @@
                 <h5>卡信息</h5>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" id="frozen-tab" uri="/fund/frozen.html" data-toggle="tab" href="#freeze" role="tab">
-                <h5>冻结资金</h5>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="unfrozen-tab" uri="fund/unfrozenFund.html" data-toggle="tab" href="#unfreeze" role="tab">
-                <h5>解冻资金</h5>
-            </a>
-        </li>
+        <#resource code="frozen-fund">
+        <% if(isMaster) { %>
+            <li class="nav-item">
+                <a class="nav-link" id="frozen-fund-tab" uri="/fund/frozen.html" data-toggle="tab" href="#frozen-fund" role="tab">
+                    <h5>冻结资金</h5>
+                </a>
+            </li>
+        <% } %>
+       </#resource>
+
+       <#resource code="unfrozen-fund">
+        <% if(isMaster) { %>
+            <li class="nav-item">
+                <a class="nav-link" id="unfrozen-fund-tab" uri="/fund/unfrozenFund.html" data-toggle="tab" href="#unfrozen-fund" role="tab">
+                    <h5>解冻资金</h5>
+                </a>
+            </li>
+        <% } %>
+       </#resource>
     </ul>
 </div>
 
 <div id="detailTabContent" class="tab-content border-top-0">
     <div class="tab-pane tab-info" id="cardInfo" role="tabpanel">
     </div>
-    <div class="tab-pane tab-info" id="freeze" role="tabpanel">
+    <div class="tab-pane tab-info" id="frozen-fund" role="tabpanel">
     </div>
-    <div class="tab-pane" id="unfreeze" role="tabpanel">
+    <div class="tab-pane tab-info" id="unfrozen-fund" role="tabpanel">
     </div>
 </div>
 </#bs4Body>

@@ -59,6 +59,7 @@
         let $table = $("#table-div");
         if ($table.is(":hidden")) {
             $table.show();
+            $.table.refresh()
         } else {
             $table.hide();
         }

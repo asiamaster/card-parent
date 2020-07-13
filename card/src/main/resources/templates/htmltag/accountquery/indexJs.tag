@@ -1,15 +1,25 @@
 <script>
     $(function () {
         let options = {
-            url: "${contextPath}/accountQuery" + "/page.action",
+            uniqueId: "id",
+            url: "${contextPath}/accountQuery/page.action",
             sortName: "card_create_time",
             modalName: "卡查询"
         };
         $.table.init(options);
     });
 
+    function redirectToDetail() {
+        let selectedCardNo = $.table.selectColumns("cardNo");
+        if ($.common.isEmpty(selectedCardNo)){
+            $.modal.alertWarning("请至少选中一行");
+            return
+        }
+        window.location.href="${contextPath}/accountQuery/detailTab.html?cardNo="+selectedCardNo
+    }
+
     function cardNoFormatter(value, row, index, field) {
-        return '<a class="" href="javascript:void(0);">' + insertSpace(value) + '</a> ';
+        return '<div class="" style="color: #1e9fff" href="javascript:void(0);">' + insertSpace(value) + '</div> ';
     }
 
     /*每隔4位空格一下*/

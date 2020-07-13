@@ -37,13 +37,19 @@
 
 
 <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
-    <button id="btn_query" type="button" class="btn btn-primary" onclick="$.operate.add(null,'40%','60%')"><i
-            class="fa fa-save"></i> 新增出库
-    </button>
-    <button id="btn-out" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'40%','70%')"><i
-            class="fa fa-list"></i>
-        出库明细
-    </button>
+    <#resource code="add">
+        <button id="btn_query" type="button" class="btn btn-primary" onclick="$.operate.add(null,'40%','60%')"><i
+                class="fa fa-save"></i>
+            新增出库
+        </button>
+    </#resource>
+
+    <#resource code="detail">
+        <button id="btn-out" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'40%','70%')"><i
+                class="fa fa-list"></i>
+            出库明细
+        </button>
+    </#resource>
 </div>
 <div class="row">
     <div class="col-12">
@@ -81,19 +87,17 @@
 <#common_userJs/>
 
 <script>
-    $(function () {
+    $(() => {
         let options = {
             //必须加这个唯一标识
             uniqueId: "id",
             url: "${contextPath}/cardStorage/outPage.action",
             createUrl: "${contextPath}/cardStorage/outAdd.html",
-            detailUrl: "${contextPath}/cardStorage/outDetail.html/{id}",
+            detailUrl: "${contextPath}/cardStorage/outDetail.html?id={id}",
             sortName: "apply_time",
             modalName: "卡片出库"
         };
         $.table.init(options);
     });
-
-
 </script>
 

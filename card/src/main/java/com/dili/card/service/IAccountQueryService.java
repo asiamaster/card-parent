@@ -34,7 +34,7 @@ public interface IAccountQueryService {
      * @date 2020/6/28
      */
     AccountDetailResponseDto getDetailByCardNo(String cardNo);
-    
+
     /**
      * 根据卡号查询客户信息及账户信息
      * @param cardNo
@@ -44,8 +44,6 @@ public interface IAccountQueryService {
 
     /**
     * 根据卡号查询（只查询卡账户信息）
-    * @param
-    * @return
     * @author miaoguoxin
     * @date 2020/7/2
     */
@@ -72,4 +70,5 @@ public interface IAccountQueryService {
     * @date 2020/7/7
     */
     AccountSimpleResponseDto getByCardNoWithBalance(String cardNo);
+
 }

@@ -80,10 +80,6 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         UserAccountCardResponseDto primary = cardAssociation.getPrimary();
         CustomerResponseDto customer = customerRpcResolver.findCustomerByIdWithConvert(primary.getCustomerId(), primary.getFirmId());
         BalanceResponseDto fund = payService.queryBalance(new BalanceRequestDto(primary.getFundAccountId()));
-//        BalanceResponseDto fund = new BalanceResponseDto();
-//        fund.setBalance(1L);
-//        fund.setAvailableAmount(1L);
-//        fund.setFrozenAmount(1000L);
 
         detail.setAccountFund(fund);
         detail.setCustomer(customer);

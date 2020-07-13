@@ -184,9 +184,8 @@ public class SerialController implements IControllerHandler {
     */
     @PostMapping("/business/page.action")
     @ResponseBody
-    public PageOutput<List<BusinessRecordDo>> businessPage(@RequestBody SerialQueryDto queryDto){
-
-        Page<BusinessRecordDo> lists = serialService.queryPage(queryDto);
-        return PageUtils.convert2PageOutput(lists,lists.getResult());
+    public Map<String, Object> businessPage(SerialQueryDto queryDto){
+        PageOutput<List<BusinessRecordDo>> lists = serialService.queryPage(queryDto);
+        return successPage(lists);
     }
 }
