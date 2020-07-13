@@ -1,5 +1,5 @@
 // 当前table相关信息
-let table = {
+table = {
     config: {},
     // 当前实例配置
     options: {},
@@ -23,10 +23,11 @@ let table = {
 };
 
 //当前tab标签信息
-let tab = {
+tab = {
     tabMap: new Map(),
     options: {}
 };
+
 (function ($) {
     $.extend({
         _tree: {},
@@ -659,11 +660,6 @@ let tab = {
             alertWarning: function (content) {
                 $.modal.alert(content, modal_status.WARNING);
             },
-            // 关闭窗体
-            close: function () {
-                var index = parent.layer.getFrameIndex(window.name);
-                parent.layer.close(index);
-            },
             // 关闭全部窗体
             closeAll: function () {
                 layer.closeAll();
@@ -982,6 +978,7 @@ let tab = {
                             try {
                                 return $iframe[0].contentWindow.submitHandler(e)
                             } catch (ex) {
+                                console.log(ex);
                                 return false;
                             }
                         }
@@ -1092,15 +1089,15 @@ let tab = {
             },
             // 保存信息 刷新表格
             save: function (url, data, callback) {
-                $.operate.submit(url, "post", "json", data, callback)
-                /*   var config = {
+                   let config = {
                        url: url,
                        type: "post",
                        dataType: "json",
+                       contentType: "application/json; charset=utf-8",
                        data: data,
                        beforeSend: function () {
                            $.modal.loading("正在处理中，请稍后...");
-                           $.modal.disable();
+                          // $.modal.disable();
                        },
                        success: function(result) {
                            if (typeof callback == "function") {
@@ -1112,7 +1109,7 @@ let tab = {
                            $.modal.hide();
                        }
                    };
-                   $.ajax(config)*/
+                   $.ajax(config)
             },
             // 保存信息 弹出提示框
             saveModal: function (url, data, callback) {
@@ -1173,25 +1170,23 @@ let tab = {
             // 成功回调执行事件（父窗体静默更新）
             successCallback: function (result) {
                 if (result.code == web_status.SUCCESS) {
-                    var parent = window.parent;
+                    //let parent = window.parent;
                     if (parent.table.options.type == table_type.bootstrapTable) {
-                        $.modal.close();
-                        parent.$.modal.msgSuccess(result.msg);
+                        parent.$.modal.msgSuccess(result.message);
                         parent.$.table.refresh();
                     } else if (parent.table.options.type == table_type.bootstrapTreeTable) {
-                        $.modal.close();
-                        parent.$.modal.msgSuccess(result.msg);
+                        parent.$.modal.msgSuccess(result.message);
                         parent.$.treeTable.refresh();
                     } else {
                         $.modal.msgReload("保存成功,正在刷新数据请稍后……", modal_status.SUCCESS);
                     }
                 } else if (result.code == web_status.WARNING) {
-                    $.modal.alertWarning(result.msg)
+                    $.modal.alertWarning(result.message)
                 } else {
-                    $.modal.alertError(result.msg);
+                    $.modal.alertError(result.message);
                 }
                 $.modal.closeLoading();
-                $.modal.enable();
+               // $.modal.enable();
             },
         },
         // 校验封装处理
@@ -1535,7 +1530,7 @@ let tab = {
             formToJSON: function (formId) {
                 let json =  $.common.formToPairValue(formId);
 
-                let jQuery = $(form).find('input,textarea,hidden');
+                let jQuery = $("#" + formId).find('input,textarea,hidden');
                 for (let i = 0; i < jQuery.length; i++) {
                     let name = jQuery[i].getAttribute("name");
                     let formatter = jQuery[i].getAttribute("val-formatter");

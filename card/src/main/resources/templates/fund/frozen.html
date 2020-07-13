@@ -34,7 +34,8 @@
                     </tr>
                     <tr>
                         <td class="vertical-td info-column-frozen-fund">冻结金额<i class="red">*</i></td>
-                        <td><input id="amount" name="amount" type="number" value="2"
+                        <td>
+                            <input id="amount" name="amount" type="number"
                                    oninput="limitNum(this)" step="0.1"
                                    class="form-control" val-formatter="yuanToFen"/>
                         </td>
@@ -90,4 +91,4 @@
     </div>
 
 </div>
-<#fund_indexJs/>
+<#fund_frozenIndexJs/>
