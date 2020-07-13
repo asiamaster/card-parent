@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
@@ -47,8 +48,8 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 *
 	 * @date 2020/7/6
 	 */
-	@GetMapping("/detail.html/{id}")
-	public String detailFacadeView(@PathVariable Long id, ModelMap map) {
+	@GetMapping("/detail.html")
+	public String detailFacadeView(@RequestParam("id") Long id, ModelMap map) {
 		if (id == null || id < 0L) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期详情请求参数错误");
 		}
