@@ -27,5 +27,11 @@ public interface IOpenCardService {
 	 * @return
 	 */
 	public OpenCardResponseDto openSlaveCard(OpenCardDto openCardInfo);
+	
+	/**
+	 * 查询开卡工本费
+	 * @return
+	 */
+	public Long getOpenCostFee(Long firmId);
 
 }

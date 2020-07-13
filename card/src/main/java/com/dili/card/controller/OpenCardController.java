@@ -56,6 +56,7 @@ public class OpenCardController implements IControllerHandler {
 	AccountQueryRpc accountQueryRpc;
 	@Resource
 	IAccountQueryService accountQueryService;
+
 	/**
 	 * 主卡开卡
 	 * 
@@ -67,7 +68,7 @@ public class OpenCardController implements IControllerHandler {
 	}
 
 	/**
-	 * 主卡开卡
+	 * 主卡开卡测试用户查询
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -97,8 +98,8 @@ public class OpenCardController implements IControllerHandler {
 			return BaseOutput.failure("未获取到登录用户信息，请重新登录!");
 		}
 		AssertUtils.notEmpty(openCardInfo.getCertificateNumber(), "请输入证件号!");
-		Customer customer = GenericRpcResolver
-				.resolver(customerRpc.getByCertificateNumber(openCardInfo.getCertificateNumber(), user.getFirmId()), "开卡客户查询");
+		Customer customer = GenericRpcResolver.resolver(
+				customerRpc.getByCertificateNumber(openCardInfo.getCertificateNumber(), user.getFirmId()), "开卡客户查询");
 		CustomerResponseDto response = new CustomerResponseDto();
 		BeanUtils.copyProperties(customer, response);
 		response.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
@@ -107,6 +108,7 @@ public class OpenCardController implements IControllerHandler {
 
 	/**
 	 * 根据主卡卡号，查询主卡信息和客户信息
+	 * 
 	 * @param openCardInfo
 	 * @return
 	 */
@@ -117,8 +119,24 @@ public class OpenCardController implements IControllerHandler {
 		AccountCustomerDto response = accountQueryService.getAccountCustomerByCardNo(openCardInfo.getCardNo());
 		return BaseOutput.successData(response);
 	}
-	
-	
+
+	/**
+	 * 查询开卡费用项
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "getOpenCardFee.action", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public BaseOutput<Long> getOpenCardFee() {
+		// 操作人信息
+		UserTicket user = SessionContext.getSessionContext().getUserTicket();
+		if (user == null) {
+			return BaseOutput.failure("未获取到登录用户信息，请重新登录!");
+		}
+		Long openCostFee = openCardService.getOpenCostFee(user.getFirmId());
+		return BaseOutput.successData(openCostFee);
+	}
+
 	/**
 	 * 主卡开卡
 	 * 
