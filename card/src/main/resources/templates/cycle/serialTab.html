@@ -1,0 +1,70 @@
+<#bs4Body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <table id="grid" data-toggle="table" data-title="操作交易记录" class="table" data-toolbar="#toolbar"
+                   data-pagination="true" data-page-number="1" data-page-size="10"
+                   data-query-params="queryParams" data-side-pagination="server" data-method="POST"
+                   data-content-type="application/x-www-form-urlencoded" data-single-select="true"
+                   data-click-to-select="true" data-unique-id="id" data-sort-name="operate_time"
+                   data-sort-order="desc" data-icons="bui.variable.icons" data-buttons-class="primary"
+                   data-show-refresh="true" data-show-fullscreen="true" data-show-columns="true">
+                <thead>
+                <tr>
+                	 <th data-field="serialNo" data-align="center" >
+                        业务流水号
+                    </th>
+                    <th data-field="customerNo" data-align="center" >
+                        客户编号
+                    </th>
+                    <th data-field="customerName" data-align="center">
+                        客户名称
+                    </th>
+                    <th data-field="cardNo" data-align="center" >
+                        园区卡号
+                    </th>
+                    <th data-field="fundItemName" data-align="center">
+                        操作业务
+                    </th>
+                    <th data-field="startBalanceView" data-align="center">
+                        期初金额
+                    </th>
+                    <th data-field="amountView" data-align="center">
+                        操作金额
+                    </th>
+                    <th data-field="endBalanceView" data-align="center">
+                        账户余额
+                    </th>
+                   <th data-field="operateTime" data-align="center">
+                        操作时间
+                    </th>
+                    <th data-field="notes" data-align="center" data-sortable="false">
+                        备注
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+</#bs4Body>
+<#common_commonJs/>
+<#common_customerJs/>
+<#common_userJs/>
+<#serial_indexJs/>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script>
+    var prefixChild = "${contextPath}/cash";
+    $(function () {
+        var options = {
+            url: "${contextPath}/serial/account/listPage.action",
+            singleSelect : true,
+            queryParams:{
+            	cycleNo:cycleNo,
+            	rows:10,
+            	page:1
+            }
+        };
+        $.table.init(options);
+    });
+</script>

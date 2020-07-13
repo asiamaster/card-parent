@@ -87,6 +87,7 @@
 			card_user_cash
 		WHERE
 			firm_id = #{firmId}
+			<if test="cycleNo != null">AND cycle_no = #{cycleNo}</if>
 			<if test="userId != null"> AND user_id = #{userId}</if>
 			<if test="creatorId != null"> AND creator_id = #{creatorId}</if>
 			<if test="state != null"> AND state = #{state}</if>

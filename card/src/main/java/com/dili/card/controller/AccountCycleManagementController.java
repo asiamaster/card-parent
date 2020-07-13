@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
@@ -23,7 +24,6 @@ import com.dili.card.type.CashAction;
 import com.dili.card.type.CycleState;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.domain.PageOutput;
 
 /**
  * 账务管理
@@ -48,8 +48,8 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 *
 	 * @date 2020/7/6
 	 */
-	@GetMapping("/detail.html/{id}")
-	public String detailFacadeView(@PathVariable Long id, ModelMap map) {
+	@GetMapping("/detail.html")
+	public String detailFacadeView(@RequestParam("id") Long id, ModelMap map) {
 		if (id == null || id < 0L) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期详情请求参数错误");
 		}
@@ -58,6 +58,15 @@ public class AccountCycleManagementController implements IControllerHandler {
 		map.put("settled", CycleState.SETTLED.getCode());
 		return "cycle/detail";
 	}
+	
+    /**
+     * 跳转到操作流水页面
+     * @return
+     */
+    @RequestMapping(value = "/serialTab.html")
+    public String serialTab() {
+        return "cycle/serialTab";
+    }
 
 	/**
 	 * 跳转结账申请
