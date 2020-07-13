@@ -1,0 +1,83 @@
+<#bs4Body>
+<style>
+    .info-column {
+        width: 20%;
+        font-weight: bold;
+        text-align: right;
+        vertical-align: middle;
+    }
+    .info-cell{
+        width: 80%;
+        text-align: left;
+        vertical-align: middle;
+    }
+    .td_input{
+    	width: 200px; 
+    	float: left;
+    	margin-right:25px;
+    }
+    .td_button{
+    	width: 150px; 
+    	float: left;
+    }
+</style>
+    <div id="detail-modal" >
+    	<form id="save-form" >
+    		<input id="action" name="action" type="hidden" value="${usercash.action!}" class="form-control"/>
+	        <table id="out-detail" class="table table-bordered" >
+	            <tbody>
+	            <tr>
+	                <td class="info-column" >委托人</td>
+	                <td class="info-cell">
+	                	<input placeholder="姓名" name="userId" disabled="disabled" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
+	                	<input placeholder="身份证号" name="userId" disabled="disabled" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
+	                	<button id="query" type="button" class="btn btn-secondary td_button" onclick="$.table.search()"><i class="fa fa-search"></i>读取身份证</button>
+	                </td>
+	            </tr>
+	            <tr>
+	                <td class="info-column">委托人园区卡</td>
+	                <td class="info-cell">
+	                	<input placeholder="园区卡" disabled="disabled" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
+	                	<input disabled="disabled" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
+	                	<button id="query" type="button" class="btn btn-secondary td_button" onclick="$.table.search()"><i class="fa fa-search"></i>请刷卡</button>
+	                </td>
+	            </tr>
+	            <tr>
+	                <td class="info-column">合同起止日期</td>
+	                <td class="info-cell">
+	                	 <div class="form-inline">
+		                    <div class="input-group">
+		                        <input type="text" name="operateTimeStart" id="operateTimeStart" class="form-control laydatetime"/>
+		                        <div class="input-group-append">
+		                            <label for="operateTimeStart"  class="input-group-text fa fa-calendar"></label>
+		                        </div>
+		                    </div>&nbsp;&nbsp;至&nbsp;&nbsp;
+		                    <div class="input-group">
+		                        <input type="text" name="operateTimeEnd" id="operateTimeEnd" class="form-control laydatetime"/>
+		                        <div class="input-group-append">
+		                            <label for="operateTimeEnd"  class="input-group-text fa fa-calendar"></label>
+		                        </div>
+		                    </div>
+                		</div>
+	                </td>
+	            </tr>
+	            <tr>
+	                <td class="info-column">被委托人</td>
+	                <td class="info-cell">
+	                	<input placeholder="姓名" disabled="disabled" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
+	                	<input placeholder="身份证号" disabled="disabled" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
+	                	<input placeholder="手机号" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
+	                	<button id="query" type="button" class="btn btn-secondary td_button" onclick="$.table.search()"><i class="fa fa-search"></i>读取身份证</button>
+	                </td>
+	            </tr>
+	             <tr>
+	                <td class="info-column">备注</td>
+	                <td class="info-cell">
+	                	<textarea placeholder="委托备注" style="width:45%; " id="notes" name="notes"></textarea>
+	                </td>
+	            </tr>
+	        </table>
+        </form>
+    </div>
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
