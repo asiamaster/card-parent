@@ -7,14 +7,19 @@
                 <tr>
                     <td class="info-column-card-out">领取人</td>
                     <td class="info-cell-card-out">
-                        <input id="applyUserName" name="applyUserName" type="text" class="form-control"/>
-                        <input id="applyUserCode" name="applyUserCode" type="hidden" class="form-control"/>
-                        <input id="applyUserId" name="applyUserId" type="hidden" class="form-control"/>
+                        <#bautoCompleteProvider
+                        _hiddenDomainId="applyUserId"
+                        _hiddenDomainName="applyUserId"
+                        _displayDomainId="applyUserName"
+                        _displayDomainName="applyUserName"
+                        _placeholder=""
+                        _optionVariable="userNameAutoCompleteOption"/>
                     </td>
                 </tr>
                 <tr>
                     <td class="info-column-card-out">工号</td>
-                    <td class="info-cell-card-out">{detail.applyUserCode!}</td>
+                    <td id="_applyUserCode" class="info-cell-card-out"></td>
+                    <input id="applyUserCode" name="applyUserCode" type="hidden" class="form-control"/>
                 </tr>
                 <tr>
                     <td class="info-column-card-out">已读数量</td>
@@ -33,8 +38,8 @@
     </div>
 </div>
 </#bs4Body>
+<#common_autoCompleteUser/>
 <script>
-
     function submitHandler(e) {
         let url = "${contextPath}/cardStorage/addOut.action";
         let data = $.common.formToJSON("save-form");

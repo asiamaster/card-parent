@@ -1515,6 +1515,7 @@ let tab = {
                 }
                 return array.join(separator);
             },
+            //表单转键值对
             formToPairValue: function(formId){
                 let json = {};
                 let form = "#" + formId;

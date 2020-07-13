@@ -1,13 +1,9 @@
 <script>
-    window.domain = 'diligrp.com';
-    /************* 获取用户信息  start *****************/
-    // 客户名称
-    let userNameQueryAutoCompleteOption = {
+    var userNameAutoCompleteOption = {
         serviceUrl: '/user/listByKeyword.action',
         paramName: 'keyword',
         displayFieldName: 'realName',
         showNoSuggestionNotice: true,
-        width: 'flex',
         noSuggestionNotice: '无此用户, 请重新输入',
         transformResult: function (result) {
             if(result.success){
@@ -21,12 +17,14 @@
                     })
                 }
             }else{
-                //bs4pop.alert(result.message, {type: 'error'});
+                bs4pop.alert(result.message, {type: 'error'});
                 return false;
             }
         },
         selectFn: function (suggestion) {
-
+            $('#_applyUserCode').text(suggestion.serialNumber);
+            $('#applyUserCode').val(suggestion.serialNumber);
         }
     };
+
 </script>
