@@ -6,22 +6,15 @@ import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
-import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.service.ISerialService;
-import com.dili.card.util.PageUtils;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
-import com.github.pagehelper.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -58,22 +51,18 @@ public class SerialController implements IControllerHandler {
     @ResponseBody
     public Map<String, Object> listPage(SerialQueryDto serialQueryDto) {
         Map<String, Object> result = new HashMap<>();
-        try {
-            UserTicket userTicket = getUserTicket();
-            serialQueryDto.setFirmId(userTicket.getFirmId());
-            if (StrUtil.isBlank(serialQueryDto.getSort())) {
-                serialQueryDto.setSort("operate_time");
-            }
-            if (StrUtil.isBlank(serialQueryDto.getOrder())) {
-                serialQueryDto.setSort("desc");
-            }
-            PageOutput<List<SerialRecordDo>> pageOutput = serialRecordRpcResolver.listPage(serialQueryDto);
-            if (pageOutput.isSuccess()) {
-                result.put("rows", pageOutput.getData());
-                result.put("total", pageOutput.getTotal());
-            }
-        } catch (Exception e) {
-            LOGGER.error("listPage", e);
+        UserTicket userTicket = getUserTicket();
+        serialQueryDto.setFirmId(userTicket.getFirmId());
+        if (StrUtil.isBlank(serialQueryDto.getSort())) {
+            serialQueryDto.setSort("operate_time");
+        }
+        if (StrUtil.isBlank(serialQueryDto.getOrder())) {
+            serialQueryDto.setSort("desc");
+        }
+        PageOutput<List<SerialRecordDo>> pageOutput = serialRecordRpcResolver.listPage(serialQueryDto);
+        if (pageOutput.isSuccess()) {
+            result.put("rows", pageOutput.getData());
+            result.put("total", pageOutput.getTotal());
         }
         return result;
     }
@@ -86,18 +75,11 @@ public class SerialController implements IControllerHandler {
     @RequestMapping(value = "/business/cycleReprintList.action")
     @ResponseBody
     public BaseOutput<List<BusinessRecordDo>> cycleReprintList(@RequestBody SerialQueryDto serialQueryDto) {
-        try {
-            UserTicket userTicket = getUserTicket();
-            serialQueryDto.setOperatorId(userTicket.getId());
-            serialQueryDto.setFirmId(userTicket.getFirmId());
-            List<BusinessRecordDo> itemList = serialService.cycleReprintList(serialQueryDto);
-            return BaseOutput.success().setData(itemList);
-        } catch (CardAppBizException e) {
-            return BaseOutput.failure(e.getMessage());
-        } catch (Exception e) {
-            LOGGER.error("reprintList", e);
-            return BaseOutput.failure();
-        }
+        UserTicket userTicket = getUserTicket();
+        serialQueryDto.setOperatorId(userTicket.getId());
+        serialQueryDto.setFirmId(userTicket.getFirmId());
+        List<BusinessRecordDo> itemList = serialService.cycleReprintList(serialQueryDto);
+        return BaseOutput.success().setData(itemList);
     }
 
     /**
@@ -108,20 +90,13 @@ public class SerialController implements IControllerHandler {
     @RequestMapping(value = "/business/todayChargeList.action")
     @ResponseBody
     public BaseOutput<List<BusinessRecordDo>> todayChargeList(@RequestBody SerialQueryDto serialQueryDto) {
-        try {
-            if (serialQueryDto.getAccountId() == null) {
-                return BaseOutput.failure("账户ID为空");
-            }
-            UserTicket userTicket = getUserTicket();
-            serialQueryDto.setFirmId(userTicket.getFirmId());
-            List<BusinessRecordDo> itemList = serialService.todayChargeList(serialQueryDto);
-            return BaseOutput.success().setData(itemList);
-        } catch (CardAppBizException e) {
-            return BaseOutput.failure(e.getMessage());
-        }catch (Exception e) {
-            LOGGER.error("todayChargeList", e);
-            return BaseOutput.failure();
+        if (serialQueryDto.getAccountId() == null) {
+            return BaseOutput.failure("账户ID为空");
         }
+        UserTicket userTicket = getUserTicket();
+        serialQueryDto.setFirmId(userTicket.getFirmId());
+        List<BusinessRecordDo> itemList = serialService.todayChargeList(serialQueryDto);
+        return BaseOutput.success().setData(itemList);
     }
 
 
@@ -133,13 +108,8 @@ public class SerialController implements IControllerHandler {
     @RequestMapping(value = "/business/handleSuccess/{flag}")
     @ResponseBody
     public BaseOutput<?> handleSuccess(@RequestBody SerialDto serialDto, @PathVariable boolean flag) {
-        try {
-            serialService.handleSuccess(serialDto, flag);
-            return BaseOutput.success();
-        } catch (Exception e) {
-            LOGGER.error("handleSuccess", e);
-            return BaseOutput.failure();
-        }
+        serialService.handleSuccess(serialDto, flag);
+        return BaseOutput.success();
     }
 
 
@@ -151,13 +121,8 @@ public class SerialController implements IControllerHandler {
     @RequestMapping(value = "/business/handleFailure")
     @ResponseBody
     public BaseOutput<?> handleFailure(@RequestBody SerialDto serialDto) {
-        try {
-            serialService.handleFailure(serialDto);
-            return BaseOutput.success();
-        } catch (Exception e) {
-            LOGGER.error("handleFailure", e);
-            return BaseOutput.failure();
-        }
+        serialService.handleFailure(serialDto);
+        return BaseOutput.success();
     }
 
 
@@ -169,13 +134,8 @@ public class SerialController implements IControllerHandler {
     @RequestMapping(value = "/account/saveSerial")
     @ResponseBody
     public BaseOutput<?> saveSerial(@RequestBody SerialDto serialDto) {
-        try {
-            serialService.saveSerialRecord(serialDto);
-            return BaseOutput.success();
-        } catch (Exception e) {
-            LOGGER.error("saveSerial", e);
-            return BaseOutput.failure();
-        }
+        serialService.saveSerialRecord(serialDto);
+        return BaseOutput.success();
     }
     /**
     * 业务日志分页

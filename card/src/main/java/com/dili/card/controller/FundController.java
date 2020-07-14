@@ -70,18 +70,11 @@ public class FundController implements IControllerHandler {
     @RequestMapping(value = "/withdraw.action")
     @ResponseBody
     public BaseOutput<?> withdraw(@RequestBody FundRequestDto fundRequestDto) {
-        try {
-            validateCommonParam(fundRequestDto);
-            validateWithdrawParam(fundRequestDto);
-            buildOperatorInfo(fundRequestDto);
-            fundService.withdraw(fundRequestDto);
-            return BaseOutput.success();
-        } catch (CardAppBizException e) {
-            return BaseOutput.failure(e.getMessage());
-        } catch (Exception e) {
-            LOGGER.error("withdraw", e);
-            return BaseOutput.failure();
-        }
+        validateCommonParam(fundRequestDto);
+        validateWithdrawParam(fundRequestDto);
+        buildOperatorInfo(fundRequestDto);
+        fundService.withdraw(fundRequestDto);
+        return BaseOutput.success();
     }
 
     /**

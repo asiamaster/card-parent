@@ -2,7 +2,6 @@ package com.dili.card.controller;
 
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CustomerResponseDto;
-import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICustomerService;
@@ -14,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -43,19 +41,28 @@ public class CustomerController implements IControllerHandler {
     @RequestMapping(value = "/listByKeyword.action")
     @ResponseBody
     public BaseOutput<List<Customer>> listByKeyword(String keyword) {
-        try {
-            CustomerQueryInput query = new CustomerQueryInput();
-            UserTicket userTicket = getUserTicket();
-            query.setMarketId(userTicket.getFirmId());
-            query.setKeyword(keyword);
-            List<Customer> itemList = customerRpcResolver.list(query);
-            return BaseOutput.success().setData(itemList);
-        } catch (CardAppBizException e) {
-            return BaseOutput.failure(e.getMessage());
-        } catch (Exception e) {
-            LOGGER.error("listByKeyword", e);
-            return BaseOutput.failure();
-        }
+        CustomerQueryInput query = new CustomerQueryInput();
+        UserTicket userTicket = getUserTicket();
+        query.setMarketId(userTicket.getFirmId());
+        query.setKeyword(keyword);
+        List<Customer> itemList = customerRpcResolver.list(query);
+        return BaseOutput.success().setData(itemList);
+    }
+
+    /**
+     * 根据客户姓名查询客户列表
+     * @param name
+     * @return
+     */
+    @RequestMapping(value = "/listByName.action")
+    @ResponseBody
+    public BaseOutput<List<Customer>> listByName(String name) {
+        CustomerQueryInput query = new CustomerQueryInput();
+        UserTicket userTicket = getUserTicket();
+        query.setMarketId(userTicket.getFirmId());
+        query.setName(name);
+        List<Customer> itemList = customerRpcResolver.list(query);
+        return BaseOutput.success().setData(itemList);
     }
 
     /**
