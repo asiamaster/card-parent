@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -54,6 +53,29 @@ public class CustomerController implements IControllerHandler {
             return BaseOutput.failure(e.getMessage());
         } catch (Exception e) {
             LOGGER.error("listByKeyword", e);
+            return BaseOutput.failure();
+        }
+    }
+
+    /**
+     * 根据客户姓名查询客户列表
+     * @param name
+     * @return
+     */
+    @RequestMapping(value = "/listByName.action")
+    @ResponseBody
+    public BaseOutput<List<Customer>> listByName(String name) {
+        try {
+            CustomerQueryInput query = new CustomerQueryInput();
+            UserTicket userTicket = getUserTicket();
+            query.setMarketId(userTicket.getFirmId());
+            query.setName(name);
+            List<Customer> itemList = customerRpcResolver.list(query);
+            return BaseOutput.success().setData(itemList);
+        } catch (CardAppBizException e) {
+            return BaseOutput.failure(e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("listByName", e);
             return BaseOutput.failure();
         }
     }
