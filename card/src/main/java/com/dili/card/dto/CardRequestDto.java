@@ -20,6 +20,8 @@ public class CardRequestDto extends BaseDto{
 	private String secondLoginPwd;
 	/** 客户ID*/
 	private Long customerId;
+	/**工本费*/
+	private Long serviceFee;
 
 	public String getCardNo() {
 		return cardNo;
@@ -75,5 +77,13 @@ public class CardRequestDto extends BaseDto{
 
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
+	}
+
+	public Long getServiceFee() {
+		return serviceFee;
+	}
+
+	public void setServiceFee(Long serviceFee) {
+		this.serviceFee = serviceFee;
 	}
 }

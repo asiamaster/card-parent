@@ -60,8 +60,6 @@ public class CustomerController implements IControllerHandler {
 
     /**
      * 根据卡号查询客户信息
-     * @param
-     * @return
      * @author miaoguoxin
      * @date 2020/7/2
      */

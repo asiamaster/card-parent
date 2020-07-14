@@ -118,7 +118,7 @@ public class FundController implements IControllerHandler {
     public BaseOutput<?> recharge(@RequestBody @Validated({ConstantValidator.Update.class, FundValidator.Trade.class})
                                           FundRequestDto requestDto) {
         this.validateCommonParam(requestDto);
-        // this.buildOperatorInfo(requestDto);
+        this.buildOperatorInfo(requestDto);
         //由于需要两阶段提交，所以这里的充值逻辑需要分成两个事务
         UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForRecharge(requestDto);
         try {

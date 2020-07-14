@@ -1,6 +1,7 @@
 package com.dili;
 
 import com.dili.ss.dto.DTOScan;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import tk.mybatis.spring.annotation.MapperScan;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.boot.SpringApplication;
@@ -25,10 +26,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 public class Application extends SpringBootServletInitializer {
 
-    @LoadBalanced
     @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
+        return restTemplateBuilder.build();
     }
 
     public static void main(String[] args) {

@@ -1105,7 +1105,7 @@ tab = {
                            }
                            $.operate.successCallback(result);
                        },
-                       error: function (status,result) {
+                       error: function (status, result) {
                            $.modal.hide();
                        }
                    };

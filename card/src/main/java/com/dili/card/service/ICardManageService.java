@@ -14,7 +14,7 @@ public interface ICardManageService {
 	 * 解挂卡片
 	 */
 	void unLostCard(CardRequestDto cardParam);
-	
+
 	/**
 	 * 退卡
 	 */
@@ -25,4 +25,16 @@ public interface ICardManageService {
 	 * @param cardParam
 	 */
     void unLockCard(CardRequestDto cardParam);
+	/**
+	* 换卡
+	* @author miaoguoxin
+	* @date 2020/7/14
+	*/
+    void changeCard(CardRequestDto cardParam);
+	/**
+	* 挂失
+	* @author miaoguoxin
+	* @date 2020/7/14
+	*/
+    void reportLossCard(CardRequestDto cardParam);
 }
