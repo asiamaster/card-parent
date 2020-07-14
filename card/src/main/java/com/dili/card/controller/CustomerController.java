@@ -2,7 +2,6 @@ package com.dili.card.controller;
 
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CustomerResponseDto;
-import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICustomerService;
@@ -42,19 +41,12 @@ public class CustomerController implements IControllerHandler {
     @RequestMapping(value = "/listByKeyword.action")
     @ResponseBody
     public BaseOutput<List<Customer>> listByKeyword(String keyword) {
-        try {
-            CustomerQueryInput query = new CustomerQueryInput();
-            UserTicket userTicket = getUserTicket();
-            query.setMarketId(userTicket.getFirmId());
-            query.setKeyword(keyword);
-            List<Customer> itemList = customerRpcResolver.list(query);
-            return BaseOutput.success().setData(itemList);
-        } catch (CardAppBizException e) {
-            return BaseOutput.failure(e.getMessage());
-        } catch (Exception e) {
-            LOGGER.error("listByKeyword", e);
-            return BaseOutput.failure();
-        }
+        CustomerQueryInput query = new CustomerQueryInput();
+        UserTicket userTicket = getUserTicket();
+        query.setMarketId(userTicket.getFirmId());
+        query.setKeyword(keyword);
+        List<Customer> itemList = customerRpcResolver.list(query);
+        return BaseOutput.success().setData(itemList);
     }
 
     /**
@@ -65,19 +57,12 @@ public class CustomerController implements IControllerHandler {
     @RequestMapping(value = "/listByName.action")
     @ResponseBody
     public BaseOutput<List<Customer>> listByName(String name) {
-        try {
-            CustomerQueryInput query = new CustomerQueryInput();
-            UserTicket userTicket = getUserTicket();
-            query.setMarketId(userTicket.getFirmId());
-            query.setName(name);
-            List<Customer> itemList = customerRpcResolver.list(query);
-            return BaseOutput.success().setData(itemList);
-        } catch (CardAppBizException e) {
-            return BaseOutput.failure(e.getMessage());
-        } catch (Exception e) {
-            LOGGER.error("listByName", e);
-            return BaseOutput.failure();
-        }
+        CustomerQueryInput query = new CustomerQueryInput();
+        UserTicket userTicket = getUserTicket();
+        query.setMarketId(userTicket.getFirmId());
+        query.setName(name);
+        List<Customer> itemList = customerRpcResolver.list(query);
+        return BaseOutput.success().setData(itemList);
     }
 
     /**

@@ -35,15 +35,10 @@ public class UserController implements IControllerHandler {
     @RequestMapping(value = "/listByKeyword.action")
     @ResponseBody
     public BaseOutput<List<User>> listByKeyword(String keyword) {
-        try {
-            UserQuery query = DTOUtils.newDTO(UserQuery.class);
-            UserTicket userTicket = getUserTicket();
-            query.setFirmCode(userTicket.getFirmCode());
-            query.setKeyword(keyword);
-            return userRpc.listByExample(query);
-        } catch (Exception e) {
-            LOGGER.error("list", e);
-            return BaseOutput.failure();
-        }
+        UserQuery query = DTOUtils.newDTO(UserQuery.class);
+        UserTicket userTicket = getUserTicket();
+        query.setFirmCode(userTicket.getFirmCode());
+        query.setKeyword(keyword);
+        return userRpc.listByExample(query);
     }
 }
