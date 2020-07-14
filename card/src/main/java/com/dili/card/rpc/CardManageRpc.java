@@ -10,25 +10,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * 卡相关rpc
  */
-@FeignClient(name = "account-service", contextId = "cardManageRpc", url = "http://127.0.0.1:8386")
+@FeignClient(name = "account-service", contextId = "cardManageRpc",
+        path = "/api/card"/*, url = "http://127.0.0.1:8386"*/)
 public interface CardManageRpc {
 
     /**
      * 解挂卡片
      */
-    @PostMapping("/api/card/unLostCard")
+    @PostMapping("/unLostCard")
     BaseOutput<?> unLostCard(CardRequestDto cardParam);
-    
+
     /**
      * 退卡
      */
-    @PostMapping("/api/card/returnCard")
+    @PostMapping("/returnCard")
     BaseOutput<?> returnCard(CardRequestDto cardParam);
-    
+
     /**
      * 重置密码
      */
-    @PostMapping("/api/card/resetLoginPwd")
+    @PostMapping("/resetLoginPwd")
     BaseOutput<?> resetLoginPwd(CardRequestDto cardParam);
 
     /**
@@ -36,6 +37,21 @@ public interface CardManageRpc {
      * @param cardParam
      * @return
      */
-    @RequestMapping("/api/card/unLockCard")
+    @RequestMapping("/unLockCard")
     BaseOutput<?> unLockCard(CardRequestDto cardParam);
+
+    /**
+     * 换卡
+     * @author miaoguoxin
+     * @date 2020/7/14
+     */
+    @PostMapping("/changeCard")
+    BaseOutput<?> changeCard(CardRequestDto cardParam);
+    /**
+    * 挂失
+    * @author miaoguoxin
+    * @date 2020/7/14
+    */
+    @PostMapping("/reportLossCard")
+    BaseOutput<?> reportLossCard(CardRequestDto cardParam);
 }
