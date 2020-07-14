@@ -61,18 +61,17 @@
                 		</div>
 	                </td>
 	            </tr>
-	            <tr>
+	            <tr class="consignee">
 	                <td class="info-column">被委托人</td>
 	                <td class="info-cell">
 	                	<input placeholder="姓名" disabled="disabled" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
 	                	<input placeholder="身份证号" disabled="disabled" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
 	                	<input placeholder="手机号" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
-	                	<button id="query" type="button" class="btn btn-secondary td_button" onclick="$.table.search()"><i class="fa fa-search"></i>读取身份证</button>
-	                	<label style="height: 34px;padding:0px 15px;"><i class="fa fa-minus" style="color:#4F94CD;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>
-	                	<label style="height: 34px;padding:0px 15px;"><i class="fa fa-plus" style="color:#fF0000;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>
+	                	<button type="button" class="btn btn-secondary td_button readID" onclick="$.table.search()"><i class="fa fa-search"></i>读取身份证</button>
+	                	<label onclick="addConsignee()" class = "plus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-plus" style="color:#fF0000;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>
 	                </td>
 	            </tr>
-	             <tr>
+	            <tr id="notesBefore">
 	                <td class="info-column">备注</td>
 	                <td class="info-cell">
 	                	<textarea placeholder="委托备注" style="width:45%; " id="notes" name="notes"></textarea>
@@ -83,3 +82,27 @@
     </div>
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script>
+	/**
+	 * 添加被委托人信息
+	 */
+	let consignee='<tr class="consignee"><td class="info-column">被委托人</td><td class="info-cell">' + 
+        	'<input placeholder="姓名" disabled="disabled" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>' + 
+        	'<input placeholder="身份证号" disabled="disabled" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>' + 
+        	'<input placeholder="手机号" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>' + 
+        	'<button type="button" class="btn btn-secondary td_button readID" onclick="$.table.search()"><i class="fa fa-search"></i>读取身份证</button>' + 
+        	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus" style="color:#4F94CD;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' + 
+        	'<label onclick="addConsignee()" class = "plus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-plus" style="color:#fF0000;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label></td</tr>';
+	function addConsignee() {
+		var list=$(".consignee");
+		if(list.length == 3){
+			$.modal.alertWarning("最多三位被委托人")
+			return;
+		}
+		$('#notesBefore').before(consignee);
+	}
+	
+	function minusConsignee(e) {
+		$(e).closest(".consignee").remove();
+	} 	
+</script>
