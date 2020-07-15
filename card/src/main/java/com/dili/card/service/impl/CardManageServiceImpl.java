@@ -1,26 +1,32 @@
 package com.dili.card.service.impl;
 
-import com.dili.card.dto.CardRequestDto;
-import com.dili.card.dto.SerialDto;
-import com.dili.card.entity.BusinessRecordDo;
-import com.dili.card.entity.SerialRecordDo;
-import com.dili.card.exception.CardAppBizException;
-import com.dili.card.rpc.CardManageRpc;
-import com.dili.card.rpc.resolver.CardManageRpcResolver;
-import com.dili.card.service.ICardManageService;
-import com.dili.card.service.ISerialService;
-import com.dili.card.type.OperateType;
-import com.dili.card.type.TradeChannel;
-import com.dili.ss.domain.BaseOutput;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
+import com.dili.card.dto.CardRequestDto;
+import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.pay.BalanceResponseDto;
+import com.dili.card.entity.BusinessRecordDo;
+import com.dili.card.entity.SerialRecordDo;
+import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.CardManageRpc;
+import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
+import com.dili.card.rpc.resolver.CardManageRpcResolver;
+import com.dili.card.rpc.resolver.PayRpcResolver;
+import com.dili.card.service.ICardManageService;
+import com.dili.card.service.ISerialService;
+import com.dili.card.type.OperateType;
+import com.dili.card.type.TradeChannel;
+import com.dili.ss.constant.ResultCode;
+import com.dili.ss.domain.BaseOutput;
 
 
 /**
@@ -39,7 +45,10 @@ public class CardManageServiceImpl implements ICardManageService {
     private CardManageRpc cardManageRpc;
     @Resource
     private ISerialService serialService;
-
+    @Resource
+    private PayRpcResolver payRpcResolver;
+    @Resource
+    private AccountQueryRpcResolver accountQueryRpcResolver;
     /**
      * @param cardParam
      */
@@ -67,7 +76,13 @@ public class CardManageServiceImpl implements ICardManageService {
 
 	@Override
 	public void returnCard(CardRequestDto cardParam) {
-		cardManageRpc.returnCard(cardParam);
+		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findByAccountId(cardParam.getAccountId());
+        //余额校验
+		BalanceResponseDto  balanceResponseDto = payRpcResolver.findBalanceByFundAccountId(accountCard.getFundAccountId());
+        if (balanceResponseDto.getBalance() != 0L) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "卡余额不为0,不能退卡");
+        }
+		cardManageRpcResolver.returnCard(cardParam);
 	}
 
 	@Transactional(rollbackFor = Exception.class)

@@ -12,12 +12,12 @@
         vertical-align: middle;
     }
     .td_input{
-    	width: 200px; 
+    	width: 120px; 
     	float: left;
     	margin-right:25px;
     }
     .td_button{
-    	width: 150px; 
+    	width: 100px; 
     	float: left;
     }
 </style>
@@ -29,16 +29,18 @@
 	            <tr>
 	                <td class="info-column" >委托人</td>
 	                <td class="info-cell">
-	                	<input placeholder="姓名" name="userId" disabled="disabled" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
-	                	<input placeholder="身份证号" name="userId" disabled="disabled" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
+	                	<input placeholder="客户id" name="consignorCustomerId" disabled="disabled" type="hidden" class="form-control td_input"  id="consignorCustomerId" maxlength="50" value="1111"/>
+	                	<input placeholder="编号" name="consignorCustomerCode" disabled="disabled" type="hidden" class="form-control td_input"  id="consignorCustomerCode" maxlength="50" value="1111"/>
+	                	<input placeholder="姓名" name="consignorCustomerName" disabled="disabled" type="text" class="form-control td_input"  id="consignorCustomerName" maxlength="50" value="1111"/>
+	                	<input placeholder="身份证号" name="consignorCustomerIDCode" disabled="disabled" type="text" class="form-control td_input"  id="consignorCustomerIDCode" maxlength="50" value="1111"/>
 	                	<button id="query" type="button" class="btn btn-secondary td_button" onclick="$.table.search()"><i class="fa fa-search"></i>读取身份证</button>
 	                </td>
 	            </tr>
 	            <tr>
 	                <td class="info-column">委托人园区卡</td>
 	                <td class="info-cell">
-	                	<input placeholder="园区卡" disabled="disabled" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
-	                	<input disabled="disabled" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
+	                	<input placeholder="园区卡" disabled="disabled" name="cardNo" type="text" class="form-control td_input"  id="cardNo" maxlength="50" value="1111"/>
+	                	<input name="consignorAccountId" type="text" class="form-control td_input" style="opacity: 0;" id="consignorAccountId" maxlength="50" value="1111"/>
 	                	<button id="query" type="button" class="btn btn-secondary td_button" onclick="$.table.search()"><i class="fa fa-search"></i>请刷卡</button>
 	                </td>
 	            </tr>
@@ -47,15 +49,15 @@
 	                <td class="info-cell">
 	                	 <div class="form-inline">
 		                    <div class="input-group">
-		                        <input type="text" name="operateTimeStart" id="operateTimeStart" class="form-control laydatetime"/>
+		                        <input type="text" name="startTime" id="startTime" class="form-control laydate"/>
 		                        <div class="input-group-append">
-		                            <label for="operateTimeStart"  class="input-group-text fa fa-calendar"></label>
+		                            <label for="startTime"  class="input-group-text fa fa-calendar"></label>
 		                        </div>
 		                    </div>&nbsp;&nbsp;至&nbsp;&nbsp;
 		                    <div class="input-group">
-		                        <input type="text" name="operateTimeEnd" id="operateTimeEnd" class="form-control laydatetime"/>
+		                        <input type="text" name="endTime" id="endTime" class="form-control laydate"/>
 		                        <div class="input-group-append">
-		                            <label for="operateTimeEnd"  class="input-group-text fa fa-calendar"></label>
+		                            <label for="endTime"  class="input-group-text fa fa-calendar"></label>
 		                        </div>
 		                    </div>
                 		</div>
@@ -64,9 +66,9 @@
 	            <tr class="consignee">
 	                <td class="info-column">被委托人</td>
 	                <td class="info-cell">
-	                	<input placeholder="姓名" disabled="disabled" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
-	                	<input placeholder="身份证号" disabled="disabled" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
-	                	<input placeholder="手机号" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>
+	                	<input placeholder="姓名" disabled="disabled" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="50" value="1111"/>
+	                	<input placeholder="身份证号" disabled="disabled" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="50" value="1111"/>
+	                	<input placeholder="手机号" name="consigneeIdMobile" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="50" value="1111"/>
 	                	<button type="button" class="btn btn-secondary td_button readID" onclick="$.table.search()"><i class="fa fa-search"></i>读取身份证</button>
 	                	<label onclick="addConsignee()" class = "plus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-plus" style="color:#fF0000;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>
 	                </td>
@@ -74,7 +76,7 @@
 	            <tr id="notesBefore">
 	                <td class="info-column">备注</td>
 	                <td class="info-cell">
-	                	<textarea placeholder="委托备注" style="width:45%; " id="notes" name="notes"></textarea>
+	                	<textarea placeholder="委托备注" style="width:55%;" id="notes" name="notes"></textarea>
 	                </td>
 	            </tr>
 	        </table>
@@ -87,9 +89,9 @@
 	 * 添加被委托人信息
 	 */
 	let consignee='<tr class="consignee"><td class="info-column">被委托人</td><td class="info-cell">' + 
-        	'<input placeholder="姓名" disabled="disabled" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>' + 
-        	'<input placeholder="身份证号" disabled="disabled" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>' + 
-        	'<input placeholder="手机号" name="userId" type="text" class="form-control td_input"  id="userId" maxlength="50"/>' + 
+        	'<input placeholder="姓名" disabled="disabled" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="50"/>' + 
+        	'<input placeholder="身份证号" disabled="disabled" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="50"/>' + 
+        	'<input placeholder="手机号" name="consigneeIdMobile" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="50"/>' + 
         	'<button type="button" class="btn btn-secondary td_button readID" onclick="$.table.search()"><i class="fa fa-search"></i>读取身份证</button>' + 
         	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus" style="color:#4F94CD;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' + 
         	'<label onclick="addConsignee()" class = "plus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-plus" style="color:#fF0000;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label></td</tr>';
@@ -104,5 +106,36 @@
 	
 	function minusConsignee(e) {
 		$(e).closest(".consignee").remove();
-	} 	
+	}
+	function nextStep(){
+		data = {};
+		data.customerId=parseInt($('#consignorCustomerId').val());
+		data.consignorCustomerName=$('#consignorCustomerName').val();
+		data.cardNo=$('#cardNo').val();
+		data.consignorCustomerCode=$('#consignorCustomerCode').val();
+		data.consignorAccountId=parseInt($('#consignorAccountId').val());
+		data.startTime=$('#startTime').val();
+		data.endTime=$('#endTime').val();
+		let items = [];
+		let consigneeNames='';
+		$(".consignee").each(function () {
+			let item = {};
+			item.consigneeName=$(this).find("#consigneeName").val();
+			item.consigneeIdCode=$(this).find("#consigneeIdCode").val();
+			item.consigneeIdMobile=$(this).find("#consigneeIdMobile").val();
+			items.push(item);
+		})
+        data.consignors=items;
+	}
+	
+	function submitHandler(e){
+		nextStep();
+		alert(11);
+		$.operate.addWithTitleAndNext("/contract/addSec.html",'70%','98%','新增资金委托关系');
+	}
+	
+	function cancelHandler(e){
+		data = {};
+		return true;
+	}
 </script>

@@ -34,7 +34,7 @@ public class CardManageRpcResolver {
     public void returnCard(CardRequestDto cardParam) {
     	BaseOutput<?> baseOutput = cardManageRpc.returnCard(cardParam);
     	if (!baseOutput.isSuccess()) {
-    		throw new CardAppBizException(ResultCode.DATA_ERROR, "退卡失败");
+    		throw new CardAppBizException(ResultCode.DATA_ERROR, "退卡失败：" + baseOutput.getMessage());
 		}
     }
 
