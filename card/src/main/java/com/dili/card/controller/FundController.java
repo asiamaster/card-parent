@@ -10,6 +10,7 @@ import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
+import com.dili.card.service.recharge.RechargeTccTransactionManager;
 import com.dili.card.service.recharge.TradeContextHolder;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.validator.ConstantValidator;
@@ -44,6 +45,8 @@ public class FundController implements IControllerHandler {
     private IFundService fundService;
     @Autowired
     private IAccountQueryService accountQueryService;
+    @Autowired
+    private RechargeTccTransactionManager rechargeTccTransactionManager;
 
 
     /**
@@ -111,14 +114,14 @@ public class FundController implements IControllerHandler {
     public BaseOutput<?> recharge(@RequestBody @Validated({ConstantValidator.Update.class, FundValidator.Trade.class})
                                           FundRequestDto requestDto) {
         this.validateCommonParam(requestDto);
-        this.buildOperatorInfo(requestDto);
-        //由于需要两阶段提交，所以这里的充值逻辑需要分成两个事务
+        //this.buildOperatorInfo(requestDto);
         UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForRecharge(requestDto);
         try {
             //传递线程变量
             TradeContextHolder.putVal(TradeContextHolder.USER_ACCOUNT, userAccount);
-            fundService.createRecharge(requestDto);
-            fundService.recharge(requestDto);
+            rechargeTccTransactionManager.doTcc(requestDto);
+ //           fundService.createRecharge(requestDto);
+//            fundService.recharge(requestDto);
         } catch (CardAppBizException e) {
             return BaseOutput.failure(e.getMessage());
         } catch (Exception e) {

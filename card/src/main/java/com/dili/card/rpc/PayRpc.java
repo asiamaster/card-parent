@@ -3,6 +3,7 @@ package com.dili.card.rpc;
 import com.dili.card.config.PayServiceFeignConfig;
 import com.dili.card.dto.pay.*;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.tcc.common.Tcc;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +22,7 @@ public interface PayRpc {
     * @author miaoguoxin
     * @date 2020/7/1
     */
+    @Tcc
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.trade.service:commit", method = RequestMethod.POST)
     BaseOutput<TradeResponseDto> commitTrade(TradeRequestDto requestDto);
 
@@ -29,6 +31,7 @@ public interface PayRpc {
     * @author miaoguoxin
     * @date 2020/7/1
     */
+    @Tcc
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.trade.service:prepare", method = RequestMethod.POST)
     BaseOutput<CreateTradeResponseDto> preparePay(CreateTradeRequestDto createTradeRequest);
 

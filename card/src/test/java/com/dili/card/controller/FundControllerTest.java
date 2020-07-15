@@ -45,6 +45,7 @@ class FundControllerTest extends BaseTest {
 
     private String token;
 
+
     @BeforeEach
     public void before() throws Exception {
         this.token = this.createToken();
@@ -85,7 +86,7 @@ class FundControllerTest extends BaseTest {
         fundRequestDto.setOpNo("");
         fundRequestDto.setFirmId(1L);
         fundRequestDto.setFirmName("集团");
-        fundRequestDto.setAmount(1L);
+        fundRequestDto.setAmount(5L);
         fundRequestDto.setTradePwd("123456");
         fundRequestDto.setTradeChannel(TradeChannel.CASH.getCode());
 

@@ -101,7 +101,7 @@
             <if test="cardNo != null">`card_no` = #{cardNo},</if>
             <if test="amount != null">`amount` = #{amount},</if>
             <if test="applyUserId != null">`apply_user_id` = #{applyUserId},</if>
-            <if test="applyUserId != null">`apply_user_code` = #{applyUserCode},</if>
+            <if test="applyUserCode != null">`apply_user_code` = #{applyUserCode},</if>
             <if test="applyUserName != null">`apply_user_name` = #{applyUserName},</if>
             <if test="creatorId != null">`creator_id` = #{creatorId},</if>
             <if test="creator != null">`creator` = #{creator},</if>

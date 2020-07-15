@@ -25,10 +25,10 @@ import javax.annotation.Resource;
 public class CardManageController implements IControllerHandler {
     private static Logger LOGGER = LoggerFactory.getLogger(CardManageController.class);
 
-	@Resource
-	private ICardManageService cardManageService;
+    @Resource
+    private ICardManageService cardManageService;
 
-	   /**
+    /**
      * 退卡
      */
     @PostMapping("/returnCard.action")
@@ -66,44 +66,31 @@ public class CardManageController implements IControllerHandler {
     }
 
     /**
-    * 换卡
-    * @author miaoguoxin
-    * @date 2020/7/14
-    */
+     * 换卡
+     * @author miaoguoxin
+     * @date 2020/7/14
+     */
     @PostMapping("/changeCard.action")
     public BaseOutput<?> changeCard(@RequestBody CardRequestDto cardParam) {
-        try {
-            AssertUtils.notEmpty(cardParam.getLoginPwd());
-            this.validateCommonParam(cardParam);
-            this.buildOperatorInfo(cardParam);
-            cardManageService.changeCard(cardParam);
-            return BaseOutput.success();
-        } catch (CardAppBizException e) {
-            return BaseOutput.failure(e.getMessage());
-        } catch (Exception e) {
-            LOGGER.error("changeCard", e);
-            return BaseOutput.failure();
-        }
+        AssertUtils.notEmpty(cardParam.getLoginPwd());
+        AssertUtils.notEmpty(cardParam.getNewCardNo());
+        this.validateCommonParam(cardParam);
+        this.buildOperatorInfo(cardParam);
+        cardManageService.changeCard(cardParam);
+        return BaseOutput.success();
     }
 
     /**
-    * 挂失
-    * @author miaoguoxin
-    * @date 2020/7/14
-    */
+     * 挂失
+     * @author miaoguoxin
+     * @date 2020/7/14
+     */
     @PostMapping("/reportLossCard.action")
     public BaseOutput<?> reportLoss(@RequestBody CardRequestDto cardParam) {
-        try {
-            AssertUtils.notEmpty(cardParam.getLoginPwd());
-            this.validateCommonParam(cardParam);
-            this.buildOperatorInfo(cardParam);
-            cardManageService.reportLossCard(cardParam);
-            return BaseOutput.success();
-        } catch (CardAppBizException e) {
-            return BaseOutput.failure(e.getMessage());
-        } catch (Exception e) {
-            LOGGER.error("reportLossCard", e);
-            return BaseOutput.failure();
-        }
+        AssertUtils.notEmpty(cardParam.getLoginPwd());
+        this.validateCommonParam(cardParam);
+        this.buildOperatorInfo(cardParam);
+        cardManageService.reportLossCard(cardParam);
+        return BaseOutput.success();
     }
 }

@@ -39,15 +39,4 @@ public class ApplicationCommonController {
         return BaseOutput.successData(id);
     }
 
-    /**
-     *
-     * @author miaoguoxin
-     * @date 2020/7/7
-     */
-    @GetMapping("/test")
-    @ResponseBody
-    @ForbidDuplicateCommit
-    public BaseOutput<String> test() {
-        return BaseOutput.successData("成功");
-    }
 }

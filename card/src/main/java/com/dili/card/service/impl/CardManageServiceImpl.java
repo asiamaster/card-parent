@@ -10,6 +10,7 @@ import com.dili.card.rpc.resolver.CardManageRpcResolver;
 import com.dili.card.service.ICardManageService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.OperateType;
+import com.dili.card.type.TradeChannel;
 import com.dili.ss.domain.BaseOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,6 +114,8 @@ public class CardManageServiceImpl implements ICardManageService {
         BusinessRecordDo businessRecord = new BusinessRecordDo();
         serialService.buildCommonInfo(cardParam, businessRecord);
         businessRecord.setType(OperateType.LOSS_CARD.getCode());
+        businessRecord.setAmount(cardParam.getServiceFee());
+        businessRecord.setTradeChannel(TradeChannel.CASH.getCode());
         serialService.saveBusinessRecord(businessRecord);
 
         cardManageRpcResolver.reportLossCard(cardParam);
