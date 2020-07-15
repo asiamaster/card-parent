@@ -965,6 +965,39 @@ tab = {
                 };
                 $.modal.openOptions(options);
             },
+            // 添加下一步信息
+            addWithTitleAndNext: function (url, width, height, modalName) {
+                table.set();
+                let _url = url;
+                if ($.common.isEmpty(url)){
+                	_url = $.operate.addUrl(url);
+                }
+                let options = {
+                    title: modalName,
+                    width: width,
+                    height: height,
+                    content: _url,
+                    btns: [{
+                        label: '下一步', className: 'btn btn-primary container_center', onClick(e, $iframe) {
+                            try {
+                                return $iframe[0].contentWindow.submitHandler(e)
+                            } catch (ex) {
+                                console.log(ex);
+                                return false;
+                            }
+                        }
+                    },{
+                        label: '取消', className: 'btn btn-secondary container_center', onClick(e, $iframe) {
+                            try {
+                                return $iframe[0].contentWindow.cancelHandler(e)
+                            } catch (ex) {
+                                return true;
+                            }
+                        }
+                    }]
+                };
+                $.modal.openOptions(options);
+            },
             // 添加信息
             addWithTitle: function (id, width, height, modalName) {
                 table.set();
