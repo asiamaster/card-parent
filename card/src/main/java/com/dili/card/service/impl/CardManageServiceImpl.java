@@ -81,7 +81,7 @@ public class CardManageServiceImpl implements ICardManageService {
         if (balanceResponseDto.getBalance() != 0L) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "卡余额不为0,不能退卡");
         }
-		cardManageRpc.returnCard(cardParam);
+		cardManageRpcResolver.returnCard(cardParam);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
