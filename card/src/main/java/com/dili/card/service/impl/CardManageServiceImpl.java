@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +19,7 @@ import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
+import com.dili.card.rpc.resolver.CardManageRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.ICardManageService;
 import com.dili.card.service.ISerialService;
@@ -37,6 +38,8 @@ import com.dili.ss.domain.BaseOutput;
 public class CardManageServiceImpl implements ICardManageService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CardManageServiceImpl.class);
 
+    @Autowired
+    private CardManageRpcResolver cardManageRpcResolver;
     @Resource
     private CardManageRpc cardManageRpc;
     @Resource
@@ -68,7 +71,7 @@ public class CardManageServiceImpl implements ICardManageService {
             LOGGER.error("unLostCard", e);
         }
     }
-    
+
 
 	@Override
 	public void returnCard(CardRequestDto cardParam) {
@@ -97,6 +100,44 @@ public class CardManageServiceImpl implements ICardManageService {
             serialService.handleSuccess(serialDto);
         } catch (Exception e) {
             LOGGER.error("unLockCard", e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void changeCard(CardRequestDto cardParam) {
+        BusinessRecordDo businessRecord = new BusinessRecordDo();
+        serialService.buildCommonInfo(cardParam, businessRecord);
+        businessRecord.setType(OperateType.CHANGE.getCode());
+        serialService.saveBusinessRecord(businessRecord);
+
+        cardManageRpcResolver.changeCard(cardParam);
+
+        try {
+            //成功则修改状态及期初期末金额，存储操作流水
+            SerialDto serialDto = buildNoFundSerial(cardParam, businessRecord);
+            serialService.handleSuccess(serialDto);
+        } catch (Exception e) {
+            LOGGER.error("changeCard", e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void reportLossCard(CardRequestDto cardParam) {
+        BusinessRecordDo businessRecord = new BusinessRecordDo();
+        serialService.buildCommonInfo(cardParam, businessRecord);
+        businessRecord.setType(OperateType.LOSS_CARD.getCode());
+        serialService.saveBusinessRecord(businessRecord);
+
+        cardManageRpcResolver.reportLossCard(cardParam);
+
+        try {
+            //成功则修改状态及期初期末金额，存储操作流水
+            SerialDto serialDto = buildNoFundSerial(cardParam, businessRecord);
+            serialService.handleSuccess(serialDto);
+        } catch (Exception e) {
+            LOGGER.error("changeCard", e);
         }
     }
 

@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.service.ICardManageService;
+import com.dili.card.util.AssertUtils;
 import com.dili.ss.domain.BaseOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class CardManageController implements IControllerHandler {
 
 	@Resource
 	private ICardManageService cardManageService;
-	
+
 	   /**
      * 退卡
      */
@@ -62,5 +63,47 @@ public class CardManageController implements IControllerHandler {
         buildOperatorInfo(cardParam);
         cardManageService.unLockCard(cardParam);
         return BaseOutput.success();
+    }
+
+    /**
+    * 换卡
+    * @author miaoguoxin
+    * @date 2020/7/14
+    */
+    @PostMapping("/changeCard.action")
+    public BaseOutput<?> changeCard(@RequestBody CardRequestDto cardParam) {
+        try {
+            AssertUtils.notEmpty(cardParam.getLoginPwd());
+            this.validateCommonParam(cardParam);
+            this.buildOperatorInfo(cardParam);
+            cardManageService.changeCard(cardParam);
+            return BaseOutput.success();
+        } catch (CardAppBizException e) {
+            return BaseOutput.failure(e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("changeCard", e);
+            return BaseOutput.failure();
+        }
+    }
+
+    /**
+    * 挂失
+    * @author miaoguoxin
+    * @date 2020/7/14
+    */
+    @PostMapping("/reportLossCard.action")
+    public BaseOutput<?> reportLoss(@RequestBody CardRequestDto cardParam) {
+        try {
+            AssertUtils.notEmpty(cardParam.getLoginPwd());
+            this.validateCommonParam(cardParam);
+            this.buildOperatorInfo(cardParam);
+            cardManageService.reportLossCard(cardParam);
+            return BaseOutput.success();
+        } catch (CardAppBizException e) {
+            return BaseOutput.failure(e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("reportLossCard", e);
+            return BaseOutput.failure();
+        }
     }
 }

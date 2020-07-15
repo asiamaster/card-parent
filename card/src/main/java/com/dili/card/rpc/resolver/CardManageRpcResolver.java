@@ -17,7 +17,7 @@ import com.dili.ss.domain.BaseOutput;
 public class CardManageRpcResolver {
 	@Autowired
 	private CardManageRpc cardManageRpc ;
-	
+
 	/**
      * 解挂卡片
      */
@@ -27,7 +27,7 @@ public class CardManageRpcResolver {
     		throw new CardAppBizException(ResultCode.DATA_ERROR, "解挂卡片失败");
 		}
     }
-    
+
     /**
      * 退卡
      */
@@ -37,7 +37,7 @@ public class CardManageRpcResolver {
     		throw new CardAppBizException(ResultCode.DATA_ERROR, "退卡失败");
 		}
     }
-    
+
     /**
      * 重置密码
      */
@@ -47,6 +47,22 @@ public class CardManageRpcResolver {
     		throw new CardAppBizException(ResultCode.DATA_ERROR, "重置密码失败");
 		}
     }
-    
-    
+
+    /**
+    * 换卡
+    * @author miaoguoxin
+    * @date 2020/7/14
+    */
+    public void changeCard(CardRequestDto cardParam){
+    	GenericRpcResolver.resolver(cardManageRpc.changeCard(cardParam),"卡务换卡");
+	}
+
+	/**
+	* 挂失
+	* @author miaoguoxin
+	* @date 2020/7/14
+	*/
+	public void reportLossCard(CardRequestDto cardParam){
+		GenericRpcResolver.resolver(cardManageRpc.reportLossCard(cardParam),"卡务挂失卡片");
+	}
 }

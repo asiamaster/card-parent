@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
  * @Date: 2020/7/1 16:40
  */
 public class ApplyRecordQueryDto extends CardRequestDto {
-    /**卡号*/
-    private String cardNo;
     /**领取人id*/
     private Long applyUserId;
     /**领取人工号*/
@@ -37,14 +35,6 @@ public class ApplyRecordQueryDto extends CardRequestDto {
 
     public void setApplyUserId(Long applyUserId) {
         this.applyUserId = applyUserId;
-    }
-
-    public String getCardNo() {
-        return cardNo;
-    }
-
-    public void setCardNo(String cardNo) {
-        this.cardNo = cardNo;
     }
 
     public LocalDateTime getStartDate() {
