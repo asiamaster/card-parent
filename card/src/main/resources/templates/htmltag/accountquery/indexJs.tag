@@ -11,12 +11,17 @@
 
     function redirectToDetail() {
         let selectedCardNo = $.table.selectColumns("cardNo");
-        if ($.common.isEmpty(selectedCardNo)){
+        if ($.common.isEmpty(selectedCardNo)) {
             $.modal.alertWarning("请至少选中一行");
             return
         }
         let accountId = $.table.selectColumns("accountId");
-        window.location.href="${contextPath}/accountQuery/detailTab.html?cardNo="+selectedCardNo+"&accountId="+accountId
+        let params = {
+            cardNo: selectedCardNo,
+            accountId: accountId
+        };
+        let urlParams = $.common.jsonObj2UrlParams(params);
+        window.location.href = "${contextPath}/accountQuery/detailTab.html?" + urlParams
     }
 
     function cardNoFormatter(value, row, index, field) {
