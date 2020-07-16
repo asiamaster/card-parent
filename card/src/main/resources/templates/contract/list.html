@@ -117,7 +117,7 @@
 		<button id="btn_preview" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 合同预览</button>
 	</#resource>
 	<#resource code="viewContract">
-		<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'75%','80%')"><i class="fa fa-list"></i> 查看</button>
+		<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'80%','85%')"><i class="fa fa-list"></i> 查看</button>
 	</#resource>
 	<#resource code="cancleContract">
 		<button id="btn_reprint" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 补打</button>
@@ -361,9 +361,8 @@
             //必须加这个唯一标识
             uniqueId: "id",
 			url : "${contextPath}/contract/list.action",
-			createUrl : "${contextPath}/contract/addFirst.html",
 			detailUrl : "${contextPath}/contract/detail.html?id={id}",
-			removeUrl : "${contextPath}/contract/remove.html/{id}",
+			removeUrl : "${contextPath}/contract/remove.html?id={id}",
 			sortName : "create_time",
 			modalName : "查看资金委托信息"
 		};
