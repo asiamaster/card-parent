@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dili.card.dao.IUserCashDao">
+	
+	<insert id="save">
+		INSERT INTO card_user_cash (
+			cash_no,
+			`user_id`, 
+			`user_code`,
+			`user_name`, 
+			`action`, 
+			`cycle_no`, 
+			`amount`, 
+			`state`, 
+			`notes`, 
+			`firm_id`, 
+			`firm_name`, 
+			`creator_id`, 
+			`creator_code`, 
+			`creator`, 
+			`create_time`, 
+			`modify_time`
+		)
+		VALUES (
+			#{cashNo},
+			#{userId}, 
+			#{userCode},
+			#{userName}, 
+			#{action}, 
+			#{cycleNo}, 
+			#{amount}, 
+			#{state}, 
+			#{notes}, 
+			#{firmId}, 
+			#{firmName}, 
+			#{creatorId}, 
+			#{creatorCode},
+			#{creator}, 
+			NOW(), 
+			NOW()
+		)
+	</insert>
+	
+	<select id="getById" resultType="com.dili.card.entity.UserCashDo">
+		SELECT
+			`id`, 
+			cash_no,
+			`user_id`, 
+			`user_code`,
+			`user_name`, 
+			`action`, 
+			`cycle_no`, 
+			`amount`, 
+			`state`, 
+			`notes`, 
+			`firm_id`, 
+			`firm_name`, 
+			`creator_id`,
+			`creator_code`,  
+			`creator`, 
+			`create_time`, 
+			`modify_time`
+		FROM
+			card_user_cash
+		WHERE
+			id = #{id}
+	</select>
+	
+	<select id="findEntityByCondition" parameterType="com.dili.card.dto.UserCashDto" resultType="com.dili.card.entity.UserCashDo">
+		SELECT
+			`id`, 
+			cash_no,
+			`user_id`, 
+			`user_code`,
+			`user_name`, 
+			`action`, 
+			`cycle_no`, 
+			`amount`, 
+			`state`, 
+			`notes`, 
+			`creator_id`, 
+			`creator_code`, 
+			`creator`, 
+			`create_time`
+		FROM
+			card_user_cash
+		WHERE
+			firm_id = #{firmId}
+			<if test="cycleNo != null">AND cycle_no = #{cycleNo}</if>
+			<if test="userId != null"> AND user_id = #{userId}</if>
+			<if test="creatorId != null"> AND creator_id = #{creatorId}</if>
+			<if test="state != null"> AND state = #{state}</if>
+		ORDER BY create_time DESC
+	</select>
+	
+	<update id="update">
+		UPDATE card_user_cash
+	 	<set>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="userName != null">`user_name` = #{userName}, </if>
+			<if test="action != null">`action` = #{action}, </if>
+			<if test="cycleNo != null">`cycle_no` = #{cycleNo}, </if>
+			<if test="amount != null">`amount` = #{amount}, </if>
+			<if test="state != null">`state` = #{state}, </if>
+			<if test="notes != null">`notes` = #{notes}, </if>
+			<if test="firmId != null">`firm_id` = #{firmId}, </if>
+			<if test="firmName != null">`firm_name` = #{firmName}, </if>
+			<if test="creatorId != null">`creator_id` = #{creatorId}, </if>
+			<if test="creator != null">`creator` = #{creator}, </if>
+			<if test="modifyTime != null">`modify_time` = NOW()</if>
+		</set>
+		WHERE
+			id = #{id}
+	</update>
+	
+	<update id="updateStateByCycle">
+		UPDATE card_user_cash SET
+			`state` = #{state}
+		WHERE
+			`cycle_no` = #{cycleNo}
+	</update>
+</mapper>

@@ -1,0 +1,87 @@
+<style>
+    .info-column {
+        width: 10%;
+        font-weight: bold ;
+    }
+
+    .info-cell {
+        width: 15%;
+    }
+</style>
+<div class="main-container container-fluid">
+    <div>
+        <div class="panel-heading">
+            <h4 class="panel-title"><strong>基本信息</strong></h4>
+        </div>
+        <div class="panel-body" style="display: block;">
+            <table id="baseInfo" class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td class="info-column">卡号</td>
+                    <td class="info-cell">${detail.cardAssociation.primary.cardNo!}</td>
+                    <td class="info-column">卡类别</td>
+                    <td class="info-cell">${detail.cardAssociation.primary.cardTypeText!}</td>
+                    <td class="info-column">卡片状态</td>
+                    <td class="info-cell">${detail.cardAssociation.primary.cardStateText!}</td>
+                    <td class="info-column">账户状态</td>
+                    <td class="info-cell">${detail.cardAssociation.primary.accountStateText!}</td>
+                </tr>
+                <tr>
+                    <td class="info-column">可用余额</td>
+                    <td class="info-cell">${detail.accountFund.availableAmountText!}</td>
+                    <td class="info-column">冻结金额</td>
+                    <td class="info-cell">${detail.accountFund.frozenAmountText!}</td>
+                    <td class="info-column">创建人</td>
+                    <td class="info-cell">${detail.cardAssociation.primary.creator!}</td>
+                    <td class="info-column">创建时间</td>
+                    <td class="info-cell">${detail.cardAssociation.primary.cardCreateTime!}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        <div class="panel-heading">
+            <h4 class="panel-title"><strong>开卡人信息</strong></h4>
+        </div>
+        <div class="panel-body" style="display: block;">
+            <table id="customerInfo" class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td class="info-column">客户编号</td>
+                    <td class="info-cell">${detail.customer.code!}</td>
+                    <td class="info-column">客户名称</td>
+                    <td class="info-cell">${detail.customer.name!}</td>
+                    <td class="info-column">联系方式</td>
+                    <td class="info-cell">${detail.customer.contactsPhone!}</td>
+                    <td class="info-column">联系地址</td>
+                    <td class="info-cell">${detail.customer.certificateAddr!}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        <div class="panel-heading">
+            <h4 class="panel-title"><strong>关联卡信息</strong></h4>
+        </div>
+        <div class="panel-body" style="display: block;">
+            <table id="cardAssociation" class="table table-bordered">
+                <tbody>
+                <% for(item in detail.cardAssociation.association) { %>
+                <tr>
+                    <td class="info-column">卡号</td>
+                    <td class="info-cell">${item.cardNo!}</td>
+                    <td class="info-column">卡类别</td>
+                    <td class="info-cell">${item.cardTypeText!}</td>
+                    <td class="info-column">开卡时间</td>
+                    <td class="info-cell">${item.cardCreateTime!}</td>
+                    <td class="info-column">卡片状态</td>
+                    <td class="info-cell">${item.cardStateText!}</td>
+                </tr>
+                <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

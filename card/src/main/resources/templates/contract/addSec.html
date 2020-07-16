@@ -1,0 +1,76 @@
+<#bs4Body>
+<style>
+    .model-div{
+    	width:50%;
+    }
+	.per_div{
+		display: flex;
+    	justify-content: flex-start;
+    	height:50px;
+	}
+	.per_div_child{
+		margin-right:15px;
+	}
+	.div_container{
+		display:flex;
+        justify-content:center;
+        align-items:center;
+	}
+	.div_container_content{
+		height: 20px;width: 100px;text-align: center;line-height:20px;
+	}
+	.triangle {
+           border: 1px solid #333;
+           width: 140px;
+           height: 30px;
+           background: linear-gradient(
+              to top right,
+              rgba(255,255,255, 0.1) 0%,
+              rgba(255,255,255, 0.1) calc(50% - 1px),
+              rgba(0, 0, 0, 0.8) 50%,
+              rgba(255,255,255, 0.1) calc(50% + 1px),
+              rgba(255,255,255, 0.1) 100%
+           ), 
+          linear-gradient(
+              to bottom right,
+              rgba(255,255,255, 0.1) 0%,
+              rgba(255,255,255, 0.1) calc(50% - 1px),
+              rgba(0, 0, 0, 0.8) 50%,
+              rgba(255,255,255, 0.1) calc(50% + 1px),
+              rgba(255,255,255, 0.1) 100%
+           );
+		}
+</style>
+<div>
+	<div class="model-div">
+      	<div>
+	      	<h4 style="text-align:center">资金授权委托协议书</h4>
+			<p>寿光地利农产品物流园有限公司：</p>
+		    <p style="text-indent:2em">本人 <font color="#FC1D24">任荣芬</font> 与贵公司签订《资金委托协议书》，现委托 胡歌，霍建华 持本人 888800000001 园区卡，
+		       在2020 年 1 月 1 日 至 2020 年 12 月 31 日 规定时间内负责资金代取汇款业务，
+		       因此期间产生的所有纠纷由我本人全部承担。</p>
+		     <p>委托人：</p>
+		     <p style="text-indent:2em"> 名称：<font color="#FC1D24">任荣芬</font> ， 身份证号：<font color="#FC1D24">130503198803172421</font>， 联系电话：<font color="#FC1D24">15011203757</font></p>
+		     <p>被委托人：</p>
+		     <p style="text-indent:2em">名称：<font color="#FC1D24">胡歌</font> ， 身份证号：<font color="#FC1D24">130503198803172421</font>， 联系电话：<font color="#FC1D24">13699456272</font></p>
+		     <p style="text-indent:2em">名称：<font color="#FC1D24">霍建华</font>，身份证号：<font color="#FC1D24">130503198811203210</font>，联系电话：<font color="#FC1D24">13699457354</font></p>
+		  </div>
+		  <div style="height: 40px;margin-top: 30px;">
+		   		<div class="per_div">
+			   		<div style="width: 100px;" class="per_div_child"><p style="height: 30px;line-height:30px;">委托人签名：</p></div>
+			   		<div class="triangle per_div_child div_container" >
+			   			<div class="div_container_content"><span style="background-color: #FFFFFF;">委托人额发发发</span></div>
+			   		</div>
+			   		<button id="signature" style="height: 30px;" type="button" class="btn btn-primary per_div_child" onclick="$.table.search()">请签名</button>
+		   		</div>
+			   	<div class="per_div">
+			   		<div style="width: 100px;" class="per_div_child"><p style="height: 30px;line-height:30px;">被委托人签名：</p></div>
+			   		<div class="triangle per_div_child div_container">
+			   			<div class="div_container_content"><span style="background-color: #FFFFFF;">委托人</span></div>
+			   		</div>
+			   		<button id="signature" type="button" style="height: 30px;" class="btn btn-primary per_div_child" onclick="$.table.search()">请签名</button>
+		   		</div>
+		   </div>
+	</div>
+</div>    
+</#bs4Body>

@@ -1,0 +1,19 @@
+<#bs4Body>
+<style>
+	.div_model{
+		width:260px;
+		height:30px;
+		text-align: center;
+	}
+</style>
+<div style="text-align: center;">
+	<div id="div_model">
+		<form  id="queryForm" role="form" >
+			<input id="id" name="id" type="hidden" value="${usercash.id!}" class="form-control"/>
+        	<div class="form-group col-auto">
+                <label for="cardNo">确认删除对<font color="#FC1D24">${usercash.userName!}</font>发起的领款记录吗？</label>
+            </div>
+    	</form>
+	</div>
+</div>    
+</#bs4Body>
