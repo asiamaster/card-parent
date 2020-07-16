@@ -22,8 +22,8 @@
             }
         },
         selectFn: function (suggestion) {
-            $('#_applyUserCode').text(suggestion.serialNumber);
-            $('#applyUserCode').val(suggestion.serialNumber);
+            $('#_userCode').text(suggestion.serialNumber);
+            $('#userCode').val(suggestion.serialNumber);
         }
     };
 
