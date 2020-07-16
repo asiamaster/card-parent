@@ -246,7 +246,7 @@
 									maxlength="50" value="1111" />
 									<button type="button"
 										class="btn btn-secondary td_button readID"
-										onclick="$.table.search()">
+										onclick="readIDCode()">
 										<i class="fa fa-search"></i>读取身份证
 									</button> <label onclick="addConsignee()"
 									style="height: 34px; padding: 0px 15px;"><i
@@ -317,7 +317,8 @@
 							</div>
 						</div>
 						<button id="signature" style="height: 30px;" type="button"
-							class="btn btn-primary per_div_child" onclick="$.table.search()">请签名</button>
+							class="btn btn-primary per_div_child" onclick="signature()">请签名</button>
+							<input type="hidden" id="signatureImagePath" name="signatureImagePath" value="tt">
 					</div>
 				</div>
 				<div  id="consignorCustomer"></div>
@@ -325,7 +326,7 @@
 			<div style="display: table-cell; text-align: center;margin-top: 15px;margin-bottom:20px;">
 				<div style="width: 49%;float: left;">
 					<button type="button" class="btn btn-primary"
-					style="margin-right:50px;width: 100px;" onclick="">保存</button>
+					style="margin-right:50px;width: 100px;" onclick="submitData(this)">保存</button>
 				</div>
 				<div style="width: 49%;float: left;">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal"
@@ -372,10 +373,10 @@
 	 * 添加被委托人信息
 	 */
 	let consignee='<tr class="consignee"><td class="info-column">被委托人</td><td class="info-cell">' + 
-        	'<input placeholder="姓名" disabled="disabled" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="50"/>' + 
-        	'<input placeholder="身份证号" disabled="disabled" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="50"/>' + 
-        	'<input placeholder="手机号" name="consigneeIdMobile" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="50"/>' + 
-        	'<button type="button" class="btn btn-secondary td_button readID" onclick="$.table.search()"><i class="fa fa-search"></i>读取身份证</button>' + 
+        	'<input placeholder="姓名" disabled="disabled" value="3333" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="50"/>' + 
+        	'<input placeholder="身份证号" disabled="disabled" value="3333" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="50"/>' + 
+        	'<input placeholder="手机号" name="consigneeIdMobile" value="3333" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="50"/>' + 
+        	'<button type="button" class="btn btn-secondary td_button readID" onclick="readIDCode()"><i class="fa fa-search"></i>读取身份证</button>' + 
         	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus" style="color:#4F94CD;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' + 
         	'<label onclick="addConsignee()" class = "plus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-plus" style="color:#fF0000;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label></td</tr>';
 	
@@ -384,7 +385,7 @@
 					'<div class="triangle per_div_child div_container"><div class="div_container_content">' + 
 					'<span style="background-color: #FFFFFF;">consugneeName</span></div>' + 
 					'</div><button id="signature" type="button" style="height: 30px;"' + 
-					'class="btn btn-primary per_div_child" onclick="$.table.search()">请签名</button></div>'  	
+					'class="btn btn-primary per_div_child" onclick="signature()">请签名</button><input type="hidden" id="signatureImagePathConsugnee" name="signatureImagePathConsugnee" value="rr"></div>'; 	
         	
         	
     function addConsignee() {
@@ -447,8 +448,10 @@
 			'名称：<font color="#FC1D24">'+ data.consignors[i].consigneeName +'</font> ， 身份证号：<font color="#FC1D24">'+data.consignors[i].consigneeIdCode+'</font>，' + 
 			'联系电话：<font color="#FC1D24">'+data.consignors[i].consigneeIdMobile+'</font></p>';
 			let consugnee2 = consugnee1;
+			consugnee2 = consugnee2.replace("consugneeName", data.consignors[i].consigneeName);
+			consugnee2 = consugnee2.replace(new RegExp("signatureImagePathConsugnee","g"), "signatureImagePath" + i);
 			$("#consigneeAlls").append(consigneeReplace);
-			$("#consignorCustomer").append(consugnee2.replace("consugneeName", data.consignors[i].consigneeName));
+			$("#consignorCustomer").append(consugnee2);
 		}
 	}
 	
@@ -478,5 +481,23 @@
 			} 
 		})
 		$('#addFirstModal').modal('hide');
+	}
+	
+	function submitData(e){
+		data.signatureImagePath=$('#signatureImagePath').val();
+		for (i = 0; i < data.consignors.length; i++) {
+			var node  = '#signatureImagePath' + i;
+			data.consignors[i].signatureImagePath=$(node).val();
+		}
+		$.operate.post("/contract/save.action", data, e);
+	}
+	
+	/** 签名 */
+	function signature(){
+		
+	}
+	/** 读取身份证 */
+	function readIDCode(){
+		
 	}
 </script>
