@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * 卡相关rpc
  */
 @FeignClient(name = "account-service", contextId = "cardManageRpc",
-        path = "/api/card"  /**, url = "http://127.0.0.1:8186"*/)
+        path = "/api/card"  /*, url = "http://127.0.0.1:8186"*/)
 public interface CardManageRpc {
 
     /**
