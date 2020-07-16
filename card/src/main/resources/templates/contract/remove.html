@@ -22,11 +22,31 @@
 	</div>
 </div>    
 </#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <script>
+    let formId = "saveForm";
+    $("#" + formId).validate({
+        onkeyup: false,
+        rules: {
+        	notes: {
+                required: true,
+            }
+        },
+        messages: {
+        	notes: {
+                required: "解除原因必填",
+            }
+        },
+        focusCleanup: true
+    });
+    let url = "${contextPath}/contract/remove.action";
     function submitHandler(e) {
-        let url = "${contextPath}/contract/remove.action";
-        let data = $.common.formToJSON("saveForm");
-        $.operate.post(url,data);
+        if (!$.validate.form(formId)) {
+            return false;
+        }
+        let data = $.common.formToJSON(formId);
+        $.operate.save(url, JSON.stringify(data));
         return true;
     }
 </script>

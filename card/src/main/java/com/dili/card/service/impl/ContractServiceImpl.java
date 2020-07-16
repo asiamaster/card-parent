@@ -144,7 +144,7 @@ public class ContractServiceImpl implements IContractService {
 	 */
 	private void buildQueryContractConditon(FundContractQueryDto contractQueryDto) {
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		contractQueryDto.setFirmId(1L);
+		contractQueryDto.setFirmId(userTicket.getFirmId());
 		if (!StringUtils.isBlank(contractQueryDto.getCardNo())) {
 			// 构建卡数据
 			UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver
@@ -310,7 +310,7 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setContractNo(contractNo);
 		fundContractRequest.setContractNo(contractNo);
 		// 获取客户信息
-		Customer customer = customerRpcResolver.findCustomerById(fundContractRequest.getCustomerId());
+		Customer customer = customerRpcResolver.getWithNotNull(fundContractRequest.getCustomerId(), (userTicket.getFirmId()));
 		fundContractDo.setConsignorCustomerCode(customer.getCode());
 		fundContractDo.setConsignorCustomerId(customer.getId());
 		return fundContractDo;

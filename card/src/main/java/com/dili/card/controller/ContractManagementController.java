@@ -1,23 +1,23 @@
 package com.dili.card.controller;
 
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.service.IContractService;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.domain.BaseOutput;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.Map;
 
 /**
  * 合同管理
@@ -36,27 +36,27 @@ public class ContractManagementController implements IControllerHandler {
         return "contract/list";
     }
     
-    /**
-     * 添加页面 第一步
-     */
-    @GetMapping("/addFirst.html")
-    public String addFirstHtml() {
-        return "contract/addFirst";
-    }
-    
-    /**
-     * 添加页面 第二步
-     */
-    @GetMapping("/addSec.html")
-    public String addSecondHtml() {
-        return "contract/addSec";
-    }
+//    /**
+//     * 添加页面 第一步
+//     */
+//    @GetMapping("/addFirst.html")
+//    public String addFirstHtml() {
+//        return "contract/addFirst";
+//    }
+//    
+//    /**
+//     * 添加页面 第二步
+//     */
+//    @GetMapping("/addSec.html")
+//    public String addSecondHtml() {
+//        return "contract/addSec";
+//    }
 
     /**
      * 详情合同
      */
-    @GetMapping("/detail.html/{id}")
-    public String detail(@PathVariable Long id, ModelMap modelMap) {
+    @GetMapping("/detail.html")
+    public String detail(Long id, ModelMap modelMap) {
         modelMap.put("detail", iContractService.detail(id));
         return "contract/detail";
     }
@@ -64,8 +64,8 @@ public class ContractManagementController implements IControllerHandler {
     /**
      * 解除页面
      */
-    @GetMapping("/remove.html/{id}")
-    public String removeToPage(@PathVariable Long id, ModelMap modelMap) {
+    @GetMapping("/remove.html")
+    public String removeToPage(Long id, ModelMap modelMap) {
         modelMap.put("detail", iContractService.removeToPage(id));
         return "contract/remove";
     }

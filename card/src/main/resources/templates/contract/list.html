@@ -107,15 +107,27 @@
 </div>
 85
 <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
-	<button id="btn_add" type="button" class="btn btn-primary" onclick="openAddView()"><i class="fa fa-plus"></i> 新增</button>
-	<button id="btn_remove" type="button" class="btn btn-primary" onclick="$.operate.removeWithTitle(null,'40%','60%','信息确认')"><i class="fa fa-trash-o"></i> 解除</button>
-	<button id="btn_preview" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 合同预览</button>
-	<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'75%','80%')"><i class="fa fa-list"></i> 查看</button>
-    <button id="btn_reprint" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 补打</button>
-    <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
+	<#resource code="addContract">
+		<button id="btn_add" type="button" class="btn btn-primary" onclick="openAddView()"><i class="fa fa-plus"></i> 新增</button>
+	</#resource>
+	<#resource code="cancleContract">
+		<button id="btn_remove" type="button" class="btn btn-primary" onclick="$.operate.removeWithTitle(null,'40%','60%','信息确认')"><i class="fa fa-trash-o"></i> 解除</button>
+	</#resource>
+	<#resource code="cancleContract">
+		<button id="btn_preview" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 合同预览</button>
+	</#resource>
+	<#resource code="viewContract">
+		<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'80%','85%')"><i class="fa fa-list"></i> 查看</button>
+	</#resource>
+	<#resource code="cancleContract">
+		<button id="btn_reprint" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 补打</button>
+	</#resource>
+	<#resource code="cancleContract">
+		<button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
             class="fa fa-file-excel-o"></i>
-        导出
+        	导出
     </button>
+	</#resource>
 </div>
 
 <div class="row">
@@ -169,15 +181,15 @@
                <h5 style="height-line:45px;">新增资金委托关系</h5>
            </div>
 			<div class="modal-body" style="overflow:auto;">
-				 <form id="save-form">
-					<table id="out-detail" class="table table-bordered">
+				 <form id = "save_form">
+					<table id="contract-save" class="table table-bordered">
 						<tbody>
 							<tr>
 								<td class="info-column">委托人</td>
 								<td class="info-cell"><input placeholder="客户id"
-									name="consignorCustomerId" disabled="disabled" type="hidden"
-									class="form-control td_input" id="consignorCustomerId"
-									maxlength="50" value="1111" /> <input placeholder="编号"
+									name="customerId"  type="hidden"
+									class="form-control td_input" id="customerId"
+									maxlength="50" value="103" /> <input placeholder="编号"
 									name="consignorCustomerCode" disabled="disabled" type="hidden"
 									class="form-control td_input" id="consignorCustomerCode"
 									maxlength="50" value="1111" /> <input placeholder="姓名"
@@ -201,9 +213,9 @@
 								<td class="info-cell"><input placeholder="园区卡"
 									disabled="disabled" name="consignorCardNo" type="text"
 									class="form-control td_input" id="consignorCardNo" maxlength="50"
-									value="1111" /> <input name="consignorAccountId" type="text"
+									value="174" /> <input name="consignorAccountId" type="text"
 									class="form-control td_input" style="opacity: 0;"
-									id="consignorAccountId" maxlength="50" value="1111" />
+									id="consignorAccountId" maxlength="50" value="174" />
 									<button id="query" type="button"
 										class="btn btn-secondary td_button" onclick="$.table.search()">
 										<i class="fa fa-search"></i>请刷卡
@@ -283,13 +295,13 @@
                <h5 style="height-line:45px;">新增资金委托关系</h5>
            </div>
 			<div class="modal-body" style="overflow:auto;">
-				<div>
+				<div style="background-color: #FFFACD;">
 					<h4 style="text-align: center">资金授权委托协议书</h4>
 					<p>寿光地利农产品物流园有限公司：</p>
 					<p style="text-indent: 2em">
-						本人 <font color="#FC1D24"><span id="consignorCustomerName2"></span></font> 与贵公司签订《资金委托协议书》，
-						现委托<font color="#FC1D24"><span id="consigneeNames2"></span></font> 持本人
-						<font color="#FC1D24"><span id="cardNo2"></span></font>园区卡， 
+						本人 <font color="#FC1D24"><span id="consignorCustomerName2" style="text-decoration:underline;"></span></font> 与贵公司签订《资金委托协议书》，
+						现委托<font color="#FC1D24"><span id="consigneeNames2" style="text-decoration:underline;"></span></font> 持本人
+						<font color="#FC1D24"><span id="cardNo2" style="text-decoration:underline;"></span></font>园区卡， 
 						在<font color="#FC1D24"><span id="startTimeYear"></span></font>年
 						<font color="#FC1D24"><span id="startTimeMonth"></span></font>月
 						<font color="#FC1D24"><span id="startTimeDay"></span></font>日 
@@ -326,7 +338,7 @@
 			<div style="display: table-cell; text-align: center;margin-top: 15px;margin-bottom:20px;">
 				<div style="width: 49%;float: left;">
 					<button type="button" class="btn btn-primary"
-					style="margin-right:50px;width: 100px;" onclick="submitData(this)">保存</button>
+					style="margin-right:50px;width: 100px;" onclick="submitData()">保存</button>
 				</div>
 				<div style="width: 49%;float: left;">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal"
@@ -349,9 +361,8 @@
             //必须加这个唯一标识
             uniqueId: "id",
 			url : "${contextPath}/contract/list.action",
-			createUrl : "${contextPath}/contract/addFirst.html",
 			detailUrl : "${contextPath}/contract/detail.html?id={id}",
-			removeUrl : "${contextPath}/contract/remove.html/{id}",
+			removeUrl : "${contextPath}/contract/remove.html?id={id}",
 			sortName : "create_time",
 			modalName : "查看资金委托信息"
 		};
@@ -403,7 +414,7 @@
 	let data = {};
 	function nextStep(){
 		data = {};
-		data.customerId=parseInt($('#consignorCustomerId').val());
+		data.customerId=parseInt($('#customerId').val());
 		data.consignorCustomerName=$('#consignorCustomerName').val();
 		data.cardNo=$('#consignorCardNo').val();
 		data.consignorCustomerIDCode=$('#consignorCustomerIDCode').val();
@@ -463,7 +474,7 @@
 	}
 	
 	function cancleAddView(){
-		$('#consignorCustomerId').val('');
+		$('#customerId').val('');
 		$('#consignorCustomerName').val('');
 		$('#consignorCardNo').val('');
 		$('#consignorCustomerIDCode').val('');
@@ -483,21 +494,36 @@
 		$('#addFirstModal').modal('hide');
 	}
 	
-	function submitData(e){
+	function submitData(){
 		data.signatureImagePath=$('#signatureImagePath').val();
 		for (i = 0; i < data.consignors.length; i++) {
 			var node  = '#signatureImagePath' + i;
 			data.consignors[i].signatureImagePath=$(node).val();
 		}
-		$.operate.post("/contract/save.action", data, e);
-	}
-	
-	/** 签名 */
-	function signature(){
-		
-	}
-	/** 读取身份证 */
-	function readIDCode(){
-		
+		let config = {
+                url: "/contract/save.action",
+                type: "post",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(data),
+                success: function(result) {
+                	 if (result.code == web_status.SUCCESS) {
+                		$.modal.alertSuccess("保存成功！");
+                        $('#addSecondModal').modal('hide');
+                 		$("#consigneeAlls").empty();
+                 		$("#consignorCustomer").empty();
+                 		cancleAddView();
+                		$.table.refresh();
+                     } else if (result.code == web_status.WARNING) {
+                         $.modal.alertWarning(result.message);
+                     } else {
+                         $.modal.alertError(result.message);
+                     }
+                },
+                error: function (status, result) {
+                    $.modal.hide();
+                }
+            };
+            $.ajax(config)
 	}
 </script>
