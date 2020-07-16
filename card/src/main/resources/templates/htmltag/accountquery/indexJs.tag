@@ -15,7 +15,8 @@
             $.modal.alertWarning("请至少选中一行");
             return
         }
-        window.location.href="${contextPath}/accountQuery/detailTab.html?cardNo="+selectedCardNo
+        let accountId = $.table.selectColumns("accountId");
+        window.location.href="${contextPath}/accountQuery/detailTab.html?cardNo="+selectedCardNo+"&accountId="+accountId
     }
 
     function cardNoFormatter(value, row, index, field) {
