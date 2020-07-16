@@ -31,6 +31,16 @@ public class UserAccountCardResponseDto implements Serializable {
     private Long fundAccountId;
     /**客户id*/
     private Long customerId;
+    /**客户名称*/
+    private String customerName;
+    /**客户编号*/
+    private String customerCode;
+    /**客户身份类型*/
+    private String customerCertificateType;
+    /**客户身份号*/
+    private String customerCertificateNumber;
+    /**客户电话*/
+    private String customerCellphone;
     /** 使用权限(充值、提现、交费等) {@link com.dili.account.type.UsePermissionType} */
     private List<String> permissionList;
     /** 卡ID */
@@ -184,5 +194,45 @@ public class UserAccountCardResponseDto implements Serializable {
 
     public void setCardCreateTime(LocalDateTime cardCreateTime) {
         this.cardCreateTime = cardCreateTime;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+    public String getCustomerCertificateType() {
+        return customerCertificateType;
+    }
+
+    public void setCustomerCertificateType(String customerCertificateType) {
+        this.customerCertificateType = customerCertificateType;
+    }
+
+    public String getCustomerCertificateNumber() {
+        return customerCertificateNumber;
+    }
+
+    public void setCustomerCertificateNumber(String customerCertificateNumber) {
+        this.customerCertificateNumber = customerCertificateNumber;
+    }
+
+    public String getCustomerCellphone() {
+        return customerCellphone;
+    }
+
+    public void setCustomerCellphone(String customerCellphone) {
+        this.customerCellphone = customerCellphone;
     }
 }

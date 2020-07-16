@@ -13,7 +13,7 @@ import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
-import com.dili.card.service.*;
+import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.IPayService;
@@ -138,7 +138,9 @@ public class FundServiceImpl implements IFundService {
         businessRecord.setNotes(requestDto.getMark());
         serialService.saveBusinessRecord(businessRecord);
 
-        payService.frozenFund(accountCard.getFundAccountId(), requestDto.getAmount());
+        payService.frozenFund(accountCard.getAccountId(),
+                accountCard.getFundAccountId(),
+                requestDto.getAmount());
 
         SerialDto serialDto = new SerialDto();
         serialService.handleSuccess(serialDto);
@@ -204,4 +206,9 @@ public class FundServiceImpl implements IFundService {
         }
         return serialDto;
     }
+
+	@Override
+	public void unfrozen(FundRequestDto fundRequestDto) {
+		
+	}
 }

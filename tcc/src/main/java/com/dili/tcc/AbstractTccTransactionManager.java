@@ -34,64 +34,13 @@ public abstract class AbstractTccTransactionManager<R, T> {
         try {
             this.initContext();
             this.doPrepare(requestDto);
-            return this.doCommit(requestDto);
+            return this.doConfirm(requestDto);
         } finally {
             LOGGER.info("tcc执行结束，开始clean up");
             TccContextHolder.remove();
         }
     }
 
-    /**
-     * confirm阶段失败进行重试操作
-     * @author miaoguoxin
-     * @date 2020/7/14
-     */
-    private R doCommit(T requestDto) {
-        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        TransactionStatus status = transactionManager.getTransaction(def);
-        TccContext tccContext = TccContextHolder.get();
-        try {
-            tccContext.changeStatus(TccStatus.CONFIRM);
-            R result = this.confirm(requestDto);
-            LOGGER.info("开始执行confirm阶段");
-            transactionManager.commit(status);
-            return result;
-        } catch (Throwable e) {
-            //先清理上个阶段的
-            // tccContext.clearPrevious();
-            this.doConfirm(requestDto, tccContext);
-
-            //进入confirm说明try阶段已经成功，资源已预添加，
-            //通常是update操作，需要等重试操作完成后再rollback
-            //否则如果先rollback，可能导致重试confirm变成无效操作
-            transactionManager.rollback(status);
-            throw e;
-        }
-    }
-
-    private void doPrepare(T requestDto) {
-        DefaultTransactionDefinition prepareDef = new DefaultTransactionDefinition();
-        prepareDef.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        TransactionStatus prepareDefStatus = transactionManager.getTransaction(prepareDef);
-        TccContext tccContext = TccContextHolder.get();
-        try {
-            tccContext.changeStatus(TccStatus.PRE);
-            this.prepare(requestDto);
-            LOGGER.info("开始执行try阶段");
-            transactionManager.commit(prepareDefStatus);
-        } catch (Exception e) {
-            //这里考虑到try阶段通常是insert操作，应尽早结束事务，
-            // 否则后续cancel操作如果重试多次，可能导致后续新业务失败
-            transactionManager.rollback(prepareDefStatus);
-
-            tccContext.changeStatus(TccStatus.CANCEL);
-            //先清理上个阶段的
-            tccContext.clearPrevious();
-            this.doCancel(requestDto, tccContext);
-            throw e;
-        }
-    }
 
     /**
      * try阶段
@@ -116,12 +65,68 @@ public abstract class AbstractTccTransactionManager<R, T> {
     protected abstract void cancel(T requestDto);
 
 
-    private void doCancel(T requestDto, TccContext tccContext) {
+    private void doPrepare(T requestDto) {
+        DefaultTransactionDefinition prepareDef = new DefaultTransactionDefinition();
+        prepareDef.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus prepareDefStatus = transactionManager.getTransaction(prepareDef);
+        TccContext tccContext = TccContextHolder.get();
+        try {
+            tccContext.changeStatus(TccStatus.PRE);
+            this.prepare(requestDto);
+            LOGGER.info("开始执行try阶段");
+            transactionManager.commit(prepareDefStatus);
+        } catch (Exception e) {
+            //这里考虑到try阶段通常是insert操作，应尽早结束事务，
+            // 否则后续cancel操作如果重试多次，可能导致后续新业务失败
+            transactionManager.rollback(prepareDefStatus);
+
+            tccContext.changeStatus(TccStatus.CANCEL);
+            //先清理上个阶段的
+            tccContext.clearPrevious();
+            this.doCancelAndRetry(requestDto, tccContext);
+            throw e;
+        }
+    }
+
+    /**
+     * confirm阶段失败进行重试操作
+     * @author miaoguoxin
+     * @date 2020/7/14
+     */
+    private R doConfirm(T requestDto) {
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus status = transactionManager.getTransaction(def);
+        TccContext tccContext = TccContextHolder.get();
+        try {
+            tccContext.changeStatus(TccStatus.CONFIRM);
+            R result = this.confirm(requestDto);
+            LOGGER.info("开始执行confirm阶段");
+            transactionManager.commit(status);
+            return result;
+        } catch (Throwable e) {
+            //先清理上个阶段的
+            // tccContext.clearPrevious();
+            this.doConfirmAndRetry(requestDto, tccContext);
+
+            //进入confirm说明try阶段已经成功，资源已预添加，
+            //通常是update操作，需要等重试操作完成后再rollback
+            //否则如果先rollback，可能导致重试confirm变成无效操作
+            transactionManager.rollback(status);
+            throw e;
+        }
+    }
+
+    private void doCancelAndRetry(T requestDto, TccContext tccContext) {
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus status = transactionManager.getTransaction(def);
         try {
             LOGGER.info("try阶段发生异常，开始执行cancel阶段回滚");
             this.cancel(requestDto);
+            transactionManager.commit(status);
         } catch (Throwable e) {
-            e.printStackTrace();
+            transactionManager.rollback(status);
             if (tccContext.getRetryNum() < MAX_RETRY) {
                 try {
                     Thread.sleep(RETRY_INTERVAL_MS);
@@ -131,19 +136,18 @@ public abstract class AbstractTccTransactionManager<R, T> {
                 }
                 tccContext.incRetryNum();
                 LOGGER.info("cancel阶段异常，开始进行重试，当前第【{}】次重试", tccContext.getRetryNum());
-                this.doCancel(requestDto, tccContext);
+                this.doCancelAndRetry(requestDto, tccContext);
             } else {
                 throw e;
             }
         }
     }
 
-    private R doConfirm(T requestDto, TccContext tccContext) {
+    private R doConfirmAndRetry(T requestDto, TccContext tccContext) {
         R result;
         try {
             result = this.confirm(requestDto);
         } catch (Throwable e) {
-            e.printStackTrace();
             if (tccContext.getRetryNum() < MAX_RETRY) {
                 try {
                     Thread.sleep(RETRY_INTERVAL_MS);
@@ -153,7 +157,7 @@ public abstract class AbstractTccTransactionManager<R, T> {
                 }
                 tccContext.incRetryNum();
                 LOGGER.info("confirm阶段异常，开始进行重试，当前第【{}】次重试", tccContext.getRetryNum());
-                result = this.doConfirm(requestDto, tccContext);
+                result = this.doConfirmAndRetry(requestDto, tccContext);
             } else {
                 throw e;
             }

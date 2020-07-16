@@ -1,6 +1,10 @@
 package com.dili.card.service;
 
-import com.dili.card.dto.pay.*;
+import com.dili.card.dto.pay.BalanceRequestDto;
+import com.dili.card.dto.pay.BalanceResponseDto;
+import com.dili.card.dto.pay.CreateTradeRequestDto;
+import com.dili.card.dto.pay.TradeRequestDto;
+import com.dili.card.dto.pay.TradeResponseDto;
 
 /**
  * 用于处理支付对接的service接口
@@ -23,10 +27,10 @@ public interface IPayService {
     TradeResponseDto commitWithdraw(TradeRequestDto withdrawRequest);
 
     /**
-    * 提交交易
-    * @author miaoguoxin
-    * @date 2020/7/8
-    */
+     * 提交交易
+     * @author miaoguoxin
+     * @date 2020/7/8
+     */
     TradeResponseDto commitTrade(TradeRequestDto requestDto);
 
     /**
@@ -37,10 +41,10 @@ public interface IPayService {
     BalanceResponseDto queryBalance(BalanceRequestDto balanceRequestDto);
 
     /**
-    * 冻结资金
-    * @author miaoguoxin
-    * @date 2020/6/30
-    */
-    Long frozenFund(Long fundAccountId, Long amount);
+     * 冻结资金
+     * @author miaoguoxin
+     * @date 2020/6/30
+     */
+    Long frozenFund(Long accountId, Long fundAccountId, Long amount);
 
 }

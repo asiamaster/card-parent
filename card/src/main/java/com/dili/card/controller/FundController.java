@@ -104,6 +104,27 @@ public class FundController implements IControllerHandler {
     }
 
     /**
+     * 解冻资金
+     */
+    @PostMapping("unfrozen.action")
+    @ResponseBody
+    public BaseOutput<?> unfrozen(@RequestBody @Validated(ConstantValidator.Update.class)
+                                        FundRequestDto requestDto) {
+        this.validateCommonParam(requestDto);
+        this.buildOperatorInfo(requestDto);
+        try {
+            fundService.frozen(requestDto);
+            return BaseOutput.success();
+        } catch (CardAppBizException e) {
+            return BaseOutput.failure(e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("冻结资金失败", e);
+            LOGGER.error("冻结资金请求参数:{}", JSON.toJSONString(requestDto));
+            return BaseOutput.failure();
+        }
+    }
+    
+    /**
      * 充值
      * @author miaoguoxin
      * @date 2020/7/6
@@ -114,7 +135,7 @@ public class FundController implements IControllerHandler {
     public BaseOutput<?> recharge(@RequestBody @Validated({ConstantValidator.Update.class, FundValidator.Trade.class})
                                           FundRequestDto requestDto) {
         this.validateCommonParam(requestDto);
-        //this.buildOperatorInfo(requestDto);
+        this.buildOperatorInfo(requestDto);
         UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForRecharge(requestDto);
         try {
             //传递线程变量

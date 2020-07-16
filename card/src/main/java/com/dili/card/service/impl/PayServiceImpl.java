@@ -48,8 +48,12 @@ public class PayServiceImpl implements IPayService {
 
 
     @Override
-    public Long frozenFund(Long fundAccountId, Long amount) {
-        return payRpcResolver.postFrozenFund(fundAccountId, amount);
+    public Long frozenFund(Long accountId, Long fundAccountId, Long amount) {
+        CreateTradeRequestDto requestDto = new CreateTradeRequestDto();
+        requestDto.setAmount(amount);
+        requestDto.setAccountId(fundAccountId);
+        requestDto.setBusinessId(accountId);
+        return payRpcResolver.postFrozenFund(requestDto);
     }
 
 

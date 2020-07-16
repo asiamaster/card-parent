@@ -64,6 +64,7 @@ public class AccountQueryManagementController implements IControllerHandler {
         }
         UserAccountCardResponseDto userAccount = accountQueryService.getByCardNoWithReturnState(cardNo);
         map.put("isMaster", CardType.isMaster(userAccount.getCardType()));
+        map.put("cardState",userAccount.getCardState());
         return "accountquery/detailTab";
     }
 
