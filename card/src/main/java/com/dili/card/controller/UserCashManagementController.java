@@ -1,23 +1,23 @@
 package com.dili.card.controller;
 
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.UserCashDto;
 import com.dili.card.service.IUserCashService;
 import com.dili.card.type.CashAction;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.domain.BaseOutput;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.Map;
 
 /**
  * 现金管理
@@ -86,8 +86,8 @@ public class UserCashManagementController implements IControllerHandler {
     /**
      * 修改数据页面
      */
-    @GetMapping("/modify.html/{id}")
-    public String modify(@PathVariable Long id, ModelMap modelMap) {
+    @GetMapping("/modify.html")
+    public String modify(Long id, ModelMap modelMap) {
         modelMap.put("usercash", iUserCashService.detail(id));
         return "usercash/modify";
     }
@@ -96,8 +96,8 @@ public class UserCashManagementController implements IControllerHandler {
     /**
      * 删除数据页面
      */
-    @GetMapping("/delete.html/{id}")
-    public String delete(@PathVariable Long id, ModelMap modelMap) {
+    @GetMapping("/delete.html")
+    public String delete(Long id, ModelMap modelMap) {
         modelMap.put("usercash", iUserCashService.detail(id));
         return "usercash/delete";
     }

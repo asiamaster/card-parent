@@ -16,7 +16,7 @@
     }
 </style>
     <div id="detail-modal" >
-    	<form id="save-form">
+    	<form id="save-form" style="width: 90%;">
     		<input id="id" name="id" type="hidden" value="${usercash.id!}" class="form-control"/>
     		<input id="action" name="action" type="hidden" value="${usercash.action!}" class="form-control"/>
 	        <table id="out-detail" class="table table-bordered" >
@@ -37,10 +37,10 @@
 	                	<input id="amount" name="amount" type="text" value="${usercash.amountYuan!}" class="form-control"/>
 	                </td>
 	            </tr>
-	            <tr>
-	                <td class="info-column vertical-td">大写金额</td>
-	                <td class="info-cell"></td>
-	            </tr>
+	           	<tr>
+					<td class="info-column">大写金额</td>
+					<td class="info-cell" style="word-wrap:break-word;word-break:break-all;"><font color="#FC1D24"><strong><span  id="bigAmount"></span></strong></font></td>
+				</tr>
 	             <tr>
 	                <td class="info-column vertical-td">备注</td>
 	                <td class="info-cell">
@@ -53,3 +53,11 @@
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <#common_userJs/>
+<script>
+$(function(){
+	$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amount').val())));
+	$('#amount').bind(' input propertychange ', function(){
+		$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amount').val())));
+	} );
+});
+</script>
