@@ -48,6 +48,12 @@ public interface IAccountQueryService {
     * @date 2020/7/2
     */
     UserAccountCardResponseDto getByCardNo(String cardNo);
+    /**
+     * 根据卡号查询（只查询卡账户信息）,包含退换状态
+     * @author miaoguoxin
+     * @date 2020/7/2
+     */
+    UserAccountCardResponseDto getByCardNoWithReturnState(String cardNO);
 
     /**
     *  根据accountId，会进行合法性校验

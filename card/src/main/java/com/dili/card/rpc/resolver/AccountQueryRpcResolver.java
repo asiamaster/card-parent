@@ -9,6 +9,7 @@ import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +95,21 @@ public class AccountQueryRpcResolver {
      */
     public UserAccountCardResponseDto findByCardNo(String cardNo) {
         return this.findBacthByCardNos(Collections.singletonList(cardNo)).get(0);
+    }
+
+    /**
+     * 通过卡号查询单个账户信息,包含退换状态
+     */
+    public UserAccountCardResponseDto findByCardNoWithReturnState(String cardNo){
+        UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
+        userAccountCardQuery.setCardNos(Lists.newArrayList(cardNo));
+        userAccountCardQuery.setExcludeReturn(0);
+        BaseOutput<List<UserAccountCardResponseDto>> baseOutput = accountQueryRpc.findUserCards(userAccountCardQuery);
+        List<UserAccountCardResponseDto> result = GenericRpcResolver.resolver(baseOutput, "查询账户信息（包含退换状态）");
+        if (CollectionUtils.isEmpty(result)){
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "卡信息不存在");
+        }
+        return result.get(0);
     }
 
     /**
