@@ -29,6 +29,7 @@ public enum OperateType
 	PAYEE("领款", 25),
 	PAYER("交款", 26),
 	FROZEN_FUND("冻结资金",27),
+	UNFROZEN_FUND("解冻资金",28),
 	;
 
 	private String name;

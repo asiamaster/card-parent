@@ -206,4 +206,9 @@ public class FundServiceImpl implements IFundService {
         }
         return serialDto;
     }
+
+	@Override
+	public void unfrozen(FundRequestDto fundRequestDto) {
+		
+	}
 }
