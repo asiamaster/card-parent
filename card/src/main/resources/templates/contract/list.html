@@ -28,7 +28,7 @@
     .per_div{
 		display: flex;
     	justify-content: flex-start;
-    	height:50px;
+    	height:40px;
 	}
 	.per_div_child{
 		margin-right:15px;
@@ -163,15 +163,13 @@
     </div>
 </div>
 <div class="modal fade" id="addFirstModal" tabindex="-1" role="dialog" aria-labelledby="addFirstModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 820px;height: 445px;">
-		<div class="modal-content" style="width: 820px;height: 445px;">
+    <div class="modal-dialog" style="width: 830px;height: 450px;">
+		<div class="modal-content" style="width: 830px;height: 450px;">
 			<div class="modal-header" style="background-color: #E6E6E6;height: 45px;">
                <h5 style="height-line:45px;">新增资金委托关系</h5>
            </div>
 			<div class="modal-body" style="overflow:auto;">
-				<form id="save-form">
-					<input id="action" name="action" type="hidden"
-						value="${usercash.action!}" class="form-control" />
+				 <form id="save-form">
 					<table id="out-detail" class="table table-bordered">
 						<tbody>
 							<tr>
@@ -201,8 +199,8 @@
 							<tr>
 								<td class="info-column">委托人园区卡</td>
 								<td class="info-cell"><input placeholder="园区卡"
-									disabled="disabled" name="cardNo" type="text"
-									class="form-control td_input" id="cardNo" maxlength="50"
+									disabled="disabled" name="consignorCardNo" type="text"
+									class="form-control td_input" id="consignorCardNo" maxlength="50"
 									value="1111" /> <input name="consignorAccountId" type="text"
 									class="form-control td_input" style="opacity: 0;"
 									id="consignorAccountId" maxlength="50" value="1111" />
@@ -250,7 +248,7 @@
 										class="btn btn-secondary td_button readID"
 										onclick="$.table.search()">
 										<i class="fa fa-search"></i>读取身份证
-									</button> <label onclick="addConsignee()" class="plus"
+									</button> <label onclick="addConsignee()"
 									style="height: 34px; padding: 0px 15px;"><i
 										class="fa fa-plus"
 										style="color: #fF0000; font-size: 20px; margin-top: 7px;"
@@ -270,8 +268,8 @@
 					style="margin-right:50px;width: 100px;" onclick="nextStepView()">下一步</button>
 				</div>
 				<div style="width: 49%;float: left;">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"
-					style="margin-left:50px;width: 100px;">取消</button>
+					<button type="button" class="btn btn-secondary"
+					style="margin-left:50px;width: 100px;" onclick="cancleAddView()">取消</button>
 				</div>
 			</div>
 		</div>
@@ -289,31 +287,24 @@
 					<h4 style="text-align: center">资金授权委托协议书</h4>
 					<p>寿光地利农产品物流园有限公司：</p>
 					<p style="text-indent: 2em">
-						本人 <font color="#FC1D24"><span id="consignorCustomerName2">荣芬</span></font> 与贵公司签订《资金委托协议书》，
-						现委托<font color="#FC1D24"><span id="consigneeNames"> 胡歌，霍建华</span></font> 持本人
-						<font color="#FC1D24"><span id="cardNo2">888800000001</span></font> 园区卡， 
-						在<font color="#FC1D24"><span id="startTimeYear">2020</span></font> 年
-						<font color="#FC1D24"><span id="startTimeMouth">1</span></font>月
-						<font color="#FC1D24"><span id="startTimeDay">1</span></font>日 
-						 至 <font color="#FC1D24"><span id="endTimeYear">2020</span></font>年
-						<font color="#FC1D24"><span id="endTimeMonth">12</span></font>月
-						<font color="#FC1D24"><span id="endTimeDay">12</span></font> 日
+						本人 <font color="#FC1D24"><span id="consignorCustomerName2"></span></font> 与贵公司签订《资金委托协议书》，
+						现委托<font color="#FC1D24"><span id="consigneeNames2"></span></font> 持本人
+						<font color="#FC1D24"><span id="cardNo2"></span></font>园区卡， 
+						在<font color="#FC1D24"><span id="startTimeYear"></span></font>年
+						<font color="#FC1D24"><span id="startTimeMonth"></span></font>月
+						<font color="#FC1D24"><span id="startTimeDay"></span></font>日 
+						 至 <font color="#FC1D24"><span id="endTimeYear"></span></font>年
+						<font color="#FC1D24"><span id="endTimeMonth"></span></font>月
+						<font color="#FC1D24"><span id="endTimeDay"></span></font>日
 						规定时间内负责资金代取汇款业务， 因此期间产生的所有纠纷由我本人全部承担。
 					</p>
-					<p>委托人：</p>
+					<p >委托人：</p>
 					<p style="text-indent: 2em">
-						名称：<font color="#FC1D24"><span id="consignorCustomerName3">荣芬</span></font> ， 身份证号：<font color="#FC1D24"><span id="consignorCustomerIDCode2">130503198803172421</span></font>，
-						联系电话：<font color="#FC1D24"><span id="consignorCustomerMobile2">15011203757</span></font>
+						名称：<font color="#FC1D24"><span id="consignorCustomerName3"></span></font> ， 身份证号：<font color="#FC1D24"><span id="consignorCustomerIDCode2"></span></font>，
+						联系电话：<font color="#FC1D24"><span id="consignorCustomerMobile2"></span></font>
 					</p>
 					<p>被委托人：</p>
-					<p style="text-indent: 2em">
-						名称：<font color="#FC1D24">胡歌</font> ， 身份证号：<font color="#FC1D24">130503198803172421</font>，
-						联系电话：<font color="#FC1D24">13699456272</font>
-					</p>
-					<p style="text-indent: 2em">
-						名称：<font color="#FC1D24">霍建华</font>，身份证号：<font color="#FC1D24">130503198811203210</font>，联系电话：<font
-							color="#FC1D24">13699457354</font>
-					</p>
+					<div id="consigneeAlls"></div>
 				</div>
 				<div style="height: 40px; margin-top: 15px;">
 					<div class="per_div">
@@ -322,25 +313,14 @@
 						</div>
 						<div class="triangle per_div_child div_container">
 							<div class="div_container_content">
-								<span style="background-color: #FFFFFF;">委托人额发发发</span>
+								<span style="background-color: #FFFFFF;" id="consignorCustomerName4"></span>
 							</div>
 						</div>
 						<button id="signature" style="height: 30px;" type="button"
 							class="btn btn-primary per_div_child" onclick="$.table.search()">请签名</button>
 					</div>
-					<div class="per_div">
-						<div style="width: 100px;" class="per_div_child">
-							<p style="height: 30px; line-height: 30px;">被委托人签名：</p>
-						</div>
-						<div class="triangle per_div_child div_container">
-							<div class="div_container_content">
-								<span style="background-color: #FFFFFF;">委托人</span>
-							</div>
-						</div>
-						<button id="signature" type="button" style="height: 30px;"
-							class="btn btn-primary per_div_child" onclick="$.table.search()">请签名</button>
-					</div>
 				</div>
+				<div  id="consignorCustomer"></div>
 			</div>
 			<div style="display: table-cell; text-align: center;margin-top: 15px;margin-bottom:20px;">
 				<div style="width: 49%;float: left;">
@@ -349,7 +329,7 @@
 				</div>
 				<div style="width: 49%;float: left;">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal"
-					style="margin-left:50px;width: 100px;">返回</button>
+					style="margin-left:50px;width: 100px;" onclick="backToFirst()">返回</button>
 				</div>
 			</div>
 		</div>
@@ -360,13 +340,14 @@
 <#contract_indexJs/>
 <#common_customerJs/>
 <script>
-	let data = {};
     $(function () {
+    	$("#addFirstModal").on("hidden.bs.modal", function() { 
+    		$(this).removeData("bs.modal"); 
+    		});
         let options = {
             //必须加这个唯一标识
             uniqueId: "id",
-         
-	url : "${contextPath}/contract/list.action",
+			url : "${contextPath}/contract/list.action",
 			createUrl : "${contextPath}/contract/addFirst.html",
 			detailUrl : "${contextPath}/contract/detail.html?id={id}",
 			removeUrl : "${contextPath}/contract/remove.html/{id}",
@@ -381,8 +362,9 @@
 	}
 	
 	function nextStepView() {
+		nextStep();
 		$('#addFirstModal').modal('hide');
-		
+		fillSecondViewData();
 		$('#addSecondModal').modal('show');
 	}
 	
@@ -396,7 +378,16 @@
         	'<button type="button" class="btn btn-secondary td_button readID" onclick="$.table.search()"><i class="fa fa-search"></i>读取身份证</button>' + 
         	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus" style="color:#4F94CD;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' + 
         	'<label onclick="addConsignee()" class = "plus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-plus" style="color:#fF0000;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label></td</tr>';
-	function addConsignee() {
+	
+    let consugnee1= '<div class="per_div"><div style="width: 100px;" class="per_div_child">' + 
+					'<p style="height: 30px; line-height: 30px;">被委托人签名：</p></div>' + 
+					'<div class="triangle per_div_child div_container"><div class="div_container_content">' + 
+					'<span style="background-color: #FFFFFF;">consugneeName</span></div>' + 
+					'</div><button id="signature" type="button" style="height: 30px;"' + 
+					'class="btn btn-primary per_div_child" onclick="$.table.search()">请签名</button></div>'  	
+        	
+        	
+    function addConsignee() {
 		var list=$(".consignee");
 		if(list.length == 3){
 			$.modal.alertWarning("最多三位被委托人")
@@ -408,11 +399,12 @@
 	function minusConsignee(e) {
 		$(e).closest(".consignee").remove();
 	}
+	let data = {};
 	function nextStep(){
 		data = {};
 		data.customerId=parseInt($('#consignorCustomerId').val());
 		data.consignorCustomerName=$('#consignorCustomerName').val();
-		data.cardNo=$('#cardNo').val();
+		data.cardNo=$('#consignorCardNo').val();
 		data.consignorCustomerIDCode=$('#consignorCustomerIDCode').val();
 		data.consignorCustomerMobile=$('#consignorCustomerMobile').val();
 		data.consignorCustomerCode=$('#consignorCustomerCode').val();
@@ -424,11 +416,67 @@
 		$(".consignee").each(function () {
 			let item = {};
 			item.consigneeName=$(this).find("#consigneeName").val();
+			consigneeNames = consigneeNames.concat("、",item.consigneeName);
 			item.consigneeIdCode=$(this).find("#consigneeIdCode").val();
 			item.consigneeIdMobile=$(this).find("#consigneeIdMobile").val();
 			items.push(item);
 		})
         data.consignors=items;
+		data.consigneeNames=consigneeNames.substring(1);
 	}
 	
+	function fillSecondViewData(){
+		$("#consignorCustomerName2").html(data.consignorCustomerName);
+		$("#consigneeNames2").html(data.consigneeNames);
+		$("#cardNo2").html(data.cardNo);
+		let startTime = data.startTime.split("-");
+		$("#startTimeYear").html(startTime[0]);
+		$("#startTimeMonth").html(startTime[1]);
+		$("#startTimeDay").html(startTime[2]);
+		let endTime = data.endTime.split("-");
+		$("#endTimeYear").html(endTime[0]);
+		$("#endTimeMonth").html(endTime[1]);
+		$("#endTimeDay").html(endTime[2]);
+		$("#consignorCustomerName3").html(data.consignorCustomerName);
+		$("#consignorCustomerName4").html(data.consignorCustomerName);
+		$("#consignorCustomerIDCode2").html(data.consignorCustomerIDCode);
+		$("#consignorCustomerMobile2").html(data.consignorCustomerMobile);
+		
+		for (i = 0; i < data.consignors.length; i++) {
+			var consigneeReplace = '<p id="consigneeNameAlls" style="text-indent: 2em">' + 
+			'名称：<font color="#FC1D24">'+ data.consignors[i].consigneeName +'</font> ， 身份证号：<font color="#FC1D24">'+data.consignors[i].consigneeIdCode+'</font>，' + 
+			'联系电话：<font color="#FC1D24">'+data.consignors[i].consigneeIdMobile+'</font></p>';
+			let consugnee2 = consugnee1;
+			$("#consigneeAlls").append(consigneeReplace);
+			$("#consignorCustomer").append(consugnee2.replace("consugneeName", data.consignors[i].consigneeName));
+		}
+	}
+	
+	function backToFirst(){
+		$('#addSecondModal').modal('hide');
+		$("#consigneeAlls").empty();
+		$("#consignorCustomer").empty();
+		$('#addFirstModal').modal('show');
+	}
+	
+	function cancleAddView(){
+		$('#consignorCustomerId').val('');
+		$('#consignorCustomerName').val('');
+		$('#consignorCardNo').val('');
+		$('#consignorCustomerIDCode').val('');
+		$('#consignorCustomerMobile').val('');
+		$('#consignorCustomerCode').val('');
+		$('#consignorAccountId').val('');
+		$('#startTime').val('');
+		$('#endTime').val('');
+		$(".consignee").each(function () {
+			$(this).find("#consigneeName").val('');
+			$(this).find("#consigneeIdCode").val('');
+			$(this).find("#consigneeIdMobile").val('');
+			if($(this).find(".minus").length != 0){
+				$(this).remove();
+			} 
+		})
+		$('#addFirstModal').modal('hide');
+	}
 </script>
