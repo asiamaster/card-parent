@@ -1,51 +1,93 @@
 <#bs4Body>
 <style>
-    .info-column {
-        width: 30%;
-        font-weight: bold;
-        text-align: right;
-        vertical-align: middle;
-    }
-    .info-cell{
-        width: 70%;
-        text-align: left;
-        vertical-align: middle;
-    }
+.info-column {
+	width: 30%;
+	font-weight: bold;
+	text-align: right;
+	vertical-align: middle;
+}
+
+.info-cell {
+	width: 70%;
+	text-align: left;
+	vertical-align: middle;
+}
 </style>
-    <div id="detail-modal" >
-    	<form id="save-form" style="width: 300px;height: 300px;">
-    		<input id="action" name="action" type="hidden" value="${usercash.action!}" class="form-control"/>
-	        <table id="out-detail" class="table table-bordered" >
-	            <tbody>
-	            <tr>
-	                <td class="info-column" >柜员工号</td>
-	                <td class="info-cell">
-	                	<input param-multiple="true" name="userId" type="text" class="form-control"  id="userId" maxlength="50"/>
-	                </td>
-	            </tr>
-	            <tr>
-	                <td class="info-column">柜员姓名</td>
-	                <td class="info-cell"></td>
-	            </tr>
-	            <tr>
-	                <td class="info-column">交款金额</td>
-	                <td class="info-cell">
-	                	<input id="amount" name="amount" type="text" class="form-control"/>
-	                </td>
-	            </tr>
-	            <tr>
-	                <td class="info-column">大写金额</td>
-	                <td class="info-cell"></td>
-	            </tr>
-	             <tr>
-	                <td class="info-column">备注</td>
-	                <td class="info-cell">
-	                	<textarea style="width:200px; " id="notes" name="notes"></textarea>
-	                </td>
-	            </tr>
-	        </table>
-        </form>
-    </div>
+<div id="detail-modal">
+	<form id="saveForm" style="width: 90%;">
+		<input id="action" name="action" type="hidden"
+			value="${usercash.action!}" class="form-control" />
+		<table id="out-detail" class="table table-bordered"  style="table-layout:fixed;">
+			<tbody>
+				<tr>
+					<td class="info-column">柜员工号</td>
+					<td class="info-cell"><#bautoCompleteProvider
+							_hiddenDomainId="userName" _hiddenDomainName="userName"
+							_displayDomainId="userId" _displayDomainName="userId"
+							_placeholder="" _optionVariable="userNameQueryAutoCompleteOption" />
+					</td>
+				</tr>
+				<tr>
+					<td class="info-column">柜员姓名</td>
+					<td id="_userName" class="info-cell"></td>
+                    <input id="userId" name="userId" type="hidden" class="form-control"/>
+				</tr>
+				<tr>
+					<td class="info-column">交款金额</td>
+					<td class="info-cell"><input id="amount" name="amount"
+						type="number" class="form-control" /></td>
+				</tr>
+				<tr>
+					<td class="info-column">大写金额</td>
+					<td class="info-cell" style="word-wrap:break-word;word-break:break-all;"><font color="#FC1D24"><strong><span  id="bigAmount"></span></strong></font></td>
+				</tr>
+				<tr>
+					<td class="info-column">备注</td>
+					<td class="info-cell"><textarea style="width: 200px;"
+							id="notes" name="notes"></textarea></td>
+				</tr>
+		</table>
+	</form>
+</div>
 </#bs4Body>
-<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
-<#common_userJs/>
+<script type="text/javascript"
+	src="${contextPath}/resources/js/sword.js"></script>
+<#common_userJs />
+<script>
+
+$(function(){
+		$('#amount').bind(' input propertychange ', function(){
+			$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amount').val())));
+		} );
+	});
+let formId = "saveForm";
+$("#" + formId).validate({
+    onkeyup: false,
+    amount: {
+    	amount: {
+            required: true,
+        },
+        userId: {
+            required: true,
+        }
+    },
+    messages: {
+    	amount: {
+            required: "交款金额必填",
+        },
+        userId: {
+            required: "员工工号必填",
+        }
+    },
+    focusCleanup: true
+});
+let url = "${contextPath}/cash/save.action";
+function submitHandler(e) {
+    if (!$.validate.form(formId)) {
+        return false;
+    }
+    let data = $.common.formToJSON(formId);
+    $.operate.save(url, JSON.stringify(data));
+    return true;
+}
+</script>
