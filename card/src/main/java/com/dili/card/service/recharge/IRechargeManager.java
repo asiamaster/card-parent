@@ -9,7 +9,7 @@ import com.dili.card.dto.pay.TradeRequestDto;
  */
 public interface IRechargeManager {
     /**
-    * 预创建
+    * 获取充值金额（这里是包含计算手续费和本金）
     * @author miaoguoxin
     * @date 2020/7/6
     */

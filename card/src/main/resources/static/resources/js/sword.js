@@ -477,6 +477,19 @@ tab = {
                         callback(targetTab, relatedTargetTab)
                     }
                 });
+            },
+            refresh:function (id) {
+                if ($.common.isEmpty(id)){
+                    for (let item of tab.tabMap.values()) {
+                        if (item.isActive) {
+                            id = item.id;
+                            break;
+                        }
+                    }
+                }
+                let targetTab = tab.tabMap.get(id);
+                $(targetTab.href).children().remove();
+                $(targetTab.href).load(targetTab.url);
             }
         },
         // 表格树封装处理
@@ -1174,10 +1187,10 @@ tab = {
             ajaxSuccess: function (result) {
                 $.modal.closeLoading();
                 if (result.code == web_status.SUCCESS && table.options.type == table_type.bootstrapTable) {
-                    $.modal.msgSuccess(result.message);
+                    $.modal.alertSuccess(result.message);
                     $.table.refresh();
                 } else if (result.code == web_status.SUCCESS && table.options.type == table_type.bootstrapTreeTable) {
-                    $.modal.msgSuccess(result.message);
+                    $.modal.alertSuccess(result.message);
                     $.treeTable.refresh();
                     $.common.isEmpty()
                 } else if (result.code == web_status.SUCCESS && table.option == undefined) {

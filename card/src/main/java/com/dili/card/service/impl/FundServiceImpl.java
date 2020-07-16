@@ -8,11 +8,13 @@ import com.dili.card.dto.pay.BalanceRequestDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.FeeItemDto;
+import com.dili.card.dto.pay.FundOpResponseDto;
 import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
@@ -36,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +60,8 @@ public class FundServiceImpl implements IFundService {
     private IAccountQueryService accountQueryService;
     @Resource
     private IAccountCycleService accountCycleService;
+    @Autowired
+    private PayRpcResolver payRpcResolver;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -133,16 +138,19 @@ public class FundServiceImpl implements IFundService {
         BusinessRecordDo businessRecord = new BusinessRecordDo();
         serialService.buildCommonInfo(requestDto, businessRecord);
 
+        CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto.createFrozenAmount(
+                accountCard.getFundAccountId(),
+                accountCard.getAccountId(),
+                requestDto.getAmount());
+        FundOpResponseDto fundOpResponseDto = payRpcResolver.postFrozenFund(createTradeRequestDto);
+
         businessRecord.setType(OperateType.FROZEN_FUND.getCode());
         businessRecord.setAmount(requestDto.getAmount());
         businessRecord.setNotes(requestDto.getMark());
+        businessRecord.setTradeNo(String.valueOf(fundOpResponseDto.getFrozenId()));
         serialService.saveBusinessRecord(businessRecord);
 
-        payService.frozenFund(accountCard.getAccountId(),
-                accountCard.getFundAccountId(),
-                requestDto.getAmount());
-
-        SerialDto serialDto = new SerialDto();
+        SerialDto serialDto = this.buildFrozenSerial(requestDto, businessRecord, fundOpResponseDto);
         serialService.handleSuccess(serialDto);
     }
 
@@ -207,8 +215,29 @@ public class FundServiceImpl implements IFundService {
         return serialDto;
     }
 
-	@Override
-	public void unfrozen(FundRequestDto fundRequestDto) {
-		
-	}
+    private SerialDto buildFrozenSerial(FundRequestDto requestDto, BusinessRecordDo businessRecord, FundOpResponseDto fundOpResponseDto) {
+        SerialDto serialDto = new SerialDto();
+        serialDto.setSerialNo(businessRecord.getSerialNo());
+
+        List<SerialRecordDo> serialRecordList = new ArrayList<>();
+
+        SerialRecordDo serialRecord = new SerialRecordDo();
+        serialService.copyCommonFields(serialRecord, businessRecord);
+        serialRecord.setAction(ActionType.EXPENSE.getCode());
+        //serialRecord.setStartBalance(fundOpResponseDto.getBalance() + Math.abs(requestDto.getAmount()));
+        serialRecord.setAmount(Math.abs(requestDto.getAmount()));
+       // serialRecord.setEndBalance(fundOpResponseDto.getBalance());
+        serialRecord.setOperateTime(LocalDateTime.now());
+        serialRecord.setNotes("手工冻结资金");
+        serialRecordList.add(serialRecord);
+
+        serialDto.setSerialRecordList(serialRecordList);
+
+        return serialDto;
+    }
+
+    @Override
+    public void unfrozen(FundRequestDto fundRequestDto) {
+
+    }
 }

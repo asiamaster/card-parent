@@ -42,7 +42,7 @@ public interface PayRpc {
      * @return
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.fund.service:freeze", method = RequestMethod.POST)
-    BaseOutput<Long> frozenFund(CreateTradeRequestDto requestDto);
+    BaseOutput<FundOpResponseDto> frozenFund(CreateTradeRequestDto requestDto);
 
     /**
      * 解冻资金
@@ -51,7 +51,7 @@ public interface PayRpc {
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.fund.service:freeze", method = RequestMethod.POST)
     BaseOutput<Long> unfrozenFund(Long frozenId);
-    
+
     /**
      * 查询余额
      * @author miaoguoxin

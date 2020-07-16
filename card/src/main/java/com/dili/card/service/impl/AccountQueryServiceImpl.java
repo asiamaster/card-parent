@@ -135,6 +135,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         return new AccountSimpleResponseDto(fund, userAccount);
     }
 
+
     private List<AccountListResponseDto> addCustomer2AccountList(List<UserAccountCardResponseDto> accountCards,
                                                                  List<CustomerResponseDto> customers) {
         Map<Long, CustomerResponseDto> customerMap = customers.stream()

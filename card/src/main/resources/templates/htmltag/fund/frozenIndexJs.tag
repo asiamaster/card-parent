@@ -31,16 +31,16 @@
         }
     }
 
-    let requestData = {
-        cardNo:${detail.cardAssociation.primary.cardNo!},
-        accountId:${detail.cardAssociation.primary.accountId!},
-        customerId:${detail.cardAssociation.primary.customerId!},
-    };
-
-    let url = '${contextPath}/fund/frozen.action';
 
     //提交冻结资金操作
     function submitFrozen() {
+        let requestData = {
+            cardNo:${detail.cardAssociation.primary.cardNo!},
+            accountId:${detail.cardAssociation.primary.accountId!},
+            customerId:${detail.cardAssociation.primary.customerId!},
+        };
+        let url = '${contextPath}/fund/frozen.action';
+
         if (!$.validate.form('frozen-fund-form')) {
             return;
         }
@@ -49,7 +49,11 @@
                 return;
             }
             let data = $.common.formToJSON('frozen-fund-form');
-            $.operate.post(url, $.extend(requestData, data));
+            $.operate.post(url, $.extend(requestData, data),function (result) {
+                if (result.code == '200'){
+                    $.tab.refresh()
+                }
+            });
         });
     }
 
