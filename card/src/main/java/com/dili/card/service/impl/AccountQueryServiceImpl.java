@@ -89,8 +89,12 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
 
     @Override
     public UserAccountCardResponseDto getByCardNo(String cardNo) {
-
         return accountQueryRpcResolver.findByCardNo(cardNo);
+    }
+
+    @Override
+    public UserAccountCardResponseDto getByCardNoWithReturnState(String cardNO) {
+        return accountQueryRpcResolver.findByCardNoWithReturnState(cardNO);
     }
 
     @Override
