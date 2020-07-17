@@ -1,15 +1,5 @@
 package com.dili.card.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -27,6 +17,15 @@ import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -67,7 +66,7 @@ public class CardManageServiceImpl implements ICardManageService {
         }
         try {//成功则修改状态及期初期末金额，存储操作流水
             SerialDto serialDto = buildNoFundSerial(cardParam, businessRecord);
-            serialService.handleSuccess(serialDto);
+            serialService.handleSuccess(serialDto, false);
         } catch (Exception e) {
             LOGGER.error("unLostCard", e);
         }
@@ -98,7 +97,7 @@ public class CardManageServiceImpl implements ICardManageService {
         }
         try {//成功则修改状态及期初期末金额，存储操作流水
             SerialDto serialDto = buildNoFundSerial(cardParam, businessRecord);
-            serialService.handleSuccess(serialDto);
+            serialService.handleSuccess(serialDto, false);
         } catch (Exception e) {
             LOGGER.error("unLockCard", e);
         }
