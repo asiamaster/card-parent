@@ -8,7 +8,7 @@
 </style>
 <div style="text-align: center;">
 	<div id="div_model">
-		<form  id="queryForm" role="form" >
+		<form  id="deleteForm" role="form" >
 			<input id="id" name="id" type="hidden" value="${usercash.id!}" class="form-control"/>
         	<div class="form-group col-auto">
                 <label for="cardNo">确认删除对<font color="#FC1D24">${usercash.userName!}</font>发起的领款记录吗？</label>
@@ -17,3 +17,14 @@
 	</div>
 </div>    
 </#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script>
+let formId = "deleteForm";
+function submitHandler(e) {
+    let url = "${contextPath}/cash/delete.action";
+    let data = $.common.formToJSON(formId);
+    alert(JSON.stringify(data));
+    $.operate.save(url, JSON.stringify(data));
+    return true;
+}
+</script>

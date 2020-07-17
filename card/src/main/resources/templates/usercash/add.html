@@ -22,19 +22,19 @@
 				<tr>
 					<td class="info-column">柜员工号</td>
 					<td class="info-cell"><#bautoCompleteProvider
-							_hiddenDomainId="userName" _hiddenDomainName="userName"
-							_displayDomainId="userId" _displayDomainName="userId"
-							_placeholder="" _optionVariable="userNameQueryAutoCompleteOption" />
+							_hiddenDomainId="userId" _hiddenDomainName="userId"
+							_displayDomainId="userCode" _displayDomainName="userCode"
+							_placeholder="" _optionVariable="userNameAutoCompleteOption" />
 					</td>
 				</tr>
 				<tr>
 					<td class="info-column">柜员姓名</td>
 					<td id="_userName" class="info-cell"></td>
-                    <input id="userId" name="userId" type="hidden" class="form-control"/>
+                    <input id="inputuserName" name="userName" type="hidden" class="form-control"/>
 				</tr>
 				<tr>
 					<td class="info-column">交款金额</td>
-					<td class="info-cell"><input id="amount" name="amount"
+					<td class="info-cell"><input id="amountYuan" name="amountYuan"
 						type="number" class="form-control" /></td>
 				</tr>
 				<tr>
@@ -52,41 +52,43 @@
 </#bs4Body>
 <script type="text/javascript"
 	src="${contextPath}/resources/js/sword.js"></script>
-<#common_userJs />
+<#common_autoCompleteUser/>
 <script>
 
 $(function(){
-		$('#amount').bind(' input propertychange ', function(){
-			$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amount').val())));
+		userNameAutoCompleteOption.displayFieldName='serialNumber';
+		$('#amountYuan').bind(' input propertychange ', function(){
+			$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amountYuan').val())));
 		} );
 	});
 let formId = "saveForm";
 $("#" + formId).validate({
     onkeyup: false,
-    amount: {
-    	amount: {
+    rules: {
+    	amountYuan: {
             required: true,
         },
-        userId: {
+        userCode: {
             required: true,
         }
     },
     messages: {
-    	amount: {
+    	amountYuan: {
             required: "交款金额必填",
         },
-        userId: {
+        userCode: {
             required: "员工工号必填",
         }
     },
     focusCleanup: true
 });
-let url = "${contextPath}/cash/save.action";
 function submitHandler(e) {
     if (!$.validate.form(formId)) {
         return false;
     }
+    let url = "${contextPath}/cash/save.action";
     let data = $.common.formToJSON(formId);
+    alert(JSON.stringify(data));
     $.operate.save(url, JSON.stringify(data));
     return true;
 }

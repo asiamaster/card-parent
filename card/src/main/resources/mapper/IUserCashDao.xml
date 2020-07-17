@@ -91,6 +91,7 @@
 			<if test="userId != null"> AND user_id = #{userId}</if>
 			<if test="creatorId != null"> AND creator_id = #{creatorId}</if>
 			<if test="state != null"> AND state = #{state}</if>
+			<if test="action != null"> AND action = #{action}</if>
 		ORDER BY create_time DESC
 	</select>
 	
@@ -119,5 +120,12 @@
 			`state` = #{state}
 		WHERE
 			`cycle_no` = #{cycleNo}
+	</update>
+	
+	<update id="delete">
+		UPDATE card_user_cash SET
+			`state` = 10
+		WHERE
+			`id` = #{id}
 	</update>
 </mapper>
