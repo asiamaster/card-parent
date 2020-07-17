@@ -1,18 +1,35 @@
 package com.dili.card.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
-import com.dili.card.dto.pay.*;
+import com.dili.card.dto.pay.BalanceRequestDto;
+import com.dili.card.dto.pay.BalanceResponseDto;
+import com.dili.card.dto.pay.CreateTradeRequestDto;
+import com.dili.card.dto.pay.FeeItemDto;
+import com.dili.card.dto.pay.FundOpResponseDto;
+import com.dili.card.dto.pay.TradeRequestDto;
+import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.PayRpcResolver;
-import com.dili.card.service.*;
+import com.dili.card.service.IAccountCycleService;
+import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.IFundService;
+import com.dili.card.service.IPayService;
+import com.dili.card.service.ISerialService;
 import com.dili.card.service.recharge.AbstractRechargeManager;
 import com.dili.card.service.recharge.RechargeFactory;
-import com.dili.card.type.*;
+import com.dili.card.type.ActionType;
+import com.dili.card.type.CardStatus;
+import com.dili.card.type.FeeType;
+import com.dili.card.type.FundItem;
+import com.dili.card.type.OperateType;
+import com.dili.card.type.TradeChannel;
+import com.dili.card.type.TradeType;
 import com.dili.ss.constant.ResultCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,7 +151,7 @@ public class FundServiceImpl implements IFundService {
         businessRecord.setTradeNo(String.valueOf(fundOpResponseDto.getFrozenId()));
         serialService.saveBusinessRecord(businessRecord);
 
-        SerialDto serialDto = this.buildFrozenSerial(requestDto, businessRecord, fundOpResponseDto);
+        SerialDto serialDto = this.buildFrozenSerial(requestDto, businessRecord, balance);
         serialService.handleSuccess(serialDto);
     }
 
@@ -199,7 +216,7 @@ public class FundServiceImpl implements IFundService {
         return serialDto;
     }
 
-    private SerialDto buildFrozenSerial(FundRequestDto requestDto, BusinessRecordDo businessRecord, FundOpResponseDto fundOpResponseDto) {
+    private SerialDto buildFrozenSerial(FundRequestDto requestDto, BusinessRecordDo businessRecord, BalanceResponseDto balance) {
         SerialDto serialDto = new SerialDto();
         serialDto.setSerialNo(businessRecord.getSerialNo());
 
@@ -208,9 +225,9 @@ public class FundServiceImpl implements IFundService {
         SerialRecordDo serialRecord = new SerialRecordDo();
         serialService.copyCommonFields(serialRecord, businessRecord);
         serialRecord.setAction(ActionType.EXPENSE.getCode());
-        //serialRecord.setStartBalance(fundOpResponseDto.getBalance() + Math.abs(requestDto.getAmount()));
+        serialRecord.setStartBalance(balance.getAvailableAmount());
         serialRecord.setAmount(Math.abs(requestDto.getAmount()));
-       // serialRecord.setEndBalance(fundOpResponseDto.getBalance());
+        serialRecord.setEndBalance(balance.getAvailableAmount() - serialRecord.getAmount());
         serialRecord.setOperateTime(LocalDateTime.now());
         serialRecord.setNotes("手工冻结资金");
         serialRecordList.add(serialRecord);

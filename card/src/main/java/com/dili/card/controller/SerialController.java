@@ -2,6 +2,7 @@ package com.dili.card.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.dto.BusinessRecordResponseDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.entity.BusinessRecordDo;
@@ -145,7 +146,7 @@ public class SerialController implements IControllerHandler {
     @PostMapping("/business/page.action")
     @ResponseBody
     public Map<String, Object> businessPage(SerialQueryDto queryDto){
-        PageOutput<List<BusinessRecordDo>> lists = serialService.queryPage(queryDto);
+        PageOutput<List<BusinessRecordResponseDto>> lists = serialService.queryPage(queryDto);
         return successPage(lists);
     }
 }

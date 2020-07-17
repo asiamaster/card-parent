@@ -4,7 +4,7 @@
         rules: {
             amount: {
                 required: true,
-                gt: 0.01
+                gt: 0.00
             },
             mark: {
                 maxlength: 30
@@ -13,7 +13,7 @@
         messages: {
             amount: {
                 required: "冻结金额必填",
-                gt: "冻结金额至少{0}"
+                gt: "冻结金额必须大于{0}"
             },
             mark: {
                 maxlength: "最多可以输入{0}个字符"
@@ -26,7 +26,7 @@
         //只能输入两个小数
         obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');
         //只能输入大于0
-        if (obj.value && obj.value <= 0) {
+        if (obj.value && obj.value < 0) {
             obj.value = 0;
         }
     }
@@ -77,4 +77,5 @@
         };
         $.table.init(options);
     });
+
 </script>

@@ -44,8 +44,8 @@ class FundControllerTest extends BaseTest {
     private MockMvc mockMvc;
 
     private String token;
-
-
+    /**需要在浏览器拿出来替换*/
+    private static final String sessionId ="2b281ee4-80cb-4079-a1d6-159dc77dfbb1";
     @BeforeEach
     public void before() throws Exception {
         this.token = this.createToken();
@@ -55,14 +55,14 @@ class FundControllerTest extends BaseTest {
     void testRecharge() throws Exception {
         FundRequestDto fundRequestDto = this.createRechargeRequest();
         AccountCycleDo accountCycle = this.createAccountCycle();
-        doReturn(accountCycle).when(accountCycleService)
-                .findActiveCycleByUserId(fundRequestDto.getOpId(),
-                        fundRequestDto.getOpName(),
-                        fundRequestDto.getOpNo());
+        when(accountCycleService.findActiveCycleByUserId(fundRequestDto.getOpId(),
+                fundRequestDto.getOpName(),
+                fundRequestDto.getOpNo())).thenReturn(accountCycle);
 
         MvcResult mvcResult = mockMvc.perform(post("/fund/recharge.action")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("duplicate_commit_token",this.token)
+                .header("UAP_SessionId",sessionId)
                 .content(JSON.toJSONString(fundRequestDto))
         )
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -79,7 +79,7 @@ class FundControllerTest extends BaseTest {
         FundRequestDto fundRequestDto = new FundRequestDto();
         fundRequestDto.setAccountId(174L);
         fundRequestDto.setCardNo("888889690048");
-        fundRequestDto.setCustomerId(105L);
+        fundRequestDto.setCustomerId(18L);
         fundRequestDto.setAmount(1L);
         fundRequestDto.setOpId(73L);
         fundRequestDto.setOpName("王波");
@@ -102,6 +102,7 @@ class FundControllerTest extends BaseTest {
     private String createToken() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/appCommon/duplicateToken.action")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .header("UAP_SessionId",sessionId)
         )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
