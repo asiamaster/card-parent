@@ -1,4 +1,4 @@
-package com.dili.card.common.hystrix;
+package com.dili.tcc.springcloud;
 
 import java.util.concurrent.Callable;
 

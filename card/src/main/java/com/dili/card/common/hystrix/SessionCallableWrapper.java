@@ -1,6 +1,7 @@
 package com.dili.card.common.hystrix;
 
 import com.dili.card.common.constant.Constant;
+import com.dili.tcc.springcloud.HystrixCallableWrapper;
 import com.dili.uap.sdk.session.SessionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -3,15 +3,21 @@ package com.dili.tcc.config;
 import com.dili.tcc.core.EmptyTccResultInterceptor;
 import com.dili.tcc.core.ITransactionRepository;
 import com.dili.tcc.core.MemoryTransactionRepository;
-import com.dili.tcc.core.TccBeanPostProcessor;
+import com.dili.tcc.springcloud.ContextHystrixConcurrencyStrategy;
+import com.dili.tcc.springcloud.HystrixCallableWrapper;
+import com.dili.tcc.springcloud.TccFeignBeanPostProcessor;
 import com.dili.tcc.core.TccResultInterceptor;
 import com.dili.tcc.util.SpringContext;
 import feign.Feign;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Auther: miaoguoxin
@@ -60,10 +66,22 @@ public class TccSpringCloudAutoConfiguration {
     * @date 2020/7/14
     */
     @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnProperty(value = "feign.hystrix.enabled", havingValue = "false", matchIfMissing = true)
-    public TccBeanPostProcessor tccBeanPostProcessor() {
-        return new TccBeanPostProcessor();
+   // @ConditionalOnProperty(value = "feign.hystrix.enabled", havingValue = "false", matchIfMissing = true)
+    public TccFeignBeanPostProcessor tccBeanPostProcessor() {
+        return new TccFeignBeanPostProcessor();
+    }
+
+
+    @Configuration
+    @ConditionalOnProperty(name = "feign.hystrix.enabled", havingValue = "true")
+    public class HystrixTccConfig{
+        @Autowired(required = false)
+        private List<HystrixCallableWrapper> wrappers = new ArrayList<>();
+
+        @Bean
+        public ContextHystrixConcurrencyStrategy contextHystrixConcurrencyStrategy(){
+            return new  ContextHystrixConcurrencyStrategy(wrappers);
+        }
     }
 
 }
