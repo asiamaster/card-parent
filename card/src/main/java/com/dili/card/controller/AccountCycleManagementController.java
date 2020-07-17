@@ -128,7 +128,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	@ResponseBody
 	public BaseOutput<Boolean> flated(@RequestBody AccountCycleDto accountCycleDto) {
 		iAccountCycleService.flated(accountCycleDto.getId());
-		return BaseOutput.success();
+		return BaseOutput.success("平账成功！");
 	}
 
 	/**

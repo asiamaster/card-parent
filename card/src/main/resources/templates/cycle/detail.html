@@ -63,7 +63,7 @@
 	        	<% if(settled == 2){ %>
 	        		<button id="back" style="height: 40px;width: 100px;border-color:#FB0E12" type="button" class="btn btn-light" onclick="backList()">返回</button>
 				<% }else{ %>
-					<button id="back" style="height: 40px;width: 100px;" type="button" class="btn btn-primary" onclick="applySettlement()">申请结账</button>
+					<button id="apply" style="height: 40px;width: 100px;" type="button" class="btn btn-primary" onclick="applySettlement()">申请结账</button>
 				<% } %>
             </div>
         </form>
@@ -103,8 +103,8 @@
 	function applySettlement(){
 		let url = "${contextPath}/cycle/applySettle.action";
 	    let data = $.common.formToJSON("settleForm");
-	    alert(JSON.stringify(data));
 	    $.operate.saveModal(url, JSON.stringify(data));
+	    $("#apply").attr("disabled",true);
 	    return true; 
 	}
 	

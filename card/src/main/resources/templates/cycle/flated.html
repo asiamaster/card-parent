@@ -20,9 +20,9 @@
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <script>
 function submitHandler(e) {
-    let url = "${contextPath}/cash/flated.action";
+    let url = "${contextPath}/cycle/flated.action";
     let data = $.common.formToJSON("flated");
-    $.operate.save(url, JSON.stringify(data));
+    $.operate.saveModal(url, JSON.stringify(data));
     return true;
-}	
+}
 </script>
