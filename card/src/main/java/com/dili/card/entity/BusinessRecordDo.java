@@ -1,6 +1,8 @@
 package com.dili.card.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.dili.card.common.annotation.TextDisplay;
+import com.dili.card.common.provider.FenToYuanProvider;
 import com.dili.card.type.*;
 import com.dili.card.util.CurrencyUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -14,76 +16,76 @@ import java.time.LocalDateTime;
  * @author bob
  */
 public class BusinessRecordDo implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	/**  */
-	private Long id; 
+	private Long id;
 	/** 流水号 */
-	private String serialNo; 
+	private String serialNo;
 	/** 账务周期号 */
-	private Long cycleNo; 
+	private Long cycleNo;
 	/** 业务类型-办卡、充值、提现等 */
-	private Integer type; 
+	private Integer type;
 	/** 账户ID */
-	private Long accountId; 
+	private Long accountId;
 	/** 关联卡号 */
-	private String cardNo; 
+	private String cardNo;
 	/** 客户ID */
-	private Long customerId; 
+	private Long customerId;
 	/** 客户编号 */
-	private String customerNo; 
+	private String customerNo;
 	/** 客户姓名 */
-	private String customerName; 
+	private String customerName;
 	/** 期初余额-分 */
-	private Long startBalance; 
+	private Long startBalance;
 	/** 操作金额-分 */
-	private Long amount; 
+	private Long amount;
 	/** 期末余额-分 */
-	private Long endBalance; 
+	private Long endBalance;
 	/** 交易类型-充值、提现、消费、转账、其他 */
-	private Integer tradeType; 
+	private Integer tradeType;
 	/** 交易渠道-现金、POS、网银 */
-	private Integer tradeChannel; 
+	private Integer tradeChannel;
 	/** 银行卡类型-借记卡、信用卡 */
-	private Integer bankCardType; 
+	private Integer bankCardType;
 	/** 交易流水号 */
-	private String tradeNo; 
+	private String tradeNo;
 	/** 委托合同编号 */
-	private String contractNo; 
+	private String contractNo;
 	/** 委托人ID */
-	private Long consignorId; 
+	private Long consignorId;
 	/** 新卡卡号 */
-	private String newCardNo; 
+	private String newCardNo;
 	/** 押金-分 */
-	private Long deposit; 
+	private Long deposit;
 	/** 工本费-分 */
-	private Long cardCost; 
+	private Long cardCost;
 	/** 手续费-分 */
-	private Long serviceCost; 
+	private Long serviceCost;
 	/** 附加内容-存储不太重要的内容，否则请扩充该表字段 */
-	private String attach; 
+	private String attach;
 	/** 操作员ID */
-	private Long operatorId; 
+	private Long operatorId;
 	/** 操作员工号 */
-	private String operatorNo; 
+	private String operatorNo;
 	/** 操作员名称 */
-	private String operatorName; 
+	private String operatorName;
 	/** 操作时间 */
 	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime operateTime; 
+	private LocalDateTime operateTime;
 	/** 备注 */
-	private String notes; 
+	private String notes;
 	/** 办理状态-处理中、成功、失败 */
-	private Integer state; 
+	private Integer state;
 	/** 商户ID */
-	private Long firmId; 
+	private Long firmId;
 	/** 修改时间 */
-	private LocalDateTime modifyTime; 
+	private LocalDateTime modifyTime;
 	/** 数据版本号 */
-	private Integer version; 
+	private Integer version;
     /**
      * BusinessRecordEntity constructor
      */
@@ -92,14 +94,14 @@ public class BusinessRecordDo implements Serializable {
 	}
 
     /**
-     * setter for 
+     * setter for
      */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
     /**
-     * getter for 
+     * getter for
      */
 	public Long getId() {
 		return id;

@@ -1,5 +1,6 @@
 package com.dili.card.service;
 
+import com.dili.card.dto.BusinessRecordResponseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.SerialQueryDto;
@@ -87,5 +88,5 @@ public interface ISerialService {
     * @author miaoguoxin
     * @date 2020/7/1
     */
-    PageOutput<List<BusinessRecordDo>> queryPage(SerialQueryDto serialQueryDto);
+    PageOutput<List<BusinessRecordResponseDto>> queryPage(SerialQueryDto serialQueryDto);
 }

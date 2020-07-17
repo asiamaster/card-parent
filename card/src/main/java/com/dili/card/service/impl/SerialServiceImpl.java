@@ -25,6 +25,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -198,9 +199,14 @@ public class SerialServiceImpl implements ISerialService {
     }
 
     @Override
-    public PageOutput<List<BusinessRecordDo>> queryPage(SerialQueryDto serialQueryDto) {
+    public PageOutput<List<BusinessRecordResponseDto>> queryPage(SerialQueryDto serialQueryDto) {
         Page<BusinessRecordDo> page = PageHelper.startPage(serialQueryDto.getPage(), serialQueryDto.getRows());
         List<BusinessRecordDo> businessRecordDos = this.queryBusinessRecord(serialQueryDto);
-        return PageUtils.convert2PageOutput(page,businessRecordDos);
+        List<BusinessRecordResponseDto> recordResponseDtos = businessRecordDos.stream().map(record -> {
+            BusinessRecordResponseDto responseDto = new BusinessRecordResponseDto();
+            BeanUtils.copyProperties(record, responseDto);
+            return responseDto;
+        }).collect(Collectors.toList());
+        return PageUtils.convert2PageOutput(page,recordResponseDtos);
     }
 }

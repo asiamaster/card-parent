@@ -4,12 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.dili.card.BaseTest;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
-import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
-import com.dili.card.service.recharge.TradeContextHolder;
-import com.dili.card.type.TradeChannel;
 import com.dili.customer.sdk.domain.Customer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,27 +65,6 @@ class FundServiceTest extends BaseTest {
 
     @Test
     void testRecharge() {
-    }
-
-    @Test
-    void testCreateRecharge() {
-        FundRequestDto fundRequestDto = this.createRechargeRequest();
-        fundRequestDto.setTradeChannel(TradeChannel.CASH.getCode());
-        //fundRequestDto.setTradePwd("123456");
-
-        doReturn(createAccountCycle()).when(accountCycleService)
-                .findActiveCycleByUserId(fundRequestDto.getOpId(),
-                        fundRequestDto.getOpName(),
-                        fundRequestDto.getOpNo());
-
-        UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForRecharge(fundRequestDto);
-        try {
-            TradeContextHolder.putVal(TradeContextHolder.USER_ACCOUNT, userAccount);
-            fundService.createRecharge(fundRequestDto);
-        } finally {
-            TradeContextHolder.remove();
-        }
-
     }
 
     private FundRequestDto createRechargeRequest() {

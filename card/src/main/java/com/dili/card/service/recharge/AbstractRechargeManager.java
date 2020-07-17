@@ -1,5 +1,6 @@
 package com.dili.card.service.recharge;
 
+import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -14,6 +15,7 @@ import com.dili.card.type.ActionType;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
+import com.dili.tcc.core.TccContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +46,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         BusinessRecordDo businessRecord = new BusinessRecordDo();
         serialService.buildCommonInfo(requestDto, businessRecord);
 
-        UserAccountCardResponseDto userAccount = TradeContextHolder.getVal(TradeContextHolder.USER_ACCOUNT, UserAccountCardResponseDto.class);
+        UserAccountCardResponseDto userAccount = TccContextHolder.get().getAttr(Constant.USER_ACCOUNT, UserAccountCardResponseDto.class);
         CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(
                 TradeType.DEPOSIT.getCode(),
                 userAccount.getAccountId(),
@@ -63,8 +65,8 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         businessRecord.setNotes(requestDto.getServiceCost() == null ? null : String.format("手续费%s元", CurrencyUtils.toYuanWithStripTrailingZeros(requestDto.getServiceCost())));
         serialService.saveBusinessRecord(businessRecord);
         //保存线程变量
-        TradeContextHolder.putVal(TradeContextHolder.TRADE_ID_KEY, tradeId);
-        TradeContextHolder.putVal(TradeContextHolder.BUSINESS_RECORD_KEY, businessRecord);
+        TccContextHolder.get().addAttr(Constant.TRADE_ID_KEY, tradeId);
+        TccContextHolder.get().addAttr(Constant.BUSINESS_RECORD_KEY, businessRecord);
     }
 
     /**
@@ -73,7 +75,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
      * @date 2020/7/2
      */
     public final void doRecharge(FundRequestDto requestDto) {
-        BusinessRecordDo record = TradeContextHolder.getVal(TradeContextHolder.BUSINESS_RECORD_KEY, BusinessRecordDo.class);
+        BusinessRecordDo record = TccContextHolder.get().getAttr(Constant.BUSINESS_RECORD_KEY, BusinessRecordDo.class);
         TradeRequestDto dto = this.recharge(requestDto);
         //务必设置bizId
         dto.setBusinessId(record.getAccountId());
@@ -117,8 +119,8 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
 
 
     protected TradeRequestDto createRechargeRequestDto(FundRequestDto requestDto) {
-        String tradeNo = TradeContextHolder.getVal(TradeContextHolder.TRADE_ID_KEY, String.class);
-        UserAccountCardResponseDto userAccount = TradeContextHolder.getVal(TradeContextHolder.USER_ACCOUNT, UserAccountCardResponseDto.class);
+        String tradeNo = TccContextHolder.get().getAttr(Constant.TRADE_ID_KEY, String.class);
+        UserAccountCardResponseDto userAccount = TccContextHolder.get().getAttr(Constant.USER_ACCOUNT, UserAccountCardResponseDto.class);
 
         TradeRequestDto rechargeRequestDto = new TradeRequestDto();
         rechargeRequestDto.setTradeId(tradeNo);

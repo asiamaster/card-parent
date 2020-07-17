@@ -6,12 +6,10 @@ import com.dili.card.common.annotation.ForbidDuplicateCommit;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.FundRequestDto;
-import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.recharge.RechargeTccTransactionManager;
-import com.dili.card.service.recharge.TradeContextHolder;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.card.validator.FundValidator;
@@ -109,7 +107,7 @@ public class FundController implements IControllerHandler {
     @PostMapping("unfrozen.action")
     @ResponseBody
     public BaseOutput<?> unfrozen(@RequestBody @Validated(ConstantValidator.Update.class)
-                                        FundRequestDto requestDto) {
+                                          FundRequestDto requestDto) {
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
         try {
@@ -123,7 +121,7 @@ public class FundController implements IControllerHandler {
             return BaseOutput.failure();
         }
     }
-    
+
     /**
      * 充值
      * @author miaoguoxin
@@ -136,12 +134,9 @@ public class FundController implements IControllerHandler {
                                           FundRequestDto requestDto) {
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
-        UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForRecharge(requestDto);
         try {
-            //传递线程变量
-            TradeContextHolder.putVal(TradeContextHolder.USER_ACCOUNT, userAccount);
             rechargeTccTransactionManager.doTcc(requestDto);
- //           fundService.createRecharge(requestDto);
+//           fundService.createRecharge(requestDto);
 //            fundService.recharge(requestDto);
         } catch (CardAppBizException e) {
             return BaseOutput.failure(e.getMessage());
@@ -149,8 +144,6 @@ public class FundController implements IControllerHandler {
             LOGGER.error("充值失败", e);
             LOGGER.error("充值请求参数:{}", JSON.toJSONString(requestDto));
             return BaseOutput.failure();
-        } finally {
-            TradeContextHolder.remove();
         }
         return BaseOutput.success();
     }

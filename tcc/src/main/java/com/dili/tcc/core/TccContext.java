@@ -50,6 +50,17 @@ public class TccContext {
         attributes.put(key, val);
     }
 
+    public <T> T getAttr(String key, Class<T> clazz) {
+        Object o = attributes.get(key);
+        if (o == null) {
+            return null;
+        }
+        if (clazz.isAssignableFrom(o.getClass())) {
+            return (T) o;
+        }
+        throw new ClassCastException(String.format("can not cast class %s to %s", o.getClass().getName(), clazz.getName()));
+    }
+
     /**
      * 加重试次数+1
      * @author miaoguoxin
@@ -94,4 +105,5 @@ public class TccContext {
         }
         return className + "#" + methodName + "#" + sb.toString();
     }
+
 }
