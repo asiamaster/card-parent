@@ -27,6 +27,9 @@ public class TccFeignInvocationHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        if (Object.class.equals(method.getDeclaringClass())) {
+            return method.invoke(this, args);
+        }
         //方法上标记TCC操作，因为并不是每个rpc都需要重试，比如读操作
         Tcc isTcc = method.getAnnotation(Tcc.class);
         if (isTcc == null) {

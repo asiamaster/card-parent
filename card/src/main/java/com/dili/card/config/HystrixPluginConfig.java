@@ -1,15 +1,16 @@
 package com.dili.card.config;
 
-import com.dili.card.common.hystrix.ContextHystrixConcurrencyStrategy;
-import com.dili.card.common.hystrix.HystrixCallableWrapper;
 import com.dili.card.common.hystrix.SessionCallableWrapper;
-import com.netflix.hystrix.strategy.HystrixPlugins;
+import com.dili.tcc.config.TccSpringCloudAutoConfiguration;
+import com.dili.tcc.springcloud.ContextHystrixConcurrencyStrategy;
+import com.dili.tcc.springcloud.HystrixCallableWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
  */
 @Configuration
 @ConditionalOnProperty(name = "feign.hystrix.enabled", havingValue = "true")
+@AutoConfigureBefore(TccSpringCloudAutoConfiguration.HystrixTccConfig.class)
 public class HystrixPluginConfig {
 
     @Bean
@@ -27,12 +29,4 @@ public class HystrixPluginConfig {
         return new SessionCallableWrapper();
     }
 
-    @Autowired(required = false)
-    private List<HystrixCallableWrapper> wrappers = new ArrayList<>();
-
-
-    @PostConstruct
-    public void init() {
-        HystrixPlugins.getInstance().registerConcurrencyStrategy(new ContextHystrixConcurrencyStrategy(wrappers));
-    }
 }

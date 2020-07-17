@@ -1,4 +1,4 @@
-package com.dili.tcc.core;
+package com.dili.tcc.springcloud;
 
 import com.dili.tcc.springcloud.TccFeignInvocationHandler;
 import org.springframework.aop.TargetSource;
@@ -18,7 +18,7 @@ import java.lang.reflect.Proxy;
  * @Auther: miaoguoxin
  * @Date: 2020/7/13 20:57
  */
-public class TccBeanPostProcessor implements BeanPostProcessor, InitializingBean {
+public class TccFeignBeanPostProcessor implements BeanPostProcessor, InitializingBean {
     private static final String FEIGN_CLAZZ_NAME = "feign.ReflectiveFeign$FeignInvocationHandler";
 
     private Field singletonTargetSourceTargetField = null;
