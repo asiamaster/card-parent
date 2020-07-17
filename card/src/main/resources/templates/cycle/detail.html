@@ -104,7 +104,7 @@
 		let url = "${contextPath}/cycle/applySettle.action";
 	    let data = $.common.formToJSON("settleForm");
 	    alert(JSON.stringify(data));
-	    $.operate.save(url, JSON.stringify(data));
+	    $.operate.saveModal(url, JSON.stringify(data));
 	    return true; 
 	}
 	
