@@ -28,9 +28,22 @@
                 </tr>
                 <tr>
                     <td class="info-column">可用余额</td>
-                    <td class="info-cell">${detail.accountFund.availableAmountText!}</td>
+                    <td class="info-cell">
+                        <% if(detail.cardAssociation.primary.cardType ==10) { %>
+                             ${detail.accountFund.availableAmountText!}
+                        <% }else{ %>
+                             ***
+                        <% } %>
+
+                    </td>
                     <td class="info-column">冻结金额</td>
-                    <td class="info-cell">${detail.accountFund.frozenAmountText!}</td>
+                    <td class="info-cell">
+                        <% if(detail.cardAssociation.primary.cardType ==10) { %>
+                             ${detail.accountFund.frozenAmountText!}
+                        <% }else{ %>
+                            ***
+                        <% } %>
+                    </td>
                     <td class="info-column">创建人</td>
                     <td class="info-cell">${detail.cardAssociation.primary.creator!}</td>
                     <td class="info-column">创建时间</td>

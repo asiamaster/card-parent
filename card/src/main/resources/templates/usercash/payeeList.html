@@ -5,11 +5,11 @@
         <div class="row row-cols-6">
              <div class="form-group col-auto">
                 <label for="userId">柜员</label>
-                <input param-multiple="true" name="userId" type="text" class="form-control"  id="userId" maxlength="50"/>
+                <#bautoCompleteProvider _hiddenDomainId="userId" _hiddenDomainName="userId" _displayDomainId="userName" _displayDomainName="userName" _placeholder="" _optionVariable="userNameQueryAutoCompleteOption"/>
             </div>
             <div class="form-group col-auto">
                 <label for="creatorId">财务员</label>
-                <input param-multiple="true" name="creatorId" type="text" class="form-control"  id="creatorId" maxlength="50"/>
+                <#bautoCompleteProvider _hiddenDomainId="creatorId" _hiddenDomainName="creatorId" _displayDomainId="creatorName" _displayDomainName="creatorName" _placeholder="" _optionVariable="userNameQueryAutoCompleteOption"/>
             </div>
             <div class="form-group col">
                 <label for="state">当前状态</label>
@@ -30,13 +30,21 @@
 </div>
 
 <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
-   <button id="btn_add" type="button" class="btn btn-primary" onclick="$.operate.addWithTitle(null,'30%','91%','新增领款')"><i class="fa fa-list"></i> 新增</button>
-	<button id="btn_modify" type="button" class="btn btn-primary" onclick="$.operate.editWithTitle(null,'30%','91%','修改领款')"><i class="fa fa-pencil-square-o"></i> 修改</button>
-	<button id="btn_delete" type="button" class="btn btn-primary" onclick="$.operate.removeWithTitle(null,'30%','60%','信息确认')"><i class="fa fa-trash-o"></i> 删除</button>
-        <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
+	<#resource code="addPayee">
+		<button id="btn_add" type="button" class="btn btn-primary" onclick="$.operate.addWithTitle(null,'40%','91%','新增领款')"><i class="fa fa-list"></i> 新增</button>
+	</#resource>
+	<#resource code="modifyPayee">
+		<button id="btn_modify" type="button" class="btn btn-primary" onclick="$.operate.editWithTitle(null,'40%','91%','修改领款')"><i class="fa fa-pencil-square-o"></i> 修改</button>
+	</#resource>
+	<#resource code="deletePayee">
+		<button id="btn_delete" type="button" class="btn btn-primary" onclick="$.operate.removeWithTitle(null,'30%','60%','信息确认')"><i class="fa fa-trash-o"></i> 删除</button>
+	</#resource>
+	<#resource code="exportPayee">
+		<button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
             class="fa fa-file-excel-o"></i>
         导出
-    </button>
+    	</button>
+	</#resource>
 </div>
 
 <div class="row">
@@ -91,8 +99,8 @@
             //必须加这个唯一标识
             uniqueId: "id",
             createUrl: "${contextPath}/cash/addPayee.html",
-            updateUrl: "${contextPath}/cash/modify.html/{id}",
-            removeUrl: "${contextPath}/cash/delete.html/{id}"
+            updateUrl: "${contextPath}/cash/modify.html?id={id}",
+            removeUrl: "${contextPath}/cash/delete.html?id={id}"
         };
         $.table.init(options);
     });

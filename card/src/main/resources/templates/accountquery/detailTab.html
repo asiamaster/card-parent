@@ -13,7 +13,7 @@
             </a>
         </li>
         <#resource code="frozen-fund">
-        <% if(isMaster) { %>
+        <% if(isMaster && cardState !=4) { %>
             <li class="nav-item">
                 <a class="nav-link" id="frozen-fund-tab" uri="/fund/frozen.html" data-toggle="tab" href="#frozen-fund" role="tab">
                     <h5>冻结资金</h5>
@@ -23,7 +23,7 @@
        </#resource>
 
        <#resource code="unfrozen-fund">
-        <% if(isMaster) { %>
+        <% if(isMaster && cardState !=4) { %>
             <li class="nav-item">
                 <a class="nav-link" id="unfrozen-fund-tab" uri="/fund/unfrozenFund.html" data-toggle="tab" href="#unfrozen-fund" role="tab">
                     <h5>解冻资金</h5>

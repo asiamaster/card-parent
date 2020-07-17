@@ -21,16 +21,31 @@ public class CreateTradeRequestDto {
     /** 业务账号ID*/
     private Long businessId;
 
+
+    public static CreateTradeRequestDto createCommon(Long fundAccountId,
+                                                     Long businessId){
+        CreateTradeRequestDto requestDto = new CreateTradeRequestDto();
+        requestDto.setAccountId(fundAccountId);
+        requestDto.setBusinessId(businessId);
+        return requestDto;
+    }
+
+    public static CreateTradeRequestDto createFrozenAmount(Long fundAccountId,
+                                                           Long accountId,
+                                                           Long amount){
+        CreateTradeRequestDto requestDto = createCommon(fundAccountId, accountId);
+        requestDto.setAmount(amount);
+        return requestDto;
+    }
+
     public static CreateTradeRequestDto createTrade(Integer type,
-                                                    Long bizId,
                                                     Long accountId,
+                                                    Long fundAccountId,
                                                     Long amount,
                                                     String serialNo,
                                                     String cycleNo) {
-        CreateTradeRequestDto requestDto = new CreateTradeRequestDto();
+        CreateTradeRequestDto requestDto = createCommon(fundAccountId, accountId);
         requestDto.setType(type);
-        requestDto.setBusinessId(bizId);
-        requestDto.setAccountId(accountId);
         requestDto.setAmount(amount);
         requestDto.setSerialNo(serialNo);
         requestDto.setCycleNo(cycleNo);

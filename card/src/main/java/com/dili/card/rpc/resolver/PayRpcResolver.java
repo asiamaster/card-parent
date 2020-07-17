@@ -48,7 +48,7 @@ public class PayRpcResolver {
      * @author miaoguoxin
      * @date 2020/6/30
      */
-    public Long postFrozenFund(CreateTradeRequestDto requestDto) {
+    public FundOpResponseDto postFrozenFund(CreateTradeRequestDto requestDto) {
         return GenericRpcResolver.resolver(payRpc.frozenFund(requestDto), SERVICE_NAME);
     }
 }
