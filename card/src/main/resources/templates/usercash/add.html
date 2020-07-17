@@ -29,8 +29,9 @@
 				</tr>
 				<tr>
 					<td class="info-column">柜员姓名</td>
-					<td id="_userName" class="info-cell"></td>
-                    <input id="inputuserName" name="userName" type="hidden" class="form-control"/>
+					<td id="_userName" class="info-cell">
+						<input id="inputuserName" name="userName" type="hidden" class="form-control"/>
+					</td>
 				</tr>
 				<tr>
 					<td class="info-column">交款金额</td>
@@ -88,7 +89,6 @@ function submitHandler(e) {
     }
     let url = "${contextPath}/cash/save.action";
     let data = $.common.formToJSON(formId);
-    alert(JSON.stringify(data));
     $.operate.save(url, JSON.stringify(data));
     return true;
 }
