@@ -62,7 +62,6 @@ $(function(){
 			$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amountYuan').val())));
 		} );
 	});
-let formId = "saveForm";
 $("#" + formId).validate({
     onkeyup: false,
     rules: {
@@ -75,7 +74,7 @@ $("#" + formId).validate({
     },
     messages: {
     	amountYuan: {
-            required: "交款金额必填",
+            required: "金额必填",
         },
         userCode: {
             required: "员工工号必填",
@@ -84,11 +83,12 @@ $("#" + formId).validate({
     focusCleanup: true
 });
 function submitHandler(e) {
-    if (!$.validate.form(formId)) {
+    if (!$.validate.form("saveForm")) {
         return false;
     }
     let url = "${contextPath}/cash/save.action";
-    let data = $.common.formToJSON(formId);
+    let data = $.common.formToJSON("saveForm");
+    alert(JSON.stringify(data));
     $.operate.save(url, JSON.stringify(data));
     return true;
 }

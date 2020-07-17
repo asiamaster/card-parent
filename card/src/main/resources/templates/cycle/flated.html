@@ -8,7 +8,7 @@
 </style>
 <div id="detail-modal" style="text-align: center;">
 	<div id="div_model">
-		<form  id="queryForm" role="form" >
+		<form  id="flated" role="form" >
 			<input id="id" name="id" type="hidden" value="${detail.id!}" class="form-control"/>
         	<div class="form-group col-auto">
                 <label for="cardNo">确认要对<font color="#FC1D24">${detail.userName!}</font>进行对账吗？</label>
@@ -21,7 +21,7 @@
 <script>
 function submitHandler(e) {
     let url = "${contextPath}/cash/flated.action";
-    let data = $.common.formToJSON(formId);
+    let data = $.common.formToJSON("flated");
     $.operate.save(url, JSON.stringify(data));
     return true;
 }	

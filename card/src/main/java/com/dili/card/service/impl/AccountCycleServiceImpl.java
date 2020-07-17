@@ -47,12 +47,15 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void settle(Long id) {
-		AccountCycleDo accountCycle = this.findById(id);
+	public void settle(Long userId) {
+		AccountCycleDo accountCycle = this.findActiveCycleByUserId(userId);
+		if (accountCycle == null) {
+			throw new CardAppBizException("当前没有可以申请的账务周期");
+		}
 		// 对账状态校验
 		this.validateCycleSettledState(accountCycle);
 		// 更新账务周期状态
-		this.updateStateById(id, CycleState.SETTLED.getCode(), accountCycle.getVersion());
+		this.updateStateById(accountCycle.getId(), CycleState.SETTLED.getCode(), accountCycle.getVersion());
 	}
 
 	@Override
