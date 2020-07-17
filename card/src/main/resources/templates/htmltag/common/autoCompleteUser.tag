@@ -24,6 +24,8 @@
         selectFn: function (suggestion) {
             $('#_userCode').text(suggestion.serialNumber);
             $('#userCode').val(suggestion.serialNumber);
+            $('#_userName').text(suggestion.realName);
+            $('#inputuserName').val(suggestion.realName);
         }
     };
 

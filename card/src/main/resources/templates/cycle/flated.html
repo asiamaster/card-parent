@@ -17,3 +17,12 @@
 	</div>
 </div>    
 </#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script>
+function submitHandler(e) {
+    let url = "${contextPath}/cash/flated.action";
+    let data = $.common.formToJSON(formId);
+    $.operate.save(url, JSON.stringify(data));
+    return true;
+}	
+</script>

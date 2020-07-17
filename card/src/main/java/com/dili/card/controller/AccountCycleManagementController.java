@@ -86,8 +86,8 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 *
 	 * @date 2020/7/6
 	 */
-	@GetMapping("/flated.html/{id}")
-	public String flatedHtml(@PathVariable Long id, ModelMap map) {
+	@GetMapping("/flated.html")
+	public String flatedHtml(Long id, ModelMap map) {
 		if (id == null || id < 0L) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期对账请求参数错误");
 		}
@@ -100,8 +100,8 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 *
 	 * @date 2020/7/6
 	 */
-	@GetMapping("/addPayer.html/{id}")
-	public String addPayer(@PathVariable Long id, ModelMap map) {
+	@GetMapping("/addPayer.html")
+	public String addPayer(Long id, ModelMap map) {
 		if (id == null || id < 0L) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期发起交款请求参数错误");
 		}

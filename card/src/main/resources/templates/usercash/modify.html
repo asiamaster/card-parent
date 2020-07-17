@@ -16,7 +16,7 @@
     }
 </style>
     <div id="detail-modal" >
-    	<form id="save-form" style="width: 90%;">
+    	<form id="saveForm" style="width: 90%;">
     		<input id="id" name="id" type="hidden" value="${usercash.id!}" class="form-control"/>
     		<input id="action" name="action" type="hidden" value="${usercash.action!}" class="form-control"/>
 	        <table id="out-detail" class="table table-bordered" >
@@ -24,17 +24,21 @@
 	            <tr>
 	                <td class="info-column">柜员工号</td>
 	                <td class="info-cell">
-	                	<input param-multiple="true" name="userId" type="text" value="${usercash.userId!}" class="form-control"  id="userId" maxlength="50"/>
+	                	<#bautoCompleteProvider
+							_hiddenDomainId="userId" _hiddenDomainName="userId"
+							_displayDomainId="userCode" _displayDomainName="userCode"
+							_placeholder="" _text="${usercash.userCode!}"  _optionVariable="userNameAutoCompleteOption" />
 	                </td>
 	            </tr>
 	            <tr>
 	                <td class="info-column">柜员姓名</td>
 	                <td class="info-cell">${usercash.userName!}</td>
+	                <input id="inputuserName" name="userName" type="hidden" value="${usercash.userName!}"/>
 	            </tr>
 	            <tr>
 	                <td class="info-column">交款金额</td>
 	                <td class="info-cell">
-	                	<input id="amount" name="amount" type="text" value="${usercash.amountYuan!}" class="form-control"/>
+	                	<input id="amountYuan" name="amountYuan" type="text" value="${usercash.amountYuan!}" class="form-control"/>
 	                </td>
 	            </tr>
 	           	<tr>
@@ -55,9 +59,42 @@
 <#common_userJs/>
 <script>
 $(function(){
-	$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amount').val())));
-	$('#amount').bind(' input propertychange ', function(){
-		$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amount').val())));
+	userNameAutoCompleteOption.displayFieldName='serialNumber';
+	$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amountYuan').val())));
+	$('#amountYuan').bind(' input propertychange ', function(){
+		$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amountYuan').val())));
 	} );
 });
+
+let formId = "saveForm";
+$("#" + formId).validate({
+    onkeyup: false,
+    rules: {
+    	amountYuan: {
+            required: true,
+        },
+        userCode: {
+            required: true,
+        }
+    },
+    messages: {
+    	amountYuan: {
+            required: "交款金额必填",
+        },
+        userCode: {
+            required: "员工工号必填",
+        }
+    },
+    focusCleanup: true
+});
+function submitHandler(e) {
+    if (!$.validate.form(formId)) {
+        return false;
+    }
+    let url = "${contextPath}/cash/modify.action";
+    let data = $.common.formToJSON(formId);
+    alert(JSON.stringify(data));
+    $.operate.save(url, JSON.stringify(data));
+    return true;
+}
 </script>

@@ -853,10 +853,7 @@ tab = {
                 if ($.common.isEmpty(_url)){
                     return;
                 }
-                let urlLastNum = _url.substring(_url.lastIndexOf("/") + 1);
-                let urlLast=_url.substring(0,_url.lastIndexOf("/")) + "?id=" + urlLastNum;
-                alert(urlLast);
-                window.location.href=urlLast;
+                window.location.href=_url;
             },
             // 详细信息
             detail: function (id, width, height) {
