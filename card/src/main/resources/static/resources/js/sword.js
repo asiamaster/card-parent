@@ -1226,6 +1226,8 @@ tab = {
                     }
                 } else if (result.code == web_status.WARNING) {
                     $.modal.alertWarning(result.message)
+                } else if (result.code == web_status.BIZERROR) {
+                    $.modal.alertWarning(result.message)
                 } else {
                     $.modal.alertError(result.message);
                 }
@@ -1711,7 +1713,8 @@ table_type = {
 web_status = {
     SUCCESS: 200,
     FAIL: 500,
-    WARNING: 301
+    WARNING: 301,
+    BIZERROR:'2000'
 };
 
 /** 弹窗状态码 */
