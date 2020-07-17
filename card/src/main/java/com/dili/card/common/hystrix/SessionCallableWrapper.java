@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import java.lang.reflect.Field;
 import java.util.concurrent.Callable;
 
 /**
@@ -16,19 +17,29 @@ import java.util.concurrent.Callable;
  * @Description:
  */
 public class SessionCallableWrapper implements HystrixCallableWrapper {
+    private static final String USER_TICKET = "userTicket";
     private static Logger LOGGER = LoggerFactory.getLogger(SessionCallableWrapper.class);
 
     @Override
     public <T> Callable<T> wrap(Callable<T> callable) {
-       // LOGGER.info("当前线程:{}",Thread.currentThread());
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        if (requestAttributes != null) {
-            requestAttributes.setAttribute(Constant.SESSION, SessionContext.getSessionContext(), RequestAttributes.SCOPE_REQUEST);
+        // LOGGER.info("当前线程:{}",Thread.currentThread());
+        SessionContext sessionContext = SessionContext.getSessionContext();
+        RequestAttributes requestAttributes = null;
+        try {
+            requestAttributes = RequestContextHolder.getRequestAttributes();
+            Field userTicketField = sessionContext.getClass().getDeclaredField(USER_TICKET);
+            userTicketField.setAccessible(true);
+            if (userTicketField.get(sessionContext) != null && requestAttributes != null) {
+                requestAttributes.setAttribute(Constant.SESSION, sessionContext, RequestAttributes.SCOPE_REQUEST);
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
         }
+        RequestAttributes finalRequestAttributes = requestAttributes;
         return () -> {
             try {
-                if (requestAttributes != null) {
-                    RequestContextHolder.setRequestAttributes(requestAttributes);
+                if (finalRequestAttributes != null) {
+                    RequestContextHolder.setRequestAttributes(finalRequestAttributes);
                 }
                 return callable.call();
             } finally {

@@ -20,6 +20,7 @@ import java.lang.reflect.Proxy;
  */
 public class TccFeignBeanPostProcessor implements BeanPostProcessor, InitializingBean {
     private static final String FEIGN_CLAZZ_NAME = "feign.ReflectiveFeign$FeignInvocationHandler";
+    static final String HYSTRIX_CLAZZ_NAME = "feign.hystrix.HystrixInvocationHandler";
 
     private Field singletonTargetSourceTargetField = null;
 
@@ -59,7 +60,8 @@ public class TccFeignBeanPostProcessor implements BeanPostProcessor, Initializin
         InvocationHandler handler = Proxy.getInvocationHandler(object);
 
         if (targetSource == null
-                && !FEIGN_CLAZZ_NAME.equals(handler.getClass().getName())) {
+                && !FEIGN_CLAZZ_NAME.equals(handler.getClass().getName())
+                && !HYSTRIX_CLAZZ_NAME.equals(handler.getClass().getName())) {
             return bean;
         }
 

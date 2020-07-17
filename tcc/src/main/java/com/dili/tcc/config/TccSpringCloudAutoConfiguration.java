@@ -75,8 +75,6 @@ public class TccSpringCloudAutoConfiguration {
     @Configuration
     @ConditionalOnProperty(name = "feign.hystrix.enabled", havingValue = "true")
     public class HystrixTccConfig {
-        @Autowired(required = false)
-        private List<HystrixCallableWrapper> wrappers = new ArrayList<>();
 
         @Bean
         public HystrixTccContextCallableWrapper hystrixTccContextCallableWrapper() {
@@ -84,7 +82,7 @@ public class TccSpringCloudAutoConfiguration {
         }
 
         @Bean
-        public ContextHystrixConcurrencyStrategy contextHystrixConcurrencyStrategy() {
+        public ContextHystrixConcurrencyStrategy contextHystrixConcurrencyStrategy(@Autowired(required = false) List<HystrixCallableWrapper> wrappers) {
             return new ContextHystrixConcurrencyStrategy(wrappers);
         }
     }

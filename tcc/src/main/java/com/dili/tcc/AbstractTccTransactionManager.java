@@ -56,7 +56,6 @@ public abstract class AbstractTccTransactionManager<R, T> {
      */
     protected abstract R confirm(T requestDto);
 
-
     /**
      * cancel阶段(try阶段反向操作)
      * @author miaoguoxin
