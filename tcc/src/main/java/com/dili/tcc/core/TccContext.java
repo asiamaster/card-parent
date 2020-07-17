@@ -13,7 +13,7 @@ import java.util.Map;
  * @Description:
  */
 public class TccContext {
-    /**每个阶段的重试次数，每次执行到下一个阶段的时候需要清除该参数*/
+    /**阶段重试次数，只有cancel和confirm阶段重试*/
     private int retryNum;
 
     private TccStatus tccStatus;

@@ -25,32 +25,15 @@ public class SessionCallableWrapper implements HystrixCallableWrapper {
         if (requestAttributes != null) {
             requestAttributes.setAttribute(Constant.SESSION, SessionContext.getSessionContext(), RequestAttributes.SCOPE_REQUEST);
         }
-        return new RequestAttributeAwareCallable<>(callable, requestAttributes);
-    }
-
-    static class RequestAttributeAwareCallable<T> implements Callable<T> {
-
-        private final Callable<T> delegate;
-
-        private final RequestAttributes requestAttributes;
-
-        RequestAttributeAwareCallable(Callable<T> callable, RequestAttributes requestAttributes) {
-            this.delegate = callable;
-            this.requestAttributes = requestAttributes;
-        }
-
-        @Override
-        public T call() throws Exception {
-           // LOGGER.info("当前call线程:{}",Thread.currentThread());
+        return () -> {
             try {
-                if (this.requestAttributes != null) {
-                    RequestContextHolder.setRequestAttributes(this.requestAttributes);
+                if (requestAttributes != null) {
+                    RequestContextHolder.setRequestAttributes(requestAttributes);
                 }
-                return delegate.call();
+                return callable.call();
             } finally {
                 RequestContextHolder.resetRequestAttributes();
             }
-        }
+        };
     }
-
 }
