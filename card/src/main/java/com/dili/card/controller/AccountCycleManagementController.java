@@ -1,14 +1,11 @@
 package com.dili.card.controller;
 
-import java.util.List;
 import java.util.Map;
 
-import com.dili.card.common.handler.IControllerHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
+import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.AccountCycleDto;
 import com.dili.card.exception.CardAppBizException;
@@ -24,6 +22,8 @@ import com.dili.card.type.CashAction;
 import com.dili.card.type.CycleState;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
 
 /**
  * 账务管理
@@ -75,7 +75,8 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 */
 	@GetMapping("/applyDetail.html")
 	public String applyDetail(ModelMap map) {
-		String json = JSON.toJSONString(iAccountCycleService.applyDetail(3L), new EnumTextDisplayAfterFilter());
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		String json = JSON.toJSONString(iAccountCycleService.applyDetail(userTicket.getId()), new EnumTextDisplayAfterFilter());
 		map.put("detail", JSON.parseObject(json));
 		map.put("settled", CycleState.ACTIVE.getCode());
 		return "cycle/detail";
@@ -111,13 +112,13 @@ public class AccountCycleManagementController implements IControllerHandler {
 	}
 
 	/**
-	 * 对账
+	 * 结账申请对账
 	 */
-	@PostMapping("/settle.action")
+	@PostMapping("/applySettle.action")
 	@ResponseBody
-	public BaseOutput<Boolean> settle(@RequestBody AccountCycleDto accountCycleDto) {
-		iAccountCycleService.settle(accountCycleDto.getId());
-		return BaseOutput.success();
+	public BaseOutput<Boolean> applySettle(@RequestBody AccountCycleDto accountCycleDto) {
+		iAccountCycleService.settle(accountCycleDto.getUserId());
+		return BaseOutput.success("结账申请成功!");
 	}
 
 	/**
@@ -127,7 +128,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	@ResponseBody
 	public BaseOutput<Boolean> flated(@RequestBody AccountCycleDto accountCycleDto) {
 		iAccountCycleService.flated(accountCycleDto.getId());
-		return BaseOutput.success();
+		return BaseOutput.success("平账成功！");
 	}
 
 	/**

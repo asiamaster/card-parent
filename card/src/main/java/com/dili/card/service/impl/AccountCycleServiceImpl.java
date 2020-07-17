@@ -25,6 +25,7 @@ import com.dili.card.type.BizNoType;
 import com.dili.card.type.CycleState;
 import com.dili.card.type.CycleStatisticType;
 import com.dili.card.util.PageUtils;
+import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
@@ -47,12 +48,15 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void settle(Long id) {
-		AccountCycleDo accountCycle = this.findById(id);
+	public void settle(Long userId) {
+		AccountCycleDo accountCycle = this.findActiveCycleByUserId(userId);
+		if (accountCycle == null) {
+			throw new CardAppBizException("当前没有可以申请的账务周期");
+		}
 		// 对账状态校验
 		this.validateCycleSettledState(accountCycle);
 		// 更新账务周期状态
-		this.updateStateById(id, CycleState.SETTLED.getCode(), accountCycle.getVersion());
+		this.updateStateById(accountCycle.getId(), CycleState.SETTLED.getCode(), accountCycle.getVersion());
 	}
 
 	@Override
@@ -217,10 +221,10 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	 */
 	private void validateCycleFlatedState(AccountCycleDo accountCycle) {
 		if (accountCycle.getState() == CycleState.ACTIVE.getCode()) {
-			throw new CardAppBizException("当前账务周期未结账,不能进行此操作");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "当前账务周期未结账,不能进行此操作");
 		}
 		if (accountCycle.getState() == CycleState.FLATED.getCode()) {
-			throw new CardAppBizException("当前账务周期已平账,不能重复操作");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "当前账务周期已平账,不能重复操作");
 		}
 	}
 
