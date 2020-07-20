@@ -15,6 +15,7 @@ import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
+import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IPayService;
 import com.dili.card.type.CardStatus;
@@ -51,6 +52,8 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     @Autowired
     private IPayService payService;
     @Autowired
+    private PayRpcResolver payRpcResolver;
+    @Autowired
     private AccountQueryRpcResolver accountQueryRpcResolver;
     @Resource
 	CustomerRpc customerRpc;
@@ -79,7 +82,8 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByCardNoWithAssociation(cardNo);
         UserAccountCardResponseDto primary = cardAssociation.getPrimary();
         CustomerResponseDto customer = customerRpcResolver.findCustomerByIdWithConvert(primary.getCustomerId(), primary.getFirmId());
-        BalanceResponseDto fund = payService.queryBalance(new BalanceRequestDto(primary.getFundAccountId()));
+
+        BalanceResponseDto fund = payRpcResolver.findBalanceByFundAccountId(primary.getFundAccountId());
 
         detail.setAccountFund(fund);
         detail.setCustomer(customer);
@@ -146,7 +150,10 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
             BeanUtils.copyProperties(accountCard, accountList);
             CustomerResponseDto customerResponseDto = customerMap.getOrDefault(accountCard.getCustomerId(),
                     new CustomerResponseDto());
-            accountList.setCustomer(customerResponseDto);
+            accountList.setCustomerId(customerResponseDto.getId());
+            accountList.setCustomerName(customerResponseDto.getName());
+            accountList.setCustomerCode(customerResponseDto.getCode());
+            accountList.setCustomerCellphone(customerResponseDto.getContactsPhone());
             accountListResponseDtos.add(accountList);
         }
         return accountListResponseDtos;
