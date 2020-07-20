@@ -41,8 +41,6 @@ public class AccountQueryManagementController implements IControllerHandler {
 
     /**
      * 跳转列表页面
-     * @param
-     * @return
      * @author miaoguoxin
      * @date 2020/6/22
      */

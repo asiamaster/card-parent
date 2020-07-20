@@ -76,10 +76,11 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
      */
     public final void doRecharge(FundRequestDto requestDto) {
         BusinessRecordDo record = TccContextHolder.get().getAttr(Constant.BUSINESS_RECORD_KEY, BusinessRecordDo.class);
-        TradeRequestDto dto = this.recharge(requestDto);
+        TradeRequestDto dto = this.buildTradeRequest(requestDto);
         //务必设置bizId
         dto.setBusinessId(record.getAccountId());
         TradeResponseDto tradeResponseDto = payService.commitTrade(dto);
+        this.afterCommitRecharge(requestDto);
         //记录日志
         try {
             SerialDto serialDto = this.buildRechargeSerial(requestDto, record, tradeResponseDto);
@@ -90,7 +91,16 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
     }
 
     /**
-     * 按需进行重写
+    * 提交充值请求之后的一些逻辑
+    * @author miaoguoxin
+    * @date 2020/7/20
+    */
+    protected void afterCommitRecharge(FundRequestDto requestDto){
+
+    }
+
+    /**
+     * 构建充值流水数据
      * @author miaoguoxin
      * @date 2020/7/8
      */

@@ -31,11 +31,14 @@ public class CashRechargeService extends AbstractRechargeManager {
     }
 
     @Override
-    public TradeRequestDto recharge(FundRequestDto requestDto) {
-        BusinessRecordDo businessRecordDo = TccContextHolder.get().getAttr(Constant.BUSINESS_RECORD_KEY, BusinessRecordDo.class);
-        //添加现金资金池
-        accountCycleService.increaseCashBox(businessRecordDo.getCycleNo(), requestDto.getAmount());
+    public TradeRequestDto buildTradeRequest(FundRequestDto requestDto) {
         return super.createRechargeRequestDto(requestDto);
     }
 
+    @Override
+    protected void afterCommitRecharge(FundRequestDto requestDto) {
+        BusinessRecordDo businessRecordDo = TccContextHolder.get().getAttr(Constant.BUSINESS_RECORD_KEY, BusinessRecordDo.class);
+        //添加现金资金池
+        accountCycleService.increaseCashBox(businessRecordDo.getCycleNo(), requestDto.getAmount());
+    }
 }
