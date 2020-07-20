@@ -7,4 +7,6 @@ public class CardValidator {
     public interface Generic {}
 
     public interface ChangeCard{}
+    
+    public interface ResetPassword{}
 }

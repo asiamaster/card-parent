@@ -70,22 +70,28 @@
     </div>
     <div class="main-container container-fluid">
     <ul id="detailTab" class="nav nav-tabs" role="tablist">
+    	<#resource code="payeeList">
         <li class="nav-item">
             <a class="nav-link" id="payee-tab" uri="/cash/payeeListTab.html" data-toggle="tab" href="#payee"
                role="tab" aria-selected="true">
                 <h5>领款明细</h5>
             </a>
         </li>
+        </#resource>
+        <#resource code="payerList">
         <li class="nav-item">
             <a class="nav-link" id="payer-tab" uri="/cash/payerListTab.html" data-toggle="tab" href="#payer" role="tab">
                 <h5>交款明细</h5>
             </a>
         </li>
+        </#resource>
+        <#resource code="serialList">
         <li class="nav-item">
             <a class="nav-link" id="operation-tab" uri="/cycle/serialTab.html" data-toggle="tab" href="#operation" role="tab">
                 <h5>操作记录</h5>
             </a>
         </li>
+        </#resource>
     </ul>
 </div>
 
@@ -94,11 +100,13 @@
     </div>
     <div class="tab-pane tab-info" id="payer" role="tabpanel">
     </div>
-    <div class="tab-pane" id="operation" role="tabpanel">
+    <div class="tab-pane tab-info" id="operation" role="tabpanel">
     </div>
 </div>
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
 <script>
 	function applySettlement(){
 		let url = "${contextPath}/cycle/applySettle.action";
@@ -118,12 +126,12 @@
     $(() => {
         let options = {
             id: 'detailTab',
-            activeId: 'payer-tab',
+            activeId: 'payee-tab',
             prefixUrl: prefix
         };
         $.tab.init(options);
         //监听tab切换
-        $.tab.onChange()
+        $.tab.onChange();
     });
 
 </script>

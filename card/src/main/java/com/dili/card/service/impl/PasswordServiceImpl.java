@@ -26,10 +26,10 @@ public class PasswordServiceImpl implements IPasswordService{
 	private ISerialService serialService;
 
 	@Override
-	public void resetLoginPwd(CardRequestDto cardRequestDto) throws Exception {
+	public void resetLoginPwd(CardRequestDto cardParam) throws Exception {
 		//重置密码
 		try {
-			cardManageRpcResolver.resetLoginPwd(cardRequestDto);
+			cardManageRpcResolver.resetLoginPwd(cardParam);
 		} catch (Exception e) {
 			LOGGER.error("重置密码失败");
 		}
