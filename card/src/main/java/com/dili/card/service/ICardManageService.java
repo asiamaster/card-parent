@@ -23,7 +23,7 @@ public interface ICardManageService {
 	/**
 	 * @description：重置登陆密码
 	 */
-	void resetLoginPwd(CardRequestDto cardRequestDto);
+	void resetLoginPwd(CardRequestDto cardParam);
 
 	/**
 	 * 解锁卡片
