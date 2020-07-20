@@ -58,5 +58,10 @@ public interface IUserCashDao {
 	 * 根据账务周期更新状态
 	 */
 	int updateStateByCycle(@Param("cycleNo") Long cycleNo, @Param("state") Integer state);
+
+	/**
+	 * 获取交款取款分类处理的总金额
+	 */
+	Long findTotalAmountByUserId(UserCashDto userCashDto);
 	
 }

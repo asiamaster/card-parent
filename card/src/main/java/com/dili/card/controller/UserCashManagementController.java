@@ -118,7 +118,9 @@ public class UserCashManagementController implements IControllerHandler {
     @PostMapping("/payeeList.action")
     @ResponseBody
     public Map<String, Object> listPayee(UserCashDto userCashDto) {
-        return successPage(iUserCashService.listPayee(userCashDto));
+    	Map<String, Object> response = successPage(iUserCashService.listPayee(userCashDto));
+    	response.put("totalAmount", iUserCashService.findTotalAmountByUserId(userCashDto, CashAction.PAYEE));
+        return response;
     }
 
     /**
@@ -127,7 +129,9 @@ public class UserCashManagementController implements IControllerHandler {
     @PostMapping("/payerList.action")
     @ResponseBody
     public Map<String, Object> listPayer(UserCashDto userCashDto) {
-        return successPage(iUserCashService.listPayer(userCashDto));
+    	Map<String, Object> response = successPage(iUserCashService.listPayee(userCashDto));
+    	response.put("totalAmount", iUserCashService.findTotalAmountByUserId(userCashDto, CashAction.PAYER));
+        return response;
     }
 
 

@@ -90,6 +90,14 @@ public class UserCashServiceImpl implements IUserCashService {
 	public UserCashDto detail(Long id) {
 		return this.buildSingleCashDtoy(this.findById(id));
 	}
+	
+
+	@Override
+	public Long findTotalAmountByUserId(UserCashDto userCashDto, CashAction cashAction) {
+		this.buildUserCashCondition(userCashDto, cashAction);
+		return userCashDao.findTotalAmountByUserId(userCashDto);
+	}
+
 
 	@Override
 	public void flatedByCycle(Long cycleNo) {
@@ -185,5 +193,4 @@ public class UserCashServiceImpl implements IUserCashService {
 		cashDto.setId(userCashDo.getId());
 		return cashDto;
 	}
-
 }

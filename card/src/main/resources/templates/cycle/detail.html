@@ -108,7 +108,22 @@
 <script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
 <script>
-	function applySettlement(){
+    let prefix = '${contextPath}';
+    let cycleNo = $.trim($("#cycle").text());
+    //初始化函数
+    $(() => {
+       let options = {
+            id: 'detailTab',
+            activeId: 'payee-tab',
+            prefixUrl: prefix
+        };
+        $.tab.init(options);
+        //监听tab切换
+        $.tab.onChange(e);
+    });
+
+    
+    function applySettlement(){
 		let url = "${contextPath}/cycle/applySettle.action";
 	    let data = $.common.formToJSON("settleForm");
 	    $.operate.saveModal(url, JSON.stringify(data));
@@ -119,19 +134,4 @@
     function backList() {
     	window.location.href="${contextPath}/cycle/list.html";
     }
-    
-    let prefix = '${contextPath}';
-    let cycleNo = $.trim($("#cycle").text());
-    //初始化函数
-    $(() => {
-        let options = {
-            id: 'detailTab',
-            activeId: 'payee-tab',
-            prefixUrl: prefix
-        };
-        $.tab.init(options);
-        //监听tab切换
-        $.tab.onChange();
-    });
-
 </script>
