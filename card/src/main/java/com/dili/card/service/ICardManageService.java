@@ -19,6 +19,11 @@ public interface ICardManageService {
 	 * 退卡
 	 */
 	void returnCard(CardRequestDto cardParam);
+	
+	/**
+	 * @description：重置登陆密码
+	 */
+	void resetLoginPwd(CardRequestDto cardRequestDto);
 
 	/**
 	 * 解锁卡片
