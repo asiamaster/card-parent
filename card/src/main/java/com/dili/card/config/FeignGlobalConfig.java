@@ -74,7 +74,7 @@ public class FeignGlobalConfig {
         if (requestAttributes == null) {
             return null;
         }
-        Object attribute = requestAttributes.getAttribute(Constant.SESSION, RequestAttributes.SCOPE_REQUEST);
+        Object attribute = requestAttributes.getAttribute(Constant.SESSION, RequestAttributes.SCOPE_SESSION);
         if (!(attribute instanceof SessionContext)) {
             return null;
         }

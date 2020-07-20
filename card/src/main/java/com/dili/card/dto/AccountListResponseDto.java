@@ -21,8 +21,14 @@ public class AccountListResponseDto extends BaseDto implements Serializable {
     /**卡类别 {@link com.dili.card.type.CardType}*/
     @TextDisplay(CardTypeProvider.class)
     private Integer cardType;
-    /**客户资料信息*/
-    private CustomerResponseDto customer;
+    /**客户id*/
+    private Long customerId;
+    /**客户名称*/
+    private String customerName;
+    /**客户编号*/
+    private String customerCode;
+    /**客户电话*/
+    private String customerCellphone;
     /**卡状态 {@link com.dili.card.type.CardStatus}*/
     @TextDisplay(CardStateProvider.class)
     private Integer cardState;
@@ -54,13 +60,6 @@ public class AccountListResponseDto extends BaseDto implements Serializable {
         this.cardType = cardType;
     }
 
-    public CustomerResponseDto getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(CustomerResponseDto customer) {
-        this.customer = customer;
-    }
 
     public Integer getCardState() {
         return cardState;
@@ -78,4 +77,36 @@ public class AccountListResponseDto extends BaseDto implements Serializable {
         this.cardCreateTime = cardCreateTime;
     }
 
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+
+    public String getCustomerCellphone() {
+        return customerCellphone;
+    }
+
+    public void setCustomerCellphone(String customerCellphone) {
+        this.customerCellphone = customerCellphone;
+    }
 }

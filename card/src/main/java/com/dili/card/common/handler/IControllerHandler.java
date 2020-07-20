@@ -39,7 +39,7 @@ public interface IControllerHandler {
         UserTicket userTicket = sessionContext.getUserTicket();
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         if (requestAttributes != null) {
-            requestAttributes.setAttribute(Constant.SESSION, sessionContext, RequestAttributes.SCOPE_REQUEST);
+            requestAttributes.setAttribute(Constant.SESSION, sessionContext, RequestAttributes.SCOPE_SESSION);
         }
         return userTicket != null ? userTicket : DTOUtils.newInstance(UserTicket.class);
     }

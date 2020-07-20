@@ -82,7 +82,7 @@ public class CardManageController implements IControllerHandler {
     }
 
     /**
-     * 换卡
+     * 换卡(C)
      * @author miaoguoxin
      * @date 2020/7/14
      */
@@ -97,7 +97,7 @@ public class CardManageController implements IControllerHandler {
     }
 
     /**
-     * 挂失
+     * 挂失(C)
      * @author miaoguoxin
      * @date 2020/7/14
      */
