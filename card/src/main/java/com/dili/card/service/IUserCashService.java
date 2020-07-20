@@ -56,5 +56,10 @@ public interface IUserCashService {
 	 * 根据账务周期更新记录
 	 */
 	void flatedByCycle(Long cycleNo);
+	
+	/**
+	 * 获取交款取款分类处理的总金额
+	 */
+	Long findTotalAmountByUserId(UserCashDto userCashDto, CashAction cashAction);
 
 }
