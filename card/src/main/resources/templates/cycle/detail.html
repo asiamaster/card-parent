@@ -72,7 +72,7 @@
     <ul id="detailTab" class="nav nav-tabs" role="tablist">
     	<#resource code="payeeList">
         <li class="nav-item">
-            <a class="nav-link" id="payee-tab" uri="/cash/payeeListTab.html" data-toggle="tab" href="#payee"
+            <a class="nav-link" id="payee-tab" uri="/cash/payeeListTab.html" data-toggle="tab" href="#payee-record"
                role="tab" aria-selected="true">
                 <h5>领款明细</h5>
             </a>
@@ -80,14 +80,14 @@
         </#resource>
         <#resource code="payerList">
         <li class="nav-item">
-            <a class="nav-link" id="payer-tab" uri="/cash/payerListTab.html" data-toggle="tab" href="#payer" role="tab">
+            <a class="nav-link" id="payer-tab" uri="/cash/payerListTab.html" data-toggle="tab" href="#payer-record" role="tab">
                 <h5>交款明细</h5>
             </a>
         </li>
         </#resource>
         <#resource code="serialList">
         <li class="nav-item">
-            <a class="nav-link" id="operation-tab" uri="/cycle/serialTab.html" data-toggle="tab" href="#operation" role="tab">
+            <a class="nav-link" id="operation-tab" uri="/cycle/serialTab.html" data-toggle="tab" href="#operation-record" role="tab">
                 <h5>操作记录</h5>
             </a>
         </li>
@@ -96,11 +96,11 @@
 </div>
 
 <div id="detailTabContent" class="tab-content border-top-0">
-    <div class="tab-pane tab-info" id="payee" role="tabpanel">
+    <div class="tab-pane tab-info" id="payee-record" role="tabpanel">
     </div>
-    <div class="tab-pane tab-info" id="payer" role="tabpanel">
+    <div class="tab-pane tab-info" id="payer-record" role="tabpanel">
     </div>
-    <div class="tab-pane tab-info" id="operation" role="tabpanel">
+    <div class="tab-pane tab-info" id="operation-record" role="tabpanel">
     </div>
 </div>
 </#bs4Body>

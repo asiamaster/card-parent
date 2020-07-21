@@ -49,15 +49,11 @@
 </div>
 </#bs4Body>
 <#common_commonJs/>
-<#common_customerJs/>
-<#common_userJs/>
-<#serial_indexJs/>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <script>
     $(function () {
         var options = {
             url: "${contextPath}/serial/account/listPage.action",
-            singleSelect : true,
             queryParams:{
             	cycleNo:cycleNo,
             	rows:10,
