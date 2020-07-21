@@ -113,13 +113,13 @@
     //初始化函数
     $(() => {
        let options = {
-            id: 'detailTab',
-            activeId: 'payee-tab',
-            prefixUrl: prefix
+            id:'detailTab',
+            activeId:'operation-tab',
+            prefixUrl:prefix
         };
         $.tab.init(options);
         //监听tab切换
-        $.tab.onChange(e);
+        $.tab.onChange();
     });
 
     

@@ -1,5 +1,6 @@
 package com.dili.card.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
+import com.dili.card.dto.FundContractResponseDto;
 import com.dili.card.service.IContractService;
+import com.dili.card.type.ContractState;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.domain.BaseOutput;
 
@@ -71,6 +74,16 @@ public class ContractManagementController implements IControllerHandler {
     @ResponseBody
     public Map<String, Object> page(@Validated(ConstantValidator.Page.class) FundContractQueryDto contractQueryDto) {
         return successPage(iContractService.page(contractQueryDto));
+    }
+    
+
+    /**
+     * 列表查询合同
+     */
+    @PostMapping("/list.action")
+    @ResponseBody
+    public BaseOutput<List<FundContractResponseDto>> list(@Validated(ConstantValidator.Query.class) FundContractQueryDto contractQueryDto) {
+    	return BaseOutput.successData(iContractService.list(contractQueryDto));
     }
 
     /**

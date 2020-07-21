@@ -1,5 +1,10 @@
 package com.dili.card.dto;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import com.dili.card.validator.ConstantValidator;
+
 /**
  * 资金委托合同
  * @author bob
@@ -7,6 +12,8 @@ package com.dili.card.dto;
 public class FundContractQueryDto extends BaseDto{
 	private static final long serialVersionUID = 1L;
 	/** 委托人账号ID */
+	@NotNull(message = "委托人账号不能为空", groups = ConstantValidator.Query.class)
+	@Min(value = 1, message = "委托人账号最小为1", groups = ConstantValidator.Query.class)
 	private Long consignorAccountId;
 	/** 合同编号 */
 	private String contractNo; 
