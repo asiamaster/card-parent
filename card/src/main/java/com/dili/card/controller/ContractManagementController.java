@@ -56,7 +56,7 @@ public class ContractManagementController implements IControllerHandler {
         modelMap.put("detail", iContractService.removeToPage(id));
         return "contract/remove";
     }
-    
+
     /**
      * 新增合同
      */
@@ -75,14 +75,14 @@ public class ContractManagementController implements IControllerHandler {
     public Map<String, Object> page(@Validated(ConstantValidator.Page.class) FundContractQueryDto contractQueryDto) {
         return successPage(iContractService.page(contractQueryDto));
     }
-    
+
 
     /**
      * 列表查询合同
      */
     @PostMapping("/list.action")
     @ResponseBody
-    public BaseOutput<List<FundContractResponseDto>> list(@Validated(ConstantValidator.Query.class) FundContractQueryDto contractQueryDto) {
+    public BaseOutput<List<FundContractResponseDto>> list(@RequestBody @Validated(ConstantValidator.Query.class) FundContractQueryDto contractQueryDto) {
     	return BaseOutput.successData(iContractService.list(contractQueryDto));
     }
 
