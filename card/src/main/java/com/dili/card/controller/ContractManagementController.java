@@ -35,22 +35,6 @@ public class ContractManagementController implements IControllerHandler {
     public String listView() {
         return "contract/list";
     }
-    
-//    /**
-//     * 添加页面 第一步
-//     */
-//    @GetMapping("/addFirst.html")
-//    public String addFirstHtml() {
-//        return "contract/addFirst";
-//    }
-//    
-//    /**
-//     * 添加页面 第二步
-//     */
-//    @GetMapping("/addSec.html")
-//    public String addSecondHtml() {
-//        return "contract/addSec";
-//    }
 
     /**
      * 详情合同

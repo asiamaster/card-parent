@@ -58,11 +58,13 @@ public class FeignGlobalConfig {
             try {
                 Long firmId = sessionContext.getUserTicket().getFirmId();
                 JSONObject jsonObject = JSON.parseObject(bodyStr);
+                //服务的市场字段名不一样
                 jsonObject.putIfAbsent("marketId", firmId);
+                jsonObject.putIfAbsent("firmId", firmId);
                 Request.Body mutatedBody = Request.Body.encoded(jsonObject.toJSONString().getBytes(utf8), utf8);
                 template.body(mutatedBody);
             } catch (Exception e) {
-                LOGGER.error("设置marketId异常:", e);
+                LOGGER.error("设置市场id异常:", e);
             }
         };
     }
@@ -72,7 +74,7 @@ public class FeignGlobalConfig {
         if (requestAttributes == null) {
             return null;
         }
-        Object attribute = requestAttributes.getAttribute(Constant.SESSION, RequestAttributes.SCOPE_REQUEST);
+        Object attribute = requestAttributes.getAttribute(Constant.SESSION, RequestAttributes.SCOPE_SESSION);
         if (!(attribute instanceof SessionContext)) {
             return null;
         }

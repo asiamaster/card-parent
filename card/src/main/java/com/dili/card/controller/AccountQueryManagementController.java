@@ -41,8 +41,6 @@ public class AccountQueryManagementController implements IControllerHandler {
 
     /**
      * 跳转列表页面
-     * @param
-     * @return
      * @author miaoguoxin
      * @date 2020/6/22
      */
@@ -105,8 +103,9 @@ public class AccountQueryManagementController implements IControllerHandler {
      * @author miaoguoxin
      * @date 2020/7/7
      */
-    @GetMapping("simpleInfo.action")
+    @GetMapping("/simpleInfo.action")
     @ResponseBody
+    @Deprecated
     public BaseOutput<AccountSimpleResponseDto> getInfoByCardNo(String cardNo) {
         if (StringUtils.isBlank(cardNo)) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "卡号不能为空");

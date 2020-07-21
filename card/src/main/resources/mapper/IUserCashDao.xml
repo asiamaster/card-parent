@@ -128,4 +128,15 @@
 		WHERE
 			`id` = #{id}
 	</update>
+	
+		
+	<select id="findTotalAmountByUserId" parameterType="com.dili.card.dto.UserCashDto" resultType="long">
+		SELECT SUM(amount) FROM card_user_cash 
+			WHERE firm_id = #{firmId}
+			<if test="cycleNo != null">AND cycle_no = #{cycleNo}</if>
+			<if test="userId != null"> AND user_id = #{userId}</if>
+			<if test="creatorId != null"> AND creator_id = #{creatorId}</if>
+			<if test="state != null"> AND state = #{state}</if>
+			<if test="action != null"> AND action = #{action}</if>
+	</select>
 </mapper>

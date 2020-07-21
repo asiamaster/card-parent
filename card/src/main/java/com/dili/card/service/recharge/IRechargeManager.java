@@ -15,10 +15,10 @@ public interface IRechargeManager {
     */
     Long getRechargeAmount(FundRequestDto requestDto);
     /**
-    * 充值顶层方法定义
+    * 构建交易请求
     * @author miaoguoxin
     * @date 2020/7/2
     */
-    TradeRequestDto recharge(FundRequestDto requestDto);
+    TradeRequestDto buildTradeRequest(FundRequestDto requestDto);
 
 }

@@ -26,7 +26,7 @@ import java.util.Map;
 
 /**
  * @description： 卡片入库相关功能
- * 
+ *
  * @author ：WangBo
  * @time ：2020年7月16日下午2:27:47
  */
@@ -39,7 +39,7 @@ public class CardAddStorageController implements IControllerHandler {
 
 	/**
 	 * 入库列表页
-	 * 
+	 *
 	 * @return
 	 */
 	@GetMapping("list.html")
@@ -49,6 +49,10 @@ public class CardAddStorageController implements IControllerHandler {
 		return "addStorage/list";
 	}
 
+	/**
+	*  入库列表接口
+	* @date 2020/7/20
+	*/
 	@PostMapping("queryList.action")
 	@ResponseBody
 	public Map<String, Object> queryList(CardStorageDto queryDto) {
@@ -69,7 +73,7 @@ public class CardAddStorageController implements IControllerHandler {
 
 	/**
 	 * 跳转到添加页面
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/2
 	 */

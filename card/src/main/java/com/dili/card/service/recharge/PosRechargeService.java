@@ -28,7 +28,7 @@ public class PosRechargeService extends AbstractRechargeManager {
     }
 
     @Override
-    public TradeRequestDto recharge(FundRequestDto requestDto) {
+    public TradeRequestDto buildTradeRequest(FundRequestDto requestDto) {
         TradeRequestDto rechargeRequestDto = super.createRechargeRequestDto(requestDto);
         rechargeRequestDto.addServiceFeeItem(requestDto.getServiceCost());
         return rechargeRequestDto;

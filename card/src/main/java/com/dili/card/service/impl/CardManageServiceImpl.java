@@ -72,16 +72,28 @@ public class CardManageServiceImpl implements ICardManageService {
         }
     }
 
-
+    @Transactional(rollbackFor = Exception.class)
 	@Override
 	public void returnCard(CardRequestDto cardParam) {
-		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findByAccountId(cardParam.getAccountId());
-        //余额校验
-		BalanceResponseDto  balanceResponseDto = payRpcResolver.findBalanceByFundAccountId(accountCard.getFundAccountId());
-        if (balanceResponseDto.getBalance() != 0L) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "卡余额不为0,不能退卡");
-        }
+    	//校验账户余额
+		validatedBanlance(cardParam);
+		//保存本地操作记录
+		BusinessRecordDo businessRecord = saveSerialRecord(cardParam, OperateType.REFUND_CARD);
+		//远程调用退卡操作
 		cardManageRpcResolver.returnCard(cardParam);
+		//记录远程操作记录
+		saveRemoteSerialRecord(cardParam, businessRecord);
+	}
+    
+    @Transactional(rollbackFor = Exception.class)
+	@Override
+	public void resetLoginPwd(CardRequestDto cardParam){
+		//保存本地操作记录
+    	BusinessRecordDo businessRecord = saveSerialRecord(cardParam, OperateType.RESET_PWD);
+		//远程重置密码操作
+		cardManageRpcResolver.resetLoginPwd(cardParam);
+		//记录远程操作记录
+		saveRemoteSerialRecord(cardParam, businessRecord);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -173,4 +185,41 @@ public class CardManageServiceImpl implements ICardManageService {
         serialDto.setSerialRecordList(serialRecordList);
         return serialDto;
     }
+    
+    /**
+     * 校验账户余额
+     */
+	private void validatedBanlance(CardRequestDto cardParam) {
+		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findByAccountId(cardParam.getAccountId());
+        //余额校验
+		BalanceResponseDto  balanceResponseDto = payRpcResolver.findBalanceByFundAccountId(accountCard.getFundAccountId());
+        if (balanceResponseDto.getBalance() != 0L) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "卡余额不为0,不能退卡");
+        }
+	}
+	
+	/**
+     * 保存本地操作记录
+     */
+	private BusinessRecordDo saveSerialRecord(CardRequestDto cardParam, OperateType operateType) {
+		 BusinessRecordDo businessRecord = new BusinessRecordDo();
+	     serialService.buildCommonInfo(cardParam, businessRecord);
+	     businessRecord.setType(operateType.getCode());
+	     serialService.saveBusinessRecord(businessRecord);
+		return businessRecord;
+	}
+	
+	 /**
+     * saveRemoteSerialRecord
+     */
+	private void saveRemoteSerialRecord(CardRequestDto cardParam, BusinessRecordDo businessRecord) {
+		try {//成功则修改状态及期初期末金额，存储操作流水
+            SerialDto serialDto = buildNoFundSerial(cardParam, businessRecord);
+            serialService.handleSuccess(serialDto, false);
+        } catch (Exception e) {
+            LOGGER.error("unLostCard", e);
+        }
+	}
+
+
 }

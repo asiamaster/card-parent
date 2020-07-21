@@ -98,7 +98,6 @@
 
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
-<#cycle_indexJs/>
 <#common_userJs/>
 <script>
     $(function () {
@@ -107,7 +106,9 @@
             uniqueId: "id",
             detailUrl: "${contextPath}/cycle/detail.html?id={id}",
             createUrl: "${contextPath}/cycle/addPayer.html?id={id}",
-            updateUrl: "${contextPath}/cycle/flated.html?id={id}"
+            updateUrl: "${contextPath}/cycle/flated.html?id={id}",
+            url: "${contextPath}/cycle/page.action",
+            singleSelect : true
         };
         $.table.init(options);
     });
