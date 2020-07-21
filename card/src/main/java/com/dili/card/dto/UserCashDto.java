@@ -20,20 +20,20 @@ public class UserCashDto extends BaseDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	/**主键id*/
-	@NotNull(message = "数据id不为空", groups = {ConstantValidator.Update.class})
+	@NotNull(message = "数据id不为空", groups = {ConstantValidator.Update.class, ConstantValidator.Delete.class})
 	private Long id; 
 	/**领取款编号*/
 	private Long cashNo;
 	/**领取款编号*/
 	private Long cycleNo;
 	/** 领款或收款人 */
-	@NotNull(message = "员工id不为空", groups = {ConstantValidator.Insert.class})
+	@NotNull(message = "员工id不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
 	private Long userId;
 	/** 领款或收款人 */
-	@NotBlank(message = "员工编号不为空", groups = {ConstantValidator.Insert.class})
+	@NotBlank(message = "员工编号不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
 	private String userCode;
 	/** 领款人名称-保留字段 */
-	@NotBlank(message = "员工姓名不为空", groups = {ConstantValidator.Insert.class})
+	@NotBlank(message = "员工姓名不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
 	private String userName; 
 	/** 现金动作-领款 交款 */
 	private Integer action; 

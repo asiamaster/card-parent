@@ -142,7 +142,7 @@ public class UserCashManagementController implements IControllerHandler {
 	 */
 	@PostMapping("/delete.action")
 	@ResponseBody
-	public BaseOutput<Boolean> delete(@RequestBody UserCashDto userCashDto) {
+	public BaseOutput<Boolean> delete(@RequestBody @Validated(value = {ConstantValidator.Delete.class}) UserCashDto userCashDto) {
 		iUserCashService.delete(userCashDto.getId());
 		return BaseOutput.success();
 	}
@@ -153,7 +153,7 @@ public class UserCashManagementController implements IControllerHandler {
 	@PostMapping("/modify.action")
 	@ResponseBody
 	public BaseOutput<UserCashDto> modify(
-			@RequestBody @Validated(value = ConstantValidator.Update.class) UserCashDto userCashDto) {
+			@RequestBody @Validated(value = {ConstantValidator.Update.class}) UserCashDto userCashDto) {
 		iUserCashService.modify(userCashDto);
 		return BaseOutput.success();
 	}
