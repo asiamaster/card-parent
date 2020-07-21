@@ -31,6 +31,10 @@ public class FundRequestDto extends CardRequestDto {
     private String mark;
     /**额外字段，由各业务逻辑自行决定*/
     private Map<String, Object> extra;
+    /** 委托合同编号 */
+    private String contractNo;
+    /** 委托人ID*/
+    private Long consignorId;
 
     public Integer getTradeChannel() {
         return tradeChannel;
@@ -80,4 +84,19 @@ public class FundRequestDto extends CardRequestDto {
         this.extra = extra;
     }
 
+    public String getContractNo() {
+        return contractNo;
+    }
+
+    public void setContractNo(String contractNo) {
+        this.contractNo = contractNo;
+    }
+
+    public Long getConsignorId() {
+        return consignorId;
+    }
+
+    public void setConsignorId(Long consignorId) {
+        this.consignorId = consignorId;
+    }
 }

@@ -1,35 +1,18 @@
 package com.dili.card.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.NumberUtil;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
-import com.dili.card.dto.pay.BalanceRequestDto;
-import com.dili.card.dto.pay.BalanceResponseDto;
-import com.dili.card.dto.pay.CreateTradeRequestDto;
-import com.dili.card.dto.pay.FeeItemDto;
-import com.dili.card.dto.pay.FundOpResponseDto;
-import com.dili.card.dto.pay.TradeRequestDto;
-import com.dili.card.dto.pay.TradeResponseDto;
+import com.dili.card.dto.pay.*;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.PayRpcResolver;
-import com.dili.card.service.IAccountCycleService;
-import com.dili.card.service.IAccountQueryService;
-import com.dili.card.service.IFundService;
-import com.dili.card.service.IPayService;
-import com.dili.card.service.ISerialService;
+import com.dili.card.service.*;
 import com.dili.card.service.recharge.AbstractRechargeManager;
 import com.dili.card.service.recharge.RechargeFactory;
-import com.dili.card.type.ActionType;
-import com.dili.card.type.CardStatus;
-import com.dili.card.type.FeeType;
-import com.dili.card.type.FundItem;
-import com.dili.card.type.OperateType;
-import com.dili.card.type.TradeChannel;
-import com.dili.card.type.TradeType;
+import com.dili.card.type.*;
 import com.dili.ss.constant.ResultCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,6 +78,8 @@ public class FundServiceImpl implements IFundService {
         businessRecord.setTradeType(TradeType.WITHDRAW.getCode());
         businessRecord.setTradeChannel(fundRequestDto.getTradeChannel());
         businessRecord.setServiceCost(fundRequestDto.getServiceCost());
+        businessRecord.setContractNo(fundRequestDto.getContractNo());
+        businessRecord.setConsignorId(fundRequestDto.getConsignorId());
         //根据操作交易流水梳理原型，提现不加备注--2020-07-17
         //businessRecord.setNotes(fundRequestDto.getServiceCost() == null ? null : String.format("手续费%s元", CurrencyUtils.toYuanWithStripTrailingZeros(fundRequestDto.getServiceCost())));
         serialService.saveBusinessRecord(businessRecord);
