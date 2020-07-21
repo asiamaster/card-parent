@@ -120,8 +120,10 @@ public class UserCashManagementController implements IControllerHandler {
 	@ResponseBody
 	public Map<String, Object> listPayee(@Validated(ConstantValidator.Page.class) UserCashDto userCashDto) {
 		Map<String, Object> response = successPage(iUserCashService.listPayee(userCashDto));
-		response.put("totalAmount", CurrencyUtils
-				.toYuanWithStripTrailingZeros(iUserCashService.findTotalAmountByUserId(userCashDto, CashAction.PAYER)));
+		if (userCashDto.getIsStatistic()) {
+			response.put("totalAmount", CurrencyUtils
+					.toYuanWithStripTrailingZeros(iUserCashService.findTotalAmountByUserId(userCashDto, CashAction.PAYER)));
+		}
 		return response;
 	}
 
@@ -132,8 +134,10 @@ public class UserCashManagementController implements IControllerHandler {
 	@ResponseBody
 	public Map<String, Object> listPayer(@Validated(ConstantValidator.Page.class) UserCashDto userCashDto) {
 		Map<String, Object> response = successPage(iUserCashService.listPayee(userCashDto));
-		response.put("totalAmount", CurrencyUtils
-				.toYuanWithStripTrailingZeros(iUserCashService.findTotalAmountByUserId(userCashDto, CashAction.PAYER)));
+		if (userCashDto.getIsStatistic()) {
+			response.put("totalAmount", CurrencyUtils
+					.toYuanWithStripTrailingZeros(iUserCashService.findTotalAmountByUserId(userCashDto, CashAction.PAYER)));
+		}
 		return response;
 	}
 

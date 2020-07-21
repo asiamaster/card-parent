@@ -65,6 +65,8 @@ public class UserCashDto extends BaseDto implements Serializable {
 	
 	/** 市场id */
 	private Long firmId;
+	/** 是否统计*/
+	private Boolean isStatistic = true;
 
     /**
      * UserCashEntity constructor
@@ -269,6 +271,14 @@ public class UserCashDto extends BaseDto implements Serializable {
 
 	public void setCycleNo(Long cycleNo) {
 		this.cycleNo = cycleNo;
+	}
+
+	public Boolean getIsStatistic() {
+		return isStatistic;
+	}
+
+	public void setIsStatistic(Boolean isStatistic) {
+		this.isStatistic = isStatistic;
 	}
 
 }
