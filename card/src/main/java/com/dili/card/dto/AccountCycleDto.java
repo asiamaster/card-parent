@@ -3,11 +3,14 @@ package com.dili.card.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.CycleStateProvider;
+import com.dili.card.validator.ConstantValidator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -19,9 +22,11 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	/**  */
+	/**数据id不为空*/
+	@NotNull(message = "数据id不为空", groups = {ConstantValidator.Default.class})
 	private Long id;
 	/** 员工ID */
+	@NotNull(message = "员工ID不为空", groups = {ConstantValidator.Update.class})
 	private Long userId;
 	/** 员工编号 */
 	private String userCode;

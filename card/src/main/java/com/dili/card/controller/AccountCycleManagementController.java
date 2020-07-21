@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.type.CashAction;
 import com.dili.card.type.CycleState;
+import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -116,7 +118,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 */
 	@PostMapping("/applySettle.action")
 	@ResponseBody
-	public BaseOutput<Boolean> applySettle(@RequestBody AccountCycleDto accountCycleDto) {
+	public BaseOutput<Boolean> applySettle(@RequestBody @Validated(value = {ConstantValidator.Update.class}) AccountCycleDto accountCycleDto) {
 		iAccountCycleService.settle(accountCycleDto.getUserId());
 		return BaseOutput.success("结账申请成功!");
 	}
@@ -126,7 +128,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 */
 	@PostMapping("/flated.action")
 	@ResponseBody
-	public BaseOutput<Boolean> flated(@RequestBody AccountCycleDto accountCycleDto) {
+	public BaseOutput<Boolean> flated(@RequestBody @Validated(value = {ConstantValidator.Default.class}) AccountCycleDto accountCycleDto) {
 		iAccountCycleService.flated(accountCycleDto.getId());
 		return BaseOutput.success("平账成功！");
 	}
@@ -145,7 +147,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 */
 	@PostMapping("/detail.action")
 	@ResponseBody
-	public BaseOutput<AccountCycleDto> detail(@RequestBody AccountCycleDto accountCycleDto) {
+	public BaseOutput<AccountCycleDto> detail(@RequestBody @Validated(value = {ConstantValidator.Default.class}) AccountCycleDto accountCycleDto) {
 		return BaseOutput.successData(iAccountCycleService.detail(accountCycleDto.getId()));
 	}
 
