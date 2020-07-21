@@ -118,7 +118,7 @@ public class UserCashManagementController implements IControllerHandler {
 	 */
 	@PostMapping("/payeeList.action")
 	@ResponseBody
-	public Map<String, Object> listPayee(UserCashDto userCashDto) {
+	public Map<String, Object> listPayee(@Validated(ConstantValidator.Page.class) UserCashDto userCashDto) {
 		Map<String, Object> response = successPage(iUserCashService.listPayee(userCashDto));
 		response.put("totalAmount", CurrencyUtils
 				.toYuanWithStripTrailingZeros(iUserCashService.findTotalAmountByUserId(userCashDto, CashAction.PAYER)));
@@ -130,7 +130,7 @@ public class UserCashManagementController implements IControllerHandler {
 	 */
 	@PostMapping("/payerList.action")
 	@ResponseBody
-	public Map<String, Object> listPayer(UserCashDto userCashDto) {
+	public Map<String, Object> listPayer(@Validated(ConstantValidator.Page.class) UserCashDto userCashDto) {
 		Map<String, Object> response = successPage(iUserCashService.listPayee(userCashDto));
 		response.put("totalAmount", CurrencyUtils
 				.toYuanWithStripTrailingZeros(iUserCashService.findTotalAmountByUserId(userCashDto, CashAction.PAYER)));
