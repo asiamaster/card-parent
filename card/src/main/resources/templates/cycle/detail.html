@@ -72,7 +72,7 @@
     <ul id="detailTab" class="nav nav-tabs" role="tablist">
     	<#resource code="payeeList">
         <li class="nav-item">
-            <a class="nav-link" id="payee-tab" uri="/cash/payeeListTab.html" data-toggle="tab" href="#payee-record"
+            <a class="nav-link" id="payee-tab" onclick="payeeActive()" uri="/cash/payeeListTab.html" data-toggle="tab" href="#payee-record"
                role="tab" aria-selected="true">
                 <h5>领款明细</h5>
             </a>
@@ -80,27 +80,127 @@
         </#resource>
         <#resource code="payerList">
         <li class="nav-item">
-            <a class="nav-link" id="payer-tab" uri="/cash/payerListTab.html" data-toggle="tab" href="#payer-record" role="tab">
+            <a class="nav-link" id="payer-tab" onclick="payerActive()" uri="/cash/payerListTab.html" data-toggle="tab" href="#payer-record" role="tab">
                 <h5>交款明细</h5>
             </a>
         </li>
         </#resource>
         <#resource code="serialList">
         <li class="nav-item">
-            <a class="nav-link" id="operation-tab" uri="/cycle/serialTab.html" data-toggle="tab" href="#operation-record" role="tab">
+            <a class="nav-link" id="operation-tab" onclick="operationActive()" uri="/cycle/serialTab.html" data-toggle="tab" href="#operation-record" role="tab">
                 <h5>操作记录</h5>
             </a>
         </li>
         </#resource>
     </ul>
 </div>
-
+ <form id="queryForm">
+     <input type="hidden" id="cycleNo" name="cycleNo" value="${detail.cycleNo!}">
+     <input type="hidden" id="isStatistic" name="isStatistic" value="false">
+</form>
 <div id="detailTabContent" class="tab-content border-top-0">
     <div class="tab-pane tab-info" id="payee-record" role="tabpanel">
+    	<div class="row" id="table-payee">
+		    <div class="col-12">
+		        <table id="grid"
+		               data-buttons-class="primary"
+		               data-icons="bui.variable.icons">
+		            <thead>
+		            <tr>
+		            	<th data-radio="true"></th>
+		                <th data-field="cashNo"data-align="center" >
+		                    领款编号
+		                </th>
+		                <th data-field="amountYuan" data-align="center">
+		                   领款金额
+		                </th>
+		                <th data-field="createTime" data-align="center">
+		                    领款时间
+		                </th>
+		                 <th data-field="notes" data-align="center">
+		                    说明
+		                </th>
+		            </tr>
+		            </thead>
+		        </table>
+		    </div>
+		</div>
     </div>
     <div class="tab-pane tab-info" id="payer-record" role="tabpanel">
+    	<div class="row" id="table-payer">
+		    <div class="col-12">
+		        <table id="grid"
+		               data-buttons-class="primary"
+		               data-icons="bui.variable.icons">
+		            <thead>
+		            <tr>
+		            	<th data-radio="true"></th>
+		                <th data-field="cashNo"data-align="center" >
+		                    交款编号
+		                </th>
+		                <th data-field="amountYuan" data-align="center">
+		                   交款金额
+		                </th>
+		                <th data-field="createTime" data-align="center">
+		                    交款时间
+		                </th>
+		                 <th data-field="notes" data-align="center">
+		                    说明
+		                </th>
+		            </tr>
+		            </thead>
+		        </table>
+		    </div>
+		</div>
     </div>
     <div class="tab-pane tab-info" id="operation-record" role="tabpanel">
+    	<div class="container-fluid" id="table-operation">
+		    <div class="row">
+		        <div class="col-12">
+		             <table id="grid" data-toggle="table" data-title="操作交易记录" class="table" data-toolbar="#toolbar"
+		                   data-pagination="true" data-page-number="1" data-page-size="10"
+		                   data-query-params="queryParams" data-side-pagination="server" data-method="POST"
+		                   data-content-type="application/x-www-form-urlencoded" data-single-select="true"
+		                   data-click-to-select="true" data-unique-id="id" data-sort-name="operate_time"
+		                   data-sort-order="desc" data-icons="bui.variable.icons" data-buttons-class="primary">
+		                <thead>
+		                <tr>
+		                	 <th data-field="serialNo" data-align="center" >
+		                        业务流水号
+		                    </th>
+		                    <th data-field="customerNo" data-align="center" >
+		                        客户编号
+		                    </th>
+		                    <th data-field="customerName" data-align="center">
+		                        客户名称
+		                    </th>
+		                    <th data-field="cardNo" data-align="center" >
+		                        园区卡号
+		                    </th>
+		                    <th data-field="fundItemName" data-align="center">
+		                        操作业务
+		                    </th>
+		                    <th data-field="startBalanceView" data-align="center">
+		                        期初金额
+		                    </th>
+		                    <th data-field="amountView" data-align="center">
+		                        操作金额
+		                    </th>
+		                    <th data-field="endBalanceView" data-align="center">
+		                        账户余额
+		                    </th>
+		                   <th data-field="operateTime" data-align="center">
+		                        操作时间
+		                    </th>
+		                    <th data-field="notes" data-align="center" data-sortable="false">
+		                        备注
+		                    </th>
+		                </tr>
+		                </thead>
+		            </table>
+		        </div>
+		    </div>
+		</div>
     </div>
 </div>
 </#bs4Body>
@@ -108,21 +208,33 @@
 <script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
 <script>
-    let prefix = '${contextPath}';
     let cycleNo = $.trim($("#cycle").text());
-    //初始化函数
-    $(() => {
-       let options = {
-            id:'detailTab',
-            activeId:'operation-tab',
-            prefixUrl:prefix
-        };
-        $.tab.init(options);
-        //监听tab切换
-        $.tab.onChange();
+    let teter = $("#table-payer").prop("outerHTML");
+    let tetee = $("#table-payee").prop("outerHTML");
+    let tetoperation = $("#table-operation").prop("outerHTML");
+    let isteter = false;
+    let istetee = false;
+    let istetoperation = false;
+    $(function () {
+    	istetee = true;
+    	$("#table-payer").remove();
+    	$("#table-payee").remove();
+    	$("#table-operation").remove();
+    	$("#payee-record").addClass('show active');
+    	$("#payee-tab").addClass('active');
+    	$("#payee-record").append(tetee);
+    	var options = {
+    	         url: "${contextPath}/cash/payeeList.action",
+    	         queryParams:{
+    	         	isStatistic:false,
+    	         	cycleNo:cycleNo,
+    	         	rows:10,
+    	         	page:1
+    	         }
+    	     };
+    	$.table.init(options);
     });
 
-    
     function applySettlement(){
 		let url = "${contextPath}/cycle/applySettle.action";
 	    let data = $.common.formToJSON("settleForm");
@@ -133,5 +245,76 @@
 	
     function backList() {
     	window.location.href="${contextPath}/cycle/list.html";
+    }
+    
+	function payeeActive(){
+		if(istetee){
+			return;
+		}
+		istetee = true;
+		isteter = false;
+		istetoperation = false;
+		$("#table-payer").remove();
+    	$("#table-operation").remove();
+		$("#payee-record").addClass('show active');
+		$(this).addClass('active');
+		$("#payee-record").append(tetee);
+    	var options = {
+    	         url: "${contextPath}/cash/payeeList.action",
+    	         queryParams:{
+    	         	isStatistic:false,
+    	         	cycleNo:cycleNo,
+    	         	rows:10,
+    	         	page:1
+    	         }
+    	     };
+    	$.table.init(options);
+    }
+	
+	function payerActive(){
+		if(isteter){
+			return;
+		}
+		isteter = true;
+		istetee = false;
+		istetoperation = false;
+    	$("#table-payee").remove();
+    	$("#table-operation").remove();
+		$("#payer-record").addClass('show active');
+		$(this).addClass('active');
+		$("#payer-record").append(teter);
+    	var options = {
+    	         url: "${contextPath}/cash/payerList.action",
+    	         queryParams:{
+    	         	isStatistic:false,
+    	         	cycleNo:cycleNo,
+    	         	rows:10,
+    	         	page:1
+    	         }
+    	     };
+    	$.table.init(options);
+    }
+	
+	function operationActive(){
+		if(istetoperation){
+			return;
+		}
+		istetoperation = true;
+		isteter = false;
+		istetee = false;
+		$("#table-payer").remove();
+    	$("#table-payee").remove();
+		$("#operationr-record").addClass('show active');
+		$(this).addClass('active');
+		$("#operation-record").append(tetoperation);
+    	var options = {
+    	         url: "${contextPath}/serial/account/listPage.action",
+    	         queryParams:{
+    	         	cycleNo:cycleNo,
+    	         	rows:10,
+    	         	page:1
+    	         }
+    	     };
+    	$.table.init(options);
     }
 </script>
