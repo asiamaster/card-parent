@@ -19,7 +19,7 @@
 	function getCustomer() {
 		var customerId = $("#customerId").val();
 		$.ajax({
-			url : "${contextPath}/card/getCustomerInfo.action",
+			url : "${contextPath}/card/getCustomerInfoTest.action",
 			type : 'POST',
 			async : false,
 			data : {"customerId":customerId},
