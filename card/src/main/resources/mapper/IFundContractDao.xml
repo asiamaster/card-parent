@@ -110,6 +110,12 @@
 			<if test="contractNo != null and contractNo != '' ">
 				AND contract_no = #{contractNo}
 			</if>
+			<if test="consignorAccountId != null">
+				AND consignor_account_id = #{consignorAccountId} 
+			</if>
+			<if test="consignorCustomerId != null">
+				AND consignor_customer_id = #{consignorCustomerId} 
+			</if>
 			<if test="consignorCustomerCode != null and consignorCustomerCode != '' ">
 				AND consignor_customer_code = #{consignorCustomerCode}
 			</if>
