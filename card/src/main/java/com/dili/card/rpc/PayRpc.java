@@ -1,6 +1,7 @@
 package com.dili.card.rpc;
 
 import com.dili.card.config.PayServiceFeignConfig;
+import com.dili.card.dto.UnfreezeFundDto;
 import com.dili.card.dto.pay.*;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.tcc.common.Tcc;
@@ -49,8 +50,8 @@ public interface PayRpc {
      * @param frozenId
      * @return
      */
-    @RequestMapping(value = "/payment/api/gateway.do?service=payment.fund.service:freeze", method = RequestMethod.POST)
-    BaseOutput<Long> unfrozenFund(Long frozenId);
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.fund.service:unfreeze", method = RequestMethod.POST)
+    BaseOutput<UnfreezeFundDto> unfrozenFund(UnfreezeFundDto unfreezeFundDto);
 
     /**
      * 查询余额

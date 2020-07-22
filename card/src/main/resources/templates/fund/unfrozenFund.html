@@ -18,31 +18,28 @@
 	<div>
 		<button id="unfrozenBtn" type="button" class="btn btn-outline-primary"
 			onclick="">解冻资金</button>
+		<form id="queryForm">
+			<input type="hidden" id="accountId" name="accountId"
+				value="${accountId!}">
+		</form>
 		<div class="panel-body" style="display: block;">
-			<table id="grid" data-title="资金冻结列表" class="table table-bordered" data-show-fullscreen="true"
-				data-buttons-class="primary" data-icons="bui.variable.icons">
-				<thead>
-					<tr>
-						<th data-checkbox="true"></th>
-						<th data-align="amount">冻结金额</th>
-						<th data-align="center">冻结备注</th>
-						<th data-align="center">冻结时间</th>
-						<th data-align="center">冻结员工号</th>
-						<th data-align="center">冻结员</th>
-					</tr>
-				</thead>
-				<tbody>
-					<% for(item in frozenList) { %>
-					<tr>
-						<td>${item.amount!}</td>
-						<td>${item.notes!}</td>
-						<td>${item.operateTime!}</td>
-						<td>${item.operatorNo!}</td>
-						<td>${item.operatorName!}</td>
-					</tr>
-					<% } %>
-				</tbody>
-			</table>
+			<div class="col-12">
+				<table id="unfrozenTable" data-title="冻结记录" data-unique-id="id"
+					data-buttons-class="primary" data-icons="bui.variable.icons">
+					<thead>
+						<tr>
+							<th data-checkbox="true"></th>
+							<th data-field="amountText" data-align="amount">冻结金额</th>
+							<th data-field="notes" data-align="center">冻结备注</th>
+							<th data-field="operateTime" data-align="center">冻结时间</th>
+							<th data-field="operatorNo" data-align="center">冻结员工号</th>
+							<th data-field="operatorName" data-align="center">冻结员</th>
+							<th data-field="operatorName" data-align="center">冻结员</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>
+<#fund_unfrozenIndexJs />

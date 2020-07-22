@@ -1,29 +1,57 @@
 package com.dili.card.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
-import com.dili.card.dto.FundRequestDto;
-import com.dili.card.dto.SerialDto;
-import com.dili.card.dto.UserAccountCardResponseDto;
-import com.dili.card.dto.pay.*;
-import com.dili.card.entity.BusinessRecordDo;
-import com.dili.card.entity.SerialRecordDo;
-import com.dili.card.exception.CardAppBizException;
-import com.dili.card.rpc.resolver.PayRpcResolver;
-import com.dili.card.service.*;
-import com.dili.card.service.recharge.AbstractRechargeManager;
-import com.dili.card.service.recharge.RechargeFactory;
-import com.dili.card.type.*;
-import com.dili.ss.constant.ResultCode;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import com.dili.card.dto.AccountWithAssociationResponseDto;
+import com.dili.card.dto.FundRequestDto;
+import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.UnfreezeFundDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.pay.BalanceRequestDto;
+import com.dili.card.dto.pay.BalanceResponseDto;
+import com.dili.card.dto.pay.CreateTradeRequestDto;
+import com.dili.card.dto.pay.FeeItemDto;
+import com.dili.card.dto.pay.FundOpResponseDto;
+import com.dili.card.dto.pay.TradeRequestDto;
+import com.dili.card.dto.pay.TradeResponseDto;
+import com.dili.card.entity.AccountCycleDo;
+import com.dili.card.entity.BusinessRecordDo;
+import com.dili.card.entity.SerialRecordDo;
+import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.AccountQueryRpc;
+import com.dili.card.rpc.PayRpc;
+import com.dili.card.rpc.resolver.GenericRpcResolver;
+import com.dili.card.rpc.resolver.PayRpcResolver;
+import com.dili.card.rpc.resolver.UidRpcResovler;
+import com.dili.card.service.IAccountCycleService;
+import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.IFundService;
+import com.dili.card.service.IPayService;
+import com.dili.card.service.ISerialService;
+import com.dili.card.service.recharge.AbstractRechargeManager;
+import com.dili.card.service.recharge.RechargeFactory;
+import com.dili.card.type.ActionType;
+import com.dili.card.type.BizNoType;
+import com.dili.card.type.CardStatus;
+import com.dili.card.type.FeeType;
+import com.dili.card.type.FundItem;
+import com.dili.card.type.OperateType;
+import com.dili.card.type.TradeChannel;
+import com.dili.card.type.TradeType;
+import com.dili.ss.constant.ResultCode;
+import com.google.common.collect.Lists;
+
+import cn.hutool.core.collection.CollUtil;
 
 /**
  * 资金操作service实现类
@@ -45,6 +73,12 @@ public class FundServiceImpl implements IFundService {
     private IAccountCycleService accountCycleService;
     @Autowired
     private PayRpcResolver payRpcResolver;
+    @Resource
+	private UidRpcResovler uidRpcResovler;
+    @Resource
+	private PayRpc payRpc;
+    @Resource
+	private AccountQueryRpc accountQueryRpc;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -223,7 +257,71 @@ public class FundServiceImpl implements IFundService {
     }
 
     @Override
-    public void unfrozen(FundRequestDto fundRequestDto) {
-
-    }
+	public void unfrozen(UnfreezeFundDto unfreezeFundDto) {
+		AccountWithAssociationResponseDto accountInfo = GenericRpcResolver.resolver(accountQueryRpc.findAssociation(unfreezeFundDto.getAccountId()),"account-service");
+		for (Long tradeNo : unfreezeFundDto.getTradeNos()) {
+			//对应支付的frozenId
+			UnfreezeFundDto dto = new UnfreezeFundDto();
+			dto.setFrozenId(tradeNo);
+			GenericRpcResolver.resolver(payRpc.unfrozenFund(dto), "pay-service");
+			//保存操作记录
+			System.out.println("****************解冻成功");
+		}
+//		buildBusinessRecordDo(accountInfo, unfreezeFundDto);
+		
+		// 保存全局操作记录
+		SerialRecordDo serialRecord = buildSerialRecord(accountInfo, unfreezeFundDto);
+//		serialService.copyCommonFields(serialRecord, buildBusinessRecordDo);
+		SerialDto serialDto = new SerialDto();
+		serialDto.setSerialRecordList(Lists.newArrayList(serialRecord));
+		serialService.saveSerialRecord(serialDto);
+	}
+	
+	
+	/**
+	 * 生成全局日志
+	 * 
+	 * @param openCardInfo
+	 * @param accountId
+	 */
+	private SerialRecordDo buildSerialRecord(AccountWithAssociationResponseDto accountInfo,UnfreezeFundDto unfreezeFundDto) {
+		SerialRecordDo record = new SerialRecordDo();
+		record.setAccountId(accountInfo.getPrimary().getAccountId());
+		record.setCardNo(accountInfo.getPrimary().getCardNo());
+		record.setCustomerId(accountInfo.getPrimary().getCustomerId());
+		record.setCustomerName(accountInfo.getPrimary().getCustomerName());
+		record.setCustomerNo(accountInfo.getPrimary().getCustomerCode());
+		record.setFirmId(unfreezeFundDto.getFirmId());
+		record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
+		record.setNotes("开卡");
+		record.setOperatorId(unfreezeFundDto.getOpId());
+		record.setOperatorName(unfreezeFundDto.getOpName());
+		record.setOperatorNo(unfreezeFundDto.getOpNo());
+		record.setTradeType(OperateType.ACCOUNT_TRANSACT.getCode());
+		record.setType(OperateType.ACCOUNT_TRANSACT.getCode());
+		record.setOperateTime(LocalDateTime.now());
+		return record;
+	}
+	
+	
+//	private BusinessRecordDo buildBusinessRecordDo(AccountWithAssociationResponseDto accountInfo,UnfreezeFundDto unfreezeFundDto) {
+//		BusinessRecordDo serial = new BusinessRecordDo();
+//		serial.setAccountId(accountInfo.getPrimary().getAccountId());
+//		serial.setCardNo(accountInfo.getPrimary().getCardNo());
+//		serial.setCustomerId(accountInfo.getPrimary().getCustomerId());
+//		serial.setCustomerName(accountInfo.getPrimary().getCustomerName());
+//		serial.setCustomerNo(accountInfo.getPrimary().getCustomerCode());
+//		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(unfreezeFundDto.getOpId(),
+//				unfreezeFundDto.getOpName(), unfreezeFundDto.getOpNo());
+//		serial.setCycleNo(cycleDo.getCycleNo());
+//		serial.setFirmId(unfreezeFundDto.getFirmId());
+//		serial.setOperatorId(unfreezeFundDto.getOpId());
+//		serial.setOperatorName(unfreezeFundDto.getOpName());
+//		serial.setOperatorNo(unfreezeFundDto.getOpNo());
+//		serial.setOperateTime(LocalDateTime.now());
+//		serial.setNotes("解冻资金");
+//		serial.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
+//		serial.setType(OperateType.UNFROZEN_FUND.getCode());
+//		return serial;
+//	}
 }

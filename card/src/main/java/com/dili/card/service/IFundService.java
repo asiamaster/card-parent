@@ -1,6 +1,7 @@
 package com.dili.card.service;
 
 import com.dili.card.dto.FundRequestDto;
+import com.dili.card.dto.UnfreezeFundDto;
 
 /**
  * 资金操作service接口
@@ -29,7 +30,7 @@ public interface IFundService {
 	 * 
 	 * @param fundRequestDto
 	 */
-	void unfrozen(FundRequestDto fundRequestDto);
+	void unfrozen(UnfreezeFundDto unfreezeFundDto);
 
 	/**
 	 * 充值

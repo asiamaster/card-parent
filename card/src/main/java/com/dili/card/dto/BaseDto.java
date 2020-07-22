@@ -1,13 +1,14 @@
 package com.dili.card.dto;
 
-import com.dili.card.common.annotation.IsOrderBy;
-import com.dili.card.validator.ConstantValidator;
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.Range;
+import java.io.Serializable;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.dili.card.common.annotation.IsOrderBy;
+import com.dili.card.validator.ConstantValidator;
 
 /**
  * @Auther: miaoguoxin
@@ -15,7 +16,9 @@ import java.io.Serializable;
  * @Description:
  */
 public class BaseDto implements Serializable {
-    /**操作员id*/
+    /** */
+	private static final long serialVersionUID = 1L;
+	/**操作员id*/
     private Long opId;
     /**操作员名字*/
     private String opName;
