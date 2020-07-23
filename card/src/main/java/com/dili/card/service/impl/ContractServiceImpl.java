@@ -20,6 +20,7 @@ import com.dili.card.dto.FundConsignorDto;
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
+import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.entity.FundConsignorDo;
 import com.dili.card.entity.FundContractDo;
@@ -169,8 +170,11 @@ public class ContractServiceImpl implements IContractService {
 		List<Long> accountIds = fundContracts.stream().map(c -> c.getConsignorAccountId()).collect(Collectors.toList());
 		List<Long> customerIds = fundContracts.stream().map(c -> c.getConsignorCustomerId())
 				.collect(Collectors.toList());
+		UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
+		userAccountCardQuery.setAccountIds(accountIds);
+		userAccountCardQuery.setFirmId(fundContracts.get(0).getFirmId());
 		Map<Long, UserAccountCardResponseDto> userAccountCardMsp = accountQueryRpcResolver
-				.findAccountCardsMapByAccountIds(accountIds);
+				.findAccountCardsMapByAccountIds(userAccountCardQuery);
 		Map<Long, Customer> customerMap = customerRpcResolver.findCustomerMapByCustomerIds(customerIds,
 				fundContracts.get(0).getFirmId());
 		for (FundContractDo fundContractDo : fundContracts) {
