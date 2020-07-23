@@ -20,7 +20,7 @@
             </div>
     	</form>
 	</div>
-</div>    
+</div>
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
@@ -46,7 +46,7 @@
             return false;
         }
         let data = $.common.formToJSON(formId);
-        $.operate.save(url, JSON.stringify(data));
-        return true;
+        $.operate.post(url, data);
+        //return true;
     }
 </script>

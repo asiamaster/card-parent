@@ -11,6 +11,7 @@ import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CardManageRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
+import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.ICardManageService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.OperateType;
@@ -48,6 +49,8 @@ public class CardManageServiceImpl implements ICardManageService {
     private PayRpcResolver payRpcResolver;
     @Resource
     private AccountQueryRpcResolver accountQueryRpcResolver;
+    @Autowired
+    private IAccountCycleService accountCycleService;
     /**
      * @param cardParam
      */
@@ -84,7 +87,7 @@ public class CardManageServiceImpl implements ICardManageService {
 		//记录远程操作记录
 		saveRemoteSerialRecord(cardParam, businessRecord);
 	}
-    
+
     @Transactional(rollbackFor = Exception.class)
 	@Override
 	public void resetLoginPwd(CardRequestDto cardParam){
@@ -124,7 +127,7 @@ public class CardManageServiceImpl implements ICardManageService {
         serialService.saveBusinessRecord(businessRecord);
 
         cardManageRpcResolver.changeCard(cardParam);
-
+        accountCycleService.increaseCashBox(businessRecord.getCycleNo(), cardParam.getServiceFee());
         try {
             //成功则修改状态及期初期末金额，存储操作流水
             SerialDto serialDto = buildNoFundSerial(cardParam, businessRecord);
@@ -185,7 +188,7 @@ public class CardManageServiceImpl implements ICardManageService {
         serialDto.setSerialRecordList(serialRecordList);
         return serialDto;
     }
-    
+
     /**
      * 校验账户余额
      */
@@ -197,7 +200,7 @@ public class CardManageServiceImpl implements ICardManageService {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "卡余额不为0,不能退卡");
         }
 	}
-	
+
 	/**
      * 保存本地操作记录
      */
@@ -208,7 +211,7 @@ public class CardManageServiceImpl implements ICardManageService {
 	     serialService.saveBusinessRecord(businessRecord);
 		return businessRecord;
 	}
-	
+
 	 /**
      * saveRemoteSerialRecord
      */

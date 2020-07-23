@@ -132,6 +132,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     }
 
     @Override
+    @Deprecated
     public AccountSimpleResponseDto getByCardNoWithBalance(String cardNo) {
         UserAccountCardResponseDto userAccount = this.getByCardNo(cardNo);
         BalanceResponseDto fund = payService.queryBalance(new BalanceRequestDto(userAccount.getFundAccountId()));

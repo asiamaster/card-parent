@@ -234,7 +234,7 @@ public class ContractServiceImpl implements IContractService {
 		}
 		contractResponseDto.setConsigneeNames(names.substring(0, names.lastIndexOf("、")));
 		contractResponseDto.setConsigneeMobiles(mobiles.substring(0, mobiles.lastIndexOf("、")));
-		contractResponseDto.setConsignorDtos(consignorDtos);				
+		contractResponseDto.setConsignorDtos(consignorDtos);
 		// 构建卡数据
 		contractResponseDto.setConsignorCard(accountCard.getCardNo());
 		// 获取客户信息
@@ -271,7 +271,7 @@ public class ContractServiceImpl implements IContractService {
 		fundConsignorDo.setContractNo(contractNo);
 		return fundConsignorDo;
 	}
-	
+
 	/**
 	 * 构建被委托人信息for page
 	 */

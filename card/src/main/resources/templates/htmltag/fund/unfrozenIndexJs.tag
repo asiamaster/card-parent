@@ -10,7 +10,7 @@
         };
         $.table.init(options);
     });
-    
+
     $("#unfrozenBtn").click(function(){
     	// 选中行
     	var rows=$("#unfrozenTable").bootstrapTable('getSelections');

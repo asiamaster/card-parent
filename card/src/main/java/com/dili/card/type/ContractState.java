@@ -6,12 +6,15 @@ import java.util.List;
 
 /**
  * 合同状态
- * 
+ *
  * @author wb
  */
 public enum ContractState {
 
-	UNSTARTED(1, "未开始"), ENTUST(2, "委托中"), ENDED(3, "结束"), REMOVED(4, "解除");
+	UNSTARTED(1, "未开始"),
+	ENTUST(2, "委托中"),
+	ENDED(3, "结束"),
+	REMOVED(4, "解除");
 
 	private int code;
 	private String name;
@@ -28,7 +31,7 @@ public enum ContractState {
 	public String getName() {
 		return name;
 	}
-	
+
     public static String getName(int code) {
         for (ContractState status : ContractState.values()) {
             if (status.getCode() == code) {

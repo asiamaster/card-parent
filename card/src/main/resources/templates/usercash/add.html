@@ -88,7 +88,6 @@ function submitHandler(e) {
     }
     let url = "${contextPath}/cash/save.action";
     let data = $.common.formToJSON("saveForm");
-    $.operate.save(url, JSON.stringify(data));
-    return true;
+    $.operate.post(url, data);
 }
 </script>

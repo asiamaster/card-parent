@@ -32,7 +32,7 @@ public class CardManageController implements IControllerHandler {
 
     @Resource
     private ICardManageService cardManageService;
-    
+
     /**
      * 重置登陆密码
      */
@@ -88,8 +88,9 @@ public class CardManageController implements IControllerHandler {
      */
     @PostMapping("/changeCard.action")
     public BaseOutput<?> changeCard(@RequestBody CardRequestDto cardParam) {
-        AssertUtils.notEmpty(cardParam.getLoginPwd());
-        AssertUtils.notEmpty(cardParam.getNewCardNo());
+        AssertUtils.notEmpty(cardParam.getLoginPwd(),"密码不能为空");
+        AssertUtils.notEmpty(cardParam.getNewCardNo(),"新开卡号不能为空");
+        AssertUtils.notNull(cardParam.getServiceFee(),"工本费不能为空");
         this.validateCommonParam(cardParam);
         this.buildOperatorInfo(cardParam);
         cardManageService.changeCard(cardParam);
@@ -103,7 +104,7 @@ public class CardManageController implements IControllerHandler {
      */
     @PostMapping("/reportLossCard.action")
     public BaseOutput<?> reportLoss(@RequestBody CardRequestDto cardParam) {
-        AssertUtils.notEmpty(cardParam.getLoginPwd());
+        AssertUtils.notEmpty(cardParam.getLoginPwd(),"密码不能为空");
         this.validateCommonParam(cardParam);
         this.buildOperatorInfo(cardParam);
         cardManageService.reportLossCard(cardParam);
