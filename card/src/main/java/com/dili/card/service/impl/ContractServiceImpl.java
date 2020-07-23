@@ -230,11 +230,7 @@ public class ContractServiceImpl implements IContractService {
 			// 详情被委托人信息
 			List<FundConsignorDto> consignorDtos = new ArrayList<FundConsignorDto>();
 			for (FundConsignorDo fundConsignorDo : consignors) {
-				FundConsignorDto fundConsignorDto = new FundConsignorDto();
-				fundConsignorDto.setConsigneeName(fundConsignorDo.getConsigneeName());
-				fundConsignorDto.setConsigneeIdMobile(fundConsignorDo.getConsigneeIdMobile());
-				fundConsignorDto.setConsigneeIdCode(fundConsignorDo.getConsigneeIdCode());
-				consignorDtos.add(fundConsignorDto);
+				consignorDtos.add(this.buildConsignorForPage(fundConsignorDo));
 			}
 			contractResponseDto.setConsignorDtos(consignorDtos);
 		}
@@ -252,15 +248,15 @@ public class ContractServiceImpl implements IContractService {
 	private List<FundConsignorDo> buildConsignorEntities(FundContractRequestDto fundContractRequest) {
 		List<FundConsignorDo> consignorDos = new ArrayList<FundConsignorDo>();
 		for (FundConsignorDto consignorRequestDto : fundContractRequest.getConsignors()) {
-			consignorDos.add(this.buildConsignorEntity(consignorRequestDto, fundContractRequest.getContractNo()));
+			consignorDos.add(this.buildConsignorForDataBase(consignorRequestDto, fundContractRequest.getContractNo()));
 		}
 		return consignorDos;
 	}
 
 	/**
-	 * 构建被委托人信息
+	 * 构建被委托人信息for data base
 	 */
-	private FundConsignorDo buildConsignorEntity(FundConsignorDto consignorRequestDto, String contractNo) {
+	private FundConsignorDo buildConsignorForDataBase(FundConsignorDto consignorRequestDto, String contractNo) {
 		FundConsignorDo fundConsignorDo = new FundConsignorDo();
 		// 构建合同被委托人核心数据
 		fundConsignorDo.setConsigneeIdCode(consignorRequestDto.getConsigneeIdCode());
@@ -273,6 +269,19 @@ public class ContractServiceImpl implements IContractService {
 		fundConsignorDo.setFirmName(userTicket.getFirmName());
 		fundConsignorDo.setContractNo(contractNo);
 		return fundConsignorDo;
+	}
+	
+	/**
+	 * 构建被委托人信息for page
+	 */
+	private FundConsignorDto buildConsignorForPage(FundConsignorDo fundConsignorDo) {
+		FundConsignorDto fundConsignorDto = new FundConsignorDto();
+		fundConsignorDto.setConsigneeName(fundConsignorDo.getConsigneeName());
+		fundConsignorDto.setConsigneeIdMobile(fundConsignorDo.getConsigneeIdMobile());
+		fundConsignorDto.setConsigneeIdCode(fundConsignorDo.getConsigneeIdCode());
+		fundConsignorDto.setContractNo(fundConsignorDo.getContractNo());
+		fundConsignorDto.setId(fundConsignorDo.getId());
+		return fundConsignorDto;
 	}
 
 	/**
