@@ -167,16 +167,19 @@ public class ContractServiceImpl implements IContractService {
 		if (CollectionUtils.isEmpty(fundContracts)) {
 			return contractResponseDtos;
 		}
+		//账户信息构建
 		List<Long> accountIds = fundContracts.stream().map(c -> c.getConsignorAccountId()).collect(Collectors.toList());
-		List<Long> customerIds = fundContracts.stream().map(c -> c.getConsignorCustomerId())
-				.collect(Collectors.toList());
 		UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
 		userAccountCardQuery.setAccountIds(accountIds);
 		userAccountCardQuery.setFirmId(fundContracts.get(0).getFirmId());
 		Map<Long, UserAccountCardResponseDto> userAccountCardMsp = accountQueryRpcResolver
 				.findAccountCardsMapByAccountIds(userAccountCardQuery);
+		//客户信息构建
+		List<Long> customerIds = fundContracts.stream().map(c -> c.getConsignorCustomerId())
+				.collect(Collectors.toList());
 		Map<Long, Customer> customerMap = customerRpcResolver.findCustomerMapByCustomerIds(customerIds,
 				fundContracts.get(0).getFirmId());
+		//合同信息构建
 		for (FundContractDo fundContractDo : fundContracts) {
 			contractResponseDtos.add(this.buildPageContracts(fundContractDo,
 					userAccountCardMsp.get(fundContractDo.getConsignorAccountId()),
