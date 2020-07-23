@@ -7,7 +7,8 @@ import javax.validation.constraints.NotEmpty;
  * @author bob
  */
 public class FundConsignorDto {
-	
+	/** 被委托人id */
+	private Long id;
 	/** 合同编号 */
 	private String contractNo; 
 	/** 受托人姓名 */
@@ -91,5 +92,13 @@ public class FundConsignorDto {
      */
 	public String getConsigneeIdMobile() {
 		return consigneeIdMobile;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }
