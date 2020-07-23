@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.dili.card.dao.IBusinessRecordDao;
 import com.dili.card.dto.*;
+import com.dili.card.dto.pay.FeeItemDto;
+import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
@@ -14,9 +16,9 @@ import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.ISerialService;
-import com.dili.card.type.BizNoType;
-import com.dili.card.type.OperateState;
-import com.dili.card.type.OperateType;
+import com.dili.card.service.serial.IAccountSerialFilter;
+import com.dili.card.service.serial.IBusinessRecordFilter;
+import com.dili.card.type.*;
 import com.dili.card.util.DateUtil;
 import com.dili.card.util.PageUtils;
 import com.dili.customer.sdk.domain.Customer;
@@ -105,6 +107,8 @@ public class SerialServiceImpl implements ISerialService {
         serialRecord.setTradeType(businessRecord.getTradeType());
         serialRecord.setTradeChannel(businessRecord.getTradeChannel());
         serialRecord.setTradeNo(businessRecord.getTradeNo());
+        serialRecord.setNotes(businessRecord.getNotes());
+        serialRecord.setOperateTime(businessRecord.getOperateTime());
     }
 
     @Override
@@ -208,5 +212,101 @@ public class SerialServiceImpl implements ISerialService {
             return responseDto;
         }).collect(Collectors.toList());
         return PageUtils.convert2PageOutput(page,recordResponseDtos);
+    }
+
+    @Override
+    public BusinessRecordDo createBusinessRecord(CardRequestDto cardRequestDto, UserAccountCardResponseDto accountCard, IBusinessRecordFilter filter) {
+        BusinessRecordDo businessRecord = new BusinessRecordDo();
+        //编号、卡号、账户id
+        businessRecord.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
+        businessRecord.setAccountId(cardRequestDto.getAccountId());
+        businessRecord.setCardNo(cardRequestDto.getCardNo());
+        //客户信息 由于卡账户冗余了客户相关信息，所以直接获取
+        businessRecord.setCustomerId(accountCard.getCustomerId());
+        businessRecord.setCustomerNo(accountCard.getCustomerCode());
+        businessRecord.setCustomerName(accountCard.getCustomerName());
+        //账务周期
+        AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(cardRequestDto.getOpId(), cardRequestDto.getOpName(), cardRequestDto.getOpNo());
+        businessRecord.setCycleNo(accountCycle.getCycleNo());
+        //操作员信息
+        businessRecord.setOperatorId(cardRequestDto.getOpId());
+        businessRecord.setOperatorNo(cardRequestDto.getOpNo());
+        businessRecord.setOperatorName(cardRequestDto.getOpName());
+        businessRecord.setFirmId(cardRequestDto.getFirmId());
+        //时间、默认状态等数据
+        LocalDateTime localDateTime = LocalDateTime.now();
+        businessRecord.setState(OperateState.PROCESSING.getCode());
+        businessRecord.setOperateTime(localDateTime);
+        businessRecord.setModifyTime(localDateTime);
+        businessRecord.setVersion(1);
+        filter.handle(businessRecord);
+        return businessRecord;
+    }
+
+    @Override
+    public SerialDto createAccountSerial(BusinessRecordDo businessRecord, IAccountSerialFilter filter) {
+        SerialDto serialDto = new SerialDto();
+        serialDto.setSerialNo(businessRecord.getSerialNo());
+        List<SerialRecordDo> serialRecordList = new ArrayList<>(1);
+        SerialRecordDo serialRecordDo = new SerialRecordDo();
+        this.copyCommonFields(serialRecordDo, businessRecord);
+        filter.handle(serialRecordDo, null);
+        serialRecordList.add(serialRecordDo);
+        serialDto.setSerialRecordList(serialRecordList);
+        return serialDto;
+    }
+
+    @Override
+    public SerialDto createAccountSerialWithFund(BusinessRecordDo businessRecord, TradeResponseDto tradeResponseDto, IAccountSerialFilter filter) {
+        SerialDto serialDto = new SerialDto();
+        serialDto.setSerialNo(businessRecord.getSerialNo());
+        tradeResponseDto = tradeResponseDto == null ? new TradeResponseDto() : tradeResponseDto;
+        Long totalFrozenAmount = tradeResponseDto.countTotalFrozenAmount();
+        serialDto.setStartBalance(countStartBalance(tradeResponseDto.getBalance(), totalFrozenAmount));
+        serialDto.setEndBalance(countEndBalance(serialDto.getStartBalance(), tradeResponseDto.getAmount()));
+        if (!CollUtil.isEmpty(tradeResponseDto.getStreams())) {
+            List<FeeItemDto> feeItemList = tradeResponseDto.getStreams();
+            List<SerialRecordDo> serialRecordList = new ArrayList<>(feeItemList.size());
+            for (FeeItemDto feeItem : feeItemList) {
+                SerialRecordDo serialRecord = new SerialRecordDo();
+                this.copyCommonFields(serialRecord, businessRecord);
+                serialRecord.setAction(feeItem.getAmount() == null ? null : feeItem.getAmount() < 0L ? ActionType.EXPENSE.getCode() : ActionType.INCOME.getCode());
+                serialRecord.setStartBalance(countStartBalance(feeItem.getBalance(), totalFrozenAmount));
+                serialRecord.setAmount(feeItem.getAmount() == null ? null : Math.abs(feeItem.getAmount()));//由于是通过标记位表示收入或支出，固取绝对值
+                serialRecord.setEndBalance(countEndBalance(serialRecord.getStartBalance(), feeItem.getAmount()));
+                /** 操作时间-与支付系统保持一致 */
+                serialRecord.setOperateTime(tradeResponseDto.getWhen());
+                filter.handle(serialRecord, feeItem.getType());
+                serialRecordList.add(serialRecord);
+            }
+            serialDto.setSerialRecordList(serialRecordList);
+        }
+        return serialDto;
+    }
+
+    /**
+     * 根据期初总余额、总冻结金额计算期初可用余额
+     * @param balance 总余额（包含冻结）
+     * @param totalFrozenAmount 冻结金额
+     * @return
+     */
+    private Long countStartBalance(Long balance, Long totalFrozenAmount) {
+        if (balance == null || totalFrozenAmount == null) {
+            return null;
+        }
+        return balance - totalFrozenAmount;
+    }
+
+    /**
+     * 根据期初可用余额、操作金额计算期末可用余额
+     * @param startBalance 期初可用余额（不含冻结）
+     * @param amount 操作金额
+     * @return
+     */
+    private Long countEndBalance(Long startBalance, Long amount) {
+        if (startBalance == null || amount == null) {
+            return null;
+        }
+        return startBalance + amount;
     }
 }

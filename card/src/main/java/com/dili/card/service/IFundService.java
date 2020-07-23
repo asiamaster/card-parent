@@ -11,14 +11,6 @@ import com.dili.ss.domain.PageOutput;
  * @author xuliang
  */
 public interface IFundService {
-
-	/**
-	 * 提现
-	 * 
-	 * @param fundRequestDto
-	 */
-	void withdraw(FundRequestDto fundRequestDto);
-
 	/**
 	 * 冻结资金
 	 * 

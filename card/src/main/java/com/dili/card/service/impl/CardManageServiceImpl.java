@@ -11,8 +11,10 @@ import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CardManageRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
+import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICardManageService;
 import com.dili.card.service.ISerialService;
+import com.dili.card.type.CardStatus;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
 import com.dili.ss.constant.ResultCode;
@@ -48,24 +50,31 @@ public class CardManageServiceImpl implements ICardManageService {
     private PayRpcResolver payRpcResolver;
     @Resource
     private AccountQueryRpcResolver accountQueryRpcResolver;
+
+    @Resource
+    protected IAccountQueryService accountQueryService;
     /**
      * @param cardParam
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void unLostCard(CardRequestDto cardParam) {
-        BusinessRecordDo businessRecord = new BusinessRecordDo();
-        serialService.buildCommonInfo(cardParam, businessRecord);
-        businessRecord.setType(OperateType.LOSS_REMOVE.getCode());
-        //businessRecord.setAmount(0L);
-        serialService.saveBusinessRecord(businessRecord);
+        UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam);
+        if (!Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
+            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行解挂", CardStatus.getName(accountCard.getCardState())));
+        }
+        BusinessRecordDo businessRecordDo = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
+            temp.setType(OperateType.LOSS_REMOVE.getCode());
+        });
+        serialService.saveBusinessRecord(businessRecordDo);
         BaseOutput<?> baseOutput = cardManageRpc.unLostCard(cardParam);
         if (!baseOutput.isSuccess()) {
-            //针对解挂失操作，暂时处理为解挂失失败则回滚业务办理记录
             throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         }
         try {//成功则修改状态及期初期末金额，存储操作流水
-            SerialDto serialDto = buildNoFundSerial(cardParam, businessRecord);
+            SerialDto serialDto = serialService.createAccountSerial(businessRecordDo, (temp, feeType) -> {
+
+            });
             serialService.handleSuccess(serialDto, false);
         } catch (Exception e) {
             LOGGER.error("unLostCard", e);
@@ -99,16 +108,22 @@ public class CardManageServiceImpl implements ICardManageService {
 	@Transactional(rollbackFor = Exception.class)
     @Override
     public void unLockCard(CardRequestDto cardParam) {
-        BusinessRecordDo businessRecord = new BusinessRecordDo();
-        serialService.buildCommonInfo(cardParam, businessRecord);
-        businessRecord.setType(OperateType.LIFT_LOCKED.getCode());
-        serialService.saveBusinessRecord(businessRecord);
-        BaseOutput<?> baseOutput = cardManageRpc.unLockCard(cardParam);
+        UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam);
+        if (!Integer.valueOf(CardStatus.LOCKED.getCode()).equals(accountCard.getCardState())) {
+            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行解锁", CardStatus.getName(accountCard.getCardState())));
+        }
+        BusinessRecordDo businessRecordDo = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
+            temp.setType(OperateType.LIFT_LOCKED.getCode());
+        });
+        serialService.saveBusinessRecord(businessRecordDo);
+        BaseOutput<?> baseOutput = cardManageRpc.unLostCard(cardParam);
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         }
         try {//成功则修改状态及期初期末金额，存储操作流水
-            SerialDto serialDto = buildNoFundSerial(cardParam, businessRecord);
+            SerialDto serialDto = serialService.createAccountSerial(businessRecordDo, (temp, feeType) -> {
+
+            });
             serialService.handleSuccess(serialDto, false);
         } catch (Exception e) {
             LOGGER.error("unLockCard", e);

@@ -1,13 +1,12 @@
 package com.dili.card.service;
 
-import com.dili.card.dto.BusinessRecordResponseDto;
-import com.dili.card.dto.CardRequestDto;
-import com.dili.card.dto.SerialDto;
-import com.dili.card.dto.SerialQueryDto;
+import com.dili.card.dto.*;
+import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
+import com.dili.card.service.serial.IAccountSerialFilter;
+import com.dili.card.service.serial.IBusinessRecordFilter;
 import com.dili.ss.domain.PageOutput;
-import com.github.pagehelper.Page;
 
 import java.util.List;
 
@@ -22,6 +21,7 @@ public interface ISerialService {
      * @param cardParam
      * @param businessRecord
      */
+    @Deprecated
     void buildCommonInfo(CardRequestDto cardParam, BusinessRecordDo businessRecord);
 
     /**
@@ -89,4 +89,30 @@ public interface ISerialService {
     * @date 2020/7/1
     */
     PageOutput<List<BusinessRecordResponseDto>> queryPage(SerialQueryDto serialQueryDto);
+
+    /**
+     * 构建业务记录数据并提供回调处理
+     * @param cardRequestDto
+     * @param accountCard
+     * @param filter
+     * @return
+     */
+    BusinessRecordDo createBusinessRecord(CardRequestDto cardRequestDto, UserAccountCardResponseDto accountCard, IBusinessRecordFilter filter);
+
+    /**
+     * 构建流水记录并提供回调处理 没有资金操作的
+     * @param businessRecord
+     * @param filter
+     * @return
+     */
+    SerialDto createAccountSerial(BusinessRecordDo businessRecord, IAccountSerialFilter filter);
+
+    /**
+     * 构建流水记录并提供回调处理 有资金操作
+     * @param businessRecord
+     * @param tradeResponseDto
+     * @param filter
+     * @return
+     */
+    SerialDto createAccountSerialWithFund(BusinessRecordDo businessRecord, TradeResponseDto tradeResponseDto, IAccountSerialFilter filter);
 }

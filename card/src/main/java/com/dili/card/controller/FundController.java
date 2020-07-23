@@ -1,6 +1,5 @@
 package com.dili.card.controller;
 
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.dili.card.common.annotation.ForbidDuplicateCommit;
 import com.dili.card.common.handler.IControllerHandler;
@@ -10,9 +9,8 @@ import com.dili.card.dto.UnfreezeFundDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
-import com.dili.card.service.ISerialService;
 import com.dili.card.service.recharge.RechargeTccTransactionManager;
-import com.dili.card.type.TradeChannel;
+import com.dili.card.service.withdraw.WithdrawDispatcher;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.card.validator.FundValidator;
@@ -25,16 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * 资金操作相关controller
@@ -52,8 +44,9 @@ public class FundController implements IControllerHandler {
 	private IAccountQueryService accountQueryService;
 	@Autowired
 	private RechargeTccTransactionManager rechargeTccTransactionManager;
-	@Autowired
-	private ISerialService serialService;
+    @Resource
+    private WithdrawDispatcher withdrawDispatcher;
+
 
 	/**
 	 * 跳转冻结资金页面
@@ -91,9 +84,8 @@ public class FundController implements IControllerHandler {
 	@ResponseBody
 	public BaseOutput<?> withdraw(@RequestBody FundRequestDto fundRequestDto) {
 		validateCommonParam(fundRequestDto);
-		validateWithdrawParam(fundRequestDto);
 		buildOperatorInfo(fundRequestDto);
-		fundService.withdraw(fundRequestDto);
+		withdrawDispatcher.dispatch(fundRequestDto);
 		return BaseOutput.success();
 	}
 
@@ -168,37 +160,5 @@ public class FundController implements IControllerHandler {
 			return BaseOutput.failure();
 		}
 		return BaseOutput.success();
-	}
-
-	/**
-	 * 验证提现参数
-	 * 
-	 * @param fundRequestDto
-	 */
-	private void validateWithdrawParam(FundRequestDto fundRequestDto) {
-		if (fundRequestDto.getTradeChannel() == null) {
-			throw new CardAppBizException("", "请选择提款方式");
-		}
-		if (fundRequestDto.getAmount() == null || fundRequestDto.getAmount() <= 0L) {
-			throw new CardAppBizException("", "请正确输入提现金额");
-		}
-		if (StrUtil.isBlank(fundRequestDto.getTradePwd())) {
-			throw new CardAppBizException("", "请输入密码");
-		}
-		TradeChannel tradeChannel = TradeChannel.getByCode(fundRequestDto.getTradeChannel());
-		if (tradeChannel == null) {
-			throw new CardAppBizException("", "不支持该提款方式");
-		}
-		switch (tradeChannel) {
-		case CASH:
-			break;
-		case E_BANK:
-			if (fundRequestDto.getServiceCost() == null || fundRequestDto.getServiceCost() < 0L) {
-				throw new CardAppBizException("", "请正确输入手续费");
-			}
-			break;
-		default:
-			throw new CardAppBizException("", "不支持该提款方式");
-		}
 	}
 }
