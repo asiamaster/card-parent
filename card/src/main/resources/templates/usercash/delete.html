@@ -15,7 +15,7 @@
             </div>
     	</form>
 	</div>
-</div>    
+</div>
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <script>
@@ -24,7 +24,7 @@ function submitHandler(e) {
     let url = "${contextPath}/cash/delete.action";
     let data = $.common.formToJSON(formId);
     alert(JSON.stringify(data));
-    $.operate.save(url, JSON.stringify(data));
-    return true;
+    $.operate.post(url, data);
+    //return true;
 }
 </script>

@@ -20,6 +20,7 @@ import com.dili.card.dto.FundConsignorDto;
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
+import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.entity.FundConsignorDo;
 import com.dili.card.entity.FundContractDo;
@@ -166,13 +167,19 @@ public class ContractServiceImpl implements IContractService {
 		if (CollectionUtils.isEmpty(fundContracts)) {
 			return contractResponseDtos;
 		}
+		//账户信息构建
 		List<Long> accountIds = fundContracts.stream().map(c -> c.getConsignorAccountId()).collect(Collectors.toList());
+		UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
+		userAccountCardQuery.setAccountIds(accountIds);
+		userAccountCardQuery.setFirmId(fundContracts.get(0).getFirmId());
+		Map<Long, UserAccountCardResponseDto> userAccountCardMsp = accountQueryRpcResolver
+				.findAccountCardsMapByAccountIds(userAccountCardQuery);
+		//客户信息构建
 		List<Long> customerIds = fundContracts.stream().map(c -> c.getConsignorCustomerId())
 				.collect(Collectors.toList());
-		Map<Long, UserAccountCardResponseDto> userAccountCardMsp = accountQueryRpcResolver
-				.findAccountCardsMapByAccountIds(accountIds);
 		Map<Long, Customer> customerMap = customerRpcResolver.findCustomerMapByCustomerIds(customerIds,
 				fundContracts.get(0).getFirmId());
+		//合同信息构建
 		for (FundContractDo fundContractDo : fundContracts) {
 			contractResponseDtos.add(this.buildPageContracts(fundContractDo,
 					userAccountCardMsp.get(fundContractDo.getConsignorAccountId()),
@@ -227,7 +234,7 @@ public class ContractServiceImpl implements IContractService {
 		}
 		contractResponseDto.setConsigneeNames(names.substring(0, names.lastIndexOf("、")));
 		contractResponseDto.setConsigneeMobiles(mobiles.substring(0, mobiles.lastIndexOf("、")));
-		contractResponseDto.setConsignorDtos(consignorDtos);				
+		contractResponseDto.setConsignorDtos(consignorDtos);
 		// 构建卡数据
 		contractResponseDto.setConsignorCard(accountCard.getCardNo());
 		// 获取客户信息
@@ -264,7 +271,7 @@ public class ContractServiceImpl implements IContractService {
 		fundConsignorDo.setContractNo(contractNo);
 		return fundConsignorDo;
 	}
-	
+
 	/**
 	 * 构建被委托人信息for page
 	 */

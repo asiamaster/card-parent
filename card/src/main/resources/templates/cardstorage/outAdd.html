@@ -44,6 +44,11 @@
 <script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <#common_autoCompleteUser/>
 <script>
+    $(() =>{
+        //修改一下“确定”按钮文本
+        $.modal.changeEnsureTxt("出库")
+    });
+
     let formId = "save-form";
     $("#" + formId).validate({
         onkeyup: false,
@@ -74,7 +79,6 @@
         }
         let url = "${contextPath}/cardStorage/addOut.action";
         let data = $.common.formToJSON(formId);
-        $.operate.save(url, JSON.stringify(data));
-        return true;
+        $.operate.post(url, data);
     }
 </script>

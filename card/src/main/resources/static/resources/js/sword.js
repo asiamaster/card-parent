@@ -237,25 +237,6 @@ tab = {
                     // 非单个禁用
                     $('#' + toolbar + ' .single').toggleClass('disabled', rows.length != 1);
                 });
-                // 图片预览事件
-                $(optionsIds).off("click").on("click", '.img-circle', function () {
-                    var src = $(this).attr('src');
-                    var target = $(this).data('target');
-                    var height = $(this).data('height');
-                    var width = $(this).data('width');
-                    if ($.common.equals("self", target)) {
-                        layer.open({
-                            title: false,
-                            type: 1,
-                            closeBtn: true,
-                            shadeClose: true,
-                            area: ['auto', 'auto'],
-                            content: "<img src='" + src + "' height='" + height + "' width='" + width + "'/>"
-                        });
-                    } else if ($.common.equals("blank", target)) {
-                        window.open(src);
-                    }
-                });
                 // 单击tooltip事件
                 $(optionsIds).on("click", '.tooltip-show', function () {
                     var target = $(this).data('target');
@@ -636,14 +617,6 @@ tab = {
             msgError: function (content) {
                 $.modal.msg(content, modal_status.FAIL);
             },
-            // 成功消息
-            msgSuccess: function (content) {
-                $.modal.msg(content, modal_status.SUCCESS);
-            },
-            // 警告消息
-            msgWarning: function (content) {
-                $.modal.msg(content, modal_status.WARNING);
-            },
             // 弹出提示
             alert: function (content, type) {
                 bs4pop.alert(content,
@@ -681,35 +654,34 @@ tab = {
             confirm: function (content, callBack) {
                 bs4pop.confirm(content, {title: "确认提示"}, callBack);
             },
-            // 弹出层指定宽度
-            open: function (title, url, width, height, isFrame) {
-                //如果是移动端，就使用自适应大小弹窗
-                if ($.common.isMobile()) {
-                    width = 'auto';
-                    height = 'auto';
-                }
-                if ($.common.isEmpty(title)) {
-                    title = false;
-                }
-                if ($.common.isEmpty(url)) {
-                    url = "/404.html";
-                }
-                if ($.common.isEmpty(width)) {
-                    width = 800;
-                }
-                if ($.common.isEmpty(height)) {
-                    height = ($(window).height() - 50);
-                }
-                if ($.common.isEmpty(isFrame)) {
-                    isFrame = true;
-                }
-                bs4pop.dialog({
-                    title: title,//对话框title
-                    content: url, //对话框内容
-                    width: width,//宽度
-                    height: height,//高度
-                    isIframe: isFrame,//默认是页面层，非iframe
-                });
+            //默认打开弹窗选项
+            openDefault: function(title,content,width,height){
+                let options = {
+                    title: title,
+                    width: width,
+                    height: height,
+                    content: content,
+                    btns: [{
+                        label: '确定', className: 'sword-modal btn-primary btn ', onClick(e, $iframe) {
+                            try {
+                                $iframe[0].contentWindow.submitHandler(e);
+                                return false;
+                            } catch (ex) {
+                                console.log(ex);
+                                return false;
+                            }
+                        }
+                    },{
+                        label: '取消', className: 'sword-modal btn-secondary btn', onClick(e, $iframe) {
+                            try {
+                                return $iframe[0].contentWindow.cancelHandler(e)
+                            } catch (ex) {
+                                return true;
+                            }
+                        }
+                    }]
+                };
+                $.modal.openOptions(options);
             },
             // 弹出层指定参数选项
             openOptions: function (options) {
@@ -721,23 +693,25 @@ tab = {
                     isIframe: true,//默认是页面层，非iframe
                 };
                 options = $.extend(defaults, options);
-                var _btn = ['<i class="fa fa-check"></i> 确认', '<i class="fa fa-close"></i> 关闭'];
-                // if ($.common.isEmpty(options.yes)) {
-                //     options.yes = function (index, layero) {
-                //         options.callBack(index, layero);
-                //     }
-                // }
-                bs4pop.dialog(options);
+                table.options.dialog = bs4pop.dialog(options);
+            },
+            //修改“确定”按钮文本
+            changeEnsureTxt: (txt)=>{
+                let doc = window.top == window.parent ? window.document : window.parent.document;
+                let $button = $("button[class*='btn sword-modal btn-primary']", doc);
+                $button.text(txt)
             },
             // 禁用按钮
             disable: function () {
-                var doc = window.top == window.parent ? window.document : window.parent.document;
-                $("a[class*=layui-layer-btn]", doc).addClass("layer-disabled");
+                let doc = window.top == window.parent ? window.document : window.parent.document;
+                let $button = $("button[class*='btn sword-modal btn-primary']", doc);
+                $button.attr("disabled", "disabled");
             },
             // 启用按钮
             enable: function () {
-                var doc = window.top == window.parent ? window.document : window.parent.document;
-                $("a[class*=layui-layer-btn]", doc).removeClass("layer-disabled");
+                let doc = window.top == window.parent ? window.document : window.parent.document;
+                let $button = $("button[class*='btn sword-modal btn-primary']", doc);
+                $button.removeAttr("disabled");
             },
             // 打开遮罩层
             loading: function (message) {
@@ -767,15 +741,17 @@ tab = {
                     data: data,
                     beforeSend: () => {
                         $.modal.loading("正在处理中，请稍后...");
+                        $.modal.disable();
                     },
                     success: (result) => {
                         if (typeof callback == "function") {
                             callback(result);
                         }
-                        $.operate.ajaxSuccess(result);
+                        $.operate.successCallback(result);
                     },
                     error: (status, result) => {
                         $.modal.closeLoading();
+                        $.modal.enable();
                     }
                 };
                 //非get请求都转json
@@ -806,30 +782,7 @@ tab = {
                     _width = 'auto';
                     _height = 'auto';
                 }
-                let options = {
-                    title: modalName,
-                    width: _width,
-                    height: _height,
-                    content: _url,
-                    btns: [{
-                        label: '确定', className: 'btn btn-primary', onClick(e, $iframe) {
-                            try {
-                                return $iframe[0].contentWindow.submitHandler(e)
-                            } catch (ex) {
-                                return false;
-                            }
-                        }
-                    },{
-                        label: '取消', className: 'btn btn-secondary', onClick(e, $iframe) {
-                            try {
-                                return $iframe[0].contentWindow.cancelHandler(e)
-                            } catch (ex) {
-                                return true;
-                            }
-                        }
-                    }]
-                };
-                $.modal.openOptions(options);
+                $.modal.openDefault(modalName,_url,_width,_height);
             },
             // 详细访问地址
             removeUrl: function (id) {
@@ -895,47 +848,6 @@ tab = {
                 }
                 return url;
             },
-            // 删除信息
-            remove: function () {
-                table.set();
-                var row = $.map($("#" + table.options.id).bootstrapTable('getSelections'), function (row) {
-                    return row;
-                });
-                if (row.length == 0) {
-                    $.modal.alertWarning("请至少一条数据");
-                    return;
-                }
-                $.modal.confirm("确定删除该条信息吗？", function (sure) {
-                    if (!sure) {
-                        return;
-                    }
-                    var data = {"id": row[0].id};
-                    $.operate.submit(table.options.removeUrl, "post", "json", data);
-                });
-
-            },
-            // 批量删除信息
-            removeAll: function () {
-                table.set();
-                var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
-                if (rows.length == 0) {
-                    $.modal.alertWarning("请至少选择一条记录");
-                    return;
-                }
-                $.modal.confirm("确认要删除选中的" + rows.length + "条数据吗?", function () {
-                    var url = table.options.removeUrl;
-                    var data = {"ids": rows.join()};
-                    $.operate.submit(url, "post", "json", data);
-                });
-            },
-            // 清空信息
-            clean: function () {
-                table.set();
-                $.modal.confirm("确定清空所有" + table.options.modalName + "吗？", function () {
-                    var url = table.options.cleanUrl;
-                    $.operate.submit(url, "post", "json", "");
-                });
-            },
             // 添加信息
             addWithTitleAndSelect: function (id, width, height, modalName) {
                 table.set();
@@ -950,92 +862,13 @@ tab = {
                     _width = 'auto';
                     _height = 'auto';
                 }
-                let options = {
-                    title: modalName,
-                    width: _width,
-                    height: _height,
-                    content: _url,
-                    btns: [{
-                        label: '确定', className: 'btn btn-primary', onClick(e, $iframe) {
-                            try {
-                                return $iframe[0].contentWindow.submitHandler(e)
-                            } catch (ex) {
-                                return false;
-                            }
-                        }
-                    },{
-                        label: '取消', className: 'btn btn-secondary', onClick(e, $iframe) {
-                            try {
-                                return $iframe[0].contentWindow.cancelHandler(e)
-                            } catch (ex) {
-                                return true;
-                            }
-                        }
-                    }]
-                };
-                $.modal.openOptions(options);
-            },
-            // 添加下一步信息
-            addWithTitleAndNext: function (url, width, height, modalName) {
-                table.set();
-                let _url = url;
-                if ($.common.isEmpty(url)){
-                	_url = $.operate.addUrl(url);
-                }
-                let options = {
-                    title: modalName,
-                    width: width,
-                    height: height,
-                    content: _url,
-                    btns: [{
-                        label: '下一步', className: 'btn btn-primary container_center', onClick(e, $iframe) {
-                            try {
-                                return $iframe[0].contentWindow.submitHandler(e)
-                            } catch (ex) {
-                                console.log(ex);
-                                return false;
-                            }
-                        }
-                    },{
-                        label: '取消', className: 'btn btn-secondary container_center', onClick(e, $iframe) {
-                            try {
-                                return $iframe[0].contentWindow.cancelHandler(e)
-                            } catch (ex) {
-                                return true;
-                            }
-                        }
-                    }]
-                };
-                $.modal.openOptions(options);
+                $.modal.openDefault(modalName,_url,_width,_height);
             },
             // 添加信息
             addWithTitle: function (id, width, height, modalName) {
                 table.set();
-                let options = {
-                    title: modalName,
-                    width: width,
-                    height: height,
-                    content: $.operate.addUrl(id),
-                    btns: [{
-                        label: '确定', className: 'btn btn-primary', onClick(e, $iframe) {
-                            try {
-                                return $iframe[0].contentWindow.submitHandler(e)
-                            } catch (ex) {
-                                console.log(ex);
-                                return false;
-                            }
-                        }
-                    },{
-                        label: '取消', className: 'btn btn-secondary', onClick(e, $iframe) {
-                            try {
-                                return $iframe[0].contentWindow.cancelHandler(e)
-                            } catch (ex) {
-                                return true;
-                            }
-                        }
-                    }]
-                };
-                $.modal.openOptions(options);
+                let url = $.operate.addUrl(id);
+                $.modal.openDefault(modalName, url, width, height);
             },
             // 添加信息
             add: function (id, width, height) {
@@ -1075,30 +908,7 @@ tab = {
                     _width = 'auto';
                     _height = 'auto';
                 }
-                let options = {
-                    title: modalName,
-                    width: _width,
-                    height: _height,
-                    content: _url,
-                    btns: [{
-                        label: '确定', className: 'btn btn-primary', onClick(e, $iframe) {
-                            try {
-                                return $iframe[0].contentWindow.submitHandler(e)
-                            } catch (ex) {
-                                return false;
-                            }
-                        }
-                    },{
-                        label: '取消', className: 'btn btn-secondary', onClick(e, $iframe) {
-                            try {
-                                return $iframe[0].contentWindow.cancelHandler(e)
-                            } catch (ex) {
-                                return true;
-                            }
-                        }
-                    }]
-                };
-                $.modal.openOptions(options);
+                $.modal.openDefault(modalName, _url, _width, _height)
             },
             // 修改信息
             edit: function (id) {
@@ -1130,33 +940,9 @@ tab = {
                 }
                 return url;
             },
-            // 保存信息 刷新表格
-            save: function (url, data, callback) {
-                   let config = {
-                       url: url,
-                       type: "post",
-                       dataType: "json",
-                       contentType: "application/json; charset=utf-8",
-                       data: data,
-                       beforeSend: function () {
-                           $.modal.loading("正在处理中，请稍后...");
-                          // $.modal.disable();
-                       },
-                       success: function(result) {
-                           if (typeof callback == "function") {
-                               callback(result);
-                           }
-                           $.operate.successCallback(result);
-                       },
-                       error: function (status, result) {
-                           $.modal.hide();
-                       }
-                   };
-                   $.ajax(config)
-            },
             // 保存信息 弹出提示框
             saveModal: function (url, data, callback) {
-                var config = {
+                let config = {
                     url: url,
                     type: "post",
                     dataType: "json",
@@ -1181,46 +967,23 @@ tab = {
                 };
                 $.ajax(config)
             },
-            // 保存结果弹出msg刷新table表格
-            ajaxSuccess: function (result) {
-                $.modal.closeLoading();
-                if (result.code == web_status.SUCCESS && table.options.type == table_type.bootstrapTable) {
-                    $.modal.alertSuccess(result.message);
-                    $.table.refresh();
-                } else if (result.code == web_status.SUCCESS && table.options.type == table_type.bootstrapTreeTable) {
-                    $.modal.alertSuccess(result.message);
-                    $.treeTable.refresh();
-                    $.common.isEmpty()
-                } else if (result.code == web_status.SUCCESS && table.option == undefined) {
-                    $.modal.alertSuccess(result.message)
-                } else if (result.code == web_status.WARNING) {
-                    $.modal.alertWarning(result.message)
-                } else {
-                    $.modal.alertError(result.message);
-                }
-
-            },
-            // 成功结果提示msg（父窗体全局更新）
-            saveSuccess: function (result) {
-                if (result.code == web_status.SUCCESS) {
-                    $.modal.msgReload("保存成功,正在刷新数据请稍后……", modal_status.SUCCESS);
-                } else if (result.code == web_status.WARNING) {
-                    $.modal.alertWarning(result.msg)
-                } else {
-                    $.modal.alertError(result.msg);
-                }
-                $.modal.closeLoading();
-            },
             // 成功回调执行事件（父窗体静默更新）
             successCallback: function (result) {
+                $.modal.closeLoading();
+                //启用按钮
+                $.modal.enable();
+                let _$ele = window.top == window.parent ? window : window.parent;
                 if (result.code == web_status.SUCCESS) {
+                    if (!$.common.isEmpty(_$ele.table.options.dialog)) {
+                        _$ele.table.options.dialog.hide();
+                    }
                     //let parent = window.parent;
-                    if (parent.table.options.type == table_type.bootstrapTable) {
-                        parent.$.modal.msgSuccess(result.message);
-                        parent.$.table.refresh();
-                    } else if (parent.table.options.type == table_type.bootstrapTreeTable) {
-                        parent.$.modal.msgSuccess(result.message);
-                        parent.$.treeTable.refresh();
+                    if (_$ele.table.options.type == table_type.bootstrapTable) {
+                        _$ele.$.modal.alertSuccess(result.message);
+                        _$ele.$.table.refresh();
+                    } else if (_$ele.table.options.type == table_type.bootstrapTreeTable) {
+                        _$ele.$.modal.alertSuccess(result.message);
+                        _$ele.$.treeTable.refresh();
                     } else {
                         $.modal.msgReload("保存成功,正在刷新数据请稍后……", modal_status.SUCCESS);
                     }
@@ -1231,8 +994,7 @@ tab = {
                 } else {
                     $.modal.alertError(result.message);
                 }
-                $.modal.closeLoading();
-               // $.modal.enable();
+
             },
         },
         // 校验封装处理
@@ -1387,36 +1149,6 @@ tab = {
                 return $.map(nodes, function (row) {
                     return row[_column];
                 }).join();
-            },
-            // 不允许根父节点选择
-            notAllowParents: function (_tree) {
-                var nodes = _tree.getSelectedNodes();
-                if (nodes.length == 0) {
-                    $.modal.msgError("请选择节点后提交");
-                    return false;
-                }
-                for (var i = 0; i < nodes.length; i++) {
-                    if (nodes[i].level == 0) {
-                        $.modal.msgError("不能选择根节点（" + nodes[i].name + "）");
-                        return false;
-                    }
-                    if (nodes[i].isParent) {
-                        $.modal.msgError("不能选择父节点（" + nodes[i].name + "）");
-                        return false;
-                    }
-                }
-                return true;
-            },
-            // 不允许最后层级节点选择
-            notAllowLastLevel: function (_tree) {
-                var nodes = _tree.getSelectedNodes();
-                for (var i = 0; i < nodes.length; i++) {
-                    if (!nodes[i].isParent) {
-                        $.modal.msgError("不能选择最后层级节点（" + nodes[i].name + "）");
-                        return false;
-                    }
-                }
-                return true;
             },
             // 隐藏/显示搜索栏
             toggleSearch: function () {
@@ -1627,7 +1359,7 @@ tab = {
     		    var IntegerNum; //金额整数部分
     		    var DecimalNum; //金额小数部分
     		    var ChineseStr = ""; //输出的中文金额字符串
-    		    var parts; //分离金额后用的数组，预定义    
+    		    var parts; //分离金额后用的数组，预定义
     		    var Symbol="";//正负值标记
     		    if (money == "") {
     		        return "";
@@ -1645,7 +1377,7 @@ tab = {
     		    if(money<0)
     		    {
     		        money=-money;
-    		        Symbol="负 ";        
+    		        Symbol="负 ";
     		    }
     		    money = money.toString(); //转换为字符串
     		    if (money.indexOf(".") == -1) {
@@ -1696,8 +1428,8 @@ tab = {
     		        ChineseStr += cnInteger;
     		    }
     		    ChineseStr = Symbol +ChineseStr;
-    		    
-    		    return ChineseStr;    
+
+    		    return ChineseStr;
         	}
         }
     });

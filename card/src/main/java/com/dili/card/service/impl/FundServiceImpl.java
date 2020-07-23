@@ -65,7 +65,7 @@ public class FundServiceImpl implements IFundService {
     public void frozen(FundRequestDto requestDto) {
         UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(requestDto);
 
-        BalanceResponseDto balance = payService.queryBalance(new BalanceRequestDto(accountCard.getFundAccountId()));
+        BalanceResponseDto balance = payRpcResolver.findBalanceByFundAccountId(accountCard.getFundAccountId());
         if (requestDto.getAmount() >= balance.getAvailableAmount()) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "可用余额不足");
         }

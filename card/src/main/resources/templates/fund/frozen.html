@@ -60,6 +60,8 @@
     <div class="row" id="table-div" style="display: none">
         <form id="queryForm">
             <input type="hidden" id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}">
+            <input type="hidden" name="operateTypeList[0]" value="27">
+            <input type="hidden" name="operateTypeList[1]" value="28">
         </form>
         <div class="col-12">
             <table id="grid"

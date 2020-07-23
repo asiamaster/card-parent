@@ -1,14 +1,7 @@
 package com.dili.card.controller;
 
-import cn.hutool.core.util.StrUtil;
+import javax.annotation.Resource;
 
-import com.dili.card.common.handler.IControllerHandler;
-import com.dili.card.dto.CardRequestDto;
-import com.dili.card.exception.CardAppBizException;
-import com.dili.card.service.ICardManageService;
-import com.dili.card.util.AssertUtils;
-import com.dili.card.validator.CardValidator;
-import com.dili.ss.domain.BaseOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.dto.CardRequestDto;
+import com.dili.card.service.ICardManageService;
+import com.dili.card.util.AssertUtils;
+import com.dili.card.validator.CardValidator;
+import com.dili.ss.domain.BaseOutput;
+
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 卡片管理服务，退卡、挂失、解挂、补卡等
@@ -32,7 +32,7 @@ public class CardManageController implements IControllerHandler {
 
     @Resource
     private ICardManageService cardManageService;
-    
+
     /**
      * 重置登陆密码
      */
@@ -88,8 +88,9 @@ public class CardManageController implements IControllerHandler {
      */
     @PostMapping("/changeCard.action")
     public BaseOutput<?> changeCard(@RequestBody CardRequestDto cardParam) {
-        AssertUtils.notEmpty(cardParam.getLoginPwd());
-        AssertUtils.notEmpty(cardParam.getNewCardNo());
+        AssertUtils.notEmpty(cardParam.getLoginPwd(),"密码不能为空");
+        AssertUtils.notEmpty(cardParam.getNewCardNo(),"新开卡号不能为空");
+        AssertUtils.notNull(cardParam.getServiceFee(),"工本费不能为空");
         this.validateCommonParam(cardParam);
         this.buildOperatorInfo(cardParam);
         cardManageService.changeCard(cardParam);
@@ -103,7 +104,7 @@ public class CardManageController implements IControllerHandler {
      */
     @PostMapping("/reportLossCard.action")
     public BaseOutput<?> reportLoss(@RequestBody CardRequestDto cardParam) {
-        AssertUtils.notEmpty(cardParam.getLoginPwd());
+        AssertUtils.notEmpty(cardParam.getLoginPwd(),"密码不能为空");
         this.validateCommonParam(cardParam);
         this.buildOperatorInfo(cardParam);
         cardManageService.reportLossCard(cardParam);

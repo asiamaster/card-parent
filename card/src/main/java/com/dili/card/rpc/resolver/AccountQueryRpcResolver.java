@@ -46,8 +46,8 @@ public class AccountQueryRpcResolver {
     /**
      * 通过账号批量查询map结构数据
      */
-    public Map<Long, UserAccountCardResponseDto> findAccountCardsMapByAccountIds(List<Long> accountIds) {
-    	List<UserAccountCardResponseDto> userAccountCards = findBacthByAccountIds(accountIds);
+    public Map<Long, UserAccountCardResponseDto> findAccountCardsMapByAccountIds(UserAccountCardQuery userAccountCardQuery) {
+    	List<UserAccountCardResponseDto> userAccountCards = findByQueryCondition(userAccountCardQuery);
     	return userAccountCards.stream()
                 .collect(Collectors.toMap(UserAccountCardResponseDto::getAccountId,
                         a -> a,
@@ -60,7 +60,14 @@ public class AccountQueryRpcResolver {
     public List<UserAccountCardResponseDto> findBacthByAccountIds(List<Long> accountIds) {
         UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
         userAccountCardQuery.setAccountIds(accountIds);
-        BaseOutput<List<UserAccountCardResponseDto>> baseOutput = accountQueryRpc.findUserCards(userAccountCardQuery);
+        return findByQueryCondition(userAccountCardQuery);
+    }
+    
+    /**
+     * 通过条件查询
+     */
+    private List<UserAccountCardResponseDto> findByQueryCondition(UserAccountCardQuery userAccountCardQuery){
+    	BaseOutput<List<UserAccountCardResponseDto>> baseOutput = accountQueryRpc.findUserCards(userAccountCardQuery);
         this.validateSuccess(baseOutput);
         if (CollectionUtils.isEmpty(baseOutput.getData())) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "卡信息不存在");

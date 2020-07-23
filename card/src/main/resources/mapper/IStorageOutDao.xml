@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.dili.card.dao.IApplyRecordDao">
+<mapper namespace="com.dili.card.dao.IStorageOutDao">
     <sql id="Base_Column">
         `id`,
 			`apply_time`,
@@ -38,17 +38,17 @@
             </if>
         </where>
     </sql>
-    <select id="selectList" resultType="com.dili.card.entity.ApplyRecordDo">
+    <select id="selectList" resultType="com.dili.card.entity.CardStorageOut">
         SELECT
         <include refid="Base_Column"/>
         FROM
-        card_apply_record
+        card_storage_out
         ORDER BY
         id DESC
     </select>
 
     <insert id="save">
-        INSERT INTO card_apply_record (`apply_time`,
+        INSERT INTO card_storage_out (`apply_time`,
                                        `card_no`,
                                        `amount`,
                                        `apply_user_id`,
@@ -76,26 +76,26 @@
                 #{notes})
     </insert>
 
-    <select id="getById" resultType="com.dili.card.entity.ApplyRecordDo">
+    <select id="getById" resultType="com.dili.card.entity.CardStorageOut">
         SELECT
         <include refid="Base_Column"/>
         FROM
-        card_apply_record
+        card_storage_out
         WHERE
         id = #{id}
     </select>
 
-    <select id="selectListByCondition" resultType="com.dili.card.entity.ApplyRecordDo">
+    <select id="selectListByCondition" resultType="com.dili.card.entity.CardStorageOut">
         SELECT
         <include refid="Base_Column"/>
         FROM
-        card_apply_record
+        card_storage_out
         <include refid="Where_Column"/>
         ORDER BY ${sort} ${order}
     </select>
 
     <update id="update">
-        UPDATE card_apply_record
+        UPDATE card_storage_out
         <set>
             <if test="applyTime != null">`apply_time` = #{applyTime},</if>
             <if test="cardNo != null">`card_no` = #{cardNo},</if>
@@ -118,7 +118,7 @@
     <delete id="batchRemove">
         DELETE
         FROM
-        card_apply_record
+        card_storage_out
         WHERE
         id IN
         <foreach item="id" collection="array" open="(" separator="," close=")">

@@ -18,7 +18,6 @@ import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
 import com.dili.card.service.IContractService;
-import com.dili.card.type.ContractState;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.domain.BaseOutput;
 

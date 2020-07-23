@@ -16,7 +16,7 @@ import java.util.List;
  * @Auther: miaoguoxin
  * @Date: 2020/7/1 16:50
  */
-public class ApplyRecordResponseDto implements Serializable {
+public class CardStorageOutResponseDto implements Serializable {
     /**主键id*/
     private Long id;
     /**卡号列表*/

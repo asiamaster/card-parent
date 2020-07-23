@@ -2,9 +2,9 @@ package com.dili.card.service;
 
 import com.alibaba.fastjson.JSON;
 import com.dili.card.BaseTest;
-import com.dili.card.dto.ApplyRecordQueryDto;
-import com.dili.card.dto.ApplyRecordRequestDto;
-import com.dili.card.dto.ApplyRecordResponseDto;
+import com.dili.card.dto.CardStorageOutQueryDto;
+import com.dili.card.dto.CardStorageOutRequestDto;
+import com.dili.card.dto.CardStorageOutResponseDto;
 import com.dili.ss.domain.PageOutput;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -12,8 +12,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @Auther: miaoguoxin
@@ -28,7 +26,7 @@ class CardStorageServiceTest extends BaseTest {
     @Transactional
     @Rollback
     void testSaveOutRecord() {
-        ApplyRecordRequestDto requestDto = new ApplyRecordRequestDto();
+        CardStorageOutRequestDto requestDto = new CardStorageOutRequestDto();
         requestDto.setAmount(2);
         requestDto.setCardNos("1233,44444");
         requestDto.setOpId(1L);
@@ -43,11 +41,11 @@ class CardStorageServiceTest extends BaseTest {
 
     @Test
     void testGetPage() {
-        ApplyRecordQueryDto recordRequestDto = new ApplyRecordQueryDto();
+        CardStorageOutQueryDto recordRequestDto = new CardStorageOutQueryDto();
         recordRequestDto.setFirmId(1L);
         recordRequestDto.setPage(1);
         recordRequestDto.setRows(10);
-        PageOutput<List<ApplyRecordResponseDto>> page = cardStorageService.getPage(recordRequestDto);
+        PageOutput<List<CardStorageOutResponseDto>> page = cardStorageService.getPage(recordRequestDto);
         LOGGER.info("获取到结果:{}", JSON.toJSONString(page));
     }
 }

@@ -15,14 +15,15 @@
             </div>
     	</form>
 	</div>
-</div>    
+</div>
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <script>
+
 function submitHandler(e) {
     let url = "${contextPath}/cycle/flated.action";
     let data = $.common.formToJSON("flated");
-    $.operate.save(url, JSON.stringify(data));
+    $.operate.post(url, data);
     return true;
 }
 </script>
