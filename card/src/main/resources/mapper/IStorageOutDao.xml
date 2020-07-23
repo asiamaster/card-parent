@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.dili.card.dao.IApplyRecordDao">
+<mapper namespace="com.dili.card.dao.IStorageOutDao">
     <sql id="Base_Column">
         `id`,
 			`apply_time`,
@@ -38,7 +38,7 @@
             </if>
         </where>
     </sql>
-    <select id="selectList" resultType="com.dili.card.entity.ApplyRecordDo">
+    <select id="selectList" resultType="com.dili.card.entity.CardStorageOut">
         SELECT
         <include refid="Base_Column"/>
         FROM
@@ -76,7 +76,7 @@
                 #{notes})
     </insert>
 
-    <select id="getById" resultType="com.dili.card.entity.ApplyRecordDo">
+    <select id="getById" resultType="com.dili.card.entity.CardStorageOut">
         SELECT
         <include refid="Base_Column"/>
         FROM
@@ -85,7 +85,7 @@
         id = #{id}
     </select>
 
-    <select id="selectListByCondition" resultType="com.dili.card.entity.ApplyRecordDo">
+    <select id="selectListByCondition" resultType="com.dili.card.entity.CardStorageOut">
         SELECT
         <include refid="Base_Column"/>
         FROM

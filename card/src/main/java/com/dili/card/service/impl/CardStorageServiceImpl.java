@@ -1,10 +1,10 @@
 package com.dili.card.service.impl;
 
-import com.dili.card.dao.IApplyRecordDao;
-import com.dili.card.dto.ApplyRecordQueryDto;
-import com.dili.card.dto.ApplyRecordRequestDto;
-import com.dili.card.dto.ApplyRecordResponseDto;
-import com.dili.card.entity.ApplyRecordDo;
+import com.dili.card.dao.IStorageOutDao;
+import com.dili.card.dto.CardStorageOutQueryDto;
+import com.dili.card.dto.CardStorageOutRequestDto;
+import com.dili.card.dto.CardStorageOutResponseDto;
+import com.dili.card.entity.CardStorageOut;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.ICardStorageService;
 import com.dili.card.util.PageUtils;
@@ -15,7 +15,6 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,24 +27,24 @@ import java.util.stream.Collectors;
 @Service
 public class CardStorageServiceImpl implements ICardStorageService {
     @Autowired
-    private IApplyRecordDao applyRecordDao;
+    private IStorageOutDao storageOutDao;
 
     @Override
-    public void saveOutRecord(ApplyRecordRequestDto requestDto) {
-        ApplyRecordDo applyRecordDo = new ApplyRecordDo();
-        BeanUtils.copyProperties(requestDto,applyRecordDo);
-        applyRecordDo.setCardNo(requestDto.getCardNos());
-        applyRecordDo.setCreatorId(requestDto.getOpId());
-        applyRecordDo.setCreator(requestDto.getOpName());
-        applyRecordDo.setApplyTime(LocalDateTime.now());
-        applyRecordDo.setCreateTime(LocalDateTime.now());
-        applyRecordDo.setModifyTime(LocalDateTime.now());
-        applyRecordDao.save(applyRecordDo);
+    public void saveOutRecord(CardStorageOutRequestDto requestDto) {
+        CardStorageOut cardStorageOut = new CardStorageOut();
+        BeanUtils.copyProperties(requestDto, cardStorageOut);
+        cardStorageOut.setCardNo(requestDto.getCardNos());
+        cardStorageOut.setCreatorId(requestDto.getOpId());
+        cardStorageOut.setCreator(requestDto.getOpName());
+        cardStorageOut.setApplyTime(LocalDateTime.now());
+        cardStorageOut.setCreateTime(LocalDateTime.now());
+        cardStorageOut.setModifyTime(LocalDateTime.now());
+        storageOutDao.save(cardStorageOut);
     }
 
     @Override
-    public ApplyRecordResponseDto getById(Long id) {
-        ApplyRecordDo byId = applyRecordDao.getById(id);
+    public CardStorageOutResponseDto getById(Long id) {
+        CardStorageOut byId = storageOutDao.getById(id);
         if (byId == null) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "领卡记录不存在");
         }
@@ -53,24 +52,24 @@ public class CardStorageServiceImpl implements ICardStorageService {
     }
 
     @Override
-    public PageOutput<List<ApplyRecordResponseDto>> getPage(ApplyRecordQueryDto queryDto) {
-        Page<ApplyRecordResponseDto> page = PageHelper.startPage(queryDto.getPage(), queryDto.getRows());
-        List<ApplyRecordResponseDto> list = this.getByCondition(queryDto);
+    public PageOutput<List<CardStorageOutResponseDto>> getPage(CardStorageOutQueryDto queryDto) {
+        Page<CardStorageOutResponseDto> page = PageHelper.startPage(queryDto.getPage(), queryDto.getRows());
+        List<CardStorageOutResponseDto> list = this.getByCondition(queryDto);
         return PageUtils.convert2PageOutput(page, list);
     }
 
     @Override
-    public List<ApplyRecordResponseDto> getByCondition(ApplyRecordQueryDto queryDto) {
+    public List<CardStorageOutResponseDto> getByCondition(CardStorageOutQueryDto queryDto) {
         queryDto.setDefSort("apply_time").setDefOrder("DESC");
-        List<ApplyRecordDo> applyRecordDos = applyRecordDao.selectListByCondition(queryDto);
-        return applyRecordDos.stream()
+        List<CardStorageOut> cardStorageOuts = storageOutDao.selectListByCondition(queryDto);
+        return cardStorageOuts.stream()
                 .map(this::convert2ResponseDto)
                 .collect(Collectors.toList());
     }
 
 
-    private ApplyRecordResponseDto convert2ResponseDto(ApplyRecordDo record) {
-        ApplyRecordResponseDto recordResponseDto = new ApplyRecordResponseDto();
+    private CardStorageOutResponseDto convert2ResponseDto(CardStorageOut record) {
+        CardStorageOutResponseDto recordResponseDto = new CardStorageOutResponseDto();
         BeanUtils.copyProperties(record, recordResponseDto);
         recordResponseDto.setConvertCardNo(record.getCardNo());
         return recordResponseDto;

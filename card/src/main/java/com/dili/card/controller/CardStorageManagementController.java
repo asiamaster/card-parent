@@ -1,8 +1,8 @@
 package com.dili.card.controller;
 
 import com.dili.card.common.handler.IControllerHandler;
-import com.dili.card.dto.ApplyRecordQueryDto;
-import com.dili.card.dto.ApplyRecordRequestDto;
+import com.dili.card.dto.CardStorageOutQueryDto;
+import com.dili.card.dto.CardStorageOutRequestDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.ICardStorageService;
 import com.dili.card.validator.ConstantValidator;
@@ -74,7 +74,7 @@ public class CardStorageManagementController implements IControllerHandler {
     @PostMapping("outPage.action")
     @ResponseBody
     public Map<String, Object> getPage(@Validated(ConstantValidator.Page.class)
-                                               ApplyRecordQueryDto queryDto) {
+                                               CardStorageOutQueryDto queryDto) {
         // this.buildOperatorInfo(queryDto);
         return successPage(cardStorageService.getPage(queryDto));
     }
@@ -87,7 +87,7 @@ public class CardStorageManagementController implements IControllerHandler {
     @PostMapping("addOut.action")
     @ResponseBody
     public BaseOutput<?> addOutRecord(@RequestBody @Validated(ConstantValidator.Insert.class)
-                                                  ApplyRecordRequestDto requestDto) {
+                                              CardStorageOutRequestDto requestDto) {
         this.buildOperatorInfo(requestDto);
         cardStorageService.saveOutRecord(requestDto);
         return BaseOutput.success();

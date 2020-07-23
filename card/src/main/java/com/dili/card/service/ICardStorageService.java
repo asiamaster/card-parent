@@ -1,11 +1,9 @@
 package com.dili.card.service;
 
-import com.dili.card.dto.ApplyRecordQueryDto;
-import com.dili.card.dto.ApplyRecordRequestDto;
-import com.dili.card.dto.ApplyRecordResponseDto;
-import com.dili.http.okhttp.utils.L;
+import com.dili.card.dto.CardStorageOutQueryDto;
+import com.dili.card.dto.CardStorageOutRequestDto;
+import com.dili.card.dto.CardStorageOutResponseDto;
 import com.dili.ss.domain.PageOutput;
-import com.github.pagehelper.Page;
 
 import java.util.List;
 
@@ -20,26 +18,26 @@ public interface ICardStorageService {
     * @author miaoguoxin
     * @date 2020/7/3
     */
-    void saveOutRecord(ApplyRecordRequestDto requestDto);
+    void saveOutRecord(CardStorageOutRequestDto requestDto);
 
     /**
     * 根据主键id查询单个
     * @author miaoguoxin
     * @date 2020/7/2
     */
-    ApplyRecordResponseDto getById(Long id);
+    CardStorageOutResponseDto getById(Long id);
 
     /**
     * 卡申领记录分页查询
     * @author miaoguoxin
     * @date 2020/7/1
     */
-    PageOutput<List<ApplyRecordResponseDto>> getPage(ApplyRecordQueryDto queryDto);
+    PageOutput<List<CardStorageOutResponseDto>> getPage(CardStorageOutQueryDto queryDto);
 
     /**
     * 多条件查询
     * @author miaoguoxin
     * @date 2020/7/1
     */
-    List<ApplyRecordResponseDto> getByCondition(ApplyRecordQueryDto queryDto);
+    List<CardStorageOutResponseDto> getByCondition(CardStorageOutQueryDto queryDto);
 }

@@ -1,7 +1,7 @@
 package com.dili.card.service.tcc;
 
-import com.dili.card.dao.IApplyRecordDao;
-import com.dili.card.entity.ApplyRecordDo;
+import com.dili.card.dao.IStorageOutDao;
+import com.dili.card.entity.CardStorageOut;
 import com.dili.card.entity.tcc.UserCardDo;
 import com.dili.card.rpc.TestTccRpc;
 import com.dili.ss.domain.BaseOutput;
@@ -20,17 +20,17 @@ import java.time.LocalDateTime;
 public class TccTestService extends AbstractTccTransactionManager<Long, UserCardDo> {
 
     @Autowired
-    private IApplyRecordDao applyRecordDao;
+    private IStorageOutDao storageOutDao;
     @Autowired
     private TestTccRpc testTccRpc;
 
     @Override
     public void prepare(UserCardDo requestDto) {
-        ApplyRecordDo applyRecordDo = new ApplyRecordDo();
-        applyRecordDo.setId(1000L);
-        applyRecordDo.setApplyUserCode("123Test");
-        applyRecordDo.setModifyTime(LocalDateTime.now());
-        applyRecordDao.update(applyRecordDo);
+        CardStorageOut cardStorageOut = new CardStorageOut();
+        cardStorageOut.setId(1000L);
+        cardStorageOut.setApplyUserCode("123Test");
+        cardStorageOut.setModifyTime(LocalDateTime.now());
+        storageOutDao.update(cardStorageOut);
         BaseOutput<Long> output = testTccRpc.testTry(requestDto);
         if (!output.isSuccess()){
             throw new RuntimeException("测试try阶段失败");
@@ -40,11 +40,11 @@ public class TccTestService extends AbstractTccTransactionManager<Long, UserCard
 
     @Override
     public Long confirm(UserCardDo requestDto) {
-        ApplyRecordDo applyRecordDo = new ApplyRecordDo();
-        applyRecordDo.setId(1000L);
-        applyRecordDo.setApplyUserCode("222Test");
-        applyRecordDo.setModifyTime(LocalDateTime.now());
-        applyRecordDao.update(applyRecordDo);
+        CardStorageOut cardStorageOut = new CardStorageOut();
+        cardStorageOut.setId(1000L);
+        cardStorageOut.setApplyUserCode("222Test");
+        cardStorageOut.setModifyTime(LocalDateTime.now());
+        storageOutDao.update(cardStorageOut);
 
         requestDto.setDeviceId("test_confirm_11111");
         BaseOutput<Long> output = testTccRpc.testConfirm(requestDto);
