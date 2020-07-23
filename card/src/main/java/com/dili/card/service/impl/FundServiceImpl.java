@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.FundRequestDto;
+import com.dili.card.dto.FundUnfrozenRecordDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UnfreezeFundDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -49,6 +50,7 @@ import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.ss.constant.ResultCode;
+import com.dili.ss.domain.PageOutput;
 import com.google.common.collect.Lists;
 
 import cn.hutool.core.collection.CollUtil;
@@ -301,6 +303,13 @@ public class FundServiceImpl implements IFundService {
 		record.setType(OperateType.ACCOUNT_TRANSACT.getCode());
 		record.setOperateTime(LocalDateTime.now());
 		return record;
+	}
+
+	@Override
+	public PageOutput<FundUnfrozenRecordDto> unfrozenRecord(UnfreezeFundDto unfreezeFundDto) {
+		// 从支付查询  默认查询从当日起一年内的未解冻记录
+		
+		return null;
 	}
 	
 	

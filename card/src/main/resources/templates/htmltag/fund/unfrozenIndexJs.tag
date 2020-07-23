@@ -2,7 +2,7 @@
     // 初始化表格
     $(() => {
         let options = {
-        		id: "unfrozenTable",
+        	id: "unfrozenTable",
         	uniqueId: "id",
             url: "${contextPath}/serial/business/page.action",
             sortName: "operate_time",
@@ -22,7 +22,7 @@
     	var accountId = $("#accountId").val();
     	$.ajax({
             type:'POST',
-            url:'${contextPath}/fund/unfrozen.action',
+            url:'${contextPath}/fund/unfrozenRecord.action',
             dataType:'json',
             traditional:true,
             data: {
@@ -31,7 +31,9 @@
             },
             success:function(result) {
                 if (result.success) {
-                    
+                	showInfo("操作成功");
+                }else {
+                	showError("解冻资金失败");
                 }
             }
         });

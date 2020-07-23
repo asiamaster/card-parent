@@ -13,6 +13,7 @@ import com.dili.card.service.IFundService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.recharge.RechargeTccTransactionManager;
 import com.dili.card.type.TradeChannel;
+import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.card.validator.FundValidator;
 import com.dili.ss.constant.ResultCode;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -119,16 +121,24 @@ public class FundController implements IControllerHandler {
 	}
 
 	/**
+	 * 未解冻记录
+	 */
+	@PostMapping("unfrozenRecord.action")
+	@ResponseBody
+	public Map<String, Object> unfrozenRecord(UnfreezeFundDto unfreezeFundDto) {
+		AssertUtils.notNull(unfreezeFundDto.getAccountId(), "参数校验失败：缺少账户ID!");
+		return successPage(fundService.unfrozenRecord(unfreezeFundDto));
+	}
+	
+	/**
 	 * 解冻资金
 	 */
 	@PostMapping("unfrozen.action")
 	@ResponseBody
-	public BaseOutput<?> unfrozen(Long[] tradeNos, Long accountId) {
-		System.out.println("*********" + accountId);
-		UnfreezeFundDto unfreezeFundDto = new UnfreezeFundDto();
+	public BaseOutput<?> unfrozen(UnfreezeFundDto unfreezeFundDto) {
+		AssertUtils.notNull(unfreezeFundDto.getAccountId(), "参数校验失败：缺少账户ID!");
+		AssertUtils.notNull(unfreezeFundDto.getTradeNos(), "参数校验失败：缺少冻结ID!");
 		buildOperatorInfo(unfreezeFundDto);
-		unfreezeFundDto.setAccountId(accountId);
-		unfreezeFundDto.setTradeNos(tradeNos);
 		fundService.unfrozen(unfreezeFundDto);
 		return BaseOutput.success();
 	}
