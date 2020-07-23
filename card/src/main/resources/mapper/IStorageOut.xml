@@ -42,13 +42,13 @@
         SELECT
         <include refid="Base_Column"/>
         FROM
-        card_apply_record
+        card_storage_out
         ORDER BY
         id DESC
     </select>
 
     <insert id="save">
-        INSERT INTO card_apply_record (`apply_time`,
+        INSERT INTO card_storage_out (`apply_time`,
                                        `card_no`,
                                        `amount`,
                                        `apply_user_id`,
@@ -80,7 +80,7 @@
         SELECT
         <include refid="Base_Column"/>
         FROM
-        card_apply_record
+        card_storage_out
         WHERE
         id = #{id}
     </select>
@@ -89,13 +89,13 @@
         SELECT
         <include refid="Base_Column"/>
         FROM
-        card_apply_record
+        card_storage_out
         <include refid="Where_Column"/>
         ORDER BY ${sort} ${order}
     </select>
 
     <update id="update">
-        UPDATE card_apply_record
+        UPDATE card_storage_out
         <set>
             <if test="applyTime != null">`apply_time` = #{applyTime},</if>
             <if test="cardNo != null">`card_no` = #{cardNo},</if>
@@ -118,7 +118,7 @@
     <delete id="batchRemove">
         DELETE
         FROM
-        card_apply_record
+        card_storage_out
         WHERE
         id IN
         <foreach item="id" collection="array" open="(" separator="," close=")">

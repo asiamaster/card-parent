@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dili.card.dao.IStorageInDao">
+	
+	<select id="selectList" resultType="com.dili.card.entity.StorageInDo">
+		SELECT
+			`id`, 
+			`start_card_no`, 
+			`end_card_no`, 
+			`amount`, 
+			`card_type`, 
+			`creator_id`, 
+			`creator`, 
+			`create_time`, 
+			`firm_id`, 
+			`firm_name`, 
+			`modify_time`, 
+			`notes`
+		FROM
+			card_storage_in
+		ORDER BY
+			id DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO card_storage_in (
+			`start_card_no`, 
+			`end_card_no`, 
+			`amount`, 
+			`card_type`, 
+			`creator_id`, 
+			`creator`, 
+			`create_time`, 
+			`firm_id`, 
+			`firm_name`, 
+			`modify_time`, 
+			`notes`
+		)
+		VALUES (
+			#{startCardNo}, 
+			#{endCardNo}, 
+			#{amount}, 
+			#{cardType}, 
+			#{creatorId}, 
+			#{creator}, 
+			#{createTime}, 
+			#{firmId}, 
+			#{firmName}, 
+			#{modifyTime}, 
+			#{notes}
+		)
+	</insert>
+	
+	<select id="getById" resultType="com.dili.card.entity.StorageInDo">
+		SELECT
+			`id`, 
+			`start_card_no`, 
+			`end_card_no`, 
+			`amount`, 
+			`card_type`, 
+			`creator_id`, 
+			`creator`, 
+			`create_time`, 
+			`firm_id`, 
+			`firm_name`, 
+			`modify_time`, 
+			`notes`
+		FROM
+			card_storage_in
+		WHERE
+			id = #{id}
+	</select>
+	
+	<update id="update">
+		UPDATE card_storage_in
+	 	<set>
+			<if test="startCardNo != null">`start_card_no` = #{startCardNo}, </if>
+			<if test="endCardNo != null">`end_card_no` = #{endCardNo}, </if>
+			<if test="amount != null">`amount` = #{amount}, </if>
+			<if test="cardType != null">`card_type` = #{cardType}, </if>
+			<if test="creatorId != null">`creator_id` = #{creatorId}, </if>
+			<if test="creator != null">`creator` = #{creator}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="firmId != null">`firm_id` = #{firmId}, </if>
+			<if test="firmName != null">`firm_name` = #{firmName}, </if>
+			<if test="modifyTime != null">`modify_time` = #{modifyTime}, </if>
+			<if test="notes != null">`notes` = #{notes}</if>
+		</set>
+		WHERE
+			id = #{id}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			card_storage_in
+		WHERE
+			id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
