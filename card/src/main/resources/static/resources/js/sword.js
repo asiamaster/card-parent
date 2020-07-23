@@ -704,7 +704,8 @@ tab = {
             // 启用按钮
             enable: function () {
                 let doc = window.top == window.parent ? window.document : window.parent.document;
-                $("button[class*='btn sword-modal btn-secondary']", doc).removeAttr("disabled");
+                let $button = $("button[class*='btn sword-modal btn-primary']", doc);
+                $button.removeAttr("disabled");
             },
             // 打开遮罩层
             loading: function (message) {
@@ -998,17 +999,18 @@ tab = {
                 $.modal.closeLoading();
                 //启用按钮
                 $.modal.enable();
+                let _$ele = window.top == window.parent ? window : window.parent;
                 if (result.code == web_status.SUCCESS) {
-                    if (!$.common.isEmpty(parent.table.options.dialog)) {
-                        parent.table.options.dialog.hide();
+                    if (!$.common.isEmpty(_$ele.table.options.dialog)) {
+                        _$ele.table.options.dialog.hide();
                     }
                     //let parent = window.parent;
-                    if (parent.table.options.type == table_type.bootstrapTable) {
-                        parent.$.modal.alertSuccess(result.message);
-                        parent.$.table.refresh();
-                    } else if (parent.table.options.type == table_type.bootstrapTreeTable) {
-                        parent.$.modal.alertSuccess(result.message);
-                        parent.$.treeTable.refresh();
+                    if (_$ele.table.options.type == table_type.bootstrapTable) {
+                        _$ele.$.modal.alertSuccess(result.message);
+                        _$ele.$.table.refresh();
+                    } else if (_$ele.table.options.type == table_type.bootstrapTreeTable) {
+                        _$ele.$.modal.alertSuccess(result.message);
+                        _$ele.$.treeTable.refresh();
                     } else {
                         $.modal.msgReload("保存成功,正在刷新数据请稍后……", modal_status.SUCCESS);
                     }

@@ -109,7 +109,7 @@ public abstract class AbstractTccTransactionManager<R, T> {
             this.doConfirmAndRetry(requestDto, tccContext);
 
             //进入confirm说明try阶段已经成功，资源已预添加，
-            //通常是update操作，需要等重试操作完成后再rollback
+            //confirm通常是update操作，因此需要等重试操作完成后再rollback
             //否则如果先rollback，可能导致重试confirm变成无效操作
             transactionManager.rollback(status);
             throw e;
