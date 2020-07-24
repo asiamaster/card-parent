@@ -74,7 +74,7 @@ public class ContractServiceImpl implements IContractService {
 		// 查询条件
 		List<FundContractDo> fundContracts = contractDao.findEntityByCondition(contractQueryDto);
 		// 数据转换
-		return this.huildPageResponseContracts(fundContracts);
+		return this.buildPageResponseContracts(fundContracts);
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public class ContractServiceImpl implements IContractService {
 	/**
 	 * 合同页面信息列表
 	 */
-	private List<FundContractResponseDto> huildPageResponseContracts(List<FundContractDo> fundContracts) {
+	private List<FundContractResponseDto> buildPageResponseContracts(List<FundContractDo> fundContracts) {
 		List<FundContractResponseDto> contractResponseDtos = new ArrayList<FundContractResponseDto>();
 		if (CollectionUtils.isEmpty(fundContracts)) {
 			return contractResponseDtos;
