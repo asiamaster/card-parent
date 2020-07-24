@@ -1,6 +1,7 @@
 package com.dili.card.config;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.uap.sdk.session.SessionContext;
@@ -56,12 +57,23 @@ public class FeignGlobalConfig {
 
             //兼容性
             try {
+                Request.Body mutatedBody;
                 Long firmId = sessionContext.getUserTicket().getFirmId();
-                JSONObject jsonObject = JSON.parseObject(bodyStr);
-                //服务的市场字段名不一样
-                jsonObject.putIfAbsent("marketId", firmId);
-                jsonObject.putIfAbsent("firmId", firmId);
-                Request.Body mutatedBody = Request.Body.encoded(jsonObject.toJSONString().getBytes(utf8), utf8);
+                if (this.isArrayJson(bodyStr)){
+                    JSONArray array = JSON.parseArray(bodyStr);
+                    for (int i = 0; i < array.size(); i++) {
+                        JSONObject jsonObject = array.getJSONObject(i);
+                        jsonObject.putIfAbsent("marketId", firmId);
+                        jsonObject.putIfAbsent("firmId", firmId);
+                    }
+                    mutatedBody = Request.Body.encoded(array.toJSONString().getBytes(utf8), utf8);
+                }else {
+                    JSONObject jsonObject = JSON.parseObject(bodyStr);
+                    //服务的市场字段名不一样
+                    jsonObject.putIfAbsent("marketId", firmId);
+                    jsonObject.putIfAbsent("firmId", firmId);
+                    mutatedBody = Request.Body.encoded(jsonObject.toJSONString().getBytes(utf8), utf8);
+                }
                 template.body(mutatedBody);
             } catch (Exception e) {
                 LOGGER.error("设置市场id异常:", e);
@@ -89,4 +101,7 @@ public class FeignGlobalConfig {
         return contentTypes.stream().anyMatch(s -> s.contains("json"));
     }
 
+    private boolean isArrayJson(String json){
+        return json.startsWith("[") && json.endsWith("]");
+    }
 }
