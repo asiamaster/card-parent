@@ -65,5 +65,5 @@ public interface PayRpc {
      * 注销资金账户
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.account.service:unregister", method = RequestMethod.POST)
-    BaseOutput<BalanceResponseDto> unregister(CreateTradeRequestDto requestDto);
+    BaseOutput<?> unregister(CreateTradeRequestDto requestDto);
 }
