@@ -7,6 +7,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.service.IAccountManageService;
 
@@ -17,7 +18,7 @@ import com.dili.card.service.IAccountManageService;
  */
 @Controller
 @RequestMapping("/account")
-public class AccountManagementController {
+public class AccountManagementController implements IControllerHandler{
 
 	@Resource
 	private IAccountManageService accountManageService;
@@ -45,6 +46,7 @@ public class AccountManagementController {
 	 */
 	@GetMapping("/frozenAccount.action")
 	public String frozenAccount(CardRequestDto cardRequestDto) {
+		buildOperatorInfo(cardRequestDto);
 		accountManageService.frozen(cardRequestDto);
 		return "fund/unfrozenFund";
 	}
@@ -54,6 +56,7 @@ public class AccountManagementController {
 	 */
 	@GetMapping("/unfrozenAccount.action")
 	public String unfrozenAccount(CardRequestDto cardRequestDto) {
+		buildOperatorInfo(cardRequestDto);
 		accountManageService.unfrozen(cardRequestDto);
 		return "fund/unfrozenFund";
 	}
