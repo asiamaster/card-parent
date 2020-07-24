@@ -18,11 +18,11 @@ public interface SerialRecordRpc {
 
     /**
      * 批量存储操作流水
-     * @param serialDto
+     * @param serialRecordDoList
      * @return
      */
     @RequestMapping(value = "/api/serial/batchSave", method = RequestMethod.POST)
-    BaseOutput<?> batchSave(SerialDto serialDto);
+    BaseOutput<?> batchSave(List<SerialRecordDo> serialRecordDoList);
 
     /**
      * 分页查询操作流水记录

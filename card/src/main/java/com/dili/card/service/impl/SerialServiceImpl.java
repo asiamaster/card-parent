@@ -152,7 +152,7 @@ public class SerialServiceImpl implements ISerialService {
     public void saveSerialRecord(SerialDto serialDto) {
         try {
             //保存流水
-            serialRecordRpcResolver.batchSave(serialDto);
+            serialRecordRpcResolver.batchSave(serialDto.getSerialRecordList());
         } catch (Exception e) {
             LOGGER.error(JSON.toJSONString(serialDto), e);//记录数据方便后期处理
             throw new CardAppBizException("保存操作交易流水失败");

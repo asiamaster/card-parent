@@ -1,6 +1,5 @@
 package com.dili.card.rpc.resolver;
 
-import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
@@ -24,11 +23,11 @@ public class SerialRecordRpcResolver {
 
     /**
      * 批量存储
-     * @param serialDto
+     * @param serialRecordDoList
      * @return
      */
-    public void batchSave(SerialDto serialDto) {
-        BaseOutput<?> baseOutput = serialRecordRpc.batchSave(serialDto);
+    public void batchSave(List<SerialRecordDo> serialRecordDoList) {
+        BaseOutput<?> baseOutput = serialRecordRpc.batchSave(serialRecordDoList);
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException("保存操作流水失败");
         }
