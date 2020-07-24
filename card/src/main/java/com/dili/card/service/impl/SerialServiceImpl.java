@@ -4,7 +4,12 @@ import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.dili.card.config.RabbitMQConfig;
 import com.dili.card.dao.IBusinessRecordDao;
-import com.dili.card.dto.*;
+import com.dili.card.dto.AccountWithAssociationResponseDto;
+import com.dili.card.dto.BusinessRecordResponseDto;
+import com.dili.card.dto.CardRequestDto;
+import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.SerialQueryDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.FeeItemDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.AccountCycleDo;
@@ -248,7 +253,9 @@ public class SerialServiceImpl implements ISerialService {
         businessRecord.setOperateTime(localDateTime);
         businessRecord.setModifyTime(localDateTime);
         businessRecord.setVersion(1);
-        filter.handle(businessRecord);
+        if (filter != null) {
+            filter.handle(businessRecord);
+        }
         return businessRecord;
     }
 
@@ -259,7 +266,9 @@ public class SerialServiceImpl implements ISerialService {
         List<SerialRecordDo> serialRecordList = new ArrayList<>(1);
         SerialRecordDo serialRecordDo = new SerialRecordDo();
         this.copyCommonFields(serialRecordDo, businessRecord);
-        filter.handle(serialRecordDo, null);
+        if (filter != null){
+            filter.handle(serialRecordDo, null);
+        }
         serialRecordList.add(serialRecordDo);
         serialDto.setSerialRecordList(serialRecordList);
         return serialDto;
@@ -283,9 +292,11 @@ public class SerialServiceImpl implements ISerialService {
                 serialRecord.setStartBalance(countStartBalance(feeItem.getBalance(), totalFrozenAmount));
                 serialRecord.setAmount(feeItem.getAmount() == null ? null : Math.abs(feeItem.getAmount()));//由于是通过标记位表示收入或支出，固取绝对值
                 serialRecord.setEndBalance(countEndBalance(serialRecord.getStartBalance(), feeItem.getAmount()));
-                /** 操作时间-与支付系统保持一致 */
+                // 操作时间-与支付系统保持一致
                 serialRecord.setOperateTime(tradeResponseDto.getWhen());
-                filter.handle(serialRecord, feeItem.getType());
+                if (filter != null) {
+                    filter.handle(serialRecord, feeItem.getType());
+                }
                 serialRecordList.add(serialRecord);
             }
             serialDto.setSerialRecordList(serialRecordList);
