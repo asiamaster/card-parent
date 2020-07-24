@@ -1,6 +1,6 @@
 package com.dili.card.rpc;
 
-import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 操作流水相关rpc
  */
-@FeignClient(name = "account-service", contextId = "serialRecordRpc"/*, url = "http://127.0.0.1:8386"*/)
+@FeignClient(name = "account-service", contextId = "serialRecordRpc"/*, url = "http://127.0.0.1:8186" */)
 public interface SerialRecordRpc {
 
     /**
@@ -26,9 +26,9 @@ public interface SerialRecordRpc {
 
     /**
      * 分页查询操作流水记录
-     * @param serialDto
+     * @param serialQueryDto
      * @return
      */
     @RequestMapping(value = "/api/serial/listPage", method = RequestMethod.POST)
-    PageOutput<List<SerialRecordDo>> listPage(SerialDto serialDto);
+    PageOutput<List<SerialRecordDo>> listPage(SerialQueryDto serialQueryDto);
 }
