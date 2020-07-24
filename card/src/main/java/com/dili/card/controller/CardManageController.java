@@ -28,7 +28,6 @@ import cn.hutool.core.util.StrUtil;
 @RestController
 @RequestMapping(value = "/card")
 public class CardManageController implements IControllerHandler {
-    private static Logger LOGGER = LoggerFactory.getLogger(CardManageController.class);
 
     @Resource
     private ICardManageService cardManageService;

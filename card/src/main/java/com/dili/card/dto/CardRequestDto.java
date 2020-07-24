@@ -32,7 +32,7 @@ public class CardRequestDto extends BaseDto{
 	@Size(min = 6, max = 6, message = "确认密码密码必须6位",groups = CardValidator.ResetPassword.class)
 	private String secondLoginPwd;
 	/** 客户ID*/
-	@NotNull(message = "客户id为空",groups = CardValidator.Generic.class)
+	@NotNull(message = "客户id不为空",groups = CardValidator.Generic.class)
 	private Long customerId;
 	/**工本费*/
 	private Long serviceFee;

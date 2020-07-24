@@ -1,9 +1,15 @@
 package com.dili.card.controller;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.dto.CardRequestDto;
+import com.dili.card.service.IAccountManageService;
 
 /**
  * 卡账户管理操作
@@ -12,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/account")
-public class AccountManagementController {
+public class AccountManagementController implements IControllerHandler{
 
+	@Resource
+	private IAccountManageService accountManageService;
+	
 	/**
 	 * 冻结账户页面
 	 */
@@ -36,8 +45,9 @@ public class AccountManagementController {
 	 * 冻结账户
 	 */
 	@GetMapping("/frozenAccount.action")
-	public String frozenAccount(Long accountId, ModelMap map) {
-		map.put("accountId", accountId);
+	public String frozenAccount(CardRequestDto cardRequestDto) {
+		buildOperatorInfo(cardRequestDto);
+		accountManageService.frozen(cardRequestDto);
 		return "fund/unfrozenFund";
 	}
 	
@@ -45,8 +55,9 @@ public class AccountManagementController {
 	 * 解冻账户
 	 */
 	@GetMapping("/unfrozenAccount.action")
-	public String unfrozenAccount(Long accountId, ModelMap map) {
-		map.put("accountId", accountId);
+	public String unfrozenAccount(CardRequestDto cardRequestDto) {
+		buildOperatorInfo(cardRequestDto);
+		accountManageService.unfrozen(cardRequestDto);
 		return "fund/unfrozenFund";
 	}
 }
