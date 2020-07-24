@@ -2,6 +2,7 @@ package com.dili.card.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
+import com.dili.card.config.RabbitMQConfig;
 import com.dili.card.dao.IBusinessRecordDao;
 import com.dili.card.dto.*;
 import com.dili.card.dto.pay.FeeItemDto;
@@ -21,6 +22,7 @@ import com.dili.card.service.serial.IBusinessRecordFilter;
 import com.dili.card.type.*;
 import com.dili.card.util.DateUtil;
 import com.dili.card.util.PageUtils;
+import com.dili.commons.rabbitmq.RabbitMQMessageService;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.ss.domain.PageOutput;
 import com.github.pagehelper.Page;
@@ -57,6 +59,8 @@ public class SerialServiceImpl implements ISerialService {
     private SerialRecordRpcResolver serialRecordRpcResolver;
     @Resource
     private AccountQueryRpcResolver accountQueryRpcResolver;
+    @Resource
+    private RabbitMQMessageService rabbitMQMessageService;
 
     @Override
     public void buildCommonInfo(CardRequestDto cardParam, BusinessRecordDo businessRecord) {
@@ -152,7 +156,9 @@ public class SerialServiceImpl implements ISerialService {
     public void saveSerialRecord(SerialDto serialDto) {
         try {
             //保存流水
-            serialRecordRpcResolver.batchSave(serialDto.getSerialRecordList());
+            //serialRecordRpcResolver.batchSave(serialDto.getSerialRecordList());
+            //消息服务器
+            rabbitMQMessageService.send(RabbitMQConfig.EXCHANGE_ACCOUNT_SERIAL, RabbitMQConfig.ROUTING_ACCOUNT_SERIAL, JSON.toJSONString(serialDto.getSerialRecordList()), null, null);
         } catch (Exception e) {
             LOGGER.error(JSON.toJSONString(serialDto), e);//记录数据方便后期处理
             throw new CardAppBizException("保存操作交易流水失败");

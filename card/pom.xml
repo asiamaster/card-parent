@@ -143,6 +143,10 @@
 			<version>2.2.0.RELEASE</version>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.dili</groupId>
 			<artifactId>tcc</artifactId>
 			<version>0.0.1-BETA</version>
@@ -183,6 +187,11 @@
 			<groupId>com.dili</groupId>
 			<artifactId>assets-sdk</artifactId>
 			<version>1.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dili</groupId>
+			<artifactId>commons-server</artifactId>
+			<version>1.3.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
