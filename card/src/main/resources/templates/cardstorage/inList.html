@@ -6,23 +6,6 @@
 	<form id="queryForm" role="form">
 		<div class="row row-cols-6">
 			<div class="form-group col-auto">
-				<label for="type">卡类别</label> <select id="type"
-					name="cardType" class="form-control"></select>
-				<#bcomboProvider _id="type" _provider="cardTypeProvider"
-					_queryParams='{emptyText:"-- 全部 --"}' />
-			</div>
-			<div class="form-group col-auto">
-				<label for="cardStorageState">状态</label> <select
-					id="state" name="state" class="form-control"></select>
-				<#bcomboProvider _id="state"
-					_provider="cardStorageStateProvider"
-					_queryParams='{emptyText:"-- 全部 --"}' />
-			</div>
-			<div class="form-group col-auto">
-				<label for="cardNo-multiple">卡号</label> <input id="cardNo-multiple"
-					name="cardNo" type="text" class="form-control" />
-			</div>
-			<div class="form-group col-auto">
 				<label class="justify-content-end">入库时间</label>
 				<div class="form-inline">
 					<div class="input-group">
@@ -63,19 +46,7 @@
 	<#resource code="add">
 	<button id="btn_query" type="button" class="btn btn-primary"
 		onclick="$.operate.add(null,'40%','60%')">
-		<i class="fa fa-save"></i> 入库
-	</button>
-	</#resource>
-	<#resource code="void">
-	<button id="btn_query" type="button" class="btn btn-primary"
-		onclick="$.operate.add(null,'40%','60%')">
-		<i class="fa fa-save"></i> 作废
-	</button>
-	</#resource>
-	<#resource code="detail">
-	<button id="btn-out" type="button" class="btn btn-primary"
-		onclick="$.operate.detail(null,'40%','70%')">
-		<i class="fa fa-list"></i> 导出
+		<i class="fa fa-save"></i> 新增入库
 	</button>
 	</#resource>
 </div>
@@ -86,14 +57,12 @@
 			<thead>
 				<tr>
 					<th data-checkbox="true"></th>
-					<th data-field="cardNo" data-align="center">卡号</th>
+					<th data-field="cardNo" data-align="center">入库张数</th>
 					<th data-field="typeText" data-align="center">类别</th>
-					<th data-field="stateText" data-align="center">状态</th>
+					<th data-field="stateText" data-align="center">号段</th>
 					<th data-field="createTime" data-sortable="true"
 						data-sort-name="createTime" data-align="center">入库时间</th>
 					<th data-field="creator" data-align="center">入库人</th>
-					<th data-field="modifyTime" data-sortable="true"
-						data-sort-name="modifyTime" data-align="center">修改时间</th>
 				</tr>
 			</thead>
 		</table>
