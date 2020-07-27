@@ -1,6 +1,10 @@
 package com.dili.card.service;
 
-import com.dili.card.dto.*;
+import com.dili.card.dto.BusinessRecordResponseDto;
+import com.dili.card.dto.CardRequestDto;
+import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.SerialQueryDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
@@ -84,10 +88,10 @@ public interface ISerialService {
     List<BusinessRecordDo> queryBusinessRecord(SerialQueryDto serialQueryDto);
 
     /**
-    * 分页查询
-    * @author miaoguoxin
-    * @date 2020/7/1
-    */
+     * 分页查询
+     * @author miaoguoxin
+     * @date 2020/7/1
+     */
     PageOutput<List<BusinessRecordResponseDto>> queryPage(SerialQueryDto serialQueryDto);
 
     /**
@@ -115,4 +119,15 @@ public interface ISerialService {
      * @return
      */
     SerialDto createAccountSerialWithFund(BusinessRecordDo businessRecord, TradeResponseDto tradeResponseDto, IAccountSerialFilter filter);
+
+    /**
+     * 构建流水记录并提供回调处理 有资金操作
+     * @param businessRecord
+     * @param tradeResponseDto
+     * @param filter
+     * @param isFrozen 标记是否是冻结/解冻资金操作
+     * @return
+     */
+    SerialDto createAccountSerialWithFund(BusinessRecordDo businessRecord, TradeResponseDto tradeResponseDto, IAccountSerialFilter filter, boolean isFrozen);
+
 }

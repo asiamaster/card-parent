@@ -7,13 +7,13 @@ import com.dili.ss.domain.PageOutput;
 
 /**
  * 资金操作service接口
- * 
+ *
  * @author xuliang
  */
 public interface IFundService {
 	/**
 	 * 冻结资金
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/6/29
 	 */
@@ -21,29 +21,14 @@ public interface IFundService {
 
 	/**
 	 * 未解冻资金记录
-	 * 
+	 *
 	 * @param fundRequestDto
 	 */
 	PageOutput<FundUnfrozenRecordDto> unfrozenRecord(UnfreezeFundDto unfreezeFundDto);
-	
+
 	/**
 	 * 解冻资金,支持批量操作
 	 */
 	void unfrozen(UnfreezeFundDto unfreezeFundDto);
 
-	/**
-	 * 充值
-	 * 
-	 * @author miaoguoxin
-	 * @date 2020/7/2
-	 */
-	void recharge(FundRequestDto fundRequestDto);
-
-	/**
-	 * 预创建充值订单
-	 * 
-	 * @author miaoguoxin
-	 * @date 2020/7/6
-	 */
-	void createRecharge(FundRequestDto fundRequestDto);
 }

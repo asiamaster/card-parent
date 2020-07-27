@@ -1,7 +1,7 @@
 package com.dili.card.dto.pay;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.annotation.JSONField;
+import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,7 +25,7 @@ public class TradeResponseDto {
     private Long amount;
     /** 期初冻结余额*/
     private Long frozenBalance;
-    /** 冻结/解冻金额-当前为0*/
+    /** 冻结/解冻金额*/
     private Long frozenAmount;
     /** 操作时间*/
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
@@ -36,19 +36,38 @@ public class TradeResponseDto {
     private List<FeeItemDto> streams;
 
     /**
-    *  添加一个空资金项（有些地方没有手续费的时候需要加）
-    * @author miaoguoxin
-    * @date 2020/7/24
-    */
-    public void addEmptyFeeItem(FundItem fundItem){
+     *  添加一个空资金项（有些地方没有手续费的时候需要加）
+     * @author miaoguoxin
+     * @date 2020/7/24
+     */
+    public void addEmptyFeeItem(FundItem fundItem) {
         FeeItemDto feeItemDto = new FeeItemDto();
         feeItemDto.setType(fundItem.getCode());
         feeItemDto.setAmount(null);
         feeItemDto.setBalance(null);
-        if (CollectionUtils.isEmpty(this.streams)){
+        if (CollectionUtils.isEmpty(this.streams)) {
             this.streams = new ArrayList<>();
         }
         this.streams.add(feeItemDto);
+    }
+
+    /**
+     * 添加一个本金项（有些接口没有返回资金项）
+     * @author miaoguoxin
+     * @date 2020/7/27
+     */
+    public void addVirtualPrincipalFundItem(Long amount) {
+        if (CollectionUtils.isEmpty(this.streams)) {
+            this.streams = new ArrayList<>();
+        }
+        boolean exist = this.streams.stream().anyMatch(feeItemDto -> feeItemDto.getType() == FeeType.ACCOUNT.getCode());
+        if (!exist){
+            FeeItemDto feeItemDto = new FeeItemDto();
+            feeItemDto.setType(FeeType.ACCOUNT.getCode());
+            feeItemDto.setBalance(this.balance);
+            feeItemDto.setAmount(amount);
+            this.streams.add(feeItemDto);
+        }
     }
 
     public Long getAccountId() {

@@ -1,10 +1,15 @@
 package com.dili.card.service.impl;
 
-import com.dili.card.dto.*;
-import com.dili.card.dto.pay.BalanceRequestDto;
+import com.dili.card.dto.AccountWithAssociationResponseDto;
+import com.dili.card.dto.FundRequestDto;
+import com.dili.card.dto.FundUnfrozenRecordDto;
+import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.UnfreezeFundDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.FundOpResponseDto;
+import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
@@ -13,12 +18,16 @@ import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
-import com.dili.card.service.*;
-import com.dili.card.service.recharge.AbstractRechargeManager;
-import com.dili.card.service.recharge.RechargeFactory;
+import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.IFundService;
+import com.dili.card.service.ISerialService;
+import com.dili.card.service.serial.IAccountSerialFilter;
 import com.dili.card.type.ActionType;
 import com.dili.card.type.BizNoType;
+import com.dili.card.type.FeeType;
+import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
+import com.dili.card.util.CurrencyUtils;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
 import com.google.common.collect.Lists;
@@ -30,8 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 资金操作service实现类
@@ -41,24 +48,18 @@ import java.util.List;
 public class FundServiceImpl implements IFundService {
     private static final Logger LOGGER = LoggerFactory.getLogger(FundServiceImpl.class);
 
-    @Autowired
-    private RechargeFactory rechargeFactory;
     @Resource
     private ISerialService serialService;
-    @Resource
-    private IPayService payService;
     @Autowired
     private IAccountQueryService accountQueryService;
-    @Resource
-    private IAccountCycleService accountCycleService;
     @Autowired
     private PayRpcResolver payRpcResolver;
     @Resource
-	private UidRpcResovler uidRpcResovler;
+    private UidRpcResovler uidRpcResovler;
     @Resource
-	private PayRpc payRpc;
+    private PayRpc payRpc;
     @Resource
-	private AccountQueryRpc accountQueryRpc;
+    private AccountQueryRpc accountQueryRpc;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -70,115 +71,91 @@ public class FundServiceImpl implements IFundService {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "可用余额不足");
         }
 
-        BusinessRecordDo businessRecord = new BusinessRecordDo();
-        serialService.buildCommonInfo(requestDto, businessRecord);
+        BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, accountCard, record -> {
+            record.setType(OperateType.FROZEN_FUND.getCode());
+            record.setAmount(requestDto.getAmount());
+            record.setNotes(requestDto.getMark());
+        });
 
         CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto.createFrozenAmount(
                 accountCard.getFundAccountId(),
                 accountCard.getAccountId(),
                 requestDto.getAmount());
         FundOpResponseDto fundOpResponseDto = payRpcResolver.postFrozenFund(createTradeRequestDto);
-
-        businessRecord.setType(OperateType.FROZEN_FUND.getCode());
-        businessRecord.setAmount(requestDto.getAmount());
-        businessRecord.setNotes(requestDto.getMark());
         businessRecord.setTradeNo(String.valueOf(fundOpResponseDto.getFrozenId()));
         serialService.saveBusinessRecord(businessRecord);
-
-        SerialDto serialDto = this.buildFrozenSerial(requestDto, businessRecord, balance);
-        serialService.handleSuccess(serialDto);
+        try {
+            TradeResponseDto transaction = fundOpResponseDto.getTransaction();
+            transaction.addVirtualPrincipalFundItem(-requestDto.getAmount());
+            SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, transaction, (serialRecord, feeType) -> {
+                if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
+                    serialRecord.setFundItem(FundItem.TRADE_FREEZE.getCode());
+                    serialRecord.setFundItemName(FundItem.TRADE_FREEZE.getName());
+                }
+                serialRecord.setNotes("手动冻结资金");
+            },true);
+            serialService.handleSuccess(serialDto);
+        } catch (Exception e) {
+            LOGGER.error("冻结处理流水失败", e);
+        }
     }
+
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void recharge(FundRequestDto fundRequestDto) {
-        AbstractRechargeManager rechargeManager = rechargeFactory.getRechargeManager(fundRequestDto.getTradeChannel());
-        rechargeManager.doRecharge(fundRequestDto);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void createRecharge(FundRequestDto requestDto) {
-        AbstractRechargeManager rechargeManager = rechargeFactory.getRechargeManager(requestDto.getTradeChannel());
-        rechargeManager.doPreRecharge(requestDto);
-    }
-
-    private SerialDto buildFrozenSerial(FundRequestDto requestDto, BusinessRecordDo businessRecord, BalanceResponseDto balance) {
-        SerialDto serialDto = new SerialDto();
-        serialDto.setSerialNo(businessRecord.getSerialNo());
-
-        List<SerialRecordDo> serialRecordList = new ArrayList<>();
-
-        SerialRecordDo serialRecord = new SerialRecordDo();
-        serialService.copyCommonFields(serialRecord, businessRecord);
-        serialRecord.setAction(ActionType.EXPENSE.getCode());
-        serialRecord.setStartBalance(balance.getAvailableAmount());
-        serialRecord.setAmount(Math.abs(requestDto.getAmount()));
-        serialRecord.setEndBalance(balance.getAvailableAmount() - serialRecord.getAmount());
-        serialRecord.setOperateTime(LocalDateTime.now());
-        serialRecord.setNotes("手工冻结资金");
-        serialRecordList.add(serialRecord);
-
-        serialDto.setSerialRecordList(serialRecordList);
-
-        return serialDto;
-    }
-
-    @Override
-	public void unfrozen(UnfreezeFundDto unfreezeFundDto) {
-		AccountWithAssociationResponseDto accountInfo = GenericRpcResolver.resolver(accountQueryRpc.findAssociation(unfreezeFundDto.getAccountId()),"account-service");
-		for (Long tradeNo : unfreezeFundDto.getTradeNos()) {
-			//对应支付的frozenId
-			UnfreezeFundDto dto = new UnfreezeFundDto();
-			dto.setFrozenId(tradeNo);
-			GenericRpcResolver.resolver(payRpc.unfrozenFund(dto), "pay-service");
-			//保存操作记录
-			System.out.println("****************解冻成功");
-		}
+    public void unfrozen(UnfreezeFundDto unfreezeFundDto) {
+        AccountWithAssociationResponseDto accountInfo = GenericRpcResolver.resolver(accountQueryRpc.findAssociation(unfreezeFundDto.getAccountId()), "account-service");
+        for (Long tradeNo : unfreezeFundDto.getTradeNos()) {
+            //对应支付的frozenId
+            UnfreezeFundDto dto = new UnfreezeFundDto();
+            dto.setFrozenId(tradeNo);
+            GenericRpcResolver.resolver(payRpc.unfrozenFund(dto), "pay-service");
+            //保存操作记录
+            System.out.println("****************解冻成功");
+        }
 //		buildBusinessRecordDo(accountInfo, unfreezeFundDto);
-		
-		// 保存全局操作记录
-		SerialRecordDo serialRecord = buildSerialRecord(accountInfo, unfreezeFundDto);
-//		serialService.copyCommonFields(serialRecord, buildBusinessRecordDo);
-		SerialDto serialDto = new SerialDto();
-		serialDto.setSerialRecordList(Lists.newArrayList(serialRecord));
-		serialService.saveSerialRecord(serialDto);
-	}
-	
-	
-	/**
-	 * 生成全局日志
-	 * 
-	 * @param openCardInfo
-	 * @param accountId
-	 */
-	private SerialRecordDo buildSerialRecord(AccountWithAssociationResponseDto accountInfo,UnfreezeFundDto unfreezeFundDto) {
-		SerialRecordDo record = new SerialRecordDo();
-		record.setAccountId(accountInfo.getPrimary().getAccountId());
-		record.setCardNo(accountInfo.getPrimary().getCardNo());
-		record.setCustomerId(accountInfo.getPrimary().getCustomerId());
-		record.setCustomerName(accountInfo.getPrimary().getCustomerName());
-		record.setCustomerNo(accountInfo.getPrimary().getCustomerCode());
-		record.setFirmId(unfreezeFundDto.getFirmId());
-		record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
-		record.setNotes("开卡");
-		record.setOperatorId(unfreezeFundDto.getOpId());
-		record.setOperatorName(unfreezeFundDto.getOpName());
-		record.setOperatorNo(unfreezeFundDto.getOpNo());
-		record.setTradeType(OperateType.ACCOUNT_TRANSACT.getCode());
-		record.setType(OperateType.ACCOUNT_TRANSACT.getCode());
-		record.setOperateTime(LocalDateTime.now());
-		return record;
-	}
 
-	@Override
-	public PageOutput<FundUnfrozenRecordDto> unfrozenRecord(UnfreezeFundDto unfreezeFundDto) {
-		// 从支付查询  默认查询从当日起一年内的未解冻记录
-		
-		return null;
-	}
-	
-	
+        // 保存全局操作记录
+        SerialRecordDo serialRecord = buildSerialRecord(accountInfo, unfreezeFundDto);
+//		serialService.copyCommonFields(serialRecord, buildBusinessRecordDo);
+        SerialDto serialDto = new SerialDto();
+        serialDto.setSerialRecordList(Lists.newArrayList(serialRecord));
+        serialService.saveSerialRecord(serialDto);
+    }
+
+
+    /**
+     * 生成全局日志
+     *
+     * @param accountInfo
+     * @param unfreezeFundDto
+     */
+    private SerialRecordDo buildSerialRecord(AccountWithAssociationResponseDto accountInfo, UnfreezeFundDto unfreezeFundDto) {
+        SerialRecordDo record = new SerialRecordDo();
+        record.setAccountId(accountInfo.getPrimary().getAccountId());
+        record.setCardNo(accountInfo.getPrimary().getCardNo());
+        record.setCustomerId(accountInfo.getPrimary().getCustomerId());
+        record.setCustomerName(accountInfo.getPrimary().getCustomerName());
+        record.setCustomerNo(accountInfo.getPrimary().getCustomerCode());
+        record.setFirmId(unfreezeFundDto.getFirmId());
+        record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
+        record.setNotes("开卡");
+        record.setOperatorId(unfreezeFundDto.getOpId());
+        record.setOperatorName(unfreezeFundDto.getOpName());
+        record.setOperatorNo(unfreezeFundDto.getOpNo());
+        record.setTradeType(OperateType.ACCOUNT_TRANSACT.getCode());
+        record.setType(OperateType.ACCOUNT_TRANSACT.getCode());
+        record.setOperateTime(LocalDateTime.now());
+        return record;
+    }
+
+    @Override
+    public PageOutput<FundUnfrozenRecordDto> unfrozenRecord(UnfreezeFundDto unfreezeFundDto) {
+        // 从支付查询  默认查询从当日起一年内的未解冻记录
+
+        return null;
+    }
+
+
 //	private BusinessRecordDo buildBusinessRecordDo(AccountWithAssociationResponseDto accountInfo,UnfreezeFundDto unfreezeFundDto) {
 //		BusinessRecordDo serial = new BusinessRecordDo();
 //		serial.setAccountId(accountInfo.getPrimary().getAccountId());

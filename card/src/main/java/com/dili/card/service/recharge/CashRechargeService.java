@@ -39,7 +39,7 @@ public class CashRechargeService extends AbstractRechargeManager {
 
     @Override
     public String buildSerialRecordNote(FundRequestDto requestDto) {
-        return null;
+        return "现金充值";
     }
 
     @Override

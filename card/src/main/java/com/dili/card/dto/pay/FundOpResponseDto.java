@@ -11,7 +11,7 @@ public class FundOpResponseDto implements Serializable {
     /**冻结资金id*/
     private Long frozenId;
     /**资金事务*/
-    private PayResponseBaseDto transaction;
+    private TradeResponseDto transaction;
 
     public Long getFrozenId() {
         return frozenId;
@@ -21,11 +21,11 @@ public class FundOpResponseDto implements Serializable {
         this.frozenId = frozenId;
     }
 
-    public PayResponseBaseDto getTransaction() {
+    public TradeResponseDto getTransaction() {
         return transaction;
     }
 
-    public void setTransaction(PayResponseBaseDto transaction) {
+    public void setTransaction(TradeResponseDto transaction) {
         this.transaction = transaction;
     }
 }

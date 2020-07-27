@@ -6,6 +6,7 @@ import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,14 @@ public interface AccountQueryRpc {
      */
     @RequestMapping(value = "/getList", method = RequestMethod.POST)
     BaseOutput<List<UserAccountCardResponseDto>> findUserCards(UserAccountCardQuery cardQuery);
+
+    /**
+    * 查询单个卡账户信息
+    * @author miaoguoxin
+    * @date 2020/7/27
+    */
+    @GetMapping(value = "/getOneByAccountId/{accountId}")
+    BaseOutput<UserAccountCardResponseDto> findOneByAccountId(@PathVariable Long accountId);
 
     /**
      * 查询包含关联卡的信息

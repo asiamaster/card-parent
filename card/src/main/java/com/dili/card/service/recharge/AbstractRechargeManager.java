@@ -78,7 +78,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         FundItem serviceCostItem = this.getServiceCostItem(requestDto);
         BusinessRecordDo record = TccContextHolder.get().getAttr(Constant.BUSINESS_RECORD_KEY, BusinessRecordDo.class);
         TradeRequestDto dto = this.createRechargeRequestDto(requestDto);
-        if (requestDto.getServiceCost() != null) {
+        if (serviceCostItem != null && requestDto.getServiceCost() != null) {
             dto.addServiceFeeItem(requestDto.getServiceCost(), serviceCostItem);
         }
         //务必设置bizId

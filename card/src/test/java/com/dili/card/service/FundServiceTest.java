@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 /**
  * @Auther: miaoguoxin
@@ -41,14 +42,14 @@ class FundServiceTest extends BaseTest {
     @Rollback
     void frozen() {
         FundRequestDto requestDto = new FundRequestDto();
-        requestDto.setOpId(111111L);
-        requestDto.setOpName("操作员1");
-        requestDto.setOpNo("1111");
-        requestDto.setFirmId(8890L);
+        requestDto.setOpId(73L);
+        requestDto.setOpName("王波");
+        requestDto.setOpNo("wangbo");
+        requestDto.setFirmId(8L);
 
-        requestDto.setAccountId(101006L);
-        requestDto.setCardNo("888800034671");
-        requestDto.setCustomerId(105L);
+        requestDto.setAccountId(174L);
+        requestDto.setCardNo("888889690048");
+        requestDto.setCustomerId(18L);
         requestDto.setAmount(1L);
 
         BusinessRecordDo businessRecordDo = new BusinessRecordDo();
@@ -61,6 +62,27 @@ class FundServiceTest extends BaseTest {
         LOGGER.info("结果:{}", JSON.toJSONString(businessRecordDo));
 
         //serialService.buildCommonInfo(requestDto,businessRecordDo);
+    }
+
+    @Test
+    void testRealFrozen(){
+        FundRequestDto requestDto = new FundRequestDto();
+        requestDto.setOpId(73L);
+        requestDto.setOpName("王波");
+        requestDto.setOpNo("wangbo");
+        requestDto.setFirmId(8L);
+
+        requestDto.setAccountId(174L);
+        requestDto.setCardNo("888889690048");
+        requestDto.setCustomerId(18L);
+        requestDto.setAmount(1L);
+        requestDto.setMark("测试手动冻结资金");
+
+        when(accountCycleService.findActiveCycleByUserId(requestDto.getOpId(),
+                requestDto.getOpName(),
+                requestDto.getOpNo())).thenReturn(this.createAccountCycle());
+
+        fundService.frozen(requestDto);
     }
 
     @Test
@@ -92,9 +114,8 @@ class FundServiceTest extends BaseTest {
 
     private AccountCycleDo createAccountCycle() {
         AccountCycleDo accountCycleDo = new AccountCycleDo();
-        accountCycleDo.setCycleNo(123L);
+        accountCycleDo.setCycleNo(202007020001L);
         return accountCycleDo;
     }
-
 
 }
