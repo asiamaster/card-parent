@@ -60,8 +60,8 @@ public class AccountManagementController implements IControllerHandler{
 	/**
 	 * 冻结账户
 	 */
-	@GetMapping("/frozenAccount.action")
-	public String frozenAccount(CardRequestDto cardRequestDto) {
+	@GetMapping("/frozen.action")
+	public String frozen(CardRequestDto cardRequestDto) {
 		buildOperatorInfo(cardRequestDto);
 		accountManageService.frozen(cardRequestDto);
 		return "fund/unfrozenFund";
@@ -70,8 +70,8 @@ public class AccountManagementController implements IControllerHandler{
 	/**
 	 * 解冻账户
 	 */
-	@GetMapping("/unfrozenAccount.action")
-	public String unfrozenAccount(CardRequestDto cardRequestDto) {
+	@GetMapping("/unfrozen.action")
+	public String unfrozen(CardRequestDto cardRequestDto) {
 		buildOperatorInfo(cardRequestDto);
 		accountManageService.unfrozen(cardRequestDto);
 		return "fund/unfrozenFund";
