@@ -24,10 +24,7 @@ import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.serial.IAccountSerialFilter;
 import com.dili.card.service.serial.IBusinessRecordFilter;
-import com.dili.card.type.ActionType;
-import com.dili.card.type.BizNoType;
-import com.dili.card.type.OperateState;
-import com.dili.card.type.OperateType;
+import com.dili.card.type.*;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.util.DateUtil;
 import com.dili.card.util.PageUtils;
@@ -317,7 +314,12 @@ public class SerialServiceImpl implements ISerialService {
             //冻结是正，解冻是负，这里需要倒一下正负
             return -tradeResponseDto.getFrozenAmount();
         } else {
-            return tradeResponseDto.getAmount();
+            for (FeeItemDto feeItemDto : tradeResponseDto.getStreams()) {
+                if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeItemDto.getType())) {
+                    return feeItemDto.getAmount();
+                }
+            }
+            return 0L;
         }
     }
 
