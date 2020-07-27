@@ -39,8 +39,8 @@
     }
 
     //表格隐藏、显示状态切换
-    function showOrHide() {
-        let $table = $("#table-div");
+    function showOrHideFrozenAccountRecord() {
+        let $table = $("#table-div-frozen-account");
         if ($table.is(":hidden")) {
             $table.show();
             $.table.refresh()
@@ -52,6 +52,7 @@
     //初始化表格
     $(() => {
         let options = {
+        	id: "frozenAccuntTable",
             url: "${contextPath}/serial/business/page.action",
             sortName: "operate_time",
             modalName: "冻结账户记录"
