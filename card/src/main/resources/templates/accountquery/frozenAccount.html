@@ -33,14 +33,6 @@
                         <td class="info-cell-frozen-fund">${detail.accountFund.frozenAmountText!}</td>
                     </tr>
                     <tr>
-                        <td class="vertical-td info-column-frozen-fund">冻结金额<i class="red">*</i></td>
-                        <td>
-                            <input id="amount" name="amount" type="number"
-                                   oninput="limitNum(this)"
-                                   class="form-control" val-formatter="yuanToFen"/>
-                        </td>
-                    </tr>
-                    <tr>
                         <td class="vertical-td info-column-frozen-fund ">备注</td>
                         <td><textarea id="mark" name="mark" class="form-control" rows="3" placeholder="不超过30个字符"></textarea></td>
                     </tr>
@@ -48,7 +40,7 @@
                 </table>
                 <div style="margin: auto" align="center">
                     <button id="frozen" type="button" class="btn btn-outline-primary" onclick="submitFrozen()">
-                        冻结资金
+                        冻结账户
                     </button>
                     <button id="record" style="margin-left: 50px" type="button" class="btn btn-outline-primary" onclick="showOrHide()">
                         冻结记录
@@ -68,10 +60,6 @@
                    data-icons="bui.variable.icons">
                 <thead>
                 <tr>
-                    <th data-field="amountText"  data-sortable="true" data-sort-name="amount"
-                        data-align="center">
-                        冻结金额
-                    </th>
                     <th data-field="operateTime" data-sortable="true" data-align="center" data-sort-name="operate_time">
                         冻结时间
                     </th>
