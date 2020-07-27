@@ -62,8 +62,8 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
 
     @Override
     public PageOutput<List<AccountListResponseDto>> getPage(UserAccountCardQuery param) {
-        //默认查询所有卡状态，并排除掉已禁用账户
-        param.setDefExcludeReturn(0).setDefExcludeDisabled(1);
+        //默认查询所有卡状态，包含已禁用账户
+        param.setDefExcludeReturn(0).setDefExcludeDisabled(0);
         PageOutput<List<UserAccountCardResponseDto>> page = accountQueryRpcResolver.findPageByCondition(param);
         List<UserAccountCardResponseDto> data = page.getData();
         if (CollectionUtils.isEmpty(data)) {
