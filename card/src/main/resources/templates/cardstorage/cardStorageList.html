@@ -7,7 +7,7 @@
 		<div class="row row-cols-6">
 			<div class="form-group col-auto">
 				<label for="type">卡类别</label> <select id="type"
-					name="cardType" class="form-control"></select>
+					name="type" class="form-control"></select>
 				<#bcomboProvider _id="type" _provider="cardTypeProvider"
 					_queryParams='{emptyText:"-- 全部 --"}' />
 			</div>
@@ -27,7 +27,7 @@
 				<div class="form-inline">
 					<div class="input-group">
 						<input type="text" name="startDate" id="startDate"
-							class="form-control laydatetime" />
+							class="form-control laydate" />
 						<div class="input-group-append">
 							<label for="startDate" class="input-group-text fa fa-calendar"></label>
 						</div>
@@ -35,7 +35,7 @@
 					&nbsp;&nbsp;至&nbsp;&nbsp;
 					<div class="input-group">
 						<input type="text" name="endDate" id="endDate"
-							class="form-control laydatetime" />
+							class="form-control laydate" />
 						<div class="input-group-append">
 							<label for="endDate" class="input-group-text fa fa-calendar"></label>
 						</div>
