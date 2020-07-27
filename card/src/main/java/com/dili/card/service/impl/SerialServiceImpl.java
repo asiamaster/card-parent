@@ -289,9 +289,9 @@ public class SerialServiceImpl implements ISerialService {
                 SerialRecordDo serialRecord = new SerialRecordDo();
                 this.copyCommonFields(serialRecord, businessRecord);
                 serialRecord.setAction(feeItem.getAmount() == null ? null : feeItem.getAmount() < 0L ? ActionType.EXPENSE.getCode() : ActionType.INCOME.getCode());
-                serialRecord.setStartBalance(countStartBalance(feeItem.getBalance(), totalFrozenAmount));
+                serialRecord.setStartBalance(this.countStartBalance(feeItem.getBalance(), totalFrozenAmount));
                 serialRecord.setAmount(feeItem.getAmount() == null ? null : Math.abs(feeItem.getAmount()));//由于是通过标记位表示收入或支出，固取绝对值
-                serialRecord.setEndBalance(countEndBalance(serialRecord.getStartBalance(), feeItem.getAmount()));
+                serialRecord.setEndBalance(this.countEndBalance(serialRecord.getStartBalance(), feeItem.getAmount()));
                 // 操作时间-与支付系统保持一致
                 serialRecord.setOperateTime(tradeResponseDto.getWhen());
                 if (filter != null) {

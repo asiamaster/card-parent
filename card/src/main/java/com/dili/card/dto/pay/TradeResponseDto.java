@@ -1,10 +1,14 @@
 package com.dili.card.dto.pay;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.annotation.JSONField;
+import com.dili.card.type.FundItem;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +34,22 @@ public class TradeResponseDto {
     private LocalDateTime when;
     /** 流水明细*/
     private List<FeeItemDto> streams;
+
+    /**
+    *  添加一个空资金项（有些地方没有手续费的时候需要加）
+    * @author miaoguoxin
+    * @date 2020/7/24
+    */
+    public void addEmptyFeeItem(FundItem fundItem){
+        FeeItemDto feeItemDto = new FeeItemDto();
+        feeItemDto.setType(fundItem.getCode());
+        feeItemDto.setAmount(null);
+        feeItemDto.setBalance(null);
+        if (CollectionUtils.isEmpty(this.streams)){
+            this.streams = new ArrayList<>();
+        }
+        this.streams.add(feeItemDto);
+    }
 
     public Long getAccountId() {
         return accountId;

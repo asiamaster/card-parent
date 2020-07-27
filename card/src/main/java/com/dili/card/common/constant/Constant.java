@@ -13,4 +13,10 @@ public class Constant {
     public static final String BUSINESS_RECORD_KEY = "businessRecord";
     /**账户信息，临时threadLocal 字段*/
     public static final String USER_ACCOUNT = "userAccount";
+    /**充值extra 网银类型字段*/
+    public static final String BANK_TYPE = "bankType";
+    /**充值extra  pos类型字段*/
+    public static final String POS_TYPE = "posType";
+    /**充值extra  pos凭证号字段*/
+    public static final String POS_CERT_NUM = "posCertNum";
 }

@@ -1,7 +1,13 @@
 package com.dili.card.dto.pay;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
+
 /**
- * @description： 
+ * @description：
  *          支付接口返回数据的通用字段
  * @author ：WangBo
  * @time ：2020年7月22日上午10:13:14
@@ -19,7 +25,10 @@ public class PayResponseBaseDto {
 	/** 解冻金额 */
 	private Long frozenAmount;
 	/** 发生时间 */
-	private Long when;
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime when;
 
 	public Long getAccountId() {
 		return accountId;
@@ -61,12 +70,11 @@ public class PayResponseBaseDto {
 		this.frozenAmount = frozenAmount;
 	}
 
-	public Long getWhen() {
+	public LocalDateTime getWhen() {
 		return when;
 	}
 
-	public void setWhen(Long when) {
+	public void setWhen(LocalDateTime when) {
 		this.when = when;
 	}
-
 }

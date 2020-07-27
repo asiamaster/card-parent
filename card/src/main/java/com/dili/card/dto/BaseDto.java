@@ -32,7 +32,7 @@ public class BaseDto implements Serializable {
     @NotNull(message = "页码不能为空", groups = ConstantValidator.Page.class)
     @Min(value = 1, message = "页码最小为1", groups = ConstantValidator.Page.class)
     private Integer page;
-    /**页码*/
+    /**每行多少条*/
     @NotNull(message = "分页条数不能为空", groups = ConstantValidator.Page.class)
     //@Range(min = 1, max = 100, message = "每页最少1条，最多100条", groups = ConstantValidator.Page.class)
     private Integer rows;

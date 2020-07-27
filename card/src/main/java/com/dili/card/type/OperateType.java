@@ -37,7 +37,7 @@ public enum OperateType
 	private String name;
 	private int code;
 
-	private OperateType(String name, int code)
+	OperateType(String name, int code)
 	{
 		this.name = name;
 		this.code = code;

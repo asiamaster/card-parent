@@ -1,6 +1,7 @@
 package com.dili.card.dto.pay;
 
 import com.dili.card.type.FeeType;
+import com.dili.card.type.FundItem;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -30,14 +31,14 @@ public class TradeRequestDto {
      * @author miaoguoxin
      * @date 2020/7/6
      */
-    public void addServiceFeeItem(Long serviceCost){
+    public void addServiceFeeItem(Long serviceCost, FundItem fundItem){
         if (CollectionUtils.isEmpty(this.fees)){
             this.fees = new ArrayList<>();
         }
         FeeItemDto feeItem = new FeeItemDto();
         feeItem.setAmount(serviceCost);
-        feeItem.setType(FeeType.SERVICE.getCode());
-        feeItem.setTypeName(FeeType.SERVICE.getName());
+        feeItem.setType(fundItem.getCode());
+        feeItem.setTypeName(fundItem.getName());
         this.fees.add(feeItem);
     }
 

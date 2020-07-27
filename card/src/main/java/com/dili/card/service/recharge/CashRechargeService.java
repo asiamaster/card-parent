@@ -8,6 +8,8 @@ import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.service.IAccountCycleService;
+import com.dili.card.type.FeeType;
+import com.dili.card.type.FundItem;
 import com.dili.card.type.TradeChannel;
 import com.dili.tcc.core.TccContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +33,31 @@ public class CashRechargeService extends AbstractRechargeManager {
     }
 
     @Override
-    public TradeRequestDto buildTradeRequest(FundRequestDto requestDto) {
-        return super.createRechargeRequestDto(requestDto);
+    public String buildBusinessRecordNote(FundRequestDto requestDto) {
+        return "现金充值";
     }
+
+    @Override
+    public String buildSerialRecordNote(FundRequestDto requestDto) {
+        return null;
+    }
+
+    @Override
+    public FundItem getPrincipalFundItem(FundRequestDto fundRequestDto) {
+        return FundItem.CASH_CHARGE;
+    }
+
+
+    @Override
+    public FundItem getServiceCostItem(FundRequestDto fundRequestDto) {
+        return null;
+    }
+
+    @Override
+    public boolean canAddEmptyFundItem(FundRequestDto fundRequestDto) {
+        return false;
+    }
+
 
     @Override
     protected void afterCommitRecharge(FundRequestDto requestDto) {

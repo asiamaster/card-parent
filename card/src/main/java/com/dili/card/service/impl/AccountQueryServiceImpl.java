@@ -26,7 +26,9 @@ import com.dili.card.validator.AccountValidator;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.constant.ResultCode;
+import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
+import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,8 +99,16 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     }
 
     @Override
-    public UserAccountCardResponseDto getByCardNoWithReturnState(String cardNO) {
-        return accountQueryRpcResolver.findByCardNoWithReturnState(cardNO);
+    public UserAccountCardResponseDto getByCardNoWithReturnState(String cardNo) {
+        UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
+        userAccountCardQuery.setCardNos(Lists.newArrayList(cardNo));
+        userAccountCardQuery.setExcludeReturn(0);
+        userAccountCardQuery.setExcludeDisabled(1);
+        List<UserAccountCardResponseDto> userAccounts = accountQueryRpcResolver.findByQueryCondition(userAccountCardQuery);
+        if (CollectionUtils.isEmpty(userAccounts)){
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "卡信息不存在");
+        }
+        return userAccounts.get(0);
     }
 
     @Override

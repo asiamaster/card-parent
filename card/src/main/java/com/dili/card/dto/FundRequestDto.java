@@ -1,5 +1,6 @@
 package com.dili.card.dto;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.card.validator.FundValidator;
 
@@ -30,7 +31,7 @@ public class FundRequestDto extends CardRequestDto {
     /**备注*/
     private String mark;
     /**额外字段，由各业务逻辑自行决定*/
-    private Map<String, Object> extra;
+    private JSONObject extra;
     /** 委托合同编号 */
     private String contractNo;
     /** 委托人ID*/
@@ -76,11 +77,11 @@ public class FundRequestDto extends CardRequestDto {
         this.mark = mark;
     }
 
-    public Map<String, Object> getExtra() {
+    public JSONObject getExtra() {
         return extra;
     }
 
-    public void setExtra(Map<String, Object> extra) {
+    public void setExtra(JSONObject extra) {
         this.extra = extra;
     }
 

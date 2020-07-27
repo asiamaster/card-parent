@@ -1,14 +1,17 @@
 package com.dili.card.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.dili.card.BaseTest;
 import com.dili.card.common.constant.CacheKey;
+import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.impl.AccountCycleServiceImpl;
+import com.dili.card.type.BankCardType;
 import com.dili.card.type.TradeChannel;
 import com.dili.ss.domain.BaseOutput;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,8 +55,42 @@ class FundControllerTest extends BaseTest {
     }
 
     @Test
-    void testRecharge() throws Exception {
+    void testPosRecharge() throws Exception {
         FundRequestDto fundRequestDto = this.createRechargeRequest();
+        fundRequestDto.setServiceCost(1L);
+        fundRequestDto.setTradeChannel(TradeChannel.POS.getCode());
+        JSONObject extra = new JSONObject();
+        extra.put(Constant.BANK_TYPE, BankCardType.DEBIT_CARD.getCode());
+        extra.put(Constant.POS_TYPE,1);
+        extra.put(Constant.POS_CERT_NUM,"12345678");
+        fundRequestDto.setExtra(extra);
+
+        AccountCycleDo accountCycle = this.createAccountCycle();
+        when(accountCycleService.findActiveCycleByUserId(fundRequestDto.getOpId(),
+                fundRequestDto.getOpName(),
+                fundRequestDto.getOpNo())).thenReturn(accountCycle);
+
+        MvcResult mvcResult = mockMvc.perform(post("/fund/recharge.action")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("duplicate_commit_token",this.token)
+                .header("UAP_SessionId",sessionId)
+                .content(JSON.toJSONString(fundRequestDto))
+        )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+        String resultContent = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+        BaseOutput<?> out = JSON.parseObject(resultContent, new TypeReference<>() {
+        });
+        assertTrue(out.isSuccess());
+        LOGGER.info("返回结果：{}",JSON.toJSONString(out));
+    }
+
+    @Test
+    void testCashRecharge() throws Exception {
+        FundRequestDto fundRequestDto = this.createRechargeRequest();
+        fundRequestDto.setTradeChannel(TradeChannel.CASH.getCode());
+
         AccountCycleDo accountCycle = this.createAccountCycle();
         when(accountCycleService.findActiveCycleByUserId(fundRequestDto.getOpId(),
                 fundRequestDto.getOpName(),
@@ -80,16 +117,13 @@ class FundControllerTest extends BaseTest {
         fundRequestDto.setAccountId(174L);
         fundRequestDto.setCardNo("888889690048");
         fundRequestDto.setCustomerId(18L);
-        fundRequestDto.setAmount(1L);
         fundRequestDto.setOpId(73L);
         fundRequestDto.setOpName("王波");
-        fundRequestDto.setOpNo("");
-        fundRequestDto.setFirmId(1L);
-        fundRequestDto.setFirmName("集团");
-        fundRequestDto.setAmount(5L);
+        fundRequestDto.setOpNo("wangbo");
+        fundRequestDto.setFirmId(8L);
+        fundRequestDto.setFirmName("寿光");
+        fundRequestDto.setAmount(101L);
         fundRequestDto.setTradePwd("123456");
-        fundRequestDto.setTradeChannel(TradeChannel.CASH.getCode());
-
         return fundRequestDto;
     }
 

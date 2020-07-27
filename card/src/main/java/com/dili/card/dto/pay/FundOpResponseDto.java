@@ -10,6 +10,8 @@ import java.io.Serializable;
 public class FundOpResponseDto implements Serializable {
     /**冻结资金id*/
     private Long frozenId;
+    /**资金事务*/
+    private PayResponseBaseDto transaction;
 
     public Long getFrozenId() {
         return frozenId;
@@ -17,5 +19,13 @@ public class FundOpResponseDto implements Serializable {
 
     public void setFrozenId(Long frozenId) {
         this.frozenId = frozenId;
+    }
+
+    public PayResponseBaseDto getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(PayResponseBaseDto transaction) {
+        this.transaction = transaction;
     }
 }

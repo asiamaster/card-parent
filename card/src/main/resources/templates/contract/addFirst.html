@@ -12,12 +12,12 @@
         vertical-align: middle;
     }
     .td_input{
-    	width: 120px; 
+    	width: 120px;
     	float: left;
     	margin-right:25px;
     }
     .td_button{
-    	width: 100px; 
+    	width: 100px;
     	float: left;
     }
 </style>
@@ -88,12 +88,12 @@
 	/**
 	 * 添加被委托人信息
 	 */
-	let consignee='<tr class="consignee"><td class="info-column">被委托人</td><td class="info-cell">' + 
-        	'<input placeholder="姓名" disabled="disabled" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="50"/>' + 
-        	'<input placeholder="身份证号" disabled="disabled" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="50"/>' + 
-        	'<input placeholder="手机号" name="consigneeIdMobile" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="50"/>' + 
-        	'<button type="button" class="btn btn-secondary td_button readID" onclick="$.table.search()"><i class="fa fa-search"></i>读取身份证</button>' + 
-        	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus" style="color:#4F94CD;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' + 
+	let consignee='<tr class="consignee"><td class="info-column">被委托人</td><td class="info-cell">' +
+        	'<input placeholder="姓名" disabled="disabled" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="50"/>' +
+        	'<input placeholder="身份证号" disabled="disabled" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="50"/>' +
+        	'<input placeholder="手机号" name="consigneeIdMobile" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="50"/>' +
+        	'<button type="button" class="btn btn-secondary td_button readID" onclick="$.table.search()"><i class="fa fa-search"></i>读取身份证</button>' +
+        	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus" style="color:#4F94CD;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' +
         	'<label onclick="addConsignee()" class = "plus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-plus" style="color:#fF0000;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label></td</tr>';
 	function addConsignee() {
 		var list=$(".consignee");
@@ -103,7 +103,7 @@
 		}
 		$('#notesBefore').before(consignee);
 	}
-	
+
 	function minusConsignee(e) {
 		$(e).closest(".consignee").remove();
 	}
@@ -127,13 +127,13 @@
 		})
         data.consignors=items;
 	}
-	
+
 	function submitHandler(e){
 		nextStep();
 		alert(11);
-		$.operate.addWithTitleAndNext("/contract/addSec.html",'70%','98%','新增资金委托关系');
+		$.operate.addWithTitle("/contract/addSec.html",'70%','98%','新增资金委托关系');
 	}
-	
+
 	function cancelHandler(e){
 		data = {};
 		return true;

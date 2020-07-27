@@ -74,7 +74,7 @@
         }
         let url = "${contextPath}/cardStorage/addOut.action";
         let data = $.common.formToJSON(formId);
-        $.operate.save(url, JSON.stringify(data));
-        return true;
+        $.operate.post(url, data);
+        //return true;
     }
 </script>
