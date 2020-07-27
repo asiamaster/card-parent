@@ -14,6 +14,7 @@ public class FeeItemDto {
     private String typeName;
     /** 期初余额*/
     private Long balance;
+
     public Long getAmount() {
         return amount;
     }

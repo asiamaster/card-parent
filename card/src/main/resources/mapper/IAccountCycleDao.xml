@@ -11,32 +11,32 @@
 			<if test="state != null"> AND state = #{state}</if>
 		</where>
 	</sql>
-	
+
 	<sql id="baseSql">
 		SELECT
-			`id`, 
-			`user_id`, 
-			`user_code`, 
-			`user_name`, 
-			`cycle_no`, 
-			`cash_box`, 
-			`start_time`, 
-			`end_time`, 
-			`check_time`, 
-			`state`, 
-			`cash_amount`, 
-			`auditor_id`, 
-			`auditor_name`, 
-			`version`, 
-			`firm_id`, 
-			`firm_name`, 
-			`notes`, 
-			`create_time`, 
+			`id`,
+			`user_id`,
+			`user_code`,
+			`user_name`,
+			`cycle_no`,
+			`cash_box`,
+			`start_time`,
+			`end_time`,
+			`check_time`,
+			`state`,
+			`cash_amount`,
+			`auditor_id`,
+			`auditor_name`,
+			`version`,
+			`firm_id`,
+			`firm_name`,
+			`notes`,
+			`create_time`,
 			`modify_time`
 		FROM
 			card_account_cycle
 	</sql>
-	
+
 		<!-- 通过条件查询 数量统计-->
 	<select id="findCountByCondition" resultType="com.dili.card.entity.AccountCycleDo">
 		SELECT
@@ -45,61 +45,61 @@
 			card_account_cycle
 		<include refid="where_condition"/>
 	</select>
-	
+
 	<insert id="save">
 		INSERT INTO card_account_cycle (
-			`user_id`, 
-			`user_code`, 
-			`user_name`, 
-			`cycle_no`, 
-			`cash_box`, 
-			`start_time`, 
-			`end_time`, 
-			`check_time`, 
-			`state`, 
-			`cash_amount`, 
-			`auditor_id`, 
-			`auditor_name`, 
-			`version`, 
-			`firm_id`, 
-			`firm_name`, 
-			`notes`, 
-			`create_time`, 
+			`user_id`,
+			`user_code`,
+			`user_name`,
+			`cycle_no`,
+			`cash_box`,
+			`start_time`,
+			`end_time`,
+			`check_time`,
+			`state`,
+			`cash_amount`,
+			`auditor_id`,
+			`auditor_name`,
+			`version`,
+			`firm_id`,
+			`firm_name`,
+			`notes`,
+			`create_time`,
 			`modify_time`
 		)
 		VALUES (
-			#{userId}, 
-			#{userCode}, 
-			#{userName}, 
-			#{cycleNo}, 
-			#{cashBox}, 
-			NOW(), 
-			#{endTime}, 
-			#{checkTime}, 
-			#{state}, 
-			#{cashAmount}, 
-			#{auditorId}, 
-			#{auditorName}, 
-			#{version}, 
-			#{firmId}, 
-			#{firmName}, 
-			#{notes}, 
-			NOW(), 
+			#{userId},
+			#{userCode},
+			#{userName},
+			#{cycleNo},
+			#{cashBox},
+			NOW(),
+			#{endTime},
+			#{checkTime},
+			#{state},
+			#{cashAmount},
+			#{auditorId},
+			#{auditorName},
+			#{version},
+			#{firmId},
+			#{firmName},
+			#{notes},
+			NOW(),
 			NOW()
 		)
 	</insert>
-	
+
 	<select id="getById" resultType="com.dili.card.entity.AccountCycleDo">
 		<include refid="baseSql"/>
 		WHERE id = #{id}
 	</select>
-	
+
 	<select id="findByCondition" parameterType="com.dili.card.dto.AccountCycleDto" resultType="com.dili.card.entity.AccountCycleDo">
 		<include refid="baseSql"/>
 		<include refid="where_condition"/>
 		ORDER BY create_time DESC
 	</select>
-	
+
 	<update id="update">
 		UPDATE card_account_cycle
 	 	<set>
@@ -123,21 +123,21 @@
 		WHERE
 			id = #{id}
 	</update>
-	
+
 	<select id="findByUserIdAndState" resultType="com.dili.card.entity.AccountCycleDo">
 		<include refid="baseSql"/>
 		WHERE user_id = #{userId} and state = #{state}
 	</select>
-	
+
 	<!-- 更新状态sql -->
 	<update id="updateStateById">
-		UPDATE card_account_cycle SET 
+		UPDATE card_account_cycle SET
 			`state` = #{state},`version` = version + 1, `modify_time` = NOW()
 			<if test="state != null and state ==3 ">, `end_time` = NOW() </if>
 		WHERE
 			id = #{id} and version = #{version}
 	</update>
-	
+
 	<update id="updateCashBox" >
 		UPDATE card_account_cycle SET cash_box = cash_box + #{amount} WHERE cycle_no = #{cycleNo}
 	</update>

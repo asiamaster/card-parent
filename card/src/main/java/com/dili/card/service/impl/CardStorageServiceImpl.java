@@ -31,9 +31,9 @@ import java.util.stream.Collectors;
 public class CardStorageServiceImpl implements ICardStorageService {
     @Autowired
     private IStorageOutDao storageOutDao;
-
     @Autowired
     private CardStorageRpc cardStorageRpc;
+
     @Override
     public void saveOutRecord(CardStorageOutRequestDto requestDto) {
         CardStorageOut cardStorageOut = new CardStorageOut();
@@ -45,6 +45,7 @@ public class CardStorageServiceImpl implements ICardStorageService {
         cardStorageOut.setCreateTime(LocalDateTime.now());
         cardStorageOut.setModifyTime(LocalDateTime.now());
         storageOutDao.save(cardStorageOut);
+
     }
 
     @Override
@@ -71,7 +72,7 @@ public class CardStorageServiceImpl implements ICardStorageService {
                 .map(this::convert2ResponseDto)
                 .collect(Collectors.toList());
     }
-    
+
     @Override
 	public PageOutput<List<CardStorageDto>> cardStorageList(CardStorageDto queryParam) {
 		return cardStorageRpc.pageList(queryParam);
@@ -83,8 +84,8 @@ public class CardStorageServiceImpl implements ICardStorageService {
 		queryParam.setCardNo(cardNo);
 		GenericRpcResolver.resolver(cardStorageRpc.voidCard(queryParam), "account-service");
 	}
-    
-    
+
+
 
     private CardStorageOutResponseDto convert2ResponseDto(CardStorageOut record) {
         CardStorageOutResponseDto recordResponseDto = new CardStorageOutResponseDto();

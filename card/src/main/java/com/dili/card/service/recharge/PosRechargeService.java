@@ -1,11 +1,15 @@
 package com.dili.card.service.recharge;
 
 import cn.hutool.core.util.NumberUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.annotation.TradeChannelMark;
+import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
-import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.type.BankCardType;
+import com.dili.card.type.FundItem;
 import com.dili.card.type.TradeChannel;
+import com.dili.card.util.CurrencyUtils;
 import com.dili.ss.constant.ResultCode;
 import org.springframework.stereotype.Component;
 
@@ -28,9 +32,35 @@ public class PosRechargeService extends AbstractRechargeManager {
     }
 
     @Override
-    public TradeRequestDto buildTradeRequest(FundRequestDto requestDto) {
-        TradeRequestDto rechargeRequestDto = super.createRechargeRequestDto(requestDto);
-        rechargeRequestDto.addServiceFeeItem(requestDto.getServiceCost());
-        return rechargeRequestDto;
+    public String buildBusinessRecordNote(FundRequestDto requestDto) {
+        Long serviceCost = requestDto.getServiceCost();
+        String yuan = CurrencyUtils.toYuanWithStripTrailingZeros(serviceCost == null ? 0L : serviceCost);
+        return String.format("pos充值, 手续费: %s", yuan);
+    }
+
+    @Override
+    public String buildSerialRecordNote(FundRequestDto requestDto) {
+        JSONObject extra = requestDto.getExtra();
+        if (extra == null) {
+            return "";
+        }
+        String bankTypeName = BankCardType.getNameByCode(extra.getInteger(Constant.BANK_TYPE));
+        return String.format("pos充值，%s,凭证号:%s", bankTypeName, extra.getString(Constant.POS_CERT_NUM));
+    }
+
+    @Override
+    public FundItem getPrincipalFundItem(FundRequestDto fundRequestDto) {
+        return FundItem.POS_CHARGE;
+    }
+
+
+    @Override
+    public FundItem getServiceCostItem(FundRequestDto fundRequestDto) {
+        return FundItem.POS_SERVICE;
+    }
+
+    @Override
+    public boolean canAddEmptyFundItem(FundRequestDto fundRequestDto) {
+        return fundRequestDto.getServiceCost() == null;
     }
 }

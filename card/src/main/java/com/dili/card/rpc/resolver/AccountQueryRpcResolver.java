@@ -43,11 +43,12 @@ public class AccountQueryRpcResolver {
         return page;
     }
 
+
     /**
      * 通过账号批量查询map结构数据
      */
     public Map<Long, UserAccountCardResponseDto> findAccountCardsMapByAccountIds(UserAccountCardQuery userAccountCardQuery) {
-    	List<UserAccountCardResponseDto> userAccountCards = findByQueryCondition(userAccountCardQuery);
+    	List<UserAccountCardResponseDto> userAccountCards = this.findByQueryCondition(userAccountCardQuery);
     	return userAccountCards.stream()
                 .collect(Collectors.toMap(UserAccountCardResponseDto::getAccountId,
                         a -> a,
@@ -62,17 +63,17 @@ public class AccountQueryRpcResolver {
         userAccountCardQuery.setAccountIds(accountIds);
         return findByQueryCondition(userAccountCardQuery);
     }
-    
+
     /**
      * 通过条件查询
      */
-    private List<UserAccountCardResponseDto> findByQueryCondition(UserAccountCardQuery userAccountCardQuery){
+    public List<UserAccountCardResponseDto> findByQueryCondition(UserAccountCardQuery userAccountCardQuery){
     	BaseOutput<List<UserAccountCardResponseDto>> baseOutput = accountQueryRpc.findUserCards(userAccountCardQuery);
-        this.validateSuccess(baseOutput);
-        if (CollectionUtils.isEmpty(baseOutput.getData())) {
+        List<UserAccountCardResponseDto> result = GenericRpcResolver.resolver(baseOutput, "account-service");
+        if (CollectionUtils.isEmpty(result)) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "卡信息不存在");
         }
-        return baseOutput.getData();
+        return result;
     }
 
     /**
@@ -104,20 +105,6 @@ public class AccountQueryRpcResolver {
         return this.findBacthByCardNos(Collections.singletonList(cardNo)).get(0);
     }
 
-    /**
-     * 通过卡号查询单个账户信息,包含退换状态
-     */
-    public UserAccountCardResponseDto findByCardNoWithReturnState(String cardNo){
-        UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
-        userAccountCardQuery.setCardNos(Lists.newArrayList(cardNo));
-        userAccountCardQuery.setExcludeReturn(0);
-        BaseOutput<List<UserAccountCardResponseDto>> baseOutput = accountQueryRpc.findUserCards(userAccountCardQuery);
-        List<UserAccountCardResponseDto> result = GenericRpcResolver.resolver(baseOutput, "查询账户信息（包含退换状态）");
-        if (CollectionUtils.isEmpty(result)){
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "卡信息不存在");
-        }
-        return result.get(0);
-    }
 
     /**
      * 查询包含关联卡的信息
@@ -136,7 +123,7 @@ public class AccountQueryRpcResolver {
      */
     public AccountWithAssociationResponseDto findByAccountIdWithAssociation(Long accountId) {
         BaseOutput<AccountWithAssociationResponseDto> result = accountQueryRpc.findAssociation(accountId);
-        return GenericRpcResolver.resolver(result);
+        return GenericRpcResolver.resolver(result,"account-service");
     }
 
     /**

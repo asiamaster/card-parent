@@ -21,8 +21,6 @@ public interface IAccountQueryService {
 
     /**
      * 分页多条件查询
-     * @param
-     * @return
      * @author miaoguoxin
      * @date 2020/6/22
      */
