@@ -15,6 +15,7 @@ import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.AccountManageRpc;
 import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
@@ -23,6 +24,7 @@ import com.dili.card.service.IAccountManageService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.OperateType;
+import com.dili.ss.domain.BaseOutput;
 
 @Service("accountManageService")
 public class AccountManageServiceImpl implements IAccountManageService {
@@ -49,7 +51,10 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		//保存本地操作记录 TODO
     	BusinessRecordDo businessRecord = saveSerialRecord(cardRequestDto, OperateType.FROZEN_ACCOUNT);
 		//远程冻结账户操作 TODO
-    	accountManageRpc.frozen(cardRequestDto);
+    	BaseOutput<?> baseOutput = accountManageRpc.frozen(cardRequestDto);
+        if (!baseOutput.isSuccess()) {
+            throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
+        } 
 		//记录远程操作记录 TODO
 		saveRemoteSerialRecord(cardRequestDto, businessRecord);
 	}
@@ -60,7 +65,10 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		//保存本地操作记录 TODO
     	BusinessRecordDo businessRecord = saveSerialRecord(cardRequestDto, OperateType.UNFROZEN_ACCOUNT);
 		//远程冻结账户操作 TODO
-    	accountManageRpc.unfrozen(cardRequestDto);
+    	BaseOutput<?> baseOutput = accountManageRpc.unfrozen(cardRequestDto);
+        if (!baseOutput.isSuccess()) {
+            throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
+        } 
 		//记录远程操作记录 TODO
 		saveRemoteSerialRecord(cardRequestDto, businessRecord);
 	}

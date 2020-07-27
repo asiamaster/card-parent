@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
@@ -16,6 +18,7 @@ import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountManageService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.ss.constant.ResultCode;
+import com.dili.ss.domain.BaseOutput;
 
 /**
  * 卡账户管理操作
@@ -60,20 +63,20 @@ public class AccountManagementController implements IControllerHandler{
 	/**
 	 * 冻结账户
 	 */
-	@GetMapping("/frozen.action")
-	public String frozen(CardRequestDto cardRequestDto) {
+	@PostMapping("/frozen.action")
+	public BaseOutput<String> frozen(@RequestBody CardRequestDto cardRequestDto) {
 		buildOperatorInfo(cardRequestDto);
 		accountManageService.frozen(cardRequestDto);
-		return "fund/unfrozenFund";
+		return BaseOutput.success();
 	}
 	
 	/**
 	 * 解冻账户
 	 */
-	@GetMapping("/unfrozen.action")
-	public String unfrozen(CardRequestDto cardRequestDto) {
+	@PostMapping("/unfrozen.action")
+	public BaseOutput<String> unfrozen(@RequestBody CardRequestDto cardRequestDto) {
 		buildOperatorInfo(cardRequestDto);
 		accountManageService.unfrozen(cardRequestDto);
-		return "fund/unfrozenFund";
+		return BaseOutput.success();
 	}
 }
