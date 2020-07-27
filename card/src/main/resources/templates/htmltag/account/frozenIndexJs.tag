@@ -14,7 +14,7 @@
         focusCleanup: true
     });
     //提交冻结账户操作
-    function submitFrozen() {
+    function submitFrozenAccount() {
         let requestData = {
             cardNo:${detail.cardAssociation.primary.cardNo!},
             accountId:${detail.cardAssociation.primary.accountId!},

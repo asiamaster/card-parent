@@ -13,7 +13,7 @@ $("#unfrozen-account-form").validate({
     },
     focusCleanup: true
 });
-	 function submitUnFrozen() {
+	 function submitUnFrozenAccount() {
 			if (!$.validate.form('unfrozen-account-form')) {
 				return;
 			}
