@@ -11,9 +11,9 @@
             },
             success:function(result) {
                 if (result.success) {
-                	showInfo("解冻账户成功");
+                	$.from.alertSuccess("解冻账户成功！");
                 }else {
-                	showError("解冻账户失败");
+                	$.from.alertError("解冻账户失败！");
                 }
             }
         });

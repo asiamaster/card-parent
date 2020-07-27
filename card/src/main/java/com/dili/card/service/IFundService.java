@@ -13,7 +13,6 @@ import com.dili.ss.domain.PageOutput;
 public interface IFundService {
 	/**
 	 * 冻结资金
-	 *
 	 * @author miaoguoxin
 	 * @date 2020/6/29
 	 */

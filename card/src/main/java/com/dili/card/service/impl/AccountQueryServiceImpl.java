@@ -103,7 +103,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
         userAccountCardQuery.setCardNos(Lists.newArrayList(cardNo));
         userAccountCardQuery.setExcludeReturn(0);
-        userAccountCardQuery.setExcludeDisabled(1);
+        userAccountCardQuery.setExcludeDisabled(0);
         List<UserAccountCardResponseDto> userAccounts = accountQueryRpcResolver.findByQueryCondition(userAccountCardQuery);
         if (CollectionUtils.isEmpty(userAccounts)){
             throw new CardAppBizException(ResultCode.DATA_ERROR, "卡信息不存在");

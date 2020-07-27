@@ -1,5 +1,5 @@
 <script>
-    $("#frozen-fund-form").validate({
+    $("#frozen-account-form").validate({
         onkeyup: false,
         rules: {
             mark: {
@@ -13,9 +13,7 @@
         },
         focusCleanup: true
     });
-
-
-    //提交冻结资金操作
+    //提交冻结账户操作
     function submitFrozen() {
         let requestData = {
             cardNo:${detail.cardAssociation.primary.cardNo!},
@@ -24,17 +22,17 @@
         };
         let url = '${contextPath}/account/frozen.action';
 
-        if (!$.validate.form('account-fund-form')) {
+        if (!$.validate.form('frozen-account-form')) {
             return;
         }
-        $.modal.confirm("确认冻结账户吗?", function (sure) {
+        $.modal.confirm("注意：账户冻结后，所有功能业务均不可用，确认冻结当前账户吗?", function (sure) {
             if (!sure) {
                 return;
             }
             let data = $.common.formToJSON('frozen-account-form');
             $.operate.post(url, $.extend(requestData, data),function (result) {
                 if (result.code == '200'){
-                    $.tab.refresh()
+                    $.tab.refresh();
                 }
             });
         });

@@ -17,7 +17,7 @@
 <div class="main-container container-fluid">
     <div>
         <div class="panel-body" style="display: block;">
-            <form id="frozen-fund-form">
+            <form id="unfrozen-account-form">
             	<input id="accountId" name="accountId" value="${accountId!}" type="hidden">
                 <table id="baseInfo" class="table table-bordered">
                     <tbody>
@@ -28,7 +28,7 @@
                     </tbody>
                 </table>
                 <div style="margin: auto" align="center">
-                    <button id="frozen" type="button" class="btn btn-outline-primary" onclick="submitFrozen()">
+                    <button id="unfrozen" type="button" class="btn btn-outline-primary" onclick="submitFrozen()">
                         解冻账户
                     </button>
                 </div>
@@ -36,4 +36,4 @@
         </div>
     </div>
 </div>
-<#fund_frozenIndexJs/>
+<#fund_unfrozenIndexJs/>
