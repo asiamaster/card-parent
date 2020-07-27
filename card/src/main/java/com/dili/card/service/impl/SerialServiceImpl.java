@@ -167,7 +167,8 @@ public class SerialServiceImpl implements ISerialService {
             rabbitMQMessageService.send(RabbitMQConfig.EXCHANGE_ACCOUNT_SERIAL, RabbitMQConfig.ROUTING_ACCOUNT_SERIAL, JSON.toJSONString(serialDto.getSerialRecordList()), null, null);
         } catch (Exception e) {
             LOGGER.error(JSON.toJSONString(serialDto), e);//记录数据方便后期处理
-            throw new CardAppBizException("保存操作交易流水失败");
+            //由于通过mq存储流水，本身带有重试机制，故屏蔽异常
+            //throw new CardAppBizException("保存操作交易流水失败");
         }
     }
 
