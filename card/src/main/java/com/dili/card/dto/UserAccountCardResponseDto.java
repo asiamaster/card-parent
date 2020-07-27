@@ -58,11 +58,14 @@ public class UserAccountCardResponseDto implements Serializable {
     /**账户状态 {@link com.dili.card.type.AccountStatus}*/
     @TextDisplay(AccountStateProvider.class)
     private Integer accountState;
+    /**账户是否禁用 {@link com.dili.account.type.DisableState}*/
+    private Integer disabledState;
     /**开卡时间*/
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime cardCreateTime;
+
     /**建卡人名字*/
     private String creator;
     /**建卡人id*/
@@ -234,5 +237,13 @@ public class UserAccountCardResponseDto implements Serializable {
 
     public void setCustomerCellphone(String customerCellphone) {
         this.customerCellphone = customerCellphone;
+    }
+
+    public Integer getDisabledState() {
+        return disabledState;
+    }
+
+    public void setDisabledState(Integer disabledState) {
+        this.disabledState = disabledState;
     }
 }
