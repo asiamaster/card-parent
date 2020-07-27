@@ -1,10 +1,15 @@
 package com.dili.card.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.CardStorageStateProvider;
 import com.dili.card.common.provider.CardTypeProvider;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * @description： 卡片入库条件查询
@@ -30,13 +35,19 @@ public class CardStorageDto extends BaseDto {
 	/** 商户ID */
 	private Long firmId;
 	/** 创建时间 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createTime;
 	/** 修改时间 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime modifyTime;
 	/** 结束时间 */
-	private LocalDateTime startDate;
+	private LocalDate startDate;
 	/** 开始时间 */
-	private LocalDateTime endDate;
+	private LocalDate endDate;
 
 	public String getCardNo() {
 		return cardNo;
@@ -62,19 +73,19 @@ public class CardStorageDto extends BaseDto {
 		this.state = state;
 	}
 
-	public LocalDateTime getStartDate() {
+	public LocalDate getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDateTime startDate) {
+	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDateTime getEndDate() {
+	public LocalDate getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDateTime endDate) {
+	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
 
