@@ -18,75 +18,21 @@
     <div>
         <div class="panel-body" style="display: block;">
             <form id="frozen-fund-form">
+            	<input id="accountId" name="accountId" value="${accountId!}">
                 <table id="baseInfo" class="table table-bordered">
                     <tbody>
-                    <tr>
-                        <td class="info-column-frozen-fund">园区卡号</td>
-                        <td class="info-cell-frozen-fund">${detail.cardAssociation.primary.cardNo!}</td>
-                        <td class="info-column-frozen-fund">客户名称</td>
-                        <td class="info-cell-frozen-fund">${detail.customer.name!}</td>
-                    </tr>
-                    <tr>
-                        <td class="info-column-frozen-fund">可用余额</td>
-                        <td class="info-cell-frozen-fund">${detail.accountFund.availableAmountText!}</td>
-                        <td class="info-column-frozen-fund">手动冻结金额</td>
-                        <td class="info-cell-frozen-fund">${detail.accountFund.frozenAmountText!}</td>
-                    </tr>
-                    <tr>
-                        <td class="vertical-td info-column-frozen-fund">冻结金额<i class="red">*</i></td>
-                        <td>
-                            <input id="amount" name="amount" type="number"
-                                   oninput="limitNum(this)"
-                                   class="form-control" val-formatter="yuanToFen"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="vertical-td info-column-frozen-fund ">备注</td>
-                        <td><textarea id="mark" name="mark" class="form-control" rows="3" placeholder="不超过30个字符"></textarea></td>
-                    </tr>
+	                    <tr>
+	                        <td class="vertical-td info-column-frozen-fund ">备注</td>
+	                        <td><textarea id="mark" name="mark" class="form-control" rows="3" placeholder="不超过30个字符"></textarea></td>
+	                    </tr>
                     </tbody>
                 </table>
                 <div style="margin: auto" align="center">
                     <button id="frozen" type="button" class="btn btn-outline-primary" onclick="submitFrozen()">
-                        冻结资金
-                    </button>
-                    <button id="record" style="margin-left: 50px" type="button" class="btn btn-outline-primary" onclick="showOrHide()">
-                        冻结记录
+                        解冻账户
                     </button>
                 </div>
             </form>
-        </div>
-    </div>
-    <div class="row" id="table-div" style="display: none">
-        <form id="queryForm">
-            <input type="hidden" id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}">
-        </form>
-        <div class="col-12">
-            <table id="grid"
-                   data-title="冻结记录"
-                   data-buttons-class="primary"
-                   data-icons="bui.variable.icons">
-                <thead>
-                <tr>
-                    <th data-field="amountText"  data-sortable="true" data-sort-name="amount"
-                        data-align="center">
-                        冻结金额
-                    </th>
-                    <th data-field="operateTime" data-sortable="true" data-align="center" data-sort-name="operate_time">
-                        冻结时间
-                    </th>
-                    <th data-field="operatorNo" data-align="center">
-                        操作员工号
-                    </th>
-                    <th data-field="operatorName" data-align="center">
-                        操作员
-                    </th>
-                    <th data-field="notes" data-align="center">
-                        备注
-                    </th>
-                </tr>
-                </thead>
-            </table>
         </div>
     </div>
 </div>

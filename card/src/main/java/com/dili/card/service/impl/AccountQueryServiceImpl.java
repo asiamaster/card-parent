@@ -47,7 +47,7 @@ import javax.annotation.Resource;
  * @Date: 2020/6/22 14:00
  * @Description:
  */
-@Service
+@Service("accountQueryService")
 public class AccountQueryServiceImpl implements IAccountQueryService {
     @Autowired
     private CustomerRpcResolver customerRpcResolver;
