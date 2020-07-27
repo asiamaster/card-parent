@@ -17,7 +17,8 @@
 <div class="main-container container-fluid">
     <div>
         <div class="panel-body" style="display: block;">
-            <form id="frozen-fund-form">
+            <form id="account-fund-form">
+            	<input id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}" type="hidden">
                 <table id="baseInfo" class="table table-bordered">
                     <tbody>
                     <tr>
@@ -78,4 +79,4 @@
         </div>
     </div>
 </div>
-<#fund_frozenIndexJs/>
+<#account_frozenIndexJs/>

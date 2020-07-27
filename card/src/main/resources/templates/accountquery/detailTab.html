@@ -34,7 +34,7 @@
         <#resource code="frozen-account">
         <% if(isMaster && cardState !=4) { %>
             <li class="nav-item">
-                <a class="nav-link" id="unfrozen-fund-tab" uri="/account/frozenAccount.html" data-toggle="tab" href="#frozen-account" role="tab">
+                <a class="nav-link" id="frozen-account-tab" uri="/account/frozenAccount.html" data-toggle="tab" href="#frozen-account" role="tab">
                     <h5>冻结账户</h5>
                 </a>
             </li>
@@ -43,7 +43,7 @@
         <#resource code="unfrozen-account">
         <% if(isMaster && cardState !=4) { %>
             <li class="nav-item">
-                <a class="nav-link" id="unfrozen-fund-tab" uri="/account/unfrozenAccount.html" data-toggle="tab" href="#unfrozen-account" role="tab">
+                <a class="nav-link" id="unfrozen-account-tab" uri="/account/unfrozenAccount.html" data-toggle="tab" href="#unfrozen-account" role="tab">
                     <h5>解冻账户</h5>
                 </a>
             </li>
@@ -58,6 +58,10 @@
     <div class="tab-pane tab-info" id="frozen-fund" role="tabpanel">
     </div>
     <div class="tab-pane tab-info" id="unfrozen-fund" role="tabpanel">
+    </div>
+    <div class="tab-pane tab-info" id="frozen-account" role="tabpanel">
+    </div>
+    <div class="tab-pane tab-info" id="unfrozen-account" role="tabpanel">
     </div>
 </div>
 </#bs4Body>
