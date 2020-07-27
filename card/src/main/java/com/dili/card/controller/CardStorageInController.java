@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("cardStorage/add")
-public class CardAddStorageController implements IControllerHandler {
+public class CardStorageInController implements IControllerHandler {
 
 	@Autowired
 	private ICardAddStorageService cardAddStorageService;
@@ -39,7 +39,7 @@ public class CardAddStorageController implements IControllerHandler {
 	public String outListView(ModelMap modelMap) {
 		modelMap.put("cardTypeList", CardType.getAll());
 		modelMap.put("cardStorageStateList", CardStorageState.list());
-		return "addStorage/list";
+		return "cardstorage/inList";
 	}
 
 	/**

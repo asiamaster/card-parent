@@ -1,0 +1,127 @@
+<#bs4Body>
+<style>
+</style>
+<div class="main-container container-fluid">
+	<#bs4nav>
+	<form id="queryForm" role="form">
+		<div class="row row-cols-6">
+			<div class="form-group col-auto">
+				<label for="type">卡类别</label> <select id="type"
+					name="cardType" class="form-control"></select>
+				<#bcomboProvider _id="type" _provider="cardTypeProvider"
+					_queryParams='{emptyText:"-- 全部 --"}' />
+			</div>
+			<div class="form-group col-auto">
+				<label for="cardStorageState">状态</label> <select
+					id="state" name="state" class="form-control"></select>
+				<#bcomboProvider _id="state"
+					_provider="cardStorageStateProvider"
+					_queryParams='{emptyText:"-- 全部 --"}' />
+			</div>
+			<div class="form-group col-auto">
+				<label for="cardNo-multiple">卡号</label> <input id="cardNo-multiple"
+					name="cardNo" type="text" class="form-control" />
+			</div>
+			<div class="form-group col-auto">
+				<label class="justify-content-end">入库时间</label>
+				<div class="form-inline">
+					<div class="input-group">
+						<input type="text" name="startDate" id="startDate"
+							class="form-control laydatetime" />
+						<div class="input-group-append">
+							<label for="startDate" class="input-group-text fa fa-calendar"></label>
+						</div>
+					</div>
+					&nbsp;&nbsp;至&nbsp;&nbsp;
+					<div class="input-group">
+						<input type="text" name="endDate" id="endDate"
+							class="form-control laydatetime" />
+						<div class="input-group-append">
+							<label for="endDate" class="input-group-text fa fa-calendar"></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col align-self-center mt-3">
+				<button id="clear" type="button"
+					class="btn btn-outline-primary mr-2" onclick="$.form.reset()">
+					<i class="fa fa-refresh"></i> 清空
+				</button>
+				<button id="query" type="button" class="btn btn-outline-primary"
+					onclick="$.table.search()">
+					<i class="fa fa-search"></i> 查询
+				</button>
+			</div>
+		</div>
+	</form>
+	</#bs4nav>
+</div>
+
+
+<div id="toolbar" class="btn-group" role="group"
+	aria-label="Toolbar with button groups">
+	<#resource code="card_storage_void">
+	<button id="voidBtn" type="button"class="btn btn-primary">
+		<i class="fa fa-save"></i> 作废
+	</button>
+	</#resource>
+	<#resource code="detail">
+	<button id="btn-out" type="button" class="btn btn-primary"
+		onclick="$.operate.detail(null,'40%','70%')">
+		<i class="fa fa-list"></i> 导出
+	</button>
+	</#resource>
+</div>
+<div class="row">
+	<div class="col-12">
+		<table id="cardStorageTable" data-title="卡库存列表" data-show-fullscreen="true"
+			data-buttons-class="primary" data-icons="bui.variable.icons">
+			<thead>
+				<tr>
+					<th data-checkbox="true"></th>
+					<th data-field="cardNo" data-align="center">卡号</th>
+					<th data-field="typeText" data-align="center">类别</th>
+					<th data-field="stateText" data-align="center">状态</th>
+					<th data-field="createTime" data-sortable="true"
+						data-sort-name="create_time" data-align="center">入库时间</th>
+					<th data-field="creator" data-align="center">入库人</th>
+					<th data-field="modifyTime" data-sortable="true"
+						data-sort-name="modify_time" data-align="center">修改时间</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+
+  <!-- 作废弹出模态框 -->
+  <div class="modal fade" id="voidModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+   
+        <!-- 头部 -->
+        <div class="modal-header">
+          <h4 class="modal-title">信息确认</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+   
+        <!-- 主体内容-->
+        <div class="modal-body">
+        	作废后，该卡将不可再用，确定作废选中卡？
+        </div>
+   
+        <!-- 底部 -->
+        <div class="modal-footer">
+        	<button type="button" id="voidOkBtn" class="btn btn-secondary" data-dismiss="modal">确定</button>
+          	<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+        </div>
+   
+      </div>
+    </div>
+  </div>
+</#bs4Body>
+<script type="text/javascript"
+	src="${contextPath}/resources/js/sword.js"></script>
+<#common_userJs />
+<#common_commonJs/>
+<#cardstorage_cardStorageJs />

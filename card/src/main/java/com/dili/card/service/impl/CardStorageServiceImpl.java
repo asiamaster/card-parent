@@ -1,11 +1,14 @@
 package com.dili.card.service.impl;
 
 import com.dili.card.dao.IStorageOutDao;
+import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.CardStorageOutQueryDto;
 import com.dili.card.dto.CardStorageOutRequestDto;
 import com.dili.card.dto.CardStorageOutResponseDto;
 import com.dili.card.entity.CardStorageOut;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.CardStorageRpc;
+import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.ICardStorageService;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.constant.ResultCode;
@@ -29,6 +32,8 @@ public class CardStorageServiceImpl implements ICardStorageService {
     @Autowired
     private IStorageOutDao storageOutDao;
 
+    @Autowired
+    private CardStorageRpc cardStorageRpc;
     @Override
     public void saveOutRecord(CardStorageOutRequestDto requestDto) {
         CardStorageOut cardStorageOut = new CardStorageOut();
@@ -66,7 +71,20 @@ public class CardStorageServiceImpl implements ICardStorageService {
                 .map(this::convert2ResponseDto)
                 .collect(Collectors.toList());
     }
+    
+    @Override
+	public PageOutput<List<CardStorageDto>> cardStorageList(CardStorageDto queryParam) {
+		return cardStorageRpc.pageList(queryParam);
+	}
 
+	@Override
+	public void voidCard(String cardNo, String remark) {
+		CardStorageDto queryParam = new CardStorageDto();
+		queryParam.setCardNo(cardNo);
+		GenericRpcResolver.resolver(cardStorageRpc.voidCard(queryParam), "account-service");
+	}
+    
+    
 
     private CardStorageOutResponseDto convert2ResponseDto(CardStorageOut record) {
         CardStorageOutResponseDto recordResponseDto = new CardStorageOutResponseDto();

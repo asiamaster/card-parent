@@ -1,5 +1,6 @@
 package com.dili.card.service;
 
+import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.CardStorageOutQueryDto;
 import com.dili.card.dto.CardStorageOutRequestDto;
 import com.dili.card.dto.CardStorageOutResponseDto;
@@ -40,4 +41,19 @@ public interface ICardStorageService {
     * @date 2020/7/1
     */
     List<CardStorageOutResponseDto> getByCondition(CardStorageOutQueryDto queryDto);
+    
+    
+    /**
+     * 卡片仓库列表
+     * @param id
+     * @return
+     */
+    PageOutput<List<CardStorageDto>> cardStorageList(CardStorageDto queryParam);
+
+    /**
+     * 作废卡片
+     * @param cardNo
+     * @param remark 备注（可不填）
+     */
+    void voidCard(String cardNo, String remark);
 }
