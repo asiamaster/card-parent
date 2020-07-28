@@ -94,6 +94,18 @@ public class FundController implements IControllerHandler {
     }
 
     /**
+     * 提现手续费
+     *
+     * @param tradeChannel
+     * @return
+     */
+    @RequestMapping(value = "/withdrawServiceFee.action")
+    @ResponseBody
+    public BaseOutput<Long> withdrawServiceFee(Integer tradeChannel) {
+        return BaseOutput.success().setData(3L);
+    }
+
+    /**
      * 冻结资金
      *
      * @author miaoguoxin
