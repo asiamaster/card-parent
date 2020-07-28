@@ -1,6 +1,7 @@
 package com.dili.card.type;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -95,5 +96,9 @@ public enum OperateType
 	public void setCode(int code)
 	{
 		this.code = code;
+	}
+	
+	public static List<OperateType> getAll() {
+		return new ArrayList<>(Arrays.asList(OperateType.values()));
 	}
 }

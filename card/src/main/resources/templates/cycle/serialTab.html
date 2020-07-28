@@ -51,9 +51,10 @@
     $(function () {
         var options = {
         	id:"serailTable",
-            url: "${contextPath}/serial/account/listPage.action",
+            url: "${contextPath}/serial/business/page.action",
             queryParams:{
             	cycleNo:cycleNo,
+            	operatorId:operatorId,
             	rows:10,
             	page:1
             }

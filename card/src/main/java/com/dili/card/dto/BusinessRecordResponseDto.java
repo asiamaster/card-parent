@@ -1,26 +1,30 @@
 package com.dili.card.dto;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.FenToYuanProvider;
+import com.dili.card.common.provider.OperationTypeProvider;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * @Auther: miaoguoxin
  * @Date: 2020/7/17 15:35
  */
 public class BusinessRecordResponseDto implements Serializable {
-    /**  */
+	private static final long serialVersionUID = 1L;
+	/**  */
     private Long id;
     /** 流水号 */
     private String serialNo;
     /** 账务周期号 */
     private Long cycleNo;
     /** 业务类型-办卡、充值、提现等 */
+    @TextDisplay(OperationTypeProvider.class)
     private Integer type;
     /** 账户ID */
     private Long accountId;

@@ -170,16 +170,16 @@
 		                    <th data-field="cardNo" data-align="center" >
 		                        园区卡号
 		                    </th>
-		                    <th data-field="fundItemName" data-align="center">
+		                    <th data-field="typeText" data-align="center">
 		                        操作业务
 		                    </th>
-		                    <th data-field="startBalanceView" data-align="center">
+		                    <th data-field="startBalanceText" data-align="center">
 		                        期初金额
 		                    </th>
-		                    <th data-field="amountView" data-align="center">
+		                    <th data-field="amountText" data-align="center">
 		                        操作金额
 		                    </th>
-		                    <th data-field="endBalanceView" data-align="center">
+		                    <th data-field="endBalanceText" data-align="center">
 		                        账户余额
 		                    </th>
 		                   <th data-field="operateTime" data-align="center">
@@ -202,6 +202,7 @@
 <script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
 <script>
     let cycleNo = $.trim($("#cycle").text());
+    let operatorId = $("#userId").val();
     let teter = $("#table-payer").prop("outerHTML");
     let tetee = $("#table-payee").prop("outerHTML");
     let tetoperation = $("#table-operation").prop("outerHTML");
@@ -301,7 +302,7 @@
 		$(this).addClass('active');
 		$("#operation-record").append(tetoperation);
     	var options = {
-    	         url: "${contextPath}/serial/account/listPage.action",
+    	         url: "${contextPath}/serial/business/page.action",
     	         queryParams:{
     	         	cycleNo:cycleNo,
     	         	rows:10,
