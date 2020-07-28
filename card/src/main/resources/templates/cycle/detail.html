@@ -11,7 +11,7 @@
     }
 </style>
     <div id="detail-modal" class="main-container container-fluid" style="height: 380px;width: 1000px;">
-    	<form id="settleForm">
+    	<form id="queryForm">
 	        <table id="out-detail" class="table table-bordered" >
 	            <tbody>
 	            <tr>
@@ -26,6 +26,8 @@
 	                <td class="info-column">柜员名称</td>
 	                <td class="info-cell">${detail.userName!}
 	                	<input type="hidden" name="userId" id="userId" value="${detail.userId!}">
+	                	<input type="hidden" name="cycleNo" id="cycleNo" value="${detail.cycleNo!}">
+	                	<input type="hidden" id="isStatistic" name="isStatistic" value="false">
 	                </td>
 	            </tr>
 	            <tr>
@@ -94,15 +96,11 @@
         </#resource>
     </ul>
 </div>
- <form id="queryForm">
-     <input type="hidden" id="cycleNo" name="cycleNo" value="${detail.cycleNo!}">
-     <input type="hidden" id="isStatistic" name="isStatistic" value="false">
-</form>
 <div id="detailTabContent" class="tab-content border-top-0">
     <div class="tab-pane tab-info" id="payee-record" role="tabpanel">
     	<div class="row" id="table-payee">
 		    <div class="col-12">
-		        <table id="grid"
+		        <table id="payee-table"
 		               data-buttons-class="primary"
 		               data-icons="bui.variable.icons">
 		            <thead>
@@ -128,7 +126,7 @@
     <div class="tab-pane tab-info" id="payer-record" role="tabpanel">
     	<div class="row" id="table-payer">
 		    <div class="col-12">
-		        <table id="grid"
+		        <table id="payer-table"
 		               data-buttons-class="primary"
 		               data-icons="bui.variable.icons">
 		            <thead>
@@ -155,7 +153,7 @@
     	<div class="container-fluid" id="table-operation">
 		    <div class="row">
 		        <div class="col-12">
-		             <table id="grid" data-toggle="table" data-icons="bui.variable.icons" data-buttons-class="primary">
+		             <table id="serial-table" data-toggle="table" data-icons="bui.variable.icons" data-buttons-class="primary">
 		                <thead>
 		                <tr>
 		                	 <th data-field="serialNo" data-align="center" >
@@ -218,20 +216,15 @@
     	$("#payee-tab").addClass('active');
     	$("#payee-record").append(tetee);
     	var options = {
-    	         url: "${contextPath}/cash/payeeList.action",
-    	         queryParams:{
-    	         	isStatistic:false,
-    	         	cycleNo:cycleNo,
-    	         	rows:10,
-    	         	page:1
-    	         }
+    		     id:"payee-table",
+    	         url: "${contextPath}/cash/payeeList.action"
     	     };
     	$.table.init(options);
     });
 
     function applySettlement(){
 		let url = "${contextPath}/cycle/applySettle.action";
-	    let data = $.common.formToJSON("settleForm");
+	    let data = $.common.formToJSON("queryForm");
 	    $.operate.saveModal(url, JSON.stringify(data));
 	    $("#apply").attr("disabled",true);
 	    return true; 
@@ -254,13 +247,8 @@
 		$(this).addClass('active');
 		$("#payee-record").append(tetee);
     	var options = {
-    	         url: "${contextPath}/cash/payeeList.action",
-    	         queryParams:{
-    	         	isStatistic:false,
-    	         	cycleNo:cycleNo,
-    	         	rows:10,
-    	         	page:1
-    	         }
+    			id:"payee-table",
+    	         url: "${contextPath}/cash/payeeList.action"
     	     };
     	$.table.init(options);
     }
@@ -278,13 +266,8 @@
 		$(this).addClass('active');
 		$("#payer-record").append(teter);
     	var options = {
-    	         url: "${contextPath}/cash/payerList.action",
-    	         queryParams:{
-    	         	isStatistic:false,
-    	         	cycleNo:cycleNo,
-    	         	rows:10,
-    	         	page:1
-    	         }
+    			id:"payer-table",
+    	        url: "${contextPath}/cash/payerList.action"
     	     };
     	$.table.init(options);
     }
@@ -302,12 +285,8 @@
 		$(this).addClass('active');
 		$("#operation-record").append(tetoperation);
     	var options = {
-    	         url: "${contextPath}/serial/business/page.action",
-    	         queryParams:{
-    	         	cycleNo:cycleNo,
-    	         	rows:10,
-    	         	page:1
-    	         }
+    			 id:"serial-table",
+    	         url: "${contextPath}/serial/business/page.action"
     	     };
     	$.table.init(options);
     }
