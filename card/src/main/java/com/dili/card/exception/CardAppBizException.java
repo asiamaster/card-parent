@@ -25,6 +25,7 @@ public class CardAppBizException extends RuntimeException {
     public CardAppBizException(String code, String msg) {
         super(msg.replace("{}", ""));
         this.code = code;
+        log.warn(msg);
     }
 
     public CardAppBizException(String msg) {
