@@ -11,14 +11,15 @@ import com.dili.assets.sdk.dto.BusinessChargeItemDto;
 import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IRuleFeeService;
+import com.dili.card.type.RuleFeeBusinessType;
 import com.dili.rule.sdk.domain.input.QueryFeeInput;
 import com.dili.rule.sdk.domain.output.QueryFeeOutput;
 import com.dili.rule.sdk.rpc.ChargeRuleRpc;
 import com.dili.ss.domain.BaseOutput;
 
 /**
- * @description： 
- *          规则服务统一处理
+ * @description： 规则服务统一处理
+ * 
  * @author ：WangBo
  * @time ：2020年7月14日下午5:39:08
  */
@@ -32,12 +33,7 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 
 	@Override
 	public Long getOpenCardFee(Long firmId) {
-		BusinessChargeItemDto businessChargeItemDto = new BusinessChargeItemDto();
-		businessChargeItemDto.setBusinessType("CARD_OPEN_CARD");
-		businessChargeItemDto.setMarketId(firmId);
-		BaseOutput<List<BusinessChargeItemDto>> businessChargeList = businessChargeItemRpc
-				.listByExample(businessChargeItemDto);
-		List<BusinessChargeItemDto> chargeItemList = GenericRpcResolver.resolver(businessChargeList, "获取费用项");
+		List<BusinessChargeItemDto> chargeItemList = getChargeItem(firmId, RuleFeeBusinessType.CARD_OPEN_CARD);
 		List<QueryFeeInput> feeInputs = new ArrayList<QueryFeeInput>();
 		for (BusinessChargeItemDto item : chargeItemList) {
 			QueryFeeInput queryFeeInput = new QueryFeeInput();
@@ -51,4 +47,13 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 		return null;
 	}
 
+	private List<BusinessChargeItemDto> getChargeItem(Long firmId, RuleFeeBusinessType type) {
+		BusinessChargeItemDto businessChargeItemDto = new BusinessChargeItemDto();
+		businessChargeItemDto.setBusinessType(type.getCode());
+		businessChargeItemDto.setMarketId(firmId);
+		BaseOutput<List<BusinessChargeItemDto>> businessChargeList = businessChargeItemRpc
+				.listByExample(businessChargeItemDto);
+		List<BusinessChargeItemDto> chargeItemList = GenericRpcResolver.resolver(businessChargeList, "获取费用项");
+		return chargeItemList;
+	}
 }

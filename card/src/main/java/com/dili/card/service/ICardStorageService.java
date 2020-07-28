@@ -20,6 +20,12 @@ public interface ICardStorageService {
     * @date 2020/7/3
     */
     void saveOutRecord(CardStorageOutRequestDto requestDto);
+    
+    
+    /**
+     * 根据卡号查询卡片在库存中的信息
+     */
+    CardStorageDto  getCardStorageByCardNo(String cardNo);
 
     /**
     * 根据主键id查询单个

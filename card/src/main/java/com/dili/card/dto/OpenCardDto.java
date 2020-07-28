@@ -46,8 +46,8 @@ public class OpenCardDto extends BaseSerialLogDto {
 	/** 卡号 */
 	private String cardNo;
 
-	/** 卡类别 {@link CardCategory} */
-	private Integer category;
+	/** 卡类别 {@link CardType} */
+	private Integer cardType;
 	/** {@link CardType} */
 	private Integer seinsweise;
 	/** 父账号ID */
@@ -155,12 +155,12 @@ public class OpenCardDto extends BaseSerialLogDto {
 		this.cardNo = cardNo;
 	}
 
-	public Integer getCategory() {
-		return category;
+	public Integer getCardType() {
+		return cardType;
 	}
 
-	public void setCategory(Integer category) {
-		this.category = category;
+	public void setCardType(Integer cardType) {
+		this.cardType = cardType;
 	}
 
 	public Integer getSeinsweise() {
