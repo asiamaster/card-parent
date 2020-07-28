@@ -81,22 +81,10 @@ public class CardManageServiceImpl implements ICardManageService {
         }
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void returnCard(CardRequestDto cardParam) {
-        //校验账户余额
-        validatedBanlance(cardParam);
-        //保存本地操作记录
-        BusinessRecordDo businessRecord = saveSerialRecord(cardParam, OperateType.REFUND_CARD);
-        //远程调用退卡操作
-        cardManageRpcResolver.returnCard(cardParam);
-        //记录远程操作记录
-        this.saveRemoteSerialRecord(businessRecord);
-    }
 	@Override
 	public void returnCard(CardRequestDto cardParam) {
     	//校验卡状态
-    	UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findByAccountId(cardParam.getAccountId());
+    	UserAccountCardResponseDto accountCard =  accountQueryService.getByAccountId(cardParam.getAccountId());
     	if (!Integer.valueOf(CardStatus.NORMAL.getCode()).equals(accountCard.getCardState())) {
             throw new CardAppBizException("", String.format("该卡为%s状态,不能进行退卡", CardStatus.getName(accountCard.getCardState())));
         }
@@ -113,7 +101,7 @@ public class CardManageServiceImpl implements ICardManageService {
 		//远程调用退卡操作
 		cardManageRpcResolver.returnCard(cardParam);
 		//记录远程操作记录
-		saveRemoteSerialRecord(cardParam, businessRecordDo);
+		saveRemoteSerialRecord(businessRecordDo);
 	}
 
     @Transactional(rollbackFor = Exception.class)
