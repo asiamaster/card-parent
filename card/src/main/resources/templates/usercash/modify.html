@@ -91,7 +91,6 @@ function submitHandler(e) {
     }
     let url = "${contextPath}/cash/modify.action";
     let data = $.common.formToJSON(formId);
-    alert(JSON.stringify(data));
     $.operate.post(url, data);
     return true;
 }
