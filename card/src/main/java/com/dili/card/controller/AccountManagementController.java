@@ -69,7 +69,7 @@ public class AccountManagementController implements IControllerHandler{
 	public BaseOutput<String> frozen(@RequestBody CardRequestDto cardRequestDto) {
 		buildOperatorInfo(cardRequestDto);
 		accountManageService.frozen(cardRequestDto);
-		return BaseOutput.success();
+		return BaseOutput.success("账户冻结成功");
 	}
 	
 	/**
@@ -79,6 +79,6 @@ public class AccountManagementController implements IControllerHandler{
 	public BaseOutput<String> unfrozen(@RequestBody CardRequestDto cardRequestDto) {
 		buildOperatorInfo(cardRequestDto);
 		accountManageService.unfrozen(cardRequestDto);
-		return BaseOutput.success();
+		return BaseOutput.success("账户解冻成功");
 	}
 }

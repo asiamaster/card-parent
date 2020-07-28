@@ -105,8 +105,10 @@ public class OpenCardController implements IControllerHandler {
 		Customer customer = GenericRpcResolver.resolver(
 				customerRpc.getByCertificateNumber(openCardInfo.getCertificateNumber(), user.getFirmId()), "开卡客户查询");
 		CustomerResponseDto response = new CustomerResponseDto();
-		BeanUtils.copyProperties(customer, response);
-		response.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
+		if(customer != null) {
+			BeanUtils.copyProperties(customer, response);
+			response.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
+		}
 		return BaseOutput.successData(response);
 	}
 
@@ -165,7 +167,7 @@ public class OpenCardController implements IControllerHandler {
 	 */
 	@PostMapping("openMasterCard.action")
 	@ResponseBody
-	public BaseOutput<?> openMasterCard(OpenCardDto openCardInfo) {
+	public BaseOutput<?> openMasterCard(@RequestBody OpenCardDto openCardInfo) {
 		// 主要参数校验
 		checkMasterParam(openCardInfo);
 		// 操作人信息
@@ -185,7 +187,7 @@ public class OpenCardController implements IControllerHandler {
 	 */
 	@PostMapping("openSlaveCard.action")
 	@ResponseBody
-	public BaseOutput<?> openSlaveCard(OpenCardDto openCardInfo) throws Exception {
+	public BaseOutput<?> openSlaveCard(@RequestBody OpenCardDto openCardInfo) throws Exception {
 		// 主要参数校验
 		AssertUtils.notNull(openCardInfo.getParentAccountId(), "主卡信息不能为空!");
 		// 操作人信息

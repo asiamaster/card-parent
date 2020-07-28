@@ -9,6 +9,7 @@ import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.service.ISerialService;
+import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -62,6 +63,7 @@ public class SerialController implements IControllerHandler {
         }
         PageOutput<List<SerialRecordDo>> pageOutput = serialRecordRpcResolver.listPage(serialQueryDto);
         if (pageOutput.isSuccess()) {
+        	result.put("code", ResultCode.OK);
             result.put("rows", pageOutput.getData());
             result.put("total", pageOutput.getTotal());
         }
