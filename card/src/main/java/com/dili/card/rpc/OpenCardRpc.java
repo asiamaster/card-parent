@@ -7,25 +7,24 @@ import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.OpenCardResponseDto;
 import com.dili.ss.domain.BaseOutput;
 
-
 /**
- * @description： 
- *          开卡RPC
+ * @description： 开卡RPC
+ * 
  * @author ：WangBo
  * @time ：2020年6月30日下午2:19:18
  */
-@FeignClient(name = "account-service", contextId = "openCard"/* , url = "http://127.0.0.1:8186" */)
+@FeignClient(name = "account-service", contextId = "openCard", url = "http://127.0.0.1:8186")
 public interface OpenCardRpc {
 
-    /**
-     * 主卡
-     */
-    @PostMapping("/api/account/openMasterCard")
-    BaseOutput<OpenCardResponseDto> openMasterCard(OpenCardDto openCardInfo);
-    
-    /**
-     * 副卡
-     */
-    @PostMapping("/api/account/openSlaveCard")
-    BaseOutput<OpenCardResponseDto> openSlaveCard(OpenCardDto openCardInfo);
+	/**
+	 * 主卡
+	 */
+	@PostMapping("/api/account/openMasterCard")
+	BaseOutput<OpenCardResponseDto> openMasterCard(OpenCardDto openCardInfo);
+
+	/**
+	 * 副卡
+	 */
+	@PostMapping("/api/account/openSlaveCard")
+	BaseOutput<OpenCardResponseDto> openSlaveCard(OpenCardDto openCardInfo);
 }

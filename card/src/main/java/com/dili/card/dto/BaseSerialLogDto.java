@@ -24,7 +24,7 @@ public class BaseSerialLogDto {
 	/** 客户名称 */
 	private String customerName;
 	/** 客户编号 */
-	private String customerNo;
+	private String customerCode;
 
 	public Long getCreatorId() {
 		return creatorId;
@@ -74,12 +74,12 @@ public class BaseSerialLogDto {
 		this.customerName = customerName;
 	}
 
-	public String getCustomerNo() {
-		return customerNo;
+	public String getCustomerCode() {
+		return customerCode;
 	}
 
-	public void setCustomerNo(String customerNo) {
-		this.customerNo = customerNo;
+	public void setCustomerCode(String customerCode) {
+		this.customerCode = customerCode;
 	}
 
 	public Integer getType() {
@@ -89,6 +89,5 @@ public class BaseSerialLogDto {
 	public void setType(Integer type) {
 		this.type = type;
 	}
-
 
 }

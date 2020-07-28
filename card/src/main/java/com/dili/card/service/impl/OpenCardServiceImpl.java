@@ -116,7 +116,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		serial.setCardNo(openCardInfo.getCardNo());
 		serial.setCustomerId(openCardInfo.getCustomerId());
 		serial.setCustomerName(openCardInfo.getName());
-		serial.setCustomerNo(openCardInfo.getCustomerNo());
+		serial.setCustomerNo(openCardInfo.getCustomerCode());
 		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(openCardInfo.getCreatorId(),
 				openCardInfo.getCreator(), openCardInfo.getCreatorCode());
 		serial.setCycleNo(cycleDo.getCycleNo());
@@ -143,7 +143,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		record.setCardNo(openCardInfo.getCardNo());
 		record.setCustomerId(openCardInfo.getCustomerId());
 		record.setCustomerName(openCardInfo.getName());
-		record.setCustomerNo(openCardInfo.getCustomerNo());
+		record.setCustomerNo(openCardInfo.getCustomerCode());
 		record.setFirmId(openCardInfo.getFirmId());
 		record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
 		record.setNotes("开卡");

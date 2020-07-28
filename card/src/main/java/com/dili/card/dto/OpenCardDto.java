@@ -19,8 +19,6 @@ public class OpenCardDto extends BaseSerialLogDto {
 	private Long customerId;
 	/** 客户类型买卖 {@link AccountType} */
 	private String custormerType;
-	/** 客户编号 */
-	private String customerNo;
 	/** 个人、对公 */
 	private String organizationType;
 	/** 证件类型 */
@@ -239,14 +237,6 @@ public class OpenCardDto extends BaseSerialLogDto {
 
 	public void setCostFee(Long costFee) {
 		this.costFee = costFee;
-	}
-
-	public String getCustomerNo() {
-		return customerNo;
-	}
-
-	public void setCustomerNo(String customerNo) {
-		this.customerNo = customerNo;
 	}
 
 }

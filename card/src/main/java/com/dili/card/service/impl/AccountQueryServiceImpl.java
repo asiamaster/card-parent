@@ -188,6 +188,10 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         detail.setAccountId(primary.getAccountId());
         detail.setCustomerId(customer.getId());
         detail.setCode(customer.getCode());
+        detail.setCardType(primary.getCardType());
+        detail.setCardNo(primary.getCardNo());
+        detail.setCertificateNumber(primary.getCustomerCertificateNumber());
+        detail.setCredentialType(primary.getCustomerCertificateType());
 		return detail;
 	}
 }
