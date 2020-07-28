@@ -94,4 +94,12 @@ public class CardStorageServiceImpl implements ICardStorageService {
         return recordResponseDto;
     }
 
+	@Override
+	public CardStorageDto getCardStorageByCardNo(String cardNo) {
+		CardStorageDto queryParam=new CardStorageDto();
+		queryParam.setCardNo(cardNo);
+		CardStorageDto cardStorage = GenericRpcResolver.resolver(cardStorageRpc.getCardStorageByCardNo(queryParam), "account-service");
+		return cardStorage;
+	}
+
 }
