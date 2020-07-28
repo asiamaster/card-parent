@@ -16,6 +16,8 @@ public class UserAccountCardQuery extends BaseDto {
     private static final long serialVersionUID = 1L;
     /**客户id*/
     private List<Long> customerIds;
+    /**客户名字*/
+    private String customerName;
     /** 多个账户ID */
     private List<Long> accountIds;
     /** 多个卡号 */
@@ -37,6 +39,13 @@ public class UserAccountCardQuery extends BaseDto {
     /**是否排除禁用状态*/
     private Integer excludeDisabled;
 
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 
     public List<Long> getCustomerIds() {
         return customerIds;
