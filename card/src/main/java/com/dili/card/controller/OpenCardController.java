@@ -108,6 +108,7 @@ public class OpenCardController implements IControllerHandler {
 		if(customer != null) {
 			BeanUtils.copyProperties(customer, response);
 			response.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
+			response.setCustomerType(customer.getCustomerMarket().getType());
 		}
 		return BaseOutput.successData(response);
 	}
