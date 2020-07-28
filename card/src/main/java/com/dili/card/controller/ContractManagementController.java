@@ -17,6 +17,7 @@ import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
+import com.dili.card.schedule.ContractScheduleHandler;
 import com.dili.card.service.IContractService;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.domain.BaseOutput;
@@ -29,6 +30,8 @@ import com.dili.ss.domain.BaseOutput;
 public class ContractManagementController implements IControllerHandler {
     @Autowired
     private IContractService iContractService;
+    @Autowired
+    private ContractScheduleHandler contractScheduleHandler;
 
     /**
      * 列表页面
@@ -92,6 +95,16 @@ public class ContractManagementController implements IControllerHandler {
     @ResponseBody
     public BaseOutput<Boolean> remove(@RequestBody FundContractRequestDto fundContractRequest) {
         iContractService.remove(fundContractRequest);
+        return BaseOutput.success();
+    }
+    
+    /**
+     * 更新合同状态
+     */
+    @PostMapping("/updateStateTask.action")
+    @ResponseBody
+    public BaseOutput<Boolean> updateStateTask() {
+    	contractScheduleHandler.execute();
         return BaseOutput.success();
     }
 }
