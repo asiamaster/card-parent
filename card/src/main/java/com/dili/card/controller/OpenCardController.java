@@ -165,7 +165,7 @@ public class OpenCardController implements IControllerHandler {
 	 */
 	@PostMapping("openMasterCard.action")
 	@ResponseBody
-	public BaseOutput<?> openMasterCard(OpenCardDto openCardInfo) {
+	public BaseOutput<?> openMasterCard(@RequestBody OpenCardDto openCardInfo) {
 		// 主要参数校验
 		checkMasterParam(openCardInfo);
 		// 操作人信息
@@ -185,7 +185,7 @@ public class OpenCardController implements IControllerHandler {
 	 */
 	@PostMapping("openSlaveCard.action")
 	@ResponseBody
-	public BaseOutput<?> openSlaveCard(OpenCardDto openCardInfo) throws Exception {
+	public BaseOutput<?> openSlaveCard(@RequestBody OpenCardDto openCardInfo) throws Exception {
 		// 主要参数校验
 		AssertUtils.notNull(openCardInfo.getParentAccountId(), "主卡信息不能为空!");
 		// 操作人信息
