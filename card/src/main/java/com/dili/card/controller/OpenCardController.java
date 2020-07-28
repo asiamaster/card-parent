@@ -105,8 +105,10 @@ public class OpenCardController implements IControllerHandler {
 		Customer customer = GenericRpcResolver.resolver(
 				customerRpc.getByCertificateNumber(openCardInfo.getCertificateNumber(), user.getFirmId()), "开卡客户查询");
 		CustomerResponseDto response = new CustomerResponseDto();
-		BeanUtils.copyProperties(customer, response);
-		response.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
+		if(customer != null) {
+			BeanUtils.copyProperties(customer, response);
+			response.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
+		}
 		return BaseOutput.successData(response);
 	}
 
