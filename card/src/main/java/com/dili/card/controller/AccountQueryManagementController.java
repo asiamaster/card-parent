@@ -121,6 +121,7 @@ public class AccountQueryManagementController implements IControllerHandler {
     * @date 2020/7/28
     */
     @PostMapping("/list.action")
+    @ResponseBody
     public BaseOutput<List<UserAccountCardResponseDto>> getList(@RequestBody UserAccountCardQuery param){
         AssertUtils.notNull(param.getFirmId(),"市场id不能为空");
         return BaseOutput.successData(accountQueryService.getList(param));
