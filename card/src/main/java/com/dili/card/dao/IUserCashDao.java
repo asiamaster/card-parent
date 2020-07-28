@@ -39,7 +39,7 @@ public interface IUserCashDao {
 	/**
 	 * 删除
 	 */
-	void delete(Long id);
+	boolean delete(Long id);
 	
 	/**
      * 列表查询

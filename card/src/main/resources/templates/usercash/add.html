@@ -17,6 +17,7 @@
 	<form id="saveForm" style="width: 90%;">
 		<input id="action" name="action" type="hidden"
 			value="${usercash.action!}" class="form-control" />
+			<input id="inputuserName" name="userName" type="hidden" class="form-control"/>
 		<table id="out-detail" class="table table-bordered"  style="table-layout:fixed;">
 			<tbody>
 				<tr>
@@ -30,7 +31,6 @@
 				<tr>
 					<td class="info-column">柜员姓名</td>
 					<td id="_userName" class="info-cell">
-						<input id="inputuserName" name="userName" type="hidden" class="form-control"/>
 					</td>
 				</tr>
 				<tr>
@@ -82,7 +82,7 @@ $("#" + formId).validate({
     },
     focusCleanup: true
 });
-function submitHandler(e) {
+function submitHandler() {
     if (!$.validate.form("saveForm")) {
         return false;
     }

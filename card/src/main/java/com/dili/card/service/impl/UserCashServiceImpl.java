@@ -61,7 +61,9 @@ public class UserCashServiceImpl implements IUserCashService {
 		if (CashState.UNSETTLED.getCode() != userCashDo.getState()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能删除");
 		}
-		userCashDao.delete(id);
+		if (!userCashDao.delete(id)) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "删除失败");
+		};
 	}
 
 	@Override

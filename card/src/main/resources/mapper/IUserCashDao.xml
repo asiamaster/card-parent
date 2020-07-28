@@ -92,6 +92,7 @@
 			<if test="creatorId != null"> AND creator_id = #{creatorId}</if>
 			<if test="state != null"> AND state = #{state}</if>
 			<if test="action != null"> AND action = #{action}</if>
+			AND state != 10
 		ORDER BY create_time DESC
 	</select>
 	
