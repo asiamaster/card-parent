@@ -52,11 +52,13 @@ public class AccountManagementController implements IControllerHandler{
 	 * 解冻账户页面
 	 */
 	@GetMapping("/unfrozenAccount.html")
-	public String unfrozenAccountView(Long accountId, ModelMap map) {
-		if (accountId == null) {
-			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账号不能为空");
+	public String unfrozenAccountView(String cardNo, ModelMap map) {
+		if (StringUtils.isBlank(cardNo)) {
+			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "卡号不能为空");
 		}
-		map.put("accountId", accountId);
+		String json = JSON.toJSONString(accountQueryService.getDetailByCardNo(cardNo),
+				new EnumTextDisplayAfterFilter());
+		map.put("detail", JSON.parseObject(json));
 		return "accountquery/unfrozenAccount";
 	}
 	

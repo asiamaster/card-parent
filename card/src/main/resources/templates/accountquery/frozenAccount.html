@@ -40,23 +40,23 @@
                     </tbody>
                 </table>
                 <div style="margin: auto" align="center">
-                    <button id="frozen" type="button"  class="btn btn-primary" onclick="submitFrozen()">
+                    <button id="frozen" type="button"  class="btn btn-primary" onclick="submitFrozenAccount()">
                         冻结账户
                     </button>
-                    <button id="record" style="margin-left: 50px" type="button" class="btn btn-outline-primary" onclick="showOrHide()">
+                    <button id="record" style="margin-left: 50px" type="button" class="btn btn-outline-primary" onclick="showOrHideFrozenAccountRecord()">
                         冻结记录
                     </button>
                 </div>
             </form>
         </div>
     </div>
-    <div class="row" id="table-div" style="display: none">
+    <div class="row" id="table-div-frozen-account" style="display: none">
         <form id="queryForm">
             <input type="hidden" id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}">
             <input type="hidden" name="operateTypeList[0]" value="29">
         </form>
         <div class="col-12">
-            <table id="grid"
+            <table id="frozenAccuntTable"
                    data-title="冻结记录"
                    data-buttons-class="primary"
                    data-icons="bui.variable.icons">
