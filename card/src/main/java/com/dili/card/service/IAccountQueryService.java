@@ -4,8 +4,8 @@ import com.dili.card.dto.AccountCustomerDto;
 import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.AccountSimpleResponseDto;
+import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.CardRequestDto;
-import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.ss.domain.PageOutput;
@@ -27,10 +27,10 @@ public interface IAccountQueryService {
     PageOutput<List<AccountListResponseDto>> getPage(UserAccountCardQuery param);
 
     /**
-    * 条件查询
-    * @author miaoguoxin
-    * @date 2020/7/28
-    */
+     * 条件查询
+     * @author miaoguoxin
+     * @date 2020/7/28
+     */
     List<UserAccountCardResponseDto> getList(UserAccountCardQuery param);
 
     /**
@@ -48,38 +48,47 @@ public interface IAccountQueryService {
     AccountCustomerDto getAccountCustomerByCardNo(String cardNo);
 
     /**
-    * 根据卡号查询（只查询卡账户信息）
-    * @author miaoguoxin
-    * @date 2020/7/2
-    */
-    UserAccountCardResponseDto getByCardNo(String cardNo);
-    /**
-     * 根据卡号查询（只查询卡账户信息）,包含退换状态
+     * 根据卡号查询（只查询卡账户信息）
      * @author miaoguoxin
      * @date 2020/7/2
      */
-    UserAccountCardResponseDto getByCardNoWithReturnState(String cardNO);
+    UserAccountCardResponseDto getByCardNo(String cardNo);
 
     /**
-    *  根据accountId，会进行合法性校验
-    * @author miaoguoxin
-    * @date 2020/7/6
-    */
+     * 根据卡号查询（只查询卡账户信息）
+     * @author miaoguoxin
+     * @param validateLevel 账户校验等级{@link com.dili.card.validator.AccountValidator}
+     * @date 2020/7/2
+     */
+    UserAccountCardResponseDto getByCardNo(String cardNo, Integer validateLevel);
+
+    /**
+     *  根据accountId，会进行合法性校验
+     * @author miaoguoxin
+     * @date 2020/7/6
+     */
     UserAccountCardResponseDto getByAccountId(CardRequestDto requestDto);
 
     /**
-    * 根据accountId查询，充值的时候使用
-     * 会对返回结果进行一些合法性校验
-    * @author miaoguoxin
-    * @date 2020/7/6
-    */
-    UserAccountCardResponseDto getByAccountIdForRecharge(CardRequestDto requestDto);
+     *  根据accountId查询
+     * @author miaoguoxin
+     * @date 2020/7/6
+     */
+    UserAccountCardResponseDto getByAccountId(Long accountId);
 
     /**
-    * 查询账户信息（包含余额）
-    * @author miaoguoxin
-    * @date 2020/7/7
-    */
+     * 根据accountId获取包含关联卡
+     * @author miaoguoxin
+     * @date 2020/7/28
+     */
+    AccountWithAssociationResponseDto getAssociationByAccountId(Long accountId);
+
+
+    /**
+     * 查询账户信息（包含余额）
+     * @author miaoguoxin
+     * @date 2020/7/7
+     */
     AccountSimpleResponseDto getByCardNoWithBalance(String cardNo);
 
 }

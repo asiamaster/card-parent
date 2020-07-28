@@ -14,6 +14,14 @@ public class AccountWithAssociationResponseDto implements Serializable {
     /**关联卡信息*/
     private List<UserAccountCardResponseDto> association;
 
+    public AccountWithAssociationResponseDto() {
+    }
+
+    public AccountWithAssociationResponseDto(UserAccountCardResponseDto primary, List<UserAccountCardResponseDto> association) {
+        this.primary = primary;
+        this.association = association;
+    }
+
     public UserAccountCardResponseDto getPrimary() {
         return primary;
     }

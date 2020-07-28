@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.dili.card.service.IAccountQueryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,8 @@ public class ContractServiceImpl implements IContractService {
 	private CustomerRpcResolver customerRpcResolver;
 	@Autowired
 	private AccountQueryRpcResolver accountQueryRpcResolver;
+	@Autowired
+	private IAccountQueryService accountQueryService;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -108,8 +111,7 @@ public class ContractServiceImpl implements IContractService {
 		if (fundContract == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "该合同号不存在");
 		}
-		UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver
-				.findByAccountId(fundContract.getConsignorAccountId());
+		UserAccountCardResponseDto userAccountCard = accountQueryService.getByAccountId(fundContract.getConsignorAccountId());
 		Customer customer = customerRpcResolver.getWithNotNull(userAccountCard.getCustomerId(),
 				fundContract.getFirmId());
 		return this.buildContractDetail(fundContract, userAccountCard, customer);
@@ -121,8 +123,7 @@ public class ContractServiceImpl implements IContractService {
 		if (fundContract == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "该合同号不存在");
 		}
-		UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver
-				.findByAccountId(fundContract.getConsignorAccountId());
+		UserAccountCardResponseDto userAccountCard = accountQueryService.getByAccountId(fundContract.getConsignorAccountId());
 		Customer customer = customerRpcResolver.getWithNotNull(userAccountCard.getCustomerId(),
 				fundContract.getFirmId());
 		return this.buildContractResponse(fundContract, userAccountCard, customer);
@@ -148,8 +149,7 @@ public class ContractServiceImpl implements IContractService {
 		contractQueryDto.setFirmId(userTicket.getFirmId());
 		if (!StringUtils.isBlank(contractQueryDto.getCardNo())) {
 			// 构建卡数据
-			UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver
-					.findByCardNo(contractQueryDto.getCardNo());
+			UserAccountCardResponseDto userAccountCard = accountQueryService.getByCardNo(contractQueryDto.getCardNo());
 			contractQueryDto.setConsignorAccountId(userAccountCard.getAccountId());
 		}
 		// 过期时间构建

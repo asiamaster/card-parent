@@ -2,6 +2,7 @@ package com.dili.card.controller;
 
 import javax.annotation.Resource;
 
+import com.dili.card.service.tcc.ChangeCardTccTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,7 @@ import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 
 /**
- * @description： 
+ * @description：
  *          换卡页面由C端实现，Controller提供相应的数据查询及业务处理
  * @author ：WangBo
  * @time ：2020年7月27日下午2:35:58
@@ -34,8 +35,10 @@ public class ChangeCardController implements IControllerHandler {
     private ICardManageService cardManageService;
     @Autowired
     private IAccountQueryService accountQueryService;
-    
-    
+    @Autowired
+    private ChangeCardTccTransactionManager changeCardTccTransactionManager;
+
+
 
     /**
      * 换卡 C端
@@ -47,7 +50,7 @@ public class ChangeCardController implements IControllerHandler {
         AssertUtils.notNull(cardParam.getServiceFee(),"工本费不能为空");
         this.validateCommonParam(cardParam);
         this.buildOperatorInfo(cardParam);
-        cardManageService.changeCard(cardParam);
+        changeCardTccTransactionManager.doTcc(cardParam);
         return BaseOutput.success();
     }
 

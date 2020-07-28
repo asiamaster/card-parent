@@ -11,6 +11,7 @@ import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.type.CardType;
 import com.dili.card.util.AssertUtils;
+import com.dili.card.validator.AccountValidator;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
@@ -62,7 +63,8 @@ public class AccountQueryManagementController implements IControllerHandler {
         if (StringUtils.isBlank(cardNo)) {
             throw new CardAppBizException(ResultCode.PARAMS_ERROR, "卡号不能为空");
         }
-        UserAccountCardResponseDto userAccount = accountQueryService.getByCardNoWithReturnState(cardNo);
+
+        UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(cardNo, AccountValidator.NONE);
         map.put("isMaster", CardType.isMaster(userAccount.getCardType()));
         map.put("cardState", userAccount.getCardState());
         map.put("disabledState", userAccount.getDisabledState());
@@ -116,14 +118,14 @@ public class AccountQueryManagementController implements IControllerHandler {
     }
 
     /**
-    * 查询列表(c端)
-    * @author miaoguoxin
-    * @date 2020/7/28
-    */
+     * 查询列表(c端)
+     * @author miaoguoxin
+     * @date 2020/7/28
+     */
     @PostMapping("/list.action")
     @ResponseBody
-    public BaseOutput<List<UserAccountCardResponseDto>> getList(@RequestBody UserAccountCardQuery param){
-        AssertUtils.notNull(param.getFirmId(),"市场id不能为空");
+    public BaseOutput<List<UserAccountCardResponseDto>> getList(@RequestBody UserAccountCardQuery param) {
+        AssertUtils.notNull(param.getFirmId(), "市场id不能为空");
         return BaseOutput.successData(accountQueryService.getList(param));
     }
 }

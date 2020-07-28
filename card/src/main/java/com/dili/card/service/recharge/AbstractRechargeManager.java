@@ -1,6 +1,7 @@
 package com.dili.card.service.recharge;
 
 import com.dili.card.common.constant.Constant;
+import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -14,7 +15,9 @@ import com.dili.card.service.ISerialService;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
+import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
+import com.dili.card.validator.AccountValidator;
 import com.dili.tcc.core.TccContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +42,11 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
      * @date 2020/7/6
      */
     public final void doPreRecharge(FundRequestDto requestDto) {
-        UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForRecharge(requestDto);
+        AccountWithAssociationResponseDto association = accountQueryService.getAssociationByAccountId(requestDto.getAccountId());
+        UserAccountCardResponseDto userAccount = association.getPrimary();
+        AccountValidator.validateMatchAccount(requestDto, userAccount);
+        AccountValidator.validateForRecharge(association);
+
         //真正充值的金额
         Long rechargeAmount = this.getRechargeAmount(requestDto);
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {
@@ -77,12 +84,14 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
     public final void doRecharge(FundRequestDto requestDto) {
         FundItem serviceCostItem = this.getServiceCostItem(requestDto);
         BusinessRecordDo record = TccContextHolder.get().getAttr(Constant.BUSINESS_RECORD_KEY, BusinessRecordDo.class);
-        TradeRequestDto dto = this.createRechargeRequestDto(requestDto);
+        String tradeNo = TccContextHolder.get().getAttr(Constant.TRADE_ID_KEY, String.class);
+        UserAccountCardResponseDto userAccount = TccContextHolder.get().getAttr(Constant.USER_ACCOUNT, UserAccountCardResponseDto.class);
+
+        TradeRequestDto dto = TradeRequestDto.createTrade(userAccount, tradeNo, requestDto.getTradeChannel(), requestDto.getLoginPwd());
         if (serviceCostItem != null && requestDto.getServiceCost() != null) {
             dto.addServiceFeeItem(requestDto.getServiceCost(), serviceCostItem);
         }
-        //务必设置bizId
-        dto.setBusinessId(record.getAccountId());
+
         TradeResponseDto tradeResponseDto = payService.commitTrade(dto);
         //没有手续费的时候需要添加一个空项
         if (serviceCostItem != null && this.canAddEmptyFundItem(requestDto)) {
@@ -119,17 +128,4 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
     protected void afterCommitRecharge(FundRequestDto requestDto) {
 
     }
-
-    protected TradeRequestDto createRechargeRequestDto(FundRequestDto requestDto) {
-        String tradeNo = TccContextHolder.get().getAttr(Constant.TRADE_ID_KEY, String.class);
-        UserAccountCardResponseDto userAccount = TccContextHolder.get().getAttr(Constant.USER_ACCOUNT, UserAccountCardResponseDto.class);
-
-        TradeRequestDto rechargeRequestDto = new TradeRequestDto();
-        rechargeRequestDto.setTradeId(tradeNo);
-        rechargeRequestDto.setAccountId(userAccount.getFundAccountId());
-        rechargeRequestDto.setChannelId(requestDto.getTradeChannel());
-        rechargeRequestDto.setPassword(requestDto.getTradePwd());
-        return rechargeRequestDto;
-    }
-
 }

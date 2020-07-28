@@ -26,7 +26,6 @@ import com.dili.card.validator.AccountValidator;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.constant.ResultCode;
-import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
@@ -34,13 +33,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
 
 /**
  * @Auther: miaoguoxin
@@ -58,7 +56,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     @Autowired
     private AccountQueryRpcResolver accountQueryRpcResolver;
     @Resource
-	CustomerRpc customerRpc;
+    CustomerRpc customerRpc;
 
     @Override
     public PageOutput<List<AccountListResponseDto>> getPage(UserAccountCardQuery param) {
@@ -81,14 +79,17 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
 
     @Override
     public List<UserAccountCardResponseDto> getList(UserAccountCardQuery param) {
-        List<UserAccountCardResponseDto> list = accountQueryRpcResolver.findByQueryCondition(param);
         return accountQueryRpcResolver.findByQueryCondition(param);
     }
 
     @Override
     public AccountDetailResponseDto getDetailByCardNo(String cardNo) {
         AccountDetailResponseDto detail = new AccountDetailResponseDto();
-        AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByCardNoWithAssociation(cardNo);
+        UserAccountCardQuery query = new UserAccountCardQuery();
+        query.setCardNos(Lists.newArrayList(cardNo));
+        query.setValidateLevel(AccountValidator.NONE);
+        AccountWithAssociationResponseDto cardAssociation = this.getAssociation(query);
+
         UserAccountCardResponseDto primary = cardAssociation.getPrimary();
         CustomerResponseDto customer = customerRpcResolver.findCustomerByIdWithConvert(primary.getCustomerId(), primary.getFirmId());
 
@@ -102,51 +103,42 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
 
     @Override
     public UserAccountCardResponseDto getByCardNo(String cardNo) {
-        return accountQueryRpcResolver.findByCardNo(cardNo);
+        UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
+        userAccountCardQuery.setCardNos(Lists.newArrayList(cardNo));
+        return accountQueryRpcResolver.findSingle(userAccountCardQuery);
     }
 
     @Override
-    public UserAccountCardResponseDto getByCardNoWithReturnState(String cardNo) {
+    public UserAccountCardResponseDto getByCardNo(String cardNo, Integer validateLevel) {
         UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
         userAccountCardQuery.setCardNos(Lists.newArrayList(cardNo));
-        userAccountCardQuery.setExcludeReturn(0);
-        userAccountCardQuery.setExcludeDisabled(0);
-        List<UserAccountCardResponseDto> userAccounts = accountQueryRpcResolver.findByQueryCondition(userAccountCardQuery);
-        if (CollectionUtils.isEmpty(userAccounts)){
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "卡信息不存在");
-        }
-        return userAccounts.get(0);
+        userAccountCardQuery.setValidateLevel(validateLevel);
+        return accountQueryRpcResolver.findSingle(userAccountCardQuery);
     }
 
     @Override
     public UserAccountCardResponseDto getByAccountId(CardRequestDto requestDto) {
-        UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findByAccountId(requestDto.getAccountId());
+        UserAccountCardQuery query = new UserAccountCardQuery();
+        query.setAccountIds(Lists.newArrayList(requestDto.getAccountId()));
+        UserAccountCardResponseDto accountCard =  accountQueryRpcResolver.findSingle(query);
         AccountValidator.validateMatchAccount(requestDto, accountCard);
         return accountCard;
     }
 
     @Override
-    public UserAccountCardResponseDto getByAccountIdForRecharge(CardRequestDto requestDto) {
-        //不需要校验账户是否存在，因为对端已经做过了判断
-        AccountWithAssociationResponseDto result = accountQueryRpcResolver.findByAccountIdWithAssociation(requestDto.getAccountId());
-        AccountValidator.validateMatchAccount(requestDto, result.getPrimary());
-
-        UserAccountCardResponseDto primary = result.getPrimary();
-        //挂失状态不能进行操作
-        if (CardStatus.LOSS.getCode() == primary.getCardState()) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡为挂失状态，不能进行此操作");
-        }
-        //该卡为副卡的时候需要校验关联主卡是否为挂失
-        if (CardType.isSlave(primary.getCardType())) {
-            //副卡肯定有关联的主卡，要是没的就是数据有问题，直接抛错，所以这里直接get(0)
-            UserAccountCardResponseDto master = result.getAssociation().get(0);
-            if (CardStatus.LOSS.getCode() == master.getCardState()) {
-                throw new CardAppBizException(ResultCode.DATA_ERROR,
-                        String.format("该卡关联的主卡【%s】为挂失状态，不能进行此操作", master.getCardNo()));
-            }
-        }
-        return primary;
+    public UserAccountCardResponseDto getByAccountId(Long accountId) {
+        UserAccountCardQuery query = new UserAccountCardQuery();
+        query.setAccountIds(Lists.newArrayList(accountId));
+        return accountQueryRpcResolver.findSingle(query);
     }
+
+    @Override
+    public AccountWithAssociationResponseDto getAssociationByAccountId(Long accountId) {
+        UserAccountCardQuery query = new UserAccountCardQuery();
+        query.setAccountIds(Lists.newArrayList(accountId));
+        return this.getAssociation(query);
+    }
+
 
     @Override
     @Deprecated
@@ -177,10 +169,15 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         return accountListResponseDtos;
     }
 
-	@Override
-	public AccountCustomerDto getAccountCustomerByCardNo(String cardNo) {
-		AccountCustomerDto detail = new AccountCustomerDto();
-        AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByCardNoWithAssociation(cardNo);
+    @Override
+    public AccountCustomerDto getAccountCustomerByCardNo(String cardNo) {
+        AccountCustomerDto detail = new AccountCustomerDto();
+
+        UserAccountCardQuery query = new UserAccountCardQuery();
+        query.setCardNos(Lists.newArrayList(cardNo));
+        query.setValidateLevel(AccountValidator.NONE);
+        AccountWithAssociationResponseDto cardAssociation = this.getAssociation(query);
+
         UserAccountCardResponseDto primary = cardAssociation.getPrimary();
         Customer customer = GenericRpcResolver.resolver(customerRpc.get(primary.getCustomerId(), primary.getFirmId()), "测试获取用户信息");
         detail.setName(customer.getName());
@@ -188,6 +185,26 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         detail.setAccountId(primary.getAccountId());
         detail.setCustomerId(customer.getId());
         detail.setCode(customer.getCode());
-		return detail;
-	}
+        return detail;
+    }
+
+    /**
+     * 获取包含关联卡的信息
+     * @author miaoguoxin
+     * @date 2020/7/28
+     */
+    private AccountWithAssociationResponseDto getAssociation(UserAccountCardQuery query) {
+        UserAccountCardResponseDto primary =  accountQueryRpcResolver.findSingle(query);
+        //查询关联卡，primaryCard为主卡就查副卡，副卡就查主卡
+        UserAccountCardQuery param = new UserAccountCardQuery();
+        if (CardType.isMaster(primary.getCardType())) {
+            param.setParentAccountId(primary.getAccountId());
+        } else if (CardType.isSlave(primary.getCardType())) {
+            param.setAccountIds(Lists.newArrayList(primary.getParentAccountId()));
+        }
+        param.setExcludeReturn(0);
+        param.setExcludeDisabled(0);
+        List<UserAccountCardResponseDto> association = accountQueryRpcResolver.findByQueryCondition(param);
+        return new AccountWithAssociationResponseDto(primary, association);
+    }
 }

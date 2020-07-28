@@ -1,6 +1,6 @@
 package com.dili.card.dto.pay;
 
-import com.dili.card.type.FeeType;
+import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.type.FundItem;
 import org.springframework.util.CollectionUtils;
 
@@ -26,13 +26,23 @@ public class TradeRequestDto {
     /** 业务账号ID*/
     private Long businessId;
 
+    public static TradeRequestDto createTrade(UserAccountCardResponseDto userAccount, String tradeNo, Integer channelId, String password) {
+        TradeRequestDto tradeRequestDto = new TradeRequestDto();
+        tradeRequestDto.setTradeId(tradeNo);
+        tradeRequestDto.setBusinessId(userAccount.getAccountId());
+        tradeRequestDto.setAccountId(userAccount.getFundAccountId());
+        tradeRequestDto.setChannelId(channelId);
+        tradeRequestDto.setPassword(password);
+        return tradeRequestDto;
+    }
+
     /**
      * 添加手续费
      * @author miaoguoxin
      * @date 2020/7/6
      */
-    public void addServiceFeeItem(Long serviceCost, FundItem fundItem){
-        if (CollectionUtils.isEmpty(this.fees)){
+    public void addServiceFeeItem(Long serviceCost, FundItem fundItem) {
+        if (CollectionUtils.isEmpty(this.fees)) {
             this.fees = new ArrayList<>();
         }
         FeeItemDto feeItem = new FeeItemDto();

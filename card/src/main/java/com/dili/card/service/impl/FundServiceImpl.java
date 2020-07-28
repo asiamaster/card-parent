@@ -103,7 +103,7 @@ public class FundServiceImpl implements IFundService {
 
     @Override
     public void unfrozen(UnfreezeFundDto unfreezeFundDto) {
-        AccountWithAssociationResponseDto accountInfo = GenericRpcResolver.resolver(accountQueryRpc.findAssociation(unfreezeFundDto.getAccountId()), "account-service");
+        AccountWithAssociationResponseDto accountInfo = accountQueryService.getAssociationByAccountId(unfreezeFundDto.getAccountId());
         for (Long tradeNo : unfreezeFundDto.getTradeNos()) {
             //对应支付的frozenId
             UnfreezeFundDto dto = new UnfreezeFundDto();

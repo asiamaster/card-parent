@@ -1,6 +1,7 @@
 package com.dili.card.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.dili.card.validator.AccountValidator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
@@ -38,6 +39,9 @@ public class UserAccountCardQuery extends BaseDto {
     private Integer excludeReturn;
     /**是否排除禁用状态*/
     private Integer excludeDisabled;
+
+    /**账户校验等级 {@link AccountValidator}*/
+    private Integer validateLevel;
 
     public String getCustomerName() {
         return customerName;
@@ -125,5 +129,13 @@ public class UserAccountCardQuery extends BaseDto {
 
     public void setExcludeDisabled(Integer excludeDisabled) {
         this.excludeDisabled = excludeDisabled;
+    }
+
+    public Integer getValidateLevel() {
+        return validateLevel;
+    }
+
+    public void setValidateLevel(Integer validateLevel) {
+        this.validateLevel = validateLevel;
     }
 }

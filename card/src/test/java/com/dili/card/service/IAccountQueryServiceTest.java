@@ -104,14 +104,4 @@ class IAccountQueryServiceTest extends BaseTest {
         return customerResponseDtos;
     }
 
-
-    @Test
-    void testGetByAccountIdForRecharge() {
-        CardRequestDto cardRequestDto = new CardRequestDto();
-        cardRequestDto.setAccountId(174L);
-        cardRequestDto.setCardNo("888889690048");
-        cardRequestDto.setCustomerId(105L);
-        UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForRecharge(cardRequestDto);
-        assertNotNull(userAccount);
-    }
 }

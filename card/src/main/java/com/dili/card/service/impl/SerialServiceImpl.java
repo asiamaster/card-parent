@@ -21,6 +21,7 @@ import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
+import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.serial.IAccountSerialFilter;
 import com.dili.card.service.serial.IBusinessRecordFilter;
@@ -36,6 +37,7 @@ import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +69,8 @@ public class SerialServiceImpl implements ISerialService {
     private AccountQueryRpcResolver accountQueryRpcResolver;
     @Resource
     private RabbitMQMessageService rabbitMQMessageService;
+    @Autowired
+    private IAccountQueryService accountQueryService;
 
     @Override
     public void buildCommonInfo(CardRequestDto cardParam, BusinessRecordDo businessRecord) {
@@ -196,7 +200,8 @@ public class SerialServiceImpl implements ISerialService {
         query.setFirmId(serialQueryDto.getFirmId());
         List<Long> accountIdList = new ArrayList<>();
         accountIdList.add(serialQueryDto.getAccountId());
-        AccountWithAssociationResponseDto cardAssociation = accountQueryRpcResolver.findByAccountIdWithAssociation(serialQueryDto.getAccountId());
+        AccountWithAssociationResponseDto cardAssociation = accountQueryService.getAssociationByAccountId(serialQueryDto.getAccountId());
+
         if (!CollUtil.isEmpty(cardAssociation.getAssociation())) {
             accountIdList.addAll(cardAssociation.getAssociation().stream().map(UserAccountCardResponseDto::getAccountId).collect(Collectors.toList()));
         }

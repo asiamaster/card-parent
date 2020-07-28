@@ -42,20 +42,34 @@ class CardManageControllerTest extends BaseTest {
     private String sessionId;
     @BeforeEach
     public void setUp(){
-        this.sessionId = "ba2a48fd-4773-4c70-bce5-310ccceeb9f6";
+        this.sessionId = "ccb98a77-c11e-4d92-b2fa-c14fea19f9d2";
     }
 
     @Test
-    void changeCard() {
+    void changeCard() throws Exception {
         CardRequestDto cardParam = new CardRequestDto();
         cardParam.setLoginPwd("123456");
+        cardParam.setCustomerId(107L);
+        cardParam.setAccountId(175L);
+        cardParam.setCardNo("888889690191");
+        cardParam.setNewCardNo("888889690048");
+        cardParam.setServiceFee(1L);
+        MvcResult mvcResult = mockMvc.perform(post("/card/changeCard.action")
+                .contentType(MediaType.APPLICATION_JSON)
+                //先登录uap获取sessionId
+                .header("UAP_SessionId",this.sessionId)
+                .content(JSON.toJSONString(cardParam))
+        )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
     }
 
     @Test
     void testReportLoss() throws Exception {
         CardRequestDto cardParam = new CardRequestDto();
         cardParam.setLoginPwd("123456");
-        cardParam.setCustomerId(105L);
+        cardParam.setCustomerId(18L);
         cardParam.setAccountId(174L);
         cardParam.setCardNo("888889690048");
         MvcResult mvcResult = mockMvc.perform(post("/card/reportLossCard.action")

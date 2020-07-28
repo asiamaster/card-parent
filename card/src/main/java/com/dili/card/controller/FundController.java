@@ -9,7 +9,7 @@ import com.dili.card.dto.UnfreezeFundDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
-import com.dili.card.service.recharge.RechargeTccTransactionManager;
+import com.dili.card.service.tcc.RechargeTccTransactionManager;
 import com.dili.card.service.withdraw.WithdrawDispatcher;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.ConstantValidator;

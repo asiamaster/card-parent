@@ -2,8 +2,10 @@ package com.dili.card.controller;
 
 import javax.annotation.Resource;
 
+import com.dili.card.service.tcc.ChangeCardTccTransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +33,8 @@ public class CardManageController implements IControllerHandler {
 
     @Resource
     private ICardManageService cardManageService;
+    @Autowired
+    private ChangeCardTccTransactionManager changeCardTccTransactionManager;
 
     /**
      * 重置登陆密码
@@ -92,7 +96,7 @@ public class CardManageController implements IControllerHandler {
         AssertUtils.notNull(cardParam.getServiceFee(),"工本费不能为空");
         this.validateCommonParam(cardParam);
         this.buildOperatorInfo(cardParam);
-        cardManageService.changeCard(cardParam);
+        changeCardTccTransactionManager.doTcc(cardParam);
         return BaseOutput.success();
     }
 
