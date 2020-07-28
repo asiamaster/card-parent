@@ -14,9 +14,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -61,10 +63,10 @@ public class CustomerRpcResolver {
      */
     public List<Customer> findCustomerByIds(List<Long> ids, Long firmId) {
         CustomerQueryInput customer = new CustomerQueryInput();
-        customer.setIdList(ids);
+        customer.setIdSet(new HashSet<>(ids));
         customer.setMarketId(firmId);
         BaseOutput<List<Customer>> baseOutput = customerRpc.list(customer);
-        List<Customer> customers = GenericRpcResolver.resolver(baseOutput);
+        List<Customer> customers = GenericRpcResolver.resolver(baseOutput,"customer-service");
         if (CollectionUtils.isEmpty(customers)) {
             return new ArrayList<>();
         }
