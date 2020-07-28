@@ -78,7 +78,8 @@ public class AccountCycleManagementController implements IControllerHandler {
 	@GetMapping("/applyDetail.html")
 	public String applyDetail(ModelMap map) {
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		String json = JSON.toJSONString(iAccountCycleService.applyDetail(userTicket.getId()), new EnumTextDisplayAfterFilter());
+		AccountCycleDto accountCycleDto = iAccountCycleService.applyDetail(userTicket.getId());
+		String json = JSON.toJSONString(accountCycleDto, new EnumTextDisplayAfterFilter());
 		map.put("detail", JSON.parseObject(json));
 		map.put("settled", CycleState.ACTIVE.getCode());
 		return "cycle/detail";

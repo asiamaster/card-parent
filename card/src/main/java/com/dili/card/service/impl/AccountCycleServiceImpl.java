@@ -49,10 +49,8 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void settle(Long userId) {
-		AccountCycleDo accountCycle = this.findActiveCycleByUserId(userId);
-		if (accountCycle == null) {
-			throw new CardAppBizException("当前没有可以申请的账务周期");
-		}
+		//获取最新的账务周期
+		AccountCycleDo accountCycle = accountCycleDao.findLatestActiveCycleByUserId(userId);
 		// 对账状态校验
 		this.validateCycleSettledState(accountCycle);
 		// 更新账务周期状态
@@ -99,11 +97,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	
 	@Override
 	public AccountCycleDto applyDetail(Long userId) {
-		AccountCycleDo accountCycleDo = findActiveCycleByUserId(userId);
-		if (accountCycleDo == null) {
-			throw new CardAppBizException("当前没有可以申请的账务周期");
-		}
-		return this.buildAccountCycleWrapper(accountCycleDo);
+		return this.buildAccountCycleWrapper(accountCycleDao.findLatestActiveCycleByUserId(userId));
 	}
 	
 	@Override

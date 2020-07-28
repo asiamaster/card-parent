@@ -71,4 +71,9 @@ public interface IAccountCycleDao {
 	 * 通过条件查询
 	 */
 	Long findCountByCondition(AccountCycleDto accountCycleDto);
+
+	/**
+	 * 获取当前人最新的账务周期
+	 */
+	AccountCycleDo findLatestActiveCycleByUserId(Long userId);
 }
