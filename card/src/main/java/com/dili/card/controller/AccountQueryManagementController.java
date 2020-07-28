@@ -10,6 +10,7 @@ import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.type.CardType;
+import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
@@ -21,6 +22,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -113,5 +115,15 @@ public class AccountQueryManagementController implements IControllerHandler {
         return BaseOutput.successData(accountQueryService.getByCardNoWithBalance(cardNo));
     }
 
+    /**
+    * 查询列表(c端)
+    * @author miaoguoxin
+    * @date 2020/7/28
+    */
+    @PostMapping("/list.action")
+    public BaseOutput<List<UserAccountCardResponseDto>> getList(@RequestBody UserAccountCardQuery param){
+        AssertUtils.notNull(param.getFirmId(),"市场id不能为空");
+        return BaseOutput.successData(accountQueryService.getList(param));
+    }
 }
 

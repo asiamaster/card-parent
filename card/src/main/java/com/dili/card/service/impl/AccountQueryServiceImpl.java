@@ -63,7 +63,8 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     @Override
     public PageOutput<List<AccountListResponseDto>> getPage(UserAccountCardQuery param) {
         //默认查询所有卡状态，包含已禁用账户
-        param.setDefExcludeReturn(0).setDefExcludeDisabled(0);
+        param.setExcludeReturn(0);
+        param.setExcludeDisabled(0);
         PageOutput<List<UserAccountCardResponseDto>> page = accountQueryRpcResolver.findPageByCondition(param);
         List<UserAccountCardResponseDto> data = page.getData();
         if (CollectionUtils.isEmpty(data)) {
@@ -76,6 +77,12 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         List<CustomerResponseDto> customers = customerRpcResolver.findCustomerByIdsWithConvert(customerIds, null);
         List<AccountListResponseDto> result = this.addCustomer2AccountList(data, customers);
         return PageUtils.convert2PageOutput(page, result);
+    }
+
+    @Override
+    public List<UserAccountCardResponseDto> getList(UserAccountCardQuery param) {
+        List<UserAccountCardResponseDto> list = accountQueryRpcResolver.findByQueryCondition(param);
+        return accountQueryRpcResolver.findByQueryCondition(param);
     }
 
     @Override

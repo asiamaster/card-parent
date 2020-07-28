@@ -27,6 +27,13 @@ public interface IAccountQueryService {
     PageOutput<List<AccountListResponseDto>> getPage(UserAccountCardQuery param);
 
     /**
+    * 条件查询
+    * @author miaoguoxin
+    * @date 2020/7/28
+    */
+    List<UserAccountCardResponseDto> getList(UserAccountCardQuery param);
+
+    /**
      * 根据卡号查询详情
      * @author miaoguoxin
      * @date 2020/6/28

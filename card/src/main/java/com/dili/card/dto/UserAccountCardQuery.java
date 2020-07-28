@@ -38,20 +38,6 @@ public class UserAccountCardQuery extends BaseDto {
     private Integer excludeDisabled;
 
 
-    public UserAccountCardQuery setDefExcludeReturn(Integer defExcludeReturn) {
-        if (this.getExcludeReturn() == null) {
-            this.setExcludeReturn(defExcludeReturn);
-        }
-        return this;
-    }
-
-    public UserAccountCardQuery setDefExcludeDisabled(Integer defExcludeDisabled) {
-        if (this.getExcludeDisabled() == null) {
-            this.setExcludeDisabled(defExcludeDisabled);
-        }
-        return this;
-    }
-
     public List<Long> getCustomerIds() {
         return customerIds;
     }
