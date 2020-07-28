@@ -108,6 +108,7 @@ public class OpenCardController implements IControllerHandler {
 		if(customer != null) {
 			BeanUtils.copyProperties(customer, response);
 			response.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
+			response.setCustomerType(customer.getCustomerMarket().getType());
 		}
 		return BaseOutput.successData(response);
 	}
@@ -212,7 +213,8 @@ public class OpenCardController implements IControllerHandler {
 	private void checkMasterParam(OpenCardDto openCardInfo) {
 		AssertUtils.notEmpty(openCardInfo.getName(), "开卡用户名不能为空!");
 		AssertUtils.notEmpty(openCardInfo.getCardNo(), "开卡卡号不能为空!");
-		AssertUtils.notEmpty(openCardInfo.getCustomerNo(), "客户编号不能为空!");
+		AssertUtils.notEmpty(openCardInfo.getCertificateNumber(), "证件号不能为空!");
+		AssertUtils.notEmpty(openCardInfo.getCustomerCode(), "客户编号不能为空!");
 		AssertUtils.notNull(openCardInfo.getCustomerId(), "客户ID不能为空!");
 		AssertUtils.notEmpty(openCardInfo.getLoginPwd(), "账户密码不能为空!");
 	}

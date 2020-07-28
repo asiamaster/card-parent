@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.dili.assets.sdk.dto.BusinessChargeItemDto;
 import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
+import com.dili.card.exception.CardAppBizException;
+import com.dili.card.exception.ErrorCode;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IRuleFeeService;
 import com.dili.card.type.RuleFeeBusinessType;
+import com.dili.card.type.SystemSubjectType;
 import com.dili.rule.sdk.domain.input.QueryFeeInput;
 import com.dili.rule.sdk.domain.output.QueryFeeOutput;
 import com.dili.rule.sdk.rpc.ChargeRuleRpc;
@@ -34,19 +37,36 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 	@Override
 	public Long getOpenCardFee(Long firmId) {
 		List<BusinessChargeItemDto> chargeItemList = getChargeItem(firmId, RuleFeeBusinessType.CARD_OPEN_CARD);
+		if(chargeItemList == null || chargeItemList.size() < 0) {
+			throw new CardAppBizException(ErrorCode.GENERAL_CODE, "开卡没有配置任何收费项！");
+		}
+		// 只收取工本费
 		List<QueryFeeInput> feeInputs = new ArrayList<QueryFeeInput>();
 		for (BusinessChargeItemDto item : chargeItemList) {
-			QueryFeeInput queryFeeInput = new QueryFeeInput();
-			queryFeeInput.setMarketId(firmId);
-			queryFeeInput.setBusinessType("CARD_OPEN_CARD");
-			queryFeeInput.setChargeItem(item.getId());
-			feeInputs.add(queryFeeInput);
+			// 判断系统科目 是否是工本费，只取第一个
+			// systemSubject == SystemSubjectType.CARD_OPEN_COST
+			if (SystemSubjectType.CARD_OPEN_COST.getCode() == 2) {
+				QueryFeeInput queryFeeInput = new QueryFeeInput();
+				queryFeeInput.setMarketId(firmId);
+				queryFeeInput.setBusinessType("CARD_OPEN_CARD");
+				queryFeeInput.setChargeItem(item.getId());
+				feeInputs.add(queryFeeInput);
+			}
+		}
+		if(feeInputs.size() == 0) {
+			throw new CardAppBizException(ErrorCode.GENERAL_CODE, "请在规则系统中配置开卡工本费！");
 		}
 		BaseOutput<List<QueryFeeOutput>> batchQueryFee = chargeRuleRpc.batchQueryFee(feeInputs);
 		List<QueryFeeOutput> list = GenericRpcResolver.resolver(batchQueryFee, "开卡查询费用规则");
 		return null;
 	}
 
+	/**
+	 * 获取收费项
+	 * @param firmId
+	 * @param type
+	 * @return
+	 */
 	private List<BusinessChargeItemDto> getChargeItem(Long firmId, RuleFeeBusinessType type) {
 		BusinessChargeItemDto businessChargeItemDto = new BusinessChargeItemDto();
 		businessChargeItemDto.setBusinessType(type.getCode());
