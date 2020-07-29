@@ -63,8 +63,6 @@ public class OpenCardController implements IControllerHandler {
 
 	/**
 	 * 主卡开卡
-	 * 
-	 * @throws InterruptedException
 	 */
 	@RequestMapping(value = "openMasterCard.html", method = { RequestMethod.GET, RequestMethod.POST })
 	public String toOpenCardHtml() {
@@ -73,8 +71,6 @@ public class OpenCardController implements IControllerHandler {
 
 	/**
 	 * 主卡开卡测试用户查询
-	 * 
-	 * @throws InterruptedException
 	 */
 	@RequestMapping(value = "getCustomerInfoTest.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
@@ -89,13 +85,12 @@ public class OpenCardController implements IControllerHandler {
 	}
 
 	/**
-	 * 查询客户信息
-	 * 
-	 * @throws InterruptedException
+	 * 根据证件号查询客户信息
 	 */
 	@RequestMapping(value = "getCustomerInfo.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public BaseOutput<CustomerResponseDto> getCustomerInfo(@RequestBody OpenCardDto openCardInfo) {
+		log.info("开卡证件号查询客户信息:{}", JSONObject.toJSONString(openCardInfo));
 		// 操作人信息
 		UserTicket user = SessionContext.getSessionContext().getUserTicket();
 		if (user == null) {
@@ -110,14 +105,12 @@ public class OpenCardController implements IControllerHandler {
 			response.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
 			response.setCustomerType(customer.getCustomerMarket().getType());
 		}
+		log.info("开卡证件号查询客户信息完成:{}", JSONObject.toJSONString(response));
 		return BaseOutput.successData(response);
 	}
 
 	/**
 	 * 根据主卡卡号，查询主卡信息和客户信息
-	 * 
-	 * @param openCardInfo
-	 * @return
 	 */
 	@RequestMapping(value = "getAccountInfo.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
@@ -125,6 +118,7 @@ public class OpenCardController implements IControllerHandler {
 		log.info("开卡查询主卡信息:{}", JSONObject.toJSONString(openCardInfo));
 		AssertUtils.notNull(openCardInfo.getCardNo(), "请输入主卡卡号!");
 		AccountCustomerDto response = accountQueryService.getAccountCustomerByCardNo(openCardInfo.getCardNo());
+		log.info("开卡查询主卡信息完成:{}", JSONObject.toJSONString(response));
 		return BaseOutput.successData(response);
 	}
 
@@ -158,6 +152,7 @@ public class OpenCardController implements IControllerHandler {
 		}
 //		Long openCostFee = openCardService.getOpenCostFee(user.getFirmId());
 		Long openCostFee = 1000L;
+		log.info("查询开卡费用项:{}", openCostFee);
 		return BaseOutput.successData(MoneyUtils.centToYuan(openCostFee));
 	}
 
@@ -169,6 +164,7 @@ public class OpenCardController implements IControllerHandler {
 	@PostMapping("openMasterCard.action")
 	@ResponseBody
 	public BaseOutput<?> openMasterCard(@RequestBody OpenCardDto openCardInfo) {
+		log.info("开卡主卡信息:{}", JSONObject.toJSONString(openCardInfo));
 		// 主要参数校验
 		checkMasterParam(openCardInfo);
 		// 操作人信息
@@ -180,6 +176,7 @@ public class OpenCardController implements IControllerHandler {
 		openCardInfo.setFirmName(user.getFirmName());
 		// 开卡
 		OpenCardResponseDto response = openCardService.openMasterCard(openCardInfo);
+		log.info("开卡主完成:{}", JSONObject.toJSONString(response));
 		return BaseOutput.success("success").setData(response);
 	}
 
@@ -189,6 +186,7 @@ public class OpenCardController implements IControllerHandler {
 	@PostMapping("openSlaveCard.action")
 	@ResponseBody
 	public BaseOutput<?> openSlaveCard(@RequestBody OpenCardDto openCardInfo) throws Exception {
+		log.info("开副卡信息:{}", JSONObject.toJSONString(openCardInfo));
 		// 主要参数校验
 		AssertUtils.notNull(openCardInfo.getParentAccountId(), "主卡信息不能为空!");
 		// 操作人信息
@@ -202,9 +200,23 @@ public class OpenCardController implements IControllerHandler {
 		openCardInfo.setFirmId(user.getFirmId());
 		openCardInfo.setFirmName(user.getFirmName());
 		OpenCardResponseDto response = openCardService.openSlaveCard(openCardInfo);
+		log.info("开副卡完成:{}", JSONObject.toJSONString(response));
 		return BaseOutput.success("success").setData(response);
 	}
 
+	
+	/**
+	 * 开卡补打记录查询
+	 * 
+	 */
+	@PostMapping("getOperRecord.action")
+	@ResponseBody
+	public BaseOutput<?> getOperRecord(@RequestBody OpenCardDto openCardInfo) throws Exception {
+		// TODO 查询最近操作流水
+		return BaseOutput.success("success");
+	}
+	
+	
 	/**
 	 * 主卡参数校验
 	 * 

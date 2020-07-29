@@ -185,6 +185,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         detail.setAccountId(primary.getAccountId());
         detail.setCustomerId(customer.getId());
         detail.setCode(customer.getCode());
+        detail.setContactsPhone(customer.getCellphone());
         return detail;
     }
 
