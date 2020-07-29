@@ -70,7 +70,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
         try {
             SerialDto serialDto = serialService.createAccountSerial(businessRecord, (temp, feeType) -> {
             });
-            serialService.handleSuccess(serialDto, false);
+            serialService.handleSuccess(serialDto);
         } catch (Exception e) {
             LOGGER.error("returnCard", e);
         }	
@@ -97,7 +97,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
         try {
             SerialDto serialDto = serialService.createAccountSerial(businessRecord, (temp, feeType) -> {
             });
-            serialService.handleSuccess(serialDto, false);
+            serialService.handleSuccess(serialDto);
         } catch (Exception e) {
             LOGGER.error("returnCard", e);
         }	

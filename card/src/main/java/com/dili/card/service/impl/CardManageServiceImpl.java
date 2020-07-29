@@ -1,5 +1,13 @@
 package com.dili.card.service.impl;
 
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -10,7 +18,6 @@ import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CardManageRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
-import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICardManageService;
 import com.dili.card.service.ISerialService;
@@ -18,13 +25,6 @@ import com.dili.card.type.CardStatus;
 import com.dili.card.type.OperateType;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Resource;
 
 
 /**
@@ -47,11 +47,8 @@ public class CardManageServiceImpl implements ICardManageService {
     private PayRpcResolver payRpcResolver;
     @Resource
     private AccountQueryRpcResolver accountQueryRpcResolver;
-
     @Resource
     protected IAccountQueryService accountQueryService;
-    @Autowired
-    private IAccountCycleService accountCycleService;
 
     /**
      * @param cardParam
@@ -104,7 +101,7 @@ public class CardManageServiceImpl implements ICardManageService {
 		try {
             SerialDto serialDto = serialService.createAccountSerial(businessRecordDo, (temp, feeType) -> {
             });
-            serialService.handleSuccess(serialDto, false);
+            serialService.handleSuccess(serialDto);
         } catch (Exception e) {
             LOGGER.error("returnCard", e);
         }
@@ -126,7 +123,7 @@ public class CardManageServiceImpl implements ICardManageService {
         try {
             SerialDto serialDto = serialService.createAccountSerial(businessRecordDo, (temp, feeType) -> {
             });
-            serialService.handleSuccess(serialDto, false);
+            serialService.handleSuccess(serialDto);
         } catch (Exception e) {
             LOGGER.error("returnCard", e);
         }

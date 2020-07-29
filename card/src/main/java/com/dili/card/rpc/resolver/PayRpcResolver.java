@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @Auther: miaoguoxin
  * @Date: 2020/6/30 14:02
  */
-@Component
+@Component("payRpcResolver")
 public class PayRpcResolver {
     @Autowired
     private PayRpc payRpc;

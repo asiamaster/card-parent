@@ -1,11 +1,8 @@
 package com.dili.card.validator;
 
-import cn.hutool.core.lang.Assert;
 import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.CardRequestDto;
-import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
-import com.dili.card.dto.pay.BalanceRequestDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.exception.ErrorCode;
@@ -14,6 +11,8 @@ import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.util.SpringUtil;
+
+import cn.hutool.core.lang.Assert;
 
 /**
  * 卡账户校验器
