@@ -37,4 +37,13 @@ public enum DisableState {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+    public static String getName(int code) {
+        for (DisableState status : DisableState.values()) {
+            if (status.getCode() == code) {
+                return status.name;
+            }
+        }
+        return null;
+    }
 }

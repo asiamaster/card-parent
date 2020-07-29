@@ -26,6 +26,7 @@ import com.dili.card.service.IAccountManageService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
+import com.dili.card.type.DisableState;
 import com.dili.card.type.OperateType;
 import com.dili.ss.domain.BaseOutput;
 
@@ -51,8 +52,15 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void frozen(CardRequestDto cardRequestDto) {
-		//保存本地操作记录 TODO
-    	BusinessRecordDo businessRecord = saveSerialRecord(cardRequestDto, OperateType.FROZEN_ACCOUNT);
+		//保存本地操作记录 
+		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(UserAccountCardQuery.createInstance(cardRequestDto.getAccountId()));
+    	if (!Integer.valueOf(DisableState.ENABLED.getCode()).equals(accountCard.getCardState())) {
+            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行操作", DisableState.getName(accountCard.getDisabledState())));
+        }
+		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardRequestDto, accountCard, temp -> {
+            temp.setType(OperateType.FROZEN_ACCOUNT.getCode());
+        });
+		serialService.saveBusinessRecord(businessRecord);			
 		//远程冻结账户操作 TODO
     	BaseOutput<?> baseOutput = accountManageRpc.frozen(cardRequestDto);
         if (!baseOutput.isSuccess()) {
@@ -67,8 +75,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	public void unfrozen(CardRequestDto cardRequestDto) {
 		//保存本地操作记录 
 		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(UserAccountCardQuery.createInstance(cardRequestDto.getAccountId()));
-    	if (!Integer.valueOf(CardStatus.NORMAL.getCode()).equals(accountCard.getCardState())) {
-            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行退卡", CardStatus.getName(accountCard.getCardState())));
+    	if (!Integer.valueOf(DisableState.DISABLED.getCode()).equals(accountCard.getDisabledState())) {
+            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行操作", CardStatus.getName(accountCard.getDisabledState())));
         }
 		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardRequestDto, accountCard, temp -> {
             temp.setType(OperateType.UNFROZEN_ACCOUNT.getCode());
