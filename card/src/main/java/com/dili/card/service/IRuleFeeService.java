@@ -1,5 +1,7 @@
 package com.dili.card.service;
 
+import java.math.BigDecimal;
+
 /**
  * @description： 费用规则服务
  * 
@@ -13,7 +15,7 @@ public interface IRuleFeeService {
 	 * 
 	 * @return
 	 */
-	public Long getOpenCardFee(Long firmId);
+	public BigDecimal getOpenCardFee(Long firmId);
 
 	
 }

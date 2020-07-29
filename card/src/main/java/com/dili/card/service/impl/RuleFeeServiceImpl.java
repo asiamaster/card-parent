@@ -1,5 +1,6 @@
 package com.dili.card.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,30 +36,29 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 	private BusinessChargeItemRpc businessChargeItemRpc;
 
 	@Override
-	public Long getOpenCardFee(Long firmId) {
+	public  BigDecimal getOpenCardFee(Long firmId) {
 		List<BusinessChargeItemDto> chargeItemList = getChargeItem(firmId, RuleFeeBusinessType.CARD_OPEN_CARD);
 		if(chargeItemList == null || chargeItemList.size() < 0) {
 			throw new CardAppBizException(ErrorCode.GENERAL_CODE, "开卡没有配置任何收费项！");
 		}
 		// 只收取工本费
-		List<QueryFeeInput> feeInputs = new ArrayList<QueryFeeInput>();
+		QueryFeeInput queryFeeInput = null;
 		for (BusinessChargeItemDto item : chargeItemList) {
 			// 判断系统科目 是否是工本费，只取第一个
-			// systemSubject == SystemSubjectType.CARD_OPEN_COST
+			// SystemSubjectType.CARD_OPEN_COST == systemSubject
 			if (SystemSubjectType.CARD_OPEN_COST.getCode() == 2) {
-				QueryFeeInput queryFeeInput = new QueryFeeInput();
+				queryFeeInput  = new QueryFeeInput();
 				queryFeeInput.setMarketId(firmId);
 				queryFeeInput.setBusinessType("CARD_OPEN_CARD");
 				queryFeeInput.setChargeItem(item.getId());
-				feeInputs.add(queryFeeInput);
 			}
 		}
-		if(feeInputs.size() == 0) {
+		if(queryFeeInput == null) {
 			throw new CardAppBizException(ErrorCode.GENERAL_CODE, "请在规则系统中配置开卡工本费！");
 		}
-		BaseOutput<List<QueryFeeOutput>> batchQueryFee = chargeRuleRpc.batchQueryFee(feeInputs);
-		List<QueryFeeOutput> list = GenericRpcResolver.resolver(batchQueryFee, "开卡查询费用规则");
-		return null;
+		BaseOutput<QueryFeeOutput> queryFee = chargeRuleRpc.queryFee(queryFeeInput);
+		QueryFeeOutput resolver = GenericRpcResolver.resolver(queryFee, "开卡查询费用规则");
+		return resolver.getTotalFee();
 	}
 
 	/**
