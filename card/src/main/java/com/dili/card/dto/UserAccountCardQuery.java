@@ -5,6 +5,7 @@ import com.dili.card.validator.AccountValidator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -137,5 +138,18 @@ public class UserAccountCardQuery extends BaseDto {
 
     public void setValidateLevel(Integer validateLevel) {
         this.validateLevel = validateLevel;
+    }
+    
+    public void addAccountId(Long accountId) {
+    	if (this.accountIds == null) {
+    		accountIds = new ArrayList<Long>();
+		}
+    	accountIds.add(accountId);
+    }
+    
+    public static UserAccountCardQuery createInstance(Long accountId) {
+    	UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
+    	userAccountCardQuery.addAccountId(accountId);
+    	return userAccountCardQuery;
     }
 }
