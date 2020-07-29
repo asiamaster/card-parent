@@ -257,7 +257,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	 */
 	private void buildQueryCondition(AccountCycleDto accountCycleDto) {
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		accountCycleDto.setFirmId(1L);
+		accountCycleDto.setFirmId(userTicket.getFirmId());
 		accountCycleDto.setUserId(
 				NumberUtil.isInteger(accountCycleDto.getUserName()) ? Long.valueOf(accountCycleDto.getUserName())
 						: null);

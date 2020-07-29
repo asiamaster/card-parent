@@ -307,7 +307,7 @@ public class ContractServiceImpl implements IContractService {
 		// 构建商户信息
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		fundContractDo.setCreatorId(userTicket.getId());
-		fundContractDo.setCreator(userTicket.getUserName());
+		fundContractDo.setCreator(userTicket.getRealName());
 		fundContractDo.setFirmId(userTicket.getFirmId());
 		fundContractDo.setFirmName(userTicket.getFirmName());
 		fundContractDo.setState(ContractState.UNSTARTED.getCode());

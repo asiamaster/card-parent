@@ -139,7 +139,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		// 构建商户信息和创建者
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		userCash.setCreatorId(userTicket.getId());
-		userCash.setCreatorCode(userTicket.getUserName());
+		userCash.setCreatorCode(userTicket.getSerialNumber());
 		userCash.setCreator(userTicket.getRealName());
 		userCash.setFirmId(userTicket.getFirmId());
 		userCash.setFirmName(userTicket.getFirmName());
