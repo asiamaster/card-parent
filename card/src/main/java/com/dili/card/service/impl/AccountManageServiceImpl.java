@@ -61,13 +61,19 @@ public class AccountManageServiceImpl implements IAccountManageService {
             temp.setType(OperateType.FROZEN_ACCOUNT.getCode());
         });
 		serialService.saveBusinessRecord(businessRecord);			
-		//远程冻结账户操作 TODO
+		//远程冻结卡账户操作
     	BaseOutput<?> baseOutput = accountManageRpc.frozen(cardRequestDto);
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         } 
-		//记录远程操作记录 TODO
-		saveRemoteSerialRecord(cardRequestDto, businessRecord);
+        //记录远程操作记录
+        try {
+            SerialDto serialDto = serialService.createAccountSerial(businessRecord, (temp, feeType) -> {
+            });
+            serialService.handleSuccess(serialDto, false);
+        } catch (Exception e) {
+            LOGGER.error("returnCard", e);
+        }	
 	}
 
 	@Override
@@ -87,49 +93,27 @@ public class AccountManageServiceImpl implements IAccountManageService {
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         } 
-		//记录远程操作记录 TODO
-		saveRemoteSerialRecord(cardRequestDto, businessRecord);
+        //记录远程操作记录
+        try {
+            SerialDto serialDto = serialService.createAccountSerial(businessRecord, (temp, feeType) -> {
+            });
+            serialService.handleSuccess(serialDto, false);
+        } catch (Exception e) {
+            LOGGER.error("returnCard", e);
+        }	
 	}
 	
 	/**
      * 保存本地操作记录
      */
 	private BusinessRecordDo saveSerialRecord(CardRequestDto cardParam, OperateType operateType) {
-		 BusinessRecordDo businessRecord = new BusinessRecordDo();
-	     serialService.buildCommonInfo(cardParam, businessRecord);
-	     businessRecord.setType(operateType.getCode());
-	     serialService.saveBusinessRecord(businessRecord);
-		return businessRecord;
+		return null;
 	}
 
 	 /**
-     * saveRemoteSerialRecord
+     * 保存远程流水记录
      */
 	private void saveRemoteSerialRecord(CardRequestDto cardParam, BusinessRecordDo businessRecord) {
-		try {//成功则修改状态及期初期末金额，存储操作流水
-            SerialDto serialDto = buildNoFundSerial(cardParam, businessRecord);
-            serialService.handleSuccess(serialDto, false);
-        } catch (Exception e) {
-            LOGGER.error("unLostCard", e);
-        }
 	}
-	
-	/**
-     * 构建操作流水 后期根据各业务代码调整优化(针对无资金操作的流水构建)
-     * @param cardParam
-     * @return
-     */
-    private SerialDto buildNoFundSerial(CardRequestDto cardParam, BusinessRecordDo businessRecord) {
-        SerialDto serialDto = new SerialDto();
-        serialDto.setSerialNo(businessRecord.getSerialNo());
-        List<SerialRecordDo> serialRecordList = new ArrayList<>(1);
-        SerialRecordDo serialRecord = new SerialRecordDo();
-        serialService.copyCommonFields(serialRecord, businessRecord);
-        serialRecord.setOperateTime(businessRecord.getOperateTime());
-        serialRecordList.add(serialRecord);
-        serialDto.setSerialRecordList(serialRecordList);
-        return serialDto;
-    }
-
 
 }

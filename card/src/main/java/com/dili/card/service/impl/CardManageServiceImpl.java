@@ -101,18 +101,35 @@ public class CardManageServiceImpl implements ICardManageService {
 		//远程调用退卡操作
 		cardManageRpcResolver.returnCard(cardParam);
 		//记录远程操作记录
-		saveRemoteSerialRecord(businessRecordDo);
+		try {
+            SerialDto serialDto = serialService.createAccountSerial(businessRecordDo, (temp, feeType) -> {
+            });
+            serialService.handleSuccess(serialDto, false);
+        } catch (Exception e) {
+            LOGGER.error("returnCard", e);
+        }
 	}
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void resetLoginPwd(CardRequestDto cardParam) {
+    	//获取卡信息
+    	UserAccountCardResponseDto accountCard =  accountQueryService.getByAccountId(cardParam.getAccountId());
         //保存本地操作记录
-        BusinessRecordDo businessRecord = saveSerialRecord(cardParam, OperateType.RESET_PWD);
+    	BusinessRecordDo businessRecordDo = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
+            temp.setType(OperateType.RESET_PWD.getCode());
+        });
+		serialService.saveBusinessRecord(businessRecordDo);
         //远程重置密码操作
         cardManageRpcResolver.resetLoginPwd(cardParam);
         //记录远程操作记录
-        this.saveRemoteSerialRecord(businessRecord);
+        try {
+            SerialDto serialDto = serialService.createAccountSerial(businessRecordDo, (temp, feeType) -> {
+            });
+            serialService.handleSuccess(serialDto, false);
+        } catch (Exception e) {
+            LOGGER.error("returnCard", e);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
