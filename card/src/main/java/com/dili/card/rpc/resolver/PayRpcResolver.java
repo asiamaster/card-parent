@@ -51,5 +51,19 @@ public class PayRpcResolver {
     public FundOpResponseDto postFrozenFund(CreateTradeRequestDto requestDto) {
         return GenericRpcResolver.resolver(payRpc.frozenFund(requestDto), SERVICE_NAME);
     }
+    
+    /**
+     *  冻结账户操作
+     */
+    public void freezeFundAccount(CreateTradeRequestDto requestDto) {
+        GenericRpcResolver.resolver(payRpc.freeze(requestDto), SERVICE_NAME);
+    }
+    
+    /**
+     *  解冻账户操作
+     */
+    public void unfreezeFundAccount(CreateTradeRequestDto requestDto) {
+        GenericRpcResolver.resolver(payRpc.unfreeze(requestDto), SERVICE_NAME);
+    }
 }
 

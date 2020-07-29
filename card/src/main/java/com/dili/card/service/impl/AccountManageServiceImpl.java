@@ -12,6 +12,7 @@ import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.AccountManageRpc;
@@ -41,7 +42,6 @@ public class AccountManageServiceImpl implements IAccountManageService {
     private PayRpcResolver payRpcResolver;
     @Resource
     private AccountQueryRpcResolver accountQueryRpcResolver;
-
     @Resource
     protected IAccountQueryService accountQueryService;
 
@@ -62,6 +62,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         } 
+        //远程冻结资金账户
+        payRpcResolver.freezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
         //记录远程操作记录
         try {
             SerialDto serialDto = serialService.createAccountSerial(businessRecord, (temp, feeType) -> {
@@ -84,11 +86,13 @@ public class AccountManageServiceImpl implements IAccountManageService {
             temp.setType(OperateType.UNFROZEN_ACCOUNT.getCode());
         });
 		serialService.saveBusinessRecord(businessRecord);		
-		//远程冻结账户操作 TODO
+		//远程解冻账户操作 
     	BaseOutput<?> baseOutput = accountManageRpc.unfrozen(cardRequestDto);
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         } 
+        //远程解冻资金账户
+        payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
         //记录远程操作记录
         try {
             SerialDto serialDto = serialService.createAccountSerial(businessRecord, (temp, feeType) -> {
