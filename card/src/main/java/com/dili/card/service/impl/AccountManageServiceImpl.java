@@ -80,7 +80,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		//保存本地操作记录 
 		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(UserAccountCardQuery.createInstance(cardRequestDto.getAccountId()));
     	if (!Integer.valueOf(DisableState.DISABLED.getCode()).equals(accountCard.getDisabledState())) {
-            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行操作", CardStatus.getName(accountCard.getDisabledState())));
+            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行操作", DisableState.getName(accountCard.getDisabledState())));
         }
 		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardRequestDto, accountCard, temp -> {
             temp.setType(OperateType.UNFROZEN_ACCOUNT.getCode());
