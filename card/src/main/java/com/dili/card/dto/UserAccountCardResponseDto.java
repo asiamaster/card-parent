@@ -5,6 +5,7 @@ import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.AccountStateProvider;
 import com.dili.card.common.provider.CardStateProvider;
 import com.dili.card.common.provider.CardTypeProvider;
+import com.dili.card.common.provider.DisableStateProvider;
 import com.dili.http.okhttp.utils.L;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -59,6 +60,7 @@ public class UserAccountCardResponseDto implements Serializable {
     @TextDisplay(AccountStateProvider.class)
     private Integer accountState;
     /**账户是否禁用 {@link com.dili.account.type.DisableState}*/
+    @TextDisplay(DisableStateProvider.class)
     private Integer disabledState;
     /**开卡时间*/
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")

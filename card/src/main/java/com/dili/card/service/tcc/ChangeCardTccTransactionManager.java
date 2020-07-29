@@ -7,15 +7,18 @@ import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.entity.BusinessRecordDo;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.CardManageRpcResolver;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
+import com.dili.card.type.CardStatus;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
+import com.dili.ss.constant.ResultCode;
 import com.dili.tcc.AbstractTccTransactionManager;
 import com.dili.tcc.core.TccContextHolder;
 import org.slf4j.Logger;
@@ -46,6 +49,8 @@ public class ChangeCardTccTransactionManager extends AbstractTccTransactionManag
     @Override
     protected void prepare(CardRequestDto requestDto) {
         UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(requestDto.getCardNo());
+        this.validateCanChange(requestDto, userAccount);
+
         Long serviceFee = requestDto.getServiceFee();
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {
             record.setType(OperateType.CHANGE.getCode());
@@ -63,13 +68,20 @@ public class ChangeCardTccTransactionManager extends AbstractTccTransactionManag
         //创建交易
         String tradeId = payService.createTrade(tradeRequest);
 
+        accountCycleService.increaseCashBox(businessRecord.getCycleNo(), requestDto.getServiceFee());
+
         businessRecord.setTradeNo(tradeId);
         serialService.saveBusinessRecord(businessRecord);
+
+        //换卡操作放到try阶段执行，是为了防止confirm阶段因为各种意外情况失败
+        //先确保换卡操作能够成功，然后confirm阶段只是对资金进行操作，不影响主业务流程
+        cardManageRpcResolver.changeCard(requestDto);
 
         TccContextHolder.get().addAttr(Constant.TRADE_ID_KEY, tradeId);
         TccContextHolder.get().addAttr(Constant.BUSINESS_RECORD_KEY, businessRecord);
         TccContextHolder.get().addAttr(Constant.USER_ACCOUNT, userAccount);
     }
+
 
     @Override
     protected Boolean confirm(CardRequestDto requestDto) {
@@ -81,9 +93,6 @@ public class ChangeCardTccTransactionManager extends AbstractTccTransactionManag
         tradeRequestDto.addServiceFeeItem(requestDto.getServiceFee(), FundItem.IC_CARD_COST);
         payService.commitTrade(tradeRequestDto);
 
-        cardManageRpcResolver.changeCard(requestDto);
-
-        accountCycleService.increaseCashBox(businessRecord.getCycleNo(), requestDto.getServiceFee());
         try {
             SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
             serialService.handleSuccess(serialDto, false);
@@ -96,5 +105,19 @@ public class ChangeCardTccTransactionManager extends AbstractTccTransactionManag
     @Override
     protected void cancel(CardRequestDto requestDto) {
 
+    }
+
+    /**
+    * 校验
+    * @author miaoguoxin
+    * @date 2020/7/29
+    */
+    private void validateCanChange(CardRequestDto requestDto, UserAccountCardResponseDto userAccount) {
+        if (userAccount.getCardState() != CardStatus.NORMAL.getCode()) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡不是正常状态，不能进行该操作");
+        }
+        if (userAccount.getCardNo().equals(requestDto.getNewCardNo())) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "新老卡号不能相同");
+        }
     }
 }

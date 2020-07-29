@@ -2,6 +2,8 @@ package com.dili.card.controller;
 
 import javax.annotation.Resource;
 
+import com.alibaba.fastjson.JSON;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.tcc.ChangeCardTccTransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,7 @@ import cn.hutool.core.util.StrUtil;
 @RestController
 @RequestMapping(value = "/card")
 public class CardManageController implements IControllerHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CardManageController.class);
 
     @Resource
     private ICardManageService cardManageService;
@@ -96,7 +99,15 @@ public class CardManageController implements IControllerHandler {
         AssertUtils.notNull(cardParam.getServiceFee(),"工本费不能为空");
         this.validateCommonParam(cardParam);
         this.buildOperatorInfo(cardParam);
-        changeCardTccTransactionManager.doTcc(cardParam);
+        try {
+            cardManageService.changeCard(cardParam);
+        } catch (CardAppBizException e) {
+            return BaseOutput.failure(e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("换卡失败", e);
+            LOGGER.error("换卡请求参数:{}", JSON.toJSONString(cardParam));
+            return BaseOutput.failure();
+        }
         return BaseOutput.success();
     }
 
