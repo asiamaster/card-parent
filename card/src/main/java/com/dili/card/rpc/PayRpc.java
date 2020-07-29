@@ -66,4 +66,16 @@ public interface PayRpc {
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.account.service:unregister", method = RequestMethod.POST)
     BaseOutput<?> unregister(CreateTradeRequestDto requestDto);
+    
+    /**
+     * 解冻资金账户
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.account.service:unfreeze", method = RequestMethod.POST)
+    BaseOutput<?> unfreeze(CreateTradeRequestDto requestDto);
+    
+    /**
+     * 冻结资金账户
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.account.service:freeze", method = RequestMethod.POST)
+    BaseOutput<?> freeze(CreateTradeRequestDto requestDto);
 }

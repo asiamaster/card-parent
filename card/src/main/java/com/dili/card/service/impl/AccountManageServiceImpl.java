@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
@@ -23,6 +24,7 @@ import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountManageService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ISerialService;
+import com.dili.card.type.CardStatus;
 import com.dili.card.type.OperateType;
 import com.dili.ss.domain.BaseOutput;
 
@@ -62,8 +64,15 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void unfrozen(CardRequestDto cardRequestDto) {
-		//保存本地操作记录 TODO
-    	BusinessRecordDo businessRecord = saveSerialRecord(cardRequestDto, OperateType.UNFROZEN_ACCOUNT);
+		//保存本地操作记录 
+		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findByAccountId(cardRequestDto.getAccountId());
+    	if (!Integer.valueOf(CardStatus.NORMAL.getCode()).equals(accountCard.getCardState())) {
+            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行退卡", CardStatus.getName(accountCard.getCardState())));
+        }
+		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardRequestDto, accountCard, temp -> {
+            temp.setType(OperateType.UNFROZEN_ACCOUNT.getCode());
+        });
+		serialService.saveBusinessRecord(businessRecord);		
 		//远程冻结账户操作 TODO
     	BaseOutput<?> baseOutput = accountManageRpc.unfrozen(cardRequestDto);
         if (!baseOutput.isSuccess()) {
