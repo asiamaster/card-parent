@@ -1,5 +1,6 @@
 package com.dili.card.service.withdraw;
 
+import cn.hutool.core.util.StrUtil;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -23,6 +24,7 @@ public class CashWithdrawServiceImpl extends WithdrawServiceImpl {
             temp.setTradeChannel(fundRequestDto.getTradeChannel());
             temp.setContractNo(fundRequestDto.getContractNo());
             temp.setConsignorId(fundRequestDto.getConsignorId());
+            temp.setNotes(StrUtil.isBlank(fundRequestDto.getContractNo()) ? null : "委托现金取款");
         });
     }
 
