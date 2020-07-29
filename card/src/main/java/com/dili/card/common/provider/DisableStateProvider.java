@@ -1,32 +1,23 @@
 package com.dili.card.common.provider;
 
-
-import com.dili.card.type.CycleState;
+import com.dili.card.type.DisableState;
 import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
-import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.ValueProvider;
-import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 账务周期状态提供者
+ * @Auther: miaoguoxin
+ * @Date: 2020/7/29 09:54
+ * @Description:
  */
-@Component
-public class CycleStateProvider implements ValueProvider {
-    private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
-
-    static {
-        CycleState.getAll()
-                .forEach(c -> BUFFER.add(new ValuePairImpl(c.getName(), c.getCode())));
-    }
+public class DisableStateProvider implements ValueProvider {
 
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
-        return BUFFER;
+        return null;
     }
 
     @Override
@@ -35,7 +26,6 @@ public class CycleStateProvider implements ValueProvider {
             return null;
         }
         Integer state = (Integer) obj;
-        return CycleState.getName(state);
+        return DisableState.getName(state);
     }
-
 }

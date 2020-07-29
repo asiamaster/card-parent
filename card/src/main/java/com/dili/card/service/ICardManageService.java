@@ -36,4 +36,11 @@ public interface ICardManageService {
 	* @date 2020/7/14
 	*/
     void reportLossCard(CardRequestDto cardParam);
+
+    /**
+    * 换卡
+    * @author miaoguoxin
+    * @date 2020/7/29
+    */
+    void changeCard(CardRequestDto cardParam);
 }

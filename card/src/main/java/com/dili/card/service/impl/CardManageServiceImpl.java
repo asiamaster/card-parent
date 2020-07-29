@@ -7,13 +7,12 @@ import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
-import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CardManageRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
-import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICardManageService;
 import com.dili.card.service.ISerialService;
+import com.dili.card.service.tcc.ChangeCardTccTransactionManager;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.OperateType;
 import com.dili.ss.constant.ResultCode;
@@ -46,12 +45,9 @@ public class CardManageServiceImpl implements ICardManageService {
     @Resource
     private PayRpcResolver payRpcResolver;
     @Resource
-    private AccountQueryRpcResolver accountQueryRpcResolver;
-
-    @Resource
     protected IAccountQueryService accountQueryService;
     @Autowired
-    private IAccountCycleService accountCycleService;
+    private ChangeCardTccTransactionManager changeCardTccTransactionManager;
 
     /**
      * @param cardParam
@@ -81,28 +77,28 @@ public class CardManageServiceImpl implements ICardManageService {
         }
     }
 
-	@Override
-	public void returnCard(CardRequestDto cardParam) {
-    	//校验卡状态
-    	UserAccountCardResponseDto accountCard =  accountQueryService.getByAccountId(cardParam.getAccountId());
-    	if (!Integer.valueOf(CardStatus.NORMAL.getCode()).equals(accountCard.getCardState())) {
+    @Override
+    public void returnCard(CardRequestDto cardParam) {
+        //校验卡状态
+        UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam.getAccountId());
+        if (!Integer.valueOf(CardStatus.NORMAL.getCode()).equals(accountCard.getCardState())) {
             throw new CardAppBizException("", String.format("该卡为%s状态,不能进行退卡", CardStatus.getName(accountCard.getCardState())));
         }
         //余额校验
-		BalanceResponseDto  balanceResponseDto = payRpcResolver.findBalanceByFundAccountId(accountCard.getFundAccountId());
+        BalanceResponseDto balanceResponseDto = payRpcResolver.findBalanceByFundAccountId(accountCard.getFundAccountId());
         if (balanceResponseDto.getBalance() > 100L) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "卡余额大于1元,不能退卡");
         }
-		//保存本地操作记录
-		BusinessRecordDo businessRecordDo = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
+        //保存本地操作记录
+        BusinessRecordDo businessRecordDo = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
             temp.setType(OperateType.LOSS_REMOVE.getCode());
         });
-		serialService.saveBusinessRecord(businessRecordDo);
-		//远程调用退卡操作
-		cardManageRpcResolver.returnCard(cardParam);
-		//记录远程操作记录
-		saveRemoteSerialRecord(businessRecordDo);
-	}
+        serialService.saveBusinessRecord(businessRecordDo);
+        //远程调用退卡操作
+        cardManageRpcResolver.returnCard(cardParam);
+        //记录远程操作记录
+        saveRemoteSerialRecord(businessRecordDo);
+    }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -145,6 +141,11 @@ public class CardManageServiceImpl implements ICardManageService {
         cardManageRpcResolver.reportLossCard(cardParam);
 
         this.saveRemoteSerialRecord(businessRecord);
+    }
+
+    @Override
+    public void changeCard(CardRequestDto cardParam) {
+        changeCardTccTransactionManager.doTcc(cardParam);
     }
 
 
