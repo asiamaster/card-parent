@@ -1,8 +1,5 @@
 package com.dili.card.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -16,7 +13,6 @@ import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
-import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.AccountManageRpc;
 import com.dili.card.rpc.CardManageRpc;
