@@ -99,8 +99,7 @@ public class CardManageServiceImpl implements ICardManageService {
 		cardManageRpcResolver.returnCard(cardParam);
 		//记录远程操作记录
 		try {
-            SerialDto serialDto = serialService.createAccountSerial(businessRecordDo, (temp, feeType) -> {
-            });
+            SerialDto serialDto = serialService.createAccountSerial(businessRecordDo, null);
             serialService.handleSuccess(serialDto);
         } catch (Exception e) {
             LOGGER.error("returnCard", e);
@@ -121,8 +120,7 @@ public class CardManageServiceImpl implements ICardManageService {
         cardManageRpcResolver.resetLoginPwd(cardParam);
         //记录远程操作记录
         try {
-            SerialDto serialDto = serialService.createAccountSerial(businessRecordDo, (temp, feeType) -> {
-            });
+            SerialDto serialDto = serialService.createAccountSerial(businessRecordDo, null);
             serialService.handleSuccess(serialDto);
         } catch (Exception e) {
             LOGGER.error("returnCard", e);
