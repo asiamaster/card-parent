@@ -66,8 +66,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
         payRpcResolver.freezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
         //记录远程操作记录
         try {
-            SerialDto serialDto = serialService.createAccountSerial(businessRecord, (temp, feeType) -> {
-            });
+            SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
             serialService.handleSuccess(serialDto);
         } catch (Exception e) {
             LOGGER.error("returnCard", e);
@@ -95,8 +94,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
         payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
         //记录远程操作记录
         try {
-            SerialDto serialDto = serialService.createAccountSerial(businessRecord, (temp, feeType) -> {
-            });
+            SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
             serialService.handleSuccess(serialDto);
         } catch (Exception e) {
             LOGGER.error("returnCard", e);
