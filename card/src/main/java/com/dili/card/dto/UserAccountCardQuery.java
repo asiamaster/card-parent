@@ -5,6 +5,7 @@ import com.dili.card.validator.AccountValidator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,128 +15,153 @@ import java.util.List;
  * @time ：2020年4月26日下午4:30:03
  */
 public class UserAccountCardQuery extends BaseDto {
-    private static final long serialVersionUID = 1L;
-    /**客户id*/
-    private List<Long> customerIds;
-    /**客户名字*/
-    private String customerName;
-    /** 多个账户ID */
-    private List<Long> accountIds;
-    /** 多个卡号 */
-    private List<String> cardNos;
-    /** 主账户ID */
-    private Long parentAccountId;
-    /**结束时间*/
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime startDate;
-    /**开始时间*/
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime endDate;
-    /**卡类别 {@link com.dili.card.type.CardType}*/
-    private Integer cardType;
-    /**卡状态 {@link com.dili.card.type.CardStatus}*/
-    private Integer cardState;
-    /**是否排除退还状态*/
-    private Integer excludeReturn;
-    /**是否排除禁用状态*/
-    private Integer excludeDisabled;
+	private static final long serialVersionUID = 1L;
+	/** 客户id */
+	private List<Long> customerIds;
+	/** 客户名字 */
+	private String customerName;
+	/** 多个账户ID */
+	private List<Long> accountIds;
+	/** 多个卡号 */
+	private List<String> cardNos;
+	/** 主账户ID */
+	private Long parentAccountId;
 
-    /**账户校验等级 {@link AccountValidator}*/
-    private Integer validateLevel;
+	/** 市场ID */
+	private Long firmId;
+	/** 结束时间 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime startDate;
+	/** 开始时间 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime endDate;
+	/** 卡类别 {@link com.dili.card.type.CardType} */
+	private Integer cardType;
+	/** 卡状态 {@link com.dili.card.type.CardStatus} */
+	private Integer cardState;
+	/** 是否排除退还状态 */
+	private Integer excludeReturn;
+	/** 是否排除禁用状态 */
+	private Integer excludeDisabled;
 
-    public String getCustomerName() {
-        return customerName;
-    }
+	/** 账户校验等级 {@link AccountValidator} */
+	private Integer validateLevel;
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
+	public String getCustomerName() {
+		return customerName;
+	}
 
-    public List<Long> getCustomerIds() {
-        return customerIds;
-    }
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
 
-    public void setCustomerIds(List<Long> customerIds) {
-        this.customerIds = customerIds;
-    }
+	public List<Long> getCustomerIds() {
+		return customerIds;
+	}
 
-    public List<Long> getAccountIds() {
-        return accountIds;
-    }
+	public void setCustomerIds(List<Long> customerIds) {
+		this.customerIds = customerIds;
+	}
 
-    public void setAccountIds(List<Long> accountIds) {
-        this.accountIds = accountIds;
-    }
+	public List<Long> getAccountIds() {
+		return accountIds;
+	}
 
-    public Long getParentAccountId() {
-        return parentAccountId;
-    }
+	public void setAccountIds(List<Long> accountIds) {
+		this.accountIds = accountIds;
+	}
 
-    public void setParentAccountId(Long parentAccountId) {
-        this.parentAccountId = parentAccountId;
-    }
+	public Long getParentAccountId() {
+		return parentAccountId;
+	}
 
-    public List<String> getCardNos() {
-        return cardNos;
-    }
+	public void setParentAccountId(Long parentAccountId) {
+		this.parentAccountId = parentAccountId;
+	}
 
-    public void setCardNos(List<String> cardNos) {
-        this.cardNos = cardNos;
-    }
+	public List<String> getCardNos() {
+		return cardNos;
+	}
 
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
+	public void setCardNos(List<String> cardNos) {
+		this.cardNos = cardNos;
+	}
 
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
-    }
+	public LocalDateTime getStartDate() {
+		return startDate;
+	}
 
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
+	public void setStartDate(LocalDateTime startDate) {
+		this.startDate = startDate;
+	}
 
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
+	public LocalDateTime getEndDate() {
+		return endDate;
+	}
 
-    public Integer getCardType() {
-        return cardType;
-    }
+	public void setEndDate(LocalDateTime endDate) {
+		this.endDate = endDate;
+	}
 
-    public void setCardType(Integer cardType) {
-        this.cardType = cardType;
-    }
+	public Integer getCardType() {
+		return cardType;
+	}
 
-    public Integer getCardState() {
-        return cardState;
-    }
+	public void setCardType(Integer cardType) {
+		this.cardType = cardType;
+	}
 
-    public void setCardState(Integer cardState) {
-        this.cardState = cardState;
-    }
+	public Integer getCardState() {
+		return cardState;
+	}
 
-    public Integer getExcludeReturn() {
-        return excludeReturn;
-    }
+	public void setCardState(Integer cardState) {
+		this.cardState = cardState;
+	}
 
-    public void setExcludeReturn(Integer excludeReturn) {
-        this.excludeReturn = excludeReturn;
-    }
+	public Integer getExcludeReturn() {
+		return excludeReturn;
+	}
 
-    public Integer getExcludeDisabled() {
-        return excludeDisabled;
-    }
+	public void setExcludeReturn(Integer excludeReturn) {
+		this.excludeReturn = excludeReturn;
+	}
 
-    public void setExcludeDisabled(Integer excludeDisabled) {
-        this.excludeDisabled = excludeDisabled;
-    }
+	public Integer getExcludeDisabled() {
+		return excludeDisabled;
+	}
 
-    public Integer getValidateLevel() {
-        return validateLevel;
-    }
+	public void setExcludeDisabled(Integer excludeDisabled) {
+		this.excludeDisabled = excludeDisabled;
+	}
 
-    public void setValidateLevel(Integer validateLevel) {
-        this.validateLevel = validateLevel;
-    }
+	public Integer getValidateLevel() {
+		return validateLevel;
+	}
+
+	public void setValidateLevel(Integer validateLevel) {
+		this.validateLevel = validateLevel;
+	}
+
+	public void addAccountId(Long accountId) {
+		if (this.accountIds == null) {
+			accountIds = new ArrayList<Long>();
+		}
+		accountIds.add(accountId);
+	}
+
+	public static UserAccountCardQuery createInstance(Long accountId) {
+		UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
+		userAccountCardQuery.addAccountId(accountId);
+		return userAccountCardQuery;
+	}
+
+	public Long getFirmId() {
+		return firmId;
+	}
+
+	public void setFirmId(Long firmId) {
+		this.firmId = firmId;
+	}
+
 }

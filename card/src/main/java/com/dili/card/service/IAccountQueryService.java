@@ -1,6 +1,7 @@
 package com.dili.card.service;
 
-import com.dili.card.dto.AccountCustomerDto;
+import java.util.List;
+
 import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.AccountSimpleResponseDto;
@@ -9,8 +10,6 @@ import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.ss.domain.PageOutput;
-
-import java.util.List;
 
 /**
  * @Auther: miaoguoxin
@@ -39,13 +38,6 @@ public interface IAccountQueryService {
      * @date 2020/6/28
      */
     AccountDetailResponseDto getDetailByCardNo(String cardNo);
-
-    /**
-     * 根据卡号查询客户信息及账户信息
-     * @param cardNo
-     * @return
-     */
-    AccountCustomerDto getAccountCustomerByCardNo(String cardNo);
 
     /**
      * 根据卡号查询（只查询卡账户信息）

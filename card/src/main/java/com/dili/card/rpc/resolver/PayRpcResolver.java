@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @Auther: miaoguoxin
  * @Date: 2020/6/30 14:02
  */
-@Component
+@Component("payRpcResolver")
 public class PayRpcResolver {
     @Autowired
     private PayRpc payRpc;
@@ -50,6 +50,20 @@ public class PayRpcResolver {
      */
     public FundOpResponseDto postFrozenFund(CreateTradeRequestDto requestDto) {
         return GenericRpcResolver.resolver(payRpc.frozenFund(requestDto), SERVICE_NAME);
+    }
+    
+    /**
+     *  冻结账户操作
+     */
+    public void freezeFundAccount(CreateTradeRequestDto requestDto) {
+        GenericRpcResolver.resolver(payRpc.freeze(requestDto), SERVICE_NAME);
+    }
+    
+    /**
+     *  解冻账户操作
+     */
+    public void unfreezeFundAccount(CreateTradeRequestDto requestDto) {
+        GenericRpcResolver.resolver(payRpc.unfreeze(requestDto), SERVICE_NAME);
     }
 }
 

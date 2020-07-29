@@ -1,14 +1,18 @@
 package com.dili.card.validator;
 
-import cn.hutool.core.lang.Assert;
 import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.exception.ErrorCode;
+import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
 import com.dili.ss.constant.ResultCode;
+import com.dili.ss.util.SpringUtil;
+
+import cn.hutool.core.lang.Assert;
 
 /**
  * 卡账户校验器
@@ -59,6 +63,18 @@ public class AccountValidator {
                 throw new CardAppBizException(ResultCode.DATA_ERROR,
                         String.format("该卡关联的主卡【%s】为挂失状态，不能进行此操作", master.getCardNo()));
             }
+        }
+    }
+    
+    /**
+     * 验证余额
+     * @param operationAmount 实际与余额可用金额比对的金额
+     * @param fundAccountId 资金账号
+     */
+    protected static void checkAvailableAmount(Long operationAmount, Long fundAccountId) {
+    	BalanceResponseDto balance = SpringUtil.getBean(PayRpcResolver.class).findBalanceByFundAccountId(fundAccountId);
+        if (operationAmount > balance.getAvailableAmount()) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "可用余额不足");
         }
     }
 }
