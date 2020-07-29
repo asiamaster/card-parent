@@ -169,26 +169,6 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         return accountListResponseDtos;
     }
 
-    @Override
-    public AccountCustomerDto getAccountCustomerByCardNo(String cardNo) {
-        AccountCustomerDto detail = new AccountCustomerDto();
-
-        UserAccountCardQuery query = new UserAccountCardQuery();
-        query.setCardNos(Lists.newArrayList(cardNo));
-        query.setValidateLevel(AccountValidator.NONE);
-        AccountWithAssociationResponseDto cardAssociation = this.getAssociation(query);
-
-        UserAccountCardResponseDto primary = cardAssociation.getPrimary();
-        Customer customer = GenericRpcResolver.resolver(customerRpc.get(primary.getCustomerId(), primary.getFirmId()), "测试获取用户信息");
-        detail.setName(customer.getName());
-        detail.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
-        detail.setAccountId(primary.getAccountId());
-        detail.setCustomerId(customer.getId());
-        detail.setCode(customer.getCode());
-        detail.setContactsPhone(customer.getCellphone());
-        return detail;
-    }
-
     /**
      * 获取包含关联卡的信息
      * @author miaoguoxin

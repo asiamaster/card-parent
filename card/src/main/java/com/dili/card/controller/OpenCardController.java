@@ -19,6 +19,7 @@ import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.OpenCardResponseDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.rpc.AccountQueryRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IAccountQueryService;
@@ -114,12 +115,12 @@ public class OpenCardController implements IControllerHandler {
 	 */
 	@RequestMapping(value = "getAccountInfo.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public BaseOutput<AccountCustomerDto> getAccountInfo(@RequestBody OpenCardDto openCardInfo) {
+	public BaseOutput<UserAccountCardResponseDto> getAccountInfo(@RequestBody OpenCardDto openCardInfo) {
 		log.info("开卡查询主卡信息:{}", JSONObject.toJSONString(openCardInfo));
 		AssertUtils.notNull(openCardInfo.getCardNo(), "请输入主卡卡号!");
-		AccountCustomerDto response = accountQueryService.getAccountCustomerByCardNo(openCardInfo.getCardNo());
-		log.info("开卡查询主卡信息完成:{}", JSONObject.toJSONString(response));
-		return BaseOutput.successData(response);
+		UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(openCardInfo.getCardNo());
+		log.info("开卡查询主卡信息完成:{}", JSONObject.toJSONString(userAccount));
+		return BaseOutput.successData(userAccount);
 	}
 
 	/**

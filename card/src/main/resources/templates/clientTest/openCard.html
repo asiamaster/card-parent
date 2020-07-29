@@ -67,7 +67,8 @@ function checkNewCardNo(){
 	
 	// 获取卡信息
 	function getAccountInfo(){
-		var data = {cardNo: "888889688942"};
+		var cardNo = $("#cardNo").val();
+		var data = {cardNo: cardNo};
 		$.ajax({
 			url : "${contextPath}/card/getAccountInfo.action",
 			type : 'POST',
