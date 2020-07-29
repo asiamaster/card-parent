@@ -118,6 +118,7 @@ public class CardManageController implements IControllerHandler {
      */
     @PostMapping("/reportLossCard.action")
     public BaseOutput<?> reportLoss(@RequestBody CardRequestDto cardParam) {
+        LOGGER.error("挂失请求参数:{}", JSON.toJSONString(cardParam));
         AssertUtils.notEmpty(cardParam.getLoginPwd(),"密码不能为空");
         this.validateCommonParam(cardParam);
         this.buildOperatorInfo(cardParam);
