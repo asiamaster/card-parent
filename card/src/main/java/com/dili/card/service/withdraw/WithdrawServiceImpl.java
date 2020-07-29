@@ -12,7 +12,9 @@ import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
+import com.dili.card.type.CardType;
 import com.dili.card.type.TradeType;
+import com.dili.card.type.UsePermissionType;
 import com.dili.ss.constant.ResultCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,6 +143,12 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
      */
     protected UserAccountCardResponseDto check(FundRequestDto fundRequestDto) {
         UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(fundRequestDto);
+        if (!Integer.valueOf(CardType.MASTER.getCode()).equals(accountCard.getCardType())) {
+            throw new CardAppBizException("", "该卡非主卡,不能进行提现");
+        }
+        if (!accountCard.getPermissionList().contains(String.valueOf(UsePermissionType.WITHDRAW.getCode()))) {
+            throw new CardAppBizException("", "该卡无提现权限,不能进行提现");
+        }
         if (!Integer.valueOf(CardStatus.NORMAL.getCode()).equals(accountCard.getCardState())) {
             throw new CardAppBizException("", String.format("该卡为%s状态,不能进行提现", CardStatus.getName(accountCard.getCardState())));
         }
