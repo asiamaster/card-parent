@@ -119,12 +119,7 @@ public class UserCashManagementController implements IControllerHandler {
 	@PostMapping("/payeeList.action")
 	@ResponseBody
 	public Map<String, Object> listPayee(@Validated(ConstantValidator.Page.class) UserCashDto userCashDto) {
-		Map<String, Object> response = successPage(iUserCashService.listPayee(userCashDto));
-		if (userCashDto.getIsStatistic()) {
-			response.put("totalAmount", CurrencyUtils
-					.toYuanWithStripTrailingZeros(iUserCashService.findTotalAmountByUserId(userCashDto, CashAction.PAYEE)));
-		}
-		return response;
+		return successPage(iUserCashService.listPayee(userCashDto));
 	}
 	
 	/**
@@ -135,7 +130,7 @@ public class UserCashManagementController implements IControllerHandler {
 	public BaseOutput<String> statistic(@RequestBody UserCashDto userCashDto) {
 		String amount = CurrencyUtils
 				.toYuanWithStripTrailingZeros(iUserCashService.findTotalAmountByUserId(userCashDto));
-		return BaseOutput.successData(amount);
+		return BaseOutput.successData(amount == null ? "0" : amount);
 	}
 	
 	
@@ -145,12 +140,7 @@ public class UserCashManagementController implements IControllerHandler {
 	@PostMapping("/payerList.action")
 	@ResponseBody
 	public Map<String, Object> listPayer(@Validated(ConstantValidator.Page.class) UserCashDto userCashDto) {
-		Map<String, Object> response = successPage(iUserCashService.listPayer(userCashDto));
-		if (userCashDto.getIsStatistic()) {
-			response.put("totalAmount", CurrencyUtils
-					.toYuanWithStripTrailingZeros(iUserCashService.findTotalAmountByUserId(userCashDto, CashAction.PAYER)));
-		}
-		return response;
+		return successPage(iUserCashService.listPayer(userCashDto));
 	}
 
 	/**

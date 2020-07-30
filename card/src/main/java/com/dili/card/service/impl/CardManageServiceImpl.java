@@ -79,6 +79,7 @@ public class CardManageServiceImpl implements ICardManageService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void returnCard(CardRequestDto cardParam) {
         //校验卡状态
         UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam.getAccountId());
@@ -87,6 +88,9 @@ public class CardManageServiceImpl implements ICardManageService {
         }
         //余额校验
         BalanceResponseDto balanceResponseDto = payRpcResolver.findBalanceByFundAccountId(accountCard.getFundAccountId());
+        if (balanceResponseDto.getFrozenAmount() > 0L) {
+        	throw new CardAppBizException(ResultCode.DATA_ERROR, "卡冻结金额不为0,不能退卡");
+		}
         if (balanceResponseDto.getBalance() > 100L) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "卡余额大于1元,不能退卡");
         }

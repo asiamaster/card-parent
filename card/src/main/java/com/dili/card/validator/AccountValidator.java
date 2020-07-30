@@ -50,10 +50,19 @@ public class AccountValidator {
      * @param operationAmount 实际与余额可用金额比对的金额
      * @param fundAccountId 资金账号
      */
-    protected static void checkAvailableAmount(Long operationAmount, Long fundAccountId) {
+    public static void checkAvailableAmount(Long operationAmount, Long fundAccountId) {
+        checkAvailableAmountWithMsg(operationAmount, fundAccountId, "可用余额不足");
+    }
+    
+    /**
+     * 验证余额 附加信息
+     * @param operationAmount 实际与余额可用金额比对的金额
+     * @param fundAccountId 资金账号
+     */
+    public static void checkAvailableAmountWithMsg(Long operationAmount, Long fundAccountId, String msg) {
     	BalanceResponseDto balance = SpringUtil.getBean(PayRpcResolver.class).findBalanceByFundAccountId(fundAccountId);
         if (operationAmount > balance.getAvailableAmount()) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "可用余额不足");
+            throw new CardAppBizException(ResultCode.DATA_ERROR, msg);
         }
     }
 }

@@ -104,6 +104,9 @@
             removeUrl: "${contextPath}/cash/delete.html?id={id}"
         };
         $.table.init(options);
-        statisticTotalAmount(2);
+        statisticTotalAmount(1);
+        $("#query").click(function(){
+        	statisticTotalAmount(1);
+        });
     });
 </script>
