@@ -139,7 +139,7 @@ public class CardManageServiceImpl implements ICardManageService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void reportLossCard(CardRequestDto cardParam) {
-        UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForGenericOp(cardParam.getAccountId());
+        UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(cardParam.getCardNo());
         AccountValidator.validateMatchAccount(cardParam, userAccount);
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardParam, userAccount,
                 record -> record.setType(OperateType.LOSS_CARD.getCode()));
