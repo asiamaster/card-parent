@@ -1,7 +1,6 @@
 package com.dili.card.service.recharge;
 
 import com.dili.card.common.constant.Constant;
-import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -15,9 +14,7 @@ import com.dili.card.service.ISerialService;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
-import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
-import com.dili.card.validator.AccountValidator;
 import com.dili.tcc.core.TccContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,10 +39,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
      * @date 2020/7/6
      */
     public final void doPreRecharge(FundRequestDto requestDto) {
-        AccountWithAssociationResponseDto association = accountQueryService.getAssociationByAccountId(requestDto.getAccountId());
-        UserAccountCardResponseDto userAccount = association.getPrimary();
-        AccountValidator.validateMatchAccount(requestDto, userAccount);
-        AccountValidator.validateForRecharge(association);
+        UserAccountCardResponseDto userAccount = accountQueryService.getByAccountId(requestDto);
 
         //真正充值的金额
         Long rechargeAmount = this.getRechargeAmount(requestDto);

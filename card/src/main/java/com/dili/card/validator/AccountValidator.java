@@ -44,28 +44,7 @@ public class AccountValidator {
         }
     }
 
-    /**
-    * 充值校验账户信息
-    * @author miaoguoxin
-    * @date 2020/7/28
-    */
-    public static void validateForRecharge(AccountWithAssociationResponseDto result){
-        UserAccountCardResponseDto primary = result.getPrimary();
-        //挂失状态不能进行操作
-        if (CardStatus.LOSS.getCode() == primary.getCardState()) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡为挂失状态，不能进行此操作");
-        }
-        //该卡为副卡的时候需要校验关联主卡是否为挂失
-        if (CardType.isSlave(primary.getCardType())) {
-            //副卡肯定有关联的主卡，要是没的就是数据有问题，直接抛错，所以这里直接get(0)
-            UserAccountCardResponseDto master = result.getAssociation().get(0);
-            if (CardStatus.LOSS.getCode() == master.getCardState()) {
-                throw new CardAppBizException(ResultCode.DATA_ERROR,
-                        String.format("该卡关联的主卡【%s】为挂失状态，不能进行此操作", master.getCardNo()));
-            }
-        }
-    }
-    
+
     /**
      * 验证余额
      * @param operationAmount 实际与余额可用金额比对的金额

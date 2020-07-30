@@ -1,6 +1,7 @@
 package com.dili.card.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
@@ -46,17 +47,9 @@ public interface IAccountQueryService {
      */
     UserAccountCardResponseDto getByCardNo(String cardNo);
 
-    /**
-    * 一般的业务操作需要校验一些状态（如 挂失状态、主副卡等）
-    * @author miaoguoxin
-    * @date 2020/7/30
-    */
-    UserAccountCardResponseDto getByAccountIdForGenericOp(Long accountId);
 
     /**
     * 根据卡号查询 （不校验非正常状态）
-    * @param
-    * @return
     * @author miaoguoxin
     * @date 2020/7/30
     */

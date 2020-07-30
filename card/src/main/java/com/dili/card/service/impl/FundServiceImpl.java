@@ -1,16 +1,5 @@
 package com.dili.card.service.impl;
 
-import java.time.LocalDateTime;
-
-import javax.annotation.Resource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.FundUnfrozenRecordDto;
 import com.dili.card.dto.SerialDto;
@@ -23,7 +12,6 @@ import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
-import com.dili.card.rpc.AccountQueryRpc;
 import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
@@ -38,6 +26,14 @@ import com.dili.card.type.OperateType;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 /**
  * 资金操作service实现类
@@ -57,8 +53,6 @@ public class FundServiceImpl implements IFundService {
     private UidRpcResovler uidRpcResovler;
     @Resource
     private PayRpc payRpc;
-    @Resource
-    private AccountQueryRpc accountQueryRpc;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -92,7 +86,7 @@ public class FundServiceImpl implements IFundService {
                     serialRecord.setFundItemName(FundItem.TRADE_FREEZE.getName());
                 }
                 serialRecord.setNotes("手动冻结资金");
-            },true);
+            }, true);
             serialService.handleSuccess(serialDto);
         } catch (Exception e) {
             LOGGER.error("冻结处理流水失败", e);
@@ -102,7 +96,7 @@ public class FundServiceImpl implements IFundService {
 
     @Override
     public void unfrozen(UnfreezeFundDto unfreezeFundDto) {
-        AccountWithAssociationResponseDto accountInfo = accountQueryService.getAssociationByAccountId(unfreezeFundDto.getAccountId());
+        UserAccountCardResponseDto accountInfo = accountQueryService.getByAccountId(unfreezeFundDto.getAccountId());
         for (Long tradeNo : unfreezeFundDto.getTradeNos()) {
             //对应支付的frozenId
             UnfreezeFundDto dto = new UnfreezeFundDto();
@@ -128,13 +122,13 @@ public class FundServiceImpl implements IFundService {
      * @param accountInfo
      * @param unfreezeFundDto
      */
-    private SerialRecordDo buildSerialRecord(AccountWithAssociationResponseDto accountInfo, UnfreezeFundDto unfreezeFundDto) {
+    private SerialRecordDo buildSerialRecord(UserAccountCardResponseDto accountInfo, UnfreezeFundDto unfreezeFundDto) {
         SerialRecordDo record = new SerialRecordDo();
-        record.setAccountId(accountInfo.getPrimary().getAccountId());
-        record.setCardNo(accountInfo.getPrimary().getCardNo());
-        record.setCustomerId(accountInfo.getPrimary().getCustomerId());
-        record.setCustomerName(accountInfo.getPrimary().getCustomerName());
-        record.setCustomerNo(accountInfo.getPrimary().getCustomerCode());
+        record.setAccountId(accountInfo.getAccountId());
+        record.setCardNo(accountInfo.getCardNo());
+        record.setCustomerId(accountInfo.getCustomerId());
+        record.setCustomerName(accountInfo.getCustomerName());
+        record.setCustomerNo(accountInfo.getCustomerCode());
         record.setFirmId(unfreezeFundDto.getFirmId());
         record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
         record.setNotes("开卡");

@@ -49,7 +49,7 @@ public class ChangeCardTccTransactionManager extends AbstractTccTransactionManag
 
     @Override
     protected void prepare(CardRequestDto requestDto) {
-        UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForGenericOp(requestDto.getAccountId());
+        UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(requestDto.getCardNo());
         AccountValidator.validateMatchAccount(requestDto, userAccount);
         this.validateCanChange(requestDto, userAccount);
 

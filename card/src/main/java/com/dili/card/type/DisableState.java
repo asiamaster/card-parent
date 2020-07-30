@@ -10,14 +10,14 @@ package com.dili.card.type;
  */
 public enum DisableState {
 	/** 启用 */
-	ENABLED(1, "启用"),
+	ENABLED(1, "正常"),
 	/** 禁用 */
 	DISABLED(2, "禁用");
 
 	private Integer code;
 	private String name;
 
-	private DisableState(Integer code, String name) {
+	DisableState(Integer code, String name) {
 		this.code = code;
 		this.name = name;
 	}
@@ -37,7 +37,7 @@ public enum DisableState {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
     public static String getName(int code) {
         for (DisableState status : DisableState.values()) {
             if (status.getCode() == code) {

@@ -10,19 +10,15 @@ import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.BalanceRequestDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
-import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IPayService;
-import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
-import com.dili.card.type.DisableState;
 import com.dili.card.util.PageUtils;
 import com.dili.card.validator.AccountValidator;
 import com.dili.customer.sdk.rpc.CustomerRpc;
-import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
 import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
@@ -103,34 +99,13 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         return accountQueryRpcResolver.findSingle(query);
     }
 
-    @Override
-    public UserAccountCardResponseDto getByAccountIdForGenericOp(Long accountId) {
-        UserAccountCardQuery query = new UserAccountCardQuery();
-        query.setAccountIds(Lists.newArrayList(accountId));
-        UserAccountCardResponseDto result = accountQueryRpcResolver.findSingle(query);
-        if (result.getCardState() == CardStatus.LOSS.getCode()) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡为挂失状态，不能进行此操作");
-        }
-        if (CardType.isSlave(result.getCardType())){
-            query.setAccountIds(Lists.newArrayList(result.getParentAccountId()));
-            UserAccountCardResponseDto parentAccount = accountQueryRpcResolver.findSingleWithoutValidate(query);
-            if (parentAccount.getDisabledState().equals(DisableState.DISABLED.getCode())){
-                throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡的主卡账户为禁用状态，不能进行此操作");
-            }
-            if (parentAccount.getCardState() == CardStatus.LOSS.getCode()) {
-                throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡的主卡为挂失状态，不能进行此操作");
-            }
-        }
-        return result;
-    }
 
     @Override
     public UserAccountCardResponseDto getByCardNoWithoutValidate(String cardNo) {
-        UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
-        userAccountCardQuery.setCardNos(Lists.newArrayList(cardNo));
-        return accountQueryRpcResolver.findSingleWithoutValidate(userAccountCardQuery);
+        UserAccountCardQuery query = new UserAccountCardQuery();
+        query.setCardNos(Lists.newArrayList(cardNo));
+        return accountQueryRpcResolver.findSingleWithoutValidate(query);
     }
-
 
     @Override
     public UserAccountCardResponseDto getByAccountId(CardRequestDto requestDto) {
@@ -160,8 +135,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     @Deprecated
     public AccountSimpleResponseDto getByCardNoWithBalance(String cardNo) {
         UserAccountCardResponseDto userAccount = this.getByCardNo(cardNo);
-        BalanceResponseDto fund = payService.queryBalance(new BalanceRequestDto(userAccount.getFundAccountId()));
-
+        BalanceResponseDto fund = payRpcResolver.findBalanceByFundAccountId(userAccount.getFundAccountId());
         return new AccountSimpleResponseDto(fund, userAccount);
     }
 
