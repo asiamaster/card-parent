@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardQuery;
@@ -71,7 +72,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
         		payRpcResolver.freezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
         	}
 		} catch (Exception e) {
-			LOGGER.error("freezeFundAccount", e);
+			LOGGER.error("远程冻结资金账户失败:" + accountCard.getAccountId(), e);
 		}
         //记录远程操作记录
         try {
@@ -108,7 +109,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
         		payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
 			}
 		} catch (Exception e) {
-			LOGGER.error("unfreezeFundAccount", e);
+			LOGGER.error("远程解冻资金账户失败:" + accountCard.getAccountId(), e);
 		}
         //记录远程操作记录
         try {
