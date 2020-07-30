@@ -4,7 +4,11 @@ import com.dili.card.config.PayServiceFeignConfig;
 import com.dili.card.dto.UnfreezeFundDto;
 import com.dili.card.dto.pay.*;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.PageOutput;
 import com.dili.tcc.common.Tcc;
+
+import java.util.List;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,12 +51,17 @@ public interface PayRpc {
 
     /**
      * 解冻资金
-     * @param frozenId
-     * @return
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.fund.service:unfreeze", method = RequestMethod.POST)
     BaseOutput<UnfreezeFundDto> unfrozenFund(UnfreezeFundDto unfreezeFundDto);
 
+    
+    /**
+     * 查询人工冻结及解冻记录
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.fund.service:listFrozen", method = RequestMethod.POST)
+    PageOutput<List<FreezeFundRecordDto>> listFrozenRecord(FreezeFundRecordParam param);
+    
     /**
      * 查询余额
      * @author miaoguoxin

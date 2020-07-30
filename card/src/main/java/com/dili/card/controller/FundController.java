@@ -6,6 +6,7 @@ import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.UnfreezeFundDto;
+import com.dili.card.dto.pay.FreezeFundRecordParam;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
@@ -133,9 +134,9 @@ public class FundController implements IControllerHandler {
      */
     @PostMapping("unfrozenRecord.action")
     @ResponseBody
-    public Map<String, Object> unfrozenRecord(UnfreezeFundDto unfreezeFundDto) {
-        AssertUtils.notNull(unfreezeFundDto.getAccountId(), "参数校验失败：缺少账户ID!");
-        return successPage(fundService.unfrozenRecord(unfreezeFundDto));
+    public Map<String, Object> unfrozenRecord(FreezeFundRecordParam queryParam) {
+//        AssertUtils.notNull(unfreezeFundDto.getAccountId(), "参数校验失败：缺少账户ID!");
+        return successPage(fundService.frozenRecord(queryParam));
     }
 
     /**
