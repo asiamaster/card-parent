@@ -30,11 +30,10 @@
 						<tr>
 							<th data-checkbox="true"></th>
 							<th data-field="amountText" data-align="amount">冻结金额</th>
-							<th data-field="notes" data-align="center">冻结备注</th>
-							<th data-field="operateTime" data-align="center">冻结时间</th>
-							<th data-field="operatorNo" data-align="center">冻结员工号</th>
-							<th data-field="operatorName" data-align="center">冻结员</th>
-							<th data-field="operatorName" data-align="center">冻结员</th>
+							<th data-field="description" data-align="center">冻结备注</th>
+							<th data-field="freezeTime" data-align="center">冻结时间</th>
+							<th data-field="opNo" data-align="center">冻结员工号</th>
+							<th data-field="opName" data-align="center">冻结员</th>
 						</tr>
 					</thead>
 				</table>
@@ -42,5 +41,27 @@
 		</div>
 	</div>
 </div>
+<!-- 解冻弹出模态框 -->
+  <div class="modal fade" id="unfrozenModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">解冻确认</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+        	确认解冻资金？
+        	<br>
+        	解冻说明：<textarea rows="3" cols="15"  id="remark" name="remark"></textarea> 
+        </div>
+        <!-- 底部 -->
+        <div class="modal-footer">
+        	<button type="button" id="unfrozenOkBtn" class="btn btn-secondary" data-dismiss="modal">解冻</button>
+          	<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+        </div>
+   
+      </div>
+    </div>
+  </div>
 <#fund_unfrozenIndexJs />
 <#common_commonJs/>

@@ -10,28 +10,28 @@ public class UnfreezeFundDto extends BaseDto {
 	/** */
 	private static final long serialVersionUID = 1L;
 	/** 交易渠道 */
-	private Long[] tradeNos;
+	private Long[] frozenIds;
 	/** */
 	private Long accountId;
 	/** 冻结资金id,与支付对应 */
 	private Long frozenId;
 	/** 备注 */
-	private String mark;
+	private String remark;
 
-	public Long[] getTradeNos() {
-		return tradeNos;
+	public Long[] getFrozenIds() {
+		return frozenIds;
 	}
 
-	public void setTradeNos(Long[] tradeNos) {
-		this.tradeNos = tradeNos;
+	public void setFrozenIds(Long[] frozenIds) {
+		this.frozenIds = frozenIds;
 	}
 
-	public String getMark() {
-		return mark;
+	public String getRemark() {
+		return remark;
 	}
 
-	public void setMark(String mark) {
-		this.mark = mark;
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	public Long getAccountId() {

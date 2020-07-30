@@ -108,10 +108,10 @@ public class FundServiceImpl implements IFundService {
 	public void unfrozen(UnfreezeFundDto unfreezeFundDto) {
 		AccountWithAssociationResponseDto accountInfo = accountQueryService
 				.getAssociationByAccountId(unfreezeFundDto.getAccountId());
-		for (Long tradeNo : unfreezeFundDto.getTradeNos()) {
+		for (Long frozenId : unfreezeFundDto.getFrozenIds()) {
 			// 对应支付的frozenId
 			UnfreezeFundDto dto = new UnfreezeFundDto();
-			dto.setFrozenId(tradeNo);
+			dto.setFrozenId(frozenId);
 			GenericRpcResolver.resolver(payRpc.unfrozenFund(dto), "pay-service");
 			// 保存操作记录
 			System.out.println("****************解冻成功");
@@ -133,14 +133,12 @@ public class FundServiceImpl implements IFundService {
 		PageOutput<List<FreezeFundRecordDto>> pageOutPut = GenericRpcResolver.resolver(payRpc.listFrozenRecord(queryParam),
 				"pay-service");
 		for (FreezeFundRecordDto record : pageOutPut.getData()) {
+			record.setAmountText(MoneyUtils.centToYuan(record.getAmount()));
 			if (StringUtils.isNoneBlank(record.getExtension())) {
 				// 在冻结资金时会以json格式存入当时的操作人及其编号
 				JSONObject jsonObject = JSONObject.parseObject(record.getExtension());
 				record.setOpNo(jsonObject.getString("opNo"));
 				record.setOpName(jsonObject.getString("opName"));
-				record.setAmountText(MoneyUtils.centToYuan(record.getAmount()));
-			} else {
-				LOGGER.info("该记录冻结时并未存入操作人信息,金额[{}]", record.getAmount());
 			}
 		}
 		return pageOutPut;

@@ -4,36 +4,49 @@
         let options = {
         	id: "unfrozenTable",
         	uniqueId: "id",
-            url: "${contextPath}/serial/business/page.action",
+            url: "${contextPath}/fund/unfrozenRecord.action",
             sortName: "operate_time",
             modalName: "冻结资金记录"
         };
         $.table.init(options);
     });
 
+    // 解冻确认弹出层显示
     $("#unfrozenBtn").click(function(){
-    	// 选中行
+    	let rows = $("#unfrozenTable").bootstrapTable('getSelections').length;
+    	if(rows>0){
+    		$("#unfrozenModal").modal("show");
+    	}else{
+    		showError("您没有选择任何记录!");
+    	}
+    });
+    
+    // 解冻
+    $("#unfrozenOkBtn").click(function(){
+    	// 获取选中行
     	var rows=$("#unfrozenTable").bootstrapTable('getSelections');
-    	var tradeNos = new Array();
+    	var frozenIds = new Array();
     	$.each(rows, function (index, item) {
-            tradeNos[index] = item["tradeNo"];
+    		frozenIds[index] = item["frozenId"];
        });
-    	alert(JSON.stringify(tradeNos));
     	var accountId = $("#accountId").val();
+    	var remark = $("#remark").val();
     	$.ajax({
             type:'POST',
-            url:'${contextPath}/fund/unfrozenRecord.action',
+            url:'${contextPath}/fund/unfrozen.action',
             dataType:'json',
             traditional:true,
             data: {
-            	tradeNos:tradeNos,
-            	accountId:accountId
+            	frozenIds: frozenIds,
+            	accountId: accountId,
+            	remark: remark
             },
             success:function(result) {
                 if (result.success) {
                 	showInfo("操作成功");
+                	$('#unfrozenTable').bootstrapTable('refresh');
                 }else {
-                	showError("解冻资金失败");
+                	showError("解冻资金失败："+result.message);
                 }
             }
         });

@@ -1,7 +1,7 @@
 package com.dili.card.dto.pay;
 
 /**
- * @description： 支付资金人工冻结解冻记录查询参数 
+ * @description： 支付资金人工冻结解冻记录查询参数
  * 
  * @author ：WangBo
  * @time ：2020年7月30日上午11:35:02
@@ -9,14 +9,14 @@ package com.dili.card.dto.pay;
 public class FreezeFundRecordParam {
 	/** 资金账号 */
 	private Long accountId;
-	/** 冻结状态：1-冻结，2-解冻 */
+	/** 冻结状态：1-冻结，2-解冻 {@link} PayFreezeFundType} */
 	private Integer state;
 	/** 冻结开始时间 */
 	private String startTime;
 	/** 冻结结束时间 */
 	private String endTime;
 	/** 页号 */
-	private Integer pageNum;
+	private Integer pageNo;
 	/** 每页记录数 */
 	private Integer pageSize;
 
@@ -32,6 +32,10 @@ public class FreezeFundRecordParam {
 		return state;
 	}
 
+	/**
+	 * 冻结状态：1-冻结，2-解冻{@link} PayFreezeFundType
+	 * @param state
+	 */
 	public void setState(Integer state) {
 		this.state = state;
 	}
@@ -52,12 +56,12 @@ public class FreezeFundRecordParam {
 		this.endTime = endTime;
 	}
 
-	public Integer getPageNum() {
-		return pageNum;
+	public Integer getPageNo() {
+		return pageNo;
 	}
 
-	public void setPageNum(Integer pageNum) {
-		this.pageNum = pageNum;
+	public void setPageNo(Integer pageNo) {
+		this.pageNo = pageNo;
 	}
 
 	public Integer getPageSize() {

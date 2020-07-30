@@ -4,14 +4,17 @@ import com.alibaba.fastjson.JSON;
 import com.dili.card.common.annotation.ForbidDuplicateCommit;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
+import com.dili.card.dto.FundFrozenRecordParamDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.UnfreezeFundDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.FreezeFundRecordParam;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.tcc.RechargeTccTransactionManager;
 import com.dili.card.service.withdraw.WithdrawDispatcher;
+import com.dili.card.type.PayFreezeFundType;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.card.validator.FundValidator;
@@ -134,9 +137,15 @@ public class FundController implements IControllerHandler {
      */
     @PostMapping("unfrozenRecord.action")
     @ResponseBody
-    public Map<String, Object> unfrozenRecord(FreezeFundRecordParam queryParam) {
-//        AssertUtils.notNull(unfreezeFundDto.getAccountId(), "参数校验失败：缺少账户ID!");
-        return successPage(fundService.frozenRecord(queryParam));
+    public Map<String, Object> unfrozenRecord(FundFrozenRecordParamDto queryParam) {
+        AssertUtils.notNull(queryParam.getAccountId(), "参数校验失败：缺少账户ID!");
+    	UserAccountCardResponseDto byAccountId = accountQueryService.getByAccountId(queryParam.getAccountId());
+    	FreezeFundRecordParam payServiceParam = new FreezeFundRecordParam();
+    	payServiceParam.setAccountId(byAccountId.getFundAccountId());
+    	payServiceParam.setPageNo(queryParam.getPage());
+    	payServiceParam.setPageSize(queryParam.getRows());
+    	payServiceParam.setState(PayFreezeFundType.FREEZE_FUND.getCode());  //冻结状态
+        return successPage(fundService.frozenRecord(payServiceParam));
     }
 
     /**
@@ -146,7 +155,7 @@ public class FundController implements IControllerHandler {
     @ResponseBody
     public BaseOutput<?> unfrozen(UnfreezeFundDto unfreezeFundDto) {
         AssertUtils.notNull(unfreezeFundDto.getAccountId(), "参数校验失败：缺少账户ID!");
-        AssertUtils.notNull(unfreezeFundDto.getTradeNos(), "参数校验失败：缺少冻结ID!");
+        AssertUtils.notNull(unfreezeFundDto.getFrozenIds(), "参数校验失败：缺少冻结ID!");
         buildOperatorInfo(unfreezeFundDto);
         fundService.unfrozen(unfreezeFundDto);
         return BaseOutput.success();
