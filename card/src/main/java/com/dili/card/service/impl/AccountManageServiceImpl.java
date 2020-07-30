@@ -24,6 +24,7 @@ import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.DisableState;
 import com.dili.card.type.OperateType;
+import com.dili.ss.constant.ResultCode;
 
 @Service("accountManageService")
 public class AccountManageServiceImpl implements IAccountManageService {
@@ -44,14 +45,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void frozen(CardRequestDto cardRequestDto) {
-		//保存本地操作记录 
-		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(UserAccountCardQuery.createInstance(cardRequestDto.getAccountId()));
-		if (Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
-            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行解挂", CardStatus.getName(accountCard.getCardState())));
-        }
-		if (!Integer.valueOf(DisableState.ENABLED.getCode()).equals(accountCard.getCardState())) {
-            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行操作", DisableState.getName(accountCard.getDisabledState())));
-        }
+		//校验账户信息
+		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), false, DisableState.ENABLED);
 		//保存本地记录
 		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.FROZEN_ACCOUNT);
 		//远程冻结卡账户操作
@@ -71,14 +66,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void unfrozen(CardRequestDto cardRequestDto) {
-		//保存本地操作记录 
-		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(UserAccountCardQuery.createInstance(cardRequestDto.getAccountId()));
-		if (Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
-            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行解挂", CardStatus.getName(accountCard.getCardState())));
-        }
-		if (!Integer.valueOf(DisableState.DISABLED.getCode()).equals(accountCard.getDisabledState())) {
-            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行操作", DisableState.getName(accountCard.getDisabledState())));
-        }
+		//校验账户信息
+		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), false, DisableState.DISABLED);
 		//保存本地记录
 		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.UNFROZEN_ACCOUNT);		
 		//远程解冻账户操作 
@@ -93,6 +82,23 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		}
         //记录远程操作记录
         this.saveRemoteSerialRecord(businessRecord);
+	}
+	
+	/**
+	 * 校验卡状态
+	 * @param account 账户信息
+	 * @param checkCardLoss 是否判定挂失状态
+	 * @return
+	 */
+	private UserAccountCardResponseDto validateCardAccount(Long account, boolean checkCardLoss, DisableState disableState) {
+		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(UserAccountCardQuery.createInstance(account));
+		if (checkCardLoss && Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
+            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行操作", CardStatus.getName(accountCard.getCardState())));
+        }
+		if (!Integer.valueOf(disableState.getCode()).equals(accountCard.getCardState())) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, String.format("该卡账户为%s状态,不能进行操作", DisableState.getName(accountCard.getDisabledState())));
+        }
+		return accountCard;
 	}
 	
 	/**
