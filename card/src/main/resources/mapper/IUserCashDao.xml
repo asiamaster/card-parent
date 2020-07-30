@@ -43,59 +43,16 @@
 	</insert>
 	
 	<select id="getById" resultType="com.dili.card.entity.UserCashDo">
-		SELECT
-			`id`, 
-			cash_no,
-			`user_id`, 
-			`user_code`,
-			`user_name`, 
-			`action`, 
-			`cycle_no`, 
-			`amount`, 
-			`state`, 
-			`notes`, 
-			`firm_id`, 
-			`firm_name`, 
-			`creator_id`,
-			`creator_code`,  
-			`creator`, 
-			`create_time`, 
-			`modify_time`
-		FROM
-			card_user_cash
-		WHERE
-			id = #{id}
+		<include refid="selectsql"></include>
+		WHERE id = #{id}
 	</select>
 	
 	<select id="findEntityByCondition" parameterType="com.dili.card.dto.UserCashDto" resultType="com.dili.card.entity.UserCashDo">
-		SELECT
-			`id`, 
-			cash_no,
-			`user_id`, 
-			`user_code`,
-			`user_name`, 
-			`action`, 
-			`cycle_no`, 
-			`amount`, 
-			`state`, 
-			`notes`, 
-			`creator_id`, 
-			`creator_code`, 
-			`creator`, 
-			`create_time`
-		FROM
-			card_user_cash
-		WHERE
-			firm_id = #{firmId}
-			<if test="cycleNo != null">AND cycle_no = #{cycleNo}</if>
-			<if test="userId != null"> AND user_id = #{userId}</if>
-			<if test="creatorId != null"> AND creator_id = #{creatorId}</if>
-			<if test="state != null"> AND state = #{state}</if>
-			<if test="action != null"> AND action = #{action}</if>
-			AND state != 10
+		<include refid="selectsql"></include>
+		<include refid="wheresql"></include>
 		ORDER BY create_time DESC
 	</select>
-	
+	 
 	<update id="update">
 		UPDATE card_user_cash
 	 	<set>
@@ -133,12 +90,39 @@
 		
 	<select id="findTotalAmountByUserId" parameterType="com.dili.card.dto.UserCashDto" resultType="long">
 		SELECT SUM(amount) FROM card_user_cash 
-			WHERE firm_id = #{firmId}
+		<include refid="wheresql"></include>
+	</select>
+	
+	<sql id="wheresql">
+		WHERE
+			firm_id = #{firmId}
 			<if test="cycleNo != null">AND cycle_no = #{cycleNo}</if>
 			<if test="userId != null"> AND user_id = #{userId}</if>
 			<if test="creatorId != null"> AND creator_id = #{creatorId}</if>
 			<if test="state != null"> AND state = #{state}</if>
 			<if test="action != null"> AND action = #{action}</if>
+			<if test="createStartTime != null and createStartTime !=''"> AND create_time >= #{createStartTime}</if>
+			<if test="createEndTime != null and createEndTime !=''"><![CDATA[ AND create_time <= #{createEndTime}]]> </if>
 			AND state != 10
-	</select>
+	</sql>
+	
+	<sql id="selectsql">
+		SELECT
+			`id`, 
+			cash_no,
+			`user_id`, 
+			`user_code`,
+			`user_name`, 
+			`action`, 
+			`cycle_no`, 
+			`amount`, 
+			`state`, 
+			`notes`, 
+			`creator_id`, 
+			`creator_code`, 
+			`creator`, 
+			`create_time`
+		FROM
+			card_user_cash
+	</sql>
 </mapper>

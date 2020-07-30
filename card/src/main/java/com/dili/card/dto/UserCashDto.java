@@ -58,10 +58,10 @@ public class UserCashDto extends BaseDto implements Serializable {
 	private LocalDateTime createTime; 
 	
 	/** 创建开始时间 */
-	private LocalDateTime createStartTime;
+	private String createStartTime;
 	
 	/** 创建结束时间 */
-	private LocalDateTime createEndTime;
+	private String createEndTime;
 	
 	/** 市场id */
 	private Long firmId;
@@ -217,19 +217,19 @@ public class UserCashDto extends BaseDto implements Serializable {
 		this.creator = creator;
 	}
 
-	public LocalDateTime getCreateStartTime() {
+	public String getCreateStartTime() {
 		return createStartTime;
 	}
 
-	public void setCreateStartTime(LocalDateTime createStartTime) {
+	public void setCreateStartTime(String createStartTime) {
 		this.createStartTime = createStartTime;
 	}
 
-	public LocalDateTime getCreateEndTime() {
+	public String getCreateEndTime() {
 		return createEndTime;
 	}
 
-	public void setCreateEndTime(LocalDateTime createEndTime) {
+	public void setCreateEndTime(String createEndTime) {
 		this.createEndTime = createEndTime;
 	}
 
