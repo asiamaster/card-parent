@@ -122,11 +122,23 @@ public class UserCashManagementController implements IControllerHandler {
 		Map<String, Object> response = successPage(iUserCashService.listPayee(userCashDto));
 		if (userCashDto.getIsStatistic()) {
 			response.put("totalAmount", CurrencyUtils
-					.toYuanWithStripTrailingZeros(iUserCashService.findTotalAmountByUserId(userCashDto, CashAction.PAYER)));
+					.toYuanWithStripTrailingZeros(iUserCashService.findTotalAmountByUserId(userCashDto, CashAction.PAYEE)));
 		}
 		return response;
 	}
-
+	
+	/**
+	 * 统计数据交款领款总金额
+	 */
+	@PostMapping("/statistic.action")
+	@ResponseBody
+	public BaseOutput<String> statistic(@RequestBody UserCashDto userCashDto) {
+		String amount = CurrencyUtils
+				.toYuanWithStripTrailingZeros(iUserCashService.findTotalAmountByUserId(userCashDto));
+		return BaseOutput.successData(amount);
+	}
+	
+	
 	/**
 	 * 列表交款
 	 */
