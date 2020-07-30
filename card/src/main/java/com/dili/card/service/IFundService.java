@@ -1,8 +1,11 @@
 package com.dili.card.service;
 
+import java.util.List;
+
 import com.dili.card.dto.FundRequestDto;
-import com.dili.card.dto.FundUnfrozenRecordDto;
 import com.dili.card.dto.UnfreezeFundDto;
+import com.dili.card.dto.pay.FreezeFundRecordDto;
+import com.dili.card.dto.pay.FreezeFundRecordParam;
 import com.dili.ss.domain.PageOutput;
 
 /**
@@ -19,11 +22,11 @@ public interface IFundService {
 	void frozen(FundRequestDto fundRequestDto);
 
 	/**
-	 * 未解冻资金记录
+	 * 从支付查询人工冻结资金记录
 	 *
 	 * @param fundRequestDto
 	 */
-	PageOutput<FundUnfrozenRecordDto> unfrozenRecord(UnfreezeFundDto unfreezeFundDto);
+	PageOutput<List<FreezeFundRecordDto>> frozenRecord(FreezeFundRecordParam queryParam);
 
 	/**
 	 * 解冻资金,支持批量操作
