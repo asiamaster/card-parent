@@ -1,6 +1,6 @@
 package com.dili.tcc.springcloud;
 
-import com.dili.tcc.core.TccContext;
+import com.dili.tcc.common.TccContext;
 import com.dili.tcc.core.TccContextHolder;
 
 import java.util.concurrent.Callable;

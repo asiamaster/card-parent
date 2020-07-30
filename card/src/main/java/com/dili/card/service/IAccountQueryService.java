@@ -47,12 +47,14 @@ public interface IAccountQueryService {
     UserAccountCardResponseDto getByCardNo(String cardNo);
 
     /**
-     * 根据卡号查询（只查询卡账户信息）
-     * @author miaoguoxin
-     * @param validateLevel 账户校验等级{@link com.dili.card.validator.AccountValidator}
-     * @date 2020/7/2
-     */
-    UserAccountCardResponseDto getByCardNo(String cardNo, Integer validateLevel);
+    * 根据卡号查询 （不校验非正常状态）
+    * @param
+    * @return
+    * @author miaoguoxin
+    * @date 2020/7/30
+    */
+    UserAccountCardResponseDto getByCardNoWithoutValidate(String cardNo);
+
 
     /**
      *  根据accountId，会进行合法性校验

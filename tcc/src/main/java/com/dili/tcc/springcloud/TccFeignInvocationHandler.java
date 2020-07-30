@@ -2,7 +2,7 @@ package com.dili.tcc.springcloud;
 
 import com.dili.tcc.common.Tcc;
 import com.dili.tcc.common.TccRemoteInfo;
-import com.dili.tcc.core.TccContext;
+import com.dili.tcc.common.TccContext;
 import com.dili.tcc.core.TccContextHolder;
 import com.dili.tcc.core.TccResultInterceptor;
 import com.dili.tcc.util.SpringContext;

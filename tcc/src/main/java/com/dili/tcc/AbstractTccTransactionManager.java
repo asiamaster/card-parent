@@ -3,7 +3,7 @@ package com.dili.tcc;
 
 import com.dili.tcc.common.TccStatus;
 import com.dili.tcc.common.TransactionId;
-import com.dili.tcc.core.TccContext;
+import com.dili.tcc.common.TccContext;
 import com.dili.tcc.core.TccContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

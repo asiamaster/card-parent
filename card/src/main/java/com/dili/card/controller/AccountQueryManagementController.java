@@ -64,7 +64,7 @@ public class AccountQueryManagementController implements IControllerHandler {
             throw new CardAppBizException(ResultCode.PARAMS_ERROR, "卡号不能为空");
         }
 
-        UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(cardNo, AccountValidator.NONE);
+        UserAccountCardResponseDto userAccount = accountQueryService.getByCardNoWithoutValidate(cardNo);
         map.put("isMaster", CardType.isMaster(userAccount.getCardType()));
         map.put("cardState", userAccount.getCardState());
         map.put("disabledState", userAccount.getDisabledState());

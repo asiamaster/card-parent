@@ -1,6 +1,5 @@
 package com.dili.card.service.impl;
 
-import com.dili.card.dto.AccountCustomerDto;
 import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.AccountSimpleResponseDto;
@@ -11,21 +10,15 @@ import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.BalanceRequestDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
-import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
-import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IPayService;
-import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
-import com.dili.card.type.CustomerType;
 import com.dili.card.util.PageUtils;
 import com.dili.card.validator.AccountValidator;
-import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.rpc.CustomerRpc;
-import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
 import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
@@ -60,9 +53,8 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
 
     @Override
     public PageOutput<List<AccountListResponseDto>> getPage(UserAccountCardQuery param) {
-        //默认查询所有卡状态，包含已禁用账户
-        param.setExcludeReturn(0);
-        param.setExcludeDisabled(0);
+        //查询所有卡状态，包含已禁用账户
+        param.setExcludeUnusualState(0);
         PageOutput<List<UserAccountCardResponseDto>> page = accountQueryRpcResolver.findPageByCondition(param);
         List<UserAccountCardResponseDto> data = page.getData();
         if (CollectionUtils.isEmpty(data)) {
@@ -87,7 +79,6 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         AccountDetailResponseDto detail = new AccountDetailResponseDto();
         UserAccountCardQuery query = new UserAccountCardQuery();
         query.setCardNos(Lists.newArrayList(cardNo));
-        query.setValidateLevel(AccountValidator.NONE);
         AccountWithAssociationResponseDto cardAssociation = this.getAssociation(query);
 
         UserAccountCardResponseDto primary = cardAssociation.getPrimary();
@@ -109,18 +100,18 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     }
 
     @Override
-    public UserAccountCardResponseDto getByCardNo(String cardNo, Integer validateLevel) {
+    public UserAccountCardResponseDto getByCardNoWithoutValidate(String cardNo) {
         UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
         userAccountCardQuery.setCardNos(Lists.newArrayList(cardNo));
-        userAccountCardQuery.setValidateLevel(validateLevel);
-        return accountQueryRpcResolver.findSingle(userAccountCardQuery);
+        return accountQueryRpcResolver.findSingleWithoutValidate(userAccountCardQuery);
     }
+
 
     @Override
     public UserAccountCardResponseDto getByAccountId(CardRequestDto requestDto) {
         UserAccountCardQuery query = new UserAccountCardQuery();
         query.setAccountIds(Lists.newArrayList(requestDto.getAccountId()));
-        UserAccountCardResponseDto accountCard =  accountQueryRpcResolver.findSingle(query);
+        UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(query);
         AccountValidator.validateMatchAccount(requestDto, accountCard);
         return accountCard;
     }
@@ -175,7 +166,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
      * @date 2020/7/28
      */
     private AccountWithAssociationResponseDto getAssociation(UserAccountCardQuery query) {
-        UserAccountCardResponseDto primary =  accountQueryRpcResolver.findSingle(query);
+        UserAccountCardResponseDto primary = accountQueryRpcResolver.findSingleWithoutValidate(query);
         //查询关联卡，primaryCard为主卡就查副卡，副卡就查主卡
         UserAccountCardQuery param = new UserAccountCardQuery();
         if (CardType.isMaster(primary.getCardType())) {
@@ -183,8 +174,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         } else if (CardType.isSlave(primary.getCardType())) {
             param.setAccountIds(Lists.newArrayList(primary.getParentAccountId()));
         }
-        param.setExcludeReturn(0);
-        param.setExcludeDisabled(0);
+        param.setExcludeUnusualState(0);
         List<UserAccountCardResponseDto> association = accountQueryRpcResolver.findByQueryCondition(param);
         return new AccountWithAssociationResponseDto(primary, association);
     }
