@@ -15,6 +15,7 @@ import com.dili.card.service.ISerialService;
 import com.dili.card.service.tcc.ChangeCardTccTransactionManager;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.OperateType;
+import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import org.slf4j.Logger;
@@ -138,7 +139,8 @@ public class CardManageServiceImpl implements ICardManageService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void reportLossCard(CardRequestDto cardParam) {
-        UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(cardParam.getCardNo());
+        UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForGenericOp(cardParam.getAccountId());
+        AccountValidator.validateMatchAccount(cardParam, userAccount);
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardParam, userAccount,
                 record -> record.setType(OperateType.LOSS_CARD.getCode()));
         serialService.saveBusinessRecord(businessRecord);
