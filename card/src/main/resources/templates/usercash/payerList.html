@@ -47,7 +47,6 @@
 	    </button>
     </#resource>
 </div>
-<input type="hidden" value="${totalAmount!0}" id = "totalAmount"/>
 <div class="row"  style="margin-left:1px;">
     <div class="col-12">
         <table id="grid"
@@ -94,14 +93,10 @@
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <#usercash_payerListJs/>
+<#usercash_commonJs/>
 <#common_userJs/>
 <script>
     $(function () {
-    	var totalAmount = $('#totalAmount').val();
-    	var toolbar = $('.fixed-table-container');
-    	var divModel = '<div><h5>交款总金额：totalAmount</h5></div>';
-    	divModel = divModel.replace("totalAmount", totalAmount+"");
-    	toolbar.before(divModel);
         let options = {
             //必须加这个唯一标识
             uniqueId: "id",
@@ -110,5 +105,6 @@
             removeUrl: "${contextPath}/cash/delete.html?id={id}"
         };
         $.table.init(options);
+        statisticTotalAmount(1);
     });
 </script>

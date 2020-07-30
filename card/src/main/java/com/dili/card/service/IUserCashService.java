@@ -61,5 +61,10 @@ public interface IUserCashService {
 	 * 获取交款取款分类处理的总金额
 	 */
 	Long findTotalAmountByUserId(UserCashDto userCashDto, CashAction cashAction);
+	
+	/**
+	 * 获取总金额
+	 */
+	Long findTotalAmountByUserId(UserCashDto userCashDto);
 
 }

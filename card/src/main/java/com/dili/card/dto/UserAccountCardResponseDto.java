@@ -259,4 +259,7 @@ public class UserAccountCardResponseDto implements Serializable {
 		this.customerMarketType = customerMarketType;
 	}
 
+	public boolean isMaster() {
+		return parentAccountId == null ? true : false;
+	}
 }

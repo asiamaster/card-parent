@@ -99,6 +99,12 @@ public class UserCashServiceImpl implements IUserCashService {
 		this.buildUserCashCondition(userCashDto, cashAction);
 		return userCashDao.findTotalAmountByUserId(userCashDto);
 	}
+	
+	@Override
+	public Long findTotalAmountByUserId(UserCashDto userCashDto) {
+		this.buildUserCashCondition(userCashDto, null);
+		return userCashDao.findTotalAmountByUserId(userCashDto);
+	}
 
 
 	@Override
@@ -155,7 +161,9 @@ public class UserCashServiceImpl implements IUserCashService {
 	private void buildUserCashCondition(UserCashDto userCashDto, CashAction cashAction) {
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		userCashDto.setFirmId(userTicket.getFirmId());
-		userCashDto.setAction(cashAction.getCode());
+		if (cashAction != null) {
+			userCashDto.setAction(cashAction.getCode());
+		}
 		userCashDto.setUserId(
 				NumberUtil.isInteger(userCashDto.getUserName()) ? Long.valueOf(userCashDto.getUserName()) : null);
 		userCashDto.setCreatorId(
