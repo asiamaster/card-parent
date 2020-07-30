@@ -52,10 +52,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		if (!Integer.valueOf(DisableState.ENABLED.getCode()).equals(accountCard.getCardState())) {
             throw new CardAppBizException("", String.format("该卡为%s状态,不能进行操作", DisableState.getName(accountCard.getDisabledState())));
         }
-		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardRequestDto, accountCard, temp -> {
-            temp.setType(OperateType.FROZEN_ACCOUNT.getCode());
-        });
-		serialService.saveBusinessRecord(businessRecord);			
+		//保存本地记录
+		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.FROZEN_ACCOUNT);
 		//远程冻结卡账户操作
     	accountManageRpcResolver.frozen(cardRequestDto);
         //远程冻结资金账户
@@ -67,12 +65,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
 			LOGGER.error("远程冻结资金账户失败:" + accountCard.getAccountId(), e);
 		}
         //记录远程操作记录
-        try {
-            SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
-            serialService.handleSuccess(serialDto);
-        } catch (Exception e) {
-            LOGGER.error("freezeFundAccount", e);
-        }	
+        this.saveRemoteSerialRecord(businessRecord);
 	}
 
 	@Override
@@ -86,10 +79,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		if (!Integer.valueOf(DisableState.DISABLED.getCode()).equals(accountCard.getDisabledState())) {
             throw new CardAppBizException("", String.format("该卡为%s状态,不能进行操作", DisableState.getName(accountCard.getDisabledState())));
         }
-		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardRequestDto, accountCard, temp -> {
-            temp.setType(OperateType.UNFROZEN_ACCOUNT.getCode());
-        });
-		serialService.saveBusinessRecord(businessRecord);		
+		//保存本地记录
+		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.UNFROZEN_ACCOUNT);		
 		//远程解冻账户操作 
 		accountManageRpcResolver.unfrozen(cardRequestDto);
         //远程解冻资金账户
@@ -101,25 +92,30 @@ public class AccountManageServiceImpl implements IAccountManageService {
 			LOGGER.error("远程解冻资金账户失败:" + accountCard.getAccountId(), e);
 		}
         //记录远程操作记录
-        try {
-            SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
-            serialService.handleSuccess(serialDto);
-        } catch (Exception e) {
-            LOGGER.error("unfreezeFundAccount", e);
-        }	
+        this.saveRemoteSerialRecord(businessRecord);
 	}
 	
 	/**
      * 保存本地操作记录
      */
-	private BusinessRecordDo saveSerialRecord(CardRequestDto cardParam, OperateType operateType) {
-		return null;
+	private BusinessRecordDo saveLocalSerialRecord(CardRequestDto cardParam, UserAccountCardResponseDto accountCard, OperateType operateType) {
+		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
+            temp.setType(operateType.getCode());
+        });
+		serialService.saveBusinessRecord(businessRecord);
+		return businessRecord;
 	}
 
 	 /**
      * 保存远程流水记录
      */
-	private void saveRemoteSerialRecord(CardRequestDto cardParam, BusinessRecordDo businessRecord) {
+	private void saveRemoteSerialRecord(BusinessRecordDo businessRecord) {
+		try {
+            SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
+            serialService.handleSuccess(serialDto);
+        } catch (Exception e) {
+            LOGGER.error("unfreezeFundAccount", e);
+        }	
 	}
 
 }
