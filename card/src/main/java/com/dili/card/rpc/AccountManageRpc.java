@@ -11,7 +11,7 @@ import com.dili.ss.domain.BaseOutput;
  * 卡相关rpc
  */
 @FeignClient(name = "account-service", contextId = "accountManageRpc",
-        path = "/api/account"  , url = "http://127.0.0.1:8186")
+        path = "/api/account"  /*, url = "http://127.0.0.1:8186"*/)
 public interface AccountManageRpc {
 
     /**
