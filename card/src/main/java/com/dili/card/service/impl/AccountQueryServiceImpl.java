@@ -96,6 +96,13 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     public UserAccountCardResponseDto getByCardNo(String cardNo) {
         UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
         userAccountCardQuery.setCardNos(Lists.newArrayList(cardNo));
+        return accountQueryRpcResolver.findSingle(userAccountCardQuery);
+    }
+
+    @Override
+    public UserAccountCardResponseDto getByCardNoWithoutValidate(String cardNo) {
+        UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
+        userAccountCardQuery.setCardNos(Lists.newArrayList(cardNo));
         return accountQueryRpcResolver.findSingleWithoutValidate(userAccountCardQuery);
     }
 

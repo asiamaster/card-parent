@@ -46,6 +46,15 @@ public interface IAccountQueryService {
      */
     UserAccountCardResponseDto getByCardNo(String cardNo);
 
+    /**
+    * 根据卡号查询 （不校验非正常状态）
+    * @param
+    * @return
+    * @author miaoguoxin
+    * @date 2020/7/30
+    */
+    UserAccountCardResponseDto getByCardNoWithoutValidate(String cardNo);
+
 
     /**
      *  根据accountId，会进行合法性校验
