@@ -94,18 +94,18 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
 
     @Override
     public UserAccountCardResponseDto getByCardNo(String cardNo) {
-        UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
-        userAccountCardQuery.setCardNos(Lists.newArrayList(cardNo));
-        return accountQueryRpcResolver.findSingle(userAccountCardQuery);
+        UserAccountCardQuery query = new UserAccountCardQuery();
+        query.setCardNos(Lists.newArrayList(cardNo));
+        return accountQueryRpcResolver.findSingle(query);
     }
+
 
     @Override
     public UserAccountCardResponseDto getByCardNoWithoutValidate(String cardNo) {
-        UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
-        userAccountCardQuery.setCardNos(Lists.newArrayList(cardNo));
-        return accountQueryRpcResolver.findSingleWithoutValidate(userAccountCardQuery);
+        UserAccountCardQuery query = new UserAccountCardQuery();
+        query.setCardNos(Lists.newArrayList(cardNo));
+        return accountQueryRpcResolver.findSingleWithoutValidate(query);
     }
-
 
     @Override
     public UserAccountCardResponseDto getByAccountId(CardRequestDto requestDto) {
@@ -135,8 +135,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     @Deprecated
     public AccountSimpleResponseDto getByCardNoWithBalance(String cardNo) {
         UserAccountCardResponseDto userAccount = this.getByCardNo(cardNo);
-        BalanceResponseDto fund = payService.queryBalance(new BalanceRequestDto(userAccount.getFundAccountId()));
-
+        BalanceResponseDto fund = payRpcResolver.findBalanceByFundAccountId(userAccount.getFundAccountId());
         return new AccountSimpleResponseDto(fund, userAccount);
     }
 

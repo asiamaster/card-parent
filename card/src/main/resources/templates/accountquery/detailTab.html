@@ -23,7 +23,7 @@
        </#resource>
 
        <#resource code="unfrozen-fund">
-        <% if(isMaster && cardState !=4 && disabledState ==1) { %>
+        <% if(isMaster && cardState !=4 && disabledState ==1 && cardState !=3) { %>
             <li class="nav-item">
                 <a class="nav-link" id="unfrozen-fund-tab" uri="/fund/unfrozenFund.html" data-toggle="tab" href="#unfrozen-fund" role="tab">
                     <h5>解冻资金</h5>
@@ -32,7 +32,7 @@
         <% } %>
        </#resource>
         <#resource code="frozen-account">
-        <% if(isMaster && cardState !=4 && disabledState ==1) { %>
+        <% if(cardState !=4 && disabledState ==1) { %>
             <li class="nav-item">
                 <a class="nav-link" id="frozen-account-tab" uri="/account/frozenAccount.html" data-toggle="tab" href="#frozen-account" role="tab">
                     <h5>冻结账户</h5>
@@ -41,7 +41,7 @@
         <% } %>
        </#resource>
         <#resource code="unfrozen-account">
-        <% if(isMaster && cardState !=4) { %>
+        <% if(cardState !=4) { %>
             <li class="nav-item">
                 <a class="nav-link" id="unfrozen-account-tab" uri="/account/unfrozenAccount.html" data-toggle="tab" href="#unfrozen-account" role="tab">
                     <h5>解冻账户</h5>

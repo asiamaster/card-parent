@@ -81,28 +81,28 @@ public class FundServiceImpl implements IFundService {
 			record.setAmount(requestDto.getAmount());
 			record.setNotes(requestDto.getMark());
 		});
-
-		CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto
-				.createFrozenAmount(accountCard.getFundAccountId(), accountCard.getAccountId(), requestDto.getAmount());
-		FundOpResponseDto fundOpResponseDto = payRpcResolver.postFrozenFund(createTradeRequestDto);
-		businessRecord.setTradeNo(String.valueOf(fundOpResponseDto.getFrozenId()));
-		serialService.saveBusinessRecord(businessRecord);
-		try {
-			TradeResponseDto transaction = fundOpResponseDto.getTransaction();
-			transaction.addVirtualPrincipalFundItem(-requestDto.getAmount());
-			SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, transaction,
-					(serialRecord, feeType) -> {
-						if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
-							serialRecord.setFundItem(FundItem.TRADE_FREEZE.getCode());
-							serialRecord.setFundItemName(FundItem.TRADE_FREEZE.getName());
-						}
-						serialRecord.setNotes("手动冻结资金");
-					}, true);
-			serialService.handleSuccess(serialDto);
-		} catch (Exception e) {
-			LOGGER.error("冻结处理流水失败", e);
-		}
-	}
+        CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto.createFrozenAmount(
+                accountCard.getFundAccountId(),
+                accountCard.getAccountId(),
+                requestDto.getAmount());
+        FundOpResponseDto fundOpResponseDto = payRpcResolver.postFrozenFund(createTradeRequestDto);
+        businessRecord.setTradeNo(String.valueOf(fundOpResponseDto.getFrozenId()));
+        serialService.saveBusinessRecord(businessRecord);
+        try {
+            TradeResponseDto transaction = fundOpResponseDto.getTransaction();
+            transaction.addVirtualPrincipalFundItem(-requestDto.getAmount());
+            SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, transaction, (serialRecord, feeType) -> {
+                if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
+                    serialRecord.setFundItem(FundItem.TRADE_FREEZE.getCode());
+                    serialRecord.setFundItemName(FundItem.TRADE_FREEZE.getName());
+                }
+                serialRecord.setNotes("手动冻结资金");
+            }, true);
+            serialService.handleSuccess(serialDto);
+        } catch (Exception e) {
+            LOGGER.error("冻结处理流水失败", e);
+        }
+    }
 
 	@Override
 	public void unfrozen(UnfreezeFundDto unfreezeFundDto) {
@@ -116,6 +116,7 @@ public class FundServiceImpl implements IFundService {
 			// 保存操作记录
 			System.out.println("****************解冻成功");
 		}
+
 //		buildBusinessRecordDo(accountInfo, unfreezeFundDto);
 
 		// 保存全局操作记录
