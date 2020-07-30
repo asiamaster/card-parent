@@ -42,7 +42,7 @@ class CardManageControllerTest extends BaseTest {
     private String sessionId;
     @BeforeEach
     public void setUp(){
-        this.sessionId = "a00a956a-16e7-4678-89c7-a534ddb23759";
+        this.sessionId = "93fc4b63-3f32-46da-aeb0-57c984c5c57a";
     }
 
     @Test
@@ -69,9 +69,9 @@ class CardManageControllerTest extends BaseTest {
     void testReportLoss() throws Exception {
         CardRequestDto cardParam = new CardRequestDto();
         cardParam.setLoginPwd("123456");
-        cardParam.setCustomerId(18L);
-        cardParam.setAccountId(174L);
-        cardParam.setCardNo("888889690048");
+        cardParam.setCustomerId(215L);
+        cardParam.setAccountId(11L);
+        cardParam.setCardNo("888889688962");
         MvcResult mvcResult = mockMvc.perform(post("/card/reportLossCard.action")
                 .contentType(MediaType.APPLICATION_JSON)
                 //先登录uap获取sessionId

@@ -18,6 +18,7 @@ import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
+import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.tcc.AbstractTccTransactionManager;
 import com.dili.tcc.core.TccContextHolder;
@@ -48,7 +49,8 @@ public class ChangeCardTccTransactionManager extends AbstractTccTransactionManag
 
     @Override
     protected void prepare(CardRequestDto requestDto) {
-        UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(requestDto.getCardNo());
+        UserAccountCardResponseDto userAccount = accountQueryService.getByAccountIdForGenericOp(requestDto.getAccountId());
+        AccountValidator.validateMatchAccount(requestDto, userAccount);
         this.validateCanChange(requestDto, userAccount);
 
         Long serviceFee = requestDto.getServiceFee();
@@ -108,10 +110,10 @@ public class ChangeCardTccTransactionManager extends AbstractTccTransactionManag
     }
 
     /**
-    * 校验
-    * @author miaoguoxin
-    * @date 2020/7/29
-    */
+     * 校验
+     * @author miaoguoxin
+     * @date 2020/7/29
+     */
     private void validateCanChange(CardRequestDto requestDto, UserAccountCardResponseDto userAccount) {
         if (userAccount.getCardState() != CardStatus.NORMAL.getCode()) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡不是正常状态，不能进行该操作");
