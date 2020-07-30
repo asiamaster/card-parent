@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardQuery;
@@ -16,8 +15,7 @@ import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
-import com.dili.card.rpc.AccountManageRpc;
-import com.dili.card.rpc.CardManageRpc;
+import com.dili.card.rpc.resolver.AccountManageRpcResolver;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountManageService;
@@ -26,7 +24,6 @@ import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.DisableState;
 import com.dili.card.type.OperateType;
-import com.dili.ss.domain.BaseOutput;
 
 @Service("accountManageService")
 public class AccountManageServiceImpl implements IAccountManageService {
@@ -34,9 +31,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CardManageServiceImpl.class);
 
 	@Autowired
-	private AccountManageRpc accountManageRpc;
-    @Resource
-    private CardManageRpc cardManageRpc;
+	private AccountManageRpcResolver accountManageRpcResolver;
     @Resource
     private ISerialService serialService;
     @Resource
@@ -62,10 +57,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
         });
 		serialService.saveBusinessRecord(businessRecord);			
 		//远程冻结卡账户操作
-    	BaseOutput<?> baseOutput = accountManageRpc.frozen(cardRequestDto);
-        if (!baseOutput.isSuccess()) {
-            throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
-        } 
+    	accountManageRpcResolver.frozen(cardRequestDto);
         //远程冻结资金账户
         try {
         	if (accountCard.isMaster()) {
@@ -99,10 +91,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
         });
 		serialService.saveBusinessRecord(businessRecord);		
 		//远程解冻账户操作 
-    	BaseOutput<?> baseOutput = accountManageRpc.unfrozen(cardRequestDto);
-        if (!baseOutput.isSuccess()) {
-            throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
-        } 
+		accountManageRpcResolver.unfrozen(cardRequestDto);
         //远程解冻资金账户
         try {
         	if (accountCard.isMaster()) {
