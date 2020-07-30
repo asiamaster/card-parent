@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.exception.ErrorCode;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.PageOutput;
 
 /**
  * @description： 通用RPC结果解析
@@ -50,6 +51,21 @@ public class GenericRpcResolver {
 		return baseOutput.getData();
 	}
 
+	
+	/**
+	 * 判断baseOutput.isSuccess()为false则抛出异常
+	 * @param <T>
+	 * @param baseOutput
+	 * @param serviceName 服务名或功能用于日志记录
+	 * @return
+	 */
+	public static <T> PageOutput<T> resolver(PageOutput<T> baseOutput, String serviceName) {
+		if (!baseOutput.isSuccess()) {
+			log.error("{}远程服务返回了一个错误![{}]", serviceName, JSONObject.toJSONString(baseOutput));
+			throw new CardAppBizException(ErrorCode.SERVICE_CODE, baseOutput.getMessage());
+		}
+		return baseOutput;
+	}
 //	/**
 //	 * 判断baseOutput.isSuccess()为false则抛出异常
 //	 *
