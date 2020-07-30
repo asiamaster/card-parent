@@ -32,6 +32,13 @@ public interface AccountQueryRpc {
     @PostMapping(value = "/getSingle")
     BaseOutput<UserAccountCardResponseDto> findSingle(UserAccountCardQuery cardQuery);
 
+    /**
+     * 查询单个(返回所有状态)
+     * @author miaoguoxin
+     * @date 2020/7/28
+     */
+    @PostMapping(value = "/getSingleWithoutValidate")
+    BaseOutput<UserAccountCardResponseDto> findSingleWithoutValidate(UserAccountCardQuery cardQuery);
 
     /**
      * 查询分页

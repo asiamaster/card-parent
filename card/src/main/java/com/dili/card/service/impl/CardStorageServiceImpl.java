@@ -1,6 +1,7 @@
 package com.dili.card.service.impl;
 
 import com.dili.card.dao.IStorageOutDao;
+import com.dili.card.dto.BatchActivateCardDto;
 import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.CardStorageOutQueryDto;
 import com.dili.card.dto.CardStorageOutRequestDto;
@@ -15,11 +16,15 @@ import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +40,7 @@ public class CardStorageServiceImpl implements ICardStorageService {
     private CardStorageRpc cardStorageRpc;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void saveOutRecord(CardStorageOutRequestDto requestDto) {
         CardStorageOut cardStorageOut = new CardStorageOut();
         BeanUtils.copyProperties(requestDto, cardStorageOut);
@@ -46,6 +52,10 @@ public class CardStorageServiceImpl implements ICardStorageService {
         cardStorageOut.setModifyTime(LocalDateTime.now());
         storageOutDao.save(cardStorageOut);
 
+        List<String> cardList = Lists.newArrayList(requestDto.getCardNos().split(","));
+        BatchActivateCardDto request = new BatchActivateCardDto();
+        request.setCardNos(cardList);
+        cardStorageRpc.batchActivate(request);
     }
 
     @Override
@@ -86,6 +96,13 @@ public class CardStorageServiceImpl implements ICardStorageService {
 	}
 
 
+	@Override
+	public CardStorageDto getCardStorageByCardNo(String cardNo) {
+		CardStorageDto queryParam=new CardStorageDto();
+		queryParam.setCardNo(cardNo);
+        return GenericRpcResolver.resolver(cardStorageRpc.getCardStorageByCardNo(queryParam), "account-service");
+	}
+
 
     private CardStorageOutResponseDto convert2ResponseDto(CardStorageOut record) {
         CardStorageOutResponseDto recordResponseDto = new CardStorageOutResponseDto();
@@ -93,13 +110,4 @@ public class CardStorageServiceImpl implements ICardStorageService {
         recordResponseDto.setConvertCardNo(record.getCardNo());
         return recordResponseDto;
     }
-
-	@Override
-	public CardStorageDto getCardStorageByCardNo(String cardNo) {
-		CardStorageDto queryParam=new CardStorageDto();
-		queryParam.setCardNo(cardNo);
-		CardStorageDto cardStorage = GenericRpcResolver.resolver(cardStorageRpc.getCardStorageByCardNo(queryParam), "account-service");
-		return cardStorage;
-	}
-
 }

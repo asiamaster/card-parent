@@ -2,28 +2,32 @@ package com.dili.card.rpc;
 
 import java.util.List;
 
+import com.dili.card.dto.BatchActivateCardDto;
+import com.dili.card.util.AssertUtils;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.dili.card.dto.CardStorageDto;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * @description： 卡片仓库服务接口
- * 
+ *
  * @author ：WangBo
  * @time ：2020年7月17日上午10:22:18
  */
-@FeignClient(name = "account-service", contextId = "cardStorgeRpc", path = "/api/account/cardStorage" /*
-																										 * , url =
-																										 * "http://127.0.0.1:8186"
-																										 */)
+@FeignClient(name = "account-service",
+		contextId = "cardStorgeRpc",
+		path = "/api/account/cardStorage"
+		/*, url = "http://127.0.0.1:8186"*/
+)
 public interface CardStorageRpc {
 
 	/**
 	 * 仓库中卡片列表，包括状态及入库信息
-	 * 
+	 *
 	 * @param cardParam
 	 * @return
 	 */
@@ -41,10 +45,18 @@ public interface CardStorageRpc {
 	 */
 	@PostMapping("/void")
 	BaseOutput<?> voidCard(CardStorageDto param);
-	
+
 	/**
 	 * 查询单条数据
 	 */
 	@PostMapping("/getCardStorageByCardNo")
 	BaseOutput<CardStorageDto> getCardStorageByCardNo(CardStorageDto param);
+
+	/**
+	* 批量激活
+	* @author miaoguoxin
+	* @date 2020/7/29
+	*/
+	@PostMapping("/batchActivate")
+	BaseOutput<?> batchActivate(BatchActivateCardDto dto);
 }

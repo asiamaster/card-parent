@@ -62,6 +62,15 @@ public class AccountQueryRpcResolver {
     }
 
     /**
+    *  查询单个(返回所有状态)
+    * @author miaoguoxin
+    * @date 2020/7/30
+    */
+    public UserAccountCardResponseDto findSingleWithoutValidate(UserAccountCardQuery userAccountCardQuery){
+        return GenericRpcResolver.resolver(accountQueryRpc.findSingleWithoutValidate(userAccountCardQuery),"account-service");
+    }
+
+    /**
      * 通过条件查询
      */
     public List<UserAccountCardResponseDto> findByQueryCondition(UserAccountCardQuery userAccountCardQuery) {

@@ -1,12 +1,15 @@
 package com.dili.card.controller;
 
 import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.CardStorageOutQueryDto;
 import com.dili.card.dto.CardStorageOutRequestDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.ICardAddStorageService;
 import com.dili.card.service.ICardStorageService;
+import com.dili.card.type.CardStorageState;
+import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
@@ -24,7 +27,7 @@ import java.util.Map;
 
 /**
  * 卡仓库管理
- * 
+ *
  * @Auther: miaoguoxin
  * @Date: 2020/7/1 16:11
  */
@@ -37,7 +40,6 @@ public class CardStorageOutController implements IControllerHandler {
 
 	/**
 	 * 跳转出库页面
-	 * 
 	 * @author miaoguoxin
 	 * @date 2020/7/1
 	 */
@@ -46,9 +48,10 @@ public class CardStorageOutController implements IControllerHandler {
 		return "cardstorage/outList";
 	}
 
+
 	/**
 	 * 跳转到出库详情
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/2
 	 */
@@ -63,7 +66,7 @@ public class CardStorageOutController implements IControllerHandler {
 
 	/**
 	 * 跳转到添加页面
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/2
 	 */
@@ -74,7 +77,7 @@ public class CardStorageOutController implements IControllerHandler {
 
 	/**
 	 * 列表分页
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/1
 	 */
@@ -87,7 +90,7 @@ public class CardStorageOutController implements IControllerHandler {
 
 	/**
 	 * 添加出库记录
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/3
 	 */
@@ -99,5 +102,21 @@ public class CardStorageOutController implements IControllerHandler {
 		cardStorageService.saveOutRecord(requestDto);
 		return BaseOutput.success();
 	}
-	
+
+
+	/**
+	* 校验卡状态
+	* @author miaoguoxin
+	* @date 2020/7/29
+	*/
+	@PostMapping("checkCard.action")
+	@ResponseBody
+	public BaseOutput<?> checkCard(@RequestBody CardRequestDto cardRequestDto) {
+		AssertUtils.notEmpty(cardRequestDto.getCardNo());
+		CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardRequestDto.getCardNo());
+		if (cardStorage.getState() != CardStorageState.ACTIVE.getCode()) {
+			return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "],不能出库!");
+		}
+		return BaseOutput.success();
+	}
 }

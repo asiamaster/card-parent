@@ -4,6 +4,8 @@ import com.dili.tcc.core.EmptyTccResultInterceptor;
 import com.dili.tcc.core.ITransactionRepository;
 import com.dili.tcc.core.MemoryTransactionRepository;
 import com.dili.tcc.core.TccResultInterceptor;
+import com.dili.tcc.repository.RedisTccTransactionRepository;
+import com.dili.tcc.repository.TccTransactionRepository;
 import com.dili.tcc.springcloud.ContextHystrixConcurrencyStrategy;
 import com.dili.tcc.springcloud.HystrixCallableWrapper;
 import com.dili.tcc.springcloud.HystrixTccContextCallableWrapper;
@@ -11,11 +13,15 @@ import com.dili.tcc.springcloud.TccFeignBeanPostProcessor;
 import com.dili.tcc.util.SpringContext;
 import feign.Feign;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +77,13 @@ public class TccSpringCloudAutoConfiguration {
         return new TccFeignBeanPostProcessor();
     }
 
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnBean(RedisAutoConfiguration.class)
+    public TccTransactionRepository redisTccTransactionRepository(){
+        return new RedisTccTransactionRepository();
+    }
 
     @Configuration
     @ConditionalOnProperty(name = "feign.hystrix.enabled", havingValue = "true")

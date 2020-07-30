@@ -1,4 +1,4 @@
-package com.dili.tcc.core;
+package com.dili.tcc.common;
 
 import com.dili.tcc.common.TccRemoteInfo;
 import com.dili.tcc.common.TccStatus;
@@ -13,10 +13,12 @@ import java.util.Map;
  * @Description:
  */
 public class TccContext {
-    /**阶段重试次数，只有cancel和confirm阶段重试*/
+    /**阶段重试次数，cancel和confirm阶段重试*/
     private int retryNum;
 
     private TccStatus tccStatus;
+    /**请求参数*/
+    private Object requestDto;
 
     private TransactionId transactionId;
     /**额外的传递属性*/
@@ -72,6 +74,14 @@ public class TccContext {
 
     public void changeStatus(TccStatus tccStatus) {
         this.tccStatus = tccStatus;
+    }
+
+    public Object getRequestDto() {
+        return requestDto;
+    }
+
+    public void setRequestDto(Object requestDto) {
+        this.requestDto = requestDto;
     }
 
     public TransactionId getTransactionId() {

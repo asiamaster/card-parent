@@ -39,13 +39,9 @@ public class UserAccountCardQuery extends BaseDto {
 	private Integer cardType;
 	/** 卡状态 {@link com.dili.card.type.CardStatus} */
 	private Integer cardState;
-	/** 是否排除退还状态 */
-	private Integer excludeReturn;
-	/** 是否排除禁用状态 */
-	private Integer excludeDisabled;
 
-	/** 账户校验等级 {@link AccountValidator} */
-	private Integer validateLevel;
+	/**是否要排除异常状态的账户 ex：卡退还、账户被禁用*/
+	private Integer excludeUnusualState;
 
 	public String getCustomerName() {
 		return customerName;
@@ -119,28 +115,12 @@ public class UserAccountCardQuery extends BaseDto {
 		this.cardState = cardState;
 	}
 
-	public Integer getExcludeReturn() {
-		return excludeReturn;
+	public Integer getExcludeUnusualState() {
+		return excludeUnusualState;
 	}
 
-	public void setExcludeReturn(Integer excludeReturn) {
-		this.excludeReturn = excludeReturn;
-	}
-
-	public Integer getExcludeDisabled() {
-		return excludeDisabled;
-	}
-
-	public void setExcludeDisabled(Integer excludeDisabled) {
-		this.excludeDisabled = excludeDisabled;
-	}
-
-	public Integer getValidateLevel() {
-		return validateLevel;
-	}
-
-	public void setValidateLevel(Integer validateLevel) {
-		this.validateLevel = validateLevel;
+	public void setExcludeUnusualState(Integer excludeUnusualState) {
+		this.excludeUnusualState = excludeUnusualState;
 	}
 
 	public void addAccountId(Long accountId) {
