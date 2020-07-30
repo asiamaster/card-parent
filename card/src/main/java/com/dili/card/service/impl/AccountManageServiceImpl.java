@@ -50,7 +50,10 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	public void frozen(CardRequestDto cardRequestDto) {
 		//保存本地操作记录 
 		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(UserAccountCardQuery.createInstance(cardRequestDto.getAccountId()));
-    	if (!Integer.valueOf(DisableState.ENABLED.getCode()).equals(accountCard.getCardState())) {
+		if (Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
+            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行解挂", CardStatus.getName(accountCard.getCardState())));
+        }
+		if (!Integer.valueOf(DisableState.ENABLED.getCode()).equals(accountCard.getCardState())) {
             throw new CardAppBizException("", String.format("该卡为%s状态,不能进行操作", DisableState.getName(accountCard.getDisabledState())));
         }
 		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardRequestDto, accountCard, temp -> {
@@ -82,7 +85,10 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	public void unfrozen(CardRequestDto cardRequestDto) {
 		//保存本地操作记录 
 		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(UserAccountCardQuery.createInstance(cardRequestDto.getAccountId()));
-    	if (!Integer.valueOf(DisableState.DISABLED.getCode()).equals(accountCard.getDisabledState())) {
+		if (Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
+            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行解挂", CardStatus.getName(accountCard.getCardState())));
+        }
+		if (!Integer.valueOf(DisableState.DISABLED.getCode()).equals(accountCard.getDisabledState())) {
             throw new CardAppBizException("", String.format("该卡为%s状态,不能进行操作", DisableState.getName(accountCard.getDisabledState())));
         }
 		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardRequestDto, accountCard, temp -> {
