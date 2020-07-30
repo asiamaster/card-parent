@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
+import com.dili.card.type.ServiceType;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 
@@ -32,20 +33,14 @@ public class CardManageRpcResolver {
      * 退卡
      */
     public void returnCard(CardRequestDto cardParam) {
-    	BaseOutput<?> baseOutput = cardManageRpc.returnCard(cardParam);
-    	if (!baseOutput.isSuccess()) {
-    		throw new CardAppBizException(ResultCode.DATA_ERROR, "退卡失败：" + baseOutput.getMessage());
-		}
+    	GenericRpcResolver.resolver(cardManageRpc.returnCard(cardParam), ServiceType.ACCOUNT_SERVCIE.getName());
     }
 
     /**
      * 重置密码
      */
     public void resetLoginPwd(CardRequestDto cardParam) {
-    	BaseOutput<?> baseOutput = cardManageRpc.resetLoginPwd(cardParam);
-    	if (!baseOutput.isSuccess()) {
-    		throw new CardAppBizException(ResultCode.DATA_ERROR, "重置密码失败");
-		}
+    	GenericRpcResolver.resolver(cardManageRpc.resetLoginPwd(cardParam), ServiceType.ACCOUNT_SERVCIE.getName());
     }
 
     /**

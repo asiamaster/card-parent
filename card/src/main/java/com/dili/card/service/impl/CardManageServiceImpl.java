@@ -90,11 +90,8 @@ public class CardManageServiceImpl implements ICardManageService {
         if (balanceResponseDto.getBalance() > 100L) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "卡余额大于1元,不能退卡");
         }
-        //保存本地操作记录
-        BusinessRecordDo businessRecordDo = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
-            temp.setType(OperateType.LOSS_REMOVE.getCode());
-        });
-        serialService.saveBusinessRecord(businessRecordDo);
+      //保存本地操作记录
+        BusinessRecordDo businessRecordDo = saveLocalSerialRecordNoFundSerial(cardParam, accountCard, OperateType.REFUND_CARD);
         //远程调用退卡操作
         cardManageRpcResolver.returnCard(cardParam);
         //记录远程操作记录
@@ -107,10 +104,7 @@ public class CardManageServiceImpl implements ICardManageService {
         //获取卡信息
         UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam.getAccountId());
         //保存本地操作记录
-        BusinessRecordDo businessRecordDo = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
-            temp.setType(OperateType.RESET_PWD.getCode());
-        });
-        serialService.saveBusinessRecord(businessRecordDo);
+        BusinessRecordDo businessRecordDo = saveLocalSerialRecordNoFundSerial(cardParam, accountCard, OperateType.RESET_PWD);
         //远程重置密码操作
         cardManageRpcResolver.resetLoginPwd(cardParam);
         //记录远程操作记录
@@ -171,10 +165,10 @@ public class CardManageServiceImpl implements ICardManageService {
     /**
      * 保存本地操作记录
      */
-    private BusinessRecordDo saveSerialRecord(CardRequestDto cardParam, OperateType operateType) {
-        BusinessRecordDo businessRecord = new BusinessRecordDo();
-        serialService.buildCommonInfo(cardParam, businessRecord);
-        businessRecord.setType(operateType.getCode());
+    private BusinessRecordDo saveLocalSerialRecordNoFundSerial(CardRequestDto cardParam, UserAccountCardResponseDto accountCard, OperateType operateType) {
+    	BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
+            temp.setType(operateType.getCode());
+        });
         serialService.saveBusinessRecord(businessRecord);
         return businessRecord;
     }
