@@ -103,6 +103,7 @@ public class CardManageServiceImpl implements ICardManageService {
     public void resetLoginPwd(CardRequestDto cardParam) {
         //获取卡信息
         UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam.getAccountId());
+        AccountValidator.validateMatchAccount(cardParam, accountCard);
         //保存本地操作记录
         BusinessRecordDo businessRecordDo = saveLocalSerialRecordNoFundSerial(cardParam, accountCard, OperateType.RESET_PWD);
         //远程重置密码操作
