@@ -36,8 +36,6 @@ public class CardRequestDto extends BaseDto{
 	private Long customerId;
 	/**工本费*/
 	private Long serviceFee;
-	/**资金账号*/
-	private Long fundAccountId;
 
 	public String getCardNo() {
 		return cardNo;
@@ -101,13 +99,5 @@ public class CardRequestDto extends BaseDto{
 
 	public void setServiceFee(Long serviceFee) {
 		this.serviceFee = serviceFee;
-	}
-
-	public Long getFundAccountId() {
-		return fundAccountId;
-	}
-
-	public void setFundAccountId(Long fundAccountId) {
-		this.fundAccountId = fundAccountId;
 	}
 }
