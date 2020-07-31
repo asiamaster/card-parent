@@ -14,6 +14,7 @@ import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.tcc.RechargeTccTransactionManager;
 import com.dili.card.service.withdraw.WithdrawDispatcher;
+import com.dili.card.type.PayFreezeFundType;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.card.validator.FundValidator;
@@ -77,13 +78,25 @@ public class FundController implements IControllerHandler {
      */
     @GetMapping("/unfrozenFund.html")
     public String unfrozenFundView(Long accountId, ModelMap map) {
-        map.put("accountId", accountId);
+        UserAccountCardResponseDto account = accountQueryService.getByAccountIdWithoutValidate(accountId);
+        map.put("account", account);
         return "fund/unfrozenFund";
     }
 
     /**
+     * 跳转解冻资金modal框
+     * @author miaoguoxin
+     * @date 2020/7/31
+     */
+    @GetMapping("/unfrozenFundModal.html")
+    public String unfrozenFundModalView(String frozenIds, Long accountId, ModelMap map) {
+        map.put("frozenIds", frozenIds);
+        map.put("accountId", accountId);
+        return "fund/unfrozenModal";
+    }
+
+    /**
      * 提现
-     *
      * @param fundRequestDto
      * @return
      */
@@ -137,13 +150,13 @@ public class FundController implements IControllerHandler {
     @PostMapping("unfrozenRecord.action")
     @ResponseBody
     public Map<String, Object> unfrozenRecord(FundFrozenRecordParamDto queryParam) {
-        AssertUtils.notNull(queryParam.getAccountId(), "参数校验失败：缺少账户ID!");
-        UserAccountCardResponseDto byAccountId = accountQueryService.getByAccountId(queryParam.getAccountId());
+        AssertUtils.notNull(queryParam.getFundAccountId(), "参数校验失败：缺少资金账户ID!");
         FreezeFundRecordParam payServiceParam = new FreezeFundRecordParam();
-        payServiceParam.setAccountId(byAccountId.getFundAccountId());
+        payServiceParam.setAccountId(queryParam.getFundAccountId());
         payServiceParam.setPageNo(queryParam.getPage());
         payServiceParam.setPageSize(queryParam.getRows());
-        //payServiceParam.setState(PayFreezeFundType.FREEZE_FUND.getCode());  //冻结状态
+        //冻结状态
+        payServiceParam.setState(PayFreezeFundType.FREEZE_FUND.getCode());
         return successPage(fundService.frozenRecord(payServiceParam));
     }
 
@@ -155,10 +168,9 @@ public class FundController implements IControllerHandler {
     @PostMapping("allRecord.action")
     @ResponseBody
     public Map<String, Object> allRecord(FundFrozenRecordParamDto queryParam) {
-        AssertUtils.notNull(queryParam.getAccountId(), "参数校验失败：缺少账户ID!");
-        UserAccountCardResponseDto byAccountId = accountQueryService.getByAccountId(queryParam.getAccountId());
+        AssertUtils.notNull(queryParam.getFundAccountId(), "参数校验失败：缺少资金账户ID!");
         FreezeFundRecordParam payServiceParam = new FreezeFundRecordParam();
-        payServiceParam.setAccountId(byAccountId.getFundAccountId());
+        payServiceParam.setAccountId(queryParam.getFundAccountId());
         payServiceParam.setPageNo(queryParam.getPage());
         payServiceParam.setPageSize(queryParam.getRows());
         return successPage(fundService.frozenRecord(payServiceParam));
@@ -170,10 +182,10 @@ public class FundController implements IControllerHandler {
      */
     @PostMapping("unfrozen.action")
     @ResponseBody
-    public BaseOutput<?> unfrozen(UnfreezeFundDto unfreezeFundDto) {
+    public BaseOutput<?> unfrozen(@RequestBody UnfreezeFundDto unfreezeFundDto) {
         AssertUtils.notNull(unfreezeFundDto.getAccountId(), "参数校验失败：缺少账户ID!");
         AssertUtils.notNull(unfreezeFundDto.getFrozenIds(), "参数校验失败：缺少冻结ID!");
-        buildOperatorInfo(unfreezeFundDto);
+        this.buildOperatorInfo(unfreezeFundDto);
         fundService.unfrozen(unfreezeFundDto);
         return BaseOutput.success();
     }

@@ -1,0 +1,45 @@
+<#bs4Body>
+<style>
+    .table>tbody>tr>td{
+        border:0px;
+    }
+</style>
+<div class="container-fluid">
+    <div id="update-modal">
+        <form id="save-form">
+            <table id="add-table" class="table">
+                <tbody>
+                <tr>
+                    <td>确认冻结金额？</td>
+                </tr>
+                <tr>
+                    <td>解冻说明</td>
+                    <td>
+                        <input type="hidden" name="frozenIds"
+                               value="${frozenIds!}">
+                        <input type="hidden" id="accountId" name="accountId"
+                               value="${accountId!}">
+                        <textarea id="remark" name="remark" class="form-control" rows="3" placeholder="不超过30个字符">
+                        </textarea>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
+<script>
+    $(() => {
+            $.modal.changeEnsureTxt("解冻")
+        }
+    );
+
+    function submitHandler() {
+        let data = $.common.formToJSON('save-form');
+        data.frozenIds = data.frozenIds.split(',');
+        let url = '${contextPath}/fund/unfrozen.action';
+        $.operate.post(url, data);
+    }
+</script>

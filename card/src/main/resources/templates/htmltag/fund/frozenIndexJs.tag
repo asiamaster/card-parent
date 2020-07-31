@@ -71,7 +71,7 @@
     //初始化表格
     $(() => {
         let options = {
-            url: "${contextPath}/serial/business/page.action",
+            url: "${contextPath}/fund/allRecord.action",
             sortName: "operate_time",
             modalName: "冻结资金记录"
         };

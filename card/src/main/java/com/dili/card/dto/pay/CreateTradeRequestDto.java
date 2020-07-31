@@ -18,6 +18,8 @@ public class CreateTradeRequestDto {
     private String cycleNo;
     /** 交易备注*/
     private String description;
+    /**扩展信息字段*/
+    private String extension;
     /** 业务账号ID*/
     private Long businessId;
 
@@ -51,6 +53,14 @@ public class CreateTradeRequestDto {
         requestDto.setCycleNo(cycleNo);
         requestDto.setDescription("");
         return requestDto;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
     }
 
     public Integer getType() {

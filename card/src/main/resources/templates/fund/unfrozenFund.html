@@ -20,7 +20,9 @@
 			onclick="">解冻资金</button>
 		<form id="queryForm">
 			<input type="hidden" id="accountId" name="accountId"
-				value="${accountId!}">
+				value="${account.accountId!}">
+			<input type="hidden" id="fundAccountId" name="fundAccountId"
+				   value="${account.fundAccountId!}">
 		</form>
 		<div class="panel-body" style="display: block;">
 			<div class="col-12">
@@ -41,27 +43,5 @@
 		</div>
 	</div>
 </div>
-<!-- 解冻弹出模态框 -->
-  <div class="modal fade" id="unfrozenModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">解冻确认</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-        	确认解冻资金？
-        	<br>
-        	解冻说明：<textarea rows="3" cols="15"  id="remark" name="remark"></textarea> 
-        </div>
-        <!-- 底部 -->
-        <div class="modal-footer">
-        	<button type="button" id="unfrozenOkBtn" class="btn btn-secondary" data-dismiss="modal">解冻</button>
-          	<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-        </div>
-   
-      </div>
-    </div>
-  </div>
 <#fund_unfrozenIndexJs />
 <#common_commonJs/>

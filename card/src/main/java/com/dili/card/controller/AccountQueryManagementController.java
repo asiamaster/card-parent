@@ -53,8 +53,6 @@ public class AccountQueryManagementController implements IControllerHandler {
 
     /**
      * 跳转卡详情的tab页签入口
-     * @param
-     * @return
      * @author miaoguoxin
      * @date 2020/6/28
      */
@@ -63,7 +61,6 @@ public class AccountQueryManagementController implements IControllerHandler {
         if (StringUtils.isBlank(cardNo)) {
             throw new CardAppBizException(ResultCode.PARAMS_ERROR, "卡号不能为空");
         }
-
         UserAccountCardResponseDto userAccount = accountQueryService.getByCardNoWithoutValidate(cardNo);
         map.put("isMaster", CardType.isMaster(userAccount.getCardType()));
         map.put("cardState", userAccount.getCardState());
