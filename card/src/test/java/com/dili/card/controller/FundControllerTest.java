@@ -114,9 +114,9 @@ class FundControllerTest extends BaseTest {
 
     private FundRequestDto createRechargeRequest() {
         FundRequestDto fundRequestDto = new FundRequestDto();
-        fundRequestDto.setAccountId(174L);
-        fundRequestDto.setCardNo("888889690048");
-        fundRequestDto.setCustomerId(18L);
+        fundRequestDto.setAccountId(13L);
+        fundRequestDto.setCardNo("888889689374");
+        fundRequestDto.setCustomerId(214L);
         fundRequestDto.setOpId(73L);
         fundRequestDto.setOpName("王波");
         fundRequestDto.setOpNo("wangbo");

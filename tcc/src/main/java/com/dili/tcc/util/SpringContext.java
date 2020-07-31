@@ -27,4 +27,8 @@ public class SpringContext implements ApplicationContextAware {
 
         return applicationContext.getBean(tClass);
     }
+
+    public static String getPropertyVal(String name){
+        return applicationContext.getEnvironment().getProperty(name);
+    }
 }

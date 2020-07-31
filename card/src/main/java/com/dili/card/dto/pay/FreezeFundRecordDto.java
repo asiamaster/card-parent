@@ -1,8 +1,11 @@
 package com.dili.card.dto.pay;
 
+import com.dili.card.common.annotation.TextDisplay;
+import com.dili.card.common.provider.FenToYuanProvider;
+
 /**
  * @description： 支付资金人工冻结解冻记录
- * 
+ *
  * @author ：WangBo
  * @time ：2020年7月30日上午11:35:02
  */
@@ -12,9 +15,8 @@ public class FreezeFundRecordDto {
 	/** 资金账号 */
 	private Long accountId;
 	/** 冻结金额 */
+	@TextDisplay(FenToYuanProvider.class)
 	private Long amount;
-	/** 冻结金额显示 */
-	private String amountText;
 	/** 冻结状态：1-冻结，2-解冻 */
 	private Integer state;
 	/** 扩展信息 */
@@ -110,12 +112,5 @@ public class FreezeFundRecordDto {
 		this.opNo = opNo;
 	}
 
-	public String getAmountText() {
-		return amountText;
-	}
-
-	public void setAmountText(String amountText) {
-		this.amountText = amountText;
-	}
 
 }

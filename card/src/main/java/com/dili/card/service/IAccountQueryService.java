@@ -54,6 +54,12 @@ public interface IAccountQueryService {
     * @date 2020/7/30
     */
     UserAccountCardResponseDto getByCardNoWithoutValidate(String cardNo);
+    /**
+     * 根据账号id查询 （不校验非正常状态）
+     * @author miaoguoxin
+     * @date 2020/7/30
+     */
+    UserAccountCardResponseDto getByAccountIdWithoutValidate(Long accountId);
 
 
     /**

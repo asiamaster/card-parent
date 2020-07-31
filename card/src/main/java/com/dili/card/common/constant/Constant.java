@@ -19,4 +19,7 @@ public class Constant {
     public static final String POS_TYPE = "posType";
     /**充值extra  pos凭证号字段*/
     public static final String POS_CERT_NUM = "posCertNum";
+
+    public static final String OP_NO = "opNo";
+    public static final String OP_NAME = "opName";
 }

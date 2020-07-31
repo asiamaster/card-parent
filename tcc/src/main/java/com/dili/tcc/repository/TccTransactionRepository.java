@@ -1,6 +1,7 @@
 package com.dili.tcc.repository;
 
 import com.dili.tcc.bean.TccTransaction;
+import com.dili.tcc.serializer.ObjectSerializer;
 
 /**
  * @Auther: miaoguoxin
@@ -10,4 +11,6 @@ import com.dili.tcc.bean.TccTransaction;
 public interface TccTransactionRepository {
 
     int create(TccTransaction transaction);
+
+    void setSerializer(ObjectSerializer serializer);
 }

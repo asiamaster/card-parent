@@ -8,17 +8,14 @@ import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
-import com.dili.card.dto.pay.BalanceRequestDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountQueryService;
-import com.dili.card.service.IPayService;
 import com.dili.card.type.CardType;
 import com.dili.card.util.PageUtils;
 import com.dili.card.validator.AccountValidator;
-import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.domain.PageOutput;
 import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
@@ -26,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,13 +39,9 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     @Autowired
     private CustomerRpcResolver customerRpcResolver;
     @Autowired
-    private IPayService payService;
-    @Autowired
     private PayRpcResolver payRpcResolver;
     @Autowired
     private AccountQueryRpcResolver accountQueryRpcResolver;
-    @Resource
-    CustomerRpc customerRpc;
 
     @Override
     public PageOutput<List<AccountListResponseDto>> getPage(UserAccountCardQuery param) {
@@ -108,7 +100,14 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     }
 
     @Override
-    public UserAccountCardResponseDto getByAccountId(CardRequestDto requestDto) {
+    public UserAccountCardResponseDto getByAccountIdWithoutValidate(Long accountId) {
+        UserAccountCardQuery query = new UserAccountCardQuery();
+        query.setAccountIds(Lists.newArrayList(accountId));
+        return accountQueryRpcResolver.findSingleWithoutValidate(query);
+    }
+
+    @Override
+    public UserAccountCardResponseDto  getByAccountId(CardRequestDto requestDto) {
         UserAccountCardQuery query = new UserAccountCardQuery();
         query.setAccountIds(Lists.newArrayList(requestDto.getAccountId()));
         UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(query);

@@ -655,7 +655,7 @@ tab = {
                 bs4pop.confirm(content, {title: "确认提示"}, callBack);
             },
             //默认打开弹窗选项
-            openDefault: function(title,content,width,height){
+            openDefault: function (title, content, width, height) {
                 let options = {
                     title: title,
                     width: width,

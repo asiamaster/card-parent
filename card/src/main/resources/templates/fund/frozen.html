@@ -59,9 +59,7 @@
     </div>
     <div class="row" id="table-div" style="display: none">
         <form id="queryForm">
-            <input type="hidden" id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}">
-            <input type="hidden" name="operateTypeList[0]" value="27">
-            <input type="hidden" name="operateTypeList[1]" value="28">
+            <input type="hidden" id="fundAccountId" name="fundAccountId" value="${detail.cardAssociation.primary.fundAccountId!}">
         </form>
         <div class="col-12">
             <table id="grid"
@@ -74,16 +72,16 @@
                         data-align="center">
                         冻结金额
                     </th>
-                    <th data-field="operateTime" data-sortable="true" data-align="center" data-sort-name="operate_time">
+                    <th data-field="freezeTime" data-sortable="true" data-align="center" data-sort-name="operate_time">
                         冻结时间
                     </th>
-                    <th data-field="operatorNo" data-align="center">
+                    <th data-field="opNo" data-align="center">
                         操作员工号
                     </th>
-                    <th data-field="operatorName" data-align="center">
+                    <th data-field="opName" data-align="center">
                         操作员
                     </th>
-                    <th data-field="notes" data-align="center">
+                    <th data-field="description" data-align="center">
                         备注
                     </th>
                 </tr>

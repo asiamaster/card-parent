@@ -2,11 +2,13 @@ package com.dili.card.dto;
 
 /**
  * @description： 未解冻资金列表
- * 
+ *
  * @author ：WangBo
  * @time ：2020年7月22日下午3:37:38
  */
 public class FundFrozenRecordParamDto {
+	/**资金账户id*/
+	private Long fundAccountId;
 
 	/** 账户ID */
 	private Long accountId;
@@ -14,6 +16,14 @@ public class FundFrozenRecordParamDto {
 	private Integer page;
 	/** 每页行数 */
 	private Integer rows;
+
+	public Long getFundAccountId() {
+		return fundAccountId;
+	}
+
+	public void setFundAccountId(Long fundAccountId) {
+		this.fundAccountId = fundAccountId;
+	}
 
 	public Long getAccountId() {
 		return accountId;

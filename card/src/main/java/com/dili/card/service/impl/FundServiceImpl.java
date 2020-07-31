@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.dili.card.common.constant.Constant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ import com.google.common.collect.Lists;
 
 /**
  * 资金操作service实现类
- * 
+ *
  * @author xuliang
  */
 @Service
@@ -85,6 +86,8 @@ public class FundServiceImpl implements IFundService {
                 accountCard.getFundAccountId(),
                 accountCard.getAccountId(),
                 requestDto.getAmount());
+		createTradeRequestDto.setExtension(this.serializeFrozenExtra(requestDto));
+		createTradeRequestDto.setDescription(requestDto.getMark());
         FundOpResponseDto fundOpResponseDto = payRpcResolver.postFrozenFund(createTradeRequestDto);
         businessRecord.setTradeNo(String.valueOf(fundOpResponseDto.getFrozenId()));
         serialService.saveBusinessRecord(businessRecord);
@@ -133,12 +136,11 @@ public class FundServiceImpl implements IFundService {
 		PageOutput<List<FreezeFundRecordDto>> pageOutPut = GenericRpcResolver.resolver(payRpc.listFrozenRecord(queryParam),
 				"pay-service");
 		for (FreezeFundRecordDto record : pageOutPut.getData()) {
-			record.setAmountText(MoneyUtils.centToYuan(record.getAmount()));
 			if (StringUtils.isNoneBlank(record.getExtension())) {
 				// 在冻结资金时会以json格式存入当时的操作人及其编号
 				JSONObject jsonObject = JSONObject.parseObject(record.getExtension());
-				record.setOpNo(jsonObject.getString("opNo"));
-				record.setOpName(jsonObject.getString("opName"));
+				record.setOpNo(jsonObject.getString(Constant.OP_NO));
+				record.setOpName(jsonObject.getString(Constant.OP_NAME));
 			}
 		}
 		return pageOutPut;
@@ -170,24 +172,10 @@ public class FundServiceImpl implements IFundService {
 		return record;
 	}
 
-//	private BusinessRecordDo buildBusinessRecordDo(AccountWithAssociationResponseDto accountInfo,UnfreezeFundDto unfreezeFundDto) {
-//		BusinessRecordDo serial = new BusinessRecordDo();
-//		serial.setAccountId(accountInfo.getPrimary().getAccountId());
-//		serial.setCardNo(accountInfo.getPrimary().getCardNo());
-//		serial.setCustomerId(accountInfo.getPrimary().getCustomerId());
-//		serial.setCustomerName(accountInfo.getPrimary().getCustomerName());
-//		serial.setCustomerNo(accountInfo.getPrimary().getCustomerCode());
-//		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(unfreezeFundDto.getOpId(),
-//				unfreezeFundDto.getOpName(), unfreezeFundDto.getOpNo());
-//		serial.setCycleNo(cycleDo.getCycleNo());
-//		serial.setFirmId(unfreezeFundDto.getFirmId());
-//		serial.setOperatorId(unfreezeFundDto.getOpId());
-//		serial.setOperatorName(unfreezeFundDto.getOpName());
-//		serial.setOperatorNo(unfreezeFundDto.getOpNo());
-//		serial.setOperateTime(LocalDateTime.now());
-//		serial.setNotes("解冻资金");
-//		serial.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
-//		serial.setType(OperateType.UNFROZEN_FUND.getCode());
-//		return serial;
-//	}
+	private String serializeFrozenExtra(FundRequestDto requestDto){
+		JSONObject extra = new JSONObject();
+		extra.put(Constant.OP_NAME,requestDto.getOpName());
+		extra.put(Constant.OP_NO,requestDto.getOpNo());
+		return extra.toJSONString();
+	}
 }
