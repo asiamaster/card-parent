@@ -65,5 +65,12 @@ public class PayRpcResolver {
     public void unfreezeFundAccount(CreateTradeRequestDto requestDto) {
         GenericRpcResolver.resolver(payRpc.unfreeze(requestDto), ServiceType.PAY_SERVICE.getName());
     }
+    
+    /**
+     *  注销账户操作
+     */
+    public void unregister(CreateTradeRequestDto requestDto) {
+        GenericRpcResolver.resolver(payRpc.unregister(requestDto), ServiceType.PAY_SERVICE.getName());
+    }
 }
 
