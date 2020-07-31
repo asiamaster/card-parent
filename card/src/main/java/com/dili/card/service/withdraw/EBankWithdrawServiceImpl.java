@@ -48,7 +48,7 @@ public class EBankWithdrawServiceImpl extends WithdrawServiceImpl {
             temp.setTradeType(TradeType.WITHDRAW.getCode());
             temp.setTradeChannel(fundRequestDto.getTradeChannel());
             temp.setServiceCost(fundRequestDto.getServiceCost());
-            temp.setNotes(String.format("手续费%s元", CurrencyUtils.toYuanWithStripTrailingZeros(fundRequestDto.getServiceCost())));
+            temp.setNotes(String.format("网银取款，手续费%s元", CurrencyUtils.toYuanWithStripTrailingZeros(fundRequestDto.getServiceCost())));
         });
     }
 

@@ -7,7 +7,6 @@ import com.dili.card.validator.FundValidator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Map;
 
 /**
  * 用于资金操作相关dto
@@ -36,6 +35,8 @@ public class FundRequestDto extends CardRequestDto {
     private String contractNo;
     /** 委托人ID*/
     private Long consignorId;
+    /** 委托人姓名*/
+    private String consignorName;
 
     public Integer getTradeChannel() {
         return tradeChannel;
@@ -99,5 +100,13 @@ public class FundRequestDto extends CardRequestDto {
 
     public void setConsignorId(Long consignorId) {
         this.consignorId = consignorId;
+    }
+
+    public String getConsignorName() {
+        return consignorName;
+    }
+
+    public void setConsignorName(String consignorName) {
+        this.consignorName = consignorName;
     }
 }
