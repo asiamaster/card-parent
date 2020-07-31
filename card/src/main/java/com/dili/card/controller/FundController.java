@@ -14,7 +14,6 @@ import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.tcc.RechargeTccTransactionManager;
 import com.dili.card.service.withdraw.WithdrawDispatcher;
-import com.dili.card.type.PayFreezeFundType;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.card.validator.FundValidator;
@@ -139,14 +138,32 @@ public class FundController implements IControllerHandler {
     @ResponseBody
     public Map<String, Object> unfrozenRecord(FundFrozenRecordParamDto queryParam) {
         AssertUtils.notNull(queryParam.getAccountId(), "参数校验失败：缺少账户ID!");
-    	UserAccountCardResponseDto byAccountId = accountQueryService.getByAccountId(queryParam.getAccountId());
-    	FreezeFundRecordParam payServiceParam = new FreezeFundRecordParam();
-    	payServiceParam.setAccountId(byAccountId.getFundAccountId());
-    	payServiceParam.setPageNo(queryParam.getPage());
-    	payServiceParam.setPageSize(queryParam.getRows());
-    	payServiceParam.setState(PayFreezeFundType.FREEZE_FUND.getCode());  //冻结状态
+        UserAccountCardResponseDto byAccountId = accountQueryService.getByAccountId(queryParam.getAccountId());
+        FreezeFundRecordParam payServiceParam = new FreezeFundRecordParam();
+        payServiceParam.setAccountId(byAccountId.getFundAccountId());
+        payServiceParam.setPageNo(queryParam.getPage());
+        payServiceParam.setPageSize(queryParam.getRows());
+        //payServiceParam.setState(PayFreezeFundType.FREEZE_FUND.getCode());  //冻结状态
         return successPage(fundService.frozenRecord(payServiceParam));
     }
+
+    /**
+     * 冻结和未冻结记录列表
+     * @author miaoguoxin
+     * @date 2020/7/31
+     */
+    @PostMapping("allRecord.action")
+    @ResponseBody
+    public Map<String, Object> allRecord(FundFrozenRecordParamDto queryParam) {
+        AssertUtils.notNull(queryParam.getAccountId(), "参数校验失败：缺少账户ID!");
+        UserAccountCardResponseDto byAccountId = accountQueryService.getByAccountId(queryParam.getAccountId());
+        FreezeFundRecordParam payServiceParam = new FreezeFundRecordParam();
+        payServiceParam.setAccountId(byAccountId.getFundAccountId());
+        payServiceParam.setPageNo(queryParam.getPage());
+        payServiceParam.setPageSize(queryParam.getRows());
+        return successPage(fundService.frozenRecord(payServiceParam));
+    }
+
 
     /**
      * 解冻资金
@@ -172,6 +189,7 @@ public class FundController implements IControllerHandler {
     @ForbidDuplicateCommit
     public BaseOutput<?> recharge(@RequestBody @Validated({ConstantValidator.Update.class,
             FundValidator.Trade.class}) FundRequestDto requestDto) {
+        LOGGER.error("充值请求参数:{}", JSON.toJSONString(requestDto));
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
         try {
