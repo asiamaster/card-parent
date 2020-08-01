@@ -24,7 +24,7 @@ public class CashWithdrawServiceImpl extends WithdrawServiceImpl {
             temp.setTradeChannel(fundRequestDto.getTradeChannel());
             temp.setContractNo(fundRequestDto.getContractNo());
             temp.setConsignorId(fundRequestDto.getConsignorId());
-            temp.setNotes(StrUtil.isBlank(fundRequestDto.getContractNo()) ? null : "委托现金取款");
+            temp.setNotes(StrUtil.isBlank(fundRequestDto.getContractNo()) ?  "现金取款": String.format("委托现金取款，被委托人%s", fundRequestDto.getConsignorName()));
         });
     }
 
