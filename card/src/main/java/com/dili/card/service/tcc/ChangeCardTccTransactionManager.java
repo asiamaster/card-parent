@@ -59,7 +59,9 @@ public class ChangeCardTccTransactionManager extends AbstractTccTransactionManag
             record.setAmount(serviceFee);
             record.setTradeType(TradeType.FEE.getCode());
             record.setTradeChannel(TradeChannel.CASH.getCode());
+            record.setNotes("补卡，手续费转为市场收入");
         });
+
         CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(
                 TradeType.FEE.getCode(),
                 userAccount.getAccountId(),

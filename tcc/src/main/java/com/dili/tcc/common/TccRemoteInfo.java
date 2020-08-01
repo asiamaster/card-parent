@@ -9,8 +9,6 @@ import java.lang.reflect.Method;
  * @Description:
  */
 public class TccRemoteInfo {
-    /**代理Handler*/
-    private InvocationHandler handler;
     /**执行的方法*/
     private Method method;
     /**执行参数*/
@@ -18,15 +16,19 @@ public class TccRemoteInfo {
     /**执行结果*/
     private Object result;
     /**是否报错*/
-    private boolean isError;
+    private boolean isSuccess;
 
-    public TccRemoteInfo(InvocationHandler handler, Method method, Object[] args, Object result) {
-        this.handler = handler;
+    public TccRemoteInfo(Method method, Object[] args) {
+        this.method = method;
+        this.args = args;
+    }
+
+    public TccRemoteInfo(Method method, Object[] args, Object result) {
         this.method = method;
         this.args = args;
         this.result = result;
-        if (result instanceof Throwable) {
-            this.isError = true;
+        if (!(result instanceof Throwable)) {
+            this.isSuccess = true;
         }
     }
 
@@ -42,11 +44,8 @@ public class TccRemoteInfo {
         return result;
     }
 
-    public boolean isError() {
-        return isError;
+    public boolean isSuccess() {
+        return isSuccess;
     }
 
-    public InvocationHandler getHandler() {
-        return handler;
-    }
 }

@@ -1,9 +1,5 @@
 package com.dili.tcc.common;
 
-import com.dili.tcc.common.TccRemoteInfo;
-import com.dili.tcc.common.TccStatus;
-import com.dili.tcc.common.TransactionId;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -107,7 +103,7 @@ public class TccContext {
      * @date 2020/7/14
      */
     private static String getKey(TccRemoteInfo info) {
-        String className = info.getMethod().getDeclaringClass().getSimpleName();
+        String className = info.getMethod().getDeclaringClass().getName();
         String methodName = info.getMethod().getName();
         StringBuilder sb = new StringBuilder();
         for (Object arg : info.getArgs()) {

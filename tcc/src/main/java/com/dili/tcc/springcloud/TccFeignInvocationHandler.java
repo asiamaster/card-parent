@@ -1,8 +1,8 @@
 package com.dili.tcc.springcloud;
 
 import com.dili.tcc.common.Tcc;
-import com.dili.tcc.common.TccRemoteInfo;
 import com.dili.tcc.common.TccContext;
+import com.dili.tcc.common.TccRemoteInfo;
 import com.dili.tcc.core.TccContextHolder;
 import com.dili.tcc.core.TccResultInterceptor;
 import com.dili.tcc.util.SpringContext;
@@ -44,7 +44,7 @@ public class TccFeignInvocationHandler implements InvocationHandler {
 
         Object result;
         //跳过已执行成功的方法
-        TccRemoteInfo tccRemoteInfo = new TccRemoteInfo(this, method, args, null);
+        TccRemoteInfo tccRemoteInfo = new TccRemoteInfo(method, args, null);
         TccRemoteInfo remote = tccContext.getRemote(tccRemoteInfo);
         if (remote != null) {
             result = remote.getResult();
@@ -52,11 +52,12 @@ public class TccFeignInvocationHandler implements InvocationHandler {
 //                String cid  = UUID.randomUUID().toString();
 //                tccContext.getTransactionId().addCid(cid);
             result = delegate.invoke(proxy, method, args);
+            remote = new TccRemoteInfo(method, args, result);
             TccResultInterceptor interceptor = SpringContext.getBean(TccResultInterceptor.class);
             //这里需要判断一下，只有正确返回的结果才添加到remote列表中
             if (interceptor.doExtra(result)) {
-                LOGGER.info("当前远程分支执行成功:{}", tccRemoteInfo.getMethod().getName());
-                tccContext.addRemote(tccRemoteInfo);
+                LOGGER.info("当前远程分支执行成功:{}", method.getDeclaringClass().getName() + "#" + method.getName() + "()");
+                tccContext.addRemote(remote);
             }
         }
         return result;
