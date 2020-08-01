@@ -32,6 +32,6 @@ public interface IOpenCardService {
 	 * 查询开卡工本费
 	 * @return
 	 */
-	public Long getOpenCostFee(Long firmId);
+	public Long getOpenCostFee();
 
 }

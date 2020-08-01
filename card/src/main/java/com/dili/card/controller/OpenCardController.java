@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
-import com.dili.card.dto.AccountCustomerDto;
 import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.OpenCardDto;
@@ -151,8 +150,7 @@ public class OpenCardController implements IControllerHandler {
 		if (user == null) {
 			return BaseOutput.failure("未获取到登录用户信息，请重新登录!");
 		}
-//		Long openCostFee = openCardService.getOpenCostFee(user.getFirmId());
-		Long openCostFee = 1000L;
+		Long openCostFee = openCardService.getOpenCostFee();
 		log.info("查询开卡费用项:{}", openCostFee);
 		return BaseOutput.successData(MoneyUtils.centToYuan(openCostFee));
 	}
