@@ -53,7 +53,7 @@ public class GenericRpcResolver {
 
 	
 	/**
-	 * 判断baseOutput.isSuccess()为false则抛出异常
+	 * 判断baseOutput.isSuccess()为false则抛出异常，并返回远程服务原始错误码及提示信息,目前错误码都是200为成功，非200则失败
 	 * @param <T>
 	 * @param baseOutput
 	 * @param serviceName 服务名或功能用于日志记录
@@ -62,7 +62,7 @@ public class GenericRpcResolver {
 	public static <T> PageOutput<T> resolver(PageOutput<T> baseOutput, String serviceName) {
 		if (!baseOutput.isSuccess()) {
 			log.error("{}远程服务返回了一个错误![{}]", serviceName, JSONObject.toJSONString(baseOutput));
-			throw new CardAppBizException(ErrorCode.SERVICE_CODE, baseOutput.getMessage());
+			throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
 		}
 		return baseOutput;
 	}
