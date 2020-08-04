@@ -31,6 +31,12 @@ public interface CardManageRpc {
      */
     @PostMapping("/resetLoginPwd")
     BaseOutput<?> resetLoginPwd(CardRequestDto cardParam);
+    
+    /**
+     * 密码校验
+     */
+    @PostMapping("/checkPassword")
+    BaseOutput<?> checkPassword(CardRequestDto cardParam);
 
     /**
      * 解锁卡片
