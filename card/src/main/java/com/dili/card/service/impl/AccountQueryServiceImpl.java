@@ -152,7 +152,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
             accountList.setCustomerId(customerResponseDto.getId());
             accountList.setCustomerName(customerResponseDto.getName());
             accountList.setCustomerCode(customerResponseDto.getCode());
-            accountList.setCustomerCellphone(customerResponseDto.getContactsPhone());
+            accountList.setCustomerContactsPhone(customerResponseDto.getCustomerContactsPhone());
             accountListResponseDtos.add(accountList);
         }
         return accountListResponseDtos;

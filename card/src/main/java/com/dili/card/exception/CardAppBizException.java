@@ -34,7 +34,7 @@ public class CardAppBizException extends RuntimeException {
     }
 
     /**
-     * 抛出默认错误码（100000）异常，并打印日志
+     * 抛出默认错误码（20000）异常，并打印日志
      * <br><i>由于前端可能直接使用该异常信息，有些信息不需要用户看到，所以抛出的异常信息会去掉占位符</i>
      * @param msg 错误信息，可使用log4j格式占位符
      * @param obj 占位符日志参数
