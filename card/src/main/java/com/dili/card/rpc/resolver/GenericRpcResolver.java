@@ -46,7 +46,7 @@ public class GenericRpcResolver {
 	public static <T> T resolver(BaseOutput<T> baseOutput, String serviceName) {
 		if (!baseOutput.isSuccess()) {
 			log.error("{}远程服务返回了一个错误![{}]", serviceName, JSONObject.toJSONString(baseOutput));
-			throw new CardAppBizException(ErrorCode.SERVICE_CODE, baseOutput.getMessage());
+			throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
 		}
 		return baseOutput.getData();
 	}
