@@ -1,5 +1,7 @@
 package com.dili.tcc.serializer;
 
+import com.dili.tcc.bean.TccParticipant;
+import com.dili.tcc.bean.TccTransaction;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -7,6 +9,10 @@ import com.esotericsoftware.kryo.io.Output;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Auther: miaoguoxin
@@ -41,4 +47,5 @@ public class KryoSerializer implements ObjectSerializer {
         }
         return object;
     }
+
 }

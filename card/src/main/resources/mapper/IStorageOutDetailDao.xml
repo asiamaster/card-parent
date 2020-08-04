@@ -2,40 +2,48 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dili.card.dao.IStorageOutDetailDao">
-	
+
 	<select id="selectList" resultType="com.dili.card.entity.StorageOutDetailDo">
 		SELECT
-			`id`, 
-			`card_no`, 
+			`id`,
+			`card_no`,
 			`storage_out_id`
 		FROM
 			card_storage_out_detail
+		<where>
+			<if test="storageOutId !=null">
+				AND storage_out_id= #{storageOutId}
+			</if>
+			<if test="id !=null">
+				AND id= #{id}
+			</if>
+		</where>
 		ORDER BY
 			id DESC
 	</select>
-	
+
 	<insert id="save">
 		INSERT INTO card_storage_out_detail (
-			`card_no`, 
+			`card_no`,
 			`storage_out_id`
 		)
 		VALUES (
-			#{cardNo}, 
+			#{cardNo},
 			#{storageOutId}
 		)
 	</insert>
-	
+
 	<select id="getById" resultType="com.dili.card.entity.StorageOutDetailDo">
 		SELECT
-			`id`, 
-			`card_no`, 
+			`id`,
+			`card_no`,
 			`storage_out_id`
 		FROM
 			card_storage_out_detail
 		WHERE
 			id = #{id}
 	</select>
-	
+
 	<update id="update">
 		UPDATE card_storage_out_detail
 	 	<set>
@@ -45,7 +53,7 @@
 		WHERE
 			id = #{id}
 	</update>
-	
+
 	<delete id="batchRemove">
 		DELETE
 		FROM

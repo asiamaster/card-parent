@@ -1,12 +1,14 @@
 package com.dili.card.service.impl;
 
 import com.dili.card.dao.IStorageOutDao;
+import com.dili.card.dao.IStorageOutDetailDao;
 import com.dili.card.dto.BatchActivateCardDto;
 import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.CardStorageOutQueryDto;
 import com.dili.card.dto.CardStorageOutRequestDto;
 import com.dili.card.dto.CardStorageOutResponseDto;
 import com.dili.card.entity.CardStorageOut;
+import com.dili.card.entity.StorageOutDetailDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardStorageRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
@@ -37,6 +39,8 @@ public class CardStorageServiceImpl implements ICardStorageService {
     @Autowired
     private IStorageOutDao storageOutDao;
     @Autowired
+    private IStorageOutDetailDao storageOutDetailDao;
+    @Autowired
     private CardStorageRpc cardStorageRpc;
 
     @Override
@@ -64,6 +68,13 @@ public class CardStorageServiceImpl implements ICardStorageService {
         if (byId == null) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "领卡记录不存在");
         }
+        StorageOutDetailDo query = new StorageOutDetailDo();
+        query.setStorageOutId(id);
+        List<StorageOutDetailDo> detail = storageOutDetailDao.selectList(query);
+        String cardNos = detail.stream()
+                .map(storageOutDetailDo -> storageOutDetailDo.getCardNo() + ",")
+                .collect(Collectors.joining());
+        byId.setCardNo(cardNos);
         return this.convert2ResponseDto(byId);
     }
 

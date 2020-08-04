@@ -12,5 +12,9 @@ public interface TccTransactionRepository {
 
     int create(TccTransaction transaction);
 
-    void setSerializer(ObjectSerializer serializer);
+    TccTransaction findById(String id);
+
+    int update(TccTransaction tccTransaction);
+
+    int remove(String id);
 }

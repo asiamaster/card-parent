@@ -14,13 +14,13 @@
                 <#bcomboProvider _id="cardState" _provider="cardStateProvider" _queryParams='{emptyText:"-- 状态 --"}'/>
             </div>
             <div class="form-group col-auto">
-                <label for="cardNo-multiple">卡号</label>
-                <input id="cardNo-multiple" name="cardNos[0]" type="text" class="form-control"/>
+                <label for="cardNos[0]">卡号</label>
+                <input id="cardNos[0]" name="cardNos[0]" type="text" class="form-control"/>
             </div>
             <div class="form-group col">
                 <label for="customerName">客户</label>
                 <#bautoCompleteProvider
-                _hiddenDomainId="customerId-multiple"
+                _hiddenDomainId="customerIds[0]"
                 _hiddenDomainName="customerIds[0]"
                 _displayDomainId="customerName"
                 _displayDomainName="customerName"

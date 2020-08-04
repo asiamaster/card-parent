@@ -40,7 +40,6 @@ public class TccFeignInvocationHandler implements InvocationHandler {
         if (tccContext == null) {
             return delegate.invoke(proxy, method, args);
         }
-        //LOGGER.info("当前远程分支执行状态:{}", tccContext.getTccStatus());
 
         Object result;
         //跳过已执行成功的方法

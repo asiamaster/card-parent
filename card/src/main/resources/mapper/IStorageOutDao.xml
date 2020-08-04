@@ -5,7 +5,6 @@
     <sql id="Base_Column">
         `id`,
 			`apply_time`,
-			`card_no`,
 			`amount`,
 			`apply_user_id`,
             `apply_user_code`,

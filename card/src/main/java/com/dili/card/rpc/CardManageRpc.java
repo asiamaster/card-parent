@@ -2,6 +2,7 @@ package com.dili.card.rpc;
 
 import com.dili.card.dto.CardRequestDto;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.tcc.common.Tcc;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,7 @@ public interface CardManageRpc {
      * @author miaoguoxin
      * @date 2020/7/14
      */
+    @Tcc
     @PostMapping("/changeCard")
     BaseOutput<?> changeCard(CardRequestDto cardParam);
     /**

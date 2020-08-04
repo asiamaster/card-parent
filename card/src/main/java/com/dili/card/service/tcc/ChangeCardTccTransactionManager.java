@@ -72,14 +72,8 @@ public class ChangeCardTccTransactionManager extends AbstractTccTransactionManag
         //创建交易
         String tradeId = payService.createTrade(tradeRequest);
 
-        accountCycleService.increaseCashBox(businessRecord.getCycleNo(), requestDto.getServiceFee());
-
         businessRecord.setTradeNo(tradeId);
         serialService.saveBusinessRecord(businessRecord);
-
-        //换卡操作放到try阶段执行，是为了防止confirm阶段因为各种意外情况失败
-        //先确保换卡操作能够成功，然后confirm阶段只是对资金进行操作，不影响主业务流程
-        cardManageRpcResolver.changeCard(requestDto);
 
         TccContextHolder.get().addAttr(Constant.TRADE_ID_KEY, tradeId);
         TccContextHolder.get().addAttr(Constant.BUSINESS_RECORD_KEY, businessRecord);
@@ -96,6 +90,9 @@ public class ChangeCardTccTransactionManager extends AbstractTccTransactionManag
         TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(userAccount, tradeNo, TradeChannel.CASH.getCode(), requestDto.getLoginPwd());
         tradeRequestDto.addServiceFeeItem(requestDto.getServiceFee(), FundItem.IC_CARD_COST);
         payService.commitTrade(tradeRequestDto);
+
+        accountCycleService.increaseCashBox(businessRecord.getCycleNo(), requestDto.getServiceFee());
+        cardManageRpcResolver.changeCard(requestDto);
 
         try {
             SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);

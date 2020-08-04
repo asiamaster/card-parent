@@ -44,6 +44,7 @@ tab = {
                     sortName: "",
                     sortOrder: "desc",
                     pagination: true,
+                    pageNumber:1,
                     pageSize: 10,
                     pageList: [10, 20, 50],
                     toolbar: "toolbar",
@@ -78,6 +79,7 @@ tab = {
                 if (options.showLoading) {
                     $.modal.loading("loading...");
                 }
+                $.table.initRememberedViewParams(options);
                 $('#' + options.id).bootstrapTable({
                     id: options.id,
                     url: options.url,                                   // 请求后台的URL（*）
@@ -91,7 +93,7 @@ tab = {
                     sortName: options.sortName,                         // 排序列名称
                     sortOrder: options.sortOrder,                       // 排序方式  asc 或者 desc
                     pagination: options.pagination,                     // 是否显示分页（*）
-                    pageNumber: 1,                                      // 初始化加载第一页，默认第一页
+                    pageNumber: options.pageNumber,                                      // 初始化加载第一页，默认第一页
                     pageSize: options.pageSize,                         // 每页的记录行数（*）
                     pageList: options.pageList,                         // 可供选择的每页的行数（*）
                     firstLoad: options.firstLoad,                       // 是否首次请求加载数据，对于数据较大可以配置false
@@ -140,8 +142,8 @@ tab = {
             },
             // 获取实例ID，如存在多个返回#id1,#id2 delimeter分隔符
             getOptionsIds: function (separator) {
-                var _separator = $.common.isEmpty(separator) ? "," : separator;
-                var optionsIds = "";
+                let _separator = $.common.isEmpty(separator) ? "," : separator;
+                let optionsIds = "";
                 $.each(table.config, function (key, value) {
                     optionsIds += "#" + key + _separator;
                 });
@@ -149,6 +151,14 @@ tab = {
             },
             // 查询条件
             queryParams: function (params) {
+                table.options.queryCount++;
+                let currentId = $.common.isEmpty(table.options.formId) ? 'queryForm' : table.options.formId;
+                let prefixKey = table.options.modalName + "_";
+                let rememberedParams = JSON.parse(sessionStorage.getItem(prefixKey + currentId));
+                //判断是否是第一次加载
+                if (table.options.queryCount == 1 && !$.common.isEmpty(rememberedParams)){
+                    return rememberedParams;
+                }
                 let curParams = {
                     // 传递参数查询参数
                     rows: params.limit,
@@ -157,20 +167,34 @@ tab = {
                     sort: params.sort,
                     order: params.order
                 };
+                let dataParam = $.extend(curParams, $.common.formToPairValue(currentId));
+                //记忆查询参数
+                sessionStorage.setItem(prefixKey + currentId, JSON.stringify(dataParam));
+                return dataParam;
+            },
+            //初始化已记忆的页面参数
+            initRememberedViewParams: function(options){
+                table.options.queryCount = 0;
                 let currentId = $.common.isEmpty(table.options.formId) ? 'queryForm' : table.options.formId;
-                return $.extend(curParams, $.common.formToPairValue(currentId));
+                let prefixKey = table.options.modalName + "_";
+                let rememberedParams = JSON.parse(sessionStorage.getItem(prefixKey + currentId));
+                //填充表格参数
+                if(!$.common.isEmpty(rememberedParams)){
+                    options.pageNumber = rememberedParams.page;
+                    options.pageSize = rememberedParams.rows;
+                    options.sortName = rememberedParams.sort;
+                    options.sortOrder = rememberedParams.order;
+                    //填充表单
+                    $.each($("#" + currentId).find('input,textarea,hidden'), (i, e) => {
+                        if (!$.common.isEmpty(rememberedParams[e.id])) {
+                            e.value = rememberedParams[e.id];
+                        }
+                    });
+                }
+
             },
             //单击事件
             onClickRow: function (row, $element, field) {
-                // //判断是否已选中
-                // if ($($element).hasClass("changeColor")) {
-                //     //已选中则移除 当前行的class='changeColor'
-                //     $($element).removeClass('changeColor');
-                // } else
-                // {
-                //     //未点击则，为当前行添加 class='changeColor'
-                //     $($element).addClass('changeColor');
-                // }
             },
             // 请求获取数据后处理回调函数
             responseHandler: function (res) {
@@ -178,7 +202,7 @@ tab = {
                     table.options.responseHandler(res);
                 }
 
-                if (res.code == 200) {
+                if (res.code == web_status.SUCCESS) {
                     if ($.common.isNotEmpty(table.options.sidePagination) && table.options.sidePagination == 'client') {
                         return res.rows;
                     } else {
@@ -301,7 +325,7 @@ tab = {
                 var currentId = $.common.isEmpty(formId) ? $('form').attr('id') : formId;
                 var params = $.common.isEmpty(tableId) ? $("#" + table.options.id).bootstrapTable('getOptions') : $("#" + tableId).bootstrapTable('getOptions');
                 params.queryParams = function (params) {
-                    var search = $.common.formToJSON(currentId);
+                    let search = $.common.formToJSON(currentId);
                     if ($.common.isNotEmpty(data)) {
                         $.each(data, function (key) {
                             search[key] = data[key];
@@ -432,8 +456,6 @@ tab = {
                         $(item.href).addClass('show active');
 
                         $(item.href).load(item.url);
-                        //加载过一次不再重复加载
-                        item.hasLoad = true;
                         break;
                     }
                 }
@@ -448,12 +470,7 @@ tab = {
                     let newId = e.target.getAttribute("id");
                     let targetTab = tab.tabMap.get(newId);
                     targetTab.isActive = true;
-                    //加载过一次不再重复加载
-                    if (!targetTab.hasLoad) {
-                        $(targetTab.href).load(targetTab.url);
-                        targetTab.hasLoad = true;
-                    }
-
+                    $(targetTab.href).load(targetTab.url);
                     if (typeof callback == 'function') {
                         callback(targetTab, relatedTargetTab)
                     }
@@ -552,7 +569,9 @@ tab = {
             // 表单重置
             reset: function (formId, tableId) {
                 table.set(tableId);
-                var currentId = $.common.isEmpty(formId) ? $('form').attr('id') : formId;
+                let currentId = $.common.isEmpty(formId) ? $('form').attr('id') : formId;
+                let prefixKey = table.options.modalName + "_";
+                sessionStorage.removeItem(prefixKey + currentId);
                 $("#" + currentId)[0].reset();
                 if (table.options.type == table_type.bootstrapTable) {
                     if ($.common.isEmpty(tableId)) {
@@ -1150,13 +1169,6 @@ tab = {
                     return row[_column];
                 }).join();
             },
-            // 隐藏/显示搜索栏
-            toggleSearch: function () {
-                $('#search').slideToggle(200);
-                $('#btnShow').toggle();
-                $('#btnHide').toggle();
-                $('#keyword').focus();
-            },
             // 折叠
             collapse: function () {
                 $._tree.expandAll(false);
@@ -1296,10 +1308,11 @@ tab = {
                     if ($.common.isEmpty(field.value)) {
                         return
                     }
+                    let val = $.trim(field.value);
                     if (json[field.name]) {
-                        json[field.name] += ("," + field.value);
+                        json[field.name] += ("," + val);
                     } else {
-                        json[field.name] = field.value;
+                        json[field.name] = val;
                     }
                 });
                 return json;
@@ -1348,7 +1361,28 @@ tab = {
                 }
                 return "";
             },
-            changeNumMoneyToChinese: function(money){
+            //判断两个对象的属性值是否相等
+            isObjectValueEqual: function (a, b) {
+                //取对象a和b的属性名
+                let aProps = Object.getOwnPropertyNames(a);
+                let bProps = Object.getOwnPropertyNames(b);
+                //判断属性名的length是否一致
+                if (aProps.length != bProps.length) {
+                    return false;
+                }
+                //循环取出属性名，再判断属性值是否一致
+                for (let i = 0; i < aProps.length; i++) {
+                    let propName = aProps[i];
+                    if (a[propName] === undefined || b[propName] ===undefined){
+                        continue;
+                    }
+                    if (a[propName] != b[propName]) {
+                        return false;
+                    }
+                }
+                return true;
+            },
+    changeNumMoneyToChinese: function(money){
         		var cnNums = new Array("零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"); //汉字的数字
     		    var cnIntRadice = new Array("", "拾", "佰", "仟"); //基本单位
     		    var cnIntUnits = new Array("", "万", "亿", "兆"); //对应整数部分扩展单位

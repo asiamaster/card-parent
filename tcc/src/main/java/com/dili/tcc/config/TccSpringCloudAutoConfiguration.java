@@ -1,11 +1,14 @@
 package com.dili.tcc.config;
 
+import com.dili.tcc.bean.TccTransaction;
 import com.dili.tcc.core.EmptyTccResultInterceptor;
-import com.dili.tcc.core.ITransactionRepository;
-import com.dili.tcc.core.MemoryTransactionRepository;
 import com.dili.tcc.core.TccResultInterceptor;
+import com.dili.tcc.disruptor.DisruptorBootstrap;
+import com.dili.tcc.disruptor.DisruptorProvider;
 import com.dili.tcc.repository.RedisTccTransactionRepository;
 import com.dili.tcc.repository.TccTransactionRepository;
+import com.dili.tcc.serializer.KryoSerializer;
+import com.dili.tcc.serializer.ObjectSerializer;
 import com.dili.tcc.springcloud.ContextHystrixConcurrencyStrategy;
 import com.dili.tcc.springcloud.HystrixCallableWrapper;
 import com.dili.tcc.springcloud.HystrixTccContextCallableWrapper;
@@ -13,17 +16,15 @@ import com.dili.tcc.springcloud.TccFeignBeanPostProcessor;
 import com.dili.tcc.util.SpringContext;
 import feign.Feign;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,19 +33,9 @@ import java.util.List;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(Feign.class)
+@EnableConfigurationProperties(TccProperties.class)
 public class TccSpringCloudAutoConfiguration {
 
-
-    /**
-     * 存储远程执行信息
-     * @author miaoguoxin
-     * @date 2020/7/7
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public ITransactionRepository memoryTransactionRepository() {
-        return new MemoryTransactionRepository();
-    }
 
     /**
      *
@@ -72,7 +63,6 @@ public class TccSpringCloudAutoConfiguration {
      * @date 2020/7/14
      */
     @Bean
-    // @ConditionalOnProperty(value = "feign.hystrix.enabled", havingValue = "false", matchIfMissing = true)
     public TccFeignBeanPostProcessor tccBeanPostProcessor() {
         return new TccFeignBeanPostProcessor();
     }
@@ -80,9 +70,20 @@ public class TccSpringCloudAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnBean(RedisAutoConfiguration.class)
-    public TccTransactionRepository redisTccTransactionRepository(){
+    @ConditionalOnClass(RedisAutoConfiguration.class)
+    public TccTransactionRepository redisTccTransactionRepository() {
         return new RedisTccTransactionRepository();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ObjectSerializer kryoSerializer() {
+        return new KryoSerializer();
+    }
+
+    @Bean
+    public DisruptorBootstrap<TccTransaction> disruptorProvider(TccProperties tccProperties){
+        return new DisruptorBootstrap<>(tccProperties);
     }
 
     @Configuration

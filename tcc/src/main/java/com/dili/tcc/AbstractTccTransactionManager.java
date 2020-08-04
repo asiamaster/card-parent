@@ -1,10 +1,12 @@
 package com.dili.tcc;
 
 
+import com.dili.tcc.bean.TccTransaction;
 import com.dili.tcc.common.TccStatus;
 import com.dili.tcc.common.TransactionId;
 import com.dili.tcc.common.TccContext;
 import com.dili.tcc.core.TccContextHolder;
+import com.dili.tcc.disruptor.DisruptorBootstrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public abstract class AbstractTccTransactionManager<R, T> {
     private static final long RETRY_INTERVAL_MS = 5000;
     @Autowired
     private PlatformTransactionManager transactionManager;
+    @Autowired
+    private DisruptorBootstrap<TccTransaction> disruptorBootstrap;
 
 
     public final R doTcc(T requestDto) {
@@ -105,7 +109,6 @@ public abstract class AbstractTccTransactionManager<R, T> {
             return result;
         } catch (Throwable e) {
             //先清理上个阶段的
-            // tccContext.clearPrevious();
             this.doConfirmAndRetry(requestDto, tccContext);
 
             //进入confirm说明try阶段已经成功，资源已预添加，

@@ -172,7 +172,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         } else if (CardType.isSlave(primary.getCardType())) {
             param.setAccountIds(Lists.newArrayList(primary.getParentAccountId()));
         }
-        param.setExcludeUnusualState(0);
+        param.setExcludeUnusualState(1);
         List<UserAccountCardResponseDto> association = accountQueryRpcResolver.findByQueryCondition(param);
         return new AccountWithAssociationResponseDto(primary, association);
     }

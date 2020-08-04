@@ -22,36 +22,74 @@ import java.io.Serializable;
 
 public class TccParticipant implements Serializable {
 
-    private static final long serialVersionUID = -2590970715288987627L;
-
     private String transId;
-
-    private Integer status;
 
     private Boolean isSuccess = false;
 
-    private TccInvocation tccInvocation;
+    private Class<?> targetClass;
 
-    public TccParticipant(String transId, Integer status, Boolean isSuccess, TccInvocation tccInvocation) {
-        this.transId = transId;
-        this.status = status;
-        this.isSuccess = isSuccess;
-        this.tccInvocation = tccInvocation;
-    }
+    private String methodName;
+    /**请求参数类型*/
+    private Class<?>[] parameterTypes;
+    /**请求参数*/
+    private Object[] args;
+    /**执行结果*/
+    private Object result;
 
     public String getTransId() {
         return transId;
     }
 
-    public Integer getStatus() {
-        return status;
+    public void setTransId(String transId) {
+        this.transId = transId;
     }
+
 
     public Boolean getSuccess() {
         return isSuccess;
     }
 
-    public TccInvocation getTccInvocation() {
-        return tccInvocation;
+    public void setSuccess(Boolean success) {
+        isSuccess = success;
+    }
+
+    public Class<?> getTargetClass() {
+        return targetClass;
+    }
+
+    public void setTargetClass(Class<?> targetClass) {
+        this.targetClass = targetClass;
+    }
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
+
+    public Class<?>[] getParameterTypes() {
+        return parameterTypes;
+    }
+
+    public void setParameterTypes(Class<?>[] parameterTypes) {
+        this.parameterTypes = parameterTypes;
+    }
+
+    public Object[] getArgs() {
+        return args;
+    }
+
+    public void setArgs(Object[] args) {
+        this.args = args;
+    }
+
+    public Object getResult() {
+        return result;
+    }
+
+    public void setResult(Object result) {
+        this.result = result;
     }
 }

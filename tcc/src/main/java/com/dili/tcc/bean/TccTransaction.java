@@ -28,25 +28,57 @@ public class TccTransaction implements Serializable {
     private String targetClass;
     /**请求参数*/
     private Object requestDto;
-
+    private Integer version;
+    /**threadLocal传递的参数*/
     private Map<String, Object> attributes;
     /**远程事务节点*/
     private List<TccParticipant> participants;
 
-    public TccTransaction(String transId, Integer status,
-                          Integer retriedCount, Date createTime,
-                          Date lastTime, String targetClass,
-                          Object requestDto,
-                          Map<String, Object> attributes,
-                          List<TccParticipant> participants) {
+    public TccTransaction() {
+        this.version = 0;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public void setTransId(String transId) {
         this.transId = transId;
+    }
+
+    public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public void setRetriedCount(Integer retriedCount) {
         this.retriedCount = retriedCount;
+    }
+
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public void setLastTime(Date lastTime) {
         this.lastTime = lastTime;
+    }
+
+    public void setTargetClass(String targetClass) {
         this.targetClass = targetClass;
+    }
+
+    public void setRequestDto(Object requestDto) {
         this.requestDto = requestDto;
+    }
+
+    public void setAttributes(Map<String, Object> attributes) {
         this.attributes = attributes;
+    }
+
+    public void setParticipants(List<TccParticipant> participants) {
         this.participants = participants;
     }
 
