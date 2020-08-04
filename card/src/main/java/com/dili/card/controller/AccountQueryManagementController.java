@@ -8,6 +8,7 @@ import com.dili.card.dto.AccountSimpleResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.type.CardType;
 import com.dili.card.util.AssertUtils;
@@ -40,6 +41,8 @@ import java.util.Map;
 public class AccountQueryManagementController implements IControllerHandler {
     @Autowired
     private IAccountQueryService accountQueryService;
+    @Autowired
+    private AccountQueryRpcResolver accountQueryRpcResolver;
 
     /**
      * 跳转列表页面
@@ -124,6 +127,17 @@ public class AccountQueryManagementController implements IControllerHandler {
     public BaseOutput<List<UserAccountCardResponseDto>> getList(@RequestBody UserAccountCardQuery param) {
         AssertUtils.notNull(param.getFirmId(), "市场id不能为空");
         return BaseOutput.successData(accountQueryService.getList(param));
+    }
+
+    /**
+    * 单个查询(不校验状态)
+    * @author miaoguoxin
+    * @date 2020/8/4
+    */
+    @GetMapping("/singleWithoutValidate.action")
+    @ResponseBody
+    public BaseOutput<UserAccountCardResponseDto> getByCardNoWithoutValidate(UserAccountCardQuery query) {
+        return BaseOutput.successData(accountQueryRpcResolver.findSingleWithoutValidate(query));
     }
 }
 
