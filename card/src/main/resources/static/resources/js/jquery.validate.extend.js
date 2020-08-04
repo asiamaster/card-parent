@@ -54,6 +54,10 @@ $(document).ready(function () {
         return value > param;
     }, $.validator.format("输入值必须大于{0}"));
 
+    jQuery.validator.addMethod("lt", function (value, element, param) {
+        return value < param;
+    }, $.validator.format("输入值必须小于{0}"));
+
     //校验新旧密码是否相同
     jQuery.validator.addMethod("isdiff", function () {
         var p1 = $("#pwdOld").val();
