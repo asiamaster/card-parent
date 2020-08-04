@@ -12,10 +12,14 @@ import com.dili.card.dto.pay.FreezeFundRecordParam;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
+import com.dili.card.service.IRuleFeeService;
 import com.dili.card.service.tcc.RechargeTccTransactionManager;
 import com.dili.card.service.withdraw.WithdrawDispatcher;
 import com.dili.card.type.PayFreezeFundType;
+import com.dili.card.type.RuleFeeBusinessType;
+import com.dili.card.type.SystemSubjectType;
 import com.dili.card.util.AssertUtils;
+import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.card.validator.FundValidator;
 import com.dili.ss.constant.ResultCode;
@@ -27,13 +31,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -54,8 +55,8 @@ public class FundController implements IControllerHandler {
     private RechargeTccTransactionManager rechargeTccTransactionManager;
     @Resource
     private WithdrawDispatcher withdrawDispatcher;
-
-
+    @Resource
+    private IRuleFeeService ruleFeeService;
     /**
      * 跳转冻结资金页面
      *
@@ -118,7 +119,11 @@ public class FundController implements IControllerHandler {
     @RequestMapping(value = "/withdrawServiceFee.action")
     @ResponseBody
     public BaseOutput<Long> withdrawServiceFee(Integer tradeChannel) {
-        return BaseOutput.success().setData(3L);
+        BigDecimal decimal = ruleFeeService.getRuleFee(RuleFeeBusinessType.CARD_WITHDRAW_EBANK, SystemSubjectType.CARD_WITHDRAW_EBANK_FEE);
+        if (decimal != null) {
+            return BaseOutput.success().setData(CurrencyUtils.toYuanWithStripTrailingZeros(decimal.longValue()));
+        }
+        return BaseOutput.failure("未查询到费用");
     }
 
     /**

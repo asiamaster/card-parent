@@ -68,10 +68,10 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	IRuleFeeService ruleFeeService;
 
 	@Override
-	public Long getOpenCostFee() {
+	public String getOpenCostFee() {
 		BigDecimal ruleFee = ruleFeeService.getRuleFee(RuleFeeBusinessType.CARD_OPEN_CARD,
 				SystemSubjectType.CARD_OPEN_COST);
-		return ruleFee.longValue();
+		return ruleFee.doubleValue() + "";
 	}
 
 	@Override

@@ -70,15 +70,15 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 		QueryFeeInput queryFeeInput = null;
 		for (BusinessChargeItemDto item : chargeItemList) {
 			// SystemSubjectType.CARD_OPEN_COST == item.getSystemSubject
-			if (systemSubjectType.getCode() == 2) {
+//			if (systemSubjectType.getCode() == 2) {
 				queryFeeInput = new QueryFeeInput();
 				queryFeeInput.setMarketId(userTicket.getFirmId());
 				queryFeeInput.setBusinessType(ruleFeeBusinessType.getCode());
 				queryFeeInput.setChargeItem(item.getId());
-			}
+//			}
 		}
 		if (queryFeeInput == null) {
-			throw new CardAppBizException(ErrorCode.GENERAL_CODE, "请在规则系统中配置 {}!", systemSubjectType.getName());
+			throw new CardAppBizException("请在规则系统中配置" + systemSubjectType.getName() + " ,并选择对应的系统科目!");
 		}
 		// 计算条件
 		if (amount != null && amount != 0) {

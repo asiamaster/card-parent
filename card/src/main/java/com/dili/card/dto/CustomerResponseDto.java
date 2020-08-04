@@ -21,7 +21,7 @@ public class CustomerResponseDto implements Serializable {
 	/** 客户类型名称 */
 	private String customerTypeName;
 	/** 联系电话 */
-	private String contactsPhone;
+	private String customerContactsPhone;
 	/** 证件地址 */
 	private String certificateAddr;
 	/** 组织类型,个人/企业 */
@@ -55,12 +55,12 @@ public class CustomerResponseDto implements Serializable {
 		this.name = name;
 	}
 
-	public String getContactsPhone() {
-		return contactsPhone;
+	public String getCustomerContactsPhone() {
+		return customerContactsPhone;
 	}
 
-	public void setContactsPhone(String contactsPhone) {
-		this.contactsPhone = contactsPhone;
+	public void setCustomerContactsPhone(String customerContactsPhone) {
+		this.customerContactsPhone = customerContactsPhone;
 	}
 
 	public String getCertificateAddr() {

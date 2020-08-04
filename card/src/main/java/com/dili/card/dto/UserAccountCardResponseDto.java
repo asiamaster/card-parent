@@ -43,7 +43,7 @@ public class UserAccountCardResponseDto implements Serializable {
 	/** 客户身份号 */
 	private String customerCertificateNumber;
 	/** 客户电话 */
-	private String customerCellphone;
+	private String customerContactsPhone;
 	/** 使用权限(充值、提现、交费等) {@link com.dili.account.type.UsePermissionType} */
 	private List<String> permissionList;
 	/** 卡ID */
@@ -235,12 +235,12 @@ public class UserAccountCardResponseDto implements Serializable {
 		this.customerCertificateNumber = customerCertificateNumber;
 	}
 
-	public String getCustomerCellphone() {
-		return customerCellphone;
+	public String getCustomerContactsPhone() {
+		return customerContactsPhone;
 	}
 
-	public void setCustomerCellphone(String customerCellphone) {
-		this.customerCellphone = customerCellphone;
+	public void setCustomerContactsPhone(String customerContactsPhone) {
+		this.customerContactsPhone = customerContactsPhone;
 	}
 
 	public Integer getDisabledState() {

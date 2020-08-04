@@ -28,7 +28,7 @@ public class AccountListResponseDto extends BaseDto implements Serializable {
     /**客户编号*/
     private String customerCode;
     /**客户电话*/
-    private String customerCellphone;
+    private String customerContactsPhone;
     /**卡状态 {@link com.dili.card.type.CardStatus}*/
     @TextDisplay(CardStateProvider.class)
     private Integer cardState;
@@ -102,11 +102,11 @@ public class AccountListResponseDto extends BaseDto implements Serializable {
     }
 
 
-    public String getCustomerCellphone() {
-        return customerCellphone;
+    public String getCustomerContactsPhone() {
+        return customerContactsPhone;
     }
 
-    public void setCustomerCellphone(String customerCellphone) {
-        this.customerCellphone = customerCellphone;
+    public void setCustomerContactsPhone(String customerContactsPhone) {
+        this.customerContactsPhone = customerContactsPhone;
     }
 }

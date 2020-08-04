@@ -150,9 +150,9 @@ public class OpenCardController implements IControllerHandler {
 		if (user == null) {
 			return BaseOutput.failure("未获取到登录用户信息，请重新登录!");
 		}
-		Long openCostFee = openCardService.getOpenCostFee();
+		String openCostFee = openCardService.getOpenCostFee();
 		log.info("查询开卡费用项:{}", openCostFee);
-		return BaseOutput.successData(MoneyUtils.centToYuan(openCostFee));
+		return BaseOutput.successData(openCostFee);
 	}
 
 	/**
