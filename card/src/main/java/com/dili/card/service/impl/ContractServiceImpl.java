@@ -1,6 +1,7 @@
 package com.dili.card.service.impl;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import com.dili.card.common.constant.Constant;
 import com.dili.card.dao.IFundConsignorDao;
 import com.dili.card.dao.IFundContractDao;
 import com.dili.card.dto.FundConsignorDto;
@@ -153,7 +155,7 @@ public class ContractServiceImpl implements IContractService {
 			contractQueryDto.setConsignorAccountId(userAccountCard.getAccountId());
 		}
 		// 过期时间构建
-		if (contractQueryDto.getDays() != null && contractQueryDto.getDays() > 0) {
+		if (contractQueryDto.getDays() != null && contractQueryDto.getDays() >= 0) {
 			contractQueryDto.setExpirationTime(
 					DateUtils.format(DateUtils.addDays(new Date(), contractQueryDto.getDays()), "yyyy-MM-dd"));
 		}
@@ -221,6 +223,12 @@ public class ContractServiceImpl implements IContractService {
 		contractResponseDto.setTerminateNotes(fundContractDo.getTerminateNotes());
 		contractResponseDto.setTerminateTime(fundContractDo.getTerminateTime());
 		contractResponseDto.setState(fundContractDo.getState());
+		
+		LocalDate plusDaysResult = LocalDate.now().plusDays(Constant.READY_EXPIRE_DAY);
+		if (Timestamp.valueOf(fundContractDo.getEndTime()).getTime() < Timestamp
+				.valueOf(plusDaysResult.atStartOfDay()).getTime()) {
+			contractResponseDto.setReadyExpire(true);
+		}
 
 		List<FundConsignorDo> consignors = fundConsignorDao.findConsignorsByContractNo(fundContractDo.getContractNo());
 		// 列表被委托人信息
@@ -294,11 +302,11 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setConsignorAccountId(fundContractRequest.getConsignorAccountId());
 		if (Timestamp.valueOf(fundContractRequest.getEndTime()).getTime() < Timestamp.valueOf(LocalDateTime.now())
 				.getTime()) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "合同结束时间不低于今天");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "合同结束时间不小于今天");
 		}
 		if (Timestamp.valueOf(fundContractRequest.getEndTime()).getTime() < Timestamp
 				.valueOf(fundContractRequest.getStartTime()).getTime()) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "合同结束时间不低于开始时间");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "合同结束时间不小于开始时间");
 		}
 		fundContractDo.setStartTime(fundContractRequest.getStartTime());
 		fundContractDo.setEndTime(fundContractRequest.getEndTime());

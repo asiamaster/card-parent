@@ -15,17 +15,17 @@
             </div>
             <div class="form-group col-auto">
                 <label for="cardNos[0]">卡号</label>
-                <input id="cardNos[0]" name="cardNos[0]" type="text" class="form-control"/>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="cardNos[0]" id="cardNos[0]" maxlength="50" oninput="queryCustomerByCardNo(this.value, 'show_customer_name_by_card');return false;"/>
+                    <input type="text" class="form-control" id="show_customer_name_by_card" readonly/>
+                </div>
             </div>
             <div class="form-group col">
                 <label for="customerName">客户</label>
-                <#bautoCompleteProvider
-                _hiddenDomainId="customerIds[0]"
-                _hiddenDomainName="customerIds[0]"
-                _displayDomainId="customerName"
-                _displayDomainName="customerName"
-                _placeholder=""
-                _optionVariable="customerNameQueryAutoCompleteOption"/>
+                <div class="input-group">
+                	<#bautoCompleteProvider _hiddenDomainId="customerIds[0]" _hiddenDomainName="customerIds[0]" _displayDomainId="customerName" _displayDomainName="customerName" _placeholder="" _optionVariable="customerNameQueryAutoCompleteOption"/>
+            		<input type="text" class="form-control" id="show_customer_name" readonly/>
+            	</div>
             </div>
             <#component_dateControls
             _labelText="创建时间:"

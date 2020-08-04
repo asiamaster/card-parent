@@ -63,6 +63,8 @@ public class FundContractResponseDto{
 	private LocalDateTime terminateTime;
 	/** 被委托人信息*/
 	private List<FundConsignorDto> consignorDtos;
+	/** 合同即将到期提示*/
+	private Boolean readyExpire = false;
 
     /**
      * setter for 合同开始日期
@@ -228,5 +230,13 @@ public class FundContractResponseDto{
 
 	public void setConsignorDtos(List<FundConsignorDto> consignorDtos) {
 		this.consignorDtos = consignorDtos;
+	}
+
+	public Boolean getReadyExpire() {
+		return readyExpire;
+	}
+
+	public void setReadyExpire(Boolean readyExpire) {
+		this.readyExpire = readyExpire;
 	}
 }

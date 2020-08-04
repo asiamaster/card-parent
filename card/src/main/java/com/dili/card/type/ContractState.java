@@ -13,8 +13,8 @@ public enum ContractState {
 
 	UNSTARTED(1, "未开始"),
 	ENTUST(2, "委托中"),
-	ENDED(3, "结束"),
-	REMOVED(4, "解除");
+	ENDED(3, "已到期"),
+	REMOVED(4, "已解除");
 
 	private int code;
 	private String name;
