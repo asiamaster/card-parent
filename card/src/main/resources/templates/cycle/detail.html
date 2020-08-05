@@ -10,6 +10,8 @@
         text-align: left;
     }
 </style>
+<#bs4nav>
+</#bs4nav>
     <div id="detail-modal" class="main-container container-fluid" style="height: 380px;width: 1000px;">
     	<form id="queryForm">
 	        <table id="out-detail" class="table table-bordered" >
@@ -228,13 +230,13 @@
 	    let data = $.common.formToJSON("queryForm");
 	    $.operate.saveModal(url, JSON.stringify(data));
 	    $("#apply").attr("disabled",true);
-	    return true; 
+	    return true;
 	}
-	
+
     function backList() {
     	window.location.href="${contextPath}/cycle/list.html";
     }
-    
+
 	function payeeActive(){
 		if(istetee){
 			return;
@@ -253,7 +255,7 @@
     	     };
     	$.table.init(options);
     }
-	
+
 	function payerActive(){
 		if(isteter){
 			return;
@@ -272,7 +274,7 @@
     	     };
     	$.table.init(options);
     }
-	
+
 	function operationActive(){
 		if(istetoperation){
 			return;

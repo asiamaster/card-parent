@@ -12,19 +12,19 @@
         vertical-align: middle;
     }
     .td_input{
-    	width: 120px; 
+    	width: 120px;
     	float: left;
     	margin-right:25px;
     }
     .td_button{
-    	width: 100px; 
+    	width: 100px;
     	float: left;
     }
-    
+
     p{
     	margin: 0px;
     }
-    
+
     .per_div{
 		display: flex;
     	justify-content: flex-start;
@@ -52,7 +52,7 @@
               rgba(0, 0, 0, 0.8) 50%,
               rgba(255,255,255, 0.1) calc(50% + 1px),
               rgba(255,255,255, 0.1) 100%
-           ), 
+           ),
           linear-gradient(
               to bottom right,
               rgba(255,255,255, 0.1) 0%,
@@ -111,7 +111,6 @@
     </form>
 </#bs4nav>
 </div>
-85
 <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
 	<#resource code="addContract">
 		<button id="btn_add" type="button" class="btn btn-primary" onclick="openAddView()"><i class="fa fa-plus"></i> 新增</button>
@@ -308,10 +307,10 @@
 					<p style="text-indent: 2em">
 						本人 <font color="#FC1D24"><span id="consignorCustomerName2" style="text-decoration:underline;"></span></font> 与贵公司签订《资金委托协议书》，
 						现委托<font color="#FC1D24"><span id="consigneeNames2" style="text-decoration:underline;"></span></font> 持本人
-						<font color="#FC1D24"><span id="cardNo2" style="text-decoration:underline;"></span></font>园区卡， 
+						<font color="#FC1D24"><span id="cardNo2" style="text-decoration:underline;"></span></font>园区卡，
 						在<font color="#FC1D24"><span id="startTimeYear"></span></font>年
 						<font color="#FC1D24"><span id="startTimeMonth"></span></font>月
-						<font color="#FC1D24"><span id="startTimeDay"></span></font>日 
+						<font color="#FC1D24"><span id="startTimeDay"></span></font>日
 						 至 <font color="#FC1D24"><span id="endTimeYear"></span></font>年
 						<font color="#FC1D24"><span id="endTimeMonth"></span></font>月
 						<font color="#FC1D24"><span id="endTimeDay"></span></font>日
@@ -362,8 +361,8 @@
 <#common_commonJs/>
 <script>
     $(function () {
-    	$("#addFirstModal").on("hidden.bs.modal", function() { 
-    		$(this).removeData("bs.modal"); 
+    	$("#addFirstModal").on("hidden.bs.modal", function() {
+    		$(this).removeData("bs.modal");
     		});
         let options = {
             //必须加这个唯一标识
@@ -380,33 +379,33 @@
 	function openAddView() {
 		$('#addFirstModal').modal('show');
 	}
-	
+
 	function nextStepView() {
 		nextStep();
 		$('#addFirstModal').modal('hide');
 		fillSecondViewData();
 		$('#addSecondModal').modal('show');
 	}
-	
+
 	/**
 	 * 添加被委托人信息
 	 */
-	let consignee='<tr class="consignee"><td class="info-column">被委托人</td><td class="info-cell">' + 
-        	'<input placeholder="姓名" disabled="disabled" value="3333" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="50"/>' + 
-        	'<input placeholder="身份证号" disabled="disabled" value="3333" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="50"/>' + 
-        	'<input placeholder="手机号" name="consigneeIdMobile" value="3333" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="50"/>' + 
-        	'<button type="button" class="btn btn-secondary td_button readID" onclick="readIDCode()"><i class="fa fa-search"></i>读取身份证</button>' + 
-        	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus" style="color:#4F94CD;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' + 
+	let consignee='<tr class="consignee"><td class="info-column">被委托人</td><td class="info-cell">' +
+        	'<input placeholder="姓名" disabled="disabled" value="3333" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="50"/>' +
+        	'<input placeholder="身份证号" disabled="disabled" value="3333" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="50"/>' +
+        	'<input placeholder="手机号" name="consigneeIdMobile" value="3333" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="50"/>' +
+        	'<button type="button" class="btn btn-secondary td_button readID" onclick="readIDCode()"><i class="fa fa-search"></i>读取身份证</button>' +
+        	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus" style="color:#4F94CD;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' +
         	'<label onclick="addConsignee()" class = "plus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-plus" style="color:#fF0000;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label></td</tr>';
-	
-    let consugnee1= '<div class="per_div"><div style="width: 100px;" class="per_div_child">' + 
-					'<p style="height: 30px; line-height: 30px;">被委托人签名：</p></div>' + 
-					'<div class="triangle per_div_child div_container"><div class="div_container_content">' + 
-					'<span style="background-color: #FFFFFF;">consugneeName</span></div>' + 
-					'</div><button id="signature" type="button" style="height: 30px;"' + 
-					'class="btn btn-primary per_div_child" onclick="signature()">请签名</button><input type="hidden" id="signatureImagePathConsugnee" name="signatureImagePathConsugnee" value="rr"></div>'; 	
-        	
-        	
+
+    let consugnee1= '<div class="per_div"><div style="width: 100px;" class="per_div_child">' +
+					'<p style="height: 30px; line-height: 30px;">被委托人签名：</p></div>' +
+					'<div class="triangle per_div_child div_container"><div class="div_container_content">' +
+					'<span style="background-color: #FFFFFF;">consugneeName</span></div>' +
+					'</div><button id="signature" type="button" style="height: 30px;"' +
+					'class="btn btn-primary per_div_child" onclick="signature()">请签名</button><input type="hidden" id="signatureImagePathConsugnee" name="signatureImagePathConsugnee" value="rr"></div>';
+
+
     function addConsignee() {
 		var list=$(".consignee");
 		if(list.length == 3){
@@ -415,7 +414,7 @@
 		}
 		$('#notesBefore').before(consignee);
 	}
-	
+
 	function minusConsignee(e) {
 		$(e).closest(".consignee").remove();
 	}
@@ -444,7 +443,7 @@
         data.consignors=items;
 		data.consigneeNames=consigneeNames.substring(1);
 	}
-	
+
 	function fillSecondViewData(){
 		$("#consignorCustomerName2").html(data.consignorCustomerName);
 		$("#consigneeNames2").html(data.consigneeNames);
@@ -461,10 +460,10 @@
 		$("#consignorCustomerName4").html(data.consignorCustomerName);
 		$("#consignorCustomerIDCode2").html(data.consignorCustomerIDCode);
 		$("#consignorCustomerMobile2").html(data.consignorCustomerMobile);
-		
+
 		for (i = 0; i < data.consignors.length; i++) {
-			var consigneeReplace = '<p id="consigneeNameAlls" style="text-indent: 2em">' + 
-			'名称：<font color="#FC1D24">'+ data.consignors[i].consigneeName +'</font> ， 身份证号：<font color="#FC1D24">'+data.consignors[i].consigneeIdCode+'</font>，' + 
+			var consigneeReplace = '<p id="consigneeNameAlls" style="text-indent: 2em">' +
+			'名称：<font color="#FC1D24">'+ data.consignors[i].consigneeName +'</font> ， 身份证号：<font color="#FC1D24">'+data.consignors[i].consigneeIdCode+'</font>，' +
 			'联系电话：<font color="#FC1D24">'+data.consignors[i].consigneeIdMobile+'</font></p>';
 			let consugnee2 = consugnee1;
 			consugnee2 = consugnee2.replace("consugneeName", data.consignors[i].consigneeName);
@@ -473,14 +472,14 @@
 			$("#consignorCustomer").append(consugnee2);
 		}
 	}
-	
+
 	function backToFirst(){
 		$('#addSecondModal').modal('hide');
 		$("#consigneeAlls").empty();
 		$("#consignorCustomer").empty();
 		$('#addFirstModal').modal('show');
 	}
-	
+
 	function cancleAddView(){
 		$('#customerId').val('');
 		$('#consignorCustomerName').val('');
@@ -497,20 +496,20 @@
 			$(this).find("#consigneeIdMobile").val('');
 			if($(this).find(".minus").length != 0){
 				$(this).remove();
-			} 
+			}
 		})
 		$('#addFirstModal').modal('hide');
 	}
-	
-	function keyPress() {    
+
+	function keyPress() {
 		var r = value.match(/^[0-9]*$/);
         if(r == null){
             return true;
         }else{
             return false;
         }
-	 }    
-	
+	 }
+
 	function submitData(){
 		data.signatureImagePath=$('#signatureImagePath').val();
 		for (i = 0; i < data.consignors.length; i++) {

@@ -153,14 +153,8 @@ tab = {
             },
             // 查询条件
             queryParams: function (params) {
-                table.options.queryCount++;
                 let currentId = $.common.isEmpty(table.options.formId) ? 'queryForm' : table.options.formId;
                 let prefixKey = table.options.modalName + "_";
-                let rememberedParams = JSON.parse(sessionStorage.getItem(prefixKey + currentId));
-                //判断是否是第一次加载
-                if (table.options.queryCount == 1 && !$.common.isEmpty(rememberedParams)){
-                    return rememberedParams;
-                }
                 let curParams = {
                     // 传递参数查询参数
                     rows: params.limit,
@@ -176,7 +170,6 @@ tab = {
             },
             //初始化已记忆的页面参数
             initRememberedViewParams: function(options){
-                table.options.queryCount = 0;
                 let currentId = $.common.isEmpty(table.options.formId) ? 'queryForm' : table.options.formId;
                 let prefixKey = table.options.modalName + "_";
                 let rememberedParams = JSON.parse(sessionStorage.getItem(prefixKey + currentId));
