@@ -1,5 +1,6 @@
 package com.dili.card.service.recharge;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
@@ -14,6 +15,7 @@ import com.dili.card.service.ISerialService;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
+import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.tcc.core.TccContextHolder;
 import org.slf4j.Logger;
@@ -48,7 +50,9 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
             record.setTradeType(TradeType.DEPOSIT.getCode());
             record.setTradeChannel(requestDto.getTradeChannel());
             record.setServiceCost(requestDto.getServiceCost());
+            record.setBankCardType(this.getBankType(requestDto));
         });
+
 
         CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(
                 TradeType.DEPOSIT.getCode(),
@@ -67,6 +71,17 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         TccContextHolder.get().addAttr(Constant.TRADE_ID_KEY, tradeId);
         TccContextHolder.get().addAttr(Constant.BUSINESS_RECORD_KEY, businessRecord);
         TccContextHolder.get().addAttr(Constant.USER_ACCOUNT, userAccount);
+    }
+
+    private Integer getBankType(FundRequestDto requestDto) {
+        if (requestDto.getTradeChannel()== TradeChannel.POS.getCode()){
+            JSONObject extra = requestDto.getExtra();
+            if (extra == null){
+                extra = new JSONObject();
+            }
+            return extra.getInteger(Constant.BANK_TYPE);
+        }
+        return null;
     }
 
     /**
