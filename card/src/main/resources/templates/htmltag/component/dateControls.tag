@@ -17,10 +17,3 @@
         </div>
     </div>
 </div>
-<script>
-    $(() => {
-        //初始化时间
-        $('.laystart').val(moment().subtract(90, 'days').format('YYYY-MM-DD HH:mm:ss'));
-        $('.layend').val(moment().format('YYYY-MM-DD HH:mm:ss'));
-    });
-</script>

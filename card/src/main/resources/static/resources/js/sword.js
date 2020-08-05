@@ -186,6 +186,8 @@ tab = {
                         }
                     });
                 }
+                //重置时间
+                $.form.resetDate();
             },
             //单击事件
             onClickRow: function (row, $element, field) {
@@ -560,18 +562,32 @@ tab = {
         },
         // 表单封装处理
         form: {
+            //重置表单上的时间为默认
+            resetDate: function (duration , timeUnit) {
+                if ($.common.isEmpty(duration)){
+                    duration = 90;
+                }
+                if ($.common.isEmpty(timeUnit)){
+                    timeUnit = 'day';
+                }
+                $('.laystart').val(moment().subtract(duration, timeUnit).format('YYYY-MM-DD HH:mm:ss'));
+                $('.layend').val(moment().format('YYYY-MM-DD HH:mm:ss'));
+            },
             // 表单重置
             reset: function (formId, tableId) {
                 table.set(tableId);
                 let currentId = $.common.isEmpty(formId) ? $('form').attr('id') : formId;
                 let prefixKey = table.options.modalName + "_";
+                //清空session记录
                 sessionStorage.removeItem(prefixKey + currentId);
                 $("#" + currentId)[0].reset();
+                //时间重置
+                $.form.resetDate();
                 if (table.options.type == table_type.bootstrapTable) {
                     if ($.common.isEmpty(tableId)) {
-                        $("#" + table.options.id).bootstrapTable('refresh');
+                        $("#" + table.options.id).bootstrapTable('refresh',{pageNumber:1});
                     } else {
-                        $("#" + tableId).bootstrapTable('refresh');
+                        $("#" + tableId).bootstrapTable('refresh', {pageNumber:1});
                     }
                 } else if (table.options.type == table_type.bootstrapTreeTable) {
                     if ($.common.isEmpty(tableId)) {
