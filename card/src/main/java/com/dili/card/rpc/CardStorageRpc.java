@@ -18,10 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author ：WangBo
  * @time ：2020年7月17日上午10:22:18
  */
-@FeignClient(name = "account-service",
-		contextId = "cardStorgeRpc",
-		path = "/api/account/cardStorage"
-		/*, url = "http://127.0.0.1:8186"*/
+@FeignClient(name = "account-service", contextId = "cardStorgeRpc", path = "/api/account/cardStorage"
+/* , url = "http://127.0.0.1:8186" */
 )
 public interface CardStorageRpc {
 
@@ -53,10 +51,19 @@ public interface CardStorageRpc {
 	BaseOutput<CardStorageDto> getCardStorageByCardNo(CardStorageDto param);
 
 	/**
-	* 批量激活
-	* @author miaoguoxin
-	* @date 2020/7/29
-	*/
+	 * 批量激活,卡片库存状态从未使用到激活
+	 * 
+	 * @author miaoguoxin
+	 * @date 2020/7/29
+	 */
 	@PostMapping("/batchActivate")
 	BaseOutput<?> batchActivate(BatchActivateCardDto dto);
+
+	/**
+	 * 激活，卡片库存状态从在用到激活
+	 * 
+	 * @param dto 提供卡号即可
+	 */
+	@PostMapping("/batchActivate")
+	BaseOutput<?> activateCardByInUse(BatchActivateCardDto dto);
 }
