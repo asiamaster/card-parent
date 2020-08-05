@@ -33,6 +33,7 @@ import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IContractService;
 import com.dili.card.type.BizNoType;
+import com.dili.card.type.CardStatus;
 import com.dili.card.type.ContractState;
 import com.dili.card.util.PageUtils;
 import com.dili.customer.sdk.domain.Customer;
@@ -151,14 +152,16 @@ public class ContractServiceImpl implements IContractService {
 		contractQueryDto.setFirmId(userTicket.getFirmId());
 		if (!StringUtils.isBlank(contractQueryDto.getCardNo())) {
 			// 构建卡数据
-			UserAccountCardResponseDto userAccountCard = accountQueryService.getByCardNo(contractQueryDto.getCardNo());
-			contractQueryDto.setConsignorAccountId(userAccountCard.getAccountId());
+			UserAccountCardResponseDto userAccountCard = accountQueryService.getByCardNoWithoutValidate(contractQueryDto.getCardNo());
+			//如果卡为退卡状态不能卡出卡信息
+			contractQueryDto.setConsignorAccountId(userAccountCard.getCardState() == CardStatus.RETURNED.getCode() ? -1 : userAccountCard.getAccountId());
 		}
 		// 过期时间构建
 		if (contractQueryDto.getDays() != null && contractQueryDto.getDays() >= 0) {
 			contractQueryDto.setExpirationTime(
 					DateUtils.format(DateUtils.addDays(new Date(), contractQueryDto.getDays()), "yyyy-MM-dd"));
 		}
+		
 	}
 
 	/**
