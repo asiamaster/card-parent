@@ -1,8 +1,11 @@
 package com.dili.card.dto;
 
+import java.time.LocalDateTime;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.validator.ConstantValidator;
 
 /**
@@ -28,9 +31,11 @@ public class FundContractQueryDto extends BaseDto{
 	/** 被委托人手机号 */
 	private String consigneeMobile;
 	/** 创建开始时间 */
-	private String createStartTime;
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime createStartTime;
 	/** 创建结束时间 */
-	private String createEndTime;
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime createEndTime;
 	/** 距离到期天数 */
 	private Integer days;
 	/** 距离到期时间 */
@@ -88,19 +93,19 @@ public class FundContractQueryDto extends BaseDto{
 		this.cardNo = cardNo;
 	}
 
-	public String getCreateStartTime() {
+	public LocalDateTime getCreateStartTime() {
 		return createStartTime;
 	}
 
-	public void setCreateStartTime(String createStartTime) {
+	public void setCreateStartTime(LocalDateTime createStartTime) {
 		this.createStartTime = createStartTime;
 	}
 
-	public String getCreateEndTime() {
+	public LocalDateTime getCreateEndTime() {
 		return createEndTime;
 	}
 
-	public void setCreateEndTime(String createEndTime) {
+	public void setCreateEndTime(LocalDateTime createEndTime) {
 		this.createEndTime = createEndTime;
 	}
 

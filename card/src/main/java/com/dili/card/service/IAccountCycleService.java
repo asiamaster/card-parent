@@ -76,4 +76,9 @@ public interface IAccountCycleService {
 	 */
 	AccountCycleDto applyDetail(Long userId);
 	
+	/**
+	 * 更新现金柜
+	 */
+	void updateCashBox(Long cycleNo, Long amount);
+	
 }
