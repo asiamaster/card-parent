@@ -18,14 +18,14 @@ public class FundRequestDto extends CardRequestDto {
     @NotNull(message = "交易渠道不能为空", groups = FundValidator.Trade.class)
     private Integer tradeChannel;
     /** 金额*/
-    @NotNull(message = "金额不能为空", groups = ConstantValidator.Update.class)
-    @Min(value = 1, message = "最少1分", groups = ConstantValidator.Update.class)
+    @NotNull(message = "金额不能为空", groups = {ConstantValidator.Update.class, FundValidator.Trade.class})
+    @Min(value = 1, message = "最少1分", groups = {ConstantValidator.Update.class, FundValidator.Trade.class})
     private Long amount;
     /** 交易密码*/
     @NotBlank(message = "交易密码不能为空", groups = FundValidator.Trade.class)
     private String tradePwd;
     /** 手续费*/
-    @Min(value = 1, message = "手续费最少1分", groups = ConstantValidator.Update.class)
+    @Min(value = 1, message = "手续费最少1分", groups = FundValidator.Trade.class)
     private Long serviceCost;
     /**备注*/
     private String mark;

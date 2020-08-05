@@ -139,7 +139,8 @@ public class FundController implements IControllerHandler {
      */
     @PostMapping("frozen.action")
     @ResponseBody
-    public BaseOutput<?> frozen(@RequestBody @Validated(ConstantValidator.Update.class) FundRequestDto requestDto) {
+    public BaseOutput<?> frozen(@RequestBody @Validated(ConstantValidator.Update.class)
+                                            FundRequestDto requestDto) {
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
         try {
@@ -209,8 +210,8 @@ public class FundController implements IControllerHandler {
     @PostMapping("recharge.action")
     @ResponseBody
     @ForbidDuplicateCommit
-    public BaseOutput<?> recharge(@RequestBody @Validated({ConstantValidator.Update.class,
-            FundValidator.Trade.class}) FundRequestDto requestDto) {
+    public BaseOutput<?> recharge(@RequestBody @Validated({FundValidator.Trade.class})
+                                              FundRequestDto requestDto) {
         LOGGER.error("充值请求参数:{}", JSON.toJSONString(requestDto));
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
