@@ -35,17 +35,21 @@ public class PosRechargeService extends AbstractRechargeManager {
     public String buildBusinessRecordNote(FundRequestDto requestDto) {
         Long serviceCost = requestDto.getServiceCost();
         String yuan = CurrencyUtils.toYuanWithStripTrailingZeros(serviceCost == null ? 0L : serviceCost);
-        return String.format("pos充值, 手续费: %s", yuan);
+        JSONObject extra = requestDto.getExtra();
+        if (extra == null) {
+            extra = new JSONObject();
+        }
+        return String.format("pos存款, 手续费%s元，凭证号：%s", yuan, extra.getString(Constant.POS_CERT_NUM));
     }
 
     @Override
     public String buildSerialRecordNote(FundRequestDto requestDto) {
         JSONObject extra = requestDto.getExtra();
         if (extra == null) {
-            return "";
+            extra = new JSONObject();
         }
         String bankTypeName = BankCardType.getNameByCode(extra.getInteger(Constant.BANK_TYPE));
-        return String.format("pos充值，%s,凭证号:%s", bankTypeName, extra.getString(Constant.POS_CERT_NUM));
+        return String.format("pos存款，%s,凭证号:%s", bankTypeName, extra.getString(Constant.POS_CERT_NUM));
     }
 
     @Override

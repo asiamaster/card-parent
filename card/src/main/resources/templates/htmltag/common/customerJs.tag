@@ -39,11 +39,11 @@
         }
         $.ajax({
             type:'GET',
-            url:'/customer/infoByCardNo.action?cardNo=' + cardNo,
+            url:'/accountQuery/singleWithoutValidate.action?cardNos=' + cardNo,
             dataType:'json',
             success:function(result) {
                 if (result.success) {
-                    $('#' + domId).val(result.data.name);
+                    $('#' + domId).val(result.data.customerName);
                 } else {
 
                 }

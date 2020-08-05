@@ -41,11 +41,10 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
     public final void doPreRecharge(FundRequestDto requestDto) {
         UserAccountCardResponseDto userAccount = accountQueryService.getByAccountId(requestDto);
 
-        //真正充值的金额
         Long rechargeAmount = requestDto.getAmount();
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {
             record.setType(OperateType.ACCOUNT_CHARGE.getCode());
-            record.setAmount(requestDto.getAmount());
+            record.setAmount(rechargeAmount);
             record.setTradeType(TradeType.DEPOSIT.getCode());
             record.setTradeChannel(requestDto.getTradeChannel());
             record.setServiceCost(requestDto.getServiceCost());

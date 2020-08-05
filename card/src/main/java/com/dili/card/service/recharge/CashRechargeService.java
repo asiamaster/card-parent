@@ -34,12 +34,12 @@ public class CashRechargeService extends AbstractRechargeManager {
 
     @Override
     public String buildBusinessRecordNote(FundRequestDto requestDto) {
-        return "现金充值";
+        return "现金存款";
     }
 
     @Override
     public String buildSerialRecordNote(FundRequestDto requestDto) {
-        return "现金充值";
+        return "现金存款";
     }
 
     @Override

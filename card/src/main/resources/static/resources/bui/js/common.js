@@ -87,17 +87,20 @@ function laydateInt() {
 };
 
 //开始结束时间对比
-function isStartEndDatetime (el){
+function isStartEndDatetime(el) {
     let start = moment(new Date($('.laystart').val()), 'MM-DD-YYYY HH:mm:ss');
     let end = moment(new Date($('.layend').val()), 'MM-DD-YYYY HH:mm:ss');
-    if ($(el).attr('class').indexOf('laystart')>-1 && end) {
-        debugger
+    if ($(el).attr('class').indexOf('laystart') > -1 && end) {
         if (start.isAfter(end)) {
-            bs4pop.alert('结束时间不能小于开始时间',{} ,function () {$(el).val('')});
+            bs4pop.alert('结束时间不能小于开始时间', {}, function () {
+                $(el).val('')
+            });
         }
-    } else if (start && $(el).attr('class').indexOf('layend')>-1 ) {
+    } else if (start && $(el).attr('class').indexOf('layend') > -1) {
         if (start.isAfter(end)) {
-            bs4pop.alert('结束时间不能小于开始时间',{} ,function () {$(el).val('')});
+            bs4pop.alert('结束时间不能小于开始时间', {}, function () {
+                $(el).val('')
+            });
         }
     }
 }

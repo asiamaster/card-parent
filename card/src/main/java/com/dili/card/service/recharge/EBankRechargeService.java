@@ -5,6 +5,7 @@ import com.dili.card.common.annotation.TradeChannelMark;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.TradeChannel;
+import com.dili.card.util.CurrencyUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,17 +24,19 @@ public class EBankRechargeService extends AbstractRechargeManager {
 
     @Override
     public String buildBusinessRecordNote(FundRequestDto requestDto) {
-        return "网银充值";
+        Long serviceCost = requestDto.getServiceCost();
+        String yuan = CurrencyUtils.toYuanWithStripTrailingZeros(serviceCost == null ? 0L : serviceCost);
+        return String.format("网银取款，手续费：%s", yuan);
     }
 
     @Override
     public String buildSerialRecordNote(FundRequestDto requestDto) {
-        return "网银充值";
+        return this.buildBusinessRecordNote(requestDto);
     }
 
     @Override
     public FundItem getPrincipalFundItem(FundRequestDto fundRequestDto) {
-         return FundItem.CASH_CHARGE;
+        return FundItem.CASH_CHARGE;
     }
 
 

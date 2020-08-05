@@ -63,7 +63,7 @@ public class DuplicateCommitAspect {
             if (2L == increment) {
                 return pjp.proceed();
             }
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "commit token过期或不存在，请重新提交");
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "commit token过期或不存在，请刷新后重试");
         } finally {
             redisUtil.remove(key);
         }
