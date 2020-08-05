@@ -103,13 +103,22 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void increaseCashBox(Long cycleNo, Long amount) {
-		accountCycleDao.updateCashBox(cycleNo, amount);
+		this.updateCashBox(cycleNo, amount);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void decreaseeCashBox(Long cycleNo, Long amount) {
-		accountCycleDao.updateCashBox(cycleNo, -amount);
+		this.updateCashBox(cycleNo, -amount);
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateCashBox(Long cycleNo, Long amount) {
+		AccountCycleDo accountCycleDo = accountCycleDao.findByCycleNo(cycleNo);
+		if (accountCycleDao.updateCashBox(cycleNo, amount, accountCycleDo.getVersion())) {
+			throw new CardAppBizException("更新现金柜失败");
+		}
 	}
 
 	@Override
@@ -194,7 +203,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	private void updateStateById(Long id, Integer state, Integer version) {
 		int update = accountCycleDao.updateStateById(id, state, version);
 		if (update == 0) {
-			throw new CardAppBizException("操作频繁,平账失败");
+			throw new CardAppBizException("平账失败");
 		}
 	}
 

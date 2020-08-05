@@ -3,6 +3,7 @@ package com.dili.card.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.dili.card.dto.AccountCycleDto;
 import com.dili.card.entity.AccountCycleDo;
@@ -60,7 +61,7 @@ public interface IAccountCycleDao {
 	 * @param cycleNo z账务周期号
 	 * @param amount 金额
 	 */
-	void updateCashBox(Long cycleNo, Long amount);
+	boolean updateCashBox(@Param("cycleNo") Long cycleNo, @Param("amount")  Long amount, @Param("version") Integer version);
 
 	/**
 	 * 通过条件查询

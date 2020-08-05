@@ -125,14 +125,14 @@
 			<if test="state != null">
 				AND state = #{state}
 			</if>
-			<if test="createStartTime != null and createStartTime != ''">
-				AND create_time >= #{createStartTime}
+			<if test="createStartTime != null">
+				AND create_time &gt;= #{createStartTime}
 			</if>
-			<if test="createEndTime != null and createEndTime != ''">
-				<![CDATA[ AND create_time <= #{createEndTime}]]>
+			<if test="createEndTime != null">
+				AND create_time &lt;= #{createEndTime}
 			</if>
 			<if test="expirationTime != null and expirationTime != ''">
-				<![CDATA[ AND end_time = #{expirationTime}]]>
+				AND end_time = #{expirationTime}
 			</if>
 		ORDER BY create_time DESC
 	</select>
