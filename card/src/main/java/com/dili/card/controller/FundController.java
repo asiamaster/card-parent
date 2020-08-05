@@ -31,7 +31,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -57,6 +61,7 @@ public class FundController implements IControllerHandler {
     private WithdrawDispatcher withdrawDispatcher;
     @Resource
     private IRuleFeeService ruleFeeService;
+
     /**
      * 跳转冻结资金页面
      *
@@ -219,5 +224,18 @@ public class FundController implements IControllerHandler {
             return BaseOutput.failure();
         }
         return BaseOutput.success();
+    }
+
+    /**
+     * 获取充值手续费(目前只支持pos)
+     * @author miaoguoxin
+     * @date 2020/8/5
+     */
+    @GetMapping("rechargeFee.action")
+    @ResponseBody
+    public BaseOutput<Long> getRechargeFee(Long amount) {
+        AssertUtils.notNull(amount,"金额不能为空");
+        BigDecimal ruleFee = ruleFeeService.getRuleFee(amount, RuleFeeBusinessType.CARD_RECHARGE_POS, SystemSubjectType.CARD_RECHARGE_POS_FEE);
+        return BaseOutput.successData(ruleFee.longValue());
     }
 }
