@@ -1,0 +1,100 @@
+<#bs4Body>
+<style>
+p {
+	margin: 0px;
+}
+
+.per_div {
+	display: flex;
+	justify-content: flex-start;
+	height: 40px;
+}
+
+.per_div_child {
+	margin-right: 15px;
+}
+
+.div_container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.div_container_content {
+	height: 20px;
+	width: 100px;
+	text-align: center;
+	line-height: 20px;
+}
+
+.triangle {
+	border: 1px solid #333;
+	width: 140px;
+	height: 30px;
+	background: linear-gradient(to top right, rgba(255, 255, 255, 0.1) 0%,
+		rgba(255, 255, 255, 0.1) calc(50% - 1px), rgba(0, 0, 0, 0.8) 50%,
+		rgba(255, 255, 255, 0.1) calc(50% + 1px), rgba(255, 255, 255, 0.1)
+		100%), linear-gradient(to bottom right, rgba(255, 255, 255, 0.1) 0%,
+		rgba(255, 255, 255, 0.1) calc(50% - 1px), rgba(0, 0, 0, 0.8) 50%,
+		rgba(255, 255, 255, 0.1) calc(50% + 1px), rgba(255, 255, 255, 0.1)
+		100%);
+}
+</style>
+
+<div style="height: 700px;">
+	<div style="background-color: #FFFACD;">
+		<h4 style="text-align: center">资金授权委托协议书</h4>
+		<p>寿光地利农产品物流园有限公司：</p>
+		<p style="text-indent: 2em">
+			本人 <font color="#FC1D24"><span id="consignorCustomerName2"
+				style="text-decoration: underline;">${detail.consignorName!}</span></font>
+			与贵公司签订《资金委托协议书》， 现委托<font color="#FC1D24"><span
+				id="consigneeNames2" style="text-decoration: underline;">${detail.consigneeNames!}</span></font>
+			持本人 <font color="#FC1D24"><span id="cardNo2"
+				style="text-decoration: underline;">${detail.consignorCard!}</span></font>园区卡，
+			在<font color="#FC1D24"><span id="startTimeYear">${detail.startYear!}</span></font>年
+			<font color="#FC1D24"><span id="startTimeMonth">${detail.startMonth!}</span></font>月
+			<font color="#FC1D24"><span id="startTimeDay">${detail.startDay!}</span></font>日
+			至 <font color="#FC1D24"><span id="endTimeYear">${detail.endYear!}</span></font>年
+			<font color="#FC1D24"><span id="endTimeMonth">${detail.endMonth!}</span></font>月
+			<font color="#FC1D24"><span id="endTimeDay">${detail.endDay!}</span></font>日
+			规定时间内负责资金代取汇款业务， 因此期间产生的所有纠纷由我本人全部承担。
+		</p>
+		<p>委托人：</p>
+		<p style="text-indent: 2em">
+			名称：<font color="#FC1D24"><span id="consignorCustomerName3">${detail.consignorName!}</span></font>
+			， 身份证号：<font color="#FC1D24"><span
+				id="consignorCustomerIDCode2">${detail.consignorMobile!}</span></font>，
+			联系电话：<font color="#FC1D24"><span id="consignorCustomerMobile2">${detail.consignorIdCode!}</span></font>
+		</p>
+		<p>被委托人：</p>
+		<div id="consigneeAlls"></div>
+	</div>
+	<div style="height: 40px; margin-top: 15px;">
+		<div class="per_div">
+			<div style="width: 100px;" class="per_div_child">
+				<p style="height: 30px; line-height: 30px;">委托人签名：</p>
+			</div>
+			<div class="triangle per_div_child div_container">
+				<div class="div_container_content">
+					<span style="background-color: #FFFFFF;">${detail.consignorName!}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="consignorCustomer" >
+		<div class="per_div">
+			<div style="width: 100px; margin-right: 15px;" class="per_div_child;">
+				<p style="height: 30px; line-height: 30px;">被委托人签名：</p>
+			</div>
+			<% for(item in detail.consignorDtos) { %>
+				<div class="triangle per_div_child div_container">
+				<div class="div_container_content">
+					<span style="background-color: #FFFFFF;">${detail.consignorName!}</span>
+				</div>
+			</div>
+			<% } %>
+		</div>
+	</div>
+</div>
+</#bs4Body>

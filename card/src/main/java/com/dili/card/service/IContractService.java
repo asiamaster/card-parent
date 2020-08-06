@@ -37,12 +37,7 @@ public interface IContractService {
 	/**
 	 * 合同详情
 	 */
-	FundContractResponseDto detail(Long id);
-
-	/**
-	 * 获取解除双方的信息
-	 */
-	FundContractResponseDto removeToPage(Long id);
+	FundContractResponseDto detail(Long id, boolean isPreview);
 
 	/**
 	 * 关闭过期合同
