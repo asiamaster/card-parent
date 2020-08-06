@@ -17,3 +17,11 @@
         </div>
     </div>
 </div>
+<script>
+    $(() => {
+        let duration = 90;
+        let timeUnit = 'day';
+        $(".laystart").attr("value", moment().subtract(duration, timeUnit).format('YYYY-MM-DD HH:mm:ss'));
+        $(".layend").attr("value", moment().format('YYYY-MM-DD HH:mm:ss'));
+    })
+</script>

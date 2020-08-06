@@ -180,14 +180,12 @@ tab = {
                     options.sortName = rememberedParams.sort;
                     options.sortOrder = rememberedParams.order;
                     //填充表单
-                    $.each($("#" + currentId).find('input,textarea,select,hidden'), (i, e) => {
+                    $.each($("#" + currentId).find('input,textarea,select'), (i, e) => {
                         if (!$.common.isEmpty(rememberedParams[e.id])) {
                             e.value = rememberedParams[e.id];
                         }
                     });
                 }
-                //重置时间
-                $.form.resetDate();
             },
             //单击事件
             onClickRow: function (row, $element, field) {
@@ -562,17 +560,6 @@ tab = {
         },
         // 表单封装处理
         form: {
-            //重置表单上的时间为默认
-            resetDate: function (duration , timeUnit) {
-                if ($.common.isEmpty(duration)){
-                    duration = 90;
-                }
-                if ($.common.isEmpty(timeUnit)){
-                    timeUnit = 'day';
-                }
-                $('.laystart').val(moment().subtract(duration, timeUnit).format('YYYY-MM-DD HH:mm:ss'));
-                $('.layend').val(moment().format('YYYY-MM-DD HH:mm:ss'));
-            },
             // 表单重置
             reset: function (formId, tableId) {
                 table.set(tableId);
@@ -580,9 +567,12 @@ tab = {
                 let prefixKey = table.options.modalName + "_";
                 //清空session记录
                 sessionStorage.removeItem(prefixKey + currentId);
-                $("#" + currentId)[0].reset();
-                //时间重置
-                $.form.resetDate();
+                var form = $("#" + currentId);
+                form[0].reset();
+                //特别处理hidden
+                $.each(form.find('input:hidden'), (i, e) => {
+                    e.value = '';
+                });
                 if (table.options.type == table_type.bootstrapTable) {
                     if ($.common.isEmpty(tableId)) {
                         $("#" + table.options.id).bootstrapTable('refresh', {pageNumber: 1});
@@ -624,20 +614,10 @@ tab = {
             },
             // 弹出提示
             alert: function (content, type) {
+                //let _$ele = window.top == window.parent ? window : window.parent;
                 bs4pop.alert(content,
                     {type: type}
                 );
-            },
-            // 消息提示并刷新父窗体
-            msgReload: function (msg, type) {
-                layer.msg(msg, {
-                        icon: $.modal.icon(type),
-                        time: 500,
-                        shade: [0.1, '#8F8F8F']
-                    },
-                    function () {
-                        $.modal.reload();
-                    });
             },
             // 错误提示
             alertError: function (content) {
@@ -1030,7 +1010,7 @@ tab = {
                         _$ele.$.modal.alertSuccess(result.message);
                         _$ele.$.treeTable.refresh();
                     } else {
-                        $.modal.msgReload("保存成功,正在刷新数据请稍后……", modal_status.SUCCESS);
+                        //$.modal.msgReload("保存成功,正在刷新数据请稍后……", modal_status.SUCCESS);
                     }
                 } else if (result.code == web_status.WARNING) {
                     $.modal.alertWarning(result.message)
@@ -1347,7 +1327,7 @@ tab = {
             formToJSON: function (formId) {
                 let json =  $.common.formToPairValue(formId);
 
-                let jQuery = $("#" + formId).find('input,textarea,select,hidden');
+                let jQuery = $("#" + formId).find('input,textarea,select');
                 for (let i = 0; i < jQuery.length; i++) {
                     let name = jQuery[i].getAttribute("name");
                     let formatter = jQuery[i].getAttribute("val-formatter");
