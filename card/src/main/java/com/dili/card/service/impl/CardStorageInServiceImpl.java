@@ -41,7 +41,7 @@ public class CardStorageInServiceImpl implements ICardStorageInService {
 		batchInfo.setFirmId(storageIn.getFirmId());
 		batchInfo.setFirmName(storageIn.getFirmName());
 		batchInfo.setNotes(storageIn.getNotes());
-		GenericRpcResolver.resolver(cardStorageRpc.barchAddCard(batchInfo), ServiceName.ACCOUNT_SERVICE);
+		GenericRpcResolver.resolver(cardStorageRpc.batchAddCard(batchInfo), ServiceName.ACCOUNT_SERVICE);
 		
 		// 保存入库记录
 		storageInDao.save(storageIn);
