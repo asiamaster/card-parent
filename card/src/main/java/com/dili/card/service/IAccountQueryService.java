@@ -84,7 +84,6 @@ public interface IAccountQueryService {
      */
     AccountWithAssociationResponseDto getAssociationByAccountId(Long accountId);
 
-
     /**
      * 查询账户信息（包含余额）
      * @author miaoguoxin
@@ -92,4 +91,10 @@ public interface IAccountQueryService {
      */
     AccountSimpleResponseDto getByCardNoWithBalance(String cardNo);
 
+    /**
+    * 解挂操作查询
+    * @author miaoguoxin
+    * @date 2020/8/6
+    */
+    UserAccountCardResponseDto getForUnLostCard(UserAccountCardQuery query);
 }

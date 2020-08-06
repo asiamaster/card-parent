@@ -4,14 +4,20 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardRequestDto;
+import com.dili.card.dto.UserAccountCardQuery;
+import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICardManageService;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.CardValidator;
 import com.dili.ss.domain.BaseOutput;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +38,8 @@ public class CardManageController implements IControllerHandler {
 
     @Resource
     private ICardManageService cardManageService;
+    @Autowired
+    private IAccountQueryService accountQueryService;
 
     /**
      * 重置登陆密码
@@ -118,5 +126,18 @@ public class CardManageController implements IControllerHandler {
         this.buildOperatorInfo(cardParam);
         cardManageService.reportLossCard(cardParam);
         return BaseOutput.success();
+    }
+
+    /**
+     * 解挂操作的时候查询(C端)
+     * @author miaoguoxin
+     * @date 2020/8/6
+     */
+    @GetMapping("getByCardForUnLost.action")
+    public BaseOutput<UserAccountCardResponseDto> getByCardNoForUnLost(String cardNo){
+        AssertUtils.notEmpty(cardNo,"卡号不能为空");
+        UserAccountCardQuery query = new UserAccountCardQuery();
+        query.setCardNos(Lists.newArrayList(cardNo));
+        return BaseOutput.successData(accountQueryService.getForUnLostCard(query));
     }
 }
