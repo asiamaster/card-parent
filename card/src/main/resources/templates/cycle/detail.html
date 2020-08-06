@@ -110,7 +110,7 @@ p {
 			<button id="back"
 				style="height: 40px; width: 100px; border-color: #FB0E12"
 				type="button" class="btn btn-light" onclick="backList()">返回</button>
-			<% }else{ %>
+			<% }else if(settled != 2 && detail.state == 1){ %>
 			<button id="apply" style="height: 40px; width: 100px;" type="button"
 				class="btn btn-primary" onclick="applySettlement()">申请结账</button>
 			<% } %>
