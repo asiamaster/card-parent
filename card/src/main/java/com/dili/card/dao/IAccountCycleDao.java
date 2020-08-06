@@ -40,21 +40,21 @@ public interface IAccountCycleDao {
 	 * 根据账务周期编号查询账务周期
 	 * @param cycleNo
 	 */
-	AccountCycleDo findByCycleNo(Long cycleNo);
+	AccountCycleDo findByCycleNo(@Param("cycleNo") Long cycleNo);
 
 	/**
 	 * 更新状态 
 	 * @param id 账务周期主键id
 	 * @param state 状态
 	 */
-	int updateStateById(Long id, Integer state, Integer version);
+	int updateStateById(@Param("id")  Long id, @Param("state") Integer state, @Param("version") Integer version);
 
 	/**
 	 * 根据童虎id查询账务周期
 	 * @param userId
 	 * @param state
 	 */
-	AccountCycleDo findByUserIdAndState(Long userId, Integer state);
+	AccountCycleDo findByUserIdAndState(@Param("userId")  Long userId, @Param("state") Integer state);
 	
 	/**
 	 * 更新现金池金额
@@ -76,5 +76,5 @@ public interface IAccountCycleDao {
 	/**
 	 * 获取当前人最新的账务周期
 	 */
-	AccountCycleDo findLatestActiveCycleByUserId(Long userId);
+	AccountCycleDo findLatestActiveCycleByUserId(@Param("userId") Long userId);
 }
