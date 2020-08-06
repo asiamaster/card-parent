@@ -62,6 +62,18 @@ $(function(){
 	$('#amountYuan').bind(' input propertychange ', function(){
 		$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amountYuan').val())));
 	} );
+	$("#amountYuan").on('input  propertychange',function(){
+		//如果输入非数字，则替换为''
+		this.value = this.value.replace(/[^\d\.]/g, '');
+		//必须保证第一个为数字而不是.     
+	    this.value = this.value.replace(/^\./g,'');
+	    //保证只有出现一个.而没有多个.     
+	    this.value = this.value.replace(/\.{2,}/g,'.');
+	    //保证.只出现一次，而不能出现两次以上     
+	    this.value = this.value.replace('.','$#$').replace(/\./g,'').replace('$#$','.');
+	    //只能输入两位小数
+	    this.value = this.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');
+	});
 });
 
 let formId = "saveForm";
@@ -70,6 +82,8 @@ $("#" + formId).validate({
     rules: {
     	amountYuan: {
             required: true,
+            gt: 0.00,
+            max: 999999.99
         },
         userCode: {
             required: true,
@@ -78,6 +92,8 @@ $("#" + formId).validate({
     messages: {
     	amountYuan: {
             required: "金额必填",
+            gt: "金额必须大于{0}元",
+            max: "金额不能超过{0}元"
         },
         userCode: {
             required: "员工工号必填",
