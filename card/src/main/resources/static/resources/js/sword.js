@@ -899,6 +899,46 @@ tab = {
                  }
                  return url;
             },
+            // 预览信息
+            preview: function (id, width, height, modalName) {
+                table.set();
+                let _url = $.operate.previewUrl(id);
+                if ($.common.isEmpty(_url)){
+                    return;
+                }
+                let _width = $.common.isEmpty(width) ? "800" : width;
+                let _height = $.common.isEmpty(height) ? ($(window).height() - 50) : height;
+                //如果是移动端，就使用自适应大小弹窗
+                if ($.common.isMobile()) {
+                    _width = 'auto';
+                    _height = 'auto';
+                }
+                let options = {
+                    title: modalName,
+                    width: _width,
+                    height: _height,
+                    content: _url,
+                    btns: [{label: '关闭', className: 'btn-secondary', onClick(e) {
+
+                        }}]
+                };
+                $.modal.openOptions(options);
+            },
+            // 预览信息访问地址
+            previewUrl: function (id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = table.options.previewUrl.replace("{id}", id);
+                } else {
+                    var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+                    if (id.length == 0) {
+                        $.modal.alertWarning("请至少选择一条记录");
+                        return;
+                    }
+                    url = table.options.previewUrl.replace("{id}", id);
+                }
+                return url;
+            },
             // 修改信息
             editWithTitle: function (id, width, height, modalName) {
             	table.set();

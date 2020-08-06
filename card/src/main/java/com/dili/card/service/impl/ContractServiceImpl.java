@@ -109,7 +109,7 @@ public class ContractServiceImpl implements IContractService {
 	}
 
 	@Override
-	public FundContractResponseDto detail(Long id) {
+	public FundContractResponseDto detail(Long id, boolean isPreview) {
 		FundContractDo fundContract = contractDao.getById(id);
 		if (fundContract == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "该合同号不存在");
@@ -117,19 +117,7 @@ public class ContractServiceImpl implements IContractService {
 		UserAccountCardResponseDto userAccountCard = accountQueryService.getByAccountId(fundContract.getConsignorAccountId());
 		Customer customer = customerRpcResolver.getWithNotNull(userAccountCard.getCustomerId(),
 				fundContract.getFirmId());
-		return this.buildContractDetail(fundContract, userAccountCard, customer);
-	}
-
-	@Override
-	public FundContractResponseDto removeToPage(Long id) {
-		FundContractDo fundContract = contractDao.getById(id);
-		if (fundContract == null) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "该合同号不存在");
-		}
-		UserAccountCardResponseDto userAccountCard = accountQueryService.getByAccountId(fundContract.getConsignorAccountId());
-		Customer customer = customerRpcResolver.getWithNotNull(userAccountCard.getCustomerId(),
-				fundContract.getFirmId());
-		return this.buildContractResponse(fundContract, userAccountCard, customer);
+		return this.buildContractResponse(fundContract, userAccountCard, customer, isPreview);
 	}
 
 	@Override
@@ -191,34 +179,18 @@ public class ContractServiceImpl implements IContractService {
 				fundContracts.get(0).getFirmId());
 		//合同信息构建
 		for (FundContractDo fundContractDo : fundContracts) {
-			contractResponseDtos.add(this.buildPageContracts(fundContractDo,
+			contractResponseDtos.add(this.buildContractResponse(fundContractDo,
 					userAccountCardMsp.get(fundContractDo.getConsignorAccountId()),
-					customerMap.get(fundContractDo.getConsignorCustomerId())));
+					customerMap.get(fundContractDo.getConsignorCustomerId()), false));
 		}
 		return contractResponseDtos;
-	}
-
-	/**
-	 * 合同列表页面信息
-	 */
-	private FundContractResponseDto buildPageContracts(FundContractDo fundContract,
-			UserAccountCardResponseDto accountCard, Customer customer) {
-		return this.buildContractResponse(fundContract, accountCard, customer);
-	}
-
-	/**
-	 * 构建页面合同详情数据
-	 */
-	private FundContractResponseDto buildContractDetail(FundContractDo fundContract,
-			UserAccountCardResponseDto accountCard, Customer customer) {
-		return this.buildContractResponse(fundContract, accountCard, customer);
 	}
 
 	/**
 	 * 构建页面相应数据
 	 */
 	private FundContractResponseDto buildContractResponse(FundContractDo fundContractDo,
-			UserAccountCardResponseDto accountCard, Customer customer) {
+			UserAccountCardResponseDto accountCard, Customer customer, boolean ispreview) {
 		FundContractResponseDto contractResponseDto = new FundContractResponseDto();
 		// 构建合同核心数据
 		contractResponseDto.setId(fundContractDo.getId());
@@ -227,6 +199,16 @@ public class ContractServiceImpl implements IContractService {
 		contractResponseDto.setCreateTime(fundContractDo.getCreateTime());
 		contractResponseDto.setStartTime(fundContractDo.getStartTime());
 		contractResponseDto.setEndTime(fundContractDo.getEndTime());
+		
+		if (ispreview) {
+			contractResponseDto.setStartYear(fundContractDo.getStartTime().getYear());
+			contractResponseDto.setStartMonth(fundContractDo.getStartTime().getMonth().getValue());
+			contractResponseDto.setStartDay(fundContractDo.getStartTime().getDayOfMonth());
+			contractResponseDto.setEndYear(fundContractDo.getEndTime().getYear());
+			contractResponseDto.setEndMonth(fundContractDo.getEndTime().getMonth().getValue());
+			contractResponseDto.setEndDay(fundContractDo.getEndTime().getDayOfMonth());
+		}
+		
 		contractResponseDto.setTerminater(fundContractDo.getTerminater());
 		contractResponseDto.setTerminateNotes(fundContractDo.getTerminateNotes());
 		contractResponseDto.setTerminateTime(fundContractDo.getTerminateTime());
@@ -256,6 +238,10 @@ public class ContractServiceImpl implements IContractService {
 		// 获取客户信息
 		contractResponseDto.setConsignorCode(customer.getCode());
 		contractResponseDto.setConsignorName(customer.getName());
+		if (ispreview) {
+			contractResponseDto.setConsignorMobile(customer.getCellphone());
+			contractResponseDto.setConsignorIdCode(customer.getCertificateNumber());
+		}
 		return contractResponseDto;
 	}
 

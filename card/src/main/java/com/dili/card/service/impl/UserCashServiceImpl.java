@@ -75,6 +75,12 @@ public class UserCashServiceImpl implements IUserCashService {
 		userCashDo = new UserCashDo();
 		userCashDo.setId(userCashDto.getId());
 		userCashDo.setAmount(CurrencyUtils.yuan2Cent(new BigDecimal(userCashDto.getAmountYuan())));
+		if (userCashDo.getAmount() < 1L) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01");
+		}
+		if (userCashDo.getAmount() > 99999999L) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过999999.99");
+		}
 		userCashDo.setNotes(userCashDto.getNotes());
 		userCashDao.update(userCashDo);
 	}
@@ -137,6 +143,12 @@ public class UserCashServiceImpl implements IUserCashService {
 		userCash.setCashNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CASH_NO.getCode())));
 		userCash.setAction(userCashDto.getAction());
 		userCash.setAmount(CurrencyUtils.yuan2Cent(new BigDecimal(userCashDto.getAmountYuan())));
+		if (userCash.getAmount() < 1L) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01");
+		}
+		if (userCash.getAmount() > 99999999L) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过999999.99");
+		}
 		userCash.setUserId(userCashDto.getUserId());
 		userCash.setUserCode(userCashDto.getUserCode());
 		userCash.setUserName(userCashDto.getUserName());
@@ -164,10 +176,13 @@ public class UserCashServiceImpl implements IUserCashService {
 		if (cashAction != null) {
 			userCashDto.setAction(cashAction.getCode());
 		}
-		userCashDto.setUserId(
-				NumberUtil.isInteger(userCashDto.getUserName()) ? Long.valueOf(userCashDto.getUserName()) : null);
-		userCashDto.setCreatorId(
-				NumberUtil.isInteger(userCashDto.getCreator()) ? Long.valueOf(userCashDto.getCreator()) : null);
+		if (userCashDto.getCreateStartTime() != null && userCashDto.getCreateEndTime() != null && userCashDto.getCreateStartTime().isAfter(userCashDto.getCreateEndTime())) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "开始时间大于结束时间");
+		}
+		//默认365天
+		if (userCashDto.getCreateEndTime() != null && userCashDto.getCreateStartTime() == null ) {
+			userCashDto.setCreateStartTime(userCashDto.getCreateEndTime().minusDays(365L));
+		}
 	}
 
 	/**

@@ -5,7 +5,7 @@ import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.CardStorageOutQueryDto;
 import com.dili.card.dto.CardStorageOutRequestDto;
 import com.dili.card.exception.CardAppBizException;
-import com.dili.card.service.ICardAddStorageService;
+import com.dili.card.service.ICardStorageInService;
 import com.dili.card.service.ICardStorageService;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;

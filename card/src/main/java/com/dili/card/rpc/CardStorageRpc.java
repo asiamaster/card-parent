@@ -2,15 +2,14 @@ package com.dili.card.rpc;
 
 import java.util.List;
 
-import com.dili.card.dto.BatchActivateCardDto;
-import com.dili.card.util.AssertUtils;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.dili.card.dto.BatchActivateCardDto;
+import com.dili.card.dto.BatchCardAddStorageDto;
 import com.dili.card.dto.CardStorageDto;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * @description： 卡片仓库服务接口
@@ -19,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @time ：2020年7月17日上午10:22:18
  */
 @FeignClient(name = "account-service", contextId = "cardStorgeRpc", path = "/api/account/cardStorage"
-/* , url = "http://127.0.0.1:8186" */
+/* , url = "http://127.0.0.1:8186" */ 
 )
 public interface CardStorageRpc {
+
+	public static final String SERVICE_NAME = "account-service";
 
 	/**
 	 * 仓库中卡片列表，包括状态及入库信息
@@ -37,6 +38,12 @@ public interface CardStorageRpc {
 	 */
 	@PostMapping("/add")
 	BaseOutput<?> addCard(CardStorageDto addParam);
+
+	/**
+	 * 批量入库
+	 */
+	@PostMapping("/batchAdd")
+	BaseOutput<?> batchAddCard(BatchCardAddStorageDto batchInfo);
 
 	/**
 	 * 作库

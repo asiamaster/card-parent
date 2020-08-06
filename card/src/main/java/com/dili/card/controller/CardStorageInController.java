@@ -1,21 +1,22 @@
 package com.dili.card.controller;
 
-import com.dili.card.common.handler.IControllerHandler;
-import com.dili.card.dto.CardStorageDto;
-import com.dili.card.exception.CardAppBizException;
-import com.dili.card.service.ICardAddStorageService;
-import com.dili.card.type.CardStorageState;
-import com.dili.card.type.CardType;
-import com.dili.ss.constant.ResultCode;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Map;
+import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.dto.CardStorageOutQueryDto;
+import com.dili.card.entity.BusinessRecordDo;
+import com.dili.card.entity.StorageInDo;
+import com.dili.card.service.ICardStorageInService;
+import com.dili.ss.domain.BaseOutput;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 
 /**
  * @description： 卡片入库相关功能
@@ -24,55 +25,43 @@ import java.util.Map;
  * @time ：2020年7月16日下午2:27:47
  */
 @Controller
-@RequestMapping("cardStorage/add")
+@RequestMapping("cardStorageIn")
 public class CardStorageInController implements IControllerHandler {
 
 	@Autowired
-	private ICardAddStorageService cardAddStorageService;
+	private ICardStorageInService cardStorageInService;
 
 	/**
-	 * 入库列表页
-	 *
-	 * @return
+	 * 批量入库列表页面
 	 */
-	@GetMapping("list.html")
-	public String outListView(ModelMap modelMap) {
-		modelMap.put("cardTypeList", CardType.getAll());
-		modelMap.put("cardStorageStateList", CardStorageState.list());
+	@GetMapping("/list.html")
+	public String outListView() {
 		return "cardstorage/inList";
 	}
-
 	/**
-	*  入库列表接口
-	* @date 2020/7/20
+	 * 采购批量入库页面
+	 */
+	@GetMapping("/inAdd.html")
+	public String addView() {
+		return "cardstorage/inAdd";
+	}
+	/**
+	*  批量入库保存
+	*/
+	@PostMapping("/save.action")
+	@ResponseBody
+	public BaseOutput<?> save(StorageInDo storageInDo) {
+		cardStorageInService.batchCardStorageIn(storageInDo);
+		return BaseOutput.success();
+	}
+	
+	/**
+	*  批量入库记录查询
 	*/
 	@PostMapping("queryList.action")
 	@ResponseBody
-	public Map<String, Object> queryList(CardStorageDto queryDto) {
-		return successPage(cardAddStorageService.cardStorageList(queryDto));
-	}
-
-	/**
-	 * 跳转到入库详情
-	 */
-	@GetMapping("outDetail.html")
-	public String outDetailView(Long id, ModelMap modelMap) {
-		if (id == null || id <= 0) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "id不能为空");
-		}
-//        modelMap.put("detail", cardStorageService.getById(id));
-		return "addStorage/outDetail";
-	}
-
-	/**
-	 * 跳转到添加页面
-	 *
-	 * @author miaoguoxin
-	 * @date 2020/7/2
-	 */
-	@GetMapping("outAdd.html")
-	public String outAddView() {
-		return "addStorage/outAdd";
+	public Map<String, Object> queryList(CardStorageOutQueryDto queryDto) {
+		return successPage(cardStorageInService.list(queryDto));
 	}
 
 }

@@ -19,8 +19,13 @@
 			`notes`
 		FROM
 			card_storage_in
+		<where>
+			<if test="startDate != null"><![CDATA[ `create_time` >= #{startDate} ]]></if>
+			<if test="endDate != null"><![CDATA[`end_time` <= #{endDate}  ]]></if>
+			<if test="firmId != null">`firm_id` = #{firmId} </if>
+		</where>
 		ORDER BY
-			id DESC
+			create_time DESC
 	</select>
 	
 	<insert id="save">

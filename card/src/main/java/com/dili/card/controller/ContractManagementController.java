@@ -46,8 +46,17 @@ public class ContractManagementController implements IControllerHandler {
      */
     @GetMapping("/detail.html")
     public String detail(Long id, ModelMap modelMap) {
-        modelMap.put("detail", iContractService.detail(id));
+        modelMap.put("detail", iContractService.detail(id, false));
         return "contract/detail";
+    }
+    
+    /**
+     * 合同预览
+     */
+    @GetMapping("/preview.html")
+    public String preview(Long id, ModelMap modelMap) {
+        modelMap.put("detail", iContractService.detail(id, true));
+        return "contract/preview";
     }
 
     /**
@@ -55,7 +64,7 @@ public class ContractManagementController implements IControllerHandler {
      */
     @GetMapping("/remove.html")
     public String removeToPage(Long id, ModelMap modelMap) {
-        modelMap.put("detail", iContractService.removeToPage(id));
+        modelMap.put("detail", iContractService.detail(id, false));
         return "contract/remove";
     }
 

@@ -24,6 +24,10 @@ public class FundContractResponseDto{
 	private String consignorName; 
 	/** 委托人卡号 */
 	private String consignorCard; 
+	/** 委托人手机号 */
+	private String consignorMobile;
+	/** 委托人身份证 */
+	private String consignorIdCode;
 	/** 合同编号 */
 	private String contractNo; 
 	/** 合同开始日期 */
@@ -65,6 +69,14 @@ public class FundContractResponseDto{
 	private List<FundConsignorDto> consignorDtos;
 	/** 合同即将到期提示*/
 	private Boolean readyExpire = false;
+	
+	private Integer startYear;
+	private Integer startMonth;
+	private Integer startDay;
+	
+	private Integer endYear;
+	private Integer endMonth;
+	private Integer endDay;
 
     /**
      * setter for 合同开始日期
@@ -238,5 +250,69 @@ public class FundContractResponseDto{
 
 	public void setReadyExpire(Boolean readyExpire) {
 		this.readyExpire = readyExpire;
+	}
+
+	public Integer getStartYear() {
+		return startYear;
+	}
+
+	public void setStartYear(Integer startYear) {
+		this.startYear = startYear;
+	}
+
+	public Integer getStartMonth() {
+		return startMonth;
+	}
+
+	public void setStartMonth(Integer startMonth) {
+		this.startMonth = startMonth;
+	}
+
+	public Integer getStartDay() {
+		return startDay;
+	}
+
+	public void setStartDay(Integer startDay) {
+		this.startDay = startDay;
+	}
+
+	public Integer getEndYear() {
+		return endYear;
+	}
+
+	public void setEndYear(Integer endYear) {
+		this.endYear = endYear;
+	}
+
+	public Integer getEndMonth() {
+		return endMonth;
+	}
+
+	public void setEndMonth(Integer endMonth) {
+		this.endMonth = endMonth;
+	}
+
+	public Integer getEndDay() {
+		return endDay;
+	}
+
+	public void setEndDay(Integer endDay) {
+		this.endDay = endDay;
+	}
+
+	public String getConsignorMobile() {
+		return consignorMobile;
+	}
+
+	public void setConsignorMobile(String consignorMobile) {
+		this.consignorMobile = consignorMobile;
+	}
+
+	public String getConsignorIdCode() {
+		return consignorIdCode;
+	}
+
+	public void setConsignorIdCode(String consignorIdCode) {
+		this.consignorIdCode = consignorIdCode;
 	}
 }

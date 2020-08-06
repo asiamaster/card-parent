@@ -101,8 +101,8 @@
 			<if test="creatorId != null"> AND creator_id = #{creatorId}</if>
 			<if test="state != null"> AND state = #{state}</if>
 			<if test="action != null"> AND action = #{action}</if>
-			<if test="createStartTime != null and createStartTime !=''"> AND create_time >= #{createStartTime}</if>
-			<if test="createEndTime != null and createEndTime !=''"><![CDATA[ AND create_time <= #{createEndTime}]]> </if>
+			<if test="createStartTime != null"> AND create_time &gt;= #{createStartTime}</if>
+			<if test="createEndTime != null">AND create_time &lt;= #{createEndTime} </if>
 			AND state != 10
 	</sql>
 	

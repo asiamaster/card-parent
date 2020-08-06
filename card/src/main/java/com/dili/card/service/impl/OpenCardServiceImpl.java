@@ -81,7 +81,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(openCardInfo.getCreatorId(),
 				openCardInfo.getCreator(), openCardInfo.getCreatorCode());
 
-		// 更新现金柜金额
+		// 工本费更新现金柜金额
 		accountCycleService.increaseCashBox(cycleDo.getCycleNo(), openCardInfo.getCostFee());
 
 		// 调用账户服务开卡
@@ -89,7 +89,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, "账户服务开卡");
 		Long accountId = openCardResponse.getAccountId();
 
-		// 保存卡务柜台开卡操作记录 状态处理中
+		// 保存卡务柜台开卡操作记录 使用seate后状态为成功 
 		BusinessRecordDo buildBusinessRecordDo = buildBusinessRecordDo(openCardInfo, accountId, cycleDo.getCycleNo());
 		serialService.saveBusinessRecord(buildBusinessRecordDo);
 
@@ -103,10 +103,17 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public OpenCardResponseDto openSlaveCard(OpenCardDto openCardInfo) {
-		BaseOutput<OpenCardResponseDto> baseOutPut = openCardRpc.openSlaveCard(openCardInfo);
-		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, "账户服务开卡");
+		// 获取当前账务周期
 		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(openCardInfo.getCreatorId(),
 				openCardInfo.getCreator(), openCardInfo.getCreatorCode());
+
+		// 工本费更新现金柜金额
+		accountCycleService.increaseCashBox(cycleDo.getCycleNo(), openCardInfo.getCostFee());
+		
+		// 调用账户服务开卡
+		BaseOutput<OpenCardResponseDto> baseOutPut = openCardRpc.openSlaveCard(openCardInfo);
+		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, "账户服务开卡");
+		
 		// 保存卡务柜台操作记录
 		BusinessRecordDo buildBusinessRecordDo = buildBusinessRecordDo(openCardInfo, openCardResponse.getAccountId(),
 				cycleDo.getCycleNo());
@@ -137,7 +144,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		serial.setOperatorName(openCardInfo.getCreator());
 		serial.setOperatorNo(openCardInfo.getCreatorCode());
 		serial.setOperateTime(LocalDateTime.now());
-		serial.setState(OperateState.PROCESSING.getCode());
+		serial.setState(OperateState.SUCCESS.getCode());
 		serial.setNotes("IC卡工本费，现金" + openCardInfo.getCostFee() + "元");
 		serial.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
 		serial.setType(OperateType.ACCOUNT_TRANSACT.getCode());
