@@ -213,6 +213,7 @@ p {
 			<div class="modal-header"
 				style="background-color: #E6E6E6; height: 45px;">
 				<h5 style="height-line: 45px;">结账确认</h5>
+				<label onclick="close()"><i class="fa fa-times"></i></label>
 			</div>
 			<div class="modal-body" style="overflow: auto;">
 				<form id="settleForm" style="width: 90%;">
@@ -224,6 +225,7 @@ p {
 								<td class="info-cell"><input id="settleAmount" maxlength="10"
 									name="settleAmount" type="text" class="form-control" /></td>
 							</tr>
+						</tbody>
 					</table>
 				</form>
 			</div>
@@ -275,6 +277,12 @@ p {
 	function applySettlement() {
 		$('#settleAmount').val("");
 		$('#settleCycle').modal('show');
+		return true;
+	}
+	
+	function close() {
+		$('#settleAmount').val("");
+		$('#settleCycle').modal('hide');
 		return true;
 	}
 	
