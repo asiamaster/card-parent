@@ -32,8 +32,6 @@ import com.dili.uap.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
-import cn.hutool.core.util.NumberUtil;
-
 @Service("accountCycleService")
 public class AccountCycleServiceImpl implements IAccountCycleService {
 
@@ -267,12 +265,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	private void buildQueryCondition(AccountCycleDto accountCycleDto) {
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		accountCycleDto.setFirmId(userTicket.getFirmId());
-		accountCycleDto.setUserId(
-				NumberUtil.isInteger(accountCycleDto.getUserName()) ? Long.valueOf(accountCycleDto.getUserName())
-						: null);
-		accountCycleDto.setAuditorId(
-				NumberUtil.isInteger(accountCycleDto.getAuditorName()) ? Long.valueOf(accountCycleDto.getAuditorName())
-						: null);
 	}
 
 	/**

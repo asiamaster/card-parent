@@ -23,7 +23,6 @@ let formId = "deleteForm";
 function submitHandler(e) {
     let url = "${contextPath}/cash/delete.action";
     let data = $.common.formToJSON(formId);
-    alert(JSON.stringify(data));
     $.operate.post(url, data);
     //return true;
 }

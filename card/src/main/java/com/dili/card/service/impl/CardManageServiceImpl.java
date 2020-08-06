@@ -14,6 +14,7 @@ import com.dili.card.service.ICardManageService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.tcc.ChangeCardTccTransactionManager;
 import com.dili.card.type.CardStatus;
+import com.dili.card.type.DisableState;
 import com.dili.card.type.OperateType;
 import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
@@ -56,9 +57,12 @@ public class CardManageServiceImpl implements ICardManageService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void unLostCard(CardRequestDto cardParam) {
-        UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam);
+        UserAccountCardResponseDto accountCard = accountQueryService.getByAccountIdWithoutValidate(cardParam.getAccountId());
         if (!Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
             throw new CardAppBizException("", String.format("该卡为%s状态,不能进行解挂", CardStatus.getName(accountCard.getCardState())));
+        }
+        if (!DisableState.ENABLED.getCode().equals(accountCard.getDisabledState())) {
+            throw new CardAppBizException("", "账户被禁用，不能解挂失");
         }
         BusinessRecordDo businessRecordDo = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
             temp.setType(OperateType.LOSS_REMOVE.getCode());
