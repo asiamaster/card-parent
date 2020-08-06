@@ -63,9 +63,9 @@ p {
 				</tr>
 				<tr>
 					<td class="info-column">柜员工号</td>
-					<td class="info-cell">${detail.userCode!}</td>
+					<td class="info-cell" id="userCode">${detail.userCode!}</td>
 					<td class="info-column">柜员名称</td>
-					<td class="info-cell">${detail.userName!} <input type="hidden"
+					<td class="info-cell" id="userName">${detail.userName!} <input type="hidden"
 						name="userId" id="userId" value="${detail.userId!}"> <input
 						type="hidden" name="cycleNo" id="cycleNo"
 						value="${detail.cycleNo!}"> <input type="hidden"
@@ -312,7 +312,9 @@ p {
 		let url = "${contextPath}/cycle/applySettle.action";
 		let data = {};
 		data.userId = $('#userId').val();
-		data.cashAmount = $('#settleAmount').val();
+		data.userCode = $('#userCode').text();
+		data.userName = $('#userName').text();
+		data.cashAmount = parseInt(parseFloat($('#settleAmount').val())*100);
 		$.operate.saveModal(url, JSON.stringify(data));
 		$("#apply").hide();
 	}

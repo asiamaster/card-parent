@@ -105,6 +105,7 @@ function submitHandler() {
     }
     let url = "${contextPath}/cash/save.action";
     let data = $.common.formToJSON("saveForm");
+    data.amount=parseInt(parseFloat(data.amountYuan)*100);
     $.operate.post(url, data);
 }
 </script>

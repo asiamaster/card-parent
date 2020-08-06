@@ -15,6 +15,7 @@ import com.dili.card.dao.IAccountCycleDetailDao;
 import com.dili.card.dto.AccountCycleDetailDto;
 import com.dili.card.dto.AccountCycleDto;
 import com.dili.card.dto.CycleStatistcDto;
+import com.dili.card.dto.UserCashDto;
 import com.dili.card.entity.AccountCycleDetailDo;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.exception.CardAppBizException;
@@ -22,6 +23,7 @@ import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IUserCashService;
 import com.dili.card.type.BizNoType;
+import com.dili.card.type.CashAction;
 import com.dili.card.type.CycleState;
 import com.dili.card.type.CycleStatisticType;
 import com.dili.card.util.PageUtils;
@@ -46,9 +48,11 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void settle(Long userId, Long cashAmount) {
+	public void settle(AccountCycleDto accountCycleDto) {
+		//生成交款信息
+		userCashService.save(buildUserCash(accountCycleDto));
 		//获取最新的账务周期
-		AccountCycleDo accountCycle = accountCycleDao.findLatestActiveCycleByUserId(userId);
+		AccountCycleDo accountCycle = accountCycleDao.findLatestActiveCycleByUserId(accountCycleDto.getUserId());
 		// 对账状态校验
 		this.validateCycleSettledState(accountCycle);
 		// 更新账务周期状态
@@ -315,6 +319,19 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		// 数据复制
 		BeanUtils.copyProperties(accountCycleDetail, accountCycleDetailDo);
 		return accountCycleDetailDo;
+	}
+	
+	/**
+	 * 生成交款信息
+	 */
+	private UserCashDto buildUserCash(AccountCycleDto accountCycleDto) {
+		UserCashDto cashDto = new UserCashDto();
+		cashDto.setUserId(accountCycleDto.getUserId());
+		cashDto.setUserCode(accountCycleDto.getUserCode());
+		cashDto.setUserName(accountCycleDto.getUserName());
+		cashDto.setAmount(accountCycleDto.getCashAmount());
+		cashDto.setAction(CashAction.PAYER.getCode());
+		return cashDto;
 	}
 
 }
