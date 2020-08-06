@@ -27,7 +27,7 @@ public class UserCashDto extends BaseDto implements Serializable {
 	/**领取款编号*/
 	private Long cycleNo;
 	/** 领款或收款人 */
-	@NotNull(message = "员工id不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
+	@NotNull(message = "员工工号不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
 	private Long userId;
 	/** 领款或收款人 */
 	@NotBlank(message = "员工编号不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
