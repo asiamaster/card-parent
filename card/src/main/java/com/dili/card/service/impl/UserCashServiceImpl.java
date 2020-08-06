@@ -140,7 +140,6 @@ public class UserCashServiceImpl implements IUserCashService {
 		UserCashDo userCash = new UserCashDo();
 		userCash.setCashNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CASH_NO.getCode())));
 		userCash.setAction(userCashDto.getAction());
-		userCash.setAmount(CurrencyUtils.yuan2Cent(new BigDecimal(userCashDto.getAmountYuan())));
 		if (userCash.getAmount() < 1L) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01");
 		}

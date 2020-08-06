@@ -5,8 +5,12 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Transient;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.CardTypeProvider;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * 卡片采购入库记录，从厂家到市场。
@@ -33,6 +37,9 @@ public class StorageInDo implements Serializable {
 	/** 操作人员名称-保留字段 */
 	private String creator;
 	/** 创建时间 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createTime;
 	/** 商户编码 */
 	private Long firmId;

@@ -50,6 +50,7 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 	@TextDisplay(CycleStateProvider.class)
 	private Integer state;
 	/** 交付现金金额-分 */
+	@NotNull(message = "交付现金金额不为空", groups = {ConstantValidator.Update.class})
 	private Long cashAmount;
 	/** 审核员-员工ID */
 	private Long auditorId;

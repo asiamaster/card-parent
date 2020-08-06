@@ -14,7 +14,7 @@ public enum OperateType
 {
 	ACCOUNT_TRANSACT("办卡", 10),
 	ACCOUNT_CHARGE("充值", 11),
-	ACCOUNT_WITHDRAW("提现", 12),
+	ACCOUNT_WITHDRAW("提款", 12),
 	CHANGE("换卡", 13),
 	LOSS_CARD("挂失", 14),
 	LOSS_REMOVE("解挂", 15),

@@ -36,7 +36,7 @@
 	            <tr>
 	                <td class="info-column">交款金额</td>
 	                <td class="info-cell">
-	                	<input id="amountYuan" name="amountYuan" type="text" value="${usercash.amountYuan!}" class="form-control"/>
+	                	<input id="amountYuan" maxlength="10" name="amountYuan" type="text" value="${usercash.amountYuan!}" class="form-control"/>
 	                </td>
 	            </tr>
 	           	<tr>
@@ -58,9 +58,9 @@
 <script>
 $(function(){
 	userNameAutoCompleteOption.displayFieldName='serialNumber';
-	$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amountYuan').val())));
+	$('#bigAmount').html($.common.changeNumMoneyToChinese($('#amountYuan').val()));
 	$('#amountYuan').bind(' input propertychange ', function(){
-		$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amountYuan').val())));
+		$('#bigAmount').html($.common.changeNumMoneyToChinese($('#amountYuan').val()));
 	} );
 	$("#amountYuan").on('input  propertychange',function(){
 		//如果输入非数字，则替换为''
@@ -107,6 +107,7 @@ function submitHandler(e) {
     }
     let url = "${contextPath}/cash/modify.action";
     let data = $.common.formToJSON(formId);
+    data.amount=parseInt(parseFloat(data.amountYuan)*100);
     $.operate.post(url, data);
     return true;
 }

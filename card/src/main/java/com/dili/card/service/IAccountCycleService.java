@@ -15,7 +15,7 @@ public interface IAccountCycleService {
 	/**
 	 * 结账
 	 */
-	void settle(Long userId);
+	void settle(AccountCycleDto accountCycleDto);
 	
 	/**
 	 * 平账

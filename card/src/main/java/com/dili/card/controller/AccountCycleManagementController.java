@@ -1,6 +1,5 @@
 package com.dili.card.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +17,8 @@ import com.alibaba.fastjson.JSON;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.AccountCycleDto;
-import com.dili.card.dto.SerialQueryDto;
-import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountCycleService;
-import com.dili.card.service.ISerialService;
 import com.dili.card.type.CashAction;
 import com.dili.card.type.CycleState;
 import com.dili.card.validator.ConstantValidator;
@@ -124,7 +120,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	@PostMapping("/applySettle.action")
 	@ResponseBody
 	public BaseOutput<Boolean> applySettle(@RequestBody @Validated(value = {ConstantValidator.Update.class}) AccountCycleDto accountCycleDto) {
-		iAccountCycleService.settle(accountCycleDto.getUserId());
+		iAccountCycleService.settle(accountCycleDto);
 		return BaseOutput.success("结账申请成功!");
 	}
 

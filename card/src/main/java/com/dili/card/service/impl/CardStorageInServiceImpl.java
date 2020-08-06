@@ -1,5 +1,6 @@
 package com.dili.card.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,31 +20,35 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
 /**
- * @description：
- *          卡片入库相关功能实现
+ * @description： 卡片入库相关功能实现
+ * 
  * @author ：WangBo
  * @time ：2020年7月17日上午10:21:03
  */
 @Service
 public class CardStorageInServiceImpl implements ICardStorageInService {
-    @Autowired
-    private CardStorageRpc cardStorageRpc;
-    @Autowired
-    private IStorageInDao storageInDao;
+	@Autowired
+	private CardStorageRpc cardStorageRpc;
+	@Autowired
+	private IStorageInDao storageInDao;
+
 	@Override
 	public void batchCardStorageIn(StorageInDo storageIn) {
 		// 按号段入库
-		BatchCardAddStorageDto batchInfo=new BatchCardAddStorageDto();
+		BatchCardAddStorageDto batchInfo = new BatchCardAddStorageDto();
 		batchInfo.setCardType(storageIn.getCardType());
 		batchInfo.setCreator(storageIn.getCreator());
 		batchInfo.setCreatorId(storageIn.getCreatorId());
+		batchInfo.setStartCardNo(storageIn.getStartCardNo());
 		batchInfo.setEndCardNo(storageIn.getEndCardNo());
 		batchInfo.setFirmId(storageIn.getFirmId());
 		batchInfo.setFirmName(storageIn.getFirmName());
 		batchInfo.setNotes(storageIn.getNotes());
 		GenericRpcResolver.resolver(cardStorageRpc.batchAddCard(batchInfo), ServiceName.ACCOUNT_SERVICE);
-		
+
 		// 保存入库记录
+		storageIn.setCreateTime(LocalDateTime.now());
+		storageIn.setModifyTime(LocalDateTime.now());
 		storageInDao.save(storageIn);
 	}
 

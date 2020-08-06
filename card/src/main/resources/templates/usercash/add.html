@@ -35,7 +35,7 @@
 				</tr>
 				<tr>
 					<td class="info-column">交款金额</td>
-					<td class="info-cell"><input id="amountYuan" name="amountYuan"
+					<td class="info-cell"><input id="amountYuan" maxlength="10" name="amountYuan"
 						type="text" class="form-control" /></td>
 				</tr>
 				<tr>
@@ -45,7 +45,7 @@
 				<tr>
 					<td class="info-column">备注</td>
 					<td class="info-cell"><textarea style="width: 200px;"
-							id="notes" name="notes"></textarea></td>
+							id="notes" name="notes" maxlength="50"></textarea></td>
 				</tr>
 		</table>
 	</form>
@@ -59,7 +59,7 @@
 $(function(){
 		userNameAutoCompleteOption.displayFieldName='serialNumber';
 		$('#amountYuan').bind(' input propertychange ', function(){
-			$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amountYuan').val())));
+			$('#bigAmount').html($.common.changeNumMoneyToChinese($('#amountYuan').val()));
 		} );
 		$("#amountYuan").on('input  propertychange',function(){
 			//如果输入非数字，则替换为''
@@ -72,6 +72,7 @@ $(function(){
 		    this.value = this.value.replace('.','$#$').replace(/\./g,'').replace('$#$','.');
 		    //只能输入两位小数
 		    this.value = this.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');
+		    alert(this.value.length());
 		});
 	});
 $("#" + formId).validate({
@@ -104,6 +105,7 @@ function submitHandler() {
     }
     let url = "${contextPath}/cash/save.action";
     let data = $.common.formToJSON("saveForm");
+    data.amount=parseInt(parseFloat(data.amountYuan)*100);
     $.operate.post(url, data);
 }
 </script>
