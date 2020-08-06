@@ -150,6 +150,6 @@
 	</update>
 
 	<update id="updateCashBox">
-		UPDATE card_account_cycle SET cash_box = cash_box + #{amount}, version = version + 1, modify_date = NOW() WHERE cycle_no = #{cycleNo} AND version = #{version}
+		UPDATE card_account_cycle SET cash_box = cash_box + #{amount}, version = version + 1, modify_time = NOW() WHERE cycle_no = #{cycleNo} AND version = #{version}
 	</update>
 </mapper>
