@@ -5,6 +5,7 @@ import com.dili.card.common.annotation.TradeChannelMark;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.TradeChannel;
+import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class EBankRechargeService extends AbstractRechargeManager {
 
     @Override
     public FundItem getPrincipalFundItem(FundRequestDto fundRequestDto) {
-        return FundItem.CASH_CHARGE;
+        return FundItem.EBANK_CHARGE;
     }
 
 
@@ -48,6 +49,11 @@ public class EBankRechargeService extends AbstractRechargeManager {
     @Override
     public boolean canAddEmptyFundItem(FundRequestDto fundRequestDto) {
         return fundRequestDto.getServiceCost() == null;
+    }
+
+    @Override
+    public TradeType getTradeType(FundRequestDto fundRequestDto) {
+        return TradeType.EBANK_RECHARGE;
     }
 
 }

@@ -55,7 +55,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
 
 
         CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(
-                TradeType.DEPOSIT.getCode(),
+                this.getTradeType(requestDto).getCode(),
                 userAccount.getAccountId(),
                 userAccount.getFundAccountId(),
                 rechargeAmount,
@@ -73,16 +73,6 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         TccContextHolder.get().addAttr(Constant.USER_ACCOUNT, userAccount);
     }
 
-    private Integer getBankType(FundRequestDto requestDto) {
-        if (requestDto.getTradeChannel()== TradeChannel.POS.getCode()){
-            JSONObject extra = requestDto.getExtra();
-            if (extra == null){
-                extra = new JSONObject();
-            }
-            return extra.getInteger(Constant.BANK_TYPE);
-        }
-        return null;
-    }
 
     /**
      * 充值操作入口封装
@@ -135,5 +125,16 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
      */
     protected void afterCommitRecharge(FundRequestDto requestDto) {
 
+    }
+
+    private Integer getBankType(FundRequestDto requestDto) {
+        if (requestDto.getTradeChannel()== TradeChannel.POS.getCode()){
+            JSONObject extra = requestDto.getExtra();
+            if (extra == null){
+                extra = new JSONObject();
+            }
+            return extra.getInteger(Constant.BANK_TYPE);
+        }
+        return null;
     }
 }

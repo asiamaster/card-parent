@@ -4,6 +4,7 @@ import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
+import com.dili.card.type.TradeType;
 
 /**
  * @Auther: miaoguoxin
@@ -15,6 +16,7 @@ public interface IRechargeManager {
     * @author miaoguoxin
     * @date 2020/7/6
     */
+    @Deprecated
     Long getRechargeAmount(FundRequestDto requestDto);
 
     /**
@@ -49,10 +51,15 @@ public interface IRechargeManager {
     * 是否可以添加空的费用项
     * 现金没有手续费，不需要添加
     * pos和网银可能有手续费
-    * @param
-    * @return
     * @author miaoguoxin
     * @date 2020/7/27
     */
     boolean canAddEmptyFundItem(FundRequestDto fundRequestDto);
+
+    /**
+    *  交易类型，其中网银充值是个特殊操作，类型不同
+    * @author miaoguoxin
+    * @date 2020/8/6
+    */
+    TradeType getTradeType(FundRequestDto fundRequestDto);
 }
