@@ -1,296 +1,372 @@
 <#bs4Body>
 <style>
-    .info-column {
-        width: 15%;
-        font-weight: bold;
-        text-align: right;
-    }
-    .info-cell{
-        width: 35%;
-        text-align: left;
-    }
+.info-column {
+	width: 15%;
+	font-weight: bold;
+	text-align: right;
+}
+
+.info-cell {
+	width: 35%;
+	text-align: left;
+}
+
+.td_input {
+	width: 120px;
+	float: left;
+	margin-right: 25px;
+}
+
+.td_button {
+	width: 100px;
+	float: left;
+}
+
+p {
+	margin: 0px;
+}
+
+.per_div {
+	display: flex;
+	justify-content: flex-start;
+	height: 40px;
+}
+
+.per_div_child {
+	margin-right: 15px;
+}
+
+.div_container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.div_container_content {
+	height: 20px;
+	width: 100px;
+	text-align: center;
+	line-height: 20px;
+}
 </style>
-<#bs4nav>
-</#bs4nav>
-    <div id="detail-modal" class="main-container container-fluid" style="height: 380px;width: 1000px;">
-    	<form id="queryForm">
-	        <table id="out-detail" class="table table-bordered" >
-	            <tbody>
-	            <tr>
-	                <td class="info-column">结账单号</td>
-	                <td class="info-cell" id="cycle">${detail.cycleNo!}</td>
-	                <td class="info-column">账期时间</td>
-	                <td class="info-cell">${detail.startTime!}至${detail.endTime!}</td>
-	            </tr>
-	             <tr>
-	                <td class="info-column">柜员工号</td>
-	                <td class="info-cell">${detail.userCode!}</td>
-	                <td class="info-column">柜员名称</td>
-	                <td class="info-cell">${detail.userName!}
-	                	<input type="hidden" name="userId" id="userId" value="${detail.userId!}">
-	                	<input type="hidden" name="cycleNo" id="cycleNo" value="${detail.cycleNo!}">
-	                	<input type="hidden" id="isStatistic" name="isStatistic" value="false">
-	                	<input type="hidden" name="operatorId" id="operatorId" value="${detail.userId!}">
-	                </td>
-	            </tr>
-	            <tr>
-	                <td class="info-column">领款金额|${detail.accountCycleDetailDto.receiveTimes!}笔</td>
-	                <td class="info-cell">${detail.accountCycleDetailDto.receiveAmountText!}</td>
-	                <td class="info-column">网银收款|${detail.accountCycleDetailDto.bankInTimes!}笔</td>
-	                <td class="info-cell">${detail.accountCycleDetailDto.bankInAmountText!}</td>
-	            </tr>
-	             <tr>
-	                <td class="info-column">交款金额|${detail.accountCycleDetailDto.deliverTimes!}笔</td>
-	                <td class="info-cell">${detail.accountCycleDetailDto.deliverAmountText!}</td>
-	                <td class="info-column">网银支出|${detail.accountCycleDetailDto.bankOutTimes!}笔</td>
-	                <td class="info-cell">${detail.accountCycleDetailDto.bankOutAmountText!}</td>
-	            </tr>
-	              <tr>
-	                <td class="info-column">现金收款|${detail.accountCycleDetailDto.depoCashTimes!}笔</td>
-	                <td class="info-cell">${detail.accountCycleDetailDto.depoCashAmountText!}</td>
-	                <td class="info-column">POS收款|${detail.accountCycleDetailDto.depoPosTimes!}笔</td>
-	                <td class="info-cell">${detail.accountCycleDetailDto.depoPosAmountText!}</td>
-	            </tr>
-	             <tr>
-	                <td class="info-column">现金支出|${detail.accountCycleDetailDto.drawCashTimes!}笔</td>
-	                <td class="info-cell">${detail.accountCycleDetailDto.drawCashAmountText!}</td>
-	                <td class="info-column"></td>
-	                <td class="info-cell"></td>
-	            </tr>
-	             <tr>
-	                <td class="info-column">现金余额</td>
-	                <td class="info-cell">${detail.accountCycleDetailDto.unDeliverAmountText!}</td>
-	                <td class="info-column">结账交款金额</td>
-	                <td class="info-cell">${detail.accountCycleDetailDto.lastDeliverAmountText!}</td>
-	            </tr>
-	        </table>
-	        <div class="col align-self-center" style="text-align: center">
-	        	<% if(settled == 2){ %>
-	        		<button id="back" style="height: 40px;width: 100px;border-color:#FB0E12" type="button" class="btn btn-light" onclick="backList()">返回</button>
-				<% }else{ %>
-					<button id="apply" style="height: 40px;width: 100px;" type="button" class="btn btn-primary" onclick="applySettlement()">申请结账</button>
-				<% } %>
-            </div>
-        </form>
-    </div>
-    <div class="main-container container-fluid">
-    <ul id="detailTab" class="nav nav-tabs" role="tablist">
-    	<#resource code="payeeList">
-        <li class="nav-item">
-            <a class="nav-link" id="payee-tab" onclick="payeeActive()" uri="/cash/payeeListTab.html" data-toggle="tab" href="#payee-record"
-               role="tab" aria-selected="true">
-                <h5>领款明细</h5>
-            </a>
-        </li>
-        </#resource>
-        <#resource code="payerList">
-        <li class="nav-item">
-            <a class="nav-link" id="payer-tab" onclick="payerActive()" uri="/cash/payerListTab.html" data-toggle="tab" href="#payer-record" role="tab">
-                <h5>交款明细</h5>
-            </a>
-        </li>
-        </#resource>
-        <#resource code="serialList">
-        <li class="nav-item">
-            <a class="nav-link" id="operation-tab" onclick="operationActive()" uri="/cycle/serialTab.html" data-toggle="tab" href="#operation-record" role="tab">
-                <h5>操作记录</h5>
-            </a>
-        </li>
-        </#resource>
-    </ul>
+<#bs4nav> </#bs4nav>
+<div id="detail-modal" class="main-container container-fluid"
+	style="height: 380px; width: 1000px;">
+	<form id="queryForm">
+		<table id="out-detail" class="table table-bordered">
+			<tbody>
+				<tr>
+					<td class="info-column">结账单号</td>
+					<td class="info-cell" id="cycle">${detail.cycleNo!}</td>
+					<td class="info-column">账期时间</td>
+					<td class="info-cell">${detail.startTime!}至${detail.endTime!}</td>
+				</tr>
+				<tr>
+					<td class="info-column">柜员工号</td>
+					<td class="info-cell">${detail.userCode!}</td>
+					<td class="info-column">柜员名称</td>
+					<td class="info-cell">${detail.userName!} <input type="hidden"
+						name="userId" id="userId" value="${detail.userId!}"> <input
+						type="hidden" name="cycleNo" id="cycleNo"
+						value="${detail.cycleNo!}"> <input type="hidden"
+						id="isStatistic" name="isStatistic" value="false"> <input
+						type="hidden" name="operatorId" id="operatorId"
+						value="${detail.userId!}">
+					</td>
+				</tr>
+				<tr>
+					<td class="info-column">领款金额|${detail.accountCycleDetailDto.receiveTimes!}笔</td>
+					<td class="info-cell">${detail.accountCycleDetailDto.receiveAmountText!}</td>
+					<td class="info-column">网银收款|${detail.accountCycleDetailDto.bankInTimes!}笔</td>
+					<td class="info-cell">${detail.accountCycleDetailDto.bankInAmountText!}</td>
+				</tr>
+				<tr>
+					<td class="info-column">交款金额|${detail.accountCycleDetailDto.deliverTimes!}笔</td>
+					<td class="info-cell">${detail.accountCycleDetailDto.deliverAmountText!}</td>
+					<td class="info-column">网银支出|${detail.accountCycleDetailDto.bankOutTimes!}笔</td>
+					<td class="info-cell">${detail.accountCycleDetailDto.bankOutAmountText!}</td>
+				</tr>
+				<tr>
+					<td class="info-column">现金收款|${detail.accountCycleDetailDto.depoCashTimes!}笔</td>
+					<td class="info-cell">${detail.accountCycleDetailDto.depoCashAmountText!}</td>
+					<td class="info-column">POS收款|${detail.accountCycleDetailDto.depoPosTimes!}笔</td>
+					<td class="info-cell">${detail.accountCycleDetailDto.depoPosAmountText!}</td>
+				</tr>
+				<tr>
+					<td class="info-column">现金支出|${detail.accountCycleDetailDto.drawCashTimes!}笔</td>
+					<td class="info-cell">${detail.accountCycleDetailDto.drawCashAmountText!}</td>
+					<td class="info-column"></td>
+					<td class="info-cell"></td>
+				</tr>
+				<tr>
+					<td class="info-column">现金余额</td>
+					<td class="info-cell">${detail.accountCycleDetailDto.unDeliverAmountText!}</td>
+					<td class="info-column">结账交款金额</td>
+					<td class="info-cell">${detail.accountCycleDetailDto.lastDeliverAmountText!}</td>
+				</tr>
+		</table>
+		<div class="col align-self-center" style="text-align: center">
+			<% if(settled == 2){ %>
+			<button id="back"
+				style="height: 40px; width: 100px; border-color: #FB0E12"
+				type="button" class="btn btn-light" onclick="backList()">返回</button>
+			<% }else{ %>
+			<button id="apply" style="height: 40px; width: 100px;" type="button"
+				class="btn btn-primary" onclick="applySettlement()">申请结账</button>
+			<% } %>
+		</div>
+	</form>
+</div>
+<div class="main-container container-fluid">
+	<ul id="detailTab" class="nav nav-tabs" role="tablist">
+		<#resource code="payeeList">
+		<li class="nav-item"><a class="nav-link" id="payee-tab"
+			onclick="payeeActive()" uri="/cash/payeeListTab.html"
+			data-toggle="tab" href="#payee-record" role="tab"
+			aria-selected="true">
+				<h5>领款明细</h5>
+		</a></li>
+		</#resource>
+		<#resource code="payerList">
+		<li class="nav-item"><a class="nav-link" id="payer-tab"
+			onclick="payerActive()" uri="/cash/payerListTab.html"
+			data-toggle="tab" href="#payer-record" role="tab">
+				<h5>交款明细</h5>
+		</a></li>
+		</#resource>
+		<#resource code="serialList">
+		<li class="nav-item"><a class="nav-link" id="operation-tab"
+			onclick="operationActive()" uri="/cycle/serialTab.html"
+			data-toggle="tab" href="#operation-record" role="tab">
+				<h5>操作记录</h5>
+		</a></li>
+		</#resource>
+	</ul>
 </div>
 <div id="detailTabContent" class="tab-content border-top-0">
-    <div class="tab-pane tab-info" id="payee-record" role="tabpanel">
-    	<div class="row" id="table-payee">
-		    <div class="col-12">
-		        <table id="payee-table"
-		               data-buttons-class="primary"
-		               data-icons="bui.variable.icons">
-		            <thead>
-		            <tr>
-		                <th data-field="cashNo"data-align="center" >
-		                    领款编号
-		                </th>
-		                <th data-field="amountYuan" data-align="center">
-		                   领款金额
-		                </th>
-		                <th data-field="createTime" data-align="center">
-		                    领款时间
-		                </th>
-		                 <th data-field="notes" data-align="center">
-		                    说明
-		                </th>
-		            </tr>
-		            </thead>
-		        </table>
-		    </div>
+	<div class="tab-pane tab-info" id="payee-record" role="tabpanel">
+		<div class="row" id="table-payee">
+			<div class="col-12">
+				<table id="payee-table" data-buttons-class="primary"
+					data-icons="bui.variable.icons">
+					<thead>
+						<tr>
+							<th data-field="cashNo" data-align="center">领款编号</th>
+							<th data-field="amountYuan" data-align="center">领款金额</th>
+							<th data-field="createTime" data-align="center">领款时间</th>
+							<th data-field="notes" data-align="center">说明</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
 		</div>
-    </div>
-    <div class="tab-pane tab-info" id="payer-record" role="tabpanel">
-    	<div class="row" id="table-payer">
-		    <div class="col-12">
-		        <table id="payer-table"
-		               data-buttons-class="primary"
-		               data-icons="bui.variable.icons">
-		            <thead>
-		            <tr>
-		                <th data-field="cashNo"data-align="center" >
-		                    交款编号
-		                </th>
-		                <th data-field="amountYuan" data-align="center">
-		                   交款金额
-		                </th>
-		                <th data-field="createTime" data-align="center">
-		                    交款时间
-		                </th>
-		                 <th data-field="notes" data-align="center">
-		                    说明
-		                </th>
-		            </tr>
-		            </thead>
-		        </table>
-		    </div>
+	</div>
+	<div class="tab-pane tab-info" id="payer-record" role="tabpanel">
+		<div class="row" id="table-payer">
+			<div class="col-12">
+				<table id="payer-table" data-buttons-class="primary"
+					data-icons="bui.variable.icons">
+					<thead>
+						<tr>
+							<th data-field="cashNo" data-align="center">交款编号</th>
+							<th data-field="amountYuan" data-align="center">交款金额</th>
+							<th data-field="createTime" data-align="center">交款时间</th>
+							<th data-field="notes" data-align="center">说明</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
 		</div>
-    </div>
-    <div class="tab-pane tab-info" id="operation-record" role="tabpanel">
-    	<div class="container-fluid" id="table-operation">
-		    <div class="row">
-		        <div class="col-12">
-		             <table id="serial-table" data-toggle="table" data-icons="bui.variable.icons" data-buttons-class="primary">
-		                <thead>
-		                <tr>
-		                	 <th data-field="serialNo" data-align="center" >
-		                        业务流水号
-		                    </th>
-		                    <th data-field="customerNo" data-align="center" >
-		                        客户编号
-		                    </th>
-		                    <th data-field="customerName" data-align="center">
-		                        客户名称
-		                    </th>
-		                    <th data-field="cardNo" data-align="center" >
-		                        园区卡号
-		                    </th>
-		                    <th data-field="typeText" data-align="center">
-		                        操作业务
-		                    </th>
-		                    <th data-field="startBalanceText" data-align="center">
-		                        期初金额
-		                    </th>
-		                    <th data-field="amountText" data-align="center">
-		                        操作金额
-		                    </th>
-		                    <th data-field="endBalanceText" data-align="center">
-		                        账户余额
-		                    </th>
-		                   <th data-field="operateTime" data-align="center">
-		                        操作时间
-		                    </th>
-		                    <th data-field="notes" data-align="center" data-sortable="false">
-		                        备注
-		                    </th>
-		                </tr>
-		                </thead>
-		            </table>
-		        </div>
-		    </div>
+	</div>
+	<div class="tab-pane tab-info" id="operation-record" role="tabpanel">
+		<div class="container-fluid" id="table-operation">
+			<div class="row">
+				<div class="col-12">
+					<table id="serial-table" data-toggle="table"
+						data-icons="bui.variable.icons" data-buttons-class="primary">
+						<thead>
+							<tr>
+								<th data-field="serialNo" data-align="center">业务流水号</th>
+								<th data-field="customerNo" data-align="center">客户编号</th>
+								<th data-field="customerName" data-align="center">客户名称</th>
+								<th data-field="cardNo" data-align="center">园区卡号</th>
+								<th data-field="typeText" data-align="center">操作业务</th>
+								<th data-field="startBalanceText" data-align="center">期初金额
+								</th>
+								<th data-field="amountText" data-align="center">操作金额</th>
+								<th data-field="endBalanceText" data-align="center">账户余额</th>
+								<th data-field="operateTime" data-align="center">操作时间</th>
+								<th data-field="notes" data-align="center" data-sortable="false">
+									备注</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
 		</div>
-    </div>
+	</div>
+</div>
+<div class="modal fade" id="settleCycle" tabindex="-1" role="dialog"
+	aria-labelledby="addSecondModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width: 450px; height: 240px;">
+		<div class="modal-content" style="width: 450px; height: 240px;">
+			<div class="modal-header"
+				style="background-color: #E6E6E6; height: 45px;">
+				<h5 style="height-line: 45px;">结账确认</h5>
+			</div>
+			<div class="modal-body" style="overflow: auto;">
+				<form id="settleForm" style="width: 90%;">
+					<table id="out-detail" class="table table-bordered"
+						style="table-layout: fixed;">
+						<tbody>
+							<tr>
+								<td class="info-column" valign="middle">结账交款金额</td>
+								<td class="info-cell"><input id="settleAmount" maxlength="10"
+									name="settleAmount" type="text" class="form-control" /></td>
+							</tr>
+					</table>
+				</form>
+			</div>
+			<div
+				style="display: table-cell; text-align: center; margin-top: 15px; margin-bottom: 20px;">
+				<div style="width: 49%; float: left;">
+					<button type="button" class="btn btn-primary"
+						style="width: 100px;" onclick="doSettle()">保存</button>
+				</div>
+				<div style="width: 49%; float: left;">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal" style="width: 100px;">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 </#bs4Body>
-<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
-<script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
-<script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
+<script type="text/javascript"
+	src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript"
+	src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
+<script type="text/javascript"
+	src="${contextPath}/resources/js/form.formatter.js"></script>
 <script>
-    let cycleNo = $.trim($("#cycle").text());
-    let operatorId = $("#userId").val();
-    let teter = $("#table-payer").prop("outerHTML");
-    let tetee = $("#table-payee").prop("outerHTML");
-    let tetoperation = $("#table-operation").prop("outerHTML");
-    let isteter = false;
-    let istetee = false;
-    let istetoperation = false;
-    $(function () {
-    	istetee = true;
-    	$("#table-payer").remove();
-    	$("#table-payee").remove();
-    	$("#table-operation").remove();
-    	$("#payee-record").addClass('show active');
-    	$("#payee-tab").addClass('active');
-    	$("#payee-record").append(tetee);
-    	var options = {
-    		     id:"payee-table",
-    	         url: "${contextPath}/cash/payeeList.action"
-    	     };
-    	$.table.init(options);
-    });
+	let cycleNo = $.trim($("#cycle").text());
+	let operatorId = $("#userId").val();
+	let teter = $("#table-payer").prop("outerHTML");
+	let tetee = $("#table-payee").prop("outerHTML");
+	let tetoperation = $("#table-operation").prop("outerHTML");
+	let isteter = false;
+	let istetee = false;
+	let istetoperation = false;
+	$(function() {
+		istetee = true;
+		$("#table-payer").remove();
+		$("#table-payee").remove();
+		$("#table-operation").remove();
+		$("#payee-record").addClass('show active');
+		$("#payee-tab").addClass('active');
+		$("#payee-record").append(tetee);
+		var options = {
+			id : "payee-table",
+			url : "${contextPath}/cash/payeeList.action"
+		};
+		$.table.init(options);
+	});
 
-    function applySettlement(){
+	function applySettlement() {
+		$('#settleAmount').val("");
+		$('#settleCycle').modal('show');
+		return true;
+	}
+	
+	$("#settleForm").validate({
+	    onkeyup: false,
+	    rules: {
+	    	settleAmount: {
+	            required: true,
+	            gt: 0.00,
+	            max: 999999.99
+	        }
+	    },
+	    messages: {
+	    	settleAmount: {
+	            required: "交款金额必填",
+	            gt: "金额必须大于{0}元",
+	            max: "金额不能超过{0}元"
+	        }
+	    },
+	    focusCleanup: true
+	});
+
+	function doSettle() {
+		if (!$.validate.form("settleForm")) {
+	        return false;
+	    } 
 		let url = "${contextPath}/cycle/applySettle.action";
-	    let data = $.common.formToJSON("queryForm");
-	    $.operate.saveModal(url, JSON.stringify(data));
-	    $("#apply").attr("disabled",true);
-	    return true;
+		let data = {};
+		data.userId = $('#userId').val();
+		data.cashAmount = $('#settleAmount').val();
+		$.operate.saveModal(url, JSON.stringify(data));
+		$("#apply").hide();
 	}
 
-    function backList() {
-    	window.location.href="${contextPath}/cycle/list.html";
-    }
+	function backList() {
+		window.location.href = "${contextPath}/cycle/list.html";
+	}
 
-	function payeeActive(){
-		if(istetee){
+	function payeeActive() {
+		if (istetee) {
 			return;
 		}
 		istetee = true;
 		isteter = false;
 		istetoperation = false;
 		$("#table-payer").remove();
-    	$("#table-operation").remove();
+		$("#table-operation").remove();
 		$("#payee-record").addClass('show active');
 		$(this).addClass('active');
 		$("#payee-record").append(tetee);
-    	var options = {
-    			id:"payee-table",
-    	         url: "${contextPath}/cash/payeeList.action"
-    	     };
-    	$.table.init(options);
-    }
+		var options = {
+			id : "payee-table",
+			url : "${contextPath}/cash/payeeList.action"
+		};
+		$.table.init(options);
+	}
 
-	function payerActive(){
-		if(isteter){
+	function payerActive() {
+		if (isteter) {
 			return;
 		}
 		isteter = true;
 		istetee = false;
 		istetoperation = false;
-    	$("#table-payee").remove();
-    	$("#table-operation").remove();
+		$("#table-payee").remove();
+		$("#table-operation").remove();
 		$("#payer-record").addClass('show active');
 		$(this).addClass('active');
 		$("#payer-record").append(teter);
-    	var options = {
-    			id:"payer-table",
-    	        url: "${contextPath}/cash/payerList.action"
-    	     };
-    	$.table.init(options);
-    }
+		var options = {
+			id : "payer-table",
+			url : "${contextPath}/cash/payerList.action"
+		};
+		$.table.init(options);
+	}
 
-	function operationActive(){
-		if(istetoperation){
+	function operationActive() {
+		if (istetoperation) {
 			return;
 		}
 		istetoperation = true;
 		isteter = false;
 		istetee = false;
 		$("#table-payer").remove();
-    	$("#table-payee").remove();
+		$("#table-payee").remove();
 		$("#operationr-record").addClass('show active');
 		$(this).addClass('active');
 		$("#operation-record").append(tetoperation);
-    	var options = {
-    			 id:"serial-table",
-    	         url: "${contextPath}/serial/business/page.action"
-    	     };
-    	$.table.init(options);
-    }
+		var options = {
+			id : "serial-table",
+			url : "${contextPath}/serial/business/page.action"
+		};
+		$.table.init(options);
+	}
 </script>

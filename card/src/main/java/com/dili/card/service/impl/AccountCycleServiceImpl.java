@@ -46,7 +46,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void settle(Long userId) {
+	public void settle(Long userId, Long cashAmount) {
 		//获取最新的账务周期
 		AccountCycleDo accountCycle = accountCycleDao.findLatestActiveCycleByUserId(userId);
 		// 对账状态校验
