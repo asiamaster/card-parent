@@ -75,6 +75,12 @@ public class UserCashServiceImpl implements IUserCashService {
 		userCashDo = new UserCashDo();
 		userCashDo.setId(userCashDto.getId());
 		userCashDo.setAmount(CurrencyUtils.yuan2Cent(new BigDecimal(userCashDto.getAmountYuan())));
+		if (userCashDo.getAmount() < 1L) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01");
+		}
+		if (userCashDo.getAmount() > 99999999L) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过999999.99");
+		}
 		userCashDo.setNotes(userCashDto.getNotes());
 		userCashDao.update(userCashDo);
 	}
@@ -137,6 +143,12 @@ public class UserCashServiceImpl implements IUserCashService {
 		userCash.setCashNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CASH_NO.getCode())));
 		userCash.setAction(userCashDto.getAction());
 		userCash.setAmount(CurrencyUtils.yuan2Cent(new BigDecimal(userCashDto.getAmountYuan())));
+		if (userCash.getAmount() < 1L) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01");
+		}
+		if (userCash.getAmount() > 99999999L) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过999999.99");
+		}
 		userCash.setUserId(userCashDto.getUserId());
 		userCash.setUserCode(userCashDto.getUserCode());
 		userCash.setUserName(userCashDto.getUserName());
