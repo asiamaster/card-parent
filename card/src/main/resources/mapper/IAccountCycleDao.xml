@@ -38,7 +38,7 @@
 	</sql>
 
 		<!-- 通过条件查询 数量统计-->
-	<select id="findCountByCondition" resultType="com.dili.card.entity.AccountCycleDo">
+	<select id="findCountByCondition" resultType="long">
 		SELECT
 			COUNT(*)
 		FROM
@@ -92,6 +92,11 @@
 	<select id="getById" resultType="com.dili.card.entity.AccountCycleDo">
 		<include refid="baseSql"/>
 		WHERE id = #{id}
+	</select>
+	
+	<select id="findByCycleNo" resultType="com.dili.card.entity.AccountCycleDo">
+		<include refid="baseSql"/>
+		WHERE cycle_no = #{cycleNo}
 	</select>
 
 	<select id="findByCondition" parameterType="com.dili.card.dto.AccountCycleDto" resultType="com.dili.card.entity.AccountCycleDo">
