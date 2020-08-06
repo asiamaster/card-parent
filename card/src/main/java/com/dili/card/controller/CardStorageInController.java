@@ -6,17 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardStorageOutQueryDto;
-import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.StorageInDo;
 import com.dili.card.service.ICardStorageInService;
 import com.dili.ss.domain.BaseOutput;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
+import com.dili.uap.sdk.domain.UserTicket;
 
 /**
  * @description： 卡片入库相关功能
@@ -50,7 +49,12 @@ public class CardStorageInController implements IControllerHandler {
 	*/
 	@PostMapping("/save.action")
 	@ResponseBody
-	public BaseOutput<?> save(StorageInDo storageInDo) {
+	public BaseOutput<?> save(@RequestBody StorageInDo storageInDo) {
+		UserTicket userTicket = getUserTicket();
+		storageInDo.setCreator(userTicket.getRealName());
+		storageInDo.setCreatorId(userTicket.getId());
+		storageInDo.setFirmId(userTicket.getFirmId());
+		storageInDo.setFirmName(userTicket.getFirmName());
 		cardStorageInService.batchCardStorageIn(storageInDo);
 		return BaseOutput.success();
 	}
@@ -61,6 +65,8 @@ public class CardStorageInController implements IControllerHandler {
 	@PostMapping("queryList.action")
 	@ResponseBody
 	public Map<String, Object> queryList(CardStorageOutQueryDto queryDto) {
+		UserTicket userTicket = getUserTicket();
+		queryDto.setFirmId(userTicket.getFirmId());
 		return successPage(cardStorageInService.list(queryDto));
 	}
 

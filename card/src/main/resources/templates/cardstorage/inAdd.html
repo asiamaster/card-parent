@@ -1,74 +1,95 @@
 <#bs4Body>
 <div class="container-fluid">
-    <div id="add-modal">
-        <form id="save-form">
-            <table id="add-table" class="table table-bordered">
-                <tbody>
-                <tr>
-                    <td class="info-column-card-out">入库类型</td>
-                    <td class="info-cell-card-out">
-                        <select name="cardType" id="cardType" class="form-control"></select>
-                		<#bcomboProvider _id="cardType" _provider="cardTypeProvider" _queryParams='{emptyText:"-- 请选择 --"}'/>
-                    </td>
-                </tr>
-                <tr>
-                	<td class="info-column-card-out">起始卡号</td>
-                    <td>
-                        <input id="startCardNo" name="startCardNo" type="text" class="form-control"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="info-column-card-out">结束卡号</td>
-                    <td>
-                        <input id="endCardNo" name="endCardNo" type="text" class="form-control"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="info-column-card-out">入库张数</td>
-                    <td>
-                        <input id="amount" name="amount" type="text" class="form-control"/>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </div>
+	<div id="add-modal">
+		<form id="save-form">
+			<table id="add-table" class="table table-bordered">
+				<tbody>
+					<tr>
+						<td class="info-column-card-out">入库类型</td>
+						<td class="info-cell-card-out"><select name="cardType"
+							id="cardType" class="form-control"></select> <#bcomboProvider
+								_id="cardType" _provider="cardTypeProvider"
+								_queryParams='{emptyText:"-- 请选择 --"}' /></td>
+					</tr>
+					<tr>
+						<td class="info-column-card-out">起始卡号</td>
+						<td><input id="startCardNo" name="startCardNo" type="text"
+							class="form-control calculateAmount" /></td>
+					</tr>
+					<tr>
+						<td class="info-column-card-out">结束卡号</td>
+						<td><input id="endCardNo" name="endCardNo" type="text"
+							class="form-control calculateAmount" /></td>
+					</tr>
+					<tr>
+						<td class="info-column-card-out">入库张数</td>
+						<td><input id="amount" name="amount" type="text"
+							class="form-control" readonly="readonly" /></td>
+					</tr>
+			</table>
+		</form>
+	</div>
 </div>
 </#bs4Body>
-<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
-<script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
-<#common_autoCompleteUser/>
+<script type="text/javascript"
+	src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript"
+	src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
+<#common_autoCompleteUser />
 <script>
-    let formId = "save-form";
-    $("#" + formId).validate({
-        onkeyup: false,
-        rules: {
-            applyUserName: {
-                required: true,
-            },
-            amount: {
-                required: true,
-                gt: 1,
-            }
-        },
-        messages: {
-            applyUserName: {
-                required: "领取人必填",
-            },
-            amount: {
-                required: "领取数量必填",
-                gt: "领取数量至少{0}"
-            }
-        },
-        focusCleanup: true
-    });
+	let formId = "save-form";
+	$("#" + formId).validate({
+		onkeyup : false,
+		rules : {
+			cardType : {
+				required : true,
+			},
+			startCardNo : {
+				required : true,
+				gt : 1,
+			},
+			endCardNo : {
+				required : true,
+				gt : 1,
+			}
+		},
+		messages : {
+			cardType : {
+				required : "请选择卡类型",
+			},
+			startCardNo : {
+				required : "请输入起始卡号",
+			},
+			endCardNo : {
+				required : "请输入结束卡号",
+			}
+		},
+		focusCleanup : true
+	});
 
-    function submitHandler(e) {
-        if (!$.validate.form(formId)) {
-            return false;
-        }
-        let url = "${contextPath}/cardStorage/addOut.action";
-        let data = $.common.formToJSON(formId);
-        $.operate.post(url, data);
-        //return true;
-    }
+	function submitHandler(e) {
+		var startCardNo = $("#startCardNo").val();
+		var endCardNo = $("#endCardNo").val();
+		if(startCardNo >= endCardNo){
+			bs4pop.alert("结束卡必须大于起始卡号", {type : "warning"});
+			return;
+		}
+		if (!$.validate.form(formId)) {
+			return false;
+		}
+		let url = "${contextPath}/cardStorageIn/save.action";
+		let data = $.common.formToJSON(formId);
+		$.operate.post(url, data);
+		//return true;
+	}
+	// 计算数量
+	$('.calculateAmount').bind('input propertychange', function() {
+		var startCardNo = $("#startCardNo").val();
+		var endCardNo = $("#endCardNo").val();
+		if (startCardNo == "" || endCardNo == "") {
+			$("#amount").val("");
+			return;
+		}
+		$("#amount").val(endCardNo - startCardNo + 1);
+	});
 </script>
