@@ -11,6 +11,7 @@ import com.dili.card.service.IAccountCycleService;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.TradeChannel;
+import com.dili.card.type.TradeType;
 import com.dili.tcc.core.TccContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -56,6 +57,11 @@ public class CashRechargeService extends AbstractRechargeManager {
     @Override
     public boolean canAddEmptyFundItem(FundRequestDto fundRequestDto) {
         return false;
+    }
+
+    @Override
+    public TradeType getTradeType(FundRequestDto fundRequestDto) {
+        return TradeType.DEPOSIT;
     }
 
 

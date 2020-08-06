@@ -112,6 +112,33 @@ class FundControllerTest extends BaseTest {
         LOGGER.info("返回结果：{}",JSON.toJSONString(out));
     }
 
+    @Test
+    void testEBankRecharge() throws Exception {
+        FundRequestDto fundRequestDto = this.createRechargeRequest();
+        fundRequestDto.setTradeChannel(TradeChannel.E_BANK.getCode());
+        fundRequestDto.setServiceCost(2L);
+
+        AccountCycleDo accountCycle = this.createAccountCycle();
+        when(accountCycleService.findActiveCycleByUserId(fundRequestDto.getOpId(),
+                fundRequestDto.getOpName(),
+                fundRequestDto.getOpNo())).thenReturn(accountCycle);
+
+        MvcResult mvcResult = mockMvc.perform(post("/fund/recharge.action")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("duplicate_commit_token",this.token)
+                .header("UAP_SessionId",sessionId)
+                .content(JSON.toJSONString(fundRequestDto))
+        )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+        String resultContent = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+        BaseOutput<?> out = JSON.parseObject(resultContent, new TypeReference<>() {
+        });
+        assertTrue(out.isSuccess());
+        LOGGER.info("返回结果：{}",JSON.toJSONString(out));
+    }
+
     private FundRequestDto createRechargeRequest() {
         FundRequestDto fundRequestDto = new FundRequestDto();
         fundRequestDto.setAccountId(13L);

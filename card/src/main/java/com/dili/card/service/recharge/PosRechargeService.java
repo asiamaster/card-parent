@@ -9,6 +9,7 @@ import com.dili.card.exception.CardAppBizException;
 import com.dili.card.type.BankCardType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.TradeChannel;
+import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.ss.constant.ResultCode;
 import org.springframework.stereotype.Component;
@@ -66,5 +67,10 @@ public class PosRechargeService extends AbstractRechargeManager {
     @Override
     public boolean canAddEmptyFundItem(FundRequestDto fundRequestDto) {
         return fundRequestDto.getServiceCost() == null;
+    }
+
+    @Override
+    public TradeType getTradeType(FundRequestDto fundRequestDto) {
+        return TradeType.DEPOSIT;
     }
 }
