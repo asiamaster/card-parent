@@ -118,7 +118,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Transactional(rollbackFor = Exception.class)
 	public void updateCashBox(Long cycleNo, Long amount) {
 		AccountCycleDo accountCycleDo = accountCycleDao.findByCycleNo(cycleNo);
-		if (accountCycleDao.updateCashBox(cycleNo, amount, accountCycleDo.getVersion())) {
+		if (!accountCycleDao.updateCashBox(cycleNo, amount, accountCycleDo.getVersion())) {
 			throw new CardAppBizException("更新现金柜失败");
 		}
 	}
