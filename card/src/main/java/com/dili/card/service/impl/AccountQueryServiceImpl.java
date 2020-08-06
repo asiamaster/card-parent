@@ -9,13 +9,17 @@ import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountQueryService;
+import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
+import com.dili.card.type.DisableState;
 import com.dili.card.util.PageUtils;
 import com.dili.card.validator.AccountValidator;
+import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
 import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
@@ -136,6 +140,18 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         UserAccountCardResponseDto userAccount = this.getByCardNo(cardNo);
         BalanceResponseDto fund = payRpcResolver.findBalanceByFundAccountId(userAccount.getFundAccountId());
         return new AccountSimpleResponseDto(fund, userAccount);
+    }
+
+    @Override
+    public UserAccountCardResponseDto getForUnLostCard(UserAccountCardQuery query) {
+        UserAccountCardResponseDto single = accountQueryRpcResolver.findSingleWithoutValidate(query);
+        if (CardStatus.LOSS.getCode() != single.getCardState()) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR,"该卡不是挂失状态，不能进行此操作");
+        }
+        if (DisableState.DISABLED.getCode().equals(single.getDisabledState())){
+            throw new CardAppBizException(ResultCode.DATA_ERROR,"该账户为禁用状态，不能进行此操作");
+        }
+        return single;
     }
 
 

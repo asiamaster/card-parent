@@ -585,9 +585,9 @@ tab = {
                 $.form.resetDate();
                 if (table.options.type == table_type.bootstrapTable) {
                     if ($.common.isEmpty(tableId)) {
-                        $("#" + table.options.id).bootstrapTable('refresh',{pageNumber:1});
+                        $("#" + table.options.id).bootstrapTable('refresh', {pageNumber: 1});
                     } else {
-                        $("#" + tableId).bootstrapTable('refresh', {pageNumber:1});
+                        $("#" + tableId).bootstrapTable('refresh', {pageNumber: 1});
                     }
                 } else if (table.options.type == table_type.bootstrapTreeTable) {
                     if ($.common.isEmpty(tableId)) {

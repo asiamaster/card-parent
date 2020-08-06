@@ -42,7 +42,6 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
      */
     public final void doPreRecharge(FundRequestDto requestDto) {
         UserAccountCardResponseDto userAccount = accountQueryService.getByAccountId(requestDto);
-
         Long rechargeAmount = requestDto.getAmount();
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {
             record.setType(OperateType.ACCOUNT_CHARGE.getCode());
@@ -136,5 +135,11 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
             return extra.getInteger(Constant.BANK_TYPE);
         }
         return null;
+    }
+
+    public static void main(String[] args) {
+        StringBuilder sb = new StringBuilder("wangnima");
+        sb.replace(1,1,"f");
+        System.out.println(sb.toString());
     }
 }
