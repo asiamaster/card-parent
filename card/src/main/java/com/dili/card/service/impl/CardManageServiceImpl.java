@@ -2,6 +2,7 @@ package com.dili.card.service.impl;
 
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
@@ -14,11 +15,11 @@ import com.dili.card.service.ICardManageService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.tcc.ChangeCardTccTransactionManager;
 import com.dili.card.type.CardStatus;
-import com.dili.card.type.DisableState;
 import com.dili.card.type.OperateType;
 import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,13 +58,9 @@ public class CardManageServiceImpl implements ICardManageService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void unLostCard(CardRequestDto cardParam) {
-        UserAccountCardResponseDto accountCard = accountQueryService.getByAccountIdWithoutValidate(cardParam.getAccountId());
-        if (!Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
-            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行解挂", CardStatus.getName(accountCard.getCardState())));
-        }
-        if (!DisableState.ENABLED.getCode().equals(accountCard.getDisabledState())) {
-            throw new CardAppBizException("", "账户被禁用，不能解挂失");
-        }
+        UserAccountCardQuery query = new UserAccountCardQuery();
+        query.setCardNos(Lists.newArrayList(cardParam.getCardNo()));
+        UserAccountCardResponseDto accountCard = accountQueryService.getForUnLostCard(query);
         BusinessRecordDo businessRecordDo = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
             temp.setType(OperateType.LOSS_REMOVE.getCode());
         });

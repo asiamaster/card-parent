@@ -1,20 +1,21 @@
 package com.dili.card.common.handler;
 
-import cn.hutool.core.util.StrUtil;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.BaseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
-import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
-import java.util.HashMap;
-import java.util.Map;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 用于获取用户session、验证公共参数、赋值操作员信息
@@ -37,11 +38,14 @@ public interface IControllerHandler {
     default UserTicket getUserTicket() {
         SessionContext sessionContext = SessionContext.getSessionContext();
         UserTicket userTicket = sessionContext.getUserTicket();
+        if(userTicket == null) {
+        	throw new CardAppBizException("无法获取用户信息，请重新登录!");
+        }
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         if (requestAttributes != null) {
             requestAttributes.setAttribute(Constant.SESSION, sessionContext, RequestAttributes.SCOPE_SESSION);
         }
-        return userTicket != null ? userTicket : DTOUtils.newInstance(UserTicket.class);
+        return userTicket;
     }
 
     /**
