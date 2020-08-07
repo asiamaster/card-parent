@@ -41,9 +41,9 @@ p {
 }
 </style>
 
-<div style="height: 700px;">
-	<div style="background-color: #FFFACD;">
-		<h4 style="text-align: center">资金授权委托协议书</h4>
+<div  style="background-color: #FFFACD;">
+	<div>
+		<h4 style="text-align: center;padding-top: 15px;">资金授权委托协议书</h4>
 		<p>寿光地利农产品物流园有限公司：</p>
 		<p style="text-indent: 2em">
 			本人 <font color="#FC1D24"><span id="consignorCustomerName2"
@@ -64,11 +64,18 @@ p {
 		<p style="text-indent: 2em">
 			名称：<font color="#FC1D24"><span id="consignorCustomerName3">${detail.consignorName!}</span></font>
 			， 身份证号：<font color="#FC1D24"><span
-				id="consignorCustomerIDCode2">${detail.consignorMobile!}</span></font>，
-			联系电话：<font color="#FC1D24"><span id="consignorCustomerMobile2">${detail.consignorIdCode!}</span></font>
+				id="consignorCustomerIDCode2">${detail.consignorIdCode!}</span></font>，
+			联系电话：<font color="#FC1D24"><span id="consignorCustomerMobile2">${detail.consignorMobile!}</span></font>
 		</p>
 		<p>被委托人：</p>
-		<div id="consigneeAlls"></div>
+		<% for(item in detail.consignorDtos) { %>
+			<p style="text-indent: 2em">
+			名称：<font color="#FC1D24"><span id="consignorCustomerName3">${item.consigneeName!}</span></font>
+			， 身份证号：<font color="#FC1D24"><span
+				id="consignorCustomerIDCode2">${item.consigneeIdCode!}</span></font>，
+			联系电话：<font color="#FC1D24"><span id="consignorCustomerMobile2">${item.consigneeIdMobile!}</span></font>
+		</p>
+		<% } %>
 	</div>
 	<div style="height: 40px; margin-top: 15px;">
 		<div class="per_div">
@@ -90,11 +97,34 @@ p {
 			<% for(item in detail.consignorDtos) { %>
 				<div class="triangle per_div_child div_container">
 				<div class="div_container_content">
-					<span style="background-color: #FFFFFF;">${detail.consignorName!}</span>
+					<span style="background-color: #FFFFFF;">${item.consigneeName!}</span>
 				</div>
 			</div>
 			<% } %>
 		</div>
 	</div>
+	<div style="text-align: right;">
+		<span id="currentdate" style=" margin-right: 40px;"></span>
+	</div>
 </div>
 </#bs4Body>
+<script>
+$(function(){
+	$('#currentdate').html(getNowFormatDate());
+});
+
+function getNowFormatDate() {
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = year + ' 年 ' + month + ' 月 ' + strDate + ' 日 ';
+    return currentdate;
+}
+</script>
