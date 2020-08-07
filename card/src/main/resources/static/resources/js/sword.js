@@ -560,6 +560,16 @@ tab = {
         },
         // 表单封装处理
         form: {
+            resetDate: function (duration, timeUnit) {
+                if ($.common.isEmpty(duration)) {
+                    duration = 90;
+                }
+                if ($.common.isEmpty(timeUnit)) {
+                    timeUnit = 'day';
+                }
+                $(".laystart").attr("value", moment().subtract(duration, timeUnit).startOf('day').format('YYYY-MM-DD HH:mm:ss'));
+                $(".layend").attr("value", moment().endOf('day').format('YYYY-MM-DD HH:mm:ss'));
+            },
             // 表单重置
             reset: function (formId, tableId) {
                 table.set(tableId);
@@ -567,7 +577,7 @@ tab = {
                 let prefixKey = table.options.modalName + "_";
                 //清空session记录
                 sessionStorage.removeItem(prefixKey + currentId);
-                var form = $("#" + currentId);
+                let form = $("#" + currentId);
                 form[0].reset();
                 //特别处理hidden
                 $.each(form.find('input:hidden'), (i, e) => {
@@ -997,6 +1007,8 @@ tab = {
                 $.modal.closeLoading();
                 //启用按钮
                 $.modal.enable();
+                //重置查询条件，不然会查不出来
+                $.form.reset();
                 let _$ele = window.top == window.parent ? window : window.parent;
                 if (result.code == web_status.SUCCESS) {
                     if (!$.common.isEmpty(_$ele.table.options.dialog)) {

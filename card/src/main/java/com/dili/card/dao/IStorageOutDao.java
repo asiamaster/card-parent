@@ -11,13 +11,6 @@ import com.dili.card.entity.CardStorageOut;
  */
 @Mapper
 public interface IStorageOutDao {
-	/**
-     * 列表查询
-     * @param page
-     * @param search
-     * @return
-     */
-	List<CardStorageOut> selectList(CardStorageOut applyRecord);
 
 	/**
 	* 多条件查询

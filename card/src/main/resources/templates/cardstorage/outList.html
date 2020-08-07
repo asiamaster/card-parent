@@ -7,13 +7,13 @@
         <div class="row row-cols-6">
             <div class="form-group col-auto">
                 <label for="cardNo-multiple">卡号</label>
-                <input id="cardNo-multiple" name="cardNos" type="text" class="form-control"/>
+                <input id="cardNo" name="cardNo" type="text" class="form-control"/>
             </div>
             <div class="form-group col">
                 <label for="applyUserName">领取人</label>
                 <#bautoCompleteProvider
-                _hiddenDomainId="applyUserCode"
-                _hiddenDomainName="applyUserCode"
+                _hiddenDomainId="applyUserId"
+                _hiddenDomainName="applyUserId"
                 _displayDomainId="applyUserName"
                 _displayDomainName="applyUserName" _placeholder=""
                 _optionVariable="userNameQueryAutoCompleteOption"/>

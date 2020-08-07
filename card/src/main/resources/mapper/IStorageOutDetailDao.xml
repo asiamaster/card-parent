@@ -32,6 +32,19 @@
 			#{storageOutId}
 		)
 	</insert>
+	<insert id="batchSave" parameterType="java.util.List">
+		INSERT INTO card_storage_out_detail (
+			`card_no`,
+			`storage_out_id`
+		)
+		VALUES
+		<foreach item="item" collection="list" separator=",">
+			(
+			#{item.cardNo},
+			#{item.storageOutId}
+			)
+		</foreach>
+	</insert>
 
 	<select id="getById" resultType="com.dili.card.entity.StorageOutDetailDo">
 		SELECT

@@ -24,6 +24,12 @@ public interface IStorageOutDetailDao {
      * @return
      */
 	int save(StorageOutDetailDo storageOutDetail);
+	/**
+	* 批量新增
+	* @author miaoguoxin
+	* @date 2020/8/7
+	*/
+	int batchSave(List<StorageOutDetailDo> detailDos);
 
     /**
      * 根据id查询
