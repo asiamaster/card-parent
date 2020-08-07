@@ -579,6 +579,8 @@ tab = {
                 sessionStorage.removeItem(prefixKey + currentId);
                 let form = $("#" + currentId);
                 form[0].reset();
+                //重置时间
+                $.form.resetDate();
                 //特别处理hidden
                 $.each(form.find('input:hidden'), (i, e) => {
                     e.value = '';
@@ -1007,10 +1009,9 @@ tab = {
                 $.modal.closeLoading();
                 //启用按钮
                 $.modal.enable();
-                //重置查询条件，不然会查不出来
-                $.form.reset();
                 let _$ele = window.top == window.parent ? window : window.parent;
                 if (result.code == web_status.SUCCESS) {
+                    //关闭弹框
                     if (!$.common.isEmpty(_$ele.table.options.dialog)) {
                         _$ele.table.options.dialog.hide();
                     }
