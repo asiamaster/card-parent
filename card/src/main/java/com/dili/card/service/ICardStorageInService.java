@@ -3,6 +3,7 @@ package com.dili.card.service;
 import java.util.List;
 
 import com.dili.card.dto.CardStorageOutQueryDto;
+import com.dili.card.dto.StorageInDto;
 import com.dili.card.entity.StorageInDo;
 import com.dili.ss.domain.PageOutput;
 
@@ -22,5 +23,5 @@ public interface ICardStorageInService {
     /**
      * 查询入库记录
      */
-    PageOutput<List<StorageInDo>> list(CardStorageOutQueryDto queryParam);
+    PageOutput<List<StorageInDto>> list(CardStorageOutQueryDto queryParam);
 }

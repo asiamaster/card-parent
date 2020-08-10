@@ -8,8 +8,6 @@ import javax.persistence.Transient;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.dili.card.common.annotation.TextDisplay;
-import com.dili.card.common.provider.CardTypeProvider;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -30,7 +28,6 @@ public class StorageInDo implements Serializable {
 	/** 数量 */
 	private Integer amount;
 	/** 卡类型 */
-	@TextDisplay(value = CardTypeProvider.class)
 	private Integer cardType;
 	/** 操作人员ID */
 	private Long creatorId;

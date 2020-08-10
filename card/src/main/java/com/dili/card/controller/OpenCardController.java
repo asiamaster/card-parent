@@ -90,7 +90,7 @@ public class OpenCardController implements IControllerHandler {
 	@RequestMapping(value = "getCustomerInfo.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public BaseOutput<CustomerResponseDto> getCustomerInfo(@RequestBody OpenCardDto openCardInfo) {
-		log.info("开卡证件号查询客户信息:{}", JSONObject.toJSONString(openCardInfo));
+		log.info("开卡证件号查询客户信息*****{}", JSONObject.toJSONString(openCardInfo));
 		// 操作人信息
 		UserTicket user = SessionContext.getSessionContext().getUserTicket();
 		if (user == null) {
@@ -115,10 +115,10 @@ public class OpenCardController implements IControllerHandler {
 	@RequestMapping(value = "getAccountInfo.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public BaseOutput<UserAccountCardResponseDto> getAccountInfo(@RequestBody OpenCardDto openCardInfo) {
-		log.info("开卡查询主卡信息:{}", JSONObject.toJSONString(openCardInfo));
+		log.info("开卡查询主卡信息*****{}", JSONObject.toJSONString(openCardInfo));
 		AssertUtils.notNull(openCardInfo.getCardNo(), "请输入主卡卡号!");
 		UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(openCardInfo.getCardNo());
-		log.info("开卡查询主卡信息完成:{}", JSONObject.toJSONString(userAccount));
+		log.info("开卡查询主卡信息完成*****{}", JSONObject.toJSONString(userAccount));
 		return BaseOutput.successData(userAccount);
 	}
 
@@ -151,7 +151,7 @@ public class OpenCardController implements IControllerHandler {
 			return BaseOutput.failure("未获取到登录用户信息，请重新登录!");
 		}
 		String openCostFee = openCardService.getOpenCostFee();
-		log.info("查询开卡费用项:{}", openCostFee);
+		log.info("查询开卡费用项*****{}", openCostFee);
 		return BaseOutput.successData(openCostFee);
 	}
 
@@ -163,7 +163,7 @@ public class OpenCardController implements IControllerHandler {
 	@PostMapping("openMasterCard.action")
 	@ResponseBody
 	public BaseOutput<?> openMasterCard(@RequestBody OpenCardDto openCardInfo) {
-		log.info("开卡主卡信息:{}", JSONObject.toJSONString(openCardInfo));
+		log.info("开卡主卡信息*****{}", JSONObject.toJSONString(openCardInfo));
 		// 主要参数校验
 		checkMasterParam(openCardInfo);
 		// 操作人信息
@@ -175,7 +175,7 @@ public class OpenCardController implements IControllerHandler {
 		openCardInfo.setFirmName(user.getFirmName());
 		// 开卡
 		OpenCardResponseDto response = openCardService.openMasterCard(openCardInfo);
-		log.info("开卡主完成:{}", JSONObject.toJSONString(response));
+		log.info("开卡主完成*****{}", JSONObject.toJSONString(response));
 		return BaseOutput.success("success").setData(response);
 	}
 
@@ -185,7 +185,7 @@ public class OpenCardController implements IControllerHandler {
 	@PostMapping("openSlaveCard.action")
 	@ResponseBody
 	public BaseOutput<?> openSlaveCard(@RequestBody OpenCardDto openCardInfo) throws Exception {
-		log.info("开副卡信息:{}", JSONObject.toJSONString(openCardInfo));
+		log.info("开副卡信息*****{}", JSONObject.toJSONString(openCardInfo));
 		// 主要参数校验
 		AssertUtils.notNull(openCardInfo.getParentAccountId(), "主卡信息不能为空!");
 		// 操作人信息

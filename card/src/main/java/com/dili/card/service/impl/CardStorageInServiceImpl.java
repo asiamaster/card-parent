@@ -6,10 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dao.IStorageInDao;
 import com.dili.card.dto.BatchCardAddStorageDto;
 import com.dili.card.dto.CardStorageOutQueryDto;
+import com.dili.card.dto.StorageInDto;
 import com.dili.card.entity.StorageInDo;
 import com.dili.card.rpc.CardStorageRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
@@ -53,9 +55,9 @@ public class CardStorageInServiceImpl implements ICardStorageInService {
 	}
 
 	@Override
-	public PageOutput<List<StorageInDo>> list(CardStorageOutQueryDto queryParam) {
+	public PageOutput<List<StorageInDto>> list(CardStorageOutQueryDto queryParam) {
 		Page<Object> startPage = PageHelper.startPage(queryParam.getPage(), queryParam.getRows());
-		List<StorageInDo> list = storageInDao.selectList(queryParam);
+		List<StorageInDto> list = storageInDao.selectList(queryParam);
 		return PageUtils.convert2PageOutput(startPage, list);
 	}
 

@@ -34,6 +34,9 @@ public class FundContractRequestDto{
 	/** 委托人签名图片地址 */
 	@NotEmpty(message = "委托人签名图片地址不能为空")
 	private String signatureImagePath; 
+	/** 委托人证件号 */
+	@NotEmpty(message = "委托人证件号不能为空")
+	private String consignorIdCode; 
 	/** 备注 */
 	private String notes; 
 	/** 创建时间 */
@@ -181,5 +184,13 @@ public class FundContractRequestDto{
 
 	public void setConsignorCustomerCode(String consignorCustomerCode) {
 		this.consignorCustomerCode = consignorCustomerCode;
+	}
+
+	public String getConsignorIdCode() {
+		return consignorIdCode;
+	}
+
+	public void setConsignorIdCode(String consignorIdCode) {
+		this.consignorIdCode = consignorIdCode;
 	}
 }

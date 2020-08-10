@@ -40,24 +40,24 @@
 	</#bs4nav>
 </div>
 
-<div class="row" style="width: 100%;margin-left: 0px">
+<div class="row" style="width: 100%; margin-left: 0px">
 	<div class="col-12">
 		<div id="toolbar" class="btn-group" role="group"
-			 aria-label="Toolbar with button groups">
+			aria-label="Toolbar with button groups">
 			<#resource code="card_storage_in">
 			<button id="btn_query" type="button" class="btn btn-primary"
-					onclick="$.operate.add(null,'60%','80%')">
+				onclick="$.operate.add(null,'60%','80%')">
 				<i class="fa fa-save"></i> 新增入库
 			</button>
-		</#resource>
-	   </div>
+			</#resource>
+		</div>
 		<table id="grid" data-title="卡片入库" data-show-fullscreen="true"
 			data-buttons-class="primary" data-icons="bui.variable.icons">
 			<thead>
 				<tr>
-					<th data-radio></th>
+					<th data-radio="true"></th>
 					<th data-field="amount" data-align="center">入库张数</th>
-					<th data-field="cardType" data-align="center">类别</th>
+					<th data-field="cardTypeText" data-align="center">类别</th>
 					<th data-field="cardNoRange" data-align="center">号段</th>
 					<th data-field="createTime" data-sortable="true"
 						data-sort-name="createTime" data-align="center">入库时间</th>
