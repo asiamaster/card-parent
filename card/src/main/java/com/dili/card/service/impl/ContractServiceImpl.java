@@ -65,6 +65,8 @@ public class ContractServiceImpl implements IContractService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void save(FundContractRequestDto fundContractRequest) {
+		//校验委托人和被委托人身份证校验
+		this.validateIdCode(fundContractRequest);
 		// 构建合同主体
 		FundContractDo fundContract = this.buildContractEntity(fundContractRequest);
 		// 构建被委托人主体
@@ -150,6 +152,23 @@ public class ContractServiceImpl implements IContractService {
         	throw new CardAppBizException(ResultCode.DATA_ERROR, "该客户没有办理主卡");
 		};
 		return itemList;
+	}
+
+	/**
+	 * 校验委托人和被委托人身份证校验
+	 */
+	private void validateIdCode(FundContractRequestDto fundContractRequest) {
+		List<String> consigneeCustomerIdCodes = new ArrayList<String>();
+		for (FundConsignorDto fundConsignorDto : fundContractRequest.getConsignors()) {
+			if (fundContractRequest.getConsignorIdCode().equalsIgnoreCase(fundConsignorDto.getConsigneeIdCode())) {
+				throw new CardAppBizException(ResultCode.DATA_ERROR, "被委托人证件号与委托人证件号不能相同");
+			}
+			if (consigneeCustomerIdCodes.contains(fundConsignorDto.getConsigneeIdCode())) {
+				throw new CardAppBizException(ResultCode.DATA_ERROR, "被委托人证件号不能相同");
+			}
+			consigneeCustomerIdCodes.add(fundConsignorDto.getConsigneeIdCode());
+		}
+			
 	}
 
 	/**
