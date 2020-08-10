@@ -1,7 +1,7 @@
 <#bs4Body>
 <style>
 	.modal.fade.in{
-        margin-top:200px;  
+        margin-top:200px;
         margin-right:: 100px;
     }
     .info-column {
@@ -118,32 +118,32 @@
     </form>
 </#bs4nav>
 </div>
-<div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
-	<#resource code="addContract">
-		<button id="btn_add" type="button" class="btn btn-primary" onclick="openAddView()"><i class="fa fa-plus"></i> 新增</button>
-	</#resource>
-	<#resource code="cancleContract">
+<hr>
+<div class="row" style="width: 100%;margin-left: 0px">
+    <div class="col-12">
+		<div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
+			<#resource code="addContract">
+			<button id="btn_add" type="button" class="btn btn-primary" onclick="openAddView()"><i class="fa fa-plus"></i> 新增</button>
+		</#resource>
+		<#resource code="cancleContract">
 		<button id="btn_remove" type="button" class="btn btn-primary" onclick="$.operate.removeWithTitle(null,'40%','60%','信息确认')"><i class="fa fa-trash-o"></i> 解除</button>
 	</#resource>
 	<#resource code="cancleContract">
-		<button id="btn_preview" type="button" class="btn btn-primary" onclick="$.operate.preview(null,'70%','95%', '合同预览')"><i class="fa fa-list"></i> 合同预览</button>
+	<button id="btn_preview" type="button" class="btn btn-primary" onclick="$.operate.preview(null,'70%','95%', '合同预览')"><i class="fa fa-list"></i> 合同预览</button>
 	</#resource>
 	<#resource code="viewContract">
-		<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'80%','85%')"><i class="fa fa-list"></i> 查看</button>
+	<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'80%','85%')"><i class="fa fa-list"></i> 查看</button>
 	</#resource>
 	<#resource code="cancleContract">
-		<button id="btn_reprint" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 补打</button>
+	<button id="btn_reprint" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 补打</button>
 	</#resource>
 	<#resource code="cancleContract">
-		<button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
-            class="fa fa-file-excel-o"></i>
-        	导出
-    </button>
+	<button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
+		class="fa fa-file-excel-o"></i>
+		导出
+		</button>
 	</#resource>
-</div>
-
-<div class="row">
-    <div class="col-12">
+	</div>
         <table id="grid"
         	   data-title="资金委托管理列表"
                data-show-fullscreen="true"
@@ -203,15 +203,15 @@
 								<input placeholder="客户id"
 									name="customerId"  type="hidden"
 									class="form-control td_input" id="customerId"
-									maxlength="50" value="" /> 
+									maxlength="50" value="" />
 								<input placeholder="编号"
 									name="consignorCustomerCode" disabled="disabled" type="hidden"
 									class="form-control td_input" id="consignorCustomerCode"
-									maxlength="50" value="" /> 
+									maxlength="50" value="" />
 								<input placeholder="姓名"
 									name="consignorCustomerName" disabled="disabled" type="text"
 									class="form-control td_input" id="consignorCustomerName"
-									maxlength="50" value="" /> 
+									maxlength="50" value="" />
 								<input placeholder="身份证号"
 									name="consignorCustomerIDCode" disabled="disabled" type="text"
 									class="form-control td_input" id="consignorCustomerIDCode"
@@ -236,7 +236,7 @@
 								<input placeholder="园区卡"
 									disabled="disabled" name="consignorCardNo" type="text"
 									class="form-control td_input" id="consignorCardNo" maxlength="20"
-									value="" /> 
+									value="" />
 								<input name="consignorAccountId" type="text"
 									class="form-control td_input" style="opacity: 0;"
 									id="consignorAccountId" maxlength="20" value="" />
@@ -274,11 +274,11 @@
 								<input placeholder="姓名"
 									disabled="disabled" name="consigneeName" type="text"
 									class="form-control td_input" id="consigneeName" maxlength="20"
-									value="" /> 
+									value="" />
 								<input placeholder="身份证号" disabled="disabled"
 									name="consigneeIdCode" type="text"
 									class="form-control td_input" id="consigneeIdCode"
-									maxlength="18" value="" /> 
+									maxlength="18" value="" />
 								<input placeholder="手机号"
 									name="consigneeIdMobile" type="text"
 									class="form-control td_input" id="consigneeIdMobile"
@@ -398,7 +398,7 @@
 		};
 		$.table.init(options);
 	});
-    
+
 	function openAddView() {
 		$('#addFirstModal').modal('show');
 		$("#addFirstModal").modal().css({
@@ -407,7 +407,7 @@
             }
        });
 	}
-	
+
 	$("#save_form").validate({
 	    onkeyup: false,
 	    rules: {
@@ -590,7 +590,7 @@
             };
             $.ajax(config)
 	}
-	
+
 	function readCardNo() {
 	   	var cardNo = readerCardNumber();
 	   	if(cardNo == ""){
@@ -633,7 +633,7 @@
         consignorCustomerIDCodeFirst=idCard.IDCardNo;
         getUserInfo();
     }
-	
+
 	function getConsigneeIdCard(obj){
 		var idCard = readerIDCard();
 		if(idCard.IDCardNo == consignorCustomerIDCodeFirst){
@@ -648,7 +648,7 @@
 		$(obj).parent().find("#consigneeIdCode").val(idCard.Name);
 		consigneeIdCodeList.push(idCard.IDCardNo);
 	}
-	
+
 	function getUserInfo(){
 		var idCard = $("#consignorCustomerIDCode").val();
 		if($.common.isEmpty(idCard)){
@@ -656,17 +656,17 @@
 			return false;
 		}
 		var isHasCustomer = true;
-		$.ajax({  
-		    type: "POST",  
-		    url:'${contextPath}/contract/findCustomersByKeyword.action',  
-		    data:{keyword:idCard}, 
+		$.ajax({
+		    type: "POST",
+		    url:'${contextPath}/contract/findCustomersByKeyword.action',
+		    data:{keyword:idCard},
 		    traditional:true,
 		    dataType:'json',
-		    async: false,  
-		    error: function(result) {  
+		    async: false,
+		    error: function(result) {
 		    	$.modal.alertError(result.message);
-		    },  
-		    success: function(result) { 
+		    },
+		    success: function(result) {
 		    	if(result.code=="200"){
 			    	$("#consignorCustomerMobile").val(result.data[0].contactsPhone);
 			    	$("#customerId").val(result.data[0].id);
@@ -674,9 +674,9 @@
 		    	}else{
 		    		$.modal.alertError(result.message);
 		    	}
-		    } 
+		    }
 		});
 	}
-	
-	
+
+
 </script>
