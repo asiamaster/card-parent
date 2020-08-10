@@ -27,7 +27,7 @@ public class EBankRechargeService extends AbstractRechargeManager {
     public String buildBusinessRecordNote(FundRequestDto requestDto) {
         Long serviceCost = requestDto.getServiceCost();
         String yuan = CurrencyUtils.toYuanWithStripTrailingZeros(serviceCost == null ? 0L : serviceCost);
-        return String.format("网银取款，手续费：%s", yuan);
+        return String.format("网银存款，手续费：%s", yuan);
     }
 
     @Override
