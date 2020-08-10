@@ -3,7 +3,7 @@
 
 <mapper namespace="com.dili.card.dao.IStorageInDao">
 	
-	<select id="selectList" resultType="com.dili.card.entity.StorageInDo">
+	<select id="selectList" resultType="com.dili.card.dto.StorageInDto">
 		SELECT
 			`id`, 
 			`start_card_no`, 

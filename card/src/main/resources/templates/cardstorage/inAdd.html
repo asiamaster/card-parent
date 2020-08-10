@@ -70,7 +70,7 @@
 	function submitHandler(e) {
 		var startCardNo = $("#startCardNo").val();
 		var endCardNo = $("#endCardNo").val();
-		if(startCardNo >= endCardNo){
+		if(startCardNo > endCardNo){
 			bs4pop.alert("结束卡必须大于起始卡号", {type : "warning"});
 			return;
 		}
@@ -80,7 +80,6 @@
 		let url = "${contextPath}/cardStorageIn/save.action";
 		let data = $.common.formToJSON(formId);
 		$.operate.post(url, data);
-		//return true;
 	}
 	// 计算数量
 	$('.calculateAmount').bind('input propertychange', function() {

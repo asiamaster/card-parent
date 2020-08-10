@@ -1,9 +1,11 @@
 package com.dili.card.dao;
 
-import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.dili.card.dto.CardStorageOutQueryDto;
+import com.dili.card.dto.StorageInDto;
 import com.dili.card.entity.StorageInDo;
 
 /**
@@ -18,7 +20,7 @@ public interface IStorageInDao {
      * @param search
      * @return
      */
-	List<StorageInDo> selectList(CardStorageOutQueryDto queryParam);
+	List<StorageInDto> selectList(CardStorageOutQueryDto queryParam);
 
     /**
      * 新增

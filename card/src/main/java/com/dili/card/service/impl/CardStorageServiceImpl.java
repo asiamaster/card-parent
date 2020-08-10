@@ -1,5 +1,6 @@
 package com.dili.card.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.dao.IStorageOutDao;
 import com.dili.card.dao.IStorageOutDetailDao;
 import com.dili.card.dto.BatchActivateCardDto;
@@ -100,7 +101,8 @@ public class CardStorageServiceImpl implements ICardStorageService {
 
     @Override
 	public PageOutput<List<CardStorageDto>> cardStorageList(CardStorageDto queryParam) {
-		return cardStorageRpc.pageList(queryParam);
+    	PageOutput<List<CardStorageDto>> pageList = cardStorageRpc.pageList(queryParam);
+		return pageList;
 	}
 
 	@Override
