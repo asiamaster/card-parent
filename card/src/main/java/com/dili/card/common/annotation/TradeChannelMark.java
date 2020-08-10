@@ -10,7 +10,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 用于标记交易渠道类型
+ * 用于标记交易渠道类型 {@link com.dili.card.service.recharge.RechargeFactory}
  * @Auther: miaoguoxin
  * @Date: 2020/6/23 13:31
  */

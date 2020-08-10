@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * @Auther: miaoguoxin
  * @Date: 2020/6/23 13:31
- * @Description: 校验排序字段
+ * @Description: 校验排序字段 {@link OrderByConstraintValidator}
  */
 @Target({FIELD})
 @Retention(RUNTIME)

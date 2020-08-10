@@ -11,9 +11,10 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
+ * 字段展示，用于cardType、cardStatus这些状态枚举给前端展示转行
+ * {@link com.dili.card.common.serializer.EnumTextDisplayAfterFilter}
  * @Auther: miaoguoxin
  * @Date: 2020/6/23 13:31
- * @Description: 字段展示，用于cardType、cardStatus这些状态枚举给前端展示转行
  */
 @Target({FIELD})
 @Retention(RUNTIME)
