@@ -630,17 +630,17 @@ tab = {
             },
             // 错误提示
             alertError: function (content) {
-                let _$ele = window.top == window.parent ? window : window.parent;
+                let _$ele = window.parent;
                 _$ele.$.modal.alert(content, modal_status.FAIL);
             },
             // 成功提示
             alertSuccess: function (content) {
-                let _$ele = window.top == window.parent ? window : window.parent;
+                let _$ele = window.parent;
                 _$ele.$.modal.alert(content, modal_status.SUCCESS);
             },
             // 警告提示
             alertWarning: function (content) {
-                let _$ele = window.top == window.parent ? window : window.parent;
+                let _$ele = window.parent;
                 _$ele.$.modal.alert(content, modal_status.WARNING);
             },
             // 关闭全部窗体
@@ -1009,7 +1009,7 @@ tab = {
                 $.modal.closeLoading();
                 //启用按钮
                 $.modal.enable();
-                let _$ele = window.top == window.parent ? window : window.parent;
+                let _$ele = window.parent;
                 if (result.code == web_status.SUCCESS) {
                     //关闭弹框
                     if (!$.common.isEmpty(_$ele.table.options.dialog)) {
