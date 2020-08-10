@@ -67,7 +67,7 @@
 	</#resource>
 	<#resource code="cardStorageListExport">
 	<button id="btn-out" type="button" class="btn btn-primary"
-		 onclick="bui.util.doExport('cardStorageTable','queryForm')">
+		 onclick="$.table.exportExcel('queryForm')">
 		<i class="fa fa-list"></i> 导出
 	</button>
 	</#resource>
@@ -98,24 +98,24 @@
   <div class="modal fade" id="voidModal">
     <div class="modal-dialog">
       <div class="modal-content">
-   
+
         <!-- 头部 -->
         <div class="modal-header">
           <h4 class="modal-title">信息确认</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-   
+
         <!-- 主体内容-->
         <div class="modal-body">
         	作废后，该卡将不可再用，确定作废选中卡？
         </div>
-   
+
         <!-- 底部 -->
         <div class="modal-footer">
         	<button type="button" id="voidOkBtn" class="btn btn-secondary" data-dismiss="modal">确定</button>
           	<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
         </div>
-   
+
       </div>
     </div>
   </div>

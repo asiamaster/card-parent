@@ -11,7 +11,7 @@
             <div class="form-group col-auto">
                 <label for="cardState">当前状态</label>
                 <select name="cardState" id="cardState" class="form-control"></select>
-                <#bcomboProvider _id="cardState" _provider="cardStateProvider" _queryParams='{emptyText:"-- 状态 --"}'/>
+                <#bcomboProvider _id="cardState" _provider="cardStateProvider" _queryParams='{emptyText:"-- 全部 --"}'/>
             </div>
             <div class="form-group col-auto">
                 <label for="cardNos[0]">卡号</label>
@@ -81,7 +81,7 @@
                 <th data-field="customerName" data-align="center">
                     客户名称
                 </th>
-                <th data-field="accountTypeText" data-align="center">
+                <th data-field="customerMarketTypeText" data-align="center">
                     身份类型
                 </th>
                 <th data-field="customerContactsPhone" data-align="center">

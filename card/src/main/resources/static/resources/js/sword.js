@@ -344,6 +344,11 @@ tab = {
             // 导出数据
             exportExcel: function (formId) {
                 table.set();
+                let totalRows = $('#' + table.options.id).bootstrapTable("getOptions").totalRows;
+                if (totalRows == 0) {
+                    $.modal.alertWarning("暂无数据，无法导出");
+                    return;
+                }
                 bui.util.doExport(table.options.id, formId)
             },
             // 刷新表格
@@ -630,18 +635,15 @@ tab = {
             },
             // 错误提示
             alertError: function (content) {
-                let _$ele = window.parent;
-                _$ele.$.modal.alert(content, modal_status.FAIL);
+                $.modal.alert(content, modal_status.FAIL);
             },
             // 成功提示
             alertSuccess: function (content) {
-                let _$ele = window.parent;
-                _$ele.$.modal.alert(content, modal_status.SUCCESS);
+                $.modal.alert(content, modal_status.SUCCESS);
             },
             // 警告提示
             alertWarning: function (content) {
-                let _$ele = window.parent;
-                _$ele.$.modal.alert(content, modal_status.WARNING);
+                $.modal.alert(content, modal_status.WARNING);
             },
             // 关闭全部窗体
             closeAll: function () {

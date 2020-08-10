@@ -29,8 +29,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -56,12 +54,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         if (CollectionUtils.isEmpty(data)) {
             return PageUtils.convert2PageOutput(page, new ArrayList<>());
         }
-        List<Long> customerIds = data.stream()
-                .map(UserAccountCardResponseDto::getCustomerId)
-                .distinct()
-                .collect(Collectors.toList());
-        List<CustomerResponseDto> customers = customerRpcResolver.findCustomerByIdsWithConvert(customerIds, null);
-        List<AccountListResponseDto> result = this.addCustomer2AccountList(data, customers);
+        List<AccountListResponseDto> result = this.addCustomer2AccountList(data);
         return PageUtils.convert2PageOutput(page, result);
     }
 
@@ -111,7 +104,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     }
 
     @Override
-    public UserAccountCardResponseDto  getByAccountId(CardRequestDto requestDto) {
+    public UserAccountCardResponseDto getByAccountId(CardRequestDto requestDto) {
         UserAccountCardQuery query = new UserAccountCardQuery();
         query.setAccountIds(Lists.newArrayList(requestDto.getAccountId()));
         UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(query);
@@ -146,32 +139,21 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     public UserAccountCardResponseDto getForUnLostCard(UserAccountCardQuery query) {
         UserAccountCardResponseDto single = accountQueryRpcResolver.findSingleWithoutValidate(query);
         if (CardStatus.LOSS.getCode() != single.getCardState()) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR,"该卡不是挂失状态，不能进行此操作");
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡不是挂失状态，不能进行此操作");
         }
-        if (DisableState.DISABLED.getCode().equals(single.getDisabledState())){
-            throw new CardAppBizException(ResultCode.DATA_ERROR,"该账户为禁用状态，不能进行此操作");
+        if (DisableState.DISABLED.getCode().equals(single.getDisabledState())) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "该账户为禁用状态，不能进行此操作");
         }
         return single;
     }
 
 
-    private List<AccountListResponseDto> addCustomer2AccountList(List<UserAccountCardResponseDto> accountCards,
-                                                                 List<CustomerResponseDto> customers) {
-        Map<Long, CustomerResponseDto> customerMap = customers.stream()
-                .collect(Collectors.toMap(CustomerResponseDto::getId, Function.identity(), (key1, key2) -> key2));
-        List<AccountListResponseDto> accountListResponseDtos = new ArrayList<>(accountCards.size());
-        for (UserAccountCardResponseDto accountCard : accountCards) {
+    private List<AccountListResponseDto> addCustomer2AccountList(List<UserAccountCardResponseDto> accountCards) {
+        return accountCards.stream().map(accountCard -> {
             AccountListResponseDto accountList = new AccountListResponseDto();
             BeanUtils.copyProperties(accountCard, accountList);
-            CustomerResponseDto customerResponseDto = customerMap.getOrDefault(accountCard.getCustomerId(),
-                    new CustomerResponseDto());
-            accountList.setCustomerId(customerResponseDto.getId());
-            accountList.setCustomerName(customerResponseDto.getName());
-            accountList.setCustomerCode(customerResponseDto.getCode());
-            accountList.setCustomerContactsPhone(customerResponseDto.getCustomerContactsPhone());
-            accountListResponseDtos.add(accountList);
-        }
-        return accountListResponseDtos;
+            return accountList;
+        }).collect(Collectors.toList());
     }
 
     /**

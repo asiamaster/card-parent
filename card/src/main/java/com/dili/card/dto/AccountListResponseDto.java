@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.CardStateProvider;
 import com.dili.card.common.provider.CardTypeProvider;
+import com.dili.card.common.provider.CustomerTypeProvider;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -27,6 +28,9 @@ public class AccountListResponseDto extends BaseDto implements Serializable {
     private String customerName;
     /**客户编号*/
     private String customerCode;
+    /**客户类型*/
+    @TextDisplay(CustomerTypeProvider.class)
+    private String customerMarketType;
     /**客户电话*/
     private String customerContactsPhone;
     /**卡状态 {@link com.dili.card.type.CardStatus}*/
@@ -108,5 +112,13 @@ public class AccountListResponseDto extends BaseDto implements Serializable {
 
     public void setCustomerContactsPhone(String customerContactsPhone) {
         this.customerContactsPhone = customerContactsPhone;
+    }
+
+    public String getCustomerMarketType() {
+        return customerMarketType;
+    }
+
+    public void setCustomerMarketType(String customerMarketType) {
+        this.customerMarketType = customerMarketType;
     }
 }
