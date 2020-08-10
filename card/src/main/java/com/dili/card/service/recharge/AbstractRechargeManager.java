@@ -136,10 +136,4 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         }
         return null;
     }
-
-    public static void main(String[] args) {
-        StringBuilder sb = new StringBuilder("wangnima");
-        sb.replace(1,1,"f");
-        System.out.println(sb.toString());
-    }
 }

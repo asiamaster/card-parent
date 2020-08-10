@@ -344,6 +344,11 @@ tab = {
             // 导出数据
             exportExcel: function (formId) {
                 table.set();
+                let totalRows = $('#' + table.options.id).bootstrapTable("getOptions").totalRows;
+                if (totalRows == 0) {
+                    $.modal.alertWarning("暂无数据，无法导出");
+                    return;
+                }
                 bui.util.doExport(table.options.id, formId)
             },
             // 刷新表格
@@ -560,6 +565,16 @@ tab = {
         },
         // 表单封装处理
         form: {
+            resetDate: function (duration, timeUnit) {
+                if ($.common.isEmpty(duration)) {
+                    duration = 90;
+                }
+                if ($.common.isEmpty(timeUnit)) {
+                    timeUnit = 'day';
+                }
+                $(".laystart").attr("value", moment().subtract(duration, timeUnit).startOf('day').format('YYYY-MM-DD HH:mm:ss'));
+                $(".layend").attr("value", moment().endOf('day').format('YYYY-MM-DD HH:mm:ss'));
+            },
             // 表单重置
             reset: function (formId, tableId) {
                 table.set(tableId);
@@ -567,8 +582,10 @@ tab = {
                 let prefixKey = table.options.modalName + "_";
                 //清空session记录
                 sessionStorage.removeItem(prefixKey + currentId);
-                var form = $("#" + currentId);
+                let form = $("#" + currentId);
                 form[0].reset();
+                //重置时间
+                $.form.resetDate();
                 //特别处理hidden
                 $.each(form.find('input:hidden'), (i, e) => {
                     e.value = '';
@@ -618,18 +635,15 @@ tab = {
             },
             // 错误提示
             alertError: function (content) {
-                let _$ele = window.top == window.parent ? window : window.parent;
-                _$ele.$.modal.alert(content, modal_status.FAIL);
+                $.modal.alert(content, modal_status.FAIL);
             },
             // 成功提示
             alertSuccess: function (content) {
-                let _$ele = window.top == window.parent ? window : window.parent;
-                _$ele.$.modal.alert(content, modal_status.SUCCESS);
+                $.modal.alert(content, modal_status.SUCCESS);
             },
             // 警告提示
             alertWarning: function (content) {
-                let _$ele = window.top == window.parent ? window : window.parent;
-                _$ele.$.modal.alert(content, modal_status.WARNING);
+                $.modal.alert(content, modal_status.WARNING);
             },
             // 关闭全部窗体
             closeAll: function () {
@@ -997,8 +1011,9 @@ tab = {
                 $.modal.closeLoading();
                 //启用按钮
                 $.modal.enable();
-                let _$ele = window.top == window.parent ? window : window.parent;
+                let _$ele = window.parent;
                 if (result.code == web_status.SUCCESS) {
+                    //关闭弹框
                     if (!$.common.isEmpty(_$ele.table.options.dialog)) {
                         _$ele.table.options.dialog.hide();
                     }

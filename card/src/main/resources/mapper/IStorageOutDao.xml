@@ -3,7 +3,7 @@
 
 <mapper namespace="com.dili.card.dao.IStorageOutDao">
     <sql id="Base_Column">
-        `id`,
+            `id`,
 			`apply_time`,
 			`amount`,
 			`apply_user_id`,
@@ -18,13 +18,26 @@
 			`notes`
     </sql>
 
+    <sql id="Union_Column">
+            cso.`id`,
+			cso.`apply_time`,
+			cso.`amount`,
+			cso.`apply_user_id`,
+            cso.`apply_user_code`,
+			cso.`apply_user_name`,
+			cso.`creator_id`,
+			cso.`creator`,
+			cso.`create_time`,
+			cso.`firm_id`,
+			cso.`firm_name`,
+			cso.`modify_time`,
+			cso.`notes`
+    </sql>
+
     <sql id="Where_Column">
         <where>
             <if test="firmId!=null">
                 AND  firm_id = #{firmId}
-            </if>
-            <if test="cardNo!=null and cardNo!=''">
-                AND card_no=#{cardNo}
             </if>
             <if test="applyUserCode!=null">
                 AND apply_user_code =#{applyUserCode}
@@ -37,18 +50,9 @@
             </if>
         </where>
     </sql>
-    <select id="selectList" resultType="com.dili.card.entity.CardStorageOut">
-        SELECT
-        <include refid="Base_Column"/>
-        FROM
-        card_storage_out
-        ORDER BY
-        id DESC
-    </select>
 
-    <insert id="save">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO card_storage_out (`apply_time`,
-                                       `card_no`,
                                        `amount`,
                                        `apply_user_id`,
                                        `apply_user_code`,
@@ -61,7 +65,6 @@
                                        `modify_time`,
                                        `notes`)
         VALUES (#{applyTime},
-                #{cardNo},
                 #{amount},
                 #{applyUserId},
                 #{applyUserCode},
@@ -86,10 +89,28 @@
 
     <select id="selectListByCondition" resultType="com.dili.card.entity.CardStorageOut">
         SELECT
-        <include refid="Base_Column"/>
+        <include refid="Union_Column"/>
         FROM
-        card_storage_out
-        <include refid="Where_Column"/>
+        card_storage_out cso
+        LEFT JOIN card_storage_out_detail csod ON cso.id = csod.storage_out_id
+        <where>
+            <if test="firmId!=null">
+                AND cso.firm_id = #{firmId}
+            </if>
+            <if test="applyUserId!=null">
+                AND cso.apply_user_id =#{applyUserId}
+            </if>
+            <if test="startDate !=null">
+                AND cso.apply_time &gt;= #{startDate}
+            </if>
+            <if test="endDate !=null">
+                AND cso.apply_time &lt;= #{endDate}
+            </if>
+            <if test="cardNo !=null and cardNo !=''">
+                AND csod.card_no = #{cardNo}
+            </if>
+        </where>
+        GROUP BY cso.id
         ORDER BY ${sort} ${order}
     </select>
 

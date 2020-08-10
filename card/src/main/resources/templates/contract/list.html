@@ -111,32 +111,32 @@
     </form>
 </#bs4nav>
 </div>
-<div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
-	<#resource code="addContract">
-		<button id="btn_add" type="button" class="btn btn-primary" onclick="openAddView()"><i class="fa fa-plus"></i> 新增</button>
-	</#resource>
-	<#resource code="cancleContract">
+
+<div class="row" style="width: 100%;margin-left: 0px">
+    <div class="col-12">
+		<div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
+			<#resource code="addContract">
+			<button id="btn_add" type="button" class="btn btn-primary" onclick="openAddView()"><i class="fa fa-plus"></i> 新增</button>
+		</#resource>
+		<#resource code="cancleContract">
 		<button id="btn_remove" type="button" class="btn btn-primary" onclick="$.operate.removeWithTitle(null,'40%','60%','信息确认')"><i class="fa fa-trash-o"></i> 解除</button>
 	</#resource>
 	<#resource code="cancleContract">
 		<button id="btn_preview" type="button" class="btn btn-primary" onclick="$.operate.preview(null,'70%','95%', '合同预览')"><i class="fa fa-list"></i> 合同预览</button>
 	</#resource>
 	<#resource code="viewContract">
-		<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'80%','85%')"><i class="fa fa-list"></i> 查看</button>
+	<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'80%','85%')"><i class="fa fa-list"></i> 查看</button>
 	</#resource>
 	<#resource code="cancleContract">
 		<button id="btn_reprint" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 补打</button>
 	</#resource>
 	<#resource code="cancleContract">
 		<button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
-            class="fa fa-file-excel-o"></i>
-        	导出
-    </button>
+		class="fa fa-file-excel-o"></i>
+		导出
+		</button>
 	</#resource>
-</div>
-
-<div class="row">
-    <div class="col-12">
+	</div>
         <table id="grid"
         	   data-title="资金委托管理列表"
                data-show-fullscreen="true"
@@ -196,15 +196,15 @@
 								<input placeholder="客户id"
 									name="customerId"  type="hidden"
 									class="form-control td_input" id="customerId"
-									maxlength="50" value="" /> 
+									maxlength="50" value="" />
 								<input placeholder="编号"
 									name="consignorCustomerCode" disabled="disabled" type="hidden"
 									class="form-control td_input" id="consignorCustomerCode"
-									maxlength="50" value="" /> 
+									maxlength="50" value="" />
 								<input placeholder="姓名"
 									name="consignorCustomerName" disabled="disabled" type="text"
 									class="form-control td_input" id="consignorCustomerName"
-									maxlength="50" value="" /> 
+									maxlength="50" value="" />
 								<input placeholder="身份证号"
 									name="consignorCustomerIDCode" disabled="disabled" type="text"
 									class="form-control td_input" id="consignorCustomerIDCode"

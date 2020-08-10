@@ -16,6 +16,7 @@ import com.dili.card.service.ICardStorageService;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
+import com.dili.ss.util.DateUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
@@ -48,13 +49,16 @@ public class CardStorageServiceImpl implements ICardStorageService {
     public void saveOutRecord(CardStorageOutRequestDto requestDto) {
         CardStorageOut cardStorageOut = new CardStorageOut();
         BeanUtils.copyProperties(requestDto, cardStorageOut);
-        cardStorageOut.setCardNo(requestDto.getCardNos());
         cardStorageOut.setCreatorId(requestDto.getOpId());
         cardStorageOut.setCreator(requestDto.getOpName());
         cardStorageOut.setApplyTime(LocalDateTime.now());
         cardStorageOut.setCreateTime(LocalDateTime.now());
         cardStorageOut.setModifyTime(LocalDateTime.now());
         storageOutDao.save(cardStorageOut);
+        List<StorageOutDetailDo> detailDoList = Arrays.stream(requestDto.getCardNos().split(","))
+                .map(cardNo -> new StorageOutDetailDo(cardNo, cardStorageOut.getId()))
+                .collect(Collectors.toList());
+        storageOutDetailDao.batchSave(detailDoList);
 
         List<String> cardList = Lists.newArrayList(requestDto.getCardNos().split(","));
         BatchActivateCardDto request = new BatchActivateCardDto();

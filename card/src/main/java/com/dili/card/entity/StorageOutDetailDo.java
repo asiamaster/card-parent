@@ -8,15 +8,15 @@ import java.time.LocalDateTime;
  * @author bob
  */
 public class StorageOutDetailDo implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	/**  */
-	private Long id; 
+	private Long id;
 	/** 卡号 */
-	private String cardNo; 
+	private String cardNo;
 	/** 出库记录ID */
-	private Long storageOutId; 
+	private Long storageOutId;
     /**
      * StorageOutDetailEntity constructor
      */
@@ -24,15 +24,20 @@ public class StorageOutDetailDo implements Serializable {
 		super();
 	}
 
-    /**
-     * setter for 
+	public StorageOutDetailDo(String cardNo, Long storageOutId) {
+		this.cardNo = cardNo;
+		this.storageOutId = storageOutId;
+	}
+
+	/**
+     * setter for
      */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
     /**
-     * getter for 
+     * getter for
      */
 	public Long getId() {
 		return id;

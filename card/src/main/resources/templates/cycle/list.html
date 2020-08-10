@@ -31,26 +31,26 @@
 </#bs4nav>
 </div>
 
-<div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
-   	<#resource code="viewCycle">
-		<button id="btn_add" type="button" class="btn btn-primary" onclick="$.operate.detailToPage(null)"><i class="fa fa-list"></i> 查看详情</button>
-	</#resource>
-	<#resource code="sponsorPay">
-		<button id="btn_modify" type="button" class="btn btn-primary" onclick="$.operate.addWithTitleAndSelect(null,'50%','91%','新增交款')"><i class="fa fa-pencil-square-o"></i> 发起交款</button>
-	</#resource>
-	<#resource code="flatedCycle">
-		<button id="btn_delete" type="button" class="btn btn-primary" onclick="$.operate.editWithTitle(null,'50%','65%','信息确认')"><i class="fa fa-paypal"></i> 平账</button>
-	</#resource>
-	<#resource code="exportCycle">
-		 <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
-            class="fa fa-file-excel-o"></i>
-      	  导出
-    </button>
-	</#resource>
-</div>
 
-<div class="row">
+<div class="row" style="width: 100%;margin-left: 0px">
     <div class="col-12">
+        <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
+            <#resource code="viewCycle">
+            <button id="btn_add" type="button" class="btn btn-primary" onclick="$.operate.detailToPage(null)"><i class="fa fa-list"></i> 查看详情</button>
+        </#resource>
+        <#resource code="sponsorPay">
+        <button id="btn_modify" type="button" class="btn btn-primary" onclick="$.operate.addWithTitleAndSelect(null,'50%','91%','新增交款')"><i class="fa fa-pencil-square-o"></i> 发起交款</button>
+    </#resource>
+    <#resource code="flatedCycle">
+    <button id="btn_delete" type="button" class="btn btn-primary" onclick="$.operate.editWithTitle(null,'50%','65%','信息确认')"><i class="fa fa-paypal"></i> 平账</button>
+    </#resource>
+    <#resource code="exportCycle">
+    <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
+            class="fa fa-file-excel-o"></i>
+        导出
+    </button>
+    </#resource>
+</div>
         <table id="grid"
         	   data-title="对账管理列表"
                data-show-fullscreen="true"

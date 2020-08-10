@@ -7,13 +7,13 @@
         <div class="row row-cols-6">
             <div class="form-group col-auto">
                 <label for="cardNo-multiple">卡号</label>
-                <input id="cardNo-multiple" name="cardNos" type="text" class="form-control"/>
+                <input id="cardNo" name="cardNo" type="text" class="form-control"/>
             </div>
             <div class="form-group col">
                 <label for="applyUserName">领取人</label>
                 <#bautoCompleteProvider
-                _hiddenDomainId="applyUserCode"
-                _hiddenDomainName="applyUserCode"
+                _hiddenDomainId="applyUserId"
+                _hiddenDomainName="applyUserId"
                 _displayDomainId="applyUserName"
                 _displayDomainName="applyUserName" _placeholder=""
                 _optionVariable="userNameQueryAutoCompleteOption"/>
@@ -36,23 +36,23 @@
 </div>
 
 
-<div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
-    <#resource code="add">
-        <button id="btn_query" type="button" class="btn btn-primary" onclick="$.operate.add(null,'40%','60%')"><i
-                class="fa fa-save"></i>
-            新增出库
-        </button>
-    </#resource>
+<div class="row" style="width: 100%;margin-left: 0px">
+    <div class="col-12">
+        <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
+            <#resource code="add">
+            <button id="btn_query" type="button" class="btn btn-primary" onclick="$.operate.add(null,'40%','60%')"><i
+                    class="fa fa-save"></i>
+                新增出库
+            </button>
+        </#resource>
 
-    <#resource code="detail">
-        <button id="btn-out" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'40%','70%')"><i
+        <#resource code="detail">
+            <button id="btn-out" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'40%','70%')"><i
                 class="fa fa-list"></i>
             出库明细
-        </button>
-    </#resource>
-</div>
-<div class="row">
-    <div class="col-12">
+             </button>
+        </#resource>
+        </div>
         <table id="grid"
                data-title="卡片出库"
                data-show-fullscreen="true"

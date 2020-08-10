@@ -1,6 +1,7 @@
 package com.dili.card.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -16,9 +17,11 @@ public class CardStorageOutQueryDto extends CardRequestDto {
     private String applyUserCode;
     /**结束时间*/
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
     /**开始时间*/
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
 
     public String getApplyUserCode() {

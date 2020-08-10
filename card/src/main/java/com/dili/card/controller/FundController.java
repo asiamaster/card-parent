@@ -118,13 +118,13 @@ public class FundController implements IControllerHandler {
     /**
      * 提现手续费
      *
-     * @param tradeChannel
+     * @param amount
      * @return
      */
     @RequestMapping(value = "/withdrawServiceFee.action")
     @ResponseBody
-    public BaseOutput<Long> withdrawServiceFee(Integer tradeChannel) {
-        BigDecimal decimal = ruleFeeService.getRuleFee(RuleFeeBusinessType.CARD_WITHDRAW_EBANK, SystemSubjectType.CARD_WITHDRAW_EBANK_FEE);
+    public BaseOutput<Long> withdrawServiceFee(Long amount) {
+        BigDecimal decimal = ruleFeeService.getRuleFee(amount, RuleFeeBusinessType.CARD_WITHDRAW_EBANK, SystemSubjectType.CARD_WITHDRAW_EBANK_FEE);
         if (decimal != null) {
             return BaseOutput.success().setData(CurrencyUtils.toYuanWithStripTrailingZeros(decimal.longValue()));
         }
