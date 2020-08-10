@@ -37,6 +37,7 @@ import com.dili.card.type.CardStatus;
 import com.dili.card.type.ContractState;
 import com.dili.card.util.PageUtils;
 import com.dili.customer.sdk.domain.Customer;
+import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
 import com.dili.ss.util.DateUtils;
@@ -130,6 +131,25 @@ public class ContractServiceImpl implements IContractService {
 	@Transactional(rollbackFor = Exception.class)
 	public void activeOverdueContract() {
 		contractDao.activeOverdueContract();
+	}
+
+	@Override
+	public List<Customer> findCustomers(CustomerQueryInput query) {
+		List<Customer> itemList = customerRpcResolver.list(query);
+		if (CollectionUtils.isEmpty(itemList)) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "系统无相应客户信息");
+		};
+		List<Long> customerIds = new ArrayList<Long>();
+		for (Customer customer : itemList) {
+			customerIds.add(customer.getId());
+		}
+        UserAccountCardQuery param = new UserAccountCardQuery();
+        param.setFirmId(query.getMarketId());
+        param.setCustomerIds(customerIds);
+        if (CollectionUtils.isEmpty(accountQueryService.getList(param))) {
+        	throw new CardAppBizException(ResultCode.DATA_ERROR, "该客户没有办理主卡");
+		};
+		return itemList;
 	}
 
 	/**
