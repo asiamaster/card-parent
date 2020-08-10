@@ -40,18 +40,17 @@
 	</#bs4nav>
 </div>
 
-
-<div id="toolbar" class="btn-group" role="group"
-	aria-label="Toolbar with button groups">
-	<#resource code="card_storage_in">
-	<button id="btn_query" type="button" class="btn btn-primary"
-		onclick="$.operate.add(null,'60%','80%')">
-		<i class="fa fa-save"></i> 新增入库
-	</button>
-	</#resource>
-</div>
-<div class="row">
+<div class="row" style="width: 100%;margin-left: 0px">
 	<div class="col-12">
+		<div id="toolbar" class="btn-group" role="group"
+			 aria-label="Toolbar with button groups">
+			<#resource code="card_storage_in">
+			<button id="btn_query" type="button" class="btn btn-primary"
+					onclick="$.operate.add(null,'60%','80%')">
+				<i class="fa fa-save"></i> 新增入库
+			</button>
+		</#resource>
+	   </div>
 		<table id="grid" data-title="卡片入库" data-show-fullscreen="true"
 			data-buttons-class="primary" data-icons="bui.variable.icons">
 			<thead>
