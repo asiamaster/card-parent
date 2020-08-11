@@ -16,6 +16,7 @@ import com.dili.card.type.CardType;
 import com.dili.card.type.TradeType;
 import com.dili.card.type.UsePermissionType;
 import com.dili.ss.constant.ResultCode;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +42,8 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
     @Resource
     protected IAccountCycleService accountCycleService;
 
-    @Transactional
+    @GlobalTransactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void withdraw(FundRequestDto fundRequestDto) {
         validate(fundRequestDto);//参数验证
@@ -72,12 +74,9 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         withdrawRequest.setBusinessId(accountCard.getAccountId());
         withdrawRequest.setFees(createFees(fundRequestDto));
         TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
-        try {//取款成功后修改业务单状态、存储流水
-            SerialDto serialDto = createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
-            serialService.handleSuccess(serialDto);
-        } catch (Exception e) {
-            LOGGER.error("withdraw", e);
-        }
+        //取款成功后修改业务单状态、存储流水
+        SerialDto serialDto = createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
+        serialService.handleSuccess(serialDto);
     }
 
     /**

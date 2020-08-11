@@ -20,6 +20,7 @@ import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.google.common.collect.Lists;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,7 @@ public class CardManageServiceImpl implements ICardManageService {
     /**
      * @param cardParam
      */
+    @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void unLostCard(CardRequestDto cardParam) {
@@ -69,14 +71,7 @@ public class CardManageServiceImpl implements ICardManageService {
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         }
-        try {//成功则修改状态及期初期末金额，存储操作流水
-            SerialDto serialDto = serialService.createAccountSerial(businessRecordDo, (temp, feeType) -> {
-
-            });
-            serialService.handleSuccess(serialDto, false);
-        } catch (Exception e) {
-            LOGGER.error("unLostCard", e);
-        }
+        this.saveRemoteSerialRecord(businessRecordDo);
     }
 
     @Override
@@ -117,6 +112,7 @@ public class CardManageServiceImpl implements ICardManageService {
         this.saveRemoteSerialRecord(businessRecordDo);
     }
 
+    @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void unLockCard(CardRequestDto cardParam) {
@@ -132,7 +128,6 @@ public class CardManageServiceImpl implements ICardManageService {
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         }
-
         this.saveRemoteSerialRecord(businessRecordDo);
     }
 
@@ -183,13 +178,8 @@ public class CardManageServiceImpl implements ICardManageService {
      * saveRemoteSerialRecord
      */
     private void saveRemoteSerialRecord(BusinessRecordDo businessRecord) {
-        try {//成功则修改状态及期初期末金额，存储操作流水
-            SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
-            serialService.handleSuccess(serialDto, false);
-        } catch (Exception e) {
-            LOGGER.error("unLostCard", e);
-        }
+        //成功则修改状态及期初期末金额，存储操作流水
+        SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
+        serialService.handleSuccess(serialDto, false);
     }
-
-
 }
