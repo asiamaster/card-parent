@@ -240,6 +240,9 @@
 								<input name="consignorAccountId" type="text"
 									class="form-control td_input" style="opacity: 0;"
 									id="consignorAccountId" maxlength="20" value="" />
+								<input name="cardCustomerId" type="hidden"
+									class="form-control td_input" 
+									id="cardCustomerId" maxlength="20" value="" />
 								<button id="query" type="button"
 										class="btn btn-secondary td_button" onclick="readCardNo()">
 										<i class="fa fa-search"></i>请刷卡
@@ -623,7 +626,7 @@
                 		$.modal.alertError("卡主与持卡人不一致");
                 		return;
                 	}
-                	$("#customerId").val(result.data.customerId);
+                	$("#cardCustomerId").val(result.data.customerId);
                     $("#consignorAccountId").val(result.data.accountId);
                     $("#consignorCardNo").val(cardNo);
                     $.modal.alertSuccess("读卡成功");
@@ -640,17 +643,21 @@
 	}
 	var consigneeIdCodeList = [];
 	function getConsignorIdCard() {
+		$("#consignorCustomerIDCode").val("");
+        $("#consignorCustomerName").val("");
+        $("#consignorCustomerMobile").val("");
         var idCard = readerIDCard();
         if(consigneeIdCodeList.indexOf(idCard.IDCardNo) != -1){
         	$.modal.alertError("被委托人证件号与委托人证件号不能相同");
         	return false;
         }
-        $("#consignorCustomerIDCode").val(idCard.IDCardNo);
-        $("#consignorCustomerName").val(idCard.Name);
-        getUserInfo();
+        getUserInfo(idCard.IDCardNo);
     }
 
 	function getConsigneeIdCard(obj){
+		$(obj).parent().find("#consigneeIdCode").val("");
+		$(obj).parent().find("#consigneeName").val("");
+		$(obj).parent().find("#consigneeIdMobile").val("");
 		var idCard = readerIDCard();
 		if(idCard.IDCardNo == $("#consignorCustomerIDCode").val()){
 			$.modal.alertError("被委托人证件号与委托人证件号不能相同");
@@ -665,36 +672,43 @@
 		consigneeIdCodeList.push(idCard.IDCardNo);
 		$.modal.alertSuccess("读卡成功");
 	}
-
-	function getUserInfo(){
+	
+	function searchCustomer(){
 		var idCard = $("#consignorCustomerIDCode").val();
 		if($.common.isEmpty(idCard)){
 			$.modal.alertError("证件号必填");
 			return false;
 		}
-		var isHasCustomer = true;
+		getUserInfo(idCard);
+	}
+
+	function getUserInfo(obj){
 		$.ajax({
 		    type: "POST",
 		    url:'${contextPath}/contract/findCustomersByKeyword.action',
-		    data:{keyword:idCard},
+		    data:{keyword:obj},
 		    traditional:true,
 		    dataType:'json',
 		    async: false,
 		    error: function(result) {
 		    	$.modal.alertError(result.message);
+		    	return false;
 		    },
 		    success: function(result) {
 		    	if(result.code=="200"){
-		    		if(!$.common.isEmpty($("#customerId").val()) && result.data[0].id != $("#customerId").val()){
+		    		if(!$.common.isEmpty($("#cardCustomerId").val()) && result.data[0].id != $("#cardCustomerId").val()){
                 		$.modal.alertError("卡主与持卡人不一致");
-                		return;
+                		return false;
                 	}
+		            $("#consignorCustomerIDCode").val(result.data[0].certificateNumber);
+		            $("#consignorCustomerName").val(result.data[0].name);
 			    	$("#consignorCustomerMobile").val(result.data[0].contactsPhone);
 			    	$("#customerId").val(result.data[0].id);
 			    	$("#consignorCustomerCode").val(result.data[0].code);
 			    	$.modal.alertSuccess("读卡成功");
 		    	}else{
 		    		$.modal.alertError(result.message);
+		    		return false;
 		    	}
 		    }
 		});
