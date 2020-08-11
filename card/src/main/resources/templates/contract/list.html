@@ -615,23 +615,37 @@
             }
         });
 	}
-	var consignorCustomerIDCodeFirst = '';
-	var consigneeIdCodeList = [];
+	
 	function getConsignorIdCard() {
         var idCard = readerIDCard();
+        var consigneeIdCodeList = [];
+        $(".consignee").each(function () {
+        	var idcard = $(this).find("#consigneeIdCode").val();
+			if($.common.isEmpty(idcard)){
+				continue;
+			}
+			consigneeIdCodeList.push(idcard);
+		})
         if(consigneeIdCodeList.indexOf(idCard.IDCardNo) != -1){
         	$.modal.alertError("被委托人证件号与委托人证件号不能相同");
         	return false;
         }
         $("#consignorCustomerIDCode").val(idCard.IDCardNo);
         $("#consignorCustomerName").val(idCard.Name);
-        consignorCustomerIDCodeFirst=idCard.IDCardNo;
         getUserInfo();
     }
 
 	function getConsigneeIdCard(obj){
 		var idCard = readerIDCard();
-		if(idCard.IDCardNo == consignorCustomerIDCodeFirst){
+		var consigneeIdCodeList = [];
+        $(".consignee").each(function () {
+        	var idcard = $(this).find("#consigneeIdCode").val();
+			if($.common.isEmpty(idcard)){
+				continue;
+			}
+			consigneeIdCodeList.push(idcard);
+		})
+		if(idCard.IDCardNo == $("#consignorCustomerIDCode").val()){
 			$.modal.alertError("被委托人证件号与委托人证件号不能相同");
 			return false;
 		}
