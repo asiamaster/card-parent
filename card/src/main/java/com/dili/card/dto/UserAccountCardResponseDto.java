@@ -37,9 +37,9 @@ public class UserAccountCardResponseDto implements Serializable {
     /** 客户编号 */
     private String customerCode;
     /** 客户编号类型 */
+    @TextDisplay(CustomerTypeProvider.class)
     private String customerMarketType;
     /** 客户身份类型 */
-    @TextDisplay(CustomerTypeProvider.class)
     private String customerCertificateType;
     /** 客户身份号 */
     private String customerCertificateNumber;
