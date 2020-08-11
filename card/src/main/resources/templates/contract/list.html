@@ -465,6 +465,7 @@
 
 	function minusConsignee(e) {
 		$(e).closest(".consignee").remove();
+		consigneeIdCodeList.pop();
 	}
 	let data = {};
 	function nextStep(){
@@ -594,11 +595,14 @@
 
 	function readCardNo() {
 	   	var cardNo = readerCardNumber();
-	   	$("#consignorCardNo").val(cardNo);
+	   	var cardNos = [];
+	   	cardNos.push(cardNo);
 	   	$.ajax({
-            type:'GET',
+            type:'POST',
             traditional:true,
-            url:'${contextPath}/accountQuery/singleWithoutValidate.action?cardNos=' + cardNo,
+            data:JSON.stringify({cardNos:cardNos}),
+            contentType: "application/json; charset=utf-8",
+            url:'${contextPath}/accountQuery/single.action?',
             dataType:'json',
             success:function(result) {
                 if (result.code=="200") {
@@ -614,18 +618,11 @@
             	$.modal.alertError(result.message);
             }
         });
+	   	$("#consignorCardNo").val(cardNo);
 	}
-	
+	var consigneeIdCodeList = [];
 	function getConsignorIdCard() {
         var idCard = readerIDCard();
-        var consigneeIdCodeList = [];
-        $(".consignee").each(function () {
-        	var idcard = $(this).find("#consigneeIdCode").val();
-			if($.common.isEmpty(idcard)){
-				continue;
-			}
-			consigneeIdCodeList.push(idcard);
-		})
         if(consigneeIdCodeList.indexOf(idCard.IDCardNo) != -1){
         	$.modal.alertError("被委托人证件号与委托人证件号不能相同");
         	return false;
@@ -637,14 +634,6 @@
 
 	function getConsigneeIdCard(obj){
 		var idCard = readerIDCard();
-		var consigneeIdCodeList = [];
-        $(".consignee").each(function () {
-        	var idcard = $(this).find("#consigneeIdCode").val();
-			if($.common.isEmpty(idcard)){
-				continue;
-			}
-			consigneeIdCodeList.push(idcard);
-		})
 		if(idCard.IDCardNo == $("#consignorCustomerIDCode").val()){
 			$.modal.alertError("被委托人证件号与委托人证件号不能相同");
 			return false;
