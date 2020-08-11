@@ -5,6 +5,7 @@ import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.AccountStateProvider;
 import com.dili.card.common.provider.CardStateProvider;
 import com.dili.card.common.provider.CardTypeProvider;
+import com.dili.card.common.provider.CustomerTypeProvider;
 import com.dili.card.common.provider.DisableStateProvider;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -38,6 +39,7 @@ public class UserAccountCardResponseDto implements Serializable {
     /** 客户编号类型 */
     private String customerMarketType;
     /** 客户身份类型 */
+    @TextDisplay(CustomerTypeProvider.class)
     private String customerCertificateType;
     /** 客户身份号 */
     private String customerCertificateNumber;
@@ -73,7 +75,7 @@ public class UserAccountCardResponseDto implements Serializable {
     private String creator;
     /** 建卡人id */
     private Long creatorId;
-    
+
     private Boolean master;
 
     public String getCreator() {
