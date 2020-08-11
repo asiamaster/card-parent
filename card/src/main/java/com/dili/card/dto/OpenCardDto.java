@@ -1,10 +1,6 @@
 package com.dili.card.dto;
 
-import java.time.LocalDateTime;
-
-import com.dili.card.type.AccountType;
 import com.dili.card.type.CardType;
-import com.dili.card.type.UsePermissionType;
 
 /**
  * @description： 开卡所需要的用户信息
@@ -14,42 +10,36 @@ import com.dili.card.type.UsePermissionType;
  */
 public class OpenCardDto extends BaseSerialLogDto {
 	/** 用户姓名 */
-	private String name;
+	private String customerName;
 	/** CRM系统客户ID */
 	private Long customerId;
-	/** 客户类型买卖 {@link AccountType} */
-	private String custormerType;
+	/** 客户编号 */
+	private String customerCode;
+	/** 客户类型买卖司机等 */
+	private String customerType;
 	/** 个人、对公 */
-	private String organizationType;
+	private String customerOrganizationType;
 	/** 证件类型 */
-	private String credentialType;
+	private String customerCredentialType;
 	/** 证件号 */
-	private String certificateNumber;
-	/** 证件有效期 */
-	private LocalDateTime validityDate;
-	/** 手机号 */
-	private String mobile;
+	private String customerCertificateNumber;
+	/** 客户联系电话 */
+	private String customerContactsPhone;
 	/** 资金账户ID */
 	private Long fundAccountId;
-	/** 账户类型(主、子/副) */
-	private Integer accountType;
 	/** 登录密码 */
 	private String loginPwd;
 	/** 交易密码 */
 	private String tradePwd;
-	/** 卡交易类型 */
-	private Integer usageType;
 	/** 开户来源 {@link CreateSource} */
 	private Integer createSource;
-	/** 业务权限集合 {@link UsePermissionType},以逗号分隔 */
-	private String usePermission;
 	/** 卡号 */
 	private String cardNo;
+	/** 是否存在实体卡1-存在，2-不存在 */
+	private Integer cardExist;
 
 	/** 卡类别 {@link CardType} */
 	private Integer cardType;
-	/** {@link CardType} */
-	private Integer seinsweise;
 	/** 父账号ID */
 	private Long parentAccountId;
 	/** 商户ID */
@@ -59,14 +49,6 @@ public class OpenCardDto extends BaseSerialLogDto {
 	/** 工本费 */
 	private Long costFee;
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public Long getCustomerId() {
 		return customerId;
 	}
@@ -75,76 +57,12 @@ public class OpenCardDto extends BaseSerialLogDto {
 		this.customerId = customerId;
 	}
 
-	public String getCustormerType() {
-		return custormerType;
-	}
-
-	public void setCustomerType(String custormerType) {
-		this.custormerType = custormerType;
-	}
-
-	public String getCredentialType() {
-		return credentialType;
-	}
-
-	public void setCredentialType(String credentialType) {
-		this.credentialType = credentialType;
-	}
-
-	public String getCertificateNumber() {
-		return certificateNumber;
-	}
-
-	public void setCertificateNumber(String certificateNumber) {
-		this.certificateNumber = certificateNumber;
-	}
-
-	public LocalDateTime getValidityDate() {
-		return validityDate;
-	}
-
-	public void setValidityDate(LocalDateTime validityDate) {
-		this.validityDate = validityDate;
-	}
-
-	public String getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-
-	public Integer getAccountType() {
-		return accountType;
-	}
-
-	public void setAccountType(Integer accountType) {
-		this.accountType = accountType;
-	}
-
-	public Integer getUsageType() {
-		return usageType;
-	}
-
-	public void setUsageType(Integer usageType) {
-		this.usageType = usageType;
-	}
-
 	public Integer getCreateSource() {
 		return createSource;
 	}
 
 	public void setCreateSource(Integer createSource) {
 		this.createSource = createSource;
-	}
-
-	public String getUsePermission() {
-		return usePermission;
-	}
-
-	public void setUsePermission(String usePermission) {
-		this.usePermission = usePermission;
 	}
 
 	public String getCardNo() {
@@ -161,14 +79,6 @@ public class OpenCardDto extends BaseSerialLogDto {
 
 	public void setCardType(Integer cardType) {
 		this.cardType = cardType;
-	}
-
-	public Integer getSeinsweise() {
-		return seinsweise;
-	}
-
-	public void setSeinsweise(Integer seinsweise) {
-		this.seinsweise = seinsweise;
 	}
 
 	public Long getParentAccountId() {
@@ -219,24 +129,76 @@ public class OpenCardDto extends BaseSerialLogDto {
 		this.firmName = firmName;
 	}
 
-	public void setCustormerType(String custormerType) {
-		this.custormerType = custormerType;
-	}
-
-	public String getOrganizationType() {
-		return organizationType;
-	}
-
-	public void setOrganizationType(String organizationType) {
-		this.organizationType = organizationType;
-	}
-
 	public Long getCostFee() {
 		return costFee;
 	}
 
 	public void setCostFee(Long costFee) {
 		this.costFee = costFee;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getCustomerCode() {
+		return customerCode;
+	}
+
+	public void setCustomerCode(String customerCode) {
+		this.customerCode = customerCode;
+	}
+
+	public String getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(String customerType) {
+		this.customerType = customerType;
+	}
+
+	public String getCustomerOrganizationType() {
+		return customerOrganizationType;
+	}
+
+	public void setCustomerOrganizationType(String customerOrganizationType) {
+		this.customerOrganizationType = customerOrganizationType;
+	}
+
+	public String getCustomerCredentialType() {
+		return customerCredentialType;
+	}
+
+	public void setCustomerCredentialType(String customerCredentialType) {
+		this.customerCredentialType = customerCredentialType;
+	}
+
+	public String getCustomerCertificateNumber() {
+		return customerCertificateNumber;
+	}
+
+	public void setCustomerCertificateNumber(String customerCertificateNumber) {
+		this.customerCertificateNumber = customerCertificateNumber;
+	}
+
+	public Integer getCardExist() {
+		return cardExist;
+	}
+
+	public void setCardExist(Integer cardExist) {
+		this.cardExist = cardExist;
+	}
+
+	public String getCustomerContactsPhone() {
+		return customerContactsPhone;
+	}
+
+	public void setCustomerContactsPhone(String customerContactsPhone) {
+		this.customerContactsPhone = customerContactsPhone;
 	}
 
 }

@@ -31,7 +31,6 @@ import com.dili.card.util.AssertUtils;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.util.MoneyUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 
@@ -96,16 +95,17 @@ public class OpenCardController implements IControllerHandler {
 		if (user == null) {
 			return BaseOutput.failure("未获取到登录用户信息，请重新登录!");
 		}
-		AssertUtils.notEmpty(openCardInfo.getCertificateNumber(), "请输入证件号!");
+		AssertUtils.notEmpty(openCardInfo.getCustomerCertificateNumber(), "请输入证件号!");
 		Customer customer = GenericRpcResolver.resolver(
-				customerRpc.getByCertificateNumber(openCardInfo.getCertificateNumber(), user.getFirmId()), "开卡客户查询");
+				customerRpc.getByCertificateNumber(openCardInfo.getCustomerCertificateNumber(), user.getFirmId()), "开卡客户查询");
 		CustomerResponseDto response = new CustomerResponseDto();
 		if(customer != null) {
 			BeanUtils.copyProperties(customer, response);
+			response.setCustomerContactsPhone(customer.getContactsPhone());
 			response.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
 			response.setCustomerType(customer.getCustomerMarket().getType());
 		}
-		log.info("开卡证件号查询客户信息完成:{}", JSONObject.toJSONString(response));
+		log.info("开卡证件号查询客户信息完成*****{}", JSONObject.toJSONString(response));
 		return BaseOutput.successData(response);
 	}
 
@@ -199,7 +199,7 @@ public class OpenCardController implements IControllerHandler {
 		openCardInfo.setFirmId(user.getFirmId());
 		openCardInfo.setFirmName(user.getFirmName());
 		OpenCardResponseDto response = openCardService.openSlaveCard(openCardInfo);
-		log.info("开副卡完成:{}", JSONObject.toJSONString(response));
+		log.info("开副卡完成*****{}", JSONObject.toJSONString(response));
 		return BaseOutput.success("success").setData(response);
 	}
 
@@ -222,9 +222,9 @@ public class OpenCardController implements IControllerHandler {
 	 * @param openCardInfo
 	 */
 	private void checkMasterParam(OpenCardDto openCardInfo) {
-		AssertUtils.notEmpty(openCardInfo.getName(), "开卡用户名不能为空!");
+		AssertUtils.notEmpty(openCardInfo.getCustomerName(), "开卡用户名不能为空!");
 		AssertUtils.notEmpty(openCardInfo.getCardNo(), "开卡卡号不能为空!");
-		AssertUtils.notEmpty(openCardInfo.getCertificateNumber(), "证件号不能为空!");
+		AssertUtils.notEmpty(openCardInfo.getCustomerCertificateNumber(), "证件号不能为空!");
 		AssertUtils.notEmpty(openCardInfo.getCustomerCode(), "客户编号不能为空!");
 		AssertUtils.notNull(openCardInfo.getCustomerId(), "客户ID不能为空!");
 		AssertUtils.notEmpty(openCardInfo.getLoginPwd(), "账户密码不能为空!");

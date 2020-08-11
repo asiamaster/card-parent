@@ -111,13 +111,13 @@ function checkNewCardNo(){
 			data : {"customerId":customerId},
 			success : function(res) {
 				console.log(res);
-				$("#name").val(res.data.name);
+				$("#customerName").val(res.data.name);
 				$("#customerId").val(res.data.id);
 				$("#customerType").val(res.data.customerMarket.type);
 				$("#customerCode").val(res.data.code);
-				$("#mobile").val(res.data.contactsPhone);
-				$("#credentialType").val(res.data.certificateType);
-				$("#certificateNumber").val(res.data.certificateNumber);
+				$("#customerContactsPhone").val(res.data.contactsPhone);
+				$("#customerCredentialType").val(res.data.certificateType);
+				$("#customerCertificateNumber").val(res.data.certificateNumber);
 			},
 			error : function(res) {
 				showError(JSON.stringify(res));
@@ -141,7 +141,7 @@ function checkNewCardNo(){
 			<tr>
 				<td class="vertical-td info-column-frozen-fund">姓名<i
 					class="red">*</i></td>
-				<td><input id="name" name="name" value="老李"
+				<td><input id="customerName" name="customerName" value="老李"
 					class="form-control" /></td>
 			</tr>
 			<tr>
@@ -170,17 +170,17 @@ function checkNewCardNo(){
 			</tr>
 			<tr>
 				<td class="vertical-td info-column-frozen-fund">手机号</td>
-				<td><input id="mobile" name="mobile"
+				<td><input id="customerContactsPhone" name="customerContactsPhone"
 					value="18988888888" class="form-control" /></td>
 			</tr>
 			<tr>
 				<td class="vertical-td info-column-frozen-fund">证件类型</td>
-				<td><input id="credentialType" name="credentialType"
+				<td><input id="customerCredentialType" name="customerCredentialType"
 					value="individual" class="form-control" /></td>
 			</tr>
 			<tr>
 				<td class="vertical-td info-column-frozen-fund">证件号</td>
-				<td><input id="certificateNumber" name="certificateNumber"
+				<td><input id="customerCertificateNumber" name="customerCertificateNumber"
 					value="513002198810102287" class="form-control" /></td>
 			</tr>
 			<tr>
@@ -201,6 +201,10 @@ function checkNewCardNo(){
 			<tr>
 				<td class="vertical-td info-column-frozen-fund">父卡账号</td>
 				<td><input id="parentAccountId" name="parentAccountId" class="form-control" /></td>
+			</tr>
+			<tr>
+				<td class="vertical-td info-column-frozen-fund">工本费</td>
+				<td><input id="costFee" name="costFee" class="form-control" /></td>
 			</tr>
 		</table>
 	</form>
