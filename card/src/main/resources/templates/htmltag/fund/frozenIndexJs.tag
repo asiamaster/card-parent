@@ -5,7 +5,7 @@
             amount: {
                 required: true,
                 gt: 0.00,
-                max: 999999
+                max: 999999.99
             },
             mark: {
                 maxlength: 30
@@ -51,16 +51,17 @@
                 return;
             }
             let data = $.common.formToJSON('frozen-fund-form');
-            $.operate.post(url, $.extend(requestData, data),function (result) {
-                if (result.code == '200'){
+            bui.util.debounce($.operate.post(url, $.extend(requestData, data), function (result) {
+                if (result.code == web_status.SUCCESS) {
                     $.tab.refresh()
                 }
-            });
+            }), 1000, true)
+
         });
     }
 
     //表格隐藏、显示状态切换
-    function showOrHide() {
+    function switchTableDisplay() {
         let $table = $("#table-div");
         if ($table.is(":hidden")) {
             $table.show();

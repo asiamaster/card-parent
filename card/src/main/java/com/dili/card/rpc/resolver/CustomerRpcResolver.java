@@ -3,6 +3,7 @@ package com.dili.card.rpc.resolver;
 
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.type.CustomerType;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
 import com.dili.customer.sdk.rpc.CustomerRpc;
@@ -135,7 +136,16 @@ public class CustomerRpcResolver {
      */
     private CustomerResponseDto convertFromCustomer(Customer customer) {
         CustomerResponseDto customerResponseDto = new CustomerResponseDto();
-        BeanUtils.copyProperties(customer, customerResponseDto);
+        customerResponseDto.setCode(customer.getCode());
+        customerResponseDto.setId(customer.getId());
+        customerResponseDto.setName(customer.getName());
+        customerResponseDto.setCustomerType(customer.getCustomerMarket().getType());
+        customerResponseDto.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
+        customerResponseDto.setCertificateAddr(customer.getCertificateAddr());
+        customerResponseDto.setCertificateNumber(customer.getCertificateNumber());
+        customerResponseDto.setCertificateType(customer.getCertificateType());
+        customerResponseDto.setCustomerContactsPhone(customer.getContactsPhone());
+        customerResponseDto.setOrganizationType(customer.getOrganizationType());
         return customerResponseDto;
     }
 

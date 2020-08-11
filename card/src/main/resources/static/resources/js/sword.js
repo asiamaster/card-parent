@@ -567,10 +567,10 @@ tab = {
         form: {
             resetDate: function (duration, timeUnit) {
                 if ($.common.isEmpty(duration)) {
-                    duration = 90;
+                    duration = 3;
                 }
                 if ($.common.isEmpty(timeUnit)) {
-                    timeUnit = 'day';
+                    timeUnit = 'month';
                 }
                 $(".laystart").attr("value", moment().subtract(duration, timeUnit).startOf('day').format('YYYY-MM-DD HH:mm:ss'));
                 $(".layend").attr("value", moment().endOf('day').format('YYYY-MM-DD HH:mm:ss'));
@@ -675,6 +675,7 @@ tab = {
                             try {
                                 return $iframe[0].contentWindow.cancelHandler(e)
                             } catch (ex) {
+                                console.log(ex);
                                 return true;
                             }
                         }
@@ -692,23 +693,26 @@ tab = {
                     isIframe: true,//默认是页面层，非iframe
                 };
                 options = $.extend(defaults, options);
-                table.options.dialog = bs4pop.dialog(options);
+                //只能同时打开一个弹出层
+                if ($.common.isEmpty(table.options.dialog)) {
+                    table.options.dialog = bs4pop.dialog(options);
+                }
             },
             //修改“确定”按钮文本
             changeEnsureTxt: (txt)=>{
-                let doc = window.top == window.parent ? window.document : window.parent.document;
+                let doc = window.parent.document;
                 let $button = $("button[class*='btn sword-modal btn-primary']", doc);
                 $button.text(txt)
             },
             // 禁用按钮
             disable: function () {
-                let doc = window.top == window.parent ? window.document : window.parent.document;
+                let doc = window.parent.document;
                 let $button = $("button[class*='btn sword-modal btn-primary']", doc);
                 $button.attr("disabled", "disabled");
             },
             // 启用按钮
             enable: function () {
-                let doc = window.top == window.parent ? window.document : window.parent.document;
+                let doc = window.parent.document;
                 let $button = $("button[class*='btn sword-modal btn-primary']", doc);
                 $button.removeAttr("disabled");
             },
@@ -1218,25 +1222,6 @@ tab = {
                     return "-";
                 }
                 return value;
-            },
-            // 是否显示数据 为空默认为显示
-            visible: function (value) {
-                if ($.common.isEmpty(value) || value == true) {
-                    return true;
-                }
-                return false;
-            },
-            //form表单转json
-            form2JsonString: function (formId) {
-                var paramArray = $('#' + formId).serializeArray();
-                /*请求参数转json对象*/
-                var jsonObj = {};
-                $(paramArray).each(function () {
-                    jsonObj[this.name] = this.value;
-
-                });
-                // json对象再转换成json字符串
-                return JSON.stringify(jsonObj);
             },
             //json对象转url参数
             jsonObj2UrlParams: (jsonObj) => {

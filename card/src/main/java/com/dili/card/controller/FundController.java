@@ -1,5 +1,8 @@
 package com.dili.card.controller;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.dili.card.common.annotation.ForbidDuplicateCommit;
 import com.dili.card.common.handler.IControllerHandler;
@@ -39,6 +42,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -168,6 +172,10 @@ public class FundController implements IControllerHandler {
         payServiceParam.setPageSize(queryParam.getRows());
         //冻结状态
         payServiceParam.setState(PayFreezeFundType.FREEZE_FUND.getCode());
+
+        DateTime startDate = DateUtil.offset(new Date(), DateField.YEAR, -1);
+        payServiceParam.setStartTime(DateUtil.beginOfDay(startDate).toString());
+        payServiceParam.setEndTime(DateUtil.endOfDay(new Date()).toString());
         return successPage(fundService.frozenRecord(payServiceParam));
     }
 
@@ -184,6 +192,10 @@ public class FundController implements IControllerHandler {
         payServiceParam.setAccountId(queryParam.getFundAccountId());
         payServiceParam.setPageNo(queryParam.getPage());
         payServiceParam.setPageSize(queryParam.getRows());
+
+        DateTime startDate = DateUtil.offset(new Date(), DateField.YEAR, -1);
+        payServiceParam.setStartTime(DateUtil.beginOfDay(startDate).toString());
+        payServiceParam.setEndTime(DateUtil.endOfDay(new Date()).toString());
         return successPage(fundService.frozenRecord(payServiceParam));
     }
 
@@ -238,5 +250,14 @@ public class FundController implements IControllerHandler {
         AssertUtils.notNull(amount,"金额不能为空");
         BigDecimal ruleFee = ruleFeeService.getRuleFee(amount, RuleFeeBusinessType.CARD_RECHARGE_POS, SystemSubjectType.CARD_RECHARGE_POS_FEE);
         return BaseOutput.successData(ruleFee.longValue());
+    }
+
+    /**
+     *
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        System.out.println(DateUtil.endOfDay(new Date()).toString());
     }
 }
