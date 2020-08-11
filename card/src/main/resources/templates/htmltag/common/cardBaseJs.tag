@@ -15,7 +15,7 @@ function readerCardNumber() {
    	if(cardNo == "-1"){
    		$.modal.alertError("读卡失败");
    	}
-    return cardNo;
+   	return "';
 }
 
 

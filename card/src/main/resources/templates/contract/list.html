@@ -595,6 +595,9 @@
 
 	function readCardNo() {
 	   	var cardNo = readerCardNumber();
+	   	if($.common.isEmpty(cardNo)){
+	   		return;
+	   	}
 	   	var cardNos = [];
 	   	cardNos.push(cardNo);
 	   	$.ajax({
