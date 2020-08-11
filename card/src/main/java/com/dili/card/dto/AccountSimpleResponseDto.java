@@ -3,6 +3,7 @@ package com.dili.card.dto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 账户信息（包含余额）
@@ -14,10 +15,18 @@ public class AccountSimpleResponseDto implements Serializable {
     private BalanceResponseDto accountFund;
     /**账户信息*/
     private UserAccountCardResponseDto accountInfo;
+    /**关联卡信息*/
+    private List<UserAccountCardResponseDto> associationAccounts;
 
     public AccountSimpleResponseDto(BalanceResponseDto accountFund, UserAccountCardResponseDto accountInfo) {
         this.accountFund = accountFund;
         this.accountInfo = accountInfo;
+    }
+
+    public AccountSimpleResponseDto(BalanceResponseDto accountFund, UserAccountCardResponseDto accountInfo, List<UserAccountCardResponseDto> associationAccounts) {
+        this.accountFund = accountFund;
+        this.accountInfo = accountInfo;
+        this.associationAccounts = associationAccounts;
     }
 
     public BalanceResponseDto getAccountFund() {
@@ -34,6 +43,14 @@ public class AccountSimpleResponseDto implements Serializable {
 
     public void setAccountInfo(UserAccountCardResponseDto accountInfo) {
         this.accountInfo = accountInfo;
+    }
+
+    public List<UserAccountCardResponseDto> getAssociationAccounts() {
+        return associationAccounts;
+    }
+
+    public void setAssociationAccounts(List<UserAccountCardResponseDto> associationAccounts) {
+        this.associationAccounts = associationAccounts;
     }
 }
 

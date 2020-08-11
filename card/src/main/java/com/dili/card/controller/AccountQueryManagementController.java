@@ -111,10 +111,20 @@ public class AccountQueryManagementController implements IControllerHandler {
     @ResponseBody
     @Deprecated
     public BaseOutput<AccountSimpleResponseDto> getInfoByCardNo(String cardNo) {
-        if (StringUtils.isBlank(cardNo)) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "卡号不能为空");
-        }
+        AssertUtils.notEmpty(cardNo,"卡号不能为空");
         return BaseOutput.successData(accountQueryService.getByCardNoWithBalance(cardNo));
+    }
+
+    /**
+    * 查询关联卡信息（包含余额）
+    * @author miaoguoxin
+    * @date 2020/8/11
+    */
+    @GetMapping("/getAssociation.action")
+    @ResponseBody
+    public BaseOutput<AccountSimpleResponseDto> getAssociationByCardNo(String cardNo) {
+        AssertUtils.notEmpty(cardNo,"卡号不能为空");
+        return BaseOutput.successData(accountQueryService.getByCardNoWithBalanceAndAssociation(cardNo));
     }
 
     /**
@@ -136,8 +146,20 @@ public class AccountQueryManagementController implements IControllerHandler {
     */
     @GetMapping("/singleWithoutValidate.action")
     @ResponseBody
-    public BaseOutput<UserAccountCardResponseDto> getByCardNoWithoutValidate(UserAccountCardQuery query) {
+    public BaseOutput<UserAccountCardResponseDto> getSingleWithoutValidate(UserAccountCardQuery query) {
         return BaseOutput.successData(accountQueryRpcResolver.findSingleWithoutValidate(query));
+    }
+
+
+    /**
+     * 单个查询
+     * @author miaoguoxin
+     * @date 2020/8/4
+     */
+    @GetMapping("/single.action")
+    @ResponseBody
+    public BaseOutput<UserAccountCardResponseDto> getSingle(UserAccountCardQuery query) {
+        return BaseOutput.successData(accountQueryRpcResolver.findSingle(query));
     }
 }
 

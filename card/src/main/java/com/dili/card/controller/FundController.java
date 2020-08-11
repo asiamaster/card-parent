@@ -252,12 +252,4 @@ public class FundController implements IControllerHandler {
         return BaseOutput.successData(ruleFee.longValue());
     }
 
-    /**
-     *
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-        System.out.println(DateUtil.endOfDay(new Date()).toString());
-    }
 }

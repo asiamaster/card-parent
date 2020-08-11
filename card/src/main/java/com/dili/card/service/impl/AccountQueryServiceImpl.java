@@ -128,11 +128,29 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
 
 
     @Override
-    @Deprecated
     public AccountSimpleResponseDto getByCardNoWithBalance(String cardNo) {
         UserAccountCardResponseDto userAccount = this.getByCardNo(cardNo);
         BalanceResponseDto fund = payRpcResolver.findBalanceByFundAccountId(userAccount.getFundAccountId());
         return new AccountSimpleResponseDto(fund, userAccount);
+    }
+
+    @Override
+    public AccountSimpleResponseDto getByCardNoWithBalanceAndAssociation(String cardNo) {
+        UserAccountCardQuery query = new UserAccountCardQuery();
+        query.setCardNos(Lists.newArrayList(cardNo));
+        UserAccountCardResponseDto primary = accountQueryRpcResolver.findSingle(query);
+        //查询关联卡，primaryCard为主卡就查副卡，副卡就查主卡
+        UserAccountCardQuery param = new UserAccountCardQuery();
+        if (CardType.isMaster(primary.getCardType())) {
+            param.setParentAccountId(primary.getAccountId());
+        } else if (CardType.isSlave(primary.getCardType())) {
+            param.setAccountIds(Lists.newArrayList(primary.getParentAccountId()));
+        }
+        //排除非正常卡
+        param.setExcludeUnusualState(1);
+        List<UserAccountCardResponseDto> association = accountQueryRpcResolver.findByQueryCondition(param);
+        BalanceResponseDto fund = payRpcResolver.findBalanceByFundAccountId(primary.getFundAccountId());
+        return new AccountSimpleResponseDto(fund, primary, association);
     }
 
     @Override
@@ -155,6 +173,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
             return accountList;
         }).collect(Collectors.toList());
     }
+
 
     /**
      * 获取包含关联卡的信息
