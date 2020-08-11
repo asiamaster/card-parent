@@ -161,7 +161,7 @@ public class ContractServiceImpl implements IContractService {
 		List<String> consigneeCustomerIdCodes = new ArrayList<String>();
 		List<String> consigneeCustomerMobiles = new ArrayList<String>();
 		for (FundConsignorDto fundConsignorDto : fundContractRequest.getConsignors()) {
-			if (fundContractRequest.getConsignorIdCode().equalsIgnoreCase(fundConsignorDto.getConsigneeIdCode())) {
+			if (fundContractRequest.getConsignorCustomerIDCode().equalsIgnoreCase(fundConsignorDto.getConsigneeIdCode())) {
 				throw new CardAppBizException(ResultCode.DATA_ERROR, "被委托人证件号与委托人证件号不能相同");
 			}
 			if (consigneeCustomerIdCodes.contains(fundConsignorDto.getConsigneeIdCode())) {

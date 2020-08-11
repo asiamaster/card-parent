@@ -53,7 +53,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
     	accountManageRpcResolver.frozen(cardRequestDto);
         //远程冻结资金账户
         try {
-        	if (accountCard.isMaster()) {
+        	if (accountCard.getMaster()) {
         		payRpcResolver.freezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
         	}
 		} catch (Exception e) {
@@ -74,7 +74,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		accountManageRpcResolver.unfrozen(cardRequestDto);
         //远程解冻资金账户
         try {
-        	if (accountCard.isMaster()) {
+        	if (accountCard.getMaster()) {
         		payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
 			}
 		} catch (Exception e) {

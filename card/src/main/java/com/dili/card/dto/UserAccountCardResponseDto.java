@@ -73,6 +73,8 @@ public class UserAccountCardResponseDto implements Serializable {
     private String creator;
     /** 建卡人id */
     private Long creatorId;
+    
+    private Boolean master;
 
     public String getCreator() {
         return creator;
@@ -258,7 +260,12 @@ public class UserAccountCardResponseDto implements Serializable {
         this.customerMarketType = customerMarketType;
     }
 
-    public boolean isMaster() {
-        return parentAccountId == null ? true : false;
-    }
+	public Boolean getMaster() {
+		return master;
+	}
+
+	public void setMaster(Boolean master) {
+		this.master = parentAccountId == null ? true : false;
+	}
+
 }
