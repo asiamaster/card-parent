@@ -136,7 +136,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		serial.setAccountId(accountId);
 		serial.setCardNo(openCardInfo.getCardNo());
 		serial.setCustomerId(openCardInfo.getCustomerId());
-		serial.setCustomerName(openCardInfo.getName());
+		serial.setCustomerName(openCardInfo.getCustomerName());
 		serial.setCustomerNo(openCardInfo.getCustomerCode());
 		serial.setCycleNo(cycleNo);
 		serial.setFirmId(openCardInfo.getFirmId());
@@ -162,7 +162,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		record.setAccountId(accountId);
 		record.setCardNo(openCardInfo.getCardNo());
 		record.setCustomerId(openCardInfo.getCustomerId());
-		record.setCustomerName(openCardInfo.getName());
+		record.setCustomerName(openCardInfo.getCustomerName());
 		record.setCustomerNo(openCardInfo.getCustomerCode());
 		record.setFirmId(openCardInfo.getFirmId());
 		record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));

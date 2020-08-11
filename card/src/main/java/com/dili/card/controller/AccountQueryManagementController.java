@@ -156,7 +156,7 @@ public class AccountQueryManagementController implements IControllerHandler {
      * @author miaoguoxin
      * @date 2020/8/4
      */
-    @GetMapping("/single.action")
+    @PostMapping("/single.action")
     @ResponseBody
     public BaseOutput<UserAccountCardResponseDto> getSingle(UserAccountCardQuery query) {
         return BaseOutput.successData(accountQueryRpcResolver.findSingle(query));
