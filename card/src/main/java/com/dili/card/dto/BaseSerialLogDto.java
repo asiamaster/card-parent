@@ -13,18 +13,12 @@ public class BaseSerialLogDto {
 	private String creator;
 	/** 操作人员编号 */
 	private String creatorCode;
-	/** 操作人员用户名 */
-//	private String creatorUserName;
 	/** 商户ID */
 	private Long firmId;
 	/** 商户名称 */
 	private String firmName;
 	/** 操作类型 */
 	private Integer type;
-	/** 客户名称 */
-	private String customerName;
-	/** 客户编号 */
-	private String customerCode;
 
 	public Long getCreatorId() {
 		return creatorId;
@@ -64,22 +58,6 @@ public class BaseSerialLogDto {
 
 	public void setFirmName(String firmName) {
 		this.firmName = firmName;
-	}
-
-	public String getCustomerName() {
-		return customerName;
-	}
-
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
-	}
-
-	public String getCustomerCode() {
-		return customerCode;
-	}
-
-	public void setCustomerCode(String customerCode) {
-		this.customerCode = customerCode;
 	}
 
 	public Integer getType() {
