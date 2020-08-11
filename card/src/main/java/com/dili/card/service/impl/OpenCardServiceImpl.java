@@ -173,6 +173,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		record.setTradeType(OperateType.ACCOUNT_TRANSACT.getCode());
 		record.setType(OperateType.ACCOUNT_TRANSACT.getCode());
 		record.setFundItem(FundItem.IC_CARD_COST.getCode());
+		record.setFundItemName(FundItem.IC_CARD_COST.getName());
 		record.setOperateTime(LocalDateTime.now());
 
 		SerialDto serialDto = new SerialDto();
