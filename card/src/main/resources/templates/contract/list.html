@@ -595,8 +595,13 @@
 
 	function readCardNo() {
 	   	var cardNo = readerCardNumber();
-	   	if($.common.isEmpty(cardNo)){
-	   		return;
+	   	if(cardNo == ""){
+	   		$.modal.alertError("请正确放置卡片位置");
+	   		return false;
+	   	}
+	   	if(cardNo == "-1"){
+	   		$.modal.alertError("读卡失败");
+	   		return false;
 	   	}
 	   	var cardNos = [];
 	   	cardNos.push(cardNo);

@@ -9,13 +9,7 @@ function readerIDCard() {
 function readerCardNumber() {
     if (typeof (callbackObj) == "undefined") return;
     var cardNo = callbackObj.readCardNumber();
-    if(cardNo == ""){
-   		$.modal.alertError("请正确放置卡片位置");
-   	}
-   	if(cardNo == "-1"){
-   		$.modal.alertError("读卡失败");
-   	}
-   	return "';
+   	return cardNo;
 }
 
 
