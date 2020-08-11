@@ -5,6 +5,8 @@ import java.util.List;
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
+import com.dili.customer.sdk.domain.Customer;
+import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
 import com.dili.ss.domain.PageOutput;
 
 /**
@@ -49,5 +51,10 @@ public interface IContractService {
 	 * 激活合同
 	 */
 	void activeOverdueContract();
+	
+	/**
+	 * 获取客户信息
+	 */
+	List<Customer> findCustomers(CustomerQueryInput query);
 
 }

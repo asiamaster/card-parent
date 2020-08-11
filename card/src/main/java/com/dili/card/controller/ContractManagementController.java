@@ -20,7 +20,10 @@ import com.dili.card.dto.FundContractResponseDto;
 import com.dili.card.schedule.ContractScheduleHandler;
 import com.dili.card.service.IContractService;
 import com.dili.card.validator.ConstantValidator;
+import com.dili.customer.sdk.domain.Customer;
+import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.uap.sdk.domain.UserTicket;
 
 /**
  * 合同管理
@@ -115,5 +118,21 @@ public class ContractManagementController implements IControllerHandler {
     public BaseOutput<Boolean> updateStateTask() {
     	contractScheduleHandler.execute();
         return BaseOutput.success();
+    }
+    
+    /**
+     * 查询客户列表
+     * @param keyword
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+	@RequestMapping(value = "/findCustomersByKeyword.action")
+    @ResponseBody
+    public BaseOutput<List<Customer>> findCustomersByKeyword(String keyword) {
+        CustomerQueryInput query = new CustomerQueryInput();
+        UserTicket userTicket = getUserTicket();
+        query.setMarketId(userTicket.getFirmId());
+        query.setKeyword(keyword);
+        return BaseOutput.success().setData(iContractService.findCustomers(query));
     }
 }

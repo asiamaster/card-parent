@@ -1,5 +1,9 @@
 <#bs4Body>
 <style>
+	.modal.fade.in{
+        margin-top:200px;
+        margin-right:: 100px;
+    }
     .info-column {
         width: 15%;
         font-weight: bold;
@@ -62,6 +66,9 @@
               rgba(255,255,255, 0.1) 100%
            );
 		}
+	.modal-dialog{
+		max-width: 900px;
+	}
 </style>
 <div class="main-container container-fluid">
     <#bs4nav>
@@ -111,7 +118,7 @@
     </form>
 </#bs4nav>
 </div>
-
+<hr>
 <div class="row" style="width: 100%;margin-left: 0px">
     <div class="col-12">
 		<div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
@@ -122,16 +129,16 @@
 		<button id="btn_remove" type="button" class="btn btn-primary" onclick="$.operate.removeWithTitle(null,'40%','60%','信息确认')"><i class="fa fa-trash-o"></i> 解除</button>
 	</#resource>
 	<#resource code="cancleContract">
-		<button id="btn_preview" type="button" class="btn btn-primary" onclick="$.operate.preview(null,'70%','95%', '合同预览')"><i class="fa fa-list"></i> 合同预览</button>
+	<button id="btn_preview" type="button" class="btn btn-primary" onclick="$.operate.preview(null,'70%','95%', '合同预览')"><i class="fa fa-list"></i> 合同预览</button>
 	</#resource>
 	<#resource code="viewContract">
 	<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'80%','85%')"><i class="fa fa-list"></i> 查看</button>
 	</#resource>
 	<#resource code="cancleContract">
-		<button id="btn_reprint" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 补打</button>
+	<button id="btn_reprint" type="button" class="btn btn-primary" onclick="viewHandler()"><i class="fa fa-list"></i> 补打</button>
 	</#resource>
 	<#resource code="cancleContract">
-		<button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
+	<button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
 		class="fa fa-file-excel-o"></i>
 		导出
 		</button>
@@ -208,33 +215,35 @@
 								<input placeholder="身份证号"
 									name="consignorCustomerIDCode" disabled="disabled" type="text"
 									class="form-control td_input" id="consignorCustomerIDCode"
-									maxlength="50" value="" />
+									maxlength="18" value="" />
 								<input placeholder="手机号"
 									name="consignorCustomerMobile" type="text"
 									class="form-control td_input" id="consignorCustomerMobile"
-									maxlength="50" value="" />
+									maxlength="11" value="" />
 								<button id="readIdCode" type="button"
-										class="btn btn-secondary td_button" onclick="$.table.search()">
+										class="btn btn-secondary td_button" onclick="getConsignorIdCard()">
 										<i class="fa fa-search"></i>读取身份证
 								</button>
 								<button style="margin-left: 10px;" id="queryIdCode" type="button"
-									class="btn btn-secondary td_button" onclick="$.table.search()">
+									class="btn btn-secondary td_button" onclick="getUserInfo()">
 									<i class="fa fa-search"></i>查询
 								</button>
 								</td>
 							</tr>
 							<tr>
 								<td class="info-column">委托人园区卡</td>
-								<td class="info-cell"><input placeholder="园区卡"
+								<td class="info-cell">
+								<input placeholder="园区卡"
 									disabled="disabled" name="consignorCardNo" type="text"
-									class="form-control td_input" id="consignorCardNo" maxlength="50"
-									value="174" /> <input name="consignorAccountId" type="text"
+									class="form-control td_input" id="consignorCardNo" maxlength="20"
+									value="" />
+								<input name="consignorAccountId" type="text"
 									class="form-control td_input" style="opacity: 0;"
-									id="consignorAccountId" maxlength="50" value="174" />
-									<button id="query" type="button"
-										class="btn btn-secondary td_button" onclick="$.table.search()">
+									id="consignorAccountId" maxlength="20" value="" />
+								<button id="query" type="button"
+										class="btn btn-secondary td_button" onclick="readCardNo()">
 										<i class="fa fa-search"></i>请刷卡
-									</button></td>
+								</button></td>
 							</tr>
 							<tr>
 								<td class="info-column">合同起止日期</td>
@@ -261,21 +270,24 @@
 							</tr>
 							<tr class="consignee">
 								<td class="info-column">被委托人</td>
-								<td class="info-cell"><input placeholder="姓名"
+								<td class="info-cell">
+								<input placeholder="姓名"
 									disabled="disabled" name="consigneeName" type="text"
-									class="form-control td_input" id="consigneeName" maxlength="50"
-									value="1111" /> <input placeholder="身份证号" disabled="disabled"
+									class="form-control td_input" id="consigneeName" maxlength="20"
+									value="" />
+								<input placeholder="身份证号" disabled="disabled"
 									name="consigneeIdCode" type="text"
 									class="form-control td_input" id="consigneeIdCode"
-									maxlength="50" value="1111" /> <input placeholder="手机号"
+									maxlength="18" value="" />
+								<input placeholder="手机号"
 									name="consigneeIdMobile" type="text"
 									class="form-control td_input" id="consigneeIdMobile"
-									maxlength="50" value="1111" />
-									<button type="button"
+									maxlength="11" value="" />
+								<button type="button"
 										class="btn btn-secondary td_button readID"
-										onclick="readIDCode()">
+										onclick="getConsigneeIdCard(this)">
 										<i class="fa fa-search"></i>读取身份证
-									</button> <label onclick="addConsignee()"
+								</button> <label onclick="addConsignee()"
 									style="height: 34px; padding: 0px 15px;"><i
 										class="fa fa-plus"
 										style="color: #fF0000; font-size: 20px; margin-top: 7px;"
@@ -283,8 +295,8 @@
 							</tr>
 							<tr id="notesBefore">
 								<td class="info-column">备注</td>
-								<td class="info-cell"><textarea placeholder="委托备注"
-										style="width: 55%;" id="notes" name="notes"></textarea></td>
+								<td class="info-cell"><textarea placeholder="委托备注,不超过50字"
+										style="width: 55%;" id="notes" name="notes" maxlength="50"></textarea></td>
 							</tr>
 					</table>
 				</form>
@@ -368,6 +380,7 @@
 <#contract_indexJs/>
 <#common_customerJs/>
 <#common_commonJs/>
+<#common_cardBaseJs/>
 <script>
     $(function () {
     	$("#addFirstModal").on("hidden.bs.modal", function() {
@@ -388,9 +401,34 @@
 
 	function openAddView() {
 		$('#addFirstModal').modal('show');
+		$("#addFirstModal").modal().css({
+            "margin-top": function () {
+                return  10;
+            }
+       });
 	}
 
+	$("#save_form").validate({
+	    onkeyup: false,
+	    rules: {
+	    	consignorCustomerName: {
+	            required: true,
+	            maxlength: 20
+	        }
+	    },
+	    messages: {
+	    	consignorCustomerName: {
+	            required: "委托人姓名不能为空",
+	            maxlength: "最多可以输入{0}个字符"
+	        }
+	    },
+	    focusCleanup: true
+	});
+
 	function nextStepView() {
+		if (!$.validate.form("save_form")) {
+	        return false;
+	    }
 		nextStep();
 		$('#addFirstModal').modal('hide');
 		fillSecondViewData();
@@ -401,10 +439,10 @@
 	 * 添加被委托人信息
 	 */
 	let consignee='<tr class="consignee"><td class="info-column">被委托人</td><td class="info-cell">' +
-        	'<input placeholder="姓名" disabled="disabled" value="" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="50"/>' +
-        	'<input placeholder="身份证号" disabled="disabled" value="" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="50"/>' +
-        	'<input placeholder="手机号" name="consigneeIdMobile" value="" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="50"/>' +
-        	'<button type="button" class="btn btn-secondary td_button readID" onclick="readIDCode()"><i class="fa fa-search"></i>读取身份证</button>' +
+        	'<input placeholder="姓名" disabled="disabled" value="" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="20"/>' +
+        	'<input placeholder="身份证号" disabled="disabled" value="" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="18"/>' +
+        	'<input placeholder="手机号" name="consigneeIdMobile" value="" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="11"/>' +
+        	'<button type="button" class="btn btn-secondary td_button readID" onclick="getConsigneeIdCard(this)"><i class="fa fa-search"></i>读取身份证</button>' +
         	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus" style="color:#4F94CD;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' +
         	'<label onclick="addConsignee()" class = "plus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-plus" style="color:#fF0000;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label></td</tr>';
 
@@ -552,4 +590,93 @@
             };
             $.ajax(config)
 	}
+
+	function readCardNo() {
+	   	var cardNo = readerCardNumber();
+	   	if(cardNo == ""){
+	   		$.modal.alertError("请正确放置卡片位置");
+	   	}
+	   	if(cardNo == "-1"){
+	   		$.modal.alertError("读卡失败");
+	   	}
+	   	$("#consignorCardNo").val(cardNo);
+	   	$.ajax({
+            type:'GET',
+            traditional:true,
+            url:'${contextPath}/accountQuery/singleWithoutValidate.action?cardNos=' + cardNo,
+            dataType:'json',
+            success:function(result) {
+                if (result.code=="200") {
+                	if(!result.data.isMaster){
+                		$.modal.alertError("必须是主卡");
+                	}
+                    $("#consignorAccountId").val(result.data.accountId);
+                } else {
+                	$.modal.alertError(result.message);
+                }
+            },
+            error:function(result){
+            	$.modal.alertError(result.message);
+            }
+        });
+	}
+	var consignorCustomerIDCodeFirst = '';
+	var consigneeIdCodeList = [];
+	function getConsignorIdCard() {
+        var idCard = readerIDCard();
+        if(consigneeIdCodeList.indexOf(idCard.IDCardNo) != -1){
+        	$.modal.alertError("被委托人证件号与委托人证件号不能相同");
+        	return false;
+        }
+        $("#consignorCustomerIDCode").val(idCard.IDCardNo);
+        $("#consignorCustomerName").val(idCard.Name);
+        consignorCustomerIDCodeFirst=idCard.IDCardNo;
+        getUserInfo();
+    }
+
+	function getConsigneeIdCard(obj){
+		var idCard = readerIDCard();
+		if(idCard.IDCardNo == consignorCustomerIDCodeFirst){
+			$.modal.alertError("被委托人证件号与委托人证件号不能相同");
+			return false;
+		}
+		if(consigneeIdCodeList.indexOf(idCard.IDCardNo) != -1){
+        	$.modal.alertError("被委托人证件号不能相同");
+        	return false;
+        }
+		$(obj).parent().find("#consigneeName").val(idCard.IDCardNo);
+		$(obj).parent().find("#consigneeIdCode").val(idCard.Name);
+		consigneeIdCodeList.push(idCard.IDCardNo);
+	}
+
+	function getUserInfo(){
+		var idCard = $("#consignorCustomerIDCode").val();
+		if($.common.isEmpty(idCard)){
+			$.modal.alertError("证件号必填");
+			return false;
+		}
+		var isHasCustomer = true;
+		$.ajax({
+		    type: "POST",
+		    url:'${contextPath}/contract/findCustomersByKeyword.action',
+		    data:{keyword:idCard},
+		    traditional:true,
+		    dataType:'json',
+		    async: false,
+		    error: function(result) {
+		    	$.modal.alertError(result.message);
+		    },
+		    success: function(result) {
+		    	if(result.code=="200"){
+			    	$("#consignorCustomerMobile").val(result.data[0].contactsPhone);
+			    	$("#customerId").val(result.data[0].id);
+			    	$("#consignorCustomerCode").val(result.data[0].code);
+		    	}else{
+		    		$.modal.alertError(result.message);
+		    	}
+		    }
+		});
+	}
+
+
 </script>
