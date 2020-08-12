@@ -214,7 +214,7 @@
 									class="form-control td_input" id="consignorCustomerName"
 									maxlength="20" value="" />
 								<input placeholder="身份证号"
-									name="consignorCustomerIDCode" disabled="disabled" type="text"
+									name="consignorCustomerIDCode"  type="text"
 									class="form-control td_input" id="consignorCustomerIDCode"
 									maxlength="18" value="" />
 								<input placeholder="手机号"
@@ -435,10 +435,13 @@
 	});
 
 	function nextStepView() {
-		if (!$.validate.form("save_form")) {
+		/* if (!$.validate.form("save_form")) {
 	        return false;
+	    } */
+		var next = nextStep();
+	    if(!next){
+	    	return;
 	    }
-		nextStep();
 		$('#addFirstModal').modal('hide');
 		fillSecondViewData();
 		$('#addSecondModal').modal('show');
@@ -492,17 +495,45 @@
 		data = {};
 		data.customerId=parseInt($('#customerId').val());
 		data.consignorCustomerName=$('#consignorCustomerName').val();
+		if($.common.isEmpty($('#consignorCustomerIDCode').val())){
+			$.modal.alertError("请添加委托人身份证号");
+			return false;
+		}
+		if($.common.isEmpty($('#consignorCardNo').val())){
+			$.modal.alertError("请添加委托人园区卡");
+			return false;
+		}
+		if($.common.isEmpty($('#consignorCustomerMobile').val())){
+			$.modal.alertError("请添加委托人手机号");
+			return false;
+		}
 		data.cardNo=$('#consignorCardNo').val();
 		data.consignorCustomerIDCode=$('#consignorCustomerIDCode').val();
 		data.consignorCustomerMobile=$('#consignorCustomerMobile').val();
 		data.consignorCustomerCode=$('#consignorCustomerCode').val();
 		data.consignorAccountId=parseInt($('#consignorAccountId').val());
+		if($.common.isEmpty($('#startTime').val())){
+			$.modal.alertError("请添加合同起始时间");
+			return false;
+		}
+		if($.common.isEmpty($('#endTime').val())){
+			$.modal.alertError("请添加合截止时间");
+			return false;
+		}
 		data.startTime=$('#startTime').val();
 		data.endTime=$('#endTime').val();
 		let items = [];
 		let consigneeNames='';
 		$(".consignee").each(function () {
 			let item = {};
+			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
+				$.modal.alertError("请添加被委托人身份证号");
+				return false;
+			}
+			if($.common.isEmpty($(this).find("#consigneeIdMobile").val())){
+				$.modal.alertError("请添加被委托人手机号");
+				return false;
+			}
 			item.consigneeName=$(this).find("#consigneeName").val();
 			consigneeNames = consigneeNames.concat("、",item.consigneeName);
 			item.consigneeIdCode=$(this).find("#consigneeIdCode").val();
@@ -511,6 +542,7 @@
 		})
         data.consignors=items;
 		data.consigneeNames=consigneeNames.substring(1);
+		return true;
 	}
 
 	function fillSecondViewData(){
