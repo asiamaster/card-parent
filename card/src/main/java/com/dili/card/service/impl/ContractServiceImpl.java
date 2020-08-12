@@ -72,8 +72,9 @@ public class ContractServiceImpl implements IContractService {
 		FundContractDo fundContract = this.buildContractEntity(fundContractRequest);
 		// 构建被委托人主体
 		List<FundConsignorDo> consignors = this.buildConsignorEntities(fundContractRequest);
-		// 数据保存操作
+		// 保存委托人数据
 		contractDao.save(fundContract);
+		// 保存被委托人数据
 		fundConsignorDao.saveBatch(consignors);
 	}
 
@@ -358,6 +359,9 @@ public class ContractServiceImpl implements IContractService {
         }
         if (!customer.getId().equals(userAccountCardResponseDto.getCustomerId())) {
         	throw new CardAppBizException(ResultCode.DATA_ERROR, "卡主和持卡人不一致");
+		}
+        if (userAccountCardResponseDto.getCardType() != 10) {
+        	throw new CardAppBizException(ResultCode.DATA_ERROR, "卡必须是主卡");
 		}
 		// 构建合同委托人核心数据
 		fundContractDo.setConsignorAccountId(fundContractRequest.getConsignorAccountId());
