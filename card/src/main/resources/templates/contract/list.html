@@ -5,18 +5,18 @@
         margin-right:: 100px;
     }
     .info-column {
-        width: 15%;
+        width: 12%;
         font-weight: bold;
         text-align: right;
         vertical-align: middle;
     }
     .info-cell{
-        width: 850%;
+        width: 880%;
         text-align: left;
         vertical-align: middle;
     }
     .td_input{
-    	width: 120px;
+    	width: 150px;
     	float: left;
     	margin-right:25px;
     }
@@ -188,8 +188,8 @@
     </div>
 </div>
 <div class="modal fade" id="addFirstModal" tabindex="-1" role="dialog" aria-labelledby="addFirstModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 830px;height: 450px;">
-		<div class="modal-content" style="width: 830px;height: 450px;">
+    <div class="modal-dialog" style="width: 930px;height: 500px;">
+		<div class="modal-content" style="width: 930px;height: 500px;">
 			<div class="modal-header" style="background-color: #E6E6E6;height: 45px;">
                <h5 style="height-line:45px;">新增资金委托关系</h5>
                <label onclick="closeFirst()"><i class="fa fa-times"></i></label>
@@ -212,7 +212,7 @@
 								<input placeholder="姓名"
 									name="consignorCustomerName" disabled="disabled" type="text"
 									class="form-control td_input" id="consignorCustomerName"
-									maxlength="50" value="" />
+									maxlength="20" value="" />
 								<input placeholder="身份证号"
 									name="consignorCustomerIDCode" disabled="disabled" type="text"
 									class="form-control td_input" id="consignorCustomerIDCode"
@@ -417,14 +417,18 @@
 	    onkeyup: false,
 	    rules: {
 	    	consignorCustomerName: {
-	            required: true,
-	            maxlength: 20
+	            required: true
+	        },
+	        consignorCustomerMobile: {
+	            required: true
 	        }
 	    },
 	    messages: {
 	    	consignorCustomerName: {
-	            required: "委托人姓名不能为空",
-	            maxlength: "最多可以输入{0}个字符"
+	            required: "委托人姓名不能为空"
+	        },
+	        consignorCustomerMobile: {
+	            required: ""
 	        }
 	    },
 	    focusCleanup: true

@@ -216,6 +216,7 @@ public class ContractServiceImpl implements IContractService {
 		UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
 		userAccountCardQuery.setAccountIds(accountIds);
 		userAccountCardQuery.setFirmId(fundContracts.get(0).getFirmId());
+		userAccountCardQuery.setExcludeUnusualState(0);
 		Map<Long, UserAccountCardResponseDto> userAccountCardMsp = accountQueryRpcResolver
 				.findAccountCardsMapByAccountIds(userAccountCardQuery);
 		//客户信息构建
