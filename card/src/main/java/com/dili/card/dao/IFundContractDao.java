@@ -50,4 +50,9 @@ public interface IFundContractDao {
 	 * 激活合同
 	 */
 	int activeOverdueContract();
+	
+	/**
+	 * 退卡后删除合同
+	 */
+	int delete(@Param("consignorAccountId") Long consignorAccountId);
 }

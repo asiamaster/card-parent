@@ -1,24 +1,27 @@
 <#bs4Body>
 <style>
+    #contract-save em{
+       display: block;
+    }
 	.modal.fade.in{
         margin-top:200px;
         margin-right:: 100px;
     }
     .info-column {
-        width: 15%;
+        width: 10%;
         font-weight: bold;
         text-align: right;
         vertical-align: middle;
     }
     .info-cell{
-        width: 850%;
+        width: 90%;
         text-align: left;
         vertical-align: middle;
     }
     .td_input{
-    	width: 120px;
+    	width: 180px;
     	float: left;
-    	margin-right:25px;
+    	margin-right:15px;
     }
     .td_button{
     	width: 100px;
@@ -188,10 +191,11 @@
     </div>
 </div>
 <div class="modal fade" id="addFirstModal" tabindex="-1" role="dialog" aria-labelledby="addFirstModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 830px;height: 450px;">
-		<div class="modal-content" style="width: 830px;height: 450px;">
+    <div class="modal-dialog" style="width: 960px;height: 500px;">
+		<div class="modal-content" style="width: 960px;height: 500px;">
 			<div class="modal-header" style="background-color: #E6E6E6;height: 45px;">
                <h5 style="height-line:45px;">新增资金委托关系</h5>
+               <label onclick="closeFirst()"><i class="fa fa-times"></i></label>
            </div>
 			<div class="modal-body" style="overflow:auto;">
 				 <form id = "save_form">
@@ -211,9 +215,9 @@
 								<input placeholder="姓名"
 									name="consignorCustomerName" disabled="disabled" type="text"
 									class="form-control td_input" id="consignorCustomerName"
-									maxlength="50" value="" />
+									maxlength="20" value="" />
 								<input placeholder="身份证号"
-									name="consignorCustomerIDCode" disabled="disabled" type="text"
+									name="consignorCustomerIDCode"  type="text"
 									class="form-control td_input" id="consignorCustomerIDCode"
 									maxlength="18" value="" />
 								<input placeholder="手机号"
@@ -323,6 +327,7 @@
 		<div class="modal-content" style="width: 820px;height: 445px;">
 			<div class="modal-header" style="background-color: #E6E6E6;height: 45px;">
                <h5 style="height-line:45px;">新增资金委托关系</h5>
+               <label onclick="closeSecond()"><i class="fa fa-times"></i></label>
            </div>
 			<div class="modal-body" style="overflow:auto;">
 				<div style="background-color: #FFFACD;">
@@ -364,6 +369,9 @@
 					</div>
 				</div>
 				<div  id="consignorCustomer"></div>
+				<div style="text-align: right;">
+					<span id="currentdate" style=" margin-right: 40px;"></span>
+				</div>
 			</div>
 			<div style="display: table-cell; text-align: center;margin-top: 15px;margin-bottom:20px;">
 				<div style="width: 49%;float: left;">
@@ -415,14 +423,18 @@
 	    onkeyup: false,
 	    rules: {
 	    	consignorCustomerName: {
-	            required: true,
-	            maxlength: 20
+	            required: true
+	        },
+	        consignorCustomerIDCode: {
+	            required: true
 	        }
 	    },
 	    messages: {
 	    	consignorCustomerName: {
-	            required: "委托人姓名不能为空",
-	            maxlength: "最多可以输入{0}个字符"
+	            required: "委托人姓名不能为空"
+	        },
+	        consignorCustomerIDCode: {
+	            required: "委托人姓名不能为空"
 	        }
 	    },
 	    focusCleanup: true
@@ -432,9 +444,13 @@
 		if (!$.validate.form("save_form")) {
 	        return false;
 	    }
-		nextStep();
+		var next = nextStep();
+	    if(!next){
+	    	return;
+	    }
 		$('#addFirstModal').modal('hide');
 		fillSecondViewData();
+		$('#currentdate').html(getNowFormatDate(' 年 ', ' 月 ',' 日 '));
 		$('#addSecondModal').modal('show');
 	}
 
@@ -458,34 +474,83 @@
 
 
     function addConsignee() {
+    	var next = true;
 		var list=$(".consignee");
 		if(list.length == 3){
 			$.modal.alertWarning("最多三位被委托人")
-			return;
+			return false;
+		}
+		$(".consignee").each(function () {
+			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
+				$.modal.alertWarning("请读取身份证后添加下一位")
+				next = false;
+			}
+		});
+		if(!next){
+			return !next; 
 		}
 		$('#notesBefore').before(consignee);
 	}
 
 	function minusConsignee(e) {
 		$(e).closest(".consignee").remove();
-		consigneeIdCodeList.pop();
 	}
+	
 	let data = {};
 	function nextStep(){
 		data = {};
 		data.customerId=parseInt($('#customerId').val());
 		data.consignorCustomerName=$('#consignorCustomerName').val();
+		if($.common.isEmpty($('#consignorCustomerIDCode').val())){
+			$.modal.alertError("请添加委托人身份证号");
+			return false;
+		}
+		if($.common.isEmpty($('#consignorCardNo').val())){
+			$.modal.alertError("请添加委托人园区卡");
+			return false;
+		}
+		if($.common.isEmpty($('#consignorCustomerMobile').val())){
+			$.modal.alertError("请添加委托人手机号");
+			return false;
+		}
 		data.cardNo=$('#consignorCardNo').val();
 		data.consignorCustomerIDCode=$('#consignorCustomerIDCode').val();
 		data.consignorCustomerMobile=$('#consignorCustomerMobile').val();
 		data.consignorCustomerCode=$('#consignorCustomerCode').val();
 		data.consignorAccountId=parseInt($('#consignorAccountId').val());
+		if($.common.isEmpty($('#startTime').val())){
+			$.modal.alertError("请添加合同起始时间");
+			return false;
+		}
+		if($.common.isEmpty($('#endTime').val())){
+			$.modal.alertError("请添加合截止时间");
+			return false;
+		}
+		var start=new Date($('#startTime').val().replace("-", "/").replace("-", "/"));
+		var end=new Date($('#endTime').val().replace("-", "/").replace("-", "/"));
+		var now = new Date(getNowFormatDate('-','-','-'));
+		if(start > end){
+			$.modal.alertError("合同开始时间不能大于截止时间");
+			return false;
+		}
+		if(now > end){
+			$.modal.alertError("合同截止时间不能小于当前时间");
+			return false;
+		}	
 		data.startTime=$('#startTime').val();
 		data.endTime=$('#endTime').val();
 		let items = [];
 		let consigneeNames='';
 		$(".consignee").each(function () {
 			let item = {};
+			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
+				$.modal.alertError("请添加被委托人身份证号");
+				return false;
+			}
+			if($.common.isEmpty($(this).find("#consigneeIdMobile").val())){
+				$.modal.alertError("请添加被委托人手机号");
+				return false;
+			}
 			item.consigneeName=$(this).find("#consigneeName").val();
 			consigneeNames = consigneeNames.concat("、",item.consigneeName);
 			item.consigneeIdCode=$(this).find("#consigneeIdCode").val();
@@ -494,6 +559,7 @@
 		})
         data.consignors=items;
 		data.consigneeNames=consigneeNames.substring(1);
+		return true;
 	}
 
 	function fillSecondViewData(){
@@ -551,6 +617,17 @@
 			}
 		})
 		$('#addFirstModal').modal('hide');
+	}
+	
+	function closeFirst(){
+		cancleAddView();
+	}
+	
+	function closeSecond(){
+		$('#addSecondModal').modal('hide');
+		$("#consigneeAlls").empty();
+		$("#consignorCustomer").empty();
+		cancleAddView();
 	}
 
 	function keyPress() {
@@ -636,12 +713,18 @@
             }
         });
 	}
-	var consigneeIdCodeList = [];
+	
 	function getConsignorIdCard() {
+		var consigneeIdCodeList = [];
 		$("#consignorCustomerIDCode").val("");
         $("#consignorCustomerName").val("");
         $("#consignorCustomerMobile").val("");
         var idCard = readerIDCard();
+        $(".consignee").each(function () {
+			if(!$.common.isEmpty($(this).find("#consigneeIdCode").val())){
+				consigneeIdCodeList.push($(this).find("#consigneeIdCode").val());
+			}
+		});
         if(consigneeIdCodeList.indexOf(idCard.IDCardNo) != -1){
         	$.modal.alertError("被委托人证件号与委托人证件号不能相同");
         	return false;
@@ -650,10 +733,16 @@
     }
 
 	function getConsigneeIdCard(obj){
+		var consigneeIdCodeList = [];
 		$(obj).parent().find("#consigneeIdCode").val("");
 		$(obj).parent().find("#consigneeName").val("");
 		$(obj).parent().find("#consigneeIdMobile").val("");
 		var idCard = readerIDCard();
+		 $(".consignee").each(function () {
+				if(!$.common.isEmpty($(this).find("#consigneeIdCode").val())){
+					consigneeIdCodeList.push($(this).find("#consigneeIdCode").val());
+				}
+			});
 		if(idCard.IDCardNo == $("#consignorCustomerIDCode").val()){
 			$.modal.alertError("被委托人证件号与委托人证件号不能相同");
 			return false;
@@ -708,6 +797,4 @@
 		    }
 		});
 	}
-
-
 </script>

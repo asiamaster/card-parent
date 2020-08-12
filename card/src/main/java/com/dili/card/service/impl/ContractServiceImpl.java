@@ -35,6 +35,7 @@ import com.dili.card.service.IContractService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.ContractState;
+import com.dili.card.type.DisableState;
 import com.dili.card.util.PageUtils;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
@@ -71,8 +72,9 @@ public class ContractServiceImpl implements IContractService {
 		FundContractDo fundContract = this.buildContractEntity(fundContractRequest);
 		// 构建被委托人主体
 		List<FundConsignorDo> consignors = this.buildConsignorEntities(fundContractRequest);
-		// 数据保存操作
+		// 保存委托人数据
 		contractDao.save(fundContract);
+		// 保存被委托人数据
 		fundConsignorDao.saveBatch(consignors);
 	}
 
@@ -214,6 +216,7 @@ public class ContractServiceImpl implements IContractService {
 		UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
 		userAccountCardQuery.setAccountIds(accountIds);
 		userAccountCardQuery.setFirmId(fundContracts.get(0).getFirmId());
+		userAccountCardQuery.setExcludeUnusualState(0);
 		Map<Long, UserAccountCardResponseDto> userAccountCardMsp = accountQueryRpcResolver
 				.findAccountCardsMapByAccountIds(userAccountCardQuery);
 		//客户信息构建
@@ -336,6 +339,31 @@ public class ContractServiceImpl implements IContractService {
 	 */
 	private FundContractDo buildContractEntity(FundContractRequestDto fundContractRequest) {
 		FundContractDo fundContractDo = new FundContractDo();
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		
+		Customer customer = customerRpcResolver.getWithNotNull(fundContractRequest.getCustomerId(), (userTicket.getFirmId()));
+		if (customer == null) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "系统没有客户信息");
+		}
+		UserAccountCardResponseDto userAccountCardResponseDto = accountQueryRpcResolver.findSingleWithoutValidate(UserAccountCardQuery.createInstance(fundContractRequest.getConsignorAccountId()));
+		if (userAccountCardResponseDto == null) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "卡号不存在");
+		}
+        if (CardStatus.RETURNED.getCode() == userAccountCardResponseDto.getCardState()) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡为退还状态，不能进行此操作");
+        }
+        if (DisableState.DISABLED.getCode().equals(userAccountCardResponseDto.getDisabledState())) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡账户为禁用状态，不能进行此操作");
+        }
+        if (CardStatus.LOSS.getCode() == userAccountCardResponseDto.getCardState()) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡为挂失状态，不能进行此操作");
+        }
+        if (!customer.getId().equals(userAccountCardResponseDto.getCustomerId())) {
+        	throw new CardAppBizException(ResultCode.DATA_ERROR, "卡主和持卡人不一致");
+		}
+        if (userAccountCardResponseDto.getCardType() != 10) {
+        	throw new CardAppBizException(ResultCode.DATA_ERROR, "卡必须是主卡");
+		}
 		// 构建合同委托人核心数据
 		fundContractDo.setConsignorAccountId(fundContractRequest.getConsignorAccountId());
 		if (Timestamp.valueOf(fundContractRequest.getEndTime()).getTime() < Timestamp.valueOf(LocalDateTime.now())
@@ -351,7 +379,6 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setSignatureImagePath(fundContractRequest.getSignatureImagePath());
 		fundContractDo.setNotes(fundContractRequest.getNotes());
 		// 构建商户信息
-		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		fundContractDo.setCreatorId(userTicket.getId());
 		fundContractDo.setCreator(userTicket.getRealName());
 		fundContractDo.setFirmId(userTicket.getFirmId());
@@ -366,7 +393,6 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setContractNo(contractNo);
 		fundContractRequest.setContractNo(contractNo);
 		// 获取客户信息
-		Customer customer = customerRpcResolver.getWithNotNull(fundContractRequest.getCustomerId(), (userTicket.getFirmId()));
 		fundContractDo.setConsignorCustomerCode(customer.getCode());
 		fundContractDo.setConsignorCustomerId(customer.getId());
 		return fundContractDo;

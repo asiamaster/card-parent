@@ -24,4 +24,5 @@ public class Constant {
     public static final String OP_NAME = "opName";
     /**合同快到期时间提醒*/
     public static final Long READY_EXPIRE_DAY = 3L;
+    public static final String CONTRACT_EXPIRE_DAYS = "contract_expire_days";
 }

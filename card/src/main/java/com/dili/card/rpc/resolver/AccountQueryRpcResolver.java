@@ -6,6 +6,7 @@ import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.AccountQueryRpc;
+import com.dili.card.type.CardStatus;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
@@ -47,7 +48,7 @@ public class AccountQueryRpcResolver {
      */
     public Map<Long, UserAccountCardResponseDto> findAccountCardsMapByAccountIds(UserAccountCardQuery userAccountCardQuery) {
         List<UserAccountCardResponseDto> userAccountCards = this.findByQueryCondition(userAccountCardQuery);
-        return userAccountCards.stream()
+        return userAccountCards.stream().filter(x -> CardStatus.RETURNED.getCode() != x.getCardState() )
                 .collect(Collectors.toMap(UserAccountCardResponseDto::getAccountId,
                         a -> a,
                         (k1, k2) -> k1));

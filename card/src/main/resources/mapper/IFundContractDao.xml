@@ -134,11 +134,16 @@
 			<if test="expirationTime != null and expirationTime != ''">
 				AND end_time = #{expirationTime}
 			</if>
+			AND state != -1
 		ORDER BY create_time DESC
 	</select>
 	
 	<update	id="activeOverdueContract">
 		<![CDATA[ UPDATE card_fund_contract `state` = 2 WHERE `state` = 1 and start_time <= NOW()]]>
+	</update>
+	
+	<update	id="delete">
+		<![CDATA[ UPDATE card_fund_contract `state` = -1 WHERE consignor_account_id = #{consignorAccountId}]]>
 	</update>
 	
 	<update	id="closeOverdueContract">

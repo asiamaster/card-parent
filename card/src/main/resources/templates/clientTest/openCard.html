@@ -1,7 +1,8 @@
 <#bs4Body> <script type="text/javascript">
 //根据证件号查询客户信息
 function getCustomerInfoByIdCode(){
-	var data = {certificateNumber: "513023199201206510"};
+	var number=$("#customerCertificateNumber").val();
+	var data = {customerCertificateNumber: number};
 	$.ajax({
 		url : "${contextPath}/card/getCustomerInfo.action",
 		type : 'POST',
