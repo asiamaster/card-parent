@@ -10,6 +10,7 @@ import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.ss.domain.PageOutput;
 
 /**
@@ -91,17 +92,11 @@ public interface IAccountQueryService {
      */
     AccountSimpleResponseDto getByCardNoWithBalance(String cardNo);
 
-    /**
-     * 查询账户信息（包含余额和关联卡）,已校验卡状态
-     * @author miaoguoxin
-     * @date 2020/7/7
-     */
-    AccountSimpleResponseDto getByCardNoWithBalanceAndAssociation(String cardNo);
 
     /**
     * 解挂操作查询
     * @author miaoguoxin
     * @date 2020/8/6
     */
-    UserAccountCardResponseDto getForUnLostCard(UserAccountCardQuery query);
+    UserAccountCardResponseDto getForUnLostCard(UserAccountSingleQueryDto query);
 }

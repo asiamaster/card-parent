@@ -39,7 +39,7 @@
         }
         $.ajax({
             type:'GET',
-            url:'/accountQuery/singleWithoutValidate.action?cardNos=' + cardNo,
+            url:'/accountQuery/singleWithoutValidate.action?cardNo=' + cardNo,
             dataType:'json',
             success:function(result) {
                 if (result.success) {

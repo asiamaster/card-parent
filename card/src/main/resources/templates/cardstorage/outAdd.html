@@ -24,12 +24,11 @@
                 <tr>
                     <td class="info-column-card-out">已读数量</td>
                     <td>
-                        <input id="amount" name="amount" type="text" class="form-control" value="2" readonly/>
-                        <input id="cardNos" name="cardNos" type="hidden" class="form-control"
-                               value="888889690400,888889690401"/>
+                        <input id="amount" name="amount" type="text" class="form-control" readonly/>
+                        <input id="cardNos" name="cardNos" type="hidden" class="form-control"/>
                     </td>
                     <td>
-                        <button id="btn-out" type="button" class="btn btn-primary">
+                        <button id="btn-out" type="button" class="btn btn-primary" onclick="readCard()">
                             开启读卡器
                         </button>
                     </td>
@@ -43,7 +42,12 @@
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <#common_autoCompleteUser/>
+<#common_cardBaseJs/>
 <script>
+    let temp = {
+        total: 0,
+        cardNos: []
+    };
     $(() =>{
         //修改一下“确定”按钮文本
         $.modal.changeEnsureTxt("出库")
@@ -79,6 +83,40 @@
         }
         let url = "${contextPath}/cardStorage/addOut.action";
         let data = $.common.formToJSON(formId);
+        //console.log(JSON.stringify(data))
         $.operate.post(url, data);
+    }
+
+    function readCard() {
+        let cardNo = readerCardNumber();
+        if ($.common.isEmpty(cardNo)){
+            $.modal.alertWarning("请将卡片放置在读卡器上");
+            return;
+        }
+        if(temp.cardNos.indexOf(cardNo) > -1){
+            $.modal.alertWarning("该卡片已经在待出库序列中。。。");
+            return;
+        }
+        let params = {
+            cardNo: cardNo
+        };
+        let config = {
+            url: "${contextPath}/cardStorage/checkCard.action",
+            type: 'post',
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            data: JSON.stringify(params),
+            success: (result) => {
+                if (result.code != web_status.SUCCESS) {
+                    $.modal.alertWarning(result.message)
+                }else {
+                    temp.total++;
+                    temp.cardNos.push(cardNo);
+                    $('#amount').val(temp.total);
+                    $('#cardNos').val(temp.cardNos.join(","));
+                }
+            },
+        };
+        $.ajax(config);
     }
 </script>

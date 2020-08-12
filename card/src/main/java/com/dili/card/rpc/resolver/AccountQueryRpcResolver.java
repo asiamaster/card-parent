@@ -3,6 +3,7 @@ package com.dili.card.rpc.resolver;
 import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.AccountQueryRpc;
 import com.dili.ss.constant.ResultCode;
@@ -57,7 +58,7 @@ public class AccountQueryRpcResolver {
     * @author miaoguoxin
     * @date 2020/7/28
     */
-    public UserAccountCardResponseDto findSingle(UserAccountCardQuery userAccountCardQuery){
+    public UserAccountCardResponseDto findSingle(UserAccountSingleQueryDto userAccountCardQuery){
         return GenericRpcResolver.resolver(accountQueryRpc.findSingle(userAccountCardQuery),"account-service");
     }
 
@@ -66,7 +67,7 @@ public class AccountQueryRpcResolver {
     * @author miaoguoxin
     * @date 2020/7/30
     */
-    public UserAccountCardResponseDto findSingleWithoutValidate(UserAccountCardQuery userAccountCardQuery){
+    public UserAccountCardResponseDto findSingleWithoutValidate(UserAccountSingleQueryDto userAccountCardQuery){
         return GenericRpcResolver.resolver(accountQueryRpc.findSingleWithoutValidate(userAccountCardQuery),"account-service");
     }
 

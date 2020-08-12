@@ -241,7 +241,7 @@
 									class="form-control td_input" style="opacity: 0;"
 									id="consignorAccountId" maxlength="20" value="" />
 								<input name="cardCustomerId" type="hidden"
-									class="form-control td_input" 
+									class="form-control td_input"
 									id="cardCustomerId" maxlength="20" value="" />
 								<button id="query" type="button"
 										class="btn btn-secondary td_button" onclick="readCardNo()">
@@ -607,15 +607,10 @@
 	   		$.modal.alertError("读卡失败");
 	   		return false;
 	   	}
-	   	var cardNos = [];
-	   	cardNos.push(cardNo);
 	   	$.ajax({
-            type:'POST',
-            traditional:true,
-            data:JSON.stringify({cardNos:cardNos}),
-            contentType: "application/json; charset=utf-8",
-            url:'${contextPath}/accountQuery/single.action?',
-            dataType:'json',
+            type:'GET',
+            contentType: "application/x-www-form-urlencoded",
+            url:'${contextPath}/accountQuery/single.action?cardNo='+cardNo,
             success:function(result) {
                 if (result.code=="200") {
                 	if(!result.data.cardType == 10){
@@ -672,7 +667,7 @@
 		consigneeIdCodeList.push(idCard.IDCardNo);
 		$.modal.alertSuccess("读卡成功");
 	}
-	
+
 	function searchCustomer(){
 		var idCard = $("#consignorCustomerIDCode").val();
 		if($.common.isEmpty(idCard)){

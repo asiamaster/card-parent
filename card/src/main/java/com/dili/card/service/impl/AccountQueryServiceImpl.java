@@ -8,6 +8,7 @@ import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
@@ -66,8 +67,8 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     @Override
     public AccountDetailResponseDto getDetailByCardNo(String cardNo) {
         AccountDetailResponseDto detail = new AccountDetailResponseDto();
-        UserAccountCardQuery query = new UserAccountCardQuery();
-        query.setCardNos(Lists.newArrayList(cardNo));
+        UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+        query.setCardNo(cardNo);
         AccountWithAssociationResponseDto cardAssociation = this.getAssociation(query);
 
         UserAccountCardResponseDto primary = cardAssociation.getPrimary();
@@ -83,30 +84,30 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
 
     @Override
     public UserAccountCardResponseDto getByCardNo(String cardNo) {
-        UserAccountCardQuery query = new UserAccountCardQuery();
-        query.setCardNos(Lists.newArrayList(cardNo));
+        UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+        query.setCardNo(cardNo);
         return accountQueryRpcResolver.findSingle(query);
     }
 
 
     @Override
     public UserAccountCardResponseDto getByCardNoWithoutValidate(String cardNo) {
-        UserAccountCardQuery query = new UserAccountCardQuery();
-        query.setCardNos(Lists.newArrayList(cardNo));
+        UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+        query.setCardNo(cardNo);
         return accountQueryRpcResolver.findSingleWithoutValidate(query);
     }
 
     @Override
     public UserAccountCardResponseDto getByAccountIdWithoutValidate(Long accountId) {
-        UserAccountCardQuery query = new UserAccountCardQuery();
-        query.setAccountIds(Lists.newArrayList(accountId));
+        UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+        query.setAccountId(accountId);
         return accountQueryRpcResolver.findSingleWithoutValidate(query);
     }
 
     @Override
     public UserAccountCardResponseDto getByAccountId(CardRequestDto requestDto) {
-        UserAccountCardQuery query = new UserAccountCardQuery();
-        query.setAccountIds(Lists.newArrayList(requestDto.getAccountId()));
+        UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+        query.setAccountId(requestDto.getAccountId());
         UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(query);
         AccountValidator.validateMatchAccount(requestDto, accountCard);
         return accountCard;
@@ -114,15 +115,15 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
 
     @Override
     public UserAccountCardResponseDto getByAccountId(Long accountId) {
-        UserAccountCardQuery query = new UserAccountCardQuery();
-        query.setAccountIds(Lists.newArrayList(accountId));
+        UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+        query.setAccountId(accountId);
         return accountQueryRpcResolver.findSingle(query);
     }
 
     @Override
     public AccountWithAssociationResponseDto getAssociationByAccountId(Long accountId) {
-        UserAccountCardQuery query = new UserAccountCardQuery();
-        query.setAccountIds(Lists.newArrayList(accountId));
+        UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+        query.setAccountId(accountId);
         return this.getAssociation(query);
     }
 
@@ -134,27 +135,9 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         return new AccountSimpleResponseDto(fund, userAccount);
     }
 
-    @Override
-    public AccountSimpleResponseDto getByCardNoWithBalanceAndAssociation(String cardNo) {
-        UserAccountCardQuery query = new UserAccountCardQuery();
-        query.setCardNos(Lists.newArrayList(cardNo));
-        UserAccountCardResponseDto primary = accountQueryRpcResolver.findSingle(query);
-        //查询关联卡，primaryCard为主卡就查副卡，副卡就查主卡
-        UserAccountCardQuery param = new UserAccountCardQuery();
-        if (CardType.isMaster(primary.getCardType())) {
-            param.setParentAccountId(primary.getAccountId());
-        } else if (CardType.isSlave(primary.getCardType())) {
-            param.setAccountIds(Lists.newArrayList(primary.getParentAccountId()));
-        }
-        //排除非正常卡
-        param.setExcludeUnusualState(1);
-        List<UserAccountCardResponseDto> association = accountQueryRpcResolver.findByQueryCondition(param);
-        BalanceResponseDto fund = payRpcResolver.findBalanceByFundAccountId(primary.getFundAccountId());
-        return new AccountSimpleResponseDto(fund, primary, association);
-    }
 
     @Override
-    public UserAccountCardResponseDto getForUnLostCard(UserAccountCardQuery query) {
+    public UserAccountCardResponseDto getForUnLostCard(UserAccountSingleQueryDto query) {
         UserAccountCardResponseDto single = accountQueryRpcResolver.findSingleWithoutValidate(query);
         if (CardStatus.LOSS.getCode() != single.getCardState()) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡不是挂失状态，不能进行此操作");
@@ -180,7 +163,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
      * @author miaoguoxin
      * @date 2020/7/28
      */
-    private AccountWithAssociationResponseDto getAssociation(UserAccountCardQuery query) {
+    private AccountWithAssociationResponseDto getAssociation(UserAccountSingleQueryDto query) {
         UserAccountCardResponseDto primary = accountQueryRpcResolver.findSingleWithoutValidate(query);
         //查询关联卡，primaryCard为主卡就查副卡，副卡就查主卡
         UserAccountCardQuery param = new UserAccountCardQuery();

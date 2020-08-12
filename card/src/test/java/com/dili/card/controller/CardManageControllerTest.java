@@ -42,17 +42,17 @@ class CardManageControllerTest extends BaseTest {
     private String sessionId;
     @BeforeEach
     public void setUp(){
-        this.sessionId = "93fc4b63-3f32-46da-aeb0-57c984c5c57a";
+        this.sessionId = "70dd86ff-316f-4b18-8654-4d716033791c";
     }
 
     @Test
     void changeCard() throws Exception {
         CardRequestDto cardParam = new CardRequestDto();
-        cardParam.setLoginPwd("123456");
-        cardParam.setCustomerId(109L);
-        cardParam.setAccountId(178L);
-        cardParam.setCardNo("888889689891");
-        cardParam.setNewCardNo("888889689890");
+        cardParam.setLoginPwd("12345");
+        cardParam.setCustomerId(226L);
+        cardParam.setAccountId(21L);
+        cardParam.setCardNo("888800033481");
+        cardParam.setNewCardNo("888810032608");
         cardParam.setServiceFee(1L);
         MvcResult mvcResult = mockMvc.perform(post("/card/changeCard.action")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -693,10 +693,7 @@ tab = {
                     isIframe: true,//默认是页面层，非iframe
                 };
                 options = $.extend(defaults, options);
-                //只能同时打开一个弹出层
-                if ($.common.isEmpty(table.options.dialog)) {
-                    table.options.dialog = bs4pop.dialog(options);
-                }
+                table.options.dialog = bs4pop.dialog(options);
             },
             //修改“确定”按钮文本
             changeEnsureTxt: (txt)=>{

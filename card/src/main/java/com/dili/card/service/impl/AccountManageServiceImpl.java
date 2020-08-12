@@ -2,6 +2,7 @@ package com.dili.card.service.impl;
 
 import javax.annotation.Resource;
 
+import com.dili.card.dto.UserAccountSingleQueryDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ import com.dili.ss.constant.ResultCode;
 
 @Service("accountManageService")
 public class AccountManageServiceImpl implements IAccountManageService {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(CardManageServiceImpl.class);
 
 	@Autowired
@@ -69,8 +70,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		//校验账户信息
 		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), false, DisableState.DISABLED);
 		//保存本地记录
-		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.UNFROZEN_ACCOUNT);		
-		//远程解冻账户操作 
+		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.UNFROZEN_ACCOUNT);
+		//远程解冻账户操作
 		accountManageRpcResolver.unfrozen(cardRequestDto);
         //远程解冻资金账户
         try {
@@ -83,7 +84,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
         //记录远程操作记录
         this.saveRemoteSerialRecord(businessRecord);
 	}
-	
+
 	/**
 	 * 校验卡状态
 	 * @param account 账户信息
@@ -91,7 +92,9 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	 * @return
 	 */
 	private UserAccountCardResponseDto validateCardAccount(Long account, boolean checkCardLoss, DisableState disableState) {
-		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(UserAccountCardQuery.createInstance(account));
+		UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+		query.setAccountId(account);
+		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(query);
 		if (checkCardLoss && Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
             throw new CardAppBizException("", String.format("该卡为%s状态,不能进行操作", CardStatus.getName(accountCard.getCardState())));
         }
@@ -100,7 +103,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
         }
 		return accountCard;
 	}
-	
+
 	/**
      * 保存本地操作记录
      */
@@ -121,7 +124,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
             serialService.handleSuccess(serialDto);
         } catch (Exception e) {
             LOGGER.error("unfreezeFundAccount", e);
-        }	
+        }
 	}
 
 }

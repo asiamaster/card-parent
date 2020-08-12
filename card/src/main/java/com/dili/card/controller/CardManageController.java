@@ -6,6 +6,7 @@ import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICardManageService;
@@ -120,7 +121,7 @@ public class CardManageController implements IControllerHandler {
      */
     @PostMapping("/reportLossCard.action")
     public BaseOutput<?> reportLoss(@RequestBody CardRequestDto cardParam) {
-        LOGGER.error("挂失请求参数:{}", JSON.toJSONString(cardParam));
+        LOGGER.info("挂失请求参数:{}", JSON.toJSONString(cardParam));
         AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
         this.validateCommonParam(cardParam);
         this.buildOperatorInfo(cardParam);
@@ -136,8 +137,8 @@ public class CardManageController implements IControllerHandler {
     @GetMapping("getByCardForUnLost.action")
     public BaseOutput<UserAccountCardResponseDto> getByCardNoForUnLost(String cardNo){
         AssertUtils.notEmpty(cardNo,"卡号不能为空");
-        UserAccountCardQuery query = new UserAccountCardQuery();
-        query.setCardNos(Lists.newArrayList(cardNo));
+        UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+        query.setCardNo(cardNo);
         return BaseOutput.successData(accountQueryService.getForUnLostCard(query));
     }
 }

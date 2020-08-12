@@ -7,6 +7,7 @@ import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.AccountSimpleResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.service.IAccountQueryService;
@@ -115,17 +116,6 @@ public class AccountQueryManagementController implements IControllerHandler {
         return BaseOutput.successData(accountQueryService.getByCardNoWithBalance(cardNo));
     }
 
-    /**
-    * 查询关联卡信息（包含余额）
-    * @author miaoguoxin
-    * @date 2020/8/11
-    */
-    @GetMapping("/getAssociation.action")
-    @ResponseBody
-    public BaseOutput<AccountSimpleResponseDto> getAssociationByCardNo(String cardNo) {
-        AssertUtils.notEmpty(cardNo,"卡号不能为空");
-        return BaseOutput.successData(accountQueryService.getByCardNoWithBalanceAndAssociation(cardNo));
-    }
 
     /**
      * 查询列表(c端)
@@ -146,7 +136,7 @@ public class AccountQueryManagementController implements IControllerHandler {
     */
     @GetMapping("/singleWithoutValidate.action")
     @ResponseBody
-    public BaseOutput<UserAccountCardResponseDto> getSingleWithoutValidate(UserAccountCardQuery query) {
+    public BaseOutput<UserAccountCardResponseDto> getSingleWithoutValidate(UserAccountSingleQueryDto query) {
         return BaseOutput.successData(accountQueryRpcResolver.findSingleWithoutValidate(query));
     }
 
@@ -156,9 +146,9 @@ public class AccountQueryManagementController implements IControllerHandler {
      * @author miaoguoxin
      * @date 2020/8/4
      */
-    @PostMapping("/single.action")
+    @GetMapping("/single.action")
     @ResponseBody
-    public BaseOutput<UserAccountCardResponseDto> getSingle(@RequestBody UserAccountCardQuery query) {
+    public BaseOutput<UserAccountCardResponseDto> getSingle(UserAccountSingleQueryDto query) {
     	UserAccountCardResponseDto userAccountCardResponseDto = accountQueryRpcResolver.findSingle(query);
         return BaseOutput.successData(userAccountCardResponseDto);
     }

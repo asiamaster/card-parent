@@ -24,7 +24,7 @@ import java.util.Map;
 
 /**
  * 卡仓库管理
- * 
+ *
  * @Auther: miaoguoxin
  * @Date: 2020/7/1 16:11
  */
@@ -52,7 +52,7 @@ public class CardStorageController implements IControllerHandler {
 		return successPage(cardStorageService.cardStorageList(queryDto));
 	}
 
-	
+
 	/**
 	 * 卡片作废
 	 */
@@ -62,7 +62,7 @@ public class CardStorageController implements IControllerHandler {
 		cardStorageService.voidCard(queryDto.getCardNo(), queryDto.getNotes());
 		return BaseOutput.success();
 	}
-	
+
 	/**
 	 * 卡片库存列表导出
 	 */
@@ -71,6 +71,4 @@ public class CardStorageController implements IControllerHandler {
 	public BaseOutput<?> cardStorageListExport(CardStorageDto queryDto) {
 		return BaseOutput.success();
 	}
-	
-	
 }
