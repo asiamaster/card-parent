@@ -103,7 +103,7 @@ public class GenericGlobalExceptionResolver {
      */
     @ExceptionHandler({BusinessException.class})
     public String handlerBusinessException(BusinessException e) throws IOException {
-        return this.writeErrorResp(e.getCode(), e.getMessage(), e);
+        return this.writeErrorResp(e.getErrorCode(), e.getMessage(), e);
     }
 
     /**

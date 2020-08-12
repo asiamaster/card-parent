@@ -2,6 +2,7 @@ package com.dili.card.rpc;
 
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -30,7 +31,7 @@ public interface AccountQueryRpc {
      * @date 2020/7/28
      */
     @PostMapping(value = "/getSingle")
-    BaseOutput<UserAccountCardResponseDto> findSingle(UserAccountCardQuery cardQuery);
+    BaseOutput<UserAccountCardResponseDto> findSingle(UserAccountSingleQueryDto cardQuery);
 
     /**
      * 查询单个(返回所有状态)
@@ -38,7 +39,7 @@ public interface AccountQueryRpc {
      * @date 2020/7/28
      */
     @PostMapping(value = "/getSingleWithoutValidate")
-    BaseOutput<UserAccountCardResponseDto> findSingleWithoutValidate(UserAccountCardQuery cardQuery);
+    BaseOutput<UserAccountCardResponseDto> findSingleWithoutValidate(UserAccountSingleQueryDto cardQuery);
 
     /**
      * 查询分页
