@@ -1,5 +1,8 @@
 <#bs4Body>
 <style>
+    #contract-save em{
+       display: block;
+    }
 	.modal.fade.in{
         margin-top:200px;
         margin-right:: 100px;
@@ -422,7 +425,7 @@
 	    	consignorCustomerName: {
 	            required: true
 	        },
-	        consignorCustomerMobile: {
+	        consignorCustomerIDCode: {
 	            required: true
 	        }
 	    },
@@ -430,17 +433,17 @@
 	    	consignorCustomerName: {
 	            required: "委托人姓名不能为空"
 	        },
-	        consignorCustomerMobile: {
-	            required: ""
+	        consignorCustomerIDCode: {
+	            required: "委托人姓名不能为空"
 	        }
 	    },
 	    focusCleanup: true
 	});
 
 	function nextStepView() {
-		/* if (!$.validate.form("save_form")) {
+		if (!$.validate.form("save_form")) {
 	        return false;
-	    } */
+	    }
 		var next = nextStep();
 	    if(!next){
 	    	return;
