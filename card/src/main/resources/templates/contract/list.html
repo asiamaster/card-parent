@@ -5,20 +5,20 @@
         margin-right:: 100px;
     }
     .info-column {
-        width: 12%;
+        width: 10%;
         font-weight: bold;
         text-align: right;
         vertical-align: middle;
     }
     .info-cell{
-        width: 880%;
+        width: 90%;
         text-align: left;
         vertical-align: middle;
     }
     .td_input{
-    	width: 150px;
+    	width: 180px;
     	float: left;
-    	margin-right:25px;
+    	margin-right:15px;
     }
     .td_button{
     	width: 100px;
@@ -188,8 +188,8 @@
     </div>
 </div>
 <div class="modal fade" id="addFirstModal" tabindex="-1" role="dialog" aria-labelledby="addFirstModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 930px;height: 500px;">
-		<div class="modal-content" style="width: 930px;height: 500px;">
+    <div class="modal-dialog" style="width: 960px;height: 500px;">
+		<div class="modal-content" style="width: 960px;height: 500px;">
 			<div class="modal-header" style="background-color: #E6E6E6;height: 45px;">
                <h5 style="height-line:45px;">新增资金委托关系</h5>
                <label onclick="closeFirst()"><i class="fa fa-times"></i></label>
@@ -489,6 +489,20 @@
 		$(e).closest(".consignee").remove();
 	}
 	
+	function getNowFormatDate(nian,yue,ti) {
+	    var date = new Date();
+	    var year = date.getFullYear();
+	    var month = date.getMonth() + 1;
+	    var strDate = date.getDate();
+	    if (month >= 1 && month <= 9) {
+	        month = "0" + month;
+	    }
+	    if (strDate >= 0 && strDate <= 9) {
+	        strDate = "0" + strDate;
+	    }
+	    var currentdate = year + nian + month + yue + strDate + ti;
+	    return currentdate;
+	}
 	
 	let data = {};
 	function nextStep(){
@@ -520,6 +534,17 @@
 			$.modal.alertError("请添加合截止时间");
 			return false;
 		}
+		var start=new Date($('#startTime').val().replace("-", "/").replace("-", "/"));
+		var end=new Date($('#endTime').val().replace("-", "/").replace("-", "/"));
+		var now = new Date(getNowFormatDate('-','-','-'));
+		if(start > end){
+			$.modal.alertError("合同开始时间不能大于截止时间");
+			return false;
+		}
+		if(now > end){
+			$.modal.alertError("合同截止时间不能小于当前时间");
+			return false;
+		}	
 		data.startTime=$('#startTime').val();
 		data.endTime=$('#endTime').val();
 		let items = [];
