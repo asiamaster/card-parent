@@ -192,6 +192,7 @@
 		<div class="modal-content" style="width: 830px;height: 450px;">
 			<div class="modal-header" style="background-color: #E6E6E6;height: 45px;">
                <h5 style="height-line:45px;">新增资金委托关系</h5>
+               <label onclick="closeFirst()"><i class="fa fa-times"></i></label>
            </div>
 			<div class="modal-body" style="overflow:auto;">
 				 <form id = "save_form">
@@ -323,6 +324,7 @@
 		<div class="modal-content" style="width: 820px;height: 445px;">
 			<div class="modal-header" style="background-color: #E6E6E6;height: 45px;">
                <h5 style="height-line:45px;">新增资金委托关系</h5>
+               <label onclick="closeSecond()"><i class="fa fa-times"></i></label>
            </div>
 			<div class="modal-body" style="overflow:auto;">
 				<div style="background-color: #FFFACD;">
@@ -458,18 +460,29 @@
 
 
     function addConsignee() {
+    	var next = true;
 		var list=$(".consignee");
 		if(list.length == 3){
 			$.modal.alertWarning("最多三位被委托人")
-			return;
+			return false;
+		}
+		$(".consignee").each(function () {
+			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
+				$.modal.alertWarning("请读取身份证后添加下一位")
+				next = false;
+			}
+		});
+		if(!next){
+			return !next; 
 		}
 		$('#notesBefore').before(consignee);
 	}
 
 	function minusConsignee(e) {
 		$(e).closest(".consignee").remove();
-		consigneeIdCodeList.pop();
 	}
+	
+	
 	let data = {};
 	function nextStep(){
 		data = {};
@@ -551,6 +564,17 @@
 			}
 		})
 		$('#addFirstModal').modal('hide');
+	}
+	
+	function closeFirst(){
+		cancleAddView();
+	}
+	
+	function closeSecond(){
+		$('#addSecondModal').modal('hide');
+		$("#consigneeAlls").empty();
+		$("#consignorCustomer").empty();
+		cancleAddView();
 	}
 
 	function keyPress() {
@@ -641,12 +665,18 @@
             }
         });
 	}
-	var consigneeIdCodeList = [];
+	
 	function getConsignorIdCard() {
+		var consigneeIdCodeList = [];
 		$("#consignorCustomerIDCode").val("");
         $("#consignorCustomerName").val("");
         $("#consignorCustomerMobile").val("");
         var idCard = readerIDCard();
+        $(".consignee").each(function () {
+			if(!$.common.isEmpty($(this).find("#consigneeIdCode").val())){
+				consigneeIdCodeList.push($(this).find("#consigneeIdCode").val());
+			}
+		});
         if(consigneeIdCodeList.indexOf(idCard.IDCardNo) != -1){
         	$.modal.alertError("被委托人证件号与委托人证件号不能相同");
         	return false;
@@ -655,10 +685,16 @@
     }
 
 	function getConsigneeIdCard(obj){
+		var consigneeIdCodeList = [];
 		$(obj).parent().find("#consigneeIdCode").val("");
 		$(obj).parent().find("#consigneeName").val("");
 		$(obj).parent().find("#consigneeIdMobile").val("");
 		var idCard = readerIDCard();
+		 $(".consignee").each(function () {
+				if(!$.common.isEmpty($(this).find("#consigneeIdCode").val())){
+					consigneeIdCodeList.push($(this).find("#consigneeIdCode").val());
+				}
+			});
 		if(idCard.IDCardNo == $("#consignorCustomerIDCode").val()){
 			$.modal.alertError("被委托人证件号与委托人证件号不能相同");
 			return false;
