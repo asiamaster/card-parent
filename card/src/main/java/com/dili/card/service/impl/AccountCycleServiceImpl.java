@@ -213,6 +213,9 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	 * 对账前状态校验
 	 */
 	private void validateCycleSettledState(AccountCycleDo accountCycle) {
+		if (accountCycle == null) {
+			throw new CardAppBizException("当前没有账务周期");
+		}
 		if (accountCycle.getState() == CycleState.SETTLED.getCode()) {
 			throw new CardAppBizException("当前账务周期已结账,不能重复操作");
 		}
