@@ -14,7 +14,7 @@
 }
 </style>
 <div id="detail-modal">
-	<form id="saveForm" style="width: 90%;">
+	<form id="saveCashForm" style="width: 90%;">
 		<input id="action" name="action" type="hidden"
 			value="${usercash.action!}" class="form-control" />
 			<input id="inputuserName" name="userName" type="hidden" class="form-control"/>
@@ -44,7 +44,7 @@
 				</tr>
 				<tr>
 					<td class="info-column">备注</td>
-					<td class="info-cell"><textarea style="width: 200px;"
+					<td class="info-cell"><textarea style="width: 280px;"
 							id="notes" name="notes" maxlength="50"></textarea></td>
 				</tr>
 		</table>
@@ -75,7 +75,7 @@ $(function(){
 		    alert(this.value.length());
 		});
 	});
-$("#saveForm").validate({
+$("#saveCashForm").validate({
     onkeyup: false,
     rules: {
     	amountYuan: {
@@ -100,11 +100,12 @@ $("#saveForm").validate({
     focusCleanup: true
 });
 function submitHandler() {
-    if (!$.validate.form("saveForm")) {
+    if (!$.validate.form("saveCashForm")) {
         return false;
     }
+    alert(0);
     let url = "${contextPath}/cash/save.action";
-    let data = $.common.formToJSON("saveForm");
+    let data = $.common.formToJSON("saveCashForm");
     data.amount=parseInt(parseFloat(data.amountYuan)*100);
     $.operate.post(url, data);
 }
