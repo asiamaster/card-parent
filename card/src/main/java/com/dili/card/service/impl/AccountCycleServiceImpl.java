@@ -50,13 +50,19 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Transactional(rollbackFor = Exception.class)
 	public void settle(AccountCycleDto accountCycleDto) {
 		//获取最新的账务周期
-		AccountCycleDo accountCycle = accountCycleDao.findLatestActiveCycleByUserId(accountCycleDto.getUserId());
+		AccountCycleDo accountCycle = this.findLatestActiveCycleByUserId(accountCycleDto.getUserId());
 		// 对账状态校验
 		this.validateCycleSettledState(accountCycle);
 		//生成交款信息
 		userCashService.save(buildUserCash(accountCycleDto));
 		// 更新账务周期状态
 		this.updateStateById(accountCycle.getId(), CycleState.SETTLED.getCode(), accountCycle.getVersion());
+	}
+	
+
+	@Override
+	public AccountCycleDo findLatestActiveCycleByUserId(Long userId) {
+		return accountCycleDao.findLatestActiveCycleByUserId(userId);
 	}
 
 	@Override
@@ -131,7 +137,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}
 		AccountCycleDo accountCycle = this.findSettledCycleByUserId(userId);
 		if (accountCycle != null) {
-			throw new CardAppBizException("当前账务周期正在对账中,不能操作");
+			throw new CardAppBizException("当前员工账务周期正在对账中");
 		}
 		accountCycle = this.findActiveCycleByUserId(userId);
 		if (accountCycle == null) {

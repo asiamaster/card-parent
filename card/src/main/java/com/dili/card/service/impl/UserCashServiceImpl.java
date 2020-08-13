@@ -1,6 +1,5 @@
 package com.dili.card.service.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,7 @@ import com.dili.card.service.IUserCashService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CashAction;
 import com.dili.card.type.CashState;
-import com.dili.card.util.CurrencyUtils;
+import com.dili.card.type.CycleState;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
@@ -70,18 +69,27 @@ public class UserCashServiceImpl implements IUserCashService {
 		if (CashState.UNSETTLED.getCode() != userCashDo.getState()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能修改");
 		}
+		if (userCashDto.getAmount() < 1L) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01");
+		}
+		if (userCashDto.getAmount() > 99999999L) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过999999.99");
+		}
+		
+		AccountCycleDo accountCycleDo = accountCycleService.findLatestActiveCycleByUserId(userCashDto.getUserId());
+		if (accountCycleDo.getState() == CycleState.SETTLED.getCode()) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "该员工正在结账申请中,不能修改");
+		}
+		if (accountCycleDo.getState() == CycleState.FLATED.getCode()) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "该员工账务周期已结账,不能修改");
+		}
+		
 		userCashDo = new UserCashDo();
 		userCashDo.setId(userCashDto.getId());
 		userCashDo.setUserId(userCashDto.getUserId());
 		userCashDo.setUserCode(userCashDto.getUserCode());
 		userCashDo.setUserName(userCashDto.getUserName());
 		userCashDo.setAmount(userCashDto.getAmount());
-		if (userCashDo.getAmount() < 1L) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01");
-		}
-		if (userCashDo.getAmount() > 99999999L) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过999999.99");
-		}
 		userCashDo.setNotes(userCashDto.getNotes());
 		userCashDao.update(userCashDo);
 	}
@@ -217,6 +225,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		cashDto.setNotes(userCashDo.getNotes());
 		cashDto.setState(userCashDo.getState());
 		cashDto.setId(userCashDo.getId());
+		cashDto.setAction(userCashDo.getAction());
 		return cashDto;
 	}
 }

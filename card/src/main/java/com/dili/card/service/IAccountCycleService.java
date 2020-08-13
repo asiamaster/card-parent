@@ -81,4 +81,9 @@ public interface IAccountCycleService {
 	 */
 	void updateCashBox(Long cycleNo, Long amount);
 	
+	/**
+	 * 获取最新账务周期
+	 */
+	AccountCycleDo findLatestActiveCycleByUserId(Long userId);
+	
 }

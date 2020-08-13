@@ -72,6 +72,7 @@ public class UserCashManagementController implements IControllerHandler {
 		UserCashDto userCashDto = new UserCashDto();
 		userCashDto.setAction(CashAction.PAYEE.getCode());
 		modelMap.put("usercash", userCashDto);
+		modelMap.put("actionText", "领款");
 		return "usercash/add";
 	}
 
@@ -83,6 +84,7 @@ public class UserCashManagementController implements IControllerHandler {
 		UserCashDto userCashDto = new UserCashDto();
 		userCashDto.setAction(CashAction.PAYER.getCode());
 		modelMap.put("usercash", userCashDto);
+		modelMap.put("actionText", "交款");
 		return "usercash/add";
 	}
 

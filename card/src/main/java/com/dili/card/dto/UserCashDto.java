@@ -8,8 +8,10 @@ import javax.validation.constraints.NotNull;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
+import com.dili.card.common.provider.CashActionProvider;
 import com.dili.card.common.provider.CashStateProvider;
 import com.dili.card.common.provider.FenToYuanProvider;
+import com.dili.card.type.CashAction;
 import com.dili.card.validator.ConstantValidator;
 
 /**
@@ -37,7 +39,8 @@ public class UserCashDto extends BaseDto implements Serializable {
 	@NotBlank(message = "员工姓名不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
 	private String userName; 
 	/** 现金动作-领款 交款 */
-	private Integer action; 
+	@TextDisplay(CashActionProvider.class)
+	private Integer action;
 	/** 操作金额-分 */
 	@NotNull(message = "金额不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
 	@TextDisplay(FenToYuanProvider.class)
