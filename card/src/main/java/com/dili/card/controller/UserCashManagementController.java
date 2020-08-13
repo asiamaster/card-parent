@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.UserCashDto;
 import com.dili.card.service.IUserCashService;
 import com.dili.card.type.CashAction;
@@ -89,7 +91,9 @@ public class UserCashManagementController implements IControllerHandler {
 	 */
 	@GetMapping("/modify.html")
 	public String modify(Long id, ModelMap modelMap) {
-		modelMap.put("usercash", iUserCashService.detail(id));
+		 String json = JSON.toJSONString(iUserCashService.detail(id),
+	                new EnumTextDisplayAfterFilter());
+		 modelMap.put("usercash", JSON.parseObject(json));
 		return "usercash/modify";
 	}
 
@@ -98,7 +102,9 @@ public class UserCashManagementController implements IControllerHandler {
 	 */
 	@GetMapping("/delete.html")
 	public String delete(Long id, ModelMap modelMap) {
-		modelMap.put("usercash", iUserCashService.detail(id));
+		 String json = JSON.toJSONString(iUserCashService.detail(id),
+	                new EnumTextDisplayAfterFilter());
+		 modelMap.put("usercash", JSON.parseObject(json));
 		return "usercash/delete";
 	}
 
