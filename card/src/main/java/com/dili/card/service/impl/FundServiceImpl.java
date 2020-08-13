@@ -104,6 +104,7 @@ public class FundServiceImpl implements IFundService {
     }
 
 	@Override
+	@GlobalTransactional(rollbackFor = Exception.class)
 	public void unfrozen(UnfreezeFundDto unfreezeFundDto) {
 		AccountWithAssociationResponseDto accountInfo = accountQueryService
 				.getAssociationByAccountId(unfreezeFundDto.getAccountId());

@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.CashStateProvider;
+import com.dili.card.common.provider.FenToYuanProvider;
 import com.dili.card.validator.ConstantValidator;
 
 /**
@@ -27,10 +28,10 @@ public class UserCashDto extends BaseDto implements Serializable {
 	/**领取款编号*/
 	private Long cycleNo;
 	/** 领款或收款人 */
-	@NotNull(message = "员工工号不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
+	@NotNull(message = "员工id不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
 	private Long userId;
 	/** 领款或收款人 */
-	@NotBlank(message = "员工编号不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
+	@NotBlank(message = "员工工号不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
 	private String userCode;
 	/** 领款人名称-保留字段 */
 	@NotBlank(message = "员工姓名不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
@@ -38,10 +39,9 @@ public class UserCashDto extends BaseDto implements Serializable {
 	/** 现金动作-领款 交款 */
 	private Integer action; 
 	/** 操作金额-分 */
-	private Long amount; 
-	/** 操作金额-元 */
 	@NotNull(message = "金额不为空", groups = {ConstantValidator.Insert.class, ConstantValidator.Update.class})
-	private String amountYuan;
+	@TextDisplay(FenToYuanProvider.class)
+	private Long amount; 
 	/** 状态-预留字段 */
 	@TextDisplay(CashStateProvider.class)
 	private Integer state; 
@@ -239,14 +239,6 @@ public class UserCashDto extends BaseDto implements Serializable {
 
 	public void setUserCode(String userCode) {
 		this.userCode = userCode;
-	}
-
-	public String getAmountYuan() {
-		return amountYuan;
-	}
-
-	public void setAmountYuan(String amountYuan) {
-		this.amountYuan = amountYuan;
 	}
 
 	public Long getCashNo() {

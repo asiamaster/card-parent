@@ -49,12 +49,12 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void settle(AccountCycleDto accountCycleDto) {
-		//生成交款信息
-		userCashService.save(buildUserCash(accountCycleDto));
 		//获取最新的账务周期
 		AccountCycleDo accountCycle = accountCycleDao.findLatestActiveCycleByUserId(accountCycleDto.getUserId());
 		// 对账状态校验
 		this.validateCycleSettledState(accountCycle);
+		//生成交款信息
+		userCashService.save(buildUserCash(accountCycleDto));
 		// 更新账务周期状态
 		this.updateStateById(accountCycle.getId(), CycleState.SETTLED.getCode(), accountCycle.getVersion());
 	}
@@ -213,6 +213,9 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	 * 对账前状态校验
 	 */
 	private void validateCycleSettledState(AccountCycleDo accountCycle) {
+		if (accountCycle == null) {
+			throw new CardAppBizException("当前没有账务周期");
+		}
 		if (accountCycle.getState() == CycleState.SETTLED.getCode()) {
 			throw new CardAppBizException("当前账务周期已结账,不能重复操作");
 		}

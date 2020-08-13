@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.UserCashDto;
 import com.dili.card.service.IUserCashService;
 import com.dili.card.type.CashAction;
@@ -89,7 +91,9 @@ public class UserCashManagementController implements IControllerHandler {
 	 */
 	@GetMapping("/modify.html")
 	public String modify(Long id, ModelMap modelMap) {
-		modelMap.put("usercash", iUserCashService.detail(id));
+		 String json = JSON.toJSONString(iUserCashService.detail(id),
+	                new EnumTextDisplayAfterFilter());
+		 modelMap.put("usercash", JSON.parseObject(json));
 		return "usercash/modify";
 	}
 
@@ -98,7 +102,9 @@ public class UserCashManagementController implements IControllerHandler {
 	 */
 	@GetMapping("/delete.html")
 	public String delete(Long id, ModelMap modelMap) {
-		modelMap.put("usercash", iUserCashService.detail(id));
+		 String json = JSON.toJSONString(iUserCashService.detail(id),
+	                new EnumTextDisplayAfterFilter());
+		 modelMap.put("usercash", JSON.parseObject(json));
 		return "usercash/delete";
 	}
 
@@ -110,7 +116,7 @@ public class UserCashManagementController implements IControllerHandler {
 	public BaseOutput<Boolean> savePayee(
 			@RequestBody @Validated(value = ConstantValidator.Insert.class) UserCashDto userCashDto) {
 		iUserCashService.save(userCashDto);
-		return BaseOutput.success("新增领款成功");
+		return BaseOutput.success("新增成功");
 	}
 
 	/**
@@ -150,7 +156,7 @@ public class UserCashManagementController implements IControllerHandler {
 	@ResponseBody
 	public BaseOutput<Boolean> delete(@RequestBody @Validated(value = {ConstantValidator.Delete.class}) UserCashDto userCashDto) {
 		iUserCashService.delete(userCashDto.getId());
-		return BaseOutput.success("删除领款成功");
+		return BaseOutput.success("删除成功");
 	}
 
 	/**
@@ -161,7 +167,7 @@ public class UserCashManagementController implements IControllerHandler {
 	public BaseOutput<UserCashDto> modify(
 			@RequestBody @Validated(value = {ConstantValidator.Update.class}) UserCashDto userCashDto) {
 		iUserCashService.modify(userCashDto);
-		return BaseOutput.success("修改领款成功");
+		return BaseOutput.success("修改成功");
 	}
 
 }

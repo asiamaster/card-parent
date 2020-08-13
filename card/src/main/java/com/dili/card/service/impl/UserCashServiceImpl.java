@@ -72,7 +72,10 @@ public class UserCashServiceImpl implements IUserCashService {
 		}
 		userCashDo = new UserCashDo();
 		userCashDo.setId(userCashDto.getId());
-		userCashDo.setAmount(CurrencyUtils.yuan2Cent(new BigDecimal(userCashDto.getAmountYuan())));
+		userCashDo.setUserId(userCashDto.getUserId());
+		userCashDo.setUserCode(userCashDto.getUserCode());
+		userCashDo.setUserName(userCashDto.getUserName());
+		userCashDo.setAmount(userCashDto.getAmount());
 		if (userCashDo.getAmount() < 1L) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01");
 		}
@@ -140,12 +143,13 @@ public class UserCashServiceImpl implements IUserCashService {
 		UserCashDo userCash = new UserCashDo();
 		userCash.setCashNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CASH_NO.getCode())));
 		userCash.setAction(userCashDto.getAction());
-		if (userCash.getAmount() < 1L) {
+		if (userCashDto.getAmount() < 1L) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01");
 		}
-		if (userCash.getAmount() > 99999999L) {
+		if (userCashDto.getAmount() > 99999999L) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过999999.99");
 		}
+		userCash.setAmount(userCashDto.getAmount());
 		userCash.setUserId(userCashDto.getUserId());
 		userCash.setUserCode(userCashDto.getUserCode());
 		userCash.setUserName(userCashDto.getUserName());
@@ -202,7 +206,7 @@ public class UserCashServiceImpl implements IUserCashService {
 	private UserCashDto buildSingleCashDtoy(UserCashDo userCashDo) {
 		UserCashDto cashDto = new UserCashDto();
 		cashDto.setCashNo(userCashDo.getCashNo());
-		cashDto.setAmountYuan(CurrencyUtils.toYuanWithStripTrailingZeros(userCashDo.getAmount()));
+		cashDto.setAmount(userCashDo.getAmount());
 		cashDto.setCreatorId(userCashDo.getCreatorId());
 		cashDto.setCreatorCode(userCashDo.getCreatorCode());
 		cashDto.setCreator(userCashDo.getCreator());

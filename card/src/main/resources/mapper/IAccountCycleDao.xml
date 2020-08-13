@@ -136,8 +136,7 @@
 	
 	<select id="findLatestActiveCycleByUserId" resultType="com.dili.card.entity.AccountCycleDo">
 		<include refid="baseSql"/>
-		WHERE user_id = #{userId}
-		ORDER BY create_time DESC LIMIT 1
+		WHERE user_id = #{userId} ORDER BY create_time DESC LIMIT 1
 	</select>
 
 	<!-- 更新状态sql -->
