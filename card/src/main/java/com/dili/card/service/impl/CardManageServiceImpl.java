@@ -2,7 +2,6 @@ package com.dili.card.service.impl;
 
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
-import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
@@ -26,7 +25,6 @@ import com.dili.card.type.TradeType;
 import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-import com.google.common.collect.Lists;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -225,7 +223,7 @@ public class CardManageServiceImpl implements ICardManageService {
     private void saveRemoteSerialRecord(BusinessRecordDo businessRecord) {
         //成功则修改状态及期初期末金额，存储操作流水
         SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
-        serialService.handleSuccess(serialDto);
+        serialService.handleSuccess(serialDto, false);
     }
 
     /**
