@@ -69,7 +69,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
 
         FundItem serviceCostItem = this.getServiceCostItem(requestDto);
 
-        TradeRequestDto dto = TradeRequestDto.createTrade(userAccount, tradeNo, requestDto.getTradeChannel(), requestDto.getLoginPwd());
+        TradeRequestDto dto = TradeRequestDto.createTrade(userAccount, tradeNo, requestDto.getTradeChannel(), requestDto.getTradePwd());
         if (serviceCostItem != null && requestDto.getServiceCost() != null) {
             dto.addServiceFeeItem(requestDto.getServiceCost(), serviceCostItem);
         }
