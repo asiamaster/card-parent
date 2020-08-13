@@ -116,7 +116,7 @@ public class UserCashManagementController implements IControllerHandler {
 	public BaseOutput<Boolean> savePayee(
 			@RequestBody @Validated(value = ConstantValidator.Insert.class) UserCashDto userCashDto) {
 		iUserCashService.save(userCashDto);
-		return BaseOutput.success("新增领款成功");
+		return BaseOutput.success("新增成功");
 	}
 
 	/**
@@ -156,7 +156,7 @@ public class UserCashManagementController implements IControllerHandler {
 	@ResponseBody
 	public BaseOutput<Boolean> delete(@RequestBody @Validated(value = {ConstantValidator.Delete.class}) UserCashDto userCashDto) {
 		iUserCashService.delete(userCashDto.getId());
-		return BaseOutput.success("删除领款成功");
+		return BaseOutput.success("删除成功");
 	}
 
 	/**
@@ -167,7 +167,7 @@ public class UserCashManagementController implements IControllerHandler {
 	public BaseOutput<UserCashDto> modify(
 			@RequestBody @Validated(value = {ConstantValidator.Update.class}) UserCashDto userCashDto) {
 		iUserCashService.modify(userCashDto);
-		return BaseOutput.success("修改领款成功");
+		return BaseOutput.success("修改成功");
 	}
 
 }
