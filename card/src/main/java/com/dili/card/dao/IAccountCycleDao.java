@@ -12,7 +12,6 @@ import com.dili.card.entity.AccountCycleDo;
  * 柜员账务周期
  * @author bob<>
  */
-@Mapper
 public interface IAccountCycleDao {
 
     /**

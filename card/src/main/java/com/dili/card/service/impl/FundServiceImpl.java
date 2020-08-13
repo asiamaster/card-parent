@@ -1,22 +1,7 @@
 package com.dili.card.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import com.dili.card.common.constant.Constant;
-import com.dili.card.service.recharge.AbstractRechargeManager;
-import com.dili.card.service.recharge.RechargeFactory;
-import io.seata.spring.annotation.GlobalTransactional;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
@@ -31,7 +16,6 @@ import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
-import com.dili.card.rpc.AccountQueryRpc;
 import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
@@ -39,14 +23,26 @@ import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.ISerialService;
+import com.dili.card.service.recharge.AbstractRechargeManager;
+import com.dili.card.service.recharge.RechargeFactory;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
-import com.dili.ss.util.MoneyUtils;
 import com.google.common.collect.Lists;
+import io.seata.spring.annotation.GlobalTransactional;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 资金操作service实现类
@@ -94,21 +90,17 @@ public class FundServiceImpl implements IFundService {
 		createTradeRequestDto.setDescription(requestDto.getMark());
         FundOpResponseDto fundOpResponseDto = payRpcResolver.postFrozenFund(createTradeRequestDto);
         businessRecord.setTradeNo(String.valueOf(fundOpResponseDto.getFrozenId()));
-        serialService.saveBusinessRecord(businessRecord);
-        try {
-            TradeResponseDto transaction = fundOpResponseDto.getTransaction();
-            transaction.addVirtualPrincipalFundItem(-requestDto.getAmount());
-            SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, transaction, (serialRecord, feeType) -> {
-                if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
-                    serialRecord.setFundItem(FundItem.TRADE_FREEZE.getCode());
-                    serialRecord.setFundItemName(FundItem.TRADE_FREEZE.getName());
-                }
-                serialRecord.setNotes("手动冻结资金");
-            }, true);
-            serialService.handleSuccess(serialDto);
-        } catch (Exception e) {
-            LOGGER.error("冻结处理流水失败", e);
-        }
+		serialService.saveBusinessRecord(businessRecord);
+		TradeResponseDto transaction = fundOpResponseDto.getTransaction();
+		transaction.addVirtualPrincipalFundItem(-requestDto.getAmount());
+		SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, transaction, (serialRecord, feeType) -> {
+			if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
+				serialRecord.setFundItem(FundItem.TRADE_FREEZE.getCode());
+				serialRecord.setFundItemName(FundItem.TRADE_FREEZE.getName());
+			}
+			serialRecord.setNotes("手动冻结资金");
+		}, true);
+		serialService.handleSuccess(serialDto);
     }
 
 	@Override

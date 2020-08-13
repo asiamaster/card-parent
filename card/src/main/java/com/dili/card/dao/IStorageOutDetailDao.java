@@ -8,7 +8,6 @@ import com.dili.card.entity.StorageOutDetailDo;
  * 卡片出库，柜员领取激活的详细卡号
  * @author bob<>
  */
-@Mapper
 public interface IStorageOutDetailDao {
 	/**
      * 列表查询
