@@ -1,18 +1,12 @@
 package com.dili.card.service.recharge;
 
 import com.dili.card.common.annotation.TradeChannelMark;
-import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
-import com.dili.card.dto.SerialDto;
-import com.dili.card.dto.pay.TradeRequestDto;
-import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.service.IAccountCycleService;
-import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
-import com.dili.tcc.core.TccContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -66,9 +60,8 @@ public class CashRechargeService extends AbstractRechargeManager {
 
 
     @Override
-    protected void afterCommitRecharge(FundRequestDto requestDto) {
-        BusinessRecordDo businessRecordDo = TccContextHolder.get().getAttr(Constant.BUSINESS_RECORD_KEY, BusinessRecordDo.class);
+    protected void afterCommitRecharge(FundRequestDto requestDto, BusinessRecordDo record) {
         //添加现金资金池
-        accountCycleService.increaseCashBox(businessRecordDo.getCycleNo(), requestDto.getAmount());
+        accountCycleService.increaseCashBox(record.getCycleNo(), requestDto.getAmount());
     }
 }

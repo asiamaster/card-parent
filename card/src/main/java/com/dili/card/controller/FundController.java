@@ -16,7 +16,6 @@ import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.IRuleFeeService;
-import com.dili.card.service.tcc.RechargeTccTransactionManager;
 import com.dili.card.service.withdraw.WithdrawDispatcher;
 import com.dili.card.type.PayFreezeFundType;
 import com.dili.card.type.RuleFeeBusinessType;
@@ -59,8 +58,6 @@ public class FundController implements IControllerHandler {
     private IFundService fundService;
     @Autowired
     private IAccountQueryService accountQueryService;
-    @Autowired
-    private RechargeTccTransactionManager rechargeTccTransactionManager;
     @Resource
     private WithdrawDispatcher withdrawDispatcher;
     @Resource
@@ -73,11 +70,11 @@ public class FundController implements IControllerHandler {
      * @date 2020/6/29
      */
     @GetMapping("/frozen.html")
-    public String frozenFundView(String cardNo, ModelMap map) {
+    public String frozenFundView(String cardNo, Long accountId, ModelMap map) {
         if (StringUtils.isBlank(cardNo)) {
             throw new CardAppBizException(ResultCode.PARAMS_ERROR, "卡号不能为空");
         }
-        String json = JSON.toJSONString(accountQueryService.getDetailByCardNo(cardNo),
+        String json = JSON.toJSONString(accountQueryService.getDetail(cardNo, accountId),
                 new EnumTextDisplayAfterFilter());
         map.put("detail", JSON.parseObject(json));
         return "fund/frozen";
@@ -144,19 +141,11 @@ public class FundController implements IControllerHandler {
     @PostMapping("frozen.action")
     @ResponseBody
     public BaseOutput<?> frozen(@RequestBody @Validated(ConstantValidator.Update.class)
-                                            FundRequestDto requestDto) {
+                                        FundRequestDto requestDto) {
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
-        try {
-            fundService.frozen(requestDto);
-            return BaseOutput.success();
-        } catch (CardAppBizException e) {
-            return BaseOutput.failure(e.getMessage());
-        } catch (Exception e) {
-            LOGGER.error("冻结资金失败", e);
-            LOGGER.error("冻结资金请求参数:{}", JSON.toJSONString(requestDto));
-            return BaseOutput.failure();
-        }
+        fundService.frozen(requestDto);
+        return BaseOutput.success();
     }
 
     /**
@@ -223,19 +212,11 @@ public class FundController implements IControllerHandler {
     @ResponseBody
     @ForbidDuplicateCommit
     public BaseOutput<?> recharge(@RequestBody @Validated({FundValidator.Trade.class})
-                                              FundRequestDto requestDto) {
-        LOGGER.error("充值请求参数:{}", JSON.toJSONString(requestDto));
+                                          FundRequestDto requestDto) {
+        LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto));
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
-        try {
-            rechargeTccTransactionManager.doTcc(requestDto);
-        } catch (CardAppBizException e) {
-            return BaseOutput.failure(e.getMessage());
-        } catch (Exception e) {
-            LOGGER.error("充值失败", e);
-            LOGGER.error("充值请求参数:{}", JSON.toJSONString(requestDto));
-            return BaseOutput.failure();
-        }
+        fundService.recharge(requestDto);
         return BaseOutput.success();
     }
 
@@ -247,7 +228,7 @@ public class FundController implements IControllerHandler {
     @GetMapping("rechargeFee.action")
     @ResponseBody
     public BaseOutput<Long> getRechargeFee(Long amount) {
-        AssertUtils.notNull(amount,"金额不能为空");
+        AssertUtils.notNull(amount, "金额不能为空");
         BigDecimal ruleFee = ruleFeeService.getRuleFee(amount, RuleFeeBusinessType.CARD_RECHARGE_POS, SystemSubjectType.CARD_RECHARGE_POS_FEE);
         return BaseOutput.successData(ruleFee.longValue());
     }

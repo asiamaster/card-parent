@@ -14,19 +14,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class RechargeTccTransactionManager extends AbstractTccTransactionManager<Boolean, FundRequestDto> {
-    @Autowired
-    private RechargeFactory rechargeFactory;
+
 
     @Override
     public void prepare(FundRequestDto requestDto) {
-        AbstractRechargeManager rechargeManager = rechargeFactory.getRechargeManager(requestDto.getTradeChannel());
-        rechargeManager.doPreRecharge(requestDto);
+
     }
 
     @Override
     public Boolean confirm(FundRequestDto requestDto) {
-        AbstractRechargeManager rechargeManager = rechargeFactory.getRechargeManager(requestDto.getTradeChannel());
-        rechargeManager.doRecharge(requestDto);
         return true;
     }
 

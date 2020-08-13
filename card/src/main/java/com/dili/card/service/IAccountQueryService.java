@@ -1,8 +1,5 @@
 package com.dili.card.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.AccountSimpleResponseDto;
@@ -12,6 +9,8 @@ import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.ss.domain.PageOutput;
+
+import java.util.List;
 
 /**
  * @Auther: miaoguoxin
@@ -35,11 +34,11 @@ public interface IAccountQueryService {
     List<UserAccountCardResponseDto> getList(UserAccountCardQuery param);
 
     /**
-     * 根据卡号查询详情
+     * 查询详情
      * @author miaoguoxin
      * @date 2020/6/28
      */
-    AccountDetailResponseDto getDetailByCardNo(String cardNo);
+    AccountDetailResponseDto getDetail(String cardNo, Long accountId);
 
     /**
      * 根据卡号查询（只查询卡账户信息）
@@ -50,10 +49,10 @@ public interface IAccountQueryService {
 
 
     /**
-    * 根据卡号查询 （不校验非正常状态）
-    * @author miaoguoxin
-    * @date 2020/7/30
-    */
+     * 根据卡号查询 （不校验非正常状态）
+     * @author miaoguoxin
+     * @date 2020/7/30
+     */
     UserAccountCardResponseDto getByCardNoWithoutValidate(String cardNo);
 
     /**
@@ -94,9 +93,9 @@ public interface IAccountQueryService {
 
 
     /**
-    * 解挂操作查询
-    * @author miaoguoxin
-    * @date 2020/8/6
-    */
+     * 解挂操作查询
+     * @author miaoguoxin
+     * @date 2020/8/6
+     */
     UserAccountCardResponseDto getForUnLostCard(UserAccountSingleQueryDto query);
 }

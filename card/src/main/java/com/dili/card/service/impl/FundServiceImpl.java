@@ -6,6 +6,9 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.dili.card.common.constant.Constant;
+import com.dili.card.service.recharge.AbstractRechargeManager;
+import com.dili.card.service.recharge.RechargeFactory;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,10 +67,11 @@ public class FundServiceImpl implements IFundService {
 	private UidRpcResovler uidRpcResovler;
 	@Resource
 	private PayRpc payRpc;
-	@Resource
-	private AccountQueryRpc accountQueryRpc;
+	@Autowired
+	private RechargeFactory rechargeFactory;
 
 	@Override
+	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
 	public void frozen(FundRequestDto requestDto) {
 		UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(requestDto);
@@ -129,8 +133,15 @@ public class FundServiceImpl implements IFundService {
 		serialDto.setSerialRecordList(Lists.newArrayList(serialRecord));
 		serialService.saveSerialRecord(serialDto);
 	}
+    @Override
+	@GlobalTransactional(rollbackFor = Exception.class)
+	@Transactional(rollbackFor = Exception.class)
+    public void recharge(FundRequestDto requestDto) {
+		AbstractRechargeManager rechargeManager = rechargeFactory.getRechargeManager(requestDto.getTradeChannel());
+		rechargeManager.doRecharge(requestDto);
+    }
 
-	@Override
+    @Override
 	public PageOutput<List<FreezeFundRecordDto>> frozenRecord(FreezeFundRecordParam queryParam) {
 		// 从支付查询 默认查询从当日起一年内的未解冻记录
 		PageOutput<List<FreezeFundRecordDto>> pageOutPut = GenericRpcResolver.resolver(payRpc.listFrozenRecord(queryParam),
