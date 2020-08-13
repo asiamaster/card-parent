@@ -39,7 +39,7 @@ public interface IContractService {
 	/**
 	 * 合同详情
 	 */
-	FundContractResponseDto detail(Long id, boolean isPreview);
+	FundContractResponseDto detail(Long id);
 
 	/**
 	 * 关闭过期合同

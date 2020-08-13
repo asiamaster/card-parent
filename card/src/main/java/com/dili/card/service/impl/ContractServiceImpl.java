@@ -31,6 +31,7 @@ import com.dili.card.entity.FundContractDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
+import com.dili.card.rpc.resolver.DataDictionaryRpcResovler;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IContractService;
 import com.dili.card.type.BizNoType;
@@ -63,6 +64,8 @@ public class ContractServiceImpl implements IContractService {
 	private AccountQueryRpcResolver accountQueryRpcResolver;
 	@Autowired
 	private IAccountQueryService accountQueryService;
+	@Autowired
+	private DataDictionaryRpcResovler dataDictionaryRpcResovler;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -115,7 +118,7 @@ public class ContractServiceImpl implements IContractService {
 	}
 
 	@Override
-	public FundContractResponseDto detail(Long id, boolean isPreview) {
+	public FundContractResponseDto detail(Long id) {
 		FundContractDo fundContract = contractDao.getById(id);
 		if (fundContract == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "该合同号不存在");
@@ -123,7 +126,7 @@ public class ContractServiceImpl implements IContractService {
 		UserAccountCardResponseDto userAccountCard = accountQueryService.getByAccountId(fundContract.getConsignorAccountId());
 		Customer customer = customerRpcResolver.getWithNotNull(userAccountCard.getCustomerId(),
 				fundContract.getFirmId());
-		return this.buildContractResponse(fundContract, userAccountCard, customer, isPreview);
+		return this.buildContractResponse(fundContract, userAccountCard, customer);
 	}
 
 	@Override
@@ -229,7 +232,7 @@ public class ContractServiceImpl implements IContractService {
 		for (FundContractDo fundContractDo : fundContracts) {
 			contractResponseDtos.add(this.buildContractResponse(fundContractDo,
 					userAccountCardMsp.get(fundContractDo.getConsignorAccountId()),
-					customerMap.get(fundContractDo.getConsignorCustomerId()), false));
+					customerMap.get(fundContractDo.getConsignorCustomerId())));
 		}
 		return contractResponseDtos;
 	}
@@ -238,7 +241,7 @@ public class ContractServiceImpl implements IContractService {
 	 * 构建页面相应数据
 	 */
 	private FundContractResponseDto buildContractResponse(FundContractDo fundContractDo,
-			UserAccountCardResponseDto accountCard, Customer customer, boolean ispreview) {
+			UserAccountCardResponseDto accountCard, Customer customer) {
 		FundContractResponseDto contractResponseDto = new FundContractResponseDto();
 		// 构建合同核心数据
 		contractResponseDto.setId(fundContractDo.getId());
@@ -247,22 +250,18 @@ public class ContractServiceImpl implements IContractService {
 		contractResponseDto.setCreateTime(fundContractDo.getCreateTime());
 		contractResponseDto.setStartTime(fundContractDo.getStartTime());
 		contractResponseDto.setEndTime(fundContractDo.getEndTime());
-
-		if (ispreview) {
-			contractResponseDto.setStartYear(fundContractDo.getStartTime().getYear());
-			contractResponseDto.setStartMonth(fundContractDo.getStartTime().getMonth().getValue());
-			contractResponseDto.setStartDay(fundContractDo.getStartTime().getDayOfMonth());
-			contractResponseDto.setEndYear(fundContractDo.getEndTime().getYear());
-			contractResponseDto.setEndMonth(fundContractDo.getEndTime().getMonth().getValue());
-			contractResponseDto.setEndDay(fundContractDo.getEndTime().getDayOfMonth());
-		}
-
 		contractResponseDto.setTerminater(fundContractDo.getTerminater());
 		contractResponseDto.setTerminateNotes(fundContractDo.getTerminateNotes());
 		contractResponseDto.setTerminateTime(fundContractDo.getTerminateTime());
 		contractResponseDto.setState(fundContractDo.getState());
 
-		LocalDate plusDaysResult = LocalDate.now().plusDays(Constant.READY_EXPIRE_DAY);
+		long expireDay = 0L;
+		String readyExpireDay = dataDictionaryRpcResovler.findByDataDictionaryValue(Constant.CONTRACT_EXPIRE_DAYS);
+		if (StringUtils.isBlank(readyExpireDay) || !StringUtils.isNumeric(readyExpireDay)) {
+			expireDay = Constant.READY_EXPIRE_DAY;
+		}
+		expireDay = Long.valueOf(readyExpireDay);
+		LocalDate plusDaysResult = LocalDate.now().plusDays(expireDay);
 		if (Timestamp.valueOf(fundContractDo.getEndTime()).getTime() < Timestamp
 				.valueOf(plusDaysResult.atStartOfDay()).getTime()) {
 			contractResponseDto.setReadyExpire(true);
@@ -286,10 +285,8 @@ public class ContractServiceImpl implements IContractService {
 		// 获取客户信息
 		contractResponseDto.setConsignorCode(customer.getCode());
 		contractResponseDto.setConsignorName(customer.getName());
-		if (ispreview) {
-			contractResponseDto.setConsignorMobile(customer.getCellphone());
-			contractResponseDto.setConsignorIdCode(customer.getCertificateNumber());
-		}
+		contractResponseDto.setConsignorMobile(customer.getCellphone());
+		contractResponseDto.setConsignorIdCode(customer.getCertificateNumber());
 		return contractResponseDto;
 	}
 

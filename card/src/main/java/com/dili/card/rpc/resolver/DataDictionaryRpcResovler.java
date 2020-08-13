@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import com.dili.card.exception.CardAppBizException;
 import com.dili.ss.constant.ResultCode;
@@ -30,6 +31,9 @@ public class DataDictionaryRpcResovler {
     	BaseOutput<List<DataDictionaryValue>> baseOutput = dataDictionaryRpc.listDataDictionaryValueByDdCode(ddCode);
     	if (!baseOutput.isSuccess()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "远程调用数据字典服务失败");
+		}
+    	if (CollectionUtils.isEmpty(baseOutput.getData())) {
+			return null;
 		}
 		return baseOutput.getData().get(0).getCode();
     }

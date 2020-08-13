@@ -43,6 +43,8 @@ p {
 
 <div  style="background-color: #FFFACD;">
 	<div>
+		<input type="hidden" value="${detail.startTime!}" id="startTime01">
+		<input type="hidden" value="${detail.endTime!}"  id="endTime01">
 		<h4 style="text-align: center;padding-top: 15px;">资金授权委托协议书</h4>
 		<p>寿光地利农产品物流园有限公司：</p>
 		<p style="text-indent: 2em">
@@ -52,12 +54,12 @@ p {
 				id="consigneeNames2" style="text-decoration: underline;">${detail.consigneeNames!}</span></font>
 			持本人 <font color="#FC1D24"><span id="cardNo2"
 				style="text-decoration: underline;">${detail.consignorCard!}</span></font>园区卡，
-			在<font color="#FC1D24"><span id="startTimeYear">${detail.startYear!}</span></font>年
-			<font color="#FC1D24"><span id="startTimeMonth">${detail.startMonth!}</span></font>月
-			<font color="#FC1D24"><span id="startTimeDay">${detail.startDay!}</span></font>日
-			至 <font color="#FC1D24"><span id="endTimeYear">${detail.endYear!}</span></font>年
-			<font color="#FC1D24"><span id="endTimeMonth">${detail.endMonth!}</span></font>月
-			<font color="#FC1D24"><span id="endTimeDay">${detail.endDay!}</span></font>日
+			在<font color="#FC1D24"><span id="startTimeYear"></span></font>年
+			<font color="#FC1D24"><span id="startTimeMonth"></span></font>月
+			<font color="#FC1D24"><span id="startTimeDay"></span></font>日
+			至 <font color="#FC1D24"><span id="endTimeYear"></span></font>年
+			<font color="#FC1D24"><span id="endTimeMonth"></span></font>月
+			<font color="#FC1D24"><span id="endTimeDay"></span></font>日
 			规定时间内负责资金代取汇款业务， 因此期间产生的所有纠纷由我本人全部承担。
 		</p>
 		<p>委托人：</p>
@@ -110,6 +112,14 @@ p {
 </#bs4Body>
 <script>
 $(function(){
+	var startTime01 = $("#startTime01").val();
+	var endTime01 = $("#endTime01").val();
+	$('#startTimeYear').html(startTime01.substring(0,4));
+	$('#startTimeMonth').html(startTime01.substring(5,7));
+	$('#startTimeDay').html(startTime01.substring(9));
+	$('#endTimeYear').html(endTime01.substring(0,4));
+	$('#endTimeMonth').html(endTime01.substring(5,7));
+	$('#endTimeDay').html(endTime01.substring(9));
 	$('#currentdate').html(getNowFormatDate(' 年 ', ' 月 ',' 日 '));
 });
 </script>

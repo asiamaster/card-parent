@@ -70,14 +70,6 @@ public class FundContractResponseDto{
 	/** 合同即将到期提示*/
 	private Boolean readyExpire = false;
 	
-	private Integer startYear;
-	private Integer startMonth;
-	private Integer startDay;
-	
-	private Integer endYear;
-	private Integer endMonth;
-	private Integer endDay;
-
     /**
      * setter for 合同开始日期
      */
@@ -250,54 +242,6 @@ public class FundContractResponseDto{
 
 	public void setReadyExpire(Boolean readyExpire) {
 		this.readyExpire = readyExpire;
-	}
-
-	public Integer getStartYear() {
-		return startYear;
-	}
-
-	public void setStartYear(Integer startYear) {
-		this.startYear = startYear;
-	}
-
-	public Integer getStartMonth() {
-		return startMonth;
-	}
-
-	public void setStartMonth(Integer startMonth) {
-		this.startMonth = startMonth;
-	}
-
-	public Integer getStartDay() {
-		return startDay;
-	}
-
-	public void setStartDay(Integer startDay) {
-		this.startDay = startDay;
-	}
-
-	public Integer getEndYear() {
-		return endYear;
-	}
-
-	public void setEndYear(Integer endYear) {
-		this.endYear = endYear;
-	}
-
-	public Integer getEndMonth() {
-		return endMonth;
-	}
-
-	public void setEndMonth(Integer endMonth) {
-		this.endMonth = endMonth;
-	}
-
-	public Integer getEndDay() {
-		return endDay;
-	}
-
-	public void setEndDay(Integer endDay) {
-		this.endDay = endDay;
 	}
 
 	public String getConsignorMobile() {
