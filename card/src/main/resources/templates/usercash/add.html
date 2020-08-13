@@ -106,7 +106,6 @@ function submitHandler(e) {
     if (!$.validate.form(formId)) {
         return false;
     }
-    alert(0);
     let url = "${contextPath}/cash/save.action";
     let data = $.common.formToJSON(formId);
     data.amount=parseInt(parseFloat(data.amountYuan)*100);
