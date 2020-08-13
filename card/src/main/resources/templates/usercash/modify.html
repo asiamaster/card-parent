@@ -18,15 +18,15 @@
     <div id="detail-modal" >
     	<form id="saveForm" style="width: 90%;">
     		<input id="id" name="id" type="hidden" value="${usercash.id!}" class="form-control"/>
-    		<input id="_userId" name="userId" type="hidden" value="${usercash.userId!}" class="form-control"/>
-    		<input id="_userCode" name="userCode" type="hidden" value="${usercash.userCode!}" class="form-control"/>
-    		<input id="action" name="action" type="hidden" value="${usercash.action!}" class="form-control"/>
 	        <table id="out-detail" class="table table-bordered" >
 	            <tbody>
 	            <tr>
 	                <td class="info-column">柜员工号</td>
-	                <td class="info-cell">${usercash.userCode!}
-	                </td>
+	                <td class="info-cell"><#bautoCompleteProvider id="userCode"
+							_hiddenDomainId="userId" _hiddenDomainName="userId"
+							_displayDomainId="userCode" _displayDomainName="userCode"
+							_placeholder="" _text="${usercash.userCode!}" _value="${usercash.userId!}"  _optionVariable="userNameAutoCompleteOption" />
+					</td>
 	            </tr>
 	            <tr>
 	                <td class="info-column">柜员姓名</td>
@@ -54,6 +54,8 @@
     </div>
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript"
+	src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <#common_autoCompleteUser/>
 <script>
 $(function(){
@@ -108,7 +110,8 @@ function submitHandler(e) {
     let url = "${contextPath}/cash/modify.action";
     let data = $.common.formToJSON(formId);
     data.amount=parseInt(parseFloat(data.amountYuan)*100);
-    $.operate.post(url, data);
+    alert(JSON.stringify(data));
+    //$.operate.post(url, data);
     return true;
 }
 </script>

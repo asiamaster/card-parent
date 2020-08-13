@@ -99,7 +99,7 @@ $("#saveCashForm").validate({
     },
     focusCleanup: true
 });
-function submitHandler() {
+function submitHandler(e) {
     if (!$.validate.form("saveCashForm")) {
         return false;
     }

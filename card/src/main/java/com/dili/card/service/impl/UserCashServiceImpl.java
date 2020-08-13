@@ -72,6 +72,9 @@ public class UserCashServiceImpl implements IUserCashService {
 		}
 		userCashDo = new UserCashDo();
 		userCashDo.setId(userCashDto.getId());
+		userCashDo.setUserId(userCashDto.getUserId());
+		userCashDo.setUserCode(userCashDto.getUserCode());
+		userCashDo.setUserName(userCashDto.getUserName());
 		userCashDo.setAmount(userCashDto.getAmount());
 		if (userCashDo.getAmount() < 1L) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01");
