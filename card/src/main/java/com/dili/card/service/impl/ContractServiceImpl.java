@@ -145,7 +145,7 @@ public class ContractServiceImpl implements IContractService {
 	public List<Customer> findCustomers(CustomerQueryInput query) {
 		List<Customer> itemList = customerRpcResolver.list(query);
 		if (CollectionUtils.isEmpty(itemList)) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "系统无相应客户信息");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "无相应客户信息");
 		};
 		List<Long> customerIds = new ArrayList<Long>();
 		for (Customer customer : itemList) {
@@ -285,7 +285,7 @@ public class ContractServiceImpl implements IContractService {
 		// 获取客户信息
 		contractResponseDto.setConsignorCode(customer.getCode());
 		contractResponseDto.setConsignorName(customer.getName());
-		contractResponseDto.setConsignorMobile(customer.getCellphone());
+		contractResponseDto.setConsignorMobile(customer.getContactsPhone());
 		contractResponseDto.setConsignorIdCode(customer.getCertificateNumber());
 		return contractResponseDto;
 	}
