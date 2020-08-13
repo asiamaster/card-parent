@@ -53,6 +53,8 @@
 </#bs4Body>
 <script type="text/javascript"
 	src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript"
+	src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <#common_autoCompleteUser/>
 <script>
 
@@ -75,7 +77,8 @@ $(function(){
 		    alert(this.value.length());
 		});
 	});
-$("#saveCashForm").validate({
+let formId = "saveCashForm";
+$("#" + formId).validate({
     onkeyup: false,
     rules: {
     	amountYuan: {
@@ -100,13 +103,14 @@ $("#saveCashForm").validate({
     focusCleanup: true
 });
 function submitHandler(e) {
-    if (!$.validate.form("saveCashForm")) {
+    if (!$.validate.form(formId)) {
         return false;
     }
     alert(0);
     let url = "${contextPath}/cash/save.action";
-    let data = $.common.formToJSON("saveCashForm");
+    let data = $.common.formToJSON(formId);
     data.amount=parseInt(parseFloat(data.amountYuan)*100);
-    $.operate.saveModal(url, JSON.stringify(data));
+    $.operate.post(url, data);
+    return true;
 }
 </script>
