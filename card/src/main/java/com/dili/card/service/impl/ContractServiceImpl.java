@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.service.IAccountQueryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,7 +176,7 @@ public class ContractServiceImpl implements IContractService {
 			consigneeCustomerIdCodes.add(fundConsignorDto.getConsigneeIdCode());
 			consigneeCustomerMobiles.add(fundConsignorDto.getConsigneeIdMobile());
 		}
-			
+
 	}
 
 	/**
@@ -246,7 +247,7 @@ public class ContractServiceImpl implements IContractService {
 		contractResponseDto.setCreateTime(fundContractDo.getCreateTime());
 		contractResponseDto.setStartTime(fundContractDo.getStartTime());
 		contractResponseDto.setEndTime(fundContractDo.getEndTime());
-		
+
 		if (ispreview) {
 			contractResponseDto.setStartYear(fundContractDo.getStartTime().getYear());
 			contractResponseDto.setStartMonth(fundContractDo.getStartTime().getMonth().getValue());
@@ -255,12 +256,12 @@ public class ContractServiceImpl implements IContractService {
 			contractResponseDto.setEndMonth(fundContractDo.getEndTime().getMonth().getValue());
 			contractResponseDto.setEndDay(fundContractDo.getEndTime().getDayOfMonth());
 		}
-		
+
 		contractResponseDto.setTerminater(fundContractDo.getTerminater());
 		contractResponseDto.setTerminateNotes(fundContractDo.getTerminateNotes());
 		contractResponseDto.setTerminateTime(fundContractDo.getTerminateTime());
 		contractResponseDto.setState(fundContractDo.getState());
-		
+
 		LocalDate plusDaysResult = LocalDate.now().plusDays(Constant.READY_EXPIRE_DAY);
 		if (Timestamp.valueOf(fundContractDo.getEndTime()).getTime() < Timestamp
 				.valueOf(plusDaysResult.atStartOfDay()).getTime()) {
@@ -340,12 +341,14 @@ public class ContractServiceImpl implements IContractService {
 	private FundContractDo buildContractEntity(FundContractRequestDto fundContractRequest) {
 		FundContractDo fundContractDo = new FundContractDo();
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		
+
 		Customer customer = customerRpcResolver.getWithNotNull(fundContractRequest.getCustomerId(), (userTicket.getFirmId()));
 		if (customer == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "系统没有客户信息");
 		}
-		UserAccountCardResponseDto userAccountCardResponseDto = accountQueryRpcResolver.findSingleWithoutValidate(UserAccountCardQuery.createInstance(fundContractRequest.getConsignorAccountId()));
+		UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+		query.setAccountId(fundContractRequest.getConsignorAccountId());
+		UserAccountCardResponseDto userAccountCardResponseDto = accountQueryRpcResolver.findSingleWithoutValidate(query);
 		if (userAccountCardResponseDto == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "卡号不存在");
 		}
