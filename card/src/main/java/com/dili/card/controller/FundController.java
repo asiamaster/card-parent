@@ -109,6 +109,7 @@ public class FundController implements IControllerHandler {
      */
     @RequestMapping(value = "/withdraw.action")
     @ResponseBody
+    @ForbidDuplicateCommit
     public BaseOutput<?> withdraw(@RequestBody FundRequestDto fundRequestDto) {
         validateCommonParam(fundRequestDto);
         buildOperatorInfo(fundRequestDto);

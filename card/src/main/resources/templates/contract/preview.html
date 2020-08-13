@@ -116,10 +116,10 @@ $(function(){
 	var endTime01 = $("#endTime01").val();
 	$('#startTimeYear').html(startTime01.substring(0,4));
 	$('#startTimeMonth').html(startTime01.substring(5,7));
-	$('#startTimeDay').html(startTime01.substring(9));
+	$('#startTimeDay').html(startTime01.substring(8,10));
 	$('#endTimeYear').html(endTime01.substring(0,4));
 	$('#endTimeMonth').html(endTime01.substring(5,7));
-	$('#endTimeDay').html(endTime01.substring(9));
+	$('#endTimeDay').html(endTime01.substring(8,10));
 	$('#currentdate').html(getNowFormatDate(' 年 ', ' 月 ',' 日 '));
 });
 </script>
