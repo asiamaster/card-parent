@@ -49,7 +49,7 @@ public class ContractManagementController implements IControllerHandler {
      */
     @GetMapping("/detail.html")
     public String detail(Long id, ModelMap modelMap) {
-        modelMap.put("detail", iContractService.detail(id, false));
+        modelMap.put("detail", iContractService.detail(id));
         return "contract/detail";
     }
     
@@ -58,7 +58,7 @@ public class ContractManagementController implements IControllerHandler {
      */
     @GetMapping("/preview.html")
     public String preview(Long id, ModelMap modelMap) {
-        modelMap.put("detail", iContractService.detail(id, true));
+        modelMap.put("detail", iContractService.detail(id));
         return "contract/preview";
     }
 
@@ -67,7 +67,7 @@ public class ContractManagementController implements IControllerHandler {
      */
     @GetMapping("/remove.html")
     public String removeToPage(Long id, ModelMap modelMap) {
-        modelMap.put("detail", iContractService.detail(id, false));
+        modelMap.put("detail", iContractService.detail(id));
         return "contract/remove";
     }
 
