@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.ServiceName;
@@ -21,6 +22,8 @@ import com.dili.ss.domain.PageOutput;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
+import io.seata.spring.annotation.GlobalTransactional;
+
 /**
  * @description： 卡片入库相关功能实现
  * 
@@ -35,6 +38,8 @@ public class CardStorageInServiceImpl implements ICardStorageInService {
 	private IStorageInDao storageInDao;
 
 	@Override
+	@GlobalTransactional(rollbackFor = Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void batchCardStorageIn(StorageInDo storageIn) {
 		// 按号段入库
 		BatchCardAddStorageDto batchInfo = new BatchCardAddStorageDto();
