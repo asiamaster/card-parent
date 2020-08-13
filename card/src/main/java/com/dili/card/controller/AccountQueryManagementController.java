@@ -13,7 +13,6 @@ import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.type.CardType;
 import com.dili.card.util.AssertUtils;
-import com.dili.card.validator.AccountValidator;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
@@ -45,6 +44,7 @@ public class AccountQueryManagementController implements IControllerHandler {
     @Autowired
     private AccountQueryRpcResolver accountQueryRpcResolver;
 
+
     /**
      * 跳转列表页面
      * @author miaoguoxin
@@ -61,11 +61,14 @@ public class AccountQueryManagementController implements IControllerHandler {
      * @date 2020/6/28
      */
     @GetMapping("/detailTab.html")
-    public String detailFacadeView(String cardNo, ModelMap map) {
-        if (StringUtils.isBlank(cardNo)) {
-            throw new CardAppBizException(ResultCode.PARAMS_ERROR, "卡号不能为空");
-        }
-        UserAccountCardResponseDto userAccount = accountQueryService.getByCardNoWithoutValidate(cardNo);
+    public String detailFacadeView(String cardNo, Long accountId, ModelMap map) {
+        AssertUtils.notEmpty(cardNo, "卡号不能为空");
+        AssertUtils.notNull(accountId, "账户id不能为空");
+
+        UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+        query.setAccountId(accountId);
+        query.setCardNo(cardNo);
+        UserAccountCardResponseDto userAccount = accountQueryRpcResolver.findSingleWithoutValidate(query);
         map.put("isMaster", CardType.isMaster(userAccount.getCardType()));
         map.put("cardState", userAccount.getCardState());
         map.put("disabledState", userAccount.getDisabledState());
@@ -78,11 +81,10 @@ public class AccountQueryManagementController implements IControllerHandler {
      * @date 2020/6/28
      */
     @GetMapping("/accountDetail.html")
-    public String accountDetailView(String cardNo, ModelMap map) {
-        if (StringUtils.isBlank(cardNo)) {
-            throw new CardAppBizException(ResultCode.PARAMS_ERROR, "卡号不能为空");
-        }
-        String json = JSON.toJSONString(accountQueryService.getDetailByCardNo(cardNo),
+    public String accountDetailView(String cardNo, Long accountId, ModelMap map) {
+        AssertUtils.notEmpty(cardNo, "卡号不能为空");
+        AssertUtils.notNull(accountId, "账户id不能为空");
+        String json = JSON.toJSONString(accountQueryService.getDetail(cardNo, accountId),
                 new EnumTextDisplayAfterFilter());
         map.put("detail", JSON.parseObject(json));
         return "accountquery/accountDetail";
@@ -112,7 +114,7 @@ public class AccountQueryManagementController implements IControllerHandler {
     @ResponseBody
     @Deprecated
     public BaseOutput<AccountSimpleResponseDto> getInfoByCardNo(String cardNo) {
-        AssertUtils.notEmpty(cardNo,"卡号不能为空");
+        AssertUtils.notEmpty(cardNo, "卡号不能为空");
         return BaseOutput.successData(accountQueryService.getByCardNoWithBalance(cardNo));
     }
 
@@ -130,10 +132,10 @@ public class AccountQueryManagementController implements IControllerHandler {
     }
 
     /**
-    * 单个查询(不校验状态)
-    * @author miaoguoxin
-    * @date 2020/8/4
-    */
+     * 单个查询(不校验状态)
+     * @author miaoguoxin
+     * @date 2020/8/4
+     */
     @GetMapping("/singleWithoutValidate.action")
     @ResponseBody
     public BaseOutput<UserAccountCardResponseDto> getSingleWithoutValidate(UserAccountSingleQueryDto query) {
@@ -149,7 +151,7 @@ public class AccountQueryManagementController implements IControllerHandler {
     @GetMapping("/single.action")
     @ResponseBody
     public BaseOutput<UserAccountCardResponseDto> getSingle(UserAccountSingleQueryDto query) {
-    	UserAccountCardResponseDto userAccountCardResponseDto = accountQueryRpcResolver.findSingle(query);
+        UserAccountCardResponseDto userAccountCardResponseDto = accountQueryRpcResolver.findSingle(query);
         return BaseOutput.successData(userAccountCardResponseDto);
     }
 }

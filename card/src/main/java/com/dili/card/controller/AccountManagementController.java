@@ -1,7 +1,15 @@
 package com.dili.card.controller;
 
-import javax.annotation.Resource;
-
+import com.alibaba.fastjson.JSON;
+import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
+import com.dili.card.dto.CardRequestDto;
+import com.dili.card.exception.CardAppBizException;
+import com.dili.card.service.IAccountManageService;
+import com.dili.card.service.IAccountQueryService;
+import com.dili.card.util.AssertUtils;
+import com.dili.ss.constant.ResultCode;
+import com.dili.ss.domain.BaseOutput;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -10,15 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.alibaba.fastjson.JSON;
-import com.dili.card.common.handler.IControllerHandler;
-import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
-import com.dili.card.dto.CardRequestDto;
-import com.dili.card.exception.CardAppBizException;
-import com.dili.card.service.IAccountManageService;
-import com.dili.card.service.IAccountQueryService;
-import com.dili.ss.constant.ResultCode;
-import com.dili.ss.domain.BaseOutput;
+import javax.annotation.Resource;
 
 /**
  * 卡账户管理操作
@@ -33,35 +33,33 @@ public class AccountManagementController implements IControllerHandler{
 	private IAccountManageService accountManageService;
 	@Resource
 	private IAccountQueryService accountQueryService;
-	
+
 	/**
 	 * 冻结账户页面
 	 */
 	@GetMapping("/frozenAccount.html")
-	public String frozenAccountView(String cardNo, ModelMap map) {
-		if (StringUtils.isBlank(cardNo)) {
-			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "卡号不能为空");
-		}
-		String json = JSON.toJSONString(accountQueryService.getDetailByCardNo(cardNo),
+	public String frozenAccountView(String cardNo, Long accountId, ModelMap map) {
+		AssertUtils.notEmpty(cardNo, "卡号不能为空");
+		AssertUtils.notNull(accountId, "账户id不能为空");
+		String json = JSON.toJSONString(accountQueryService.getDetail(cardNo, accountId),
 				new EnumTextDisplayAfterFilter());
 		map.put("detail", JSON.parseObject(json));
 		return "accountquery/frozenAccount";
 	}
-	
+
 	/**
 	 * 解冻账户页面
 	 */
 	@GetMapping("/unfrozenAccount.html")
-	public String unfrozenAccountView(String cardNo, ModelMap map) {
-		if (StringUtils.isBlank(cardNo)) {
-			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "卡号不能为空");
-		}
-		String json = JSON.toJSONString(accountQueryService.getDetailByCardNo(cardNo),
+	public String unfrozenAccountView(String cardNo,Long accountId, ModelMap map) {
+		AssertUtils.notEmpty(cardNo, "卡号不能为空");
+		AssertUtils.notNull(accountId, "账户id不能为空");
+		String json = JSON.toJSONString(accountQueryService.getDetail(cardNo,accountId),
 				new EnumTextDisplayAfterFilter());
 		map.put("detail", JSON.parseObject(json));
 		return "accountquery/unfrozenAccount";
 	}
-	
+
 	/**
 	 * 冻结账户
 	 */
@@ -71,7 +69,7 @@ public class AccountManagementController implements IControllerHandler{
 		accountManageService.frozen(cardRequestDto);
 		return BaseOutput.success("账户冻结成功");
 	}
-	
+
 	/**
 	 * 解冻账户
 	 */

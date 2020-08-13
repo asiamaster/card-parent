@@ -65,10 +65,11 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     }
 
     @Override
-    public AccountDetailResponseDto getDetailByCardNo(String cardNo) {
+    public AccountDetailResponseDto getDetail(String cardNo,Long accountId) {
         AccountDetailResponseDto detail = new AccountDetailResponseDto();
         UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
         query.setCardNo(cardNo);
+        query.setAccountId(accountId);
         AccountWithAssociationResponseDto cardAssociation = this.getAssociation(query);
 
         UserAccountCardResponseDto primary = cardAssociation.getPrimary();

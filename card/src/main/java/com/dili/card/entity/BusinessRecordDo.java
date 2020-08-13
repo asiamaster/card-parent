@@ -86,6 +86,8 @@ public class BusinessRecordDo implements Serializable {
 	private LocalDateTime modifyTime;
 	/** 数据版本号 */
 	private Integer version;
+	/**pos类型，从字典中获取*/
+	private String posType;
     /**
      * BusinessRecordEntity constructor
      */
@@ -653,5 +655,13 @@ public class BusinessRecordDo implements Serializable {
 	 */
 	public String getStateName() {
 		return this.state != null ? OperateState.getNameByCode(this.state) : "";
+	}
+
+	public String getPosType() {
+		return posType;
+	}
+
+	public void setPosType(String posType) {
+		this.posType = posType;
 	}
 }

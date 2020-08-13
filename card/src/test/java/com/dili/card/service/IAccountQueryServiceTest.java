@@ -82,7 +82,7 @@ class IAccountQueryServiceTest extends BaseTest {
 
     @Test
     void testGetDetailByCardNo() {
-        AccountDetailResponseDto detail = accountQueryService.getDetailByCardNo("888800034670");
+        AccountDetailResponseDto detail = accountQueryService.getDetail("888800034670",23L);
         doReturn(this.createCustomerResponse(Lists.newArrayList(105L)).get(0))
                 .when(customerRpcResolver)
                 .findCustomerByIdWithConvert(105L, 1L);

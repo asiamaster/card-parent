@@ -17,7 +17,6 @@ import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
-import com.dili.tcc.core.TccContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +34,13 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
     @Autowired
     private IAccountQueryService accountQueryService;
 
+
     /**
-     *  预创建充值订单
+     * 充值操作入口封装
      * @author miaoguoxin
-     * @date 2020/7/6
+     * @date 2020/7/2
      */
-    public final void doPreRecharge(FundRequestDto requestDto) {
+    public final void doRecharge(FundRequestDto requestDto) {
         UserAccountCardResponseDto userAccount = accountQueryService.getByAccountId(requestDto);
         Long rechargeAmount = requestDto.getAmount();
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {
@@ -50,8 +50,8 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
             record.setTradeChannel(requestDto.getTradeChannel());
             record.setServiceCost(requestDto.getServiceCost());
             record.setBankCardType(this.getBankType(requestDto));
+            record.setPosType(this.getPosType(requestDto));
         });
-
 
         CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(
                 this.getTradeType(requestDto).getCode(),
@@ -61,28 +61,13 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
                 businessRecord.getSerialNo(),
                 String.valueOf(businessRecord.getCycleNo()));
         //创建交易
-        String tradeId = payService.createTrade(tradeRequest);
+        String tradeNo = payService.createTrade(tradeRequest);
         //保存业务办理记录
-        businessRecord.setTradeNo(tradeId);
+        businessRecord.setTradeNo(tradeNo);
         businessRecord.setNotes(this.buildBusinessRecordNote(requestDto));
         serialService.saveBusinessRecord(businessRecord);
-        //保存线程变量
-        TccContextHolder.get().addAttr(Constant.TRADE_ID_KEY, tradeId);
-        TccContextHolder.get().addAttr(Constant.BUSINESS_RECORD_KEY, businessRecord);
-        TccContextHolder.get().addAttr(Constant.USER_ACCOUNT, userAccount);
-    }
 
-
-    /**
-     * 充值操作入口封装
-     * @author miaoguoxin
-     * @date 2020/7/2
-     */
-    public final void doRecharge(FundRequestDto requestDto) {
         FundItem serviceCostItem = this.getServiceCostItem(requestDto);
-        BusinessRecordDo record = TccContextHolder.get().getAttr(Constant.BUSINESS_RECORD_KEY, BusinessRecordDo.class);
-        String tradeNo = TccContextHolder.get().getAttr(Constant.TRADE_ID_KEY, String.class);
-        UserAccountCardResponseDto userAccount = TccContextHolder.get().getAttr(Constant.USER_ACCOUNT, UserAccountCardResponseDto.class);
 
         TradeRequestDto dto = TradeRequestDto.createTrade(userAccount, tradeNo, requestDto.getTradeChannel(), requestDto.getLoginPwd());
         if (serviceCostItem != null && requestDto.getServiceCost() != null) {
@@ -94,46 +79,58 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         if (serviceCostItem != null && this.canAddEmptyFundItem(requestDto)) {
             tradeResponseDto.addEmptyFeeItem(serviceCostItem);
         }
-        this.afterCommitRecharge(requestDto);
-        FundItem principalFundItem = this.getPrincipalFundItem(requestDto);
-        //记录日志
-        try {
-            SerialDto serialDto = serialService.createAccountSerialWithFund(record, tradeResponseDto, (serialRecord, feeType) -> {
-                FundItem fundItem;
-                if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
-                    fundItem = principalFundItem;
-                } else {
-                    fundItem = FundItem.getByCode(feeType);
-                }
-                if (fundItem != null) {
-                    serialRecord.setFundItem(fundItem.getCode());
-                    serialRecord.setFundItemName(fundItem.getName());
-                }
-                serialRecord.setNotes(this.buildSerialRecordNote(requestDto));
-            });
-            serialService.handleSuccess(serialDto);
-        } catch (Exception e) {
-            LOGGER.error("recharge", e);
-        }
+        this.afterCommitRecharge(requestDto, businessRecord);
+        //记录远程日志数据
+        this.doRecordCompleteLog(requestDto, businessRecord, tradeResponseDto);
     }
+
 
     /**
      * 提交充值请求之后的一些逻辑
      * @author miaoguoxin
      * @date 2020/7/20
      */
-    protected void afterCommitRecharge(FundRequestDto requestDto) {
+    protected void afterCommitRecharge(FundRequestDto requestDto, BusinessRecordDo record) {
 
     }
 
     private Integer getBankType(FundRequestDto requestDto) {
-        if (requestDto.getTradeChannel()== TradeChannel.POS.getCode()){
+        if (requestDto.getTradeChannel() == TradeChannel.POS.getCode()) {
             JSONObject extra = requestDto.getExtra();
-            if (extra == null){
+            if (extra == null) {
                 extra = new JSONObject();
             }
             return extra.getInteger(Constant.BANK_TYPE);
         }
         return null;
+    }
+
+    private String getPosType(FundRequestDto requestDto){
+        if (requestDto.getTradeChannel() == TradeChannel.POS.getCode()) {
+            JSONObject extra = requestDto.getExtra();
+            if (extra == null) {
+                extra = new JSONObject();
+            }
+            return extra.getString(Constant.POS_TYPE);
+        }
+        return null;
+    }
+
+    private void doRecordCompleteLog(FundRequestDto requestDto, BusinessRecordDo businessRecord, TradeResponseDto tradeResponseDto) {
+        FundItem principalFundItem = this.getPrincipalFundItem(requestDto);
+        SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, tradeResponseDto, (serialRecord, feeType) -> {
+            FundItem fundItem;
+            if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
+                fundItem = principalFundItem;
+            } else {
+                fundItem = FundItem.getByCode(feeType);
+            }
+            if (fundItem != null) {
+                serialRecord.setFundItem(fundItem.getCode());
+                serialRecord.setFundItemName(fundItem.getName());
+            }
+            serialRecord.setNotes(this.buildSerialRecordNote(requestDto));
+        });
+        serialService.handleSuccess(serialDto);
     }
 }

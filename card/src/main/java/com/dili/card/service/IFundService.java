@@ -33,4 +33,10 @@ public interface IFundService {
 	 */
 	void unfrozen(UnfreezeFundDto unfreezeFundDto);
 
+	/**
+	*  充值
+	* @author miaoguoxin
+	* @date 2020/8/13
+	*/
+	void recharge(FundRequestDto requestDto);
 }

@@ -35,6 +35,8 @@ public class SerialQueryDto extends SerialDto {
     private List<Integer> operateTypeList;
     /** 账户id列表*/
     private List<Long> accountIdList;
+    /** 用于流水记录排序*/
+    private String serialSort;
 
     public Integer getFundItem() {
         return fundItem;
@@ -146,5 +148,13 @@ public class SerialQueryDto extends SerialDto {
 
     public void setAccountIdList(List<Long> accountIdList) {
         this.accountIdList = accountIdList;
+    }
+
+    public String getSerialSort() {
+        return serialSort;
+    }
+
+    public void setSerialSort(String serialSort) {
+        this.serialSort = serialSort;
     }
 }

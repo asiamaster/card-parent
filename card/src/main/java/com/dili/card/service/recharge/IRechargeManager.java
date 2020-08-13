@@ -20,7 +20,7 @@ public interface IRechargeManager {
     Long getRechargeAmount(FundRequestDto requestDto);
 
     /**
-    *  构建业务流水备注
+    *  构建业务流水备注信息
     * @author miaoguoxin
     * @date 2020/7/24
     */
@@ -42,6 +42,7 @@ public interface IRechargeManager {
 
     /**
     * 获取手续费项目类型
+     *  现金没有手续费，是null
     * @author miaoguoxin
     * @date 2020/7/27
     */
@@ -51,6 +52,8 @@ public interface IRechargeManager {
     * 是否可以添加空的费用项
     * 现金没有手续费，不需要添加
     * pos和网银可能有手续费
+    *
+    * Ps:需求要求有些渠道在没有手续费的情况下，也需要添加一个空的记录
     * @author miaoguoxin
     * @date 2020/7/27
     */
