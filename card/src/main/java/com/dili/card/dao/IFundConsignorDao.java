@@ -10,7 +10,6 @@ import com.dili.card.entity.FundConsignorDo;
  * 受委托人
  * @author bob<>
  */
-@Mapper
 public interface IFundConsignorDao {
 	/**
      * 列表查询

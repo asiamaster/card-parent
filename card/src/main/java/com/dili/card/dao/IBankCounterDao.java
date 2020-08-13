@@ -8,7 +8,6 @@ import com.dili.card.entity.BankCounterDo;
  * 银行存取款
  * @author bob<>
  */
-@Mapper
 public interface IBankCounterDao {
 	/**
      * 列表查询

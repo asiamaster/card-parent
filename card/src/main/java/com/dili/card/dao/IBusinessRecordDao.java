@@ -10,7 +10,6 @@ import java.util.List;
  * 柜台业务办理记录
  * @author bob<>
  */
-@Mapper
 public interface IBusinessRecordDao {
 	/**
      * 列表查询

@@ -9,7 +9,6 @@ import com.dili.card.entity.CardStorageOut;
  * 柜员申领卡片记录
  * @author bob<>
  */
-@Mapper
 public interface IStorageOutDao {
 
 	/**
