@@ -40,6 +40,8 @@ import com.dili.ss.domain.BaseOutput;
 import com.esotericsoftware.minlog.Log;
 import com.google.common.collect.Lists;
 
+import io.seata.spring.annotation.GlobalTransactional;
+
 /**
  * @description： 开卡service实现
  *
@@ -75,6 +77,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	}
 
 	@Override
+	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
 	public OpenCardResponseDto openMasterCard(OpenCardDto openCardInfo) {
 		// 获取当前账务周期
@@ -89,7 +92,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, "账户服务开卡");
 		Long accountId = openCardResponse.getAccountId();
 
-		// 保存卡务柜台开卡操作记录 使用seate后状态为成功 
+		// 保存卡务柜台开卡操作记录 使用seate后状态为成功
 		BusinessRecordDo buildBusinessRecordDo = buildBusinessRecordDo(openCardInfo, accountId, cycleDo.getCycleNo());
 		serialService.saveBusinessRecord(buildBusinessRecordDo);
 
@@ -102,6 +105,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	@GlobalTransactional(rollbackFor = Exception.class)
 	public OpenCardResponseDto openSlaveCard(OpenCardDto openCardInfo) {
 		// 获取当前账务周期
 		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(openCardInfo.getCreatorId(),
@@ -109,11 +113,11 @@ public class OpenCardServiceImpl implements IOpenCardService {
 
 		// 工本费更新现金柜金额
 		accountCycleService.increaseCashBox(cycleDo.getCycleNo(), openCardInfo.getCostFee());
-		
+
 		// 调用账户服务开卡
 		BaseOutput<OpenCardResponseDto> baseOutPut = openCardRpc.openSlaveCard(openCardInfo);
 		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, "账户服务开卡");
-		
+
 		// 保存卡务柜台操作记录
 		BusinessRecordDo buildBusinessRecordDo = buildBusinessRecordDo(openCardInfo, openCardResponse.getAccountId(),
 				cycleDo.getCycleNo());

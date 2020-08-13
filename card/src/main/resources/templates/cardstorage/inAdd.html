@@ -74,6 +74,11 @@
 			bs4pop.alert("结束卡必须大于起始卡号", {type : "warning"});
 			return;
 		}
+		var amount = $("#amount").val();
+		if(amount > 2000){
+			bs4pop.alert("每次最多入库2000张卡片！", {type : "warning"});
+			return;
+		}
 		if (!$.validate.form(formId)) {
 			return false;
 		}
@@ -89,6 +94,7 @@
 			$("#amount").val("");
 			return;
 		}
-		$("#amount").val(endCardNo - startCardNo + 1);
+		var count = endCardNo - startCardNo + 1;
+		$("#amount").val(count);
 	});
 </script>
