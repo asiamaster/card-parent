@@ -255,6 +255,7 @@ public class ContractServiceImpl implements IContractService {
 		contractResponseDto.setTerminateTime(fundContractDo.getTerminateTime());
 		contractResponseDto.setState(fundContractDo.getState());
 
+		contractResponseDto.setReadyExpire(false);
 		long expireDay = 0L;
 		String readyExpireDay = dataDictionaryRpcResovler.findByDataDictionaryValue(Constant.CONTRACT_EXPIRE_DAYS);
 		if (StringUtils.isBlank(readyExpireDay) || !StringUtils.isNumeric(readyExpireDay)) {
