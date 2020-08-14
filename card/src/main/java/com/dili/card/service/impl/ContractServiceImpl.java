@@ -140,6 +140,20 @@ public class ContractServiceImpl implements IContractService {
 	public void activeOverdueContract() {
 		contractDao.activeOverdueContract();
 	}
+	
+
+	@Override
+	public FundContractResponseDto findActiveContractByAccountId(FundContractQueryDto contractQueryDto) {
+		List<FundContractResponseDto> fundContractResponseDtos = this.list(contractQueryDto);
+		if (CollectionUtils.isEmpty(fundContractResponseDtos)) {
+			return null;
+		}
+		FundContractResponseDto fundContractResponseDto = fundContractResponseDtos.get(0);
+		for (int i = 1; i < fundContractResponseDtos.size(); i++) {
+			fundContractResponseDto.getConsignorDtos().addAll(fundContractResponseDtos.get(i).getConsignorDtos());
+		}
+		return fundContractResponseDto;
+	}
 
 	@Override
 	public List<Customer> findCustomers(CustomerQueryInput query) {
@@ -276,7 +290,7 @@ public class ContractServiceImpl implements IContractService {
 		for (FundConsignorDo fundConsignorDo : consignors) {
 			mobiles.append(fundConsignorDo.getConsigneeIdMobile() + "、");
 			names.append(fundConsignorDo.getConsigneeName() + "、");
-			consignorDtos.add(this.buildConsignorForPage(fundConsignorDo));
+			consignorDtos.add(this.buildConsignorForPage(fundConsignorDo, contractResponseDto.getReadyExpire()));
 		}
 		contractResponseDto.setConsigneeNames(names.substring(0, names.lastIndexOf("、")));
 		contractResponseDto.setConsigneeMobiles(mobiles.substring(0, mobiles.lastIndexOf("、")));
@@ -323,13 +337,14 @@ public class ContractServiceImpl implements IContractService {
 	/**
 	 * 构建被委托人信息for page
 	 */
-	private FundConsignorDto buildConsignorForPage(FundConsignorDo fundConsignorDo) {
+	private FundConsignorDto buildConsignorForPage(FundConsignorDo fundConsignorDo, boolean readyExpire) {
 		FundConsignorDto fundConsignorDto = new FundConsignorDto();
 		fundConsignorDto.setConsigneeName(fundConsignorDo.getConsigneeName());
 		fundConsignorDto.setConsigneeIdMobile(fundConsignorDo.getConsigneeIdMobile());
 		fundConsignorDto.setConsigneeIdCode(fundConsignorDo.getConsigneeIdCode());
 		fundConsignorDto.setContractNo(fundConsignorDo.getContractNo());
 		fundConsignorDto.setId(fundConsignorDo.getId());
+		fundConsignorDto.setReadyExpire(readyExpire);
 		return fundConsignorDto;
 	}
 

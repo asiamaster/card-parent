@@ -57,4 +57,8 @@ public interface IContractService {
 	 */
 	List<Customer> findCustomers(CustomerQueryInput query);
 
+	/**
+	 */
+	FundContractResponseDto findActiveContractByAccountId(FundContractQueryDto contractQueryDto);
+
 }
