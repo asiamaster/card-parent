@@ -30,4 +30,8 @@ public class ConstantValidator {
     public interface Delete {
 
     }
+    public interface Check {
+
+    }
+    
 }

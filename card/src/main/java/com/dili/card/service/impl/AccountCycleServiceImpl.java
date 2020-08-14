@@ -129,6 +129,19 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}
 	}
 
+
+	@Override
+	public Boolean checkExistActiveCycle(Long userId) {
+		AccountCycleDo  accountCycleDo = this.findLatestActiveCycleByUserId(userId);
+		if (accountCycleDo == null) {
+			return true;
+		}
+		if (accountCycleDo.getState() == CycleState.SETTLED.getCode()) {
+			throw new CardAppBizException("柜员账务周期已结账,不能操作");
+		}
+		return true;
+	}
+	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public AccountCycleDo findActiveCycleByUserId(Long userId, String userName, String userCode) {
@@ -137,7 +150,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}
 		AccountCycleDo accountCycle = this.findSettledCycleByUserId(userId);
 		if (accountCycle != null) {
-			throw new CardAppBizException("当前员工账务周期正在对账中");
+			throw new CardAppBizException("当前员工账务周期正在对账中,不能操作");
 		}
 		accountCycle = this.findActiveCycleByUserId(userId);
 		if (accountCycle == null) {

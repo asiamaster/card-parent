@@ -60,7 +60,8 @@ public class UserCashServiceImpl implements IUserCashService {
 		}
 		if (!userCashDao.delete(id)) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "删除失败");
-		};
+		}
+		;
 	}
 
 	@Override
@@ -70,20 +71,15 @@ public class UserCashServiceImpl implements IUserCashService {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能修改");
 		}
 		if (userCashDto.getAmount() < 1L) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01元");
 		}
 		if (userCashDto.getAmount() > 99999999L) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过999999.99");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过999999.99元");
 		}
-		
-		AccountCycleDo accountCycleDo = accountCycleService.findLatestActiveCycleByUserId(userCashDto.getUserId());
-		if (accountCycleDo.getState() == CycleState.SETTLED.getCode()) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "该员工正在结账申请中,不能修改");
-		}
-		if (accountCycleDo.getState() == CycleState.FLATED.getCode()) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "该员工账务周期已结账,不能修改");
-		}
-		
+
+		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDto.getUserId(),
+				userCashDto.getUserName(), userCashDto.getUserCode());
+
 		userCashDo = new UserCashDo();
 		userCashDo.setId(userCashDto.getId());
 		userCashDo.setUserId(userCashDto.getUserId());
@@ -91,6 +87,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		userCashDo.setUserName(userCashDto.getUserName());
 		userCashDo.setAmount(userCashDto.getAmount());
 		userCashDo.setNotes(userCashDto.getNotes());
+		userCashDo.setCycleNo(accountCycle.getCycleNo());
 		userCashDao.update(userCashDo);
 	}
 
@@ -107,20 +104,18 @@ public class UserCashServiceImpl implements IUserCashService {
 	public UserCashDto detail(Long id) {
 		return this.buildSingleCashDtoy(this.findById(id));
 	}
-	
 
 	@Override
 	public Long findTotalAmountByUserId(UserCashDto userCashDto, CashAction cashAction) {
 		this.buildUserCashCondition(userCashDto, cashAction);
 		return userCashDao.findTotalAmountByUserId(userCashDto);
 	}
-	
+
 	@Override
 	public Long findTotalAmountByUserId(UserCashDto userCashDto) {
 		this.buildUserCashCondition(userCashDto, null);
 		return userCashDao.findTotalAmountByUserId(userCashDto);
 	}
-
 
 	@Override
 	public void flatedByCycle(Long cycleNo) {
@@ -152,10 +147,10 @@ public class UserCashServiceImpl implements IUserCashService {
 		userCash.setCashNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CASH_NO.getCode())));
 		userCash.setAction(userCashDto.getAction());
 		if (userCashDto.getAmount() < 1L) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01元");
 		}
 		if (userCashDto.getAmount() > 99999999L) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过999999.99");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过999999.99元");
 		}
 		userCash.setAmount(userCashDto.getAmount());
 		userCash.setUserId(userCashDto.getUserId());
@@ -185,11 +180,12 @@ public class UserCashServiceImpl implements IUserCashService {
 		if (cashAction != null) {
 			userCashDto.setAction(cashAction.getCode());
 		}
-		if (userCashDto.getCreateStartTime() != null && userCashDto.getCreateEndTime() != null && userCashDto.getCreateStartTime().isAfter(userCashDto.getCreateEndTime())) {
+		if (userCashDto.getCreateStartTime() != null && userCashDto.getCreateEndTime() != null
+				&& userCashDto.getCreateStartTime().isAfter(userCashDto.getCreateEndTime())) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "开始时间大于结束时间");
 		}
-		//默认365天
-		if (userCashDto.getCreateEndTime() != null && userCashDto.getCreateStartTime() == null ) {
+		// 默认365天
+		if (userCashDto.getCreateEndTime() != null && userCashDto.getCreateStartTime() == null) {
 			userCashDto.setCreateStartTime(userCashDto.getCreateEndTime().minusDays(365L));
 		}
 	}

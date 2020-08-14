@@ -151,5 +151,14 @@ public class AccountCycleManagementController implements IControllerHandler {
 	public BaseOutput<AccountCycleDto> detail(@RequestBody @Validated(value = {ConstantValidator.Default.class}) AccountCycleDto accountCycleDto) {
 		return BaseOutput.successData(iAccountCycleService.detail(accountCycleDto.getId()));
 	}
+	
+	/**
+	 * 校验是否存在活跃的账务周期
+	 */
+	@PostMapping("/checkExistActiveCycle.action")
+	@ResponseBody
+	public BaseOutput<Boolean> checkExistActiveCycle(@RequestBody @Validated(value = {ConstantValidator.Check.class}) AccountCycleDto accountCycleDto) {
+		return BaseOutput.successData(iAccountCycleService.checkExistActiveCycle(accountCycleDto.getUserId()));
+	}
 
 }

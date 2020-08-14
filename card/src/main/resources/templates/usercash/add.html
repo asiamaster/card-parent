@@ -18,6 +18,7 @@
 		<input id="action" name="action" type="hidden"
 			value="${usercash.action!}" class="form-control" />
 			<input id="inputuserName" name="userName" type="hidden" class="form-control"/>
+			<input id="inputuserId" name="inputuserId" type="hidden" class="form-control"/>
 			<input id="actionText" name="actionText" type="hidden" value="${actionText!}" class="form-control"/>
 		<table id="out-detail" class="table table-bordered"  style="table-layout:fixed;">
 			<tbody>
@@ -63,6 +64,13 @@ $(function(){
 		userNameAutoCompleteOption.displayFieldName='serialNumber';
 		$('#amountYuan').bind(' input propertychange ', function(){
 			$('#bigAmount').html($.common.changeNumMoneyToChinese($('#amountYuan').val()));
+		} );
+		$('#inputuserId').bind(' input propertychange ', function(){
+			var userId = $('#inputuserId').val();
+			var data = [];
+			var url = "${contextPath}/cycle/checkExistActiveCycle.action";
+			data.userId = userid;
+			$.operate.post(url, data);
 		} );
 		$("#amountYuan").on('input  propertychange',function(){
 			//如果输入非数字，则替换为''
