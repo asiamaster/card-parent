@@ -18,6 +18,8 @@ import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -39,6 +41,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/accountQuery")
 public class AccountQueryManagementController implements IControllerHandler {
+    protected static Logger LOGGER = LoggerFactory.getLogger(AccountQueryManagementController.class);
     @Autowired
     private IAccountQueryService accountQueryService;
     @Autowired
@@ -114,6 +117,7 @@ public class AccountQueryManagementController implements IControllerHandler {
     @ResponseBody
     @Deprecated
     public BaseOutput<AccountSimpleResponseDto> getInfoByCardNo(String cardNo) {
+        LOGGER.info("simpleInfo.action请求参数:{}",cardNo);
         AssertUtils.notEmpty(cardNo, "卡号不能为空");
         return BaseOutput.successData(accountQueryService.getByCardNoWithBalance(cardNo));
     }
