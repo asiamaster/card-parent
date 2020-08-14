@@ -62,7 +62,6 @@
             },
             amount: {
                 required: true,
-                gt: 1,
             }
         },
         messages: {
@@ -70,8 +69,7 @@
                 required: "领取人必填",
             },
             amount: {
-                required: "领取数量必填",
-                gt: "领取数量至少{0}"
+                required: "出库数量必填",
             }
         },
         focusCleanup: true

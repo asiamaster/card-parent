@@ -263,11 +263,11 @@ public class UserAccountCardResponseDto implements Serializable {
     }
 
 	public Boolean getMaster() {
-		return master;
+		return parentAccountId == null ? true : false;
 	}
 
 	public void setMaster(Boolean master) {
-		this.master = parentAccountId == null ? true : false;
+		this.master = master;
 	}
 
 }

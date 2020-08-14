@@ -2,7 +2,6 @@ package com.dili.card.service.impl;
 
 import javax.annotation.Resource;
 
-import com.dili.card.dto.UserAccountSingleQueryDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
-import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
@@ -26,6 +25,8 @@ import com.dili.card.type.CardStatus;
 import com.dili.card.type.DisableState;
 import com.dili.card.type.OperateType;
 import com.dili.ss.constant.ResultCode;
+
+import io.seata.spring.annotation.GlobalTransactional;
 
 @Service("accountManageService")
 public class AccountManageServiceImpl implements IAccountManageService {
@@ -44,45 +45,42 @@ public class AccountManageServiceImpl implements IAccountManageService {
     protected IAccountQueryService accountQueryService;
 
 	@Override
+	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
 	public void frozen(CardRequestDto cardRequestDto) {
+		LOGGER.info("冻结账户：" + cardRequestDto.getAccountId());
 		//校验账户信息
 		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), false, DisableState.ENABLED);
 		//保存本地记录
 		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.FROZEN_ACCOUNT);
 		//远程冻结卡账户操作
     	accountManageRpcResolver.frozen(cardRequestDto);
-        //远程冻结资金账户
-        try {
-        	if (accountCard.getMaster()) {
-        		payRpcResolver.freezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
-        	}
-		} catch (Exception e) {
-			LOGGER.error("远程冻结资金账户失败:" + accountCard.getAccountId(), e);
-		}
-        //记录远程操作记录
-        this.saveRemoteSerialRecord(businessRecord);
+        //远程冻结资金账户必須是主卡
+    	if (accountCard.getMaster()) {
+    		payRpcResolver.freezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
+    	}
+    	//更新最終记录
+    	this.saveRemoteSerialRecord(businessRecord);
 	}
 
 	@Override
+	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
 	public void unfrozen(CardRequestDto cardRequestDto) {
+		LOGGER.info("解冻账户：" + cardRequestDto.getAccountId());
 		//校验账户信息
 		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), false, DisableState.DISABLED);
 		//保存本地记录
 		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.UNFROZEN_ACCOUNT);
 		//远程解冻账户操作
 		accountManageRpcResolver.unfrozen(cardRequestDto);
-        //远程解冻资金账户
-        try {
-        	if (accountCard.getMaster()) {
-        		payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
-			}
-		} catch (Exception e) {
-			LOGGER.error("远程解冻资金账户失败:" + accountCard.getAccountId(), e);
+        //远程解冻资金账户 必須是主卡
+		if (accountCard.getMaster()) {
+    		payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
 		}
-        //记录远程操作记录
-        this.saveRemoteSerialRecord(businessRecord);
+		//更新最終记录
+    	this.saveRemoteSerialRecord(businessRecord);
+    	throw new CardAppBizException("unfrozen account fail");
 	}
 
 	/**
@@ -119,12 +117,9 @@ public class AccountManageServiceImpl implements IAccountManageService {
      * 保存远程流水记录
      */
 	private void saveRemoteSerialRecord(BusinessRecordDo businessRecord) {
-		try {
-            SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
-            serialService.handleSuccess(serialDto);
-        } catch (Exception e) {
-            LOGGER.error("unfreezeFundAccount", e);
-        }
-	}
+        //成功则修改状态及期初期末金额，存储操作流水
+        SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
+        serialService.handleSuccess(serialDto, false);
+    }
 
 }

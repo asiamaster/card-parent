@@ -103,6 +103,7 @@ public class CardManageServiceImpl implements ICardManageService {
         this.saveRemoteSerialRecord(businessRecordDo);
     }
 
+    @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void resetLoginPwd(CardRequestDto cardParam) {
