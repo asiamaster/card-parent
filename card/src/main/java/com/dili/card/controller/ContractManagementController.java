@@ -99,6 +99,15 @@ public class ContractManagementController implements IControllerHandler {
     public BaseOutput<List<FundContractResponseDto>> list(@RequestBody @Validated(ConstantValidator.Query.class) FundContractQueryDto contractQueryDto) {
     	return BaseOutput.successData(iContractService.list(contractQueryDto));
     }
+    
+    /**
+     * 查询合同根据合同人
+     */
+    @PostMapping("/findActiveContractByAccountId.action")
+    @ResponseBody
+    public BaseOutput<FundContractResponseDto> findByAccountId(@RequestBody @Validated(ConstantValidator.Query.class) FundContractQueryDto contractQueryDto) {
+    	return BaseOutput.successData(iContractService.findActiveContractByAccountId(contractQueryDto));
+    }
 
     /**
      * 解除合同

@@ -23,6 +23,8 @@ public class FundConsignorDto {
 	/** 受托人手机号 */
 	@NotEmpty(message = "受托人手机号不能为空")
 	private String consigneeIdMobile; 
+	/** 合同即将到期提示*/
+	private Boolean readyExpire;
 
     /**
      * setter for 合同编号
@@ -100,5 +102,13 @@ public class FundConsignorDto {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Boolean getReadyExpire() {
+		return readyExpire;
+	}
+
+	public void setReadyExpire(Boolean readyExpire) {
+		this.readyExpire = readyExpire;
 	}
 }

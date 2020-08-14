@@ -1,5 +1,6 @@
 package com.dili.card.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.CardStorageOutQueryDto;
@@ -10,6 +11,9 @@ import com.dili.card.service.ICardStorageService;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -31,6 +35,9 @@ import java.util.Map;
 @Controller
 @RequestMapping("cardStorage")
 public class CardStorageController implements IControllerHandler {
+	
+	private static final Logger log = LoggerFactory.getLogger(CardStorageController.class);
+
 
 	@Autowired
 	private ICardStorageService cardStorageService;
@@ -59,6 +66,7 @@ public class CardStorageController implements IControllerHandler {
 	@PostMapping("cardVoid.action")
 	@ResponseBody
 	public BaseOutput<?> cardVoid(CardStorageDto queryDto) {
+		log.info("卡片作废*****" + JSONObject.toJSONString(queryDto));
 		cardStorageService.voidCard(queryDto.getCardNo(), queryDto.getNotes());
 		return BaseOutput.success();
 	}

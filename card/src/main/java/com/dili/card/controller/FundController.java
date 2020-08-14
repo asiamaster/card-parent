@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.annotation.ForbidDuplicateCommit;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
@@ -155,6 +156,7 @@ public class FundController implements IControllerHandler {
     @PostMapping("unfrozenRecord.action")
     @ResponseBody
     public Map<String, Object> unfrozenRecord(FundFrozenRecordParamDto queryParam) {
+    	LOGGER.info("查询未解冻记录*****{}", JSONObject.toJSONString(queryParam));
         AssertUtils.notNull(queryParam.getFundAccountId(), "参数校验失败：缺少资金账户ID!");
         FreezeFundRecordParam payServiceParam = new FreezeFundRecordParam();
         payServiceParam.setAccountId(queryParam.getFundAccountId());
@@ -177,6 +179,7 @@ public class FundController implements IControllerHandler {
     @PostMapping("allRecord.action")
     @ResponseBody
     public Map<String, Object> allRecord(FundFrozenRecordParamDto queryParam) {
+    	LOGGER.info("查询冻结和未冻结记录列表*****{}", JSONObject.toJSONString(queryParam));
         AssertUtils.notNull(queryParam.getFundAccountId(), "参数校验失败：缺少资金账户ID!");
         FreezeFundRecordParam payServiceParam = new FreezeFundRecordParam();
         payServiceParam.setAccountId(queryParam.getFundAccountId());
@@ -196,6 +199,7 @@ public class FundController implements IControllerHandler {
     @PostMapping("unfrozen.action")
     @ResponseBody
     public BaseOutput<?> unfrozen(@RequestBody UnfreezeFundDto unfreezeFundDto) {
+    	LOGGER.info("解冻资金*****{}", JSONObject.toJSONString(unfreezeFundDto));
         AssertUtils.notNull(unfreezeFundDto.getAccountId(), "参数校验失败：缺少账户ID!");
         AssertUtils.notNull(unfreezeFundDto.getFrozenIds(), "参数校验失败：缺少冻结ID!");
         this.buildOperatorInfo(unfreezeFundDto);

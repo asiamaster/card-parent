@@ -68,7 +68,7 @@ public class FundContractResponseDto{
 	/** 被委托人信息*/
 	private List<FundConsignorDto> consignorDtos;
 	/** 合同即将到期提示*/
-	private Boolean readyExpire = false;
+	private Boolean readyExpire;
 	
     /**
      * setter for 合同开始日期
