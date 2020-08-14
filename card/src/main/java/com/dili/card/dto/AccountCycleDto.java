@@ -26,7 +26,7 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 	@NotNull(message = "数据id不为空", groups = {ConstantValidator.Default.class})
 	private Long id;
 	/** 员工ID */
-	@NotNull(message = "员工ID不为空", groups = {ConstantValidator.Update.class})
+	@NotNull(message = "员工ID不为空", groups = {ConstantValidator.Update.class, ConstantValidator.Check.class})
 	private Long userId;
 	/** 员工编号 */
 	private String userCode;
