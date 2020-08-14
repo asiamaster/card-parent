@@ -15,17 +15,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @description： 支付服务调用
- * 
+ *
  * @author ：WangBo
  * @time ：2020年6月22日下午5:52:52
  */
-@FeignClient(value = "pay-service", configuration = PayServiceFeignConfig.class)
+@FeignClient(value = "pay-service", configuration = PayServiceFeignConfig.class
+		/*, url = "http://10.28.1.188:8080"*/)
 public interface PayRpc {
 	static final String SERVICE_NAME = "pay-service";
 
 	/**
 	 * 提交交易(充值、提现)
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/1
 	 */
@@ -35,7 +36,7 @@ public interface PayRpc {
 
 	/**
 	 * 创建交易（预支付）
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/1
 	 */
@@ -45,7 +46,7 @@ public interface PayRpc {
 
 	/**
 	 * 冻结资金
-	 * 
+	 *
 	 * @param requestDto
 	 * @return
 	 */
@@ -66,7 +67,7 @@ public interface PayRpc {
 
 	/**
 	 * 查询余额
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/6/30
 	 */
