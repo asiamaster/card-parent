@@ -259,10 +259,11 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	 * 账务周期详情统计信息
 	 */
 	private AccountCycleDetailDto buildCycleDetail(AccountCycleDo cycle) {
+		Long cycleNo =  cycle == null ? -1L : cycle.getCycleNo();
+		Long userId =  cycle == null ? -1L : cycle.getUserId();
 		AccountCycleDetailDto accountCycleDetail = new AccountCycleDetailDto();
-		accountCycleDetail.setCycleNo(cycle.getCycleNo());
-		List<CycleStatistcDto> cycleStatistcs = accountCycleDetailDao.statisticCycleRecord(cycle.getCycleNo(),
-				cycle.getUserId());
+		accountCycleDetail.setCycleNo(cycleNo);
+		List<CycleStatistcDto> cycleStatistcs = accountCycleDetailDao.statisticCycleRecord(cycleNo, userId);
 		for (CycleStatistcDto cycleStatistc : cycleStatistcs) {
 			CycleStatisticType cycleStatisticType = CycleStatisticType.getCycleStatisticType(cycleStatistc.getType(),
 					cycleStatistc.getTradeChannel());
@@ -307,7 +308,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		// 计算未交现金金额  领款金额 + 现金收支收益金额 - 现金交款金额
 		Long unDeliverAmount = accountCycleDetail.getReceiveAmount() + accountCycleDetail.getRevenueAmount()
 				- accountCycleDetail.getDeliverAmount();
-		if (CycleState.ACTIVE.getCode() == cycle.getState()) {//活跃期
+		if (cycle != null && CycleState.ACTIVE.getCode() == cycle.getState()) {//活跃期
 			accountCycleDetail.setUnDeliverAmount(unDeliverAmount);
 		}else {//非活跃期 未交现金金额就是最终交款金额
 			accountCycleDetail.setLastDeliverAmount(unDeliverAmount);
@@ -321,6 +322,13 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	 */
 	private AccountCycleDto buildAccountCycleDto(AccountCycleDo cycle) {
 		AccountCycleDto accountCycleDto = new AccountCycleDto();
+		if (cycle == null ) {
+			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+			accountCycleDto.setUserCode(userTicket.getSerialNumber());
+			accountCycleDto.setUserId(userTicket.getId());
+			accountCycleDto.setUserName(userTicket.getRealName());
+			return accountCycleDto;
+		}
 		accountCycleDto.setId(cycle.getId());
 		accountCycleDto.setUserCode(cycle.getUserCode());
 		accountCycleDto.setUserId(cycle.getUserId());
