@@ -18,6 +18,7 @@
 		<input id="action" name="action" type="hidden"
 			value="${usercash.action!}" class="form-control" />
 			<input id="inputuserName" name="userName" type="hidden" class="form-control"/>
+			<input id="actionText" name="actionText" type="hidden" value="${actionText!}" class="form-control"/>
 		<table id="out-detail" class="table table-bordered"  style="table-layout:fixed;">
 			<tbody>
 				<tr>
@@ -45,7 +46,7 @@
 				<tr>
 					<td class="info-column">备注</td>
 					<td class="info-cell"><textarea style="width: 280px;"
-							id="notes" name="notes" maxlength="50"></textarea></td>
+							id="notes" name="notes" maxlength="20"></textarea></td>
 				</tr>
 		</table>
 	</form>
@@ -107,9 +108,19 @@ function submitHandler(e) {
         return false;
     }
     let url = "${contextPath}/cash/save.action";
-    let data = $.common.formToJSON(formId);
-    data.amount=parseInt(parseFloat(data.amountYuan)*100);
-    bui.util.debounce($.operate.post(url, data), 1000, true);
+    $.modal.confirm("确认对员工" + '<font color="#FC1D24"><span style="font-size: 18px;">' + $("#_userName").html() + '</font></span>' +"新增"+ $("#actionText").val() + '<font color="#FC1D24"> <span style="font-size: 18px;">' + $("#amountYuan").val() + '</font></span>' +"元吗?", function (sure) {
+        if (!sure) {
+            return;
+        }
+        let data = $.common.formToJSON(formId);
+        data.amount=parseInt(parseFloat(data.amountYuan)*100);
+        bui.util.debounce($.operate.post(url, data, function (result) {
+            if (result.code == web_status.SUCCESS) {
+                $.table.refresh()
+            }
+        }), 1000, true)
+
+    });
     return true;
 }
 </script>

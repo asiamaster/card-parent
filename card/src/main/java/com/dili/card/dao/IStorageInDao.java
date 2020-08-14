@@ -12,7 +12,6 @@ import com.dili.card.entity.StorageInDo;
  * 卡片采购入库记录，从厂家到市场。
  * @author bob<>
  */
-@Mapper
 public interface IStorageInDao {
 	/**
      * 列表查询

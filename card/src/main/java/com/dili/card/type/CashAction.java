@@ -1,5 +1,10 @@
 package com.dili.card.type;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * 领取款动作
  * @author wb
@@ -41,5 +46,18 @@ public enum CashAction {
 		}
 		return null;
 	}
+	
+	public static List<CashAction> getAll() {
+		return new ArrayList<>(Arrays.asList(CashAction.values())).stream().filter(c -> c.getCode() != -1)
+				.collect(Collectors.toList());
+	}
 
+	public static String getName(int code) {
+		for (CashAction status : CashAction.values()) {
+			if (status.getCode() == code) {
+				return status.name;
+			}
+		}
+		return null;
+	}
 }

@@ -12,7 +12,6 @@ import com.dili.card.entity.FundContractDo;
  * 资金委托合同
  * @author bob<>
  */
-@Mapper
 public interface IFundContractDao {
 
     /**

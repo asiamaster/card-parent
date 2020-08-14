@@ -12,7 +12,6 @@ import com.dili.card.entity.UserCashDo;
  * 柜员交款领款
  * @author bob<>
  */
-@Mapper
 public interface IUserCashDao {
 
     /**
