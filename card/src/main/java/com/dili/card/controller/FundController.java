@@ -112,6 +112,7 @@ public class FundController implements IControllerHandler {
     @ResponseBody
     @ForbidDuplicateCommit
     public BaseOutput<?> withdraw(@RequestBody FundRequestDto fundRequestDto) {
+    	LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto));
         validateCommonParam(fundRequestDto);
         buildOperatorInfo(fundRequestDto);
         withdrawDispatcher.dispatch(fundRequestDto);
@@ -129,7 +130,7 @@ public class FundController implements IControllerHandler {
     public BaseOutput<Long> withdrawServiceFee(Long amount) {
         BigDecimal decimal = ruleFeeService.getRuleFee(amount, RuleFeeBusinessType.CARD_WITHDRAW_EBANK, SystemSubjectType.CARD_WITHDRAW_EBANK_FEE);
         if (decimal != null) {
-            return BaseOutput.success().setData(CurrencyUtils.toYuanWithStripTrailingZeros(decimal.longValue()));
+            return BaseOutput.successData(decimal.longValue());
         }
         return BaseOutput.failure("未查询到费用");
     }
@@ -233,6 +234,7 @@ public class FundController implements IControllerHandler {
     @GetMapping("rechargeFee.action")
     @ResponseBody
     public BaseOutput<Long> getRechargeFee(Long amount) {
+    	LOGGER.info("获取充值手续费*****{}", amount);
         AssertUtils.notNull(amount, "金额不能为空");
         BigDecimal ruleFee = ruleFeeService.getRuleFee(amount, RuleFeeBusinessType.CARD_RECHARGE_POS, SystemSubjectType.CARD_RECHARGE_POS_FEE);
         return BaseOutput.successData(ruleFee.longValue());
