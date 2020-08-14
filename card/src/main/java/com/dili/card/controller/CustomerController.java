@@ -1,5 +1,6 @@
 package com.dili.card.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
@@ -41,6 +42,7 @@ public class CustomerController implements IControllerHandler {
     @RequestMapping(value = "/listByKeyword.action")
     @ResponseBody
     public BaseOutput<List<Customer>> listByKeyword(String keyword) {
+    	LOGGER.info("查询客户列表*****{}", keyword);
         CustomerQueryInput query = new CustomerQueryInput();
         UserTicket userTicket = getUserTicket();
         query.setMarketId(userTicket.getFirmId());
@@ -57,6 +59,7 @@ public class CustomerController implements IControllerHandler {
     @RequestMapping(value = "/listByName.action")
     @ResponseBody
     public BaseOutput<List<Customer>> listByName(String name) {
+    	LOGGER.info("查询客户列表*****{}", name);
         CustomerQueryInput query = new CustomerQueryInput();
         UserTicket userTicket = getUserTicket();
         query.setMarketId(userTicket.getFirmId());
@@ -73,6 +76,7 @@ public class CustomerController implements IControllerHandler {
     @RequestMapping(value = "/infoByCardNo.action")
     @ResponseBody
     public BaseOutput<CustomerResponseDto> getByCardNo(String cardNo) {
+    	LOGGER.info("根据卡号查询客户信息*****{}", cardNo);
         return BaseOutput.successData(customerService.getByCardNoWithCache(cardNo));
     }
 }

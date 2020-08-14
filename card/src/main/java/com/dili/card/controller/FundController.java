@@ -128,7 +128,8 @@ public class FundController implements IControllerHandler {
     @RequestMapping(value = "/withdrawServiceFee.action")
     @ResponseBody
     public BaseOutput<Long> withdrawServiceFee(Long amount) {
-        BigDecimal decimal = ruleFeeService.getRuleFee(amount, RuleFeeBusinessType.CARD_WITHDRAW_EBANK, SystemSubjectType.CARD_WITHDRAW_EBANK_FEE);
+    	LOGGER.info("获取提现手续费*****{}", amount);
+    	BigDecimal decimal = ruleFeeService.getRuleFee(amount, RuleFeeBusinessType.CARD_WITHDRAW_EBANK, SystemSubjectType.CARD_WITHDRAW_EBANK_FEE);
         if (decimal != null) {
             return BaseOutput.successData(decimal.longValue());
         }
@@ -145,6 +146,7 @@ public class FundController implements IControllerHandler {
     @ResponseBody
     public BaseOutput<?> frozen(@RequestBody @Validated(ConstantValidator.Update.class)
                                         FundRequestDto requestDto) {
+    	LOGGER.info("冻结资金*****{}", JSONObject.toJSONString(requestDto));
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
         fundService.frozen(requestDto);

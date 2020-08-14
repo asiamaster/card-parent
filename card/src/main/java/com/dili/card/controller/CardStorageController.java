@@ -56,6 +56,7 @@ public class CardStorageController implements IControllerHandler {
 	@PostMapping("queryCardStorageList.action")
 	@ResponseBody
 	public Map<String, Object> queryCardStorageList(CardStorageDto queryDto) {
+		log.info("卡片库存列表 *****{}", JSONObject.toJSONString(queryDto));
 		return successPage(cardStorageService.cardStorageList(queryDto));
 	}
 

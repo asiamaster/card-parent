@@ -1,5 +1,6 @@
 package com.dili.card.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
@@ -35,6 +36,7 @@ public class UserController implements IControllerHandler {
     @RequestMapping(value = "/listByKeyword.action")
     @ResponseBody
     public BaseOutput<List<User>> listByKeyword(String keyword) {
+    	LOGGER.info("查询客户列表*****{}", keyword);
         UserQuery query = DTOUtils.newDTO(UserQuery.class);
         UserTicket userTicket = getUserTicket();
         query.setFirmCode(userTicket.getFirmCode());

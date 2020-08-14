@@ -1,5 +1,6 @@
 package com.dili.card.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.BusinessRecordResponseDto;
 import com.dili.card.dto.SerialDto;
@@ -51,6 +52,7 @@ public class SerialController implements IControllerHandler {
     @RequestMapping(value = "/account/listPage.action")
     @ResponseBody
     public Map<String, Object> listPage(SerialQueryDto serialQueryDto) {
+    	LOGGER.info("分页加载操作流水*****{}", JSONObject.toJSONString(serialQueryDto));
         Map<String, Object> result = new HashMap<>();
         UserTicket userTicket = getUserTicket();
         serialQueryDto.setFirmId(userTicket.getFirmId());
@@ -72,7 +74,8 @@ public class SerialController implements IControllerHandler {
     @RequestMapping(value = "/business/cycleReprintList.action")
     @ResponseBody
     public BaseOutput<List<BusinessRecordDo>> cycleReprintList(@RequestBody SerialQueryDto serialQueryDto) {
-        UserTicket userTicket = getUserTicket();
+    	LOGGER.info("获取补打的操作记录*****{}", JSONObject.toJSONString(serialQueryDto));
+    	UserTicket userTicket = getUserTicket();
         serialQueryDto.setOperatorId(userTicket.getId());
         serialQueryDto.setFirmId(userTicket.getFirmId());
         List<BusinessRecordDo> itemList = serialService.cycleReprintList(serialQueryDto);
@@ -87,7 +90,8 @@ public class SerialController implements IControllerHandler {
     @RequestMapping(value = "/business/todayChargeList.action")
     @ResponseBody
     public BaseOutput<List<BusinessRecordDo>> todayChargeList(@RequestBody SerialQueryDto serialQueryDto) {
-        if (serialQueryDto.getAccountId() == null) {
+    	LOGGER.info("查询客户今日充值记录*****{}", JSONObject.toJSONString(serialQueryDto));
+    	if (serialQueryDto.getAccountId() == null) {
             return BaseOutput.failure("账户ID为空");
         }
         UserTicket userTicket = getUserTicket();
@@ -105,7 +109,8 @@ public class SerialController implements IControllerHandler {
     @RequestMapping(value = "/business/handleSuccess/{flag}")
     @ResponseBody
     public BaseOutput<?> handleSuccess(@RequestBody SerialDto serialDto, @PathVariable boolean flag) {
-        serialService.handleSuccess(serialDto, flag);
+    	LOGGER.info("办理成功后修改业务单状态*****{}", JSONObject.toJSONString(serialDto));
+    	serialService.handleSuccess(serialDto, flag);
         return BaseOutput.success();
     }
 
@@ -118,6 +123,7 @@ public class SerialController implements IControllerHandler {
     @RequestMapping(value = "/business/handleFailure")
     @ResponseBody
     public BaseOutput<?> handleFailure(@RequestBody SerialDto serialDto) {
+    	LOGGER.info("办理失败后修改业务单状态*****{}", JSONObject.toJSONString(serialDto));
         serialService.handleFailure(serialDto);
         return BaseOutput.success();
     }
@@ -131,6 +137,7 @@ public class SerialController implements IControllerHandler {
     @RequestMapping(value = "/account/saveSerial")
     @ResponseBody
     public BaseOutput<?> saveSerial(@RequestBody SerialDto serialDto) {
+    	LOGGER.info("保存账户流水*****{}", JSONObject.toJSONString(serialDto));
         serialService.saveSerialRecord(serialDto);
         return BaseOutput.success();
     }
@@ -142,6 +149,7 @@ public class SerialController implements IControllerHandler {
     @PostMapping("/business/page.action")
     @ResponseBody
     public Map<String, Object> businessPage(SerialQueryDto queryDto){
+    	LOGGER.info("业务日志分页*****{}", JSONObject.toJSONString(queryDto));
         PageOutput<List<BusinessRecordResponseDto>> lists = serialService.queryPage(queryDto);
         return successPage(lists);
     }

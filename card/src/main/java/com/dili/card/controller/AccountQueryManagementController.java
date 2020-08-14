@@ -1,6 +1,7 @@
 package com.dili.card.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.AccountListResponseDto;
@@ -102,6 +103,7 @@ public class AccountQueryManagementController implements IControllerHandler {
     @ResponseBody
     public Map<String, Object> page(@Validated(ConstantValidator.Page.class)
                                             UserAccountCardQuery param) {
+    	LOGGER.info("分页查询卡账户列表*****{}", JSONObject.toJSONString(param));
         this.buildOperatorInfo(param);
         PageOutput<List<AccountListResponseDto>> page = accountQueryService.getPage(param);
         return successPage(page);
@@ -131,7 +133,8 @@ public class AccountQueryManagementController implements IControllerHandler {
     @PostMapping("/list.action")
     @ResponseBody
     public BaseOutput<List<UserAccountCardResponseDto>> getList(@RequestBody UserAccountCardQuery param) {
-        AssertUtils.notNull(param.getFirmId(), "市场id不能为空");
+    	LOGGER.info("分页查询卡账户列表*****{}", JSONObject.toJSONString(param));
+    	AssertUtils.notNull(param.getFirmId(), "市场id不能为空");
         return BaseOutput.successData(accountQueryService.getList(param));
     }
 
@@ -143,7 +146,8 @@ public class AccountQueryManagementController implements IControllerHandler {
     @GetMapping("/singleWithoutValidate.action")
     @ResponseBody
     public BaseOutput<UserAccountCardResponseDto> getSingleWithoutValidate(UserAccountSingleQueryDto query) {
-        return BaseOutput.successData(accountQueryRpcResolver.findSingleWithoutValidate(query));
+    	LOGGER.info("单个查询getSingleWithoutValidate*****{}", JSONObject.toJSONString(query));
+    	return BaseOutput.successData(accountQueryRpcResolver.findSingleWithoutValidate(query));
     }
 
 
@@ -155,6 +159,7 @@ public class AccountQueryManagementController implements IControllerHandler {
     @GetMapping("/single.action")
     @ResponseBody
     public BaseOutput<UserAccountCardResponseDto> getSingle(UserAccountSingleQueryDto query) {
+    	LOGGER.info("单个查询getSingle*****{}", JSONObject.toJSONString(query));
         UserAccountCardResponseDto userAccountCardResponseDto = accountQueryRpcResolver.findSingle(query);
         return BaseOutput.successData(userAccountCardResponseDto);
     }
