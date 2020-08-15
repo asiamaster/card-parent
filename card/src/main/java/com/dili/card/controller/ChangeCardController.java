@@ -3,6 +3,9 @@ package com.dili.card.controller;
 import javax.annotation.Resource;
 
 import com.dili.card.service.tcc.ChangeCardTccTransactionManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.service.IAccountQueryService;
@@ -31,6 +35,9 @@ import com.dili.uap.sdk.session.SessionContext;
 @RequestMapping(value = "/card/change")
 public class ChangeCardController implements IControllerHandler {
 
+	
+	private static final Logger log = LoggerFactory.getLogger(ChangeCardController.class);
+
     @Resource
     private ICardManageService cardManageService;
     @Autowired
@@ -45,6 +52,7 @@ public class ChangeCardController implements IControllerHandler {
      */
     @PostMapping("/changeCard.action")
     public BaseOutput<?> changeCard(@RequestBody CardRequestDto cardParam) {
+    	log.info("换卡 *****{}", JSONObject.toJSONString(cardParam));
         AssertUtils.notEmpty(cardParam.getLoginPwd(),"密码不能为空");
         AssertUtils.notEmpty(cardParam.getNewCardNo(),"新开卡号不能为空");
         AssertUtils.notNull(cardParam.getServiceFee(),"工本费不能为空");
@@ -60,6 +68,7 @@ public class ChangeCardController implements IControllerHandler {
 	@RequestMapping(value = "getChangeCardFee.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public BaseOutput<String> getChangeCardFee() {
+		log.info("查询换卡费用项 *****");
 		// 操作人信息
 		UserTicket user = SessionContext.getSessionContext().getUserTicket();
 		if (user == null) {

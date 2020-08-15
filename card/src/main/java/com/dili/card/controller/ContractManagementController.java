@@ -3,6 +3,8 @@ package com.dili.card.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
@@ -31,6 +34,9 @@ import com.dili.uap.sdk.domain.UserTicket;
 @Controller
 @RequestMapping(value = "/contract")
 public class ContractManagementController implements IControllerHandler {
+	
+	private static final Logger log = LoggerFactory.getLogger(ContractManagementController.class);
+
     @Autowired
     private IContractService iContractService;
     @Autowired
@@ -77,7 +83,8 @@ public class ContractManagementController implements IControllerHandler {
     @PostMapping("/save.action")
     @ResponseBody
     public BaseOutput<Boolean> save(@RequestBody @Validated FundContractRequestDto fundContractRequest) {
-        iContractService.save(fundContractRequest);
+    	log.info("新增合同*****{}", JSONObject.toJSONString(fundContractRequest));
+    	iContractService.save(fundContractRequest);
         return BaseOutput.success();
     }
 
@@ -87,7 +94,8 @@ public class ContractManagementController implements IControllerHandler {
     @PostMapping("/page.action")
     @ResponseBody
     public Map<String, Object> page(@Validated(ConstantValidator.Page.class) FundContractQueryDto contractQueryDto) {
-        return successPage(iContractService.page(contractQueryDto));
+    	log.info("新增合同*****{}", JSONObject.toJSONString(contractQueryDto));
+    	return successPage(iContractService.page(contractQueryDto));
     }
 
 
@@ -97,6 +105,7 @@ public class ContractManagementController implements IControllerHandler {
     @PostMapping("/list.action")
     @ResponseBody
     public BaseOutput<List<FundContractResponseDto>> list(@RequestBody @Validated(ConstantValidator.Query.class) FundContractQueryDto contractQueryDto) {
+    	log.info("列表查询合同*****{}", JSONObject.toJSONString(contractQueryDto));
     	return BaseOutput.successData(iContractService.list(contractQueryDto));
     }
     
@@ -106,6 +115,7 @@ public class ContractManagementController implements IControllerHandler {
     @PostMapping("/findActiveContractByAccountId.action")
     @ResponseBody
     public BaseOutput<FundContractResponseDto> findByAccountId(@RequestBody @Validated(ConstantValidator.Query.class) FundContractQueryDto contractQueryDto) {
+    	log.info("查询合同*****{}", JSONObject.toJSONString(contractQueryDto));
     	return BaseOutput.successData(iContractService.findActiveContractByAccountId(contractQueryDto));
     }
 
@@ -115,7 +125,8 @@ public class ContractManagementController implements IControllerHandler {
     @PostMapping("/remove.action")
     @ResponseBody
     public BaseOutput<Boolean> remove(@RequestBody FundContractRequestDto fundContractRequest) {
-        iContractService.remove(fundContractRequest);
+    	log.info("解除合同*****{}", JSONObject.toJSONString(fundContractRequest));
+    	iContractService.remove(fundContractRequest);
         return BaseOutput.success();
     }
     
@@ -125,6 +136,7 @@ public class ContractManagementController implements IControllerHandler {
     @PostMapping("/updateStateTask.action")
     @ResponseBody
     public BaseOutput<Boolean> updateStateTask() {
+    	log.info("更新合同状态*****");
     	contractScheduleHandler.execute();
         return BaseOutput.success();
     }
@@ -138,6 +150,7 @@ public class ContractManagementController implements IControllerHandler {
 	@RequestMapping(value = "/findCustomersByKeyword.action")
     @ResponseBody
     public BaseOutput<List<Customer>> findCustomersByKeyword(String keyword) {
+    	log.info("查询客户列表*****{}", keyword);
         CustomerQueryInput query = new CustomerQueryInput();
         UserTicket userTicket = getUserTicket();
         query.setMarketId(userTicket.getFirmId());

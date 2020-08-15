@@ -2,6 +2,8 @@ package com.dili.card.controller;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.AccountCycleDto;
@@ -33,7 +36,10 @@ import com.dili.uap.sdk.session.SessionContext;
 @Controller
 @RequestMapping(value = "/cycle")
 public class AccountCycleManagementController implements IControllerHandler {
+	
+	private static final Logger log = LoggerFactory.getLogger(AccountCycleManagementController.class);
 
+	
 	@Autowired
 	private IAccountCycleService iAccountCycleService;
 
@@ -120,6 +126,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	@PostMapping("/applySettle.action")
 	@ResponseBody
 	public BaseOutput<Boolean> applySettle(@RequestBody @Validated(value = {ConstantValidator.Update.class}) AccountCycleDto accountCycleDto) {
+		log.info("结账申请对账*****{}", JSONObject.toJSONString(accountCycleDto));
 		iAccountCycleService.settle(accountCycleDto);
 		return BaseOutput.success("结账申请成功!");
 	}
@@ -130,6 +137,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	@PostMapping("/flated.action")
 	@ResponseBody
 	public BaseOutput<Boolean> flated(@RequestBody @Validated(value = {ConstantValidator.Default.class}) AccountCycleDto accountCycleDto) {
+		log.info("平账*****{}", JSONObject.toJSONString(accountCycleDto));
 		iAccountCycleService.flated(accountCycleDto.getId());
 		return BaseOutput.success("平账成功！");
 	}
@@ -158,6 +166,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	@PostMapping("/checkExistActiveCycle.action")
 	@ResponseBody
 	public BaseOutput<Boolean> checkExistActiveCycle(@RequestBody @Validated(value = {ConstantValidator.Check.class}) AccountCycleDto accountCycleDto) {
+		log.info("校验是否存在活跃的账务周期*****{}", JSONObject.toJSONString(accountCycleDto));
 		return BaseOutput.successData(iAccountCycleService.checkExistActiveCycle(accountCycleDto.getUserId()));
 	}
 

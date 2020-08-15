@@ -1,5 +1,6 @@
 package com.dili.card.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.CardStorageDto;
@@ -12,6 +13,9 @@ import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -33,6 +37,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("cardStorage")
 public class CardStorageOutController implements IControllerHandler {
+	
+	private static final Logger log = LoggerFactory.getLogger(CardStorageOutController.class);
 
     @Autowired
     private ICardStorageService cardStorageService;
@@ -84,6 +90,7 @@ public class CardStorageOutController implements IControllerHandler {
     @ResponseBody
     public Map<String, Object> getPage(@Validated(ConstantValidator.Page.class)
                                                CardStorageOutQueryDto queryDto) {
+    	log.info("出库列表分页 *****{}", JSONObject.toJSONString(queryDto));
         // this.buildOperatorInfo(queryDto);
         return successPage(cardStorageService.getPage(queryDto));
     }
@@ -97,7 +104,8 @@ public class CardStorageOutController implements IControllerHandler {
     @ResponseBody
     public BaseOutput<?> addOutRecord(
             @RequestBody @Validated(ConstantValidator.Insert.class) CardStorageOutRequestDto requestDto) {
-        this.buildOperatorInfo(requestDto);
+    	log.info("添加出库记录 *****{}", JSONObject.toJSONString(requestDto));
+    	this.buildOperatorInfo(requestDto);
         cardStorageService.saveOutRecord(requestDto);
         return BaseOutput.success();
     }
@@ -111,6 +119,7 @@ public class CardStorageOutController implements IControllerHandler {
     @PostMapping("checkCard.action")
     @ResponseBody
     public BaseOutput<?> checkCard(@RequestBody CardRequestDto cardRequestDto) {
+    	log.info("校验卡状态 *****{}", JSONObject.toJSONString(cardRequestDto));
         AssertUtils.notEmpty(cardRequestDto.getCardNo(),"卡号不能为空");
         CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardRequestDto.getCardNo());
         if (cardStorage.getState() != CardStorageState.UNACTIVATE.getCode()) {

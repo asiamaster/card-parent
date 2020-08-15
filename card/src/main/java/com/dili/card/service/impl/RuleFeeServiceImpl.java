@@ -75,6 +75,7 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 				queryFeeInput.setMarketId(userTicket.getFirmId());
 				queryFeeInput.setBusinessType(ruleFeeBusinessType.getCode());
 				queryFeeInput.setChargeItem(item.getId());
+				continue;
 //			}
 		}
 		if (queryFeeInput == null) {
@@ -87,7 +88,7 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 			queryFeeInput.setCalcParams(calcParams);
 		}
 		BaseOutput<QueryFeeOutput> queryFee = chargeRuleRpc.queryFee(queryFeeInput);
-		QueryFeeOutput resolver = GenericRpcResolver.resolver(queryFee, "开卡查询费用规则");
+		QueryFeeOutput resolver = GenericRpcResolver.resolver(queryFee, "dili-rule");
 		return resolver.getTotalFee();
 	}
 

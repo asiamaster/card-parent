@@ -2,6 +2,8 @@ package com.dili.card.controller;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.CardRequestDto;
@@ -26,6 +29,8 @@ import com.dili.ss.domain.BaseOutput;
 @Controller
 @RequestMapping("/account")
 public class AccountManagementController implements IControllerHandler{
+	
+	private static final Logger log = LoggerFactory.getLogger(AccountManagementController.class);
 
 	@Resource
 	private IAccountManageService accountManageService;
@@ -50,6 +55,7 @@ public class AccountManagementController implements IControllerHandler{
 	 */
 	@GetMapping("/unfrozenAccount.html")
 	public String unfrozenAccountView(String cardNo,Long accountId, ModelMap map) {
+		log.info("解冻账户页面*****{}", cardNo);
 		AssertUtils.notEmpty(cardNo, "卡号不能为空");
 		AssertUtils.notNull(accountId, "账户id不能为空");
 		String json = JSON.toJSONString(accountQueryService.getDetail(cardNo,accountId),
@@ -63,6 +69,7 @@ public class AccountManagementController implements IControllerHandler{
 	 */
 	@PostMapping("/frozen.action")
 	public BaseOutput<String> frozen(@RequestBody CardRequestDto cardRequestDto) {
+		log.info("冻结账户*****{}", JSONObject.toJSONString(cardRequestDto));
 		buildOperatorInfo(cardRequestDto);
 		accountManageService.frozen(cardRequestDto);
 		return BaseOutput.success("账户冻结成功");
@@ -73,6 +80,7 @@ public class AccountManagementController implements IControllerHandler{
 	 */
 	@PostMapping("/unfrozen.action")
 	public BaseOutput<String> unfrozen(@RequestBody CardRequestDto cardRequestDto) {
+		log.info("解冻账户*****{}", JSONObject.toJSONString(cardRequestDto));
 		buildOperatorInfo(cardRequestDto);
 		accountManageService.unfrozen(cardRequestDto);
 		return BaseOutput.success("账户解冻成功");

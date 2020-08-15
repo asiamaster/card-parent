@@ -1,19 +1,7 @@
 package com.dili.card.controller;
 
-import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
-import com.dili.card.common.handler.IControllerHandler;
-import com.dili.card.dto.CardRequestDto;
-import com.dili.card.dto.UserAccountCardQuery;
-import com.dili.card.dto.UserAccountCardResponseDto;
-import com.dili.card.dto.UserAccountSingleQueryDto;
-import com.dili.card.exception.CardAppBizException;
-import com.dili.card.service.IAccountQueryService;
-import com.dili.card.service.ICardManageService;
-import com.dili.card.util.AssertUtils;
-import com.dili.card.validator.CardValidator;
-import com.dili.ss.domain.BaseOutput;
-import com.google.common.collect.Lists;
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +13,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.dto.CardRequestDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.UserAccountSingleQueryDto;
+import com.dili.card.exception.CardAppBizException;
+import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.ICardManageService;
+import com.dili.card.util.AssertUtils;
+import com.dili.card.validator.CardValidator;
+import com.dili.ss.domain.BaseOutput;
+
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 卡片管理服务，退卡、挂失、解挂、补卡等
@@ -47,7 +48,8 @@ public class CardManageController implements IControllerHandler {
      */
     @RequestMapping(value = "/resetLoginPwd.action", method = RequestMethod.POST)
     public BaseOutput<Boolean> resetLoginPassword(@RequestBody @Validated(value = {CardValidator.Generic.class, CardValidator.ResetPassword.class}) CardRequestDto cardRequest) throws Exception {
-        buildOperatorInfo(cardRequest);
+    	LOGGER.info("重置登陆密码*****{}", JSONObject.toJSONString(cardRequest));
+    	buildOperatorInfo(cardRequest);
         cardManageService.resetLoginPwd(cardRequest);
         return BaseOutput.success();
     }
@@ -57,7 +59,8 @@ public class CardManageController implements IControllerHandler {
      */
     @PostMapping("/returnCard.action")
     public BaseOutput<Boolean> returnCard(@RequestBody @Validated(value = {CardValidator.Generic.class}) CardRequestDto cardRequest) {
-        buildOperatorInfo(cardRequest);
+    	LOGGER.info("退卡*****{}", JSONObject.toJSONString(cardRequest));
+    	buildOperatorInfo(cardRequest);
         cardManageService.returnCard(cardRequest);
         return BaseOutput.success();
     }
@@ -67,6 +70,7 @@ public class CardManageController implements IControllerHandler {
      */
     @PostMapping("/unLostCard.action")
     public BaseOutput<?> unLostCard(@RequestBody CardRequestDto cardParam) {
+    	LOGGER.info("解挂卡片*****{}", JSONObject.toJSONString(cardParam));
         validateCommonParam(cardParam);
         if (StrUtil.isBlank(cardParam.getLoginPwd())) {
             return BaseOutput.failure("密码为空");
@@ -81,6 +85,7 @@ public class CardManageController implements IControllerHandler {
      */
     @PostMapping("/unLockCard.action")
     public BaseOutput<?> unLockCard(@RequestBody CardRequestDto cardParam) {
+    	LOGGER.info("解锁卡片*****{}", JSONObject.toJSONString(cardParam));
         validateCommonParam(cardParam);
         if (StrUtil.isBlank(cardParam.getLoginPwd())) {
             return BaseOutput.failure("密码为空");
@@ -97,6 +102,7 @@ public class CardManageController implements IControllerHandler {
      */
     @PostMapping("/changeCard.action")
     public BaseOutput<?> changeCard(@RequestBody CardRequestDto cardParam) {
+    	LOGGER.info("换卡*****{}", JSONObject.toJSONString(cardParam));
         AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
         AssertUtils.notEmpty(cardParam.getNewCardNo(), "新开卡号不能为空");
         AssertUtils.notNull(cardParam.getServiceFee(), "工本费不能为空");
@@ -136,6 +142,7 @@ public class CardManageController implements IControllerHandler {
      */
     @GetMapping("getByCardForUnLost.action")
     public BaseOutput<UserAccountCardResponseDto> getByCardNoForUnLost(String cardNo){
+    	LOGGER.info("解挂查询*****{}", cardNo);
         AssertUtils.notEmpty(cardNo,"卡号不能为空");
         UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
         query.setCardNo(cardNo);
