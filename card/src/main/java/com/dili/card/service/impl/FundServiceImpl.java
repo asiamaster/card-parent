@@ -127,7 +127,7 @@ public class FundServiceImpl implements IFundService {
 		serialService.saveSerialRecord(serialDto);
 	}
     @Override
-	@GlobalTransactional(rollbackFor = Exception.class)
+	@GlobalTransactional(rollbackFor = Exception.class,timeoutMills=60000*10)
 	@Transactional(rollbackFor = Exception.class)
     public void recharge(FundRequestDto requestDto) {
 		AbstractRechargeManager rechargeManager = rechargeFactory.getRechargeManager(requestDto.getTradeChannel());
