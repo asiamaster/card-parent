@@ -1,10 +1,15 @@
 package com.dili.card.service.impl;
 
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
-import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.CreateTradeResponseDto;
 import com.dili.card.dto.pay.TradeRequestDto;
@@ -26,14 +31,8 @@ import com.dili.card.type.TradeType;
 import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-import io.seata.spring.annotation.GlobalTransactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import io.seata.spring.annotation.GlobalTransactional;
 
 
 /**
@@ -44,7 +43,6 @@ import javax.annotation.Resource;
  */
 @Service("cardManageService")
 public class CardManageServiceImpl implements ICardManageService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CardManageServiceImpl.class);
 
     @Autowired
     private CardManageRpcResolver cardManageRpcResolver;
@@ -178,19 +176,6 @@ public class CardManageServiceImpl implements ICardManageService {
         payRpcResolver.trade(tradeRequestDto);
 
         this.saveRemoteSerialRecord(businessRecord);
-    }
-
-
-    /**
-     * 校验账户余额
-     */
-    private void validatedBanlance(CardRequestDto cardParam) {
-        UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam);
-        //余额校验
-        BalanceResponseDto balanceResponseDto = payRpcResolver.findBalanceByFundAccountId(accountCard.getFundAccountId());
-        if (balanceResponseDto.getBalance() != 0L) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "卡余额不为0,不能退卡");
-        }
     }
 
     /**
