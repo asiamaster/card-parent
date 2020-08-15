@@ -37,6 +37,7 @@ import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.rule.sdk.rpc.ChargeRuleRpc;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.util.MoneyUtils;
 import com.esotericsoftware.minlog.Log;
 import com.google.common.collect.Lists;
 
@@ -149,7 +150,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		serial.setOperatorNo(openCardInfo.getCreatorCode());
 		serial.setOperateTime(LocalDateTime.now());
 		serial.setState(OperateState.SUCCESS.getCode());
-		serial.setNotes("IC卡工本费，现金" + openCardInfo.getCostFee() + "元");
+		serial.setNotes("IC卡工本费，现金" +MoneyUtils.centToYuan(openCardInfo.getCostFee()) + "元");
 		serial.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
 		serial.setType(OperateType.ACCOUNT_TRANSACT.getCode());
 		return serial;
