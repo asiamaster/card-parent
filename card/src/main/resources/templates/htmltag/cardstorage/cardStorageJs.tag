@@ -6,7 +6,7 @@
         	uniqueId: "id",
             url: "${contextPath}/cardStorage/queryCardStorageList.action",
             sortName: "create_time",
-            modalName: "冻结资金记录"
+            modalName: "卡库存列表"
         };
         $.table.init(options);
     });
@@ -37,35 +37,6 @@
                 	showInfo("操作成功");
                 }else {
                 	showError("作废失败");
-                }
-            }
-        });
-    });
-    
-    
-    $("#unfrozenBtn").click(function(){
-    	// 选中行
-    	var rows=$("#unfrozenTable").bootstrapTable('getSelections');
-    	var tradeNos = new Array();
-    	$.each(rows, function (index, item) {
-            tradeNos[index] = item["tradeNo"];
-       });
-    	alert(JSON.stringify(tradeNos));
-    	var accountId = $("#accountId").val();
-    	$.ajax({
-            type:'POST',
-            url:'${contextPath}/fund/unfrozenRecord.action',
-            dataType:'json',
-            traditional:true,
-            data: {
-            	tradeNos:tradeNos,
-            	accountId:accountId
-            },
-            success:function(result) {
-                if (result.success) {
-                	showInfo("操作成功");
-                }else {
-                	showError("解冻资金失败");
                 }
             }
         });
