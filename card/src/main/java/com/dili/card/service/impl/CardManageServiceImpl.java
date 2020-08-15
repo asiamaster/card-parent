@@ -16,6 +16,7 @@ import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICardManageService;
+import com.dili.card.service.IReturnCardService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.FundItem;
@@ -57,6 +58,8 @@ public class CardManageServiceImpl implements ICardManageService {
     protected IAccountQueryService accountQueryService;
     @Autowired
     private IAccountCycleService accountCycleService;
+    @Autowired
+    private IReturnCardService returnCardService;
 
     /**
      * @param cardParam
@@ -80,27 +83,10 @@ public class CardManageServiceImpl implements ICardManageService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+	@Transactional(rollbackFor = Exception.class)
+	@GlobalTransactional(rollbackFor = Exception.class)
     public void returnCard(CardRequestDto cardParam) {
-        //校验卡状态
-        UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam.getAccountId());
-        if (!Integer.valueOf(CardStatus.NORMAL.getCode()).equals(accountCard.getCardState())) {
-            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行退卡", CardStatus.getName(accountCard.getCardState())));
-        }
-        //余额校验
-        BalanceResponseDto balanceResponseDto = payRpcResolver.findBalanceByFundAccountId(accountCard.getFundAccountId());
-        if (balanceResponseDto.getFrozenAmount() > 0L) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "卡冻结金额不为0,不能退卡");
-        }
-        if (balanceResponseDto.getBalance() > 100L) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "卡余额大于1元,不能退卡");
-        }
-        //保存本地操作记录
-        BusinessRecordDo businessRecordDo = saveLocalSerialRecordNoFundSerial(cardParam, accountCard, OperateType.REFUND_CARD);
-        //远程调用退卡操作
-        cardManageRpcResolver.returnCard(cardParam);
-        //记录远程操作记录
-        this.saveRemoteSerialRecord(businessRecordDo);
+    	returnCardService.handle(cardParam);
     }
 
     @GlobalTransactional(rollbackFor = Exception.class)

@@ -80,7 +80,6 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		}
 		//更新最終记录
     	this.saveRemoteSerialRecord(businessRecord);
-    	throw new CardAppBizException("unfrozen account fail");
 	}
 
 	/**

@@ -2,14 +2,10 @@ package com.dili.card.service.impl;
 
 import javax.annotation.Resource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -23,21 +19,18 @@ import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IReturnCardService;
 import com.dili.card.service.ISerialService;
-import com.dili.card.service.tcc.ChangeCardTccTransactionManager;
 import com.dili.card.type.CardStatus;
+import com.dili.card.type.DisableState;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
-import com.dili.tcc.core.TccContextHolder;
 
 @Service("returnCardService")
 public class ReturnCardServiceImpl implements IReturnCardService {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(ChangeCardTccTransactionManager.class);
-
 	@Autowired
 	private CardManageRpcResolver cardManageRpcResolver;
 	@Resource
@@ -57,9 +50,14 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 			throw new CardAppBizException("",
 					String.format("该卡为%s状态,不能进行退卡", CardStatus.getName(accountCard.getCardState())));
 		}
+		if (Integer.valueOf(DisableState.DISABLED.getCode()).equals(accountCard.getAccountState())) {
+			throw new CardAppBizException("该卡账户为禁用状态,不能进行退卡");
+		}
 		// 余额校验
 		Long fee = 0L;
-		if (accountCard.getMaster()) {
+		//是否主卡
+		boolean master = accountCard.getMaster();
+		if (master) {
 			BalanceResponseDto balanceResponseDto = payRpcResolver
 					.findBalanceByFundAccountId(accountCard.getFundAccountId());
 			if (balanceResponseDto.getFrozenAmount() > 0L) {
@@ -72,10 +70,12 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 			fee = balanceResponseDto.getBalance();
 		}
 		cardParam.setServiceFee(fee);
+		//是主卡 同时卡余额存在并且小于1元需要进行流水
+		boolean hasTradeSerial = master && fee != 0L;
 		// 构建记录
 		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardParam, accountCard, record -> {
 			record.setType(OperateType.REFUND_CARD.getCode());
-			if (accountCard.getMaster() && cardParam.getServiceFee() != 0L) {
+			if (hasTradeSerial) {
 				record.setAmount(cardParam.getServiceFee());
 				record.setTradeType(TradeType.FEE.getCode());
 				record.setTradeChannel(TradeChannel.BALANCE.getCode());
@@ -83,7 +83,7 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 		});
 		// 如果金额等于0不进行交易号创建 直接退卡 注销账号
 		String tradeId = null;
-		if (accountCard.getMaster() && fee != 0L) {
+		if (master && fee != 0L) {
 			CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(TradeType.FEE.getCode(),
 					accountCard.getAccountId(), accountCard.getFundAccountId(), fee, businessRecord.getSerialNo(),
 					String.valueOf(businessRecord.getCycleNo()));
@@ -92,43 +92,23 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 		}
 		businessRecord.setTradeNo(tradeId);
 		serialService.saveBusinessRecord(businessRecord);
-		// 保证退卡成功
+		// 退卡
 		cardManageRpcResolver.returnCard(cardParam);
-		
-        TccContextHolder.get().addAttr(Constant.TRADE_ID_KEY, tradeId);
-        TccContextHolder.get().addAttr(Constant.BUSINESS_RECORD_KEY, businessRecord);
-        TccContextHolder.get().addAttr(Constant.USER_ACCOUNT, accountCard);
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void afterCompletion(CardRequestDto cardParam) {
-		BusinessRecordDo businessRecord = TccContextHolder.get().getAttr(Constant.BUSINESS_RECORD_KEY, BusinessRecordDo.class);
-	    String tradeNo = TccContextHolder.get().getAttr(Constant.TRADE_ID_KEY, String.class);
-	    UserAccountCardResponseDto userAccount = TccContextHolder.get().getAttr(Constant.USER_ACCOUNT, UserAccountCardResponseDto.class);
-		if (userAccount.getMaster()) {
-			if (cardParam.getServiceFee() != 0L) {
-				// 执行实际转账操作
-				TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(userAccount, tradeNo, TradeChannel.CASH.getCode(),
+		if (master) {//主卡退卡注销账户 副卡不做此操作
+			if (hasTradeSerial) {//存在余额在一元内需要进行缴费操作
+				// 执行实际缴费操作
+				TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(accountCard, tradeId, TradeChannel.CASH.getCode(),
 						cardParam.getLoginPwd());
 				tradeRequestDto.addServiceFeeItem(cardParam.getServiceFee(), FundItem.RETURN_CARD_CHANGE);
 				payRpcResolver.trade(tradeRequestDto);
 			}
 			// 账号注销
-			CreateTradeRequestDto createTradeRequestDto = null;
-			try {
-				createTradeRequestDto = CreateTradeRequestDto.createCommon(userAccount.getFundAccountId(), userAccount.getAccountId());
-				payRpcResolver.unregister(createTradeRequestDto);
-			}catch (Exception e) {
-				LOGGER.error("退卡注销账户失败：" + JSON.toJSONString(createTradeRequestDto), e);
-			}
+			CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId());
+			payRpcResolver.unregister(createTradeRequestDto);
 		}
-		try {
-			SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
-			serialService.handleSuccess(serialDto, true);
-		} catch (Exception e) {
-			LOGGER.error("退卡操作记录失败", e);
-		}
+		//流水建立
+		SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
+		serialService.handleSuccess(serialDto, hasTradeSerial);
 	}
 
 }
