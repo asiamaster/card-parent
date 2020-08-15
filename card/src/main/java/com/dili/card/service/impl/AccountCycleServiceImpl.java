@@ -137,7 +137,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			return true;
 		}
 		if (accountCycleDo.getState() == CycleState.SETTLED.getCode()) {
-			throw new CardAppBizException("该柜员账务周期已结账,不能操作");
+			throw new CardAppBizException("当前员工账务周期正在对账中,不能操作");
 		}
 		return true;
 	}
