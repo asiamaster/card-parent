@@ -17,6 +17,8 @@
 </style>
     <div id="detail-modal" >
     	<form id="saveForm" style="width: 90%;">
+    		<input id="inputuserName" name="userName" type="hidden" value="${usercash.userName!}"/>
+	         <input id="inputuserId" name="inputuserId" type="text" style="opacity: 0;"  value=""/>
     		<input id="id" name="id" type="hidden" value="${usercash.id!}" class="form-control"/>
     		<input id="action" name="action" type="hidden" value="${usercash.action!}" class="form-control"/>
     		<input id="actionText" name="actionText" type="hidden" value="${usercash.actionText!}" class="form-control"/>
@@ -32,8 +34,8 @@
 	            </tr>
 	            <tr>
 	                <td class="info-column">柜员姓名</td>
-	                <td id="_userName"  class="info-cell">${usercash.userName!}</td>
-	                <input id="inputuserName" name="userName" type="hidden" value="${usercash.userName!}"/>
+	                <td id="_userName"  class="info-cell">${usercash.userName!}
+	                </td>
 	            </tr>
 	            <tr>
 	                <td class="info-column">交款金额</td>
@@ -60,12 +62,51 @@
 	src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <#common_autoCompleteUser/>
 <script>
+
+function selectUser(){
+	var ckeckUserCycleUrl = "${contextPath}/cycle/checkExistActiveCycle.action"
+	var userId = $('#inputuserId').val();
+	data = {};
+	data.userId = userId;
+	$.ajax({
+	    type: "POST",
+	    url:ckeckUserCycleUrl,
+	    data:JSON.stringify(data),
+	    contentType: "application/json; charset=utf-8",
+	    traditional:true,
+	    dataType:'json',
+	    async: false,
+	    error: function(result) {
+	    	$.modal.alertError(result.message);
+	    	$('#_userName').html("");
+	    	$('#userCode').val("");
+	    	return false;
+	    },
+	    success: function(result) {
+	    	if(result.code=="200"){
+	    		return true;
+	    	}else{
+	    		$.modal.alertError(result.message);
+	    		$('#_userName').html("");
+	    		$('#userCode').val("");
+	    		return false;
+	    	}
+	    }
+	});	
+}
+
 $(function(){
 	userNameAutoCompleteOption.displayFieldName='serialNumber';
 	$('#bigAmount').html($.common.changeNumMoneyToChinese($('#amountYuan').val()));
 	$('#amountYuan').bind(' input propertychange ', function(){
 		$('#bigAmount').html($.common.changeNumMoneyToChinese($('#amountYuan').val()));
 	} );
+	
+	$('#inputuserId').focus(function(){
+		selectUser();
+		$('#inputuserId').blur();
+	} );
+
 	$("#amountYuan").on('input  propertychange',function(){
 		//如果输入非数字，则替换为''
 		this.value = this.value.replace(/[^\d\.]/g, '');
@@ -79,6 +120,7 @@ $(function(){
 	    this.value = this.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');
 	});
 });
+
 
 let formId = "saveForm";
 $("#" + formId).validate({

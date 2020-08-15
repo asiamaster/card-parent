@@ -40,7 +40,7 @@
         <button id="btn_modify" type="button" class="btn btn-primary" onclick="$.operate.editWithTitle(null,'50%','75%','修改交款')"><i class="fa fa-pencil-square-o"></i> 修改</button>
     </#resource>
     <#resource code="deletePayer">
-    <button id="btn_delete" type="button" class="btn btn-primary" onclick="$.operate.removeWithTitle(null,'30%','60%','信息确认')"><i class="fa fa-trash-o"></i> 删除</button>
+    <button id="btn_delete" type="button" class="btn btn-primary" onclick="$.operate.removeWithTitle(null,'30%','50%','信息确认')"><i class="fa fa-trash-o"></i> 删除</button>
     </#resource>
     <#resource code="exportPayer">
     <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
@@ -102,7 +102,8 @@
             uniqueId: "id",
             createUrl: "${contextPath}/cash/addPayer.html",
             updateUrl: "${contextPath}/cash/modify.html?id={id}",
-            removeUrl: "${contextPath}/cash/delete.html?id={id}"
+            removeUrl: "${contextPath}/cash/delete.html?id={id}",
+            modalName: "交款列表查询"
         };
         $.table.init(options);
         statisticTotalAmount(2);
