@@ -1,12 +1,10 @@
 package com.dili.card.dto;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.dili.card.validator.AccountValidator;
-import org.apache.commons.lang3.StringUtils;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * @description： 用户信息查询参数

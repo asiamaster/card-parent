@@ -12,7 +12,9 @@ import javax.validation.constraints.NotNull;
  * @Description:
  */
 public class CardStorageOutRequestDto extends CardRequestDto {
-    /**申领人id*/
+    /** */
+	private static final long serialVersionUID = 1L;
+	/**申领人id*/
     @NotNull(message = "申领人id必填", groups = ConstantValidator.Insert.class)
     @Min(value = 1, message = "申领人id至少1", groups = ConstantValidator.Insert.class)
     private Long applyUserId;

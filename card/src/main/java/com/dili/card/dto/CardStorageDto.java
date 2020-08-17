@@ -18,6 +18,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * @time ：2020年7月17日上午10:07:34
  */
 public class CardStorageDto extends BaseDto {
+	/** */
+	private static final long serialVersionUID = 1L;
 	/** 卡号 */
 	private String cardNo;
 	/** 卡类型 */

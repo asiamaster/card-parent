@@ -33,8 +33,6 @@ public class StorageInDto implements Serializable {
 	/** 卡类型 */
 	@TextDisplay(value = CardTypeProvider.class)
 	private Integer cardType;
-
-	private String cardTypeText;
 	/** 操作人员ID */
 	private Long creatorId;
 	/** 操作人员名称-保留字段 */

@@ -11,7 +11,6 @@ import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.CashActionProvider;
 import com.dili.card.common.provider.CashStateProvider;
 import com.dili.card.common.provider.FenToYuanProvider;
-import com.dili.card.type.CashAction;
 import com.dili.card.validator.ConstantValidator;
 
 /**

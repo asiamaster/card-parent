@@ -8,7 +8,9 @@ import java.io.Serializable;
  * @Date: 2020/8/10 13:45
  */
 public class UserAccountSingleQueryDto implements Serializable {
-    /**账户ID */
+    /** */
+	private static final long serialVersionUID = 3420897440951735189L;
+	/**账户ID */
     private Long accountId;
     /** 卡号 */
     private String cardNo;

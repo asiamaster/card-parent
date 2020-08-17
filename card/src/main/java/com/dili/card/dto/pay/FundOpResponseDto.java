@@ -8,7 +8,9 @@ import java.io.Serializable;
  * @Date: 2020/7/16 13:39
  */
 public class FundOpResponseDto implements Serializable {
-    /**冻结资金id*/
+    /** */
+	private static final long serialVersionUID = 1231182278588249054L;
+	/**冻结资金id*/
     private Long frozenId;
     /**资金事务*/
     private TradeResponseDto transaction;

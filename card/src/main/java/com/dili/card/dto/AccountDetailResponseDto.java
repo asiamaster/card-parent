@@ -10,7 +10,9 @@ import java.io.Serializable;
  * @Description: 卡账户详情dto
  */
 public class AccountDetailResponseDto implements Serializable {
-    /**卡账户资金*/
+    /** */
+	private static final long serialVersionUID = -7814484489696228274L;
+	/**卡账户资金*/
     private BalanceResponseDto accountFund;
     /**包含卡关联的信息*/
     private AccountWithAssociationResponseDto cardAssociation;
