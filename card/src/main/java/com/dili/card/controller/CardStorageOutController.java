@@ -2,18 +2,17 @@ package com.dili.card.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
-import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.CardStorageOutQueryDto;
 import com.dili.card.dto.CardStorageOutRequestDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.ICardStorageService;
 import com.dili.card.type.CardStorageState;
+import com.dili.card.type.CheckCardActionType;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ import java.util.Map;
 @RequestMapping("cardStorage")
 public class CardStorageOutController implements IControllerHandler {
 
-	private static final Logger log = LoggerFactory.getLogger(CardStorageOutController.class);
+    private static final Logger log = LoggerFactory.getLogger(CardStorageOutController.class);
 
     @Autowired
     private ICardStorageService cardStorageService;
@@ -90,7 +89,7 @@ public class CardStorageOutController implements IControllerHandler {
     @ResponseBody
     public Map<String, Object> getPage(@Validated(ConstantValidator.Page.class)
                                                CardStorageOutQueryDto queryDto) {
-    	log.info("出库列表分页 *****{}", JSONObject.toJSONString(queryDto));
+        log.info("出库列表分页 *****{}", JSONObject.toJSONString(queryDto));
         // this.buildOperatorInfo(queryDto);
         return successPage(cardStorageService.getPage(queryDto));
     }
@@ -104,8 +103,8 @@ public class CardStorageOutController implements IControllerHandler {
     @ResponseBody
     public BaseOutput<?> addOutRecord(
             @RequestBody @Validated(ConstantValidator.Insert.class) CardStorageOutRequestDto requestDto) {
-    	log.info("添加出库记录 *****{}", JSONObject.toJSONString(requestDto));
-    	this.buildOperatorInfo(requestDto);
+        log.info("添加出库记录 *****{}", JSONObject.toJSONString(requestDto));
+        this.buildOperatorInfo(requestDto);
         cardStorageService.saveOutRecord(requestDto);
         return BaseOutput.success();
     }
@@ -118,12 +117,24 @@ public class CardStorageOutController implements IControllerHandler {
      */
     @GetMapping("checkCard.action")
     @ResponseBody
-    public BaseOutput<CardStorageDto> checkCard(String cardNo) {
-    	log.info("校验卡状态 *****{}", cardNo);
-        AssertUtils.notEmpty(cardNo,"卡号不能为空");
+    public BaseOutput<CardStorageDto> checkCard(String cardNo, Integer checkCardActionType) {
+        log.info("校验卡状态 *****{} , {}", cardNo, checkCardActionType);
+        AssertUtils.notEmpty(cardNo, "卡号不能为空");
         CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardNo);
-        if (cardStorage.getState() != CardStorageState.UNACTIVATE.getCode()) {
-            return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "],不能出库!");
+        if (cardStorage == null) {
+            return BaseOutput.failure("卡仓库中不存在该卡片");
+        }
+        if (checkCardActionType == null) {
+            checkCardActionType = CheckCardActionType.CHANGE_CARD.getCode();
+        }
+        if (checkCardActionType == CheckCardActionType.CHANGE_CARD.getCode()) {
+            if (cardStorage.getState() != CardStorageState.ACTIVE.getCode()) {
+                return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "]，不能进行此操作!");
+            }
+        } else {
+            if (cardStorage.getState() != CardStorageState.UNACTIVATE.getCode()) {
+                return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "]，不能进行此操作!");
+            }
         }
         return BaseOutput.successData(cardStorage);
     }
