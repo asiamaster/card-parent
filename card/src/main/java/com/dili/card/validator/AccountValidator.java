@@ -1,14 +1,11 @@
 package com.dili.card.validator;
 
-import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.exception.ErrorCode;
 import com.dili.card.rpc.resolver.PayRpcResolver;
-import com.dili.card.type.CardStatus;
-import com.dili.card.type.CardType;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.util.SpringUtil;
 
