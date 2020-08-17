@@ -13,6 +13,7 @@ import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.CreateTradeResponseDto;
 import com.dili.card.dto.pay.TradeRequestDto;
+import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
@@ -24,6 +25,7 @@ import com.dili.card.service.ICardManageService;
 import com.dili.card.service.IReturnCardService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
+import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
@@ -140,7 +142,6 @@ public class CardManageServiceImpl implements ICardManageService {
     @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
     public void changeCard(CardRequestDto requestDto) {
-        // changeCardTccTransactionManager.doTcc(cardParam);
         UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(requestDto.getCardNo());
         AccountValidator.validateMatchAccount(requestDto, userAccount);
         this.validateCanChange(requestDto, userAccount);
@@ -151,7 +152,7 @@ public class CardManageServiceImpl implements ICardManageService {
             record.setAmount(serviceFee);
             record.setTradeType(TradeType.FEE.getCode());
             record.setTradeChannel(TradeChannel.CASH.getCode());
-            record.setNotes("换卡，手续费转为市场收入");
+            record.setNotes("换卡，工本费转为市场收入");
         });
 
         CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(
@@ -173,9 +174,17 @@ public class CardManageServiceImpl implements ICardManageService {
 
         TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(userAccount, tradeNo, TradeChannel.CASH.getCode(), requestDto.getLoginPwd());
         tradeRequestDto.addServiceFeeItem(requestDto.getServiceFee(), FundItem.IC_CARD_COST);
-        payRpcResolver.trade(tradeRequestDto);
+        TradeResponseDto tradeResponseDto = payRpcResolver.trade(tradeRequestDto);
 
-        this.saveRemoteSerialRecord(businessRecord);
+        SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, tradeResponseDto, (serialRecord, feeType) -> {
+            FundItem fundItem = FundItem.getByCode(feeType);
+            if (fundItem != null) {
+                serialRecord.setFundItem(fundItem.getCode());
+                serialRecord.setFundItemName(fundItem.getName());
+            }
+            serialRecord.setNotes("补卡，工本费转为市场收入");
+        });
+        serialService.handleSuccess(serialDto);
     }
 
     /**

@@ -8,4 +8,8 @@ package com.dili.card.validator;
 public class FundValidator {
     public interface Trade {
     }
+
+    public interface FrozenFund {
+
+    }
 }
