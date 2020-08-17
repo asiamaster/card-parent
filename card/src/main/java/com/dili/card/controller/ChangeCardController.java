@@ -2,8 +2,6 @@ package com.dili.card.controller;
 
 import javax.annotation.Resource;
 
-import com.dili.card.service.tcc.ChangeCardTccTransactionManager;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardRequestDto;
-import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICardManageService;
+import com.dili.card.service.tcc.ChangeCardTccTransactionManager;
 import com.dili.card.util.AssertUtils;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.util.MoneyUtils;
@@ -40,8 +38,6 @@ public class ChangeCardController implements IControllerHandler {
 
     @Resource
     private ICardManageService cardManageService;
-    @Autowired
-    private IAccountQueryService accountQueryService;
     @Autowired
     private ChangeCardTccTransactionManager changeCardTccTransactionManager;
 

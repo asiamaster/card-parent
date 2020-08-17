@@ -79,7 +79,7 @@ public class SerialController implements IControllerHandler {
         serialQueryDto.setOperatorId(userTicket.getId());
         serialQueryDto.setFirmId(userTicket.getFirmId());
         List<BusinessRecordDo> itemList = serialService.cycleReprintList(serialQueryDto);
-        return BaseOutput.success().setData(itemList);
+        return BaseOutput.successData(itemList);
     }
 
     /**
@@ -97,7 +97,7 @@ public class SerialController implements IControllerHandler {
         UserTicket userTicket = getUserTicket();
         serialQueryDto.setFirmId(userTicket.getFirmId());
         List<BusinessRecordDo> itemList = serialService.todayChargeList(serialQueryDto);
-        return BaseOutput.success().setData(itemList);
+        return BaseOutput.successData(itemList);
     }
 
 

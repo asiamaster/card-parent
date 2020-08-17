@@ -1,14 +1,13 @@
 package com.dili.card.common.annotation;
 
-import com.dili.ss.metadata.ValueProvider;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.util.Map;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import com.dili.ss.metadata.ValueProvider;
 
 /**
  * 字段展示，用于cardType、cardStatus这些状态枚举给前端展示转行

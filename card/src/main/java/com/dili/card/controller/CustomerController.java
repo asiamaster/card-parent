@@ -1,15 +1,9 @@
 package com.dili.card.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.dili.card.common.handler.IControllerHandler;
-import com.dili.card.dto.CustomerResponseDto;
-import com.dili.card.rpc.resolver.CustomerRpcResolver;
-import com.dili.card.service.IAccountQueryService;
-import com.dili.card.service.ICustomerService;
-import com.dili.customer.sdk.domain.Customer;
-import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
-import com.dili.ss.domain.BaseOutput;
-import com.dili.uap.sdk.domain.UserTicket;
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +11,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import java.util.List;
+import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.dto.CustomerResponseDto;
+import com.dili.card.rpc.resolver.CustomerRpcResolver;
+import com.dili.card.service.ICustomerService;
+import com.dili.customer.sdk.domain.Customer;
+import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
+import com.dili.ss.domain.BaseOutput;
+import com.dili.uap.sdk.domain.UserTicket;
 
 /**
  * 客户相关controller
@@ -29,8 +29,6 @@ public class CustomerController implements IControllerHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
     @Resource
     private CustomerRpcResolver customerRpcResolver;
-    @Autowired
-    private IAccountQueryService accountQueryService;
     @Autowired
     private ICustomerService customerService;
 
@@ -48,7 +46,7 @@ public class CustomerController implements IControllerHandler {
         query.setMarketId(userTicket.getFirmId());
         query.setKeyword(keyword);
         List<Customer> itemList = customerRpcResolver.list(query);
-        return BaseOutput.success().setData(itemList);
+        return BaseOutput.successData(itemList);
     }
 
     /**
@@ -65,7 +63,7 @@ public class CustomerController implements IControllerHandler {
         query.setMarketId(userTicket.getFirmId());
         query.setName(name);
         List<Customer> itemList = customerRpcResolver.list(query);
-        return BaseOutput.success().setData(itemList);
+        return BaseOutput.successData(itemList);
     }
 
     /**
