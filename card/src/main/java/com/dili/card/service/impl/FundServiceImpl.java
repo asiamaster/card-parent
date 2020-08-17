@@ -1,5 +1,18 @@
 package com.dili.card.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.AccountWithAssociationResponseDto;
@@ -31,18 +44,8 @@ import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
-import com.google.common.collect.Lists;
-import io.seata.spring.annotation.GlobalTransactional;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import java.time.LocalDateTime;
-import java.util.List;
+import io.seata.spring.annotation.GlobalTransactional;
 
 /**
  * 资金操作service实现类
@@ -109,22 +112,19 @@ public class FundServiceImpl implements IFundService {
 	public void unfrozen(UnfreezeFundDto unfreezeFundDto) {
 		AccountWithAssociationResponseDto accountInfo = accountQueryService
 				.getAssociationByAccountId(unfreezeFundDto.getAccountId());
+		List<SerialRecordDo> serialList =new ArrayList<SerialRecordDo>();
 		for (Long frozenId : unfreezeFundDto.getFrozenIds()) {
 			// 对应支付的frozenId
 			UnfreezeFundDto dto = new UnfreezeFundDto();
 			dto.setFrozenId(frozenId);
 			GenericRpcResolver.resolver(payRpc.unfrozenFund(dto), "pay-service");
 			// 保存操作记录
-			System.out.println("****************解冻成功");
+			SerialRecordDo serialRecord = buildSerialRecord(accountInfo, unfreezeFundDto);
+			serialList.add(serialRecord);
 		}
-
-//		buildBusinessRecordDo(accountInfo, unfreezeFundDto);
-
-		// 保存全局操作记录
-		SerialRecordDo serialRecord = buildSerialRecord(accountInfo, unfreezeFundDto);
-//		serialService.copyCommonFields(serialRecord, buildBusinessRecordDo);
 		SerialDto serialDto = new SerialDto();
-		serialDto.setSerialRecordList(Lists.newArrayList(serialRecord));
+		// 保存全局操作记录
+		serialDto.setSerialRecordList(serialList);
 		serialService.saveSerialRecord(serialDto);
 	}
     @Override
@@ -167,12 +167,14 @@ public class FundServiceImpl implements IFundService {
 		record.setCustomerNo(accountInfo.getPrimary().getCustomerCode());
 		record.setFirmId(unfreezeFundDto.getFirmId());
 		record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
-		record.setNotes("开卡");
+		record.setNotes(unfreezeFundDto.getRemark());
 		record.setOperatorId(unfreezeFundDto.getOpId());
 		record.setOperatorName(unfreezeFundDto.getOpName());
 		record.setOperatorNo(unfreezeFundDto.getOpNo());
-		record.setTradeType(OperateType.ACCOUNT_TRANSACT.getCode());
-		record.setType(OperateType.ACCOUNT_TRANSACT.getCode());
+		record.setTradeType(OperateType.UNFROZEN_FUND.getCode());
+		record.setType(OperateType.UNFROZEN_FUND.getCode());
+		record.setFundItem(FundItem.MANDATORY_UNFREEZE_FUND.getCode());
+		record.setFundItemName(FundItem.MANDATORY_UNFREEZE_FUND.getName());
 		record.setOperateTime(LocalDateTime.now());
 		return record;
 	}
