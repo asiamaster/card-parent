@@ -84,6 +84,7 @@ public class FundController implements IControllerHandler {
      */
     @GetMapping("/unfrozenFund.html")
     public String unfrozenFundView(Long accountId, ModelMap map) {
+    	LOGGER.info("跳转解冻资金页面*****{}", accountId);
         UserAccountCardResponseDto account = accountQueryService.getByAccountIdWithoutValidate(accountId);
         map.put("account", account);
         return "fund/unfrozenFund";
