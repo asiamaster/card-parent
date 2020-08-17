@@ -48,7 +48,8 @@ public class TccContext {
         attributes.put(key, val);
     }
 
-    public <T> T getAttr(String key, Class<T> clazz) {
+    @SuppressWarnings("unchecked")
+	public <T> T getAttr(String key, Class<T> clazz) {
         Object o = attributes.get(key);
         if (o == null) {
             return null;

@@ -1,10 +1,20 @@
 package com.dili.tcc.config;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import com.dili.tcc.bean.TccTransaction;
 import com.dili.tcc.core.EmptyTccResultInterceptor;
 import com.dili.tcc.core.TccResultInterceptor;
 import com.dili.tcc.disruptor.DisruptorBootstrap;
-import com.dili.tcc.disruptor.DisruptorProvider;
 import com.dili.tcc.repository.RedisTccTransactionRepository;
 import com.dili.tcc.repository.TccTransactionRepository;
 import com.dili.tcc.serializer.KryoSerializer;
@@ -14,18 +24,8 @@ import com.dili.tcc.springcloud.HystrixCallableWrapper;
 import com.dili.tcc.springcloud.HystrixTccContextCallableWrapper;
 import com.dili.tcc.springcloud.TccFeignBeanPostProcessor;
 import com.dili.tcc.util.SpringContext;
-import feign.Feign;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
+import feign.Feign;
 
 /**
  * @Auther: miaoguoxin

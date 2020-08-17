@@ -1,7 +1,6 @@
 package com.dili.tcc.repository;
 
 import com.dili.tcc.bean.TccTransaction;
-import com.dili.tcc.serializer.ObjectSerializer;
 
 /**
  * @Auther: miaoguoxin
