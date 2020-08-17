@@ -21,6 +21,7 @@ import com.dili.card.common.constant.Constant;
 import com.dili.card.dao.IFundConsignorDao;
 import com.dili.card.dao.IFundContractDao;
 import com.dili.card.dto.FundConsignorDto;
+import com.dili.card.dto.FundContractPrintDto;
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
@@ -140,7 +141,12 @@ public class ContractServiceImpl implements IContractService {
 	public void activeOverdueContract() {
 		contractDao.activeOverdueContract();
 	}
-	
+
+	@Override
+	public FundContractPrintDto print(FundContractRequestDto fundContractRequest) {
+		FundContractResponseDto fundContractResponseDto = this.detail(fundContractRequest.getId());
+		return FundContractPrintDto.wrapperPrintDetai(fundContractResponseDto);
+	}
 
 	@Override
 	public FundContractResponseDto findActiveContractByAccountId(FundContractQueryDto contractQueryDto) {

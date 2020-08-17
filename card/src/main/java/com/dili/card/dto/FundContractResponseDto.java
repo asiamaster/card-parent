@@ -52,7 +52,7 @@ public class FundContractResponseDto{
 	private LocalDateTime createTime; 
 	/** 被委托人姓名 */
 	private String consigneeNames;
-	/** 被委托人姓名 */
+	/** 被委托人手机号 */
 	private String consigneeMobiles;
 	/** 创建人姓名 */
 	private String creator; 

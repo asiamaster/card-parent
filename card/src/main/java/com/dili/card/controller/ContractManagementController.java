@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.dto.FundContractPrintDto;
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
@@ -156,5 +157,15 @@ public class ContractManagementController implements IControllerHandler {
         query.setMarketId(userTicket.getFirmId());
         query.setKeyword(keyword);
         return BaseOutput.success().setData(iContractService.findCustomers(query));
+    }
+    
+    /**
+     * 打印合同
+     */
+    @PostMapping("/print.action")
+    @ResponseBody
+    public BaseOutput<FundContractPrintDto> print(@RequestBody FundContractRequestDto fundContractRequest) {
+    	log.info("打印合同*****{}", JSONObject.toJSONString(fundContractRequest));
+        return BaseOutput.successData(iContractService.print(fundContractRequest));
     }
 }

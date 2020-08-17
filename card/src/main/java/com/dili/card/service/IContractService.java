@@ -2,6 +2,7 @@ package com.dili.card.service;
 
 import java.util.List;
 
+import com.dili.card.dto.FundContractPrintDto;
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
@@ -58,7 +59,13 @@ public interface IContractService {
 	List<Customer> findCustomers(CustomerQueryInput query);
 
 	/**
+	 * 通过账号查询合同
 	 */
 	FundContractResponseDto findActiveContractByAccountId(FundContractQueryDto contractQueryDto);
+
+	/**
+	 * 合同打印
+	 */
+	FundContractPrintDto print(FundContractRequestDto fundContractRequest);
 
 }
