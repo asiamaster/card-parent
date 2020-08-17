@@ -80,7 +80,7 @@ tab = {
                     $.modal.loading("loading...");
                 }
                 setTimeout(function () {
-                    $.table.initRememberedViewParams(options);
+                    //$.table.initRememberedViewParams(options);
                     $('#' + options.id).bootstrapTable({
                         id: options.id,
                         url: options.url,                                   // 请求后台的URL（*）
