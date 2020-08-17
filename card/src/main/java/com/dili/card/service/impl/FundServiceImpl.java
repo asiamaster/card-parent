@@ -105,6 +105,7 @@ public class FundServiceImpl implements IFundService {
 
 	@Override
 	@GlobalTransactional(rollbackFor = Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void unfrozen(UnfreezeFundDto unfreezeFundDto) {
 		AccountWithAssociationResponseDto accountInfo = accountQueryService
 				.getAssociationByAccountId(unfreezeFundDto.getAccountId());
@@ -127,7 +128,7 @@ public class FundServiceImpl implements IFundService {
 		serialService.saveSerialRecord(serialDto);
 	}
     @Override
-	@GlobalTransactional(rollbackFor = Exception.class,timeoutMills=60000*10)
+	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
     public void recharge(FundRequestDto requestDto) {
 		AbstractRechargeManager rechargeManager = rechargeFactory.getRechargeManager(requestDto.getTradeChannel());
