@@ -1,8 +1,6 @@
 package com.dili.card.service.recharge;
 
 import com.dili.card.dto.FundRequestDto;
-import com.dili.card.dto.pay.TradeRequestDto;
-import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.TradeType;
 

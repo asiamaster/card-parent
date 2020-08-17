@@ -28,7 +28,6 @@ import java.util.List;
  * 提现操作基础实现类
  */
 public abstract class WithdrawServiceImpl implements IWithdrawService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(WithdrawServiceImpl.class);
 
     @Resource
     protected IPayService payService;

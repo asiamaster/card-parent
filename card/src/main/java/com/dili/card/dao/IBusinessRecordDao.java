@@ -1,10 +1,9 @@
 package com.dili.card.dao;
 
+import java.util.List;
+
 import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.entity.BusinessRecordDo;
-import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
 
 /**
  * 柜台业务办理记录

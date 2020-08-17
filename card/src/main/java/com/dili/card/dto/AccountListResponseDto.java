@@ -15,7 +15,9 @@ import java.time.LocalDateTime;
  * @Description: 卡账户列表响应Dto
  */
 public class AccountListResponseDto extends BaseDto implements Serializable {
-    /**账户业务主键*/
+    /** */
+	private static final long serialVersionUID = -1775032495865427107L;
+	/**账户业务主键*/
     private Long accountId;
     /**卡号*/
     private String cardNo;

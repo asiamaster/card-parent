@@ -9,7 +9,9 @@ import java.util.List;
  * @Description: 卡账户关联
  */
 public class AccountWithAssociationResponseDto implements Serializable {
-    /**根据卡号查出来的主信息*/
+    /** */
+	private static final long serialVersionUID = 4114799253667262855L;
+	/**根据卡号查出来的主信息*/
     private UserAccountCardResponseDto primary;
     /**关联卡信息*/
     private List<UserAccountCardResponseDto> association;

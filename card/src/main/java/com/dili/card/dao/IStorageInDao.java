@@ -2,8 +2,6 @@ package com.dili.card.dao;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import com.dili.card.dto.CardStorageOutQueryDto;
 import com.dili.card.dto.StorageInDto;
 import com.dili.card.entity.StorageInDo;

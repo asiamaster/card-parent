@@ -14,7 +14,9 @@ import javax.validation.constraints.NotNull;
  */
 public class FundRequestDto extends CardRequestDto {
 
-    /** 交易渠道*/
+    /** */
+	private static final long serialVersionUID = 7634360360368892537L;
+	/** 交易渠道*/
     @NotNull(message = "交易渠道不能为空", groups = FundValidator.Trade.class)
     private Integer tradeChannel;
     /** 金额*/

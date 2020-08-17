@@ -11,7 +11,9 @@ import java.time.LocalDateTime;
  * @Date: 2020/7/1 16:40
  */
 public class CardStorageOutQueryDto extends CardRequestDto {
-    /**领取人id*/
+    /** */
+	private static final long serialVersionUID = 1L;
+	/**领取人id*/
     private Long applyUserId;
     /**领取人工号*/
     private String applyUserCode;

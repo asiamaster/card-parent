@@ -1,5 +1,11 @@
 package com.dili.card.dto;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.AccountStateProvider;
@@ -8,11 +14,6 @@ import com.dili.card.common.provider.CardTypeProvider;
 import com.dili.card.common.provider.CustomerTypeProvider;
 import com.dili.card.common.provider.DisableStateProvider;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @Auther: miaoguoxin
@@ -20,7 +21,9 @@ import java.util.List;
  * @Description: 卡账户响应Dto
  */
 public class UserAccountCardResponseDto implements Serializable {
-    /** 市场id */
+    /** */
+	private static final long serialVersionUID = -1375512432139116399L;
+	/** 市场id */
     private Long firmId;
     /** 卡账号id */
     private Long accountId;

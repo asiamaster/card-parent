@@ -17,7 +17,9 @@ import java.util.List;
  * @Date: 2020/7/1 16:50
  */
 public class CardStorageOutResponseDto implements Serializable {
-    /**主键id*/
+    /** */
+	private static final long serialVersionUID = 1L;
+	/**主键id*/
     private Long id;
     /**卡号列表*/
     private List<String> applyCards;

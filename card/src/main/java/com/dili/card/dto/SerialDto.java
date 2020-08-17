@@ -11,7 +11,9 @@ import java.util.List;
  */
 public class SerialDto extends BaseDomain {
 
-    /** 流水号*/
+    /** */
+	private static final long serialVersionUID = 122934787180274582L;
+	/** 流水号*/
     private String serialNo;
     /** 总的期初余额*/
     private Long startBalance;

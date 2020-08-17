@@ -1,7 +1,7 @@
 package com.dili.card.dao;
 
-import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
+
 import com.dili.card.entity.BankCounterDo;
 
 /**
