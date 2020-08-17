@@ -28,5 +28,57 @@
         var currentdate = year + nian + month + yue + strDate + ti;
         return currentdate;
     }
+    
+    /**打印信息 id主键信息 templateName 打印模板名称  需要向晓辉索取   url 加载打印数据的接口  自定义 */
+    function print(id,templateName,url){
+        if(typeof callbackObj != 'undefined'){
+            window.printFinish=function(){
+            }
+            var paramStr ="";
+            var data=loadPrintData(id, url);
+            debugger;
+            if(!data){
+                return;
+            }
+            paramStr = JSON.stringify(data);
+            
+            console.log("打印信息--:"+paramStr);
+            if(paramStr==""){
+                return;
+            }
+            callbackObj.printDirect(paramStr,templateName);
+        }else{
+            bs4pop.alert("请检查打印的设备是否已连接", { type: "error" });
+        }
+    }
+    //加载打印数据
+    function loadPrintData(id,url){
+        console.log("调用打印信息："+id);
+        var result;
+        data = {};
+    	data.id = id;
+        $.ajax({
+    	    type: "POST",
+    	    url:url,
+    	    data:JSON.stringify(data),
+    	    contentType: "application/json; charset=utf-8",
+    	    traditional:true,
+    	    dataType:'json',
+    	    async: false,
+    	    error: function(result) {
+    	    	$.modal.alertError(result.message);
+    	    	return "";
+    	    },
+    	    success: function(result) {
+    	    	debugger;
+    	    	if(result.code=="200"){
+    	    		return result.data;
+    	    	}else{
+    	    		$.modal.alertError(result.message);
+    	    		return "";
+    	    	}
+    	    }
+    	});	
+    }
 
 </script>
