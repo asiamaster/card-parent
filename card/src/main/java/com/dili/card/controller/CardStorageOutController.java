@@ -37,7 +37,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("cardStorage")
 public class CardStorageOutController implements IControllerHandler {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(CardStorageOutController.class);
 
     @Autowired
@@ -116,12 +116,12 @@ public class CardStorageOutController implements IControllerHandler {
      * @author miaoguoxin
      * @date 2020/7/29
      */
-    @PostMapping("checkCard.action")
+    @GetMapping("checkCard.action")
     @ResponseBody
-    public BaseOutput<?> checkCard(@RequestBody CardRequestDto cardRequestDto) {
-    	log.info("校验卡状态 *****{}", JSONObject.toJSONString(cardRequestDto));
-        AssertUtils.notEmpty(cardRequestDto.getCardNo(),"卡号不能为空");
-        CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardRequestDto.getCardNo());
+    public BaseOutput<?> checkCard(String cardNo) {
+    	log.info("校验卡状态 *****{}", cardNo);
+        AssertUtils.notEmpty(cardNo,"卡号不能为空");
+        CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardNo);
         if (cardStorage.getState() != CardStorageState.UNACTIVATE.getCode()) {
             return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "],不能出库!");
         }

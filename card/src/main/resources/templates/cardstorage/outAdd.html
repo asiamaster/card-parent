@@ -100,10 +100,8 @@
         };
         let config = {
             url: "${contextPath}/cardStorage/checkCard.action",
-            type: 'post',
-            contentType: "application/json; charset=utf-8",
-            dataType: 'json',
-            data: JSON.stringify(params),
+            type: 'get',
+            data: params,
             success: (result) => {
                 if (result.code != web_status.SUCCESS) {
                     $.modal.alertWarning(result.message)

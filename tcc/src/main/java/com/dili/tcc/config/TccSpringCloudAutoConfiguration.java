@@ -62,7 +62,7 @@ public class TccSpringCloudAutoConfiguration {
      * @author miaoguoxin
      * @date 2020/7/14
      */
-    @Bean
+    //@Bean
     public TccFeignBeanPostProcessor tccBeanPostProcessor() {
         return new TccFeignBeanPostProcessor();
     }
