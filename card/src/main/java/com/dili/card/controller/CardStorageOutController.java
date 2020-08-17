@@ -118,13 +118,13 @@ public class CardStorageOutController implements IControllerHandler {
      */
     @GetMapping("checkCard.action")
     @ResponseBody
-    public BaseOutput<?> checkCard(String cardNo) {
+    public BaseOutput<CardStorageDto> checkCard(String cardNo) {
     	log.info("校验卡状态 *****{}", cardNo);
         AssertUtils.notEmpty(cardNo,"卡号不能为空");
         CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardNo);
         if (cardStorage.getState() != CardStorageState.UNACTIVATE.getCode()) {
             return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "],不能出库!");
         }
-        return BaseOutput.success();
+        return BaseOutput.successData(cardStorage);
     }
 }
