@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.dili.assets.sdk.dto.BusinessChargeItemDto;
 import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
 import com.dili.card.exception.CardAppBizException;
-import com.dili.card.exception.ErrorCode;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IRuleFeeService;
 import com.dili.card.type.RuleFeeBusinessType;

@@ -7,8 +7,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +52,6 @@ import io.seata.spring.annotation.GlobalTransactional;
  */
 @Service
 public class FundServiceImpl implements IFundService {
-	private static final Logger LOGGER = LoggerFactory.getLogger(FundServiceImpl.class);
 
 	@Resource
 	private ISerialService serialService;
