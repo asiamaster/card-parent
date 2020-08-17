@@ -22,6 +22,8 @@ public class FundContractPrintDto implements Serializable{
 	private String currentTime;
 	/** 委托人身份证 */
 	private String consignorIdCode;
+	/** 委托人手机号 */
+	private String consignorMobile;
 	/** 被委托人姓名 */
 	private String consigneeNames;
 	/** 被委托人列表 */
@@ -91,6 +93,15 @@ public class FundContractPrintDto implements Serializable{
 		this.consignors = consignors;
 	}
 	
+
+	public String getConsignorMobile() {
+		return consignorMobile;
+	}
+
+	public void setConsignorMobile(String consignorMobile) {
+		this.consignorMobile = consignorMobile;
+	}
+	
 	public static FundContractPrintDto wrapperPrintDetai(FundContractResponseDto fundContractResponseDto) {
 		FundContractPrintDto fundContractPrintDto = new FundContractPrintDto();
 		fundContractPrintDto.setCardNo(fundContractResponseDto.getConsignorCard());
@@ -103,6 +114,7 @@ public class FundContractPrintDto implements Serializable{
 		LocalDateTime currentTime = LocalDateTime.now();
 		fundContractPrintDto.setCurrentTime(currentTime.getYear() + " 年 " + currentTime.getMonth() + " 月 " + currentTime.getDayOfMonth() + " 日 ");
 		fundContractPrintDto.setConsignors(fundContractResponseDto.getConsignorDtos());
+		fundContractPrintDto.setConsignorMobile(fundContractResponseDto.getConsignorMobile());
 		return fundContractPrintDto;
 	}
 
