@@ -1,5 +1,7 @@
 package com.dili.card.service.recharge;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
@@ -17,16 +19,12 @@ import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @Auther: miaoguoxin
  * @Date: 2020/7/2 10:22
  */
 public abstract class AbstractRechargeManager implements IRechargeManager {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRechargeManager.class);
     @Autowired
     protected IPayService payService;
     @Autowired
