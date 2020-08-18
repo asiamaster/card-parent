@@ -30,8 +30,6 @@ public abstract class AbstractTccTransactionManager<R, T> {
     private static final long RETRY_INTERVAL_MS = 5000;
     @Autowired
     private PlatformTransactionManager transactionManager;
-    @Autowired
-    private DisruptorBootstrap<TccTransaction> disruptorBootstrap;
 
 
     public final R doTcc(T requestDto) {

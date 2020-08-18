@@ -1,15 +1,18 @@
 package com.dili.card.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.dili.card.common.annotation.TextDisplay;
-import com.dili.card.common.provider.FenToYuanProvider;
-import com.dili.card.type.*;
-import com.dili.card.util.CurrencyUtils;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.alibaba.fastjson.annotation.JSONField;
+import com.dili.card.type.BankCardType;
+import com.dili.card.type.OperateState;
+import com.dili.card.type.OperateType;
+import com.dili.card.type.TradeChannel;
+import com.dili.card.type.TradeType;
+import com.dili.card.util.CurrencyUtils;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * 柜台业务办理记录

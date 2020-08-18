@@ -1,7 +1,6 @@
 package com.dili.tcc.core;
 
 import com.dili.tcc.common.TccRemoteInfo;
-import com.dili.tcc.common.TransactionId;
 
 /**
  *

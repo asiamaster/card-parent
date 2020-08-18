@@ -20,6 +20,7 @@ package com.dili.tcc.bean;
 import java.io.Serializable;
 
 
+@SuppressWarnings("serial")
 public class TccParticipant implements Serializable {
 
     private String transId;

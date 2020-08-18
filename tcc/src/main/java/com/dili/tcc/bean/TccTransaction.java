@@ -1,18 +1,18 @@
 package com.dili.tcc.bean;
 
-import com.dili.tcc.common.TccStatus;
-
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.dili.tcc.common.TccStatus;
 
 /**
  * @Auther: miaoguoxin
  * @Date: 2020/7/23 15:59
  * @Description:
  */
+@SuppressWarnings("serial")
 public class TccTransaction implements Serializable {
     /**事务id*/
     private String transId;

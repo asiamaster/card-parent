@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
+import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.OpenCardResponseDto;
 import com.dili.card.dto.SerialDto;
@@ -198,14 +199,14 @@ public class OpenCardServiceImpl implements IOpenCardService {
 			createDto.setDescription("开卡充值工本费");
 			createDto.setType(TradeType.FEE.getCode());
 			CreateTradeResponseDto createTradeResp = GenericRpcResolver.resolver(payRpc.preparePay(createDto),
-					PayRpc.SERVICE_NAME);
+					ServiceName.PAY);
 			TradeRequestDto commitDto = new TradeRequestDto();
 			commitDto.setTradeId(createTradeResp.getTradeId());
 			commitDto.setAccountId(fundAccountId);
 			commitDto.setBusinessId(accountId);
 			commitDto.setChannelId(TradeChannel.CASH.getCode());
 			commitDto.setPassword(openCardInfo.getLoginPwd());
-			GenericRpcResolver.resolver(payRpc.commitTrade(commitDto), PayRpc.SERVICE_NAME);
+			GenericRpcResolver.resolver(payRpc.commitTrade(commitDto), ServiceName.PAY);
 
 			// TODO 超时异常重试 支付最好区分重复提交的异常 其它异常保存日志及记录人工或定时任务补偿
 		} catch (Exception e) {

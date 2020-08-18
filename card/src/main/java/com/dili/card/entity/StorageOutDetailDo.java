@@ -1,7 +1,6 @@
 package com.dili.card.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * 卡片出库，柜员领取激活的详细卡号

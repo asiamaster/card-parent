@@ -25,7 +25,8 @@ public class DisruptorConsumerBus<T> implements WorkHandler<DataEvent<T>> {
         CONSUMER_MAP.put(DisruptorEventType.TCC_DURABLE, TccTransactionConsumer.class);
     }
 
-    @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
     public void onEvent(DataEvent<T> event) throws Exception {
         DisruptorEventType eventType = event.getEventType();
         AbstractConsumer consumer = this.doGetConsumer(eventType);

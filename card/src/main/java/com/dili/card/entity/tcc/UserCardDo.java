@@ -1,10 +1,9 @@
 package com.dili.card.entity.tcc;
 
-import com.dili.card.type.CardStatus;
-import org.springframework.beans.BeanUtils;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import org.springframework.beans.BeanUtils;
 
 /**
  * 用户卡片信息（包括电子卡）

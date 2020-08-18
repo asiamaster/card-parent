@@ -30,7 +30,8 @@ public class DisruptorBootstrap<T> {
         this.tccProperties = tccProperties;
     }
 
-    @PostConstruct
+    @SuppressWarnings("unchecked")
+	@PostConstruct
     public void startup() {
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
         EventFactory<DataEvent<T>> eventFactory = new DisruptorEventFactory<>();
