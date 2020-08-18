@@ -1404,7 +1404,6 @@ tab = {
 
     		    money = parseFloat(money);
     		    if (money >= maxNum) {
-    		        alert('超出最大处理数字');
     		        return "";
     		    }
     		    if (money == 0) {
