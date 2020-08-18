@@ -16,7 +16,7 @@
     }
 </style>
     <div id="detail-modal" >
-    	<form id="saveForm" >
+    	<form id="savePayerForm" >
     		<input id="action" name="action" type="hidden" value="2" class="form-control"/>
     		<input id="actionText" name="actionText" type="hidden" value="交款" class="form-control"/>
 	        <table id="out-detail" class="table table-bordered" >
@@ -30,14 +30,14 @@
 	            </tr>
 	            <tr>
 	                <td class="info-column">柜员姓名</td>
-	                <td class="info-cell">${detail.userName!}
-	                	<input id="_userName" name="userName" type="hidden" value="${detail.userName!}"/>
+	                <td class="info-cell" id="_userName">${detail.userName!}
+	                	<input id="userName" name="userName" type="hidden" value="${detail.userName!}"/>
 	                </td>
 	            </tr>
 	            <tr>
 	                <td class="info-column">交款金额</td>
 	                <td class="info-cell">
-	                	<input id="amountYuan" name="amountYuan" type="number" class="form-control"/>
+	                	<input id="amountYuan" name="amountYuan" type="text" class="form-control"/>
 	                </td>
 	            </tr>
 	            <tr>
@@ -55,13 +55,15 @@
     </div>
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript"
+	src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <script>
 $(function(){
 		$('#amountYuan').bind(' input propertychange ', function(){
-			$('#bigAmount').html($.common.changeNumMoneyToChinese(parseInt($('#amountYuan').val())));
+			$('#bigAmount').html($.common.changeNumMoneyToChinese($('#amountYuan').val()));
 		} );
 	});
-let formId = "saveForm";
+let formId = "savePayerForm";
 $("#" + formId).validate({
     onkeyup: false,
     rules: {
