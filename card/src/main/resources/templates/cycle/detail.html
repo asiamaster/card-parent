@@ -100,7 +100,7 @@ p {
 				</tr>
 				<tr>
 					<td class="info-column">现金余额</td>
-					<td class="info-cell">${detail.accountCycleDetailDto.unDeliverAmountText!}</td>
+					<td class="info-cell" id="unDeliverAmount">${detail.accountCycleDetailDto.unDeliverAmountText!}</td>
 					<td class="info-column">结账交款金额</td>
 					<td class="info-cell">${detail.accountCycleDetailDto.lastDeliverAmountText!}</td>
 				</tr>
@@ -307,14 +307,26 @@ p {
 		if (!$.validate.form("settleForm")) {
 	        return false;
 	    } 
+		var settleAmount = $("#settleAmount").val();
+		var balanceCash = $("#unDeliverAmount").html();
+		if(settleAmount != balanceCash){
+			$.modal.alertError("交款金额与现金余额不一致");
+			return false;
+		}
 		let url = "${contextPath}/cycle/applySettle.action";
 		let data = {};
 		data.userId = $('#userId').val();
 		data.userCode = $('#userCode').text();
 		data.userName = $('#userName').text();
 		data.cashAmount = parseInt(parseFloat($('#settleAmount').val())*100);
-		$.operate.saveModal(url, JSON.stringify(data));
+		bui.util.debounce($.operate.saveModal(url, JSON.stringify(data), function (result) {
+	            if (result.code == web_status.SUCCESS) {
+	                $.table.refresh()
+	            }
+	    }), 1000, true)
 		$("#apply").hide();
+		$('#settleAmount').val("");
+		$('#settleCycle').modal('hide');
 	}
 
 	function backList() {

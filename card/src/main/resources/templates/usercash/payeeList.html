@@ -105,7 +105,7 @@
             modalName: "领款列表查询"
         };
         $.table.init(options);
-        statisticTotalAmount(1);
+        setTimeout("statisticTotalAmount(1)", 500 );
         $("#query").click(function(){
         	statisticTotalAmount(1);
         });
