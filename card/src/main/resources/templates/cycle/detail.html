@@ -313,8 +313,14 @@ p {
 		data.userCode = $('#userCode').text();
 		data.userName = $('#userName').text();
 		data.cashAmount = parseInt(parseFloat($('#settleAmount').val())*100);
-		$.operate.saveModal(url, JSON.stringify(data));
+		bui.util.debounce($.operate.saveModal(url, JSON.stringify(data), function (result) {
+	            if (result.code == web_status.SUCCESS) {
+	                $.table.refresh()
+	            }
+	    }), 1000, true)
 		$("#apply").hide();
+		$('#settleAmount').val("");
+		$('#settleCycle').modal('hide');
 	}
 
 	function backList() {
