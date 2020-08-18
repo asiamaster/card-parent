@@ -1,7 +1,9 @@
 <script>
 function statisticTotalAmount(action){
-	$("#totalAmount").remove();
-	var toolbar = $('.fixed-table-container');
+	if($("#totalAmount")){
+		$("#totalAmount").remove();
+	}
+	var toolbar = $('.fixed-table-toolbar');
 	var divModel = '<div id="totalAmount"><h5>领款总金额：?</h5></div>';
 	let data = $.common.formToJSON('queryForm');
 	data.action=action;
@@ -15,7 +17,7 @@ function statisticTotalAmount(action){
         success:function(result) {
             if (result.code == '200') {
             	divModel = divModel.replace("?", result.data+"");
-            	toolbar.before(divModel);
+            	toolbar.after(divModel);
             }else {
             	divModel = divModel.replace("?", 0+"");
             	toolbar.before(divModel);
