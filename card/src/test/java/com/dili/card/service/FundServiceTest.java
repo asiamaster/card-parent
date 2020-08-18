@@ -34,8 +34,6 @@ class FundServiceTest extends BaseTest {
     private CustomerRpcResolver customerRpcResolver;
     @MockBean
     private IAccountCycleService accountCycleService;
-    @SpyBean
-    private IAccountQueryService accountQueryService;
 
     @Test
     @Transactional
@@ -53,7 +51,7 @@ class FundServiceTest extends BaseTest {
         requestDto.setAmount(1L);
 
         BusinessRecordDo businessRecordDo = new BusinessRecordDo();
-        doCallRealMethod().when(serialService).buildCommonInfo(requestDto, businessRecordDo);
+        //doCallRealMethod().when(serialService).buildCommonInfo(requestDto, businessRecordDo);
         doNothing().when(serialService).handleSuccess(new SerialDto());
         doReturn(this.createCustomer()).when(customerRpcResolver)
                 .getWithNotNull(requestDto.getCustomerId(), requestDto.getFirmId());
