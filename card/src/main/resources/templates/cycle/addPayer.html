@@ -18,6 +18,7 @@
     <div id="detail-modal" >
     	<form id="saveForm" >
     		<input id="action" name="action" type="hidden" value="2" class="form-control"/>
+    		<input id="actionText" name="actionText" type="hidden" value="交款" class="form-control"/>
 	        <table id="out-detail" class="table table-bordered" >
 	            <tbody>
 	            <tr>
@@ -30,7 +31,7 @@
 	            <tr>
 	                <td class="info-column">柜员姓名</td>
 	                <td class="info-cell">${detail.userName!}
-	                	<input id="userName" name="userName" type="hidden" value="${detail.userName!}"/>
+	                	<input id="_userName" name="userName" type="hidden" value="${detail.userName!}"/>
 	                </td>
 	            </tr>
 	            <tr>
@@ -46,7 +47,7 @@
 	             <tr>
 	                <td class="info-column vertical-td">备注</td>
 	                <td class="info-cell">
-	                	<textarea style="width: 240px;" id="notes" name="notes"></textarea>
+	                	<textarea style="width: 240px;" maxlength="20" id="notes" name="notes"></textarea>
 	                </td>
 	            </tr>
 	        </table>
@@ -66,11 +67,15 @@ $("#" + formId).validate({
     rules: {
     	amountYuan: {
             required: true,
+            gt: 0.00,
+            max: 999999.99
         }
     },
     messages: {
     	amountYuan: {
             required: "交款金额必填",
+            gt: "金额必须大于{0}元",
+            max: "金额不能超过{0}元"
         }
     },
     focusCleanup: true
@@ -80,8 +85,19 @@ function submitHandler(e) {
         return false;
     }
     let url = "${contextPath}/cash/save.action";
-    let data = $.common.formToJSON(formId);
-    $.operate.post(url, data);
-    //return true;
+    $.modal.confirm("确认对员工" + '<font color="#FC1D24"><span style="font-size: 18px;">' + $("#_userName").html() + '</font></span>' +"新增"+ $("#actionText").val() + '<font color="#FC1D24"> <span style="font-size: 18px;">' + $("#amountYuan").val() + '</font></span>' +"元吗?", function (sure) {
+        if (!sure) {
+            return;
+        }
+        let data = $.common.formToJSON(formId);
+        data.amount=parseInt(parseFloat(data.amountYuan)*100);
+        bui.util.debounce($.operate.post(url, data, function (result) {
+            if (result.code == web_status.SUCCESS) {
+                $.table.refresh()
+            }
+        }), 1000, true)
+
+    });
+    return true;
 }
 </script>

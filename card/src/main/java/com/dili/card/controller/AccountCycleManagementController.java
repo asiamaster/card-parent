@@ -117,6 +117,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 		}
 		map.put("detail", iAccountCycleService.findById(id));
 		map.put("action", CashAction.PAYER.getCode());
+		map.put("actionText", CashAction.PAYER.getName());
 		return "cycle/addPayer";
 	}
 
