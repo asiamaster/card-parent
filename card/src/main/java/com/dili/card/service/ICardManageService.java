@@ -43,4 +43,10 @@ public interface ICardManageService {
     * @date 2020/7/29
     */
     void changeCard(CardRequestDto cardParam);
+
+	/**
+	 * 查询换卡工本费(返回金额：分)
+	 * @return
+	 */
+	Long getChangeCardCostFee();
 }

@@ -1,11 +1,5 @@
 package com.dili.card.service.impl;
 
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -13,7 +7,6 @@ import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.CreateTradeResponseDto;
 import com.dili.card.dto.pay.TradeRequestDto;
-import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
@@ -23,17 +16,26 @@ import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICardManageService;
 import com.dili.card.service.IReturnCardService;
+import com.dili.card.service.IRuleFeeService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
+import com.dili.card.type.RuleFeeBusinessType;
+import com.dili.card.type.SystemSubjectType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
+import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-
 import io.seata.spring.annotation.GlobalTransactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
 
 
 /**
@@ -59,6 +61,8 @@ public class CardManageServiceImpl implements ICardManageService {
     private IAccountCycleService accountCycleService;
     @Autowired
     private IReturnCardService returnCardService;
+    @Autowired
+    private IRuleFeeService ruleFeeService;
 
     /**
      * @param cardParam
@@ -82,10 +86,10 @@ public class CardManageServiceImpl implements ICardManageService {
     }
 
     @Override
-	@Transactional(rollbackFor = Exception.class)
-	@GlobalTransactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
+    @GlobalTransactional(rollbackFor = Exception.class)
     public void returnCard(CardRequestDto cardParam) {
-    	returnCardService.handle(cardParam);
+        returnCardService.handle(cardParam);
     }
 
     @GlobalTransactional(rollbackFor = Exception.class)
@@ -167,23 +171,30 @@ public class CardManageServiceImpl implements ICardManageService {
 
         businessRecord.setTradeNo(tradeNo);
         serialService.saveBusinessRecord(businessRecord);
-
+        //添加现金柜资金
         accountCycleService.increaseCashBox(businessRecord.getCycleNo(), requestDto.getServiceFee());
+
         cardManageRpcResolver.changeCard(requestDto);
 
         TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(userAccount, tradeNo, TradeChannel.CASH.getCode(), requestDto.getLoginPwd());
-        tradeRequestDto.addServiceFeeItem(requestDto.getServiceFee(), FundItem.IC_CARD_COST);
-        TradeResponseDto tradeResponseDto = payRpcResolver.trade(tradeRequestDto);
+        tradeRequestDto.addServiceFeeItem(serviceFee, FundItem.IC_CARD_COST);
+        payRpcResolver.trade(tradeRequestDto);
 
-        SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, tradeResponseDto, (serialRecord, feeType) -> {
-            FundItem fundItem = FundItem.getByCode(feeType);
-            if (fundItem != null) {
-                serialRecord.setFundItem(fundItem.getCode());
-                serialRecord.setFundItemName(fundItem.getName());
-            }
+        SerialDto serialDto = serialService.createAccountSerial(businessRecord, (serialRecord, feeType) -> {
+            serialRecord.setTradeType(OperateType.CHANGE.getCode());
+            serialRecord.setType(OperateType.CHANGE.getCode());
+            serialRecord.setFundItem(FundItem.IC_CARD_COST.getCode());
+            serialRecord.setFundItemName(FundItem.IC_CARD_COST.getName());
             serialRecord.setNotes("补卡，工本费转为市场收入");
         });
         serialService.handleSuccess(serialDto);
+    }
+
+    @Override
+    public Long getChangeCardCostFee() {
+        BigDecimal ruleFee = ruleFeeService.getRuleFee(RuleFeeBusinessType.CARD_CHANGE_CARD,
+                SystemSubjectType.CARD_CHANGE_COST);
+        return CurrencyUtils.yuan2Cent(ruleFee);
     }
 
     /**

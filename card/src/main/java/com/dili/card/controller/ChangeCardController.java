@@ -33,7 +33,7 @@ import com.dili.uap.sdk.session.SessionContext;
 @RequestMapping(value = "/card/change")
 public class ChangeCardController implements IControllerHandler {
 
-	
+
 	private static final Logger log = LoggerFactory.getLogger(ChangeCardController.class);
 
     @Resource
@@ -58,20 +58,4 @@ public class ChangeCardController implements IControllerHandler {
         return BaseOutput.success();
     }
 
-    /**
-	 * 查询换卡费用项
-	 */
-	@RequestMapping(value = "getChangeCardFee.action", method = { RequestMethod.GET, RequestMethod.POST })
-	@ResponseBody
-	public BaseOutput<String> getChangeCardFee() {
-		log.info("查询换卡费用项 *****");
-//		// 操作人信息
-//		UserTicket user = SessionContext.getSessionContext().getUserTicket();
-//		if (user == null) {
-//			return BaseOutput.failure("未获取到登录用户信息，请重新登录!");
-//		}
-////		Long openCostFee = openCardService.getOpenCostFee(user.getFirmId());
-		Long openCostFee = 1000L;
-		return BaseOutput.successData(MoneyUtils.centToYuan(openCostFee));
-	}
 }

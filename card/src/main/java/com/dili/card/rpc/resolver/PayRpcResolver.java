@@ -1,9 +1,14 @@
 package com.dili.card.rpc.resolver;
 
-import com.dili.card.dto.pay.*;
+import com.dili.card.dto.pay.BalanceResponseDto;
+import com.dili.card.dto.pay.CreateTradeRequestDto;
+import com.dili.card.dto.pay.CreateTradeResponseDto;
+import com.dili.card.dto.pay.FundOpResponseDto;
+import com.dili.card.dto.pay.TradeRequestDto;
+import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.rpc.PayRpc;
 import com.dili.card.type.ServiceType;
-
+import com.dili.ss.domain.BaseOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,23 +20,26 @@ import org.springframework.stereotype.Component;
 public class PayRpcResolver {
     @Autowired
     private PayRpc payRpc;
+
     /**
-    *  提交提现
-    * @author miaoguoxin
-    * @date 2020/7/1
-    */
-    public TradeResponseDto trade(TradeRequestDto withdrawRequest){
-        return GenericRpcResolver.resolver(payRpc.commitTrade(withdrawRequest), ServiceType.PAY_SERVICE.getName());
+     *  提交交易
+     * @author miaoguoxin
+     * @date 2020/7/1
+     */
+    public TradeResponseDto trade(TradeRequestDto withdrawRequest) {
+        BaseOutput<TradeResponseDto> tradeResponseDtoBaseOutput = payRpc.commitTrade(withdrawRequest);
+        return GenericRpcResolver.resolver(tradeResponseDtoBaseOutput, ServiceType.PAY_SERVICE.getName());
     }
 
     /**
-    * 创建交易
-    * @author miaoguoxin
-    * @date 2020/7/1
-    */
-    public CreateTradeResponseDto prePay(CreateTradeRequestDto createTradeRequest){
-       return GenericRpcResolver.resolver(payRpc.preparePay(createTradeRequest), ServiceType.PAY_SERVICE.getName());
+     * 创建交易
+     * @author miaoguoxin
+     * @date 2020/7/1
+     */
+    public CreateTradeResponseDto prePay(CreateTradeRequestDto createTradeRequest) {
+        return GenericRpcResolver.resolver(payRpc.preparePay(createTradeRequest), ServiceType.PAY_SERVICE.getName());
     }
+
     /**
      *  查询余额
      * @author miaoguoxin
@@ -51,21 +59,21 @@ public class PayRpcResolver {
     public FundOpResponseDto postFrozenFund(CreateTradeRequestDto requestDto) {
         return GenericRpcResolver.resolver(payRpc.frozenFund(requestDto), ServiceType.PAY_SERVICE.getName());
     }
-    
+
     /**
      *  冻结账户操作
      */
     public void freezeFundAccount(CreateTradeRequestDto requestDto) {
         GenericRpcResolver.resolver(payRpc.freeze(requestDto), ServiceType.PAY_SERVICE.getName());
     }
-    
+
     /**
      *  解冻账户操作
      */
     public void unfreezeFundAccount(CreateTradeRequestDto requestDto) {
         GenericRpcResolver.resolver(payRpc.unfreeze(requestDto), ServiceType.PAY_SERVICE.getName());
     }
-    
+
     /**
      *  注销账户操作
      */
