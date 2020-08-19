@@ -19,15 +19,8 @@ public interface IOpenCardService {
 	 * @throws InterruptedException 
 	 * @throws Exception 
 	 */
-	public OpenCardResponseDto openMasterCard(OpenCardDto openCardInfo);
+	public OpenCardResponseDto openCard(OpenCardDto openCardInfo);
 
-	/**
-	 * 开副卡
-	 * @param openCardInfo
-	 * @return
-	 */
-	public OpenCardResponseDto openSlaveCard(OpenCardDto openCardInfo);
-	
 	/**
 	 * 查询开卡工本费
 	 * @return

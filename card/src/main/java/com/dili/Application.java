@@ -2,6 +2,7 @@ package com.dili;
 
 import com.dili.ss.dto.DTOScan;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import tk.mybatis.spring.annotation.MapperScan;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +24,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @DTOScan(value={"com.dili.ss", "com.dili.card.domain"})
 @EnableDiscoveryClient
 @EnableFeignClients
+@RefreshScope
 public class Application extends SpringBootServletInitializer {
 
     @Bean
