@@ -139,14 +139,14 @@
 	</select>
 	
 	<update	id="activeOverdueContract">
-		<![CDATA[ UPDATE card_fund_contract `state` = 2 WHERE `state` = 1 and start_time <= NOW()]]>
+		<![CDATA[ UPDATE card_fund_contract SET `state` = 2 WHERE `state` = 1 and start_time <= NOW()]]>
 	</update>
 	
 	<update	id="delete">
-		<![CDATA[ UPDATE card_fund_contract `state` = -1 WHERE consignor_account_id = #{consignorAccountId}]]>
+		<![CDATA[ UPDATE card_fund_contract SET `state` = -1 WHERE consignor_account_id = #{consignorAccountId}]]>
 	</update>
 	
 	<update	id="closeOverdueContract">
-		<![CDATA[UPDATE card_fund_contract `state` = 3 WHERE `state` = 2 and end_time <= NOW()]]>
+		<![CDATA[UPDATE card_fund_contract SET `state` = 3 WHERE `state` = 2 and end_time <= NOW()]]>
 	</update>
 </mapper>
