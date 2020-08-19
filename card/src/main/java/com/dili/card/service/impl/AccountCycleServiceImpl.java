@@ -50,7 +50,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Transactional(rollbackFor = Exception.class)
 	public void settle(AccountCycleDto accountCycleDto) {
 		//获取最新的账务周期
-		AccountCycleDo accountCycle = this.findLatestActiveCycleByUserId(accountCycleDto.getUserId());
+		AccountCycleDo accountCycle = this.findLatestCycleByUserId(accountCycleDto.getUserId());
 		// 对账状态校验
 		this.validateCycleSettledState(accountCycle);
 		//生成交款信息
@@ -59,12 +59,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		this.updateStateById(accountCycle.getId(), CycleState.SETTLED.getCode(), accountCycle.getVersion());
 	}
 	
-
-	@Override
-	public AccountCycleDo findLatestActiveCycleByUserId(Long userId) {
-		return accountCycleDao.findLatestActiveCycleByUserId(userId);
-	}
-
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void flated(Long id) {
@@ -90,57 +84,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		// 封装返回数据
 		return this.buildAccountCycleList(accountCycleDao.findByCondition(accountCycleDto));
 	}
-
-	@Override
-	public PageOutput<List<AccountCycleDto>> page(AccountCycleDto accountCycleDto) {
-		Page<?> page = PageHelper.startPage(accountCycleDto.getPage(), accountCycleDto.getRows());
-		List<AccountCycleDto> accountCycles = this.list(accountCycleDto);
-		return PageUtils.convert2PageOutput(page, accountCycles);
-	}
-
-	@Override
-	public AccountCycleDto detail(Long id) {
-		return this.buildAccountCycleWrapper(accountCycleDao.getById(id));
-	}
-	
-	@Override
-	public AccountCycleDto applyDetail(Long userId) {
-		return this.buildAccountCycleWrapper(accountCycleDao.findLatestActiveCycleByUserId(userId));
-	}
-	
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void increaseCashBox(Long cycleNo, Long amount) {
-		this.updateCashBox(cycleNo, amount);
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void decreaseeCashBox(Long cycleNo, Long amount) {
-		this.updateCashBox(cycleNo, -amount);
-	}
-	
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void updateCashBox(Long cycleNo, Long amount) {
-		AccountCycleDo accountCycleDo = accountCycleDao.findByCycleNo(cycleNo);
-		if (!accountCycleDao.updateCashBox(cycleNo, amount, accountCycleDo.getVersion())) {
-			throw new CardAppBizException("更新现金柜失败");
-		}
-	}
-
-
-	@Override
-	public Boolean checkExistActiveCycle(Long userId) {
-		AccountCycleDo  accountCycleDo = this.findLatestActiveCycleByUserId(userId);
-		if (accountCycleDo == null) {
-			return true;
-		}
-		if (accountCycleDo.getState() == CycleState.SETTLED.getCode()) {
-			throw new CardAppBizException("当前员工账务周期正在对账中,不能操作");
-		}
-		return true;
-	}
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -148,12 +91,11 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		if (userId == null || StringUtils.isBlank(userName) || StringUtils.isBlank(userCode)) {
 			throw new CardAppBizException("查询账务周期参数错误");
 		}
-		AccountCycleDo accountCycle = this.findSettledCycleByUserId(userId);
-		if (accountCycle != null) {
+		AccountCycleDo accountCycle = this.findLatestCycleByUserId(userId);
+		if (accountCycle != null && accountCycle.getState().equals(CycleState.SETTLED.getCode())) {
 			throw new CardAppBizException("当前员工账务周期正在对账中,不能操作");
 		}
-		accountCycle = this.findActiveCycleByUserId(userId);
-		if (accountCycle == null) {
+		if (accountCycle == null || accountCycle.getState().equals(CycleState.FLATED.getCode())) {
 			accountCycle = new AccountCycleDo();
 			accountCycle.setUserId(userId);
 			accountCycle.setUserCode(userCode);
@@ -173,20 +115,72 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}
 		return accountCycle;
 	}
+	
+	@Override
+	public PageOutput<List<AccountCycleDto>> page(AccountCycleDto accountCycleDto) {
+		Page<?> page = PageHelper.startPage(accountCycleDto.getPage(), accountCycleDto.getRows());
+		List<AccountCycleDto> accountCycles = this.list(accountCycleDto);
+		return PageUtils.convert2PageOutput(page, accountCycles);
+	}
 
+	@Override
+	public AccountCycleDo findLatestCycleByUserId(Long userId) {
+		return accountCycleDao.findLatestCycleByUserId(userId);
+	}
+
+	@Override
+	public AccountCycleDto detail(Long id) {
+		return this.buildAccountCycleWrapper(accountCycleDao.getById(id));
+	}
+	
+	@Override
+	public AccountCycleDto applyDetail(Long userId) {
+		return this.buildAccountCycleWrapper(accountCycleDao.findLatestCycleByUserId(userId));
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void increaseCashBox(Long cycleNo, Long amount) {
+		this.updateCashBox(cycleNo, amount);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void decreaseeCashBox(Long cycleNo, Long amount) {
+		this.updateCashBox(cycleNo, -amount);
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateCashBox(Long cycleNo, Long amount) {
+		if(amount == 0) {
+			return;
+		}
+		AccountCycleDo accountCycleDo = accountCycleDao.findByCycleNo(cycleNo);
+		if (!accountCycleDao.updateCashBox(cycleNo, amount, accountCycleDo.getVersion())) {
+			throw new CardAppBizException("更新现金柜失败");
+		}
+	}
+
+
+	@Override
+	public Boolean checkExistActiveCycle(Long userId) {
+		AccountCycleDo  accountCycleDo = this.findLatestCycleByUserId(userId);
+		if (accountCycleDo == null) {
+			return true;
+		}
+		if (accountCycleDo.getState() == CycleState.SETTLED.getCode()) {
+			throw new CardAppBizException("当前员工账务周期正在对账中,不能操作");
+		}
+		return true;
+	}
+	
 	/**
 	 * 获取活跃的账务周期
 	 */
 	@Override
 	public AccountCycleDo findActiveCycleByUserId(Long userId) {
 		return accountCycleDao.findByUserIdAndState(userId, CycleState.ACTIVE.getCode());
-	}
-
-	/**
-	 * 获取对账的账务周期
-	 */
-	private AccountCycleDo findSettledCycleByUserId(Long userId) {
-		return accountCycleDao.findByUserIdAndState(userId, CycleState.SETTLED.getCode());
 	}
 
 	@Override
@@ -224,7 +218,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	private void updateStateById(Long id, Integer state, Integer version) {
 		int update = accountCycleDao.updateStateById(id, state, version);
 		if (update == 0) {
-			throw new CardAppBizException("平账失败");
+			throw new CardAppBizException("结账失败");
 		}
 	}
 

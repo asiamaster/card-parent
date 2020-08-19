@@ -74,5 +74,5 @@ public interface IAccountCycleDao {
 	/**
 	 * 获取当前人最新的账务周期
 	 */
-	AccountCycleDo findLatestActiveCycleByUserId(@Param("userId") Long userId);
+	AccountCycleDo findLatestCycleByUserId(@Param("userId") Long userId);
 }

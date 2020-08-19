@@ -134,7 +134,7 @@
 		WHERE user_id = #{userId} and state = #{state}
 	</select>
 	
-	<select id="findLatestActiveCycleByUserId" resultType="com.dili.card.entity.AccountCycleDo">
+	<select id="findLatestCycleByUserId" resultType="com.dili.card.entity.AccountCycleDo">
 		<include refid="baseSql"/>
 		WHERE user_id = #{userId} ORDER BY create_time DESC LIMIT 1
 	</select>

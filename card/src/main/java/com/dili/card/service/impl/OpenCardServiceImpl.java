@@ -38,8 +38,6 @@ import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.rule.sdk.rpc.ChargeRuleRpc;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.util.MoneyUtils;
-import com.esotericsoftware.minlog.Log;
 import com.google.common.collect.Lists;
 
 import io.seata.spring.annotation.GlobalTransactional;
@@ -81,7 +79,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@Override
 	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
-	public OpenCardResponseDto openMasterCard(OpenCardDto openCardInfo) {
+	public OpenCardResponseDto openCard(OpenCardDto openCardInfo) {
 		// 获取当前账务周期
 		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(openCardInfo.getCreatorId(),
 				openCardInfo.getCreator(), openCardInfo.getCreatorCode());
@@ -90,54 +88,30 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		accountCycleService.increaseCashBox(cycleDo.getCycleNo(), openCardInfo.getCostFee());
 
 		// 调用账户服务开卡
-		BaseOutput<OpenCardResponseDto> baseOutPut = openCardRpc.openMasterCard(openCardInfo);
-		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, "账户服务开卡");
+		BaseOutput<OpenCardResponseDto> baseOutPut = openCardRpc.openCard(openCardInfo);
+		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, ServiceName.ACCOUNT);
 		Long accountId = openCardResponse.getAccountId();
 
-		// 保存卡务柜台开卡操作记录 使用seate后状态为成功
-		BusinessRecordDo buildBusinessRecordDo = buildBusinessRecordDo(openCardInfo, accountId, cycleDo.getCycleNo());
-		serialService.saveBusinessRecord(buildBusinessRecordDo);
-
 		// 调用支付系统向市场账户充值工本费
-		rechargeCostFee(accountId, openCardResponse.getFundAccountId(), openCardInfo);
+		String tradeId = "";
+		if (openCardInfo.getCostFee() > 0) {
+			tradeId = rechargeCostFee(accountId, openCardResponse.getFundAccountId(), openCardInfo);
+		}
+
+		// 保存卡务柜台开卡操作记录 使用seate后状态默认为成功
+		BusinessRecordDo busiRecord = buildBusinessRecordDo(openCardInfo, accountId, cycleDo.getCycleNo(), tradeId);
+		serialService.saveBusinessRecord(busiRecord);
+
 		// 保存全局操作交易记录 开卡工本费
 		saveSerialRecord(openCardInfo, accountId);
 		return openCardResponse;
 	}
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	@GlobalTransactional(rollbackFor = Exception.class)
-	public OpenCardResponseDto openSlaveCard(OpenCardDto openCardInfo) {
-		// 获取当前账务周期
-		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(openCardInfo.getCreatorId(),
-				openCardInfo.getCreator(), openCardInfo.getCreatorCode());
-
-		// 工本费更新现金柜金额
-		accountCycleService.increaseCashBox(cycleDo.getCycleNo(), openCardInfo.getCostFee());
-
-		// 调用账户服务开卡
-		BaseOutput<OpenCardResponseDto> baseOutPut = openCardRpc.openSlaveCard(openCardInfo);
-		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, "账户服务开卡");
-
-		// 保存卡务柜台操作记录
-		BusinessRecordDo buildBusinessRecordDo = buildBusinessRecordDo(openCardInfo, openCardResponse.getAccountId(),
-				cycleDo.getCycleNo());
-		serialService.saveBusinessRecord(buildBusinessRecordDo);
-		// 保存全局操作交易记录 开卡工本费
-		saveSerialRecord(openCardInfo, openCardResponse.getAccountId());
-
-		return openCardResponse;
-	}
-
 	/**
 	 * 构建柜员操作日志
-	 * 
-	 * @param openCardInfo
-	 * @param accountId
-	 * @return
 	 */
-	private BusinessRecordDo buildBusinessRecordDo(OpenCardDto openCardInfo, Long accountId, Long cycleNo) {
+	private BusinessRecordDo buildBusinessRecordDo(OpenCardDto openCardInfo, Long accountId, Long cycleNo,
+			String tradeId) {
 		BusinessRecordDo serial = new BusinessRecordDo();
 		serial.setAccountId(accountId);
 		serial.setCardNo(openCardInfo.getCardNo());
@@ -150,18 +124,18 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		serial.setOperatorName(openCardInfo.getCreator());
 		serial.setOperatorNo(openCardInfo.getCreatorCode());
 		serial.setOperateTime(LocalDateTime.now());
+		serial.setAmount(openCardInfo.getCostFee());
 		serial.setState(OperateState.SUCCESS.getCode());
-		serial.setNotes("IC卡工本费，现金" +MoneyUtils.centToYuan(openCardInfo.getCostFee()) + "元");
+		serial.setNotes("开卡，工本费转为市场收入");
 		serial.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
+		serial.setTradeType(TradeType.FEE.getCode());
+		serial.setTradeNo(tradeId);
 		serial.setType(OperateType.ACCOUNT_TRANSACT.getCode());
 		return serial;
 	}
 
 	/**
 	 * 生成全局日志
-	 * 
-	 * @param openCardInfo
-	 * @param accountId
 	 */
 	private void saveSerialRecord(OpenCardDto openCardInfo, Long accountId) {
 		SerialRecordDo record = new SerialRecordDo();
@@ -190,27 +164,22 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	/**
 	 * 调用支付系统向市场账户充值工本费
 	 */
-	private void rechargeCostFee(Long accountId, Long fundAccountId, OpenCardDto openCardInfo) {
-		try {
-			CreateTradeRequestDto createDto = new CreateTradeRequestDto();
-			createDto.setAccountId(fundAccountId);
-			createDto.setAmount(openCardInfo.getCostFee());
-			createDto.setBusinessId(accountId);
-			createDto.setDescription("开卡充值工本费");
-			createDto.setType(TradeType.FEE.getCode());
-			CreateTradeResponseDto createTradeResp = GenericRpcResolver.resolver(payRpc.preparePay(createDto),
-					ServiceName.PAY);
-			TradeRequestDto commitDto = new TradeRequestDto();
-			commitDto.setTradeId(createTradeResp.getTradeId());
-			commitDto.setAccountId(fundAccountId);
-			commitDto.setBusinessId(accountId);
-			commitDto.setChannelId(TradeChannel.CASH.getCode());
-			commitDto.setPassword(openCardInfo.getLoginPwd());
-			GenericRpcResolver.resolver(payRpc.commitTrade(commitDto), ServiceName.PAY);
-
-			// TODO 超时异常重试 支付最好区分重复提交的异常 其它异常保存日志及记录人工或定时任务补偿
-		} catch (Exception e) {
-			Log.error("向市场账户充值开卡工本费出现异常！", e);
-		}
+	private String rechargeCostFee(Long accountId, Long fundAccountId, OpenCardDto openCardInfo) {
+		CreateTradeRequestDto createDto = new CreateTradeRequestDto();
+		createDto.setAccountId(fundAccountId);
+		createDto.setAmount(openCardInfo.getCostFee());
+		createDto.setBusinessId(accountId);
+		createDto.setDescription("开卡充值工本费");
+		createDto.setType(TradeType.FEE.getCode());
+		CreateTradeResponseDto createTradeResp = GenericRpcResolver.resolver(payRpc.preparePay(createDto),
+				ServiceName.PAY);
+		TradeRequestDto commitDto = new TradeRequestDto();
+		commitDto.setTradeId(createTradeResp.getTradeId());
+		commitDto.setAccountId(fundAccountId);
+		commitDto.setBusinessId(accountId);
+		commitDto.setChannelId(TradeChannel.CASH.getCode());
+		commitDto.setPassword(openCardInfo.getLoginPwd());
+		GenericRpcResolver.resolver(payRpc.commitTrade(commitDto), ServiceName.PAY);
+		return createTradeResp.getTradeId();
 	}
 }
