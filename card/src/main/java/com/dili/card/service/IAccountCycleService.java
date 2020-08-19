@@ -84,7 +84,7 @@ public interface IAccountCycleService {
 	/**
 	 * 获取最新账务周期
 	 */
-	AccountCycleDo findLatestActiveCycleByUserId(Long userId);
+	AccountCycleDo findLatestCycleByUserId(Long userId);
 
 	/**
 	 * 校验是否存在合适的分支事务

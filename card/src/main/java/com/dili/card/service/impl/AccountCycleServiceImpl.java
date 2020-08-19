@@ -50,7 +50,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Transactional(rollbackFor = Exception.class)
 	public void settle(AccountCycleDto accountCycleDto) {
 		//获取最新的账务周期
-		AccountCycleDo accountCycle = this.findLatestActiveCycleByUserId(accountCycleDto.getUserId());
+		AccountCycleDo accountCycle = this.findLatestCycleByUserId(accountCycleDto.getUserId());
 		// 对账状态校验
 		this.validateCycleSettledState(accountCycle);
 		//生成交款信息
@@ -61,8 +61,8 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	
 
 	@Override
-	public AccountCycleDo findLatestActiveCycleByUserId(Long userId) {
-		return accountCycleDao.findLatestActiveCycleByUserId(userId);
+	public AccountCycleDo findLatestCycleByUserId(Long userId) {
+		return accountCycleDao.findLatestCycleByUserId(userId);
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	
 	@Override
 	public AccountCycleDto applyDetail(Long userId) {
-		return this.buildAccountCycleWrapper(accountCycleDao.findLatestActiveCycleByUserId(userId));
+		return this.buildAccountCycleWrapper(accountCycleDao.findLatestCycleByUserId(userId));
 	}
 	
 	@Override
@@ -135,7 +135,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	public Boolean checkExistActiveCycle(Long userId) {
-		AccountCycleDo  accountCycleDo = this.findLatestActiveCycleByUserId(userId);
+		AccountCycleDo  accountCycleDo = this.findLatestCycleByUserId(userId);
 		if (accountCycleDo == null) {
 			return true;
 		}
@@ -151,12 +151,11 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		if (userId == null || StringUtils.isBlank(userName) || StringUtils.isBlank(userCode)) {
 			throw new CardAppBizException("查询账务周期参数错误");
 		}
-		AccountCycleDo accountCycle = this.findSettledCycleByUserId(userId);
-		if (accountCycle != null) {
+		AccountCycleDo accountCycle = this.findLatestCycleByUserId(userId);
+		if (accountCycle != null && accountCycle.getState().equals(CycleState.SETTLED.getCode())) {
 			throw new CardAppBizException("当前员工账务周期正在对账中,不能操作");
 		}
-		accountCycle = this.findActiveCycleByUserId(userId);
-		if (accountCycle == null) {
+		if (accountCycle == null || accountCycle.getState().equals(CycleState.FLATED.getCode())) {
 			accountCycle = new AccountCycleDo();
 			accountCycle.setUserId(userId);
 			accountCycle.setUserCode(userCode);
@@ -183,13 +182,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Override
 	public AccountCycleDo findActiveCycleByUserId(Long userId) {
 		return accountCycleDao.findByUserIdAndState(userId, CycleState.ACTIVE.getCode());
-	}
-
-	/**
-	 * 获取对账的账务周期
-	 */
-	private AccountCycleDo findSettledCycleByUserId(Long userId) {
-		return accountCycleDao.findByUserIdAndState(userId, CycleState.SETTLED.getCode());
 	}
 
 	@Override
