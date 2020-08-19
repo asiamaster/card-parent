@@ -4,12 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.dili.card.config.RabbitMQConfig;
 import com.dili.card.dao.IBusinessRecordDao;
-import com.dili.card.dto.AccountWithAssociationResponseDto;
-import com.dili.card.dto.BusinessRecordResponseDto;
-import com.dili.card.dto.CardRequestDto;
-import com.dili.card.dto.SerialDto;
-import com.dili.card.dto.SerialQueryDto;
-import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.*;
 import com.dili.card.dto.pay.FeeItemDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.AccountCycleDo;
@@ -30,7 +25,6 @@ import com.dili.card.util.CurrencyUtils;
 import com.dili.card.util.DateUtil;
 import com.dili.card.util.PageUtils;
 import com.dili.commons.rabbitmq.RabbitMQMessageService;
-import com.dili.customer.sdk.domain.Customer;
 import com.dili.ss.domain.PageOutput;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -71,33 +65,6 @@ public class SerialServiceImpl implements ISerialService {
     private RabbitMQMessageService rabbitMQMessageService;
     @Autowired
     private IAccountQueryService accountQueryService;
-
-    @Override
-    public void buildCommonInfo(CardRequestDto cardParam, BusinessRecordDo businessRecord) {
-        //编号、卡号、账户id
-        businessRecord.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
-        businessRecord.setAccountId(cardParam.getAccountId());
-        businessRecord.setCardNo(cardParam.getCardNo());
-        //客户信息
-        Customer customer = customerRpcResolver.getWithNotNull(cardParam.getCustomerId(), cardParam.getFirmId());
-        businessRecord.setCustomerId(customer.getId());
-        businessRecord.setCustomerNo(customer.getCode());
-        businessRecord.setCustomerName(customer.getName());
-        //账务周期
-        AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(cardParam.getOpId(), cardParam.getOpName(), cardParam.getOpNo());
-        businessRecord.setCycleNo(accountCycle.getCycleNo());
-        //操作员信息
-        businessRecord.setOperatorId(cardParam.getOpId());
-        businessRecord.setOperatorNo(cardParam.getOpNo());
-        businessRecord.setOperatorName(cardParam.getOpName());
-        businessRecord.setFirmId(cardParam.getFirmId());
-        //时间、默认状态等数据
-        LocalDateTime localDateTime = LocalDateTime.now();
-        businessRecord.setState(OperateState.PROCESSING.getCode());
-        businessRecord.setOperateTime(localDateTime);
-        businessRecord.setModifyTime(localDateTime);
-        businessRecord.setVersion(1);
-    }
 
     @Transactional
     @Override

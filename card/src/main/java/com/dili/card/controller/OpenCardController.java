@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.constant.ServiceName;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.CustomerResponseDto;
@@ -32,9 +33,6 @@ import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
-import com.dili.uap.sdk.session.SessionContext;
-
-import cn.hutool.core.util.RandomUtil;
 
 /**
  * @description： 开卡服务
@@ -42,7 +40,6 @@ import cn.hutool.core.util.RandomUtil;
  * @author ：WangBo
  * @time ：2020年6月30日上午11:28:51
  */
-//@RestController
 @Controller
 @RequestMapping(value = "/card")
 public class OpenCardController implements IControllerHandler {
@@ -61,29 +58,6 @@ public class OpenCardController implements IControllerHandler {
 	ICardStorageService cardStorageService;
 
 	/**
-	 * 主卡开卡
-	 */
-	@RequestMapping(value = "openMasterCard.html", method = { RequestMethod.GET, RequestMethod.POST })
-	public String toOpenCardHtml() {
-		return "clientTest/openCard";
-	}
-
-	/**
-	 * 主卡开卡测试用户查询
-	 */
-	@RequestMapping(value = "getCustomerInfoTest.action", method = { RequestMethod.GET, RequestMethod.POST })
-	@ResponseBody
-	public BaseOutput<Customer> getCustomerInfoTest(Long customerId) {
-		// 操作人信息
-		UserTicket user = SessionContext.getSessionContext().getUserTicket();
-		if (customerId == null) {
-			customerId = RandomUtil.getRandom().nextLong(210);
-		}
-		Customer customer = GenericRpcResolver.resolver(customerRpc.get(customerId, user.getFirmId()), "测试获取用户信息");
-		return BaseOutput.successData(customer);
-	}
-
-	/**
 	 * 根据证件号查询客户信息
 	 */
 	@RequestMapping(value = "getCustomerInfo.action", method = { RequestMethod.GET, RequestMethod.POST })
@@ -91,13 +65,10 @@ public class OpenCardController implements IControllerHandler {
 	public BaseOutput<CustomerResponseDto> getCustomerInfo(@RequestBody OpenCardDto openCardInfo) {
 		log.info("开卡证件号查询客户信息*****{}", JSONObject.toJSONString(openCardInfo));
 		// 操作人信息
-		UserTicket user = SessionContext.getSessionContext().getUserTicket();
-		if (user == null) {
-			return BaseOutput.failure("未获取到登录用户信息，请重新登录!");
-		}
+		UserTicket user = getUserTicket();
 		AssertUtils.notEmpty(openCardInfo.getCustomerCertificateNumber(), "请输入证件号!");
 		Customer customer = GenericRpcResolver.resolver(
-				customerRpc.getByCertificateNumber(openCardInfo.getCustomerCertificateNumber(), user.getFirmId()), "开卡客户查询");
+				customerRpc.getByCertificateNumber(openCardInfo.getCustomerCertificateNumber(), user.getFirmId()), ServiceName.CUSTOMER);
 		CustomerResponseDto response = new CustomerResponseDto();
 		if(customer != null) {
 			BeanUtils.copyProperties(customer, response);
@@ -123,12 +94,12 @@ public class OpenCardController implements IControllerHandler {
 	}
 
 	/**
-	 * 检查新卡卡号状态
+	 * 检查新卡状态
 	 */
 	@RequestMapping(value = "checkNewCardNo.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public BaseOutput<?> checkNewCardNo(@RequestBody OpenCardDto openCardInfo) {
-		AssertUtils.notNull(openCardInfo.getCardNo(), "请输入主卡卡号!");
+		AssertUtils.notNull(openCardInfo.getCardNo(), "请输入卡号!");
 		CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(openCardInfo.getCardNo());
 		if (cardStorage.getState() != CardStorageState.ACTIVE.getCode()) {
 			return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "],不能开卡!");
@@ -145,11 +116,6 @@ public class OpenCardController implements IControllerHandler {
 	@RequestMapping(value = "getOpenCardFee.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public BaseOutput<String> getOpenCardFee() {
-		// 操作人信息
-		UserTicket user = SessionContext.getSessionContext().getUserTicket();
-		if (user == null) {
-			return BaseOutput.failure("未获取到登录用户信息，请重新登录!");
-		}
 		String openCostFee = openCardService.getOpenCostFee();
 		log.info("查询开卡费用项*****{}", openCostFee);
 		return BaseOutput.successData(openCostFee);
@@ -166,13 +132,9 @@ public class OpenCardController implements IControllerHandler {
 		log.info("开卡主卡信息*****{}", JSONObject.toJSONString(openCardInfo));
 		// 主要参数校验
 		checkMasterParam(openCardInfo);
-		// 操作人信息
-		UserTicket user = SessionContext.getSessionContext().getUserTicket();
-		openCardInfo.setCreator(user.getRealName());
-		openCardInfo.setCreatorId(user.getId());
-		openCardInfo.setCreatorCode(user.getUserName());
-		openCardInfo.setFirmId(user.getFirmId());
-		openCardInfo.setFirmName(user.getFirmName());
+		// 设置操作人信息
+		UserTicket user = getUserTicket();
+		setOpUser(openCardInfo, user);
 		// 开卡
 		OpenCardResponseDto response = openCardService.openMasterCard(openCardInfo);
 		log.info("开卡主完成*****{}", JSONObject.toJSONString(response));
@@ -188,32 +150,25 @@ public class OpenCardController implements IControllerHandler {
 		log.info("开副卡信息*****{}", JSONObject.toJSONString(openCardInfo));
 		// 主要参数校验
 		AssertUtils.notNull(openCardInfo.getParentAccountId(), "主卡信息不能为空!");
-		// 操作人信息
-		UserTicket user = SessionContext.getSessionContext().getUserTicket();
-		if (user == null) {
-			return BaseOutput.failure("未获取到登录用户信息，请重新登录!");
-		}
-		openCardInfo.setCreator(user.getRealName());
-		openCardInfo.setCreatorId(user.getId());
-		openCardInfo.setCreatorCode(user.getUserName());
-		openCardInfo.setFirmId(user.getFirmId());
-		openCardInfo.setFirmName(user.getFirmName());
+		// 设置操作人信息
+		UserTicket user = getUserTicket();
+		setOpUser(openCardInfo, user);
 		OpenCardResponseDto response = openCardService.openSlaveCard(openCardInfo);
 		log.info("开副卡完成*****{}", JSONObject.toJSONString(response));
 		return BaseOutput.success("success").setData(response);
 	}
 
-	
 	/**
-	 * 开卡补打记录查询
-	 * 
+	 * 设置操作人信息
 	 */
-	@PostMapping("getOperRecord.action")
-	@ResponseBody
-	public BaseOutput<?> getOperRecord(@RequestBody OpenCardDto openCardInfo) throws Exception {
-		// TODO 查询最近操作流水
-		return BaseOutput.success("success");
+	private void setOpUser(OpenCardDto openCardInfo, UserTicket user) {
+		openCardInfo.setCreator(user.getRealName());
+		openCardInfo.setCreatorId(user.getId());
+		openCardInfo.setCreatorCode(user.getUserName());
+		openCardInfo.setFirmId(user.getFirmId());
+		openCardInfo.setFirmName(user.getFirmName());
 	}
+
 	
 	
 	/**

@@ -21,14 +21,6 @@ import java.util.List;
 public interface ISerialService {
 
     /**
-     * 组装公共数据 包括流水号、客户信息、账务周期、操作员信息、默认状态等
-     * @param cardParam
-     * @param businessRecord
-     */
-    @Deprecated
-    void buildCommonInfo(CardRequestDto cardParam, BusinessRecordDo businessRecord);
-
-    /**
      * 保存业务办理记录
      * @param businessRecord
      */
@@ -42,7 +34,7 @@ public interface ISerialService {
     void copyCommonFields(SerialRecordDo serialRecord, BusinessRecordDo businessRecord);
 
     /**
-     * 失败处理 改状态 需新开事务
+     * 失败处理 改状态
      * @param serialDto
      */
     void handleFailure(SerialDto serialDto);
