@@ -25,4 +25,7 @@ public class Constant {
     /**合同快到期时间提醒*/
     public static final Long READY_EXPIRE_DAY = 3L;
     public static final String CONTRACT_EXPIRE_DAYS = "contract_expire_days";
+    /** 最大最小金额 单位 分 */
+    public static final Long MAX_AMOUNT = 99999999L;
+    public static final Long MIN_AMOUNT = 1L;
 }

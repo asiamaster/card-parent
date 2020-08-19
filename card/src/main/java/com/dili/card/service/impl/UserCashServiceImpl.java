@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import com.dili.card.common.constant.Constant;
 import com.dili.card.dao.IUserCashDao;
 import com.dili.card.dto.UserCashDto;
 import com.dili.card.entity.AccountCycleDo;
@@ -19,6 +20,7 @@ import com.dili.card.service.IUserCashService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CashAction;
 import com.dili.card.type.CashState;
+import com.dili.card.util.CurrencyUtils;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
@@ -145,11 +147,11 @@ public class UserCashServiceImpl implements IUserCashService {
 		UserCashDo userCash = new UserCashDo();
 		userCash.setCashNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CASH_NO.getCode())));
 		userCash.setAction(userCashDto.getAction());
-		if (userCashDto.getAmount() < 1L) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01元");
+		if (userCashDto.getAmount() < Constant.MIN_AMOUNT) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于"+ CurrencyUtils.toCurrency(Constant.MIN_AMOUNT) + "元");
 		}
-		if (userCashDto.getAmount() > 99999999L) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过999999.99元");
+		if (userCashDto.getAmount() > Constant.MAX_AMOUNT) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过"+ CurrencyUtils.toCurrency(Constant.MAX_AMOUNT) + "元");
 		}
 		userCash.setAmount(userCashDto.getAmount());
 		userCash.setUserId(userCashDto.getUserId());
