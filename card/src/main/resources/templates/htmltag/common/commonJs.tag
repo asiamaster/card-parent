@@ -31,13 +31,11 @@
     
     /**打印信息 tableId展示的表格id  templateName 打印模板名称  需要向晓辉索取   url 加载打印数据的接口  自定义 */
     function print(tableId, templateName, url){
-    	var rows= $("#tableId").bootstrapTable('getSelections');
-    	var id;
-    	if（rows.length==1）{
-    		id = rows[0].id;
-    	}else{
-    		bs4pop.alert("请选中一行", { type: "error" });
-    	}
+    	var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+   	 	if (id.length == 0) {
+            $.modal.alertWarning("请至少选择一条记录");
+            return;
+        }
         if(typeof callbackObj != 'undefined'){
             window.printFinish=function(){
             }
@@ -60,7 +58,6 @@
     //加载打印数据
     function loadPrintData(id,url){
         console.log("调用打印信息："+id);
-        var result;
         data = {};
     	data.id = id;
         $.ajax({
