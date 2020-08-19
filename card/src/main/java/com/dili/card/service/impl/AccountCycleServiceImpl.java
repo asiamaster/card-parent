@@ -227,7 +227,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	private void updateStateById(Long id, Integer state, Integer version) {
 		int update = accountCycleDao.updateStateById(id, state, version);
 		if (update == 0) {
-			throw new CardAppBizException("平账失败");
+			throw new CardAppBizException("结账失败");
 		}
 	}
 
