@@ -79,7 +79,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@Override
 	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
-	public OpenCardResponseDto openMasterCard(OpenCardDto openCardInfo) {
+	public OpenCardResponseDto openCard(OpenCardDto openCardInfo) {
 		// 获取当前账务周期
 		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(openCardInfo.getCreatorId(),
 				openCardInfo.getCreator(), openCardInfo.getCreatorCode());
@@ -88,7 +88,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		accountCycleService.increaseCashBox(cycleDo.getCycleNo(), openCardInfo.getCostFee());
 
 		// 调用账户服务开卡
-		BaseOutput<OpenCardResponseDto> baseOutPut = openCardRpc.openMasterCard(openCardInfo);
+		BaseOutput<OpenCardResponseDto> baseOutPut = openCardRpc.openCard(openCardInfo);
 		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, ServiceName.ACCOUNT);
 		Long accountId = openCardResponse.getAccountId();
 
@@ -104,38 +104,6 @@ public class OpenCardServiceImpl implements IOpenCardService {
 
 		// 保存全局操作交易记录 开卡工本费
 		saveSerialRecord(openCardInfo, accountId);
-		return openCardResponse;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	@GlobalTransactional(rollbackFor = Exception.class)
-	public OpenCardResponseDto openSlaveCard(OpenCardDto openCardInfo) {
-		// 获取当前账务周期
-		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(openCardInfo.getCreatorId(),
-				openCardInfo.getCreator(), openCardInfo.getCreatorCode());
-
-		// 工本费更新现金柜金额
-		accountCycleService.increaseCashBox(cycleDo.getCycleNo(), openCardInfo.getCostFee());
-
-		// 调用账户服务开卡
-		BaseOutput<OpenCardResponseDto> baseOutPut = openCardRpc.openSlaveCard(openCardInfo);
-		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, "账户服务开卡");
-		Long accountId = openCardResponse.getAccountId();
-
-		// 调用支付系统向市场账户充值工本费
-		String tradeId = "";
-		if (openCardInfo.getCostFee() > 0) {
-			tradeId = rechargeCostFee(accountId, openCardResponse.getFundAccountId(), openCardInfo);
-		}
-
-		// 保存卡务柜台操作记录
-		BusinessRecordDo businessDo = buildBusinessRecordDo(openCardInfo, accountId, cycleDo.getCycleNo(), tradeId);
-		serialService.saveBusinessRecord(businessDo);
-
-		// 保存全局操作交易记录 开卡工本费
-		saveSerialRecord(openCardInfo, openCardResponse.getAccountId());
-
 		return openCardResponse;
 	}
 

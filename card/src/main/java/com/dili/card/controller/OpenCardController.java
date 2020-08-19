@@ -58,7 +58,7 @@ public class OpenCardController implements IControllerHandler {
 	ICardStorageService cardStorageService;
 
 	/**
-	 * 根据证件号查询客户信息
+	 * 根据证件号查询客户信息（C）
 	 */
 	@RequestMapping(value = "getCustomerInfo.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
@@ -81,7 +81,7 @@ public class OpenCardController implements IControllerHandler {
 	}
 
 	/**
-	 * 根据主卡卡号，查询主卡信息和客户信息
+	 * 根据主卡卡号，查询主卡信息和客户信息（C）
 	 */
 	@RequestMapping(value = "getAccountInfo.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
@@ -94,7 +94,7 @@ public class OpenCardController implements IControllerHandler {
 	}
 
 	/**
-	 * 检查新卡状态
+	 * 检查新卡状态（C）
 	 */
 	@RequestMapping(value = "checkNewCardNo.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
@@ -111,7 +111,7 @@ public class OpenCardController implements IControllerHandler {
 	}
 
 	/**
-	 * 查询开卡费用项
+	 * 查询开卡费用项（C）
 	 */
 	@RequestMapping(value = "getOpenCardFee.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
@@ -122,7 +122,7 @@ public class OpenCardController implements IControllerHandler {
 	}
 
 	/**
-	 * 主卡开卡
+	 * 主卡开卡（C）
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -135,14 +135,15 @@ public class OpenCardController implements IControllerHandler {
 		// 设置操作人信息
 		UserTicket user = getUserTicket();
 		setOpUser(openCardInfo, user);
+		openCardInfo.setCardType(CardType.MASTER.getCode());
 		// 开卡
-		OpenCardResponseDto response = openCardService.openMasterCard(openCardInfo);
+		OpenCardResponseDto response = openCardService.openCard(openCardInfo);
 		log.info("开卡主完成*****{}", JSONObject.toJSONString(response));
 		return BaseOutput.success("success").setData(response);
 	}
 
 	/**
-	 * 副卡开卡
+	 * 副卡开卡（C）
 	 */
 	@PostMapping("openSlaveCard.action")
 	@ResponseBody
@@ -153,7 +154,8 @@ public class OpenCardController implements IControllerHandler {
 		// 设置操作人信息
 		UserTicket user = getUserTicket();
 		setOpUser(openCardInfo, user);
-		OpenCardResponseDto response = openCardService.openSlaveCard(openCardInfo);
+		openCardInfo.setCardType(CardType.SLAVE.getCode());
+		OpenCardResponseDto response = openCardService.openCard(openCardInfo);
 		log.info("开副卡完成*****{}", JSONObject.toJSONString(response));
 		return BaseOutput.success("success").setData(response);
 	}
