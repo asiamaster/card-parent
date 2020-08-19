@@ -59,12 +59,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		this.updateStateById(accountCycle.getId(), CycleState.SETTLED.getCode(), accountCycle.getVersion());
 	}
 	
-
-	@Override
-	public AccountCycleDo findLatestCycleByUserId(Long userId) {
-		return accountCycleDao.findLatestCycleByUserId(userId);
-	}
-
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void flated(Long id) {
@@ -90,12 +84,48 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		// 封装返回数据
 		return this.buildAccountCycleList(accountCycleDao.findByCondition(accountCycleDto));
 	}
-
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public AccountCycleDo findActiveCycleByUserId(Long userId, String userName, String userCode) {
+		if (userId == null || StringUtils.isBlank(userName) || StringUtils.isBlank(userCode)) {
+			throw new CardAppBizException("查询账务周期参数错误");
+		}
+		AccountCycleDo accountCycle = this.findLatestCycleByUserId(userId);
+		if (accountCycle != null && accountCycle.getState().equals(CycleState.SETTLED.getCode())) {
+			throw new CardAppBizException("当前员工账务周期正在对账中,不能操作");
+		}
+		if (accountCycle == null || accountCycle.getState().equals(CycleState.FLATED.getCode())) {
+			accountCycle = new AccountCycleDo();
+			accountCycle.setUserId(userId);
+			accountCycle.setUserCode(userCode);
+			accountCycle.setUserName(userName);
+			accountCycle.setCycleNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CYCLET_NO.getCode())));
+			accountCycle.setCashBox(0L);
+			accountCycle.setCashAmount(0L);
+			accountCycle.setState(CycleState.ACTIVE.getCode());
+			// 构建商户信息
+			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+			accountCycle.setAuditorId(userTicket.getId());
+			accountCycle.setAuditorName(userTicket.getRealName());
+			accountCycle.setFirmId(userTicket.getFirmId());
+			accountCycle.setFirmName(userTicket.getFirmName());
+			accountCycle.setVersion(1);
+			accountCycleDao.save(accountCycle);
+		}
+		return accountCycle;
+	}
+	
 	@Override
 	public PageOutput<List<AccountCycleDto>> page(AccountCycleDto accountCycleDto) {
 		Page<?> page = PageHelper.startPage(accountCycleDto.getPage(), accountCycleDto.getRows());
 		List<AccountCycleDto> accountCycles = this.list(accountCycleDto);
 		return PageUtils.convert2PageOutput(page, accountCycles);
+	}
+
+	@Override
+	public AccountCycleDo findLatestCycleByUserId(Long userId) {
+		return accountCycleDao.findLatestCycleByUserId(userId);
 	}
 
 	@Override
@@ -145,37 +175,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		return true;
 	}
 	
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public AccountCycleDo findActiveCycleByUserId(Long userId, String userName, String userCode) {
-		if (userId == null || StringUtils.isBlank(userName) || StringUtils.isBlank(userCode)) {
-			throw new CardAppBizException("查询账务周期参数错误");
-		}
-		AccountCycleDo accountCycle = this.findLatestCycleByUserId(userId);
-		if (accountCycle != null && accountCycle.getState().equals(CycleState.SETTLED.getCode())) {
-			throw new CardAppBizException("当前员工账务周期正在对账中,不能操作");
-		}
-		if (accountCycle == null || accountCycle.getState().equals(CycleState.FLATED.getCode())) {
-			accountCycle = new AccountCycleDo();
-			accountCycle.setUserId(userId);
-			accountCycle.setUserCode(userCode);
-			accountCycle.setUserName(userName);
-			accountCycle.setCycleNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CYCLET_NO.getCode())));
-			accountCycle.setCashBox(0L);
-			accountCycle.setCashAmount(0L);
-			accountCycle.setState(CycleState.ACTIVE.getCode());
-			// 构建商户信息
-			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-			accountCycle.setAuditorId(userTicket.getId());
-			accountCycle.setAuditorName(userTicket.getRealName());
-			accountCycle.setFirmId(userTicket.getFirmId());
-			accountCycle.setFirmName(userTicket.getFirmName());
-			accountCycle.setVersion(1);
-			accountCycleDao.save(accountCycle);
-		}
-		return accountCycle;
-	}
-
 	/**
 	 * 获取活跃的账务周期
 	 */
