@@ -51,7 +51,7 @@
         </div>
     </div>
     <div class="row" id="table-div-frozen-account" style="display: none">
-        <form id="queryForm">
+        <form id="query-frozen-account">
             <input type="hidden" id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}">
             <input type="hidden" name="operateTypeList[0]" value="29">
         </form>
@@ -81,3 +81,5 @@
     </div>
 </div>
 <#account_frozenIndexJs/>
+<script type="text/javascript"
+	src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
