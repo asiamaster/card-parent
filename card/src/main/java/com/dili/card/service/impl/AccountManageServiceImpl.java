@@ -91,11 +91,14 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	private UserAccountCardResponseDto validateCardAccount(Long account, boolean checkCardLoss, DisableState disableState) {
 		UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
 		query.setAccountId(account);
-		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingle(query);
+		UserAccountCardResponseDto accountCard = accountQueryRpcResolver.findSingleWithoutValidate(query);
+		if (checkCardLoss && Integer.valueOf(CardStatus.RETURNED.getCode()).equals(accountCard.getCardState())) {
+            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行操作", CardStatus.getName(accountCard.getCardState())));
+        }
 		if (checkCardLoss && Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
             throw new CardAppBizException("", String.format("该卡为%s状态,不能进行操作", CardStatus.getName(accountCard.getCardState())));
         }
-		if (!Integer.valueOf(disableState.getCode()).equals(accountCard.getCardState())) {
+		if (!Integer.valueOf(disableState.getCode()).equals(accountCard.getDisabledState())) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, String.format("该卡账户为%s状态,不能进行操作", DisableState.getName(accountCard.getDisabledState())));
         }
 		return accountCard;

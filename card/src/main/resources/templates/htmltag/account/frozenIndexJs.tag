@@ -30,11 +30,11 @@
                 return;
             }
             let data = $.common.formToJSON('frozen-account-form');
-            $.operate.post(url, $.extend(requestData, data),function (result) {
-                if (result.code == '200'){
-                    $.tab.refresh();
+            bui.util.debounce($.operate.post(url, $.extend(requestData, data), function (result) {
+                if (result.code == web_status.SUCCESS) {
+                    $.tab.refresh()
                 }
-            });
+            }), 1000, true);
         });
     }
 
@@ -43,7 +43,14 @@
         let $table = $("#table-div-frozen-account");
         if ($table.is(":hidden")) {
             $table.show();
-            $.table.refresh()
+            let data = $.common.formToJSON('query-frozen-account');
+            let options = {
+                	id: "frozenAccuntTable",
+                    url: "${contextPath}/serial/business/page.action",
+                    sortName: "operate_time",
+                    queryParams:data
+                };
+            $("#frozenAccuntTable").bootstrapTable('refresh', options);
         } else {
             $table.hide();
         }

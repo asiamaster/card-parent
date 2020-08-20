@@ -28,23 +28,12 @@ $("#unfrozen-account-form").validate({
 	                return;
 	            }
 	            let data = $.common.formToJSON('unfrozen-account-form');
-	            $.operate.post(url, $.extend(requestData, data));
+	            bui.util.debounce($.operate.post(url, $.extend(requestData, data), function (result) {
+	                if (result.code == web_status.SUCCESS) {
+	                	$.modal.alertSuccess("解冻成功");
+	                    $.tab.refresh();
+	                }
+	            }), 1000, true)
 	        });
-			
-/* 			$.ajax({
-				type : 'POST',
-				url : '${contextPath}/account/unfrozen.action',
-				dataType : 'json',
-				contentType : "application/json; charset=utf-8",
-				traditional : true,
-				data : JSON.stringify(data),
-				success : function(result) {
-					if (result.success) {
-						$.from.alertSuccess("解冻账户成功！");
-					} else {
-						$.from.alertError("解冻账户失败！");
-					}
-				}
-			}); */
 		}
 </script>
