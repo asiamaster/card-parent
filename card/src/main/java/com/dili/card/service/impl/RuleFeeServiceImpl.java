@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 
 import com.dili.assets.sdk.dto.BusinessChargeItemDto;
 import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
+import com.dili.card.common.constant.ServiceName;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IRuleFeeService;
 import com.dili.card.type.RuleFeeBusinessType;
 import com.dili.card.type.SystemSubjectType;
+import com.dili.card.util.CurrencyUtils;
 import com.dili.rule.sdk.domain.input.QueryFeeInput;
 import com.dili.rule.sdk.domain.output.QueryFeeOutput;
 import com.dili.rule.sdk.rpc.ChargeRuleRpc;
@@ -68,31 +70,33 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 		// 判断系统科目 是否是工本费，只取第一个
 		QueryFeeInput queryFeeInput = null;
 		for (BusinessChargeItemDto item : chargeItemList) {
-			// SystemSubjectType.CARD_OPEN_COST == item.getSystemSubject
-//			if (systemSubjectType.getCode() == 2) {
+			if (systemSubjectType.getCode() == item.getSystemSubject()) {
 				queryFeeInput = new QueryFeeInput();
 				queryFeeInput.setMarketId(userTicket.getFirmId());
 				queryFeeInput.setBusinessType(ruleFeeBusinessType.getCode());
 				queryFeeInput.setChargeItem(item.getId());
-				continue;
-//			}
+				break;
+			}
 		}
 		if (queryFeeInput == null) {
 			throw new CardAppBizException("请在规则系统中配置" + systemSubjectType.getName() + " ,并选择对应的系统科目!");
 		}
-		// 计算条件
+		// 计算条件，金额由分改为元避免计算公式里面有加减法时数据错误
 		if (amount != null && amount != 0) {
 			HashMap<String, Object> calcParams = new HashMap<String, Object>();
-			calcParams.put("amount", amount);
+			calcParams.put("amount", CurrencyUtils.cent2TenNoSymbol(amount));
 			queryFeeInput.setCalcParams(calcParams);
 		}
 		BaseOutput<QueryFeeOutput> queryFee = chargeRuleRpc.queryFee(queryFeeInput);
-		QueryFeeOutput resolver = GenericRpcResolver.resolver(queryFee, "dili-rule");
+		QueryFeeOutput resolver = GenericRpcResolver.resolver(queryFee, ServiceName.RULE);
 		return resolver.getTotalFee();
 	}
 
 	@Override
 	public BigDecimal getRuleFee(RuleFeeBusinessType ruleFeeBusinessType, SystemSubjectType systemSubjectType) {
 		return this.getRuleFee(null, ruleFeeBusinessType, systemSubjectType);
+	}
+	public static void main(String[] args) {
+		System.out.println();
 	}
 }
