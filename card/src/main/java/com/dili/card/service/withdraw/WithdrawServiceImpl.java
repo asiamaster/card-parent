@@ -1,6 +1,7 @@
 package com.dili.card.service.withdraw;
 
 import cn.hutool.core.util.StrUtil;
+import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -17,8 +18,6 @@ import com.dili.card.type.TradeType;
 import com.dili.card.type.UsePermissionType;
 import com.dili.ss.constant.ResultCode;
 import io.seata.spring.annotation.GlobalTransactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -117,7 +116,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
      * @param fundRequestDto
      */
     protected void validate(FundRequestDto fundRequestDto) {
-        if (fundRequestDto.getAmount() == null || fundRequestDto.getAmount() <= 0L) {
+        if (fundRequestDto.getAmount() == null || fundRequestDto.getAmount() < Constant.MIN_AMOUNT || fundRequestDto.getAmount() > Constant.MAX_AMOUNT) {
             throw new CardAppBizException("", "请正确输入提现金额");
         }
         if (StrUtil.isBlank(fundRequestDto.getTradePwd())) {
