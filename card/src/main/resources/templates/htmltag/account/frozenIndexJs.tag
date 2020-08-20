@@ -63,11 +63,11 @@
     	let data = $.common.formToJSON('query-frozen-account');
     	data.page=1;
     	data.rows=20;
+    	data.order="DESC";
+    	data.sort="operate_time";
         let options = {
         	id: "frozenAccuntTable",
             url: "${contextPath}/serial/business/page.action",
-            sortName: "operate_time",
-            sortOrder:"desc",
             modalName: "冻结账户记录",
             queryParams:data
         };
