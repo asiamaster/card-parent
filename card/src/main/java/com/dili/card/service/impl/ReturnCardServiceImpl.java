@@ -34,7 +34,7 @@ import com.dili.ss.constant.ResultCode;
 
 @Service("returnCardService")
 public class ReturnCardServiceImpl implements IReturnCardService {
-	
+
 	@Autowired
 	private CardManageRpcResolver cardManageRpcResolver;
 	@Resource
@@ -61,7 +61,7 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 		}
 		// 余额校验
 		Long fee = 0L;
-		//是否主卡
+		// 是否主卡
 		boolean master = accountCard.getMaster();
 		if (master) {
 			BalanceResponseDto balanceResponseDto = payRpcResolver
@@ -76,7 +76,7 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 			fee = balanceResponseDto.getBalance();
 		}
 		cardParam.setServiceFee(fee);
-		//是主卡 同时卡余额存在并且小于1元需要进行流水
+		// 是主卡 同时卡余额存在并且小于1元需要进行流水
 		boolean hasTradeSerial = master && fee != 0L;
 		// 构建记录
 		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardParam, accountCard, record -> {
@@ -100,22 +100,25 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 		serialService.saveBusinessRecord(businessRecord);
 		// 退卡
 		cardManageRpcResolver.returnCard(cardParam);
-		//激活卡
-		GenericRpcResolver.resolver(cardStorageRpc.activateCardByInUse(CardStorageActivateDto.create(accountCard.getCardNo())), ServiceType.ACCOUNT_SERVCIE.getName());
-		//主卡退卡注销账户 副卡不做此操作
+		// 激活卡
+		GenericRpcResolver.resolver(
+				cardStorageRpc.activateCardByInUse(CardStorageActivateDto.create(accountCard.getCardNo())),
+				ServiceType.ACCOUNT_SERVCIE.getName());
+		// 主卡退卡注销账户 副卡不做此操作
 		if (master) {
-			if (hasTradeSerial) {//存在余额在一元内需要进行缴费操作
+			if (hasTradeSerial) {// 存在余额在一元内需要进行缴费操作
 				// 执行实际缴费操作
-				TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(accountCard, tradeId, TradeChannel.CASH.getCode(),
-						cardParam.getLoginPwd());
+				TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(accountCard, tradeId,
+						TradeChannel.CASH.getCode(), cardParam.getLoginPwd());
 				tradeRequestDto.addServiceFeeItem(cardParam.getServiceFee(), FundItem.RETURN_CARD_CHANGE);
 				payRpcResolver.trade(tradeRequestDto);
 			}
 			// 账号注销
-			CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId());
+			CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto
+					.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId());
 			payRpcResolver.unregister(createTradeRequestDto);
 		}
-		//流水建立
+		// 流水建立
 		SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
 		serialService.handleSuccess(serialDto, hasTradeSerial);
 	}
