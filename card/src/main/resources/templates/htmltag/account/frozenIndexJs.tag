@@ -44,13 +44,15 @@
         if ($table.is(":hidden")) {
             $table.show();
             let data = $.common.formToJSON('query-frozen-account');
+            $.table.search("query-frozen-account","frozenAccuntTable",data);
+           /*  let data = $.common.formToJSON('query-frozen-account');
             let options = {
                 	id: "frozenAccuntTable",
                     url: "${contextPath}/serial/business/page.action",
                     sortName: "operate_time",
                     queryParams:data
                 };
-            $("#frozenAccuntTable").bootstrapTable('refresh', options);
+            $("#frozenAccuntTable").bootstrapTable('refresh', options); */
         } else {
             $table.hide();
         }
@@ -58,11 +60,16 @@
 
     //初始化表格
     $(() => {
+    	let data = $.common.formToJSON('query-frozen-account');
+    	data.page=1;
+    	data.rows=20;
         let options = {
         	id: "frozenAccuntTable",
             url: "${contextPath}/serial/business/page.action",
             sortName: "operate_time",
-            modalName: "冻结账户记录"
+            sortOrder:"desc",
+            modalName: "冻结账户记录",
+            queryParams:data
         };
         $.table.init(options);
     });
