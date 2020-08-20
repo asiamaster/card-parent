@@ -17,5 +17,11 @@ public class CardStorageActivateDto {
 	public void setCardNo(String cardNo) {
 		this.cardNo = cardNo;
 	}
+	
+	public static CardStorageActivateDto create(String cardNo) {
+		CardStorageActivateDto cardStorageActivateDto = new CardStorageActivateDto();
+		cardStorageActivateDto.setCardNo(cardNo);
+		return new CardStorageActivateDto();
+	}
 
 }

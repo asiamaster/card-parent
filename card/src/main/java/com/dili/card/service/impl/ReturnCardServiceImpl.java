@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dili.card.dto.CardRequestDto;
+import com.dili.card.dto.CardStorageActivateDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
@@ -14,7 +15,9 @@ import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.CardStorageRpc;
 import com.dili.card.rpc.resolver.CardManageRpcResolver;
+import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IReturnCardService;
@@ -23,6 +26,7 @@ import com.dili.card.type.CardStatus;
 import com.dili.card.type.DisableState;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
+import com.dili.card.type.ServiceType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.validator.AccountValidator;
@@ -39,6 +43,8 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 	private PayRpcResolver payRpcResolver;
 	@Resource
 	protected IAccountQueryService accountQueryService;
+	@Autowired
+	private CardStorageRpc cardStorageRpc;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -94,7 +100,10 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 		serialService.saveBusinessRecord(businessRecord);
 		// 退卡
 		cardManageRpcResolver.returnCard(cardParam);
-		if (master) {//主卡退卡注销账户 副卡不做此操作
+		//激活卡
+		GenericRpcResolver.resolver(cardStorageRpc.activateCardByInUse(CardStorageActivateDto.create(accountCard.getCardNo())), ServiceType.ACCOUNT_SERVCIE.getName());
+		//主卡退卡注销账户 副卡不做此操作
+		if (master) {
 			if (hasTradeSerial) {//存在余额在一元内需要进行缴费操作
 				// 执行实际缴费操作
 				TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(accountCard, tradeId, TradeChannel.CASH.getCode(),
