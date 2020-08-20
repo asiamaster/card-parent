@@ -71,13 +71,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		if (CashState.UNSETTLED.getCode() != userCashDo.getState()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能修改");
 		}
-		if (userCashDto.getAmount() < 1L) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于0.01元");
-		}
-		if (userCashDto.getAmount() > 99999999L) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过999999.99元");
-		}
-
+		this.validateAmount(userCashDto);
 		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDto.getUserId(),
 				userCashDto.getUserName(), userCashDto.getUserCode());
 
@@ -145,14 +139,11 @@ public class UserCashServiceImpl implements IUserCashService {
 	 */
 	private UserCashDo buildUserCashEntity(UserCashDto userCashDto) {
 		UserCashDo userCash = new UserCashDo();
+		
+		this.validateAmount(userCashDto);
+		
 		userCash.setCashNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CASH_NO.getCode())));
 		userCash.setAction(userCashDto.getAction());
-		if (userCashDto.getAmount() < Constant.MIN_AMOUNT) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于"+ CurrencyUtils.toCurrency(Constant.MIN_AMOUNT) + "元");
-		}
-		if (userCashDto.getAmount() > Constant.MAX_AMOUNT) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过"+ CurrencyUtils.toCurrency(Constant.MAX_AMOUNT) + "元");
-		}
 		userCash.setAmount(userCashDto.getAmount());
 		userCash.setUserId(userCashDto.getUserId());
 		userCash.setUserCode(userCashDto.getUserCode());
@@ -224,5 +215,19 @@ public class UserCashServiceImpl implements IUserCashService {
 		cashDto.setId(userCashDo.getId());
 		cashDto.setAction(userCashDo.getAction());
 		return cashDto;
+	}
+	
+
+	/**
+	 * 校验金额
+	 */
+	private void validateAmount(UserCashDto userCashDto) {
+		if (userCashDto.getAmount() < Constant.MIN_AMOUNT) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于"+ CurrencyUtils.toCurrency(Constant.MIN_AMOUNT) + "元");
+		}
+		if (userCashDto.getAmount() > Constant.MAX_AMOUNT) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过"+ CurrencyUtils.toCurrency(Constant.MAX_AMOUNT) + "元");
+		}
+		
 	}
 }
