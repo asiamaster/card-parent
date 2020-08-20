@@ -77,11 +77,11 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 		}
 		cardParam.setServiceFee(fee);
 		// 是主卡 同时卡余额存在并且小于1元需要进行流水
-		boolean hasTradeSerial = master && fee != 0L;
+		boolean masterHasTradeSerial = master && fee != 0L;
 		// 构建记录
 		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardParam, accountCard, record -> {
 			record.setType(OperateType.REFUND_CARD.getCode());
-			if (hasTradeSerial) {
+			if (masterHasTradeSerial) {
 				record.setAmount(cardParam.getServiceFee());
 				record.setTradeType(TradeType.FEE.getCode());
 				record.setTradeChannel(TradeChannel.BALANCE.getCode());
@@ -106,7 +106,7 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 				ServiceType.ACCOUNT_SERVCIE.getName());
 		// 主卡退卡注销账户 副卡不做此操作
 		if (master) {
-			if (hasTradeSerial) {// 存在余额在一元内需要进行缴费操作
+			if (masterHasTradeSerial) {// 存在余额在一元内需要进行缴费操作
 				// 执行实际缴费操作
 				TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(accountCard, tradeId,
 						TradeChannel.CASH.getCode(), cardParam.getLoginPwd());
@@ -120,7 +120,7 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 		}
 		// 流水建立
 		SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
-		serialService.handleSuccess(serialDto, hasTradeSerial);
+		serialService.handleSuccess(serialDto, masterHasTradeSerial);
 	}
 
 }
