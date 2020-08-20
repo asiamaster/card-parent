@@ -6,6 +6,7 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.annotation.ForbidDuplicateCommit;
+import com.dili.card.common.constant.Constant;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.FundFrozenRecordParamDto;
@@ -22,6 +23,7 @@ import com.dili.card.type.PayFreezeFundType;
 import com.dili.card.type.RuleFeeBusinessType;
 import com.dili.card.type.SystemSubjectType;
 import com.dili.card.util.AssertUtils;
+import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.FundValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
@@ -32,11 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -128,11 +126,11 @@ public class FundController implements IControllerHandler {
     @ResponseBody
     public BaseOutput<Long> withdrawServiceFee(Long amount) {
         LOGGER.info("获取提现手续费*****{}", amount);
-        BigDecimal decimal = ruleFeeService.getRuleFee(amount, RuleFeeBusinessType.CARD_WITHDRAW_EBANK, SystemSubjectType.CARD_WITHDRAW_EBANK_FEE);
-        if (decimal != null) {
-            return BaseOutput.successData(decimal.longValue());
+        if (amount == null || amount < Constant.MIN_AMOUNT || amount > Constant.MAX_AMOUNT) {
+            return BaseOutput.failure("请正确输入提现金额");
         }
-        return BaseOutput.failure("未查询到费用");
+        BigDecimal decimal = ruleFeeService.getRuleFee(amount, RuleFeeBusinessType.CARD_WITHDRAW_EBANK, SystemSubjectType.CARD_WITHDRAW_EBANK_FEE);
+        return BaseOutput.success().setData(CurrencyUtils.yuan2Cent(decimal));
     }
 
     /**
@@ -238,7 +236,7 @@ public class FundController implements IControllerHandler {
         LOGGER.info("获取充值手续费*****{}", amount);
         AssertUtils.notNull(amount, "金额不能为空");
         BigDecimal ruleFee = ruleFeeService.getRuleFee(amount, RuleFeeBusinessType.CARD_RECHARGE_POS, SystemSubjectType.CARD_RECHARGE_POS_FEE);
-        return BaseOutput.successData(ruleFee.longValue());
+        return BaseOutput.successData(CurrencyUtils.yuan2Cent(ruleFee));
     }
 
 }
