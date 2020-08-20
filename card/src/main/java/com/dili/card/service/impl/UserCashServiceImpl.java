@@ -71,7 +71,9 @@ public class UserCashServiceImpl implements IUserCashService {
 		if (CashState.UNSETTLED.getCode() != userCashDo.getState()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能修改");
 		}
-		this.validateAmount(userCashDto);
+		//金额校验
+		this.validateAmount(userCashDto.getAmount());
+		//获取账务周期
 		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDto.getUserId(),
 				userCashDto.getUserName(), userCashDto.getUserCode());
 
@@ -140,7 +142,7 @@ public class UserCashServiceImpl implements IUserCashService {
 	private UserCashDo buildUserCashEntity(UserCashDto userCashDto) {
 		UserCashDo userCash = new UserCashDo();
 		
-		this.validateAmount(userCashDto);
+		this.validateAmount(userCashDto.getAmount());
 		
 		userCash.setCashNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CASH_NO.getCode())));
 		userCash.setAction(userCashDto.getAction());
@@ -221,11 +223,11 @@ public class UserCashServiceImpl implements IUserCashService {
 	/**
 	 * 校验金额
 	 */
-	private void validateAmount(UserCashDto userCashDto) {
-		if (userCashDto.getAmount() < Constant.MIN_AMOUNT) {
+	private void validateAmount(Long amount) {
+		if (amount < Constant.MIN_AMOUNT) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于"+ CurrencyUtils.toCurrency(Constant.MIN_AMOUNT) + "元");
 		}
-		if (userCashDto.getAmount() > Constant.MAX_AMOUNT) {
+		if (amount > Constant.MAX_AMOUNT) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过"+ CurrencyUtils.toCurrency(Constant.MAX_AMOUNT) + "元");
 		}
 		
