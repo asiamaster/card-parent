@@ -89,8 +89,10 @@ public class FundServiceImpl implements IFundService {
 		createTradeRequestDto.setExtension(this.serializeFrozenExtra(requestDto));
 		createTradeRequestDto.setDescription(requestDto.getMark());
         FundOpResponseDto fundOpResponseDto = payRpcResolver.postFrozenFund(createTradeRequestDto);
+       
         businessRecord.setTradeNo(String.valueOf(fundOpResponseDto.getFrozenId()));
 		serialService.saveBusinessRecord(businessRecord);
+		
 		TradeResponseDto transaction = fundOpResponseDto.getTransaction();
 		transaction.addVirtualPrincipalFundItem(-requestDto.getAmount());
 		SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, transaction, (serialRecord, feeType) -> {

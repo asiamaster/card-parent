@@ -68,9 +68,10 @@ public class OpenCardController implements IControllerHandler {
 		UserTicket user = getUserTicket();
 		AssertUtils.notEmpty(openCardInfo.getCustomerCertificateNumber(), "请输入证件号!");
 		Customer customer = GenericRpcResolver.resolver(
-				customerRpc.getByCertificateNumber(openCardInfo.getCustomerCertificateNumber(), user.getFirmId()), ServiceName.CUSTOMER);
+				customerRpc.getByCertificateNumber(openCardInfo.getCustomerCertificateNumber(), user.getFirmId()),
+				ServiceName.CUSTOMER);
 		CustomerResponseDto response = new CustomerResponseDto();
-		if(customer != null) {
+		if (customer != null) {
 			BeanUtils.copyProperties(customer, response);
 			response.setCustomerContactsPhone(customer.getContactsPhone());
 			response.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
@@ -115,8 +116,8 @@ public class OpenCardController implements IControllerHandler {
 	 */
 	@RequestMapping(value = "getOpenCardFee.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public BaseOutput<String> getOpenCardFee() {
-		String openCostFee = openCardService.getOpenCostFee();
+	public BaseOutput<Long> getOpenCardFee() {
+		Long openCostFee = openCardService.getOpenCostFee();
 		log.info("查询开卡费用项*****{}", openCostFee);
 		return BaseOutput.successData(openCostFee);
 	}
@@ -171,8 +172,6 @@ public class OpenCardController implements IControllerHandler {
 		openCardInfo.setFirmName(user.getFirmName());
 	}
 
-	
-	
 	/**
 	 * 主卡参数校验
 	 * 

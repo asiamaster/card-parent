@@ -36,6 +36,7 @@ import com.dili.card.type.RuleFeeBusinessType;
 import com.dili.card.type.SystemSubjectType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
+import com.dili.card.util.CurrencyUtils;
 import com.dili.rule.sdk.rpc.ChargeRuleRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.google.common.collect.Lists;
@@ -70,10 +71,10 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	IRuleFeeService ruleFeeService;
 
 	@Override
-	public String getOpenCostFee() {
+	public Long getOpenCostFee() {
 		BigDecimal ruleFee = ruleFeeService.getRuleFee(RuleFeeBusinessType.CARD_OPEN_CARD,
 				SystemSubjectType.CARD_OPEN_COST);
-		return ruleFee.doubleValue() + "";
+		return CurrencyUtils.yuan2Cent(ruleFee);
 	}
 
 	@Override
