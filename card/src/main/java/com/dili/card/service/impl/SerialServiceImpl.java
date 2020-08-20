@@ -2,7 +2,7 @@ package com.dili.card.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
-import com.dili.card.config.RabbitMQConfig;
+import com.dili.card.config.SerialMQConfig;
 import com.dili.card.dao.IBusinessRecordDao;
 import com.dili.card.dto.*;
 import com.dili.card.dto.pay.FeeItemDto;
@@ -135,7 +135,7 @@ public class SerialServiceImpl implements ISerialService {
             //保存流水
             //serialRecordRpcResolver.batchSave(serialDto.getSerialRecordList());
             //消息服务器
-            rabbitMQMessageService.send(RabbitMQConfig.EXCHANGE_ACCOUNT_SERIAL, RabbitMQConfig.ROUTING_ACCOUNT_SERIAL, JSON.toJSONString(serialDto.getSerialRecordList()), null, null);
+            rabbitMQMessageService.send(SerialMQConfig.EXCHANGE_ACCOUNT_SERIAL, SerialMQConfig.ROUTING_ACCOUNT_SERIAL, JSON.toJSONString(serialDto.getSerialRecordList()), null, null);
         } catch (Exception e) {
             LOGGER.error(JSON.toJSONString(serialDto), e);//记录数据方便后期处理
             //由于通过mq存储流水，本身带有重试机制，故屏蔽异常

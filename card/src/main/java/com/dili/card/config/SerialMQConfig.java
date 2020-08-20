@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * rabbit mq 配置类
  */
 @Configuration
-public class RabbitMQConfig {
+public class SerialMQConfig {
 
     //账户流水
     public static final String EXCHANGE_ACCOUNT_SERIAL = "exchange_account_serial";
