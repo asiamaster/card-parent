@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.dili.card.dto.BatchActivateCardDto;
 import com.dili.card.dto.BatchCardAddStorageDto;
+import com.dili.card.dto.CardStorageActivateDto;
 import com.dili.card.dto.CardStorageDto;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
@@ -17,12 +18,8 @@ import com.dili.ss.domain.PageOutput;
  * @author ：WangBo
  * @time ：2020年7月17日上午10:22:18
  */
-@FeignClient(name = "account-service", contextId = "cardStorgeRpc", path = "/api/account/cardStorage"
-/* , url = "http://127.0.0.1:8186" */ 
-)
+@FeignClient(name = "account-service", contextId = "cardStorgeRpc", path = "/api/account/cardStorage")
 public interface CardStorageRpc {
-
-	public static final String SERVICE_NAME = "account-service";
 
 	/**
 	 * 仓库中卡片列表，包括状态及入库信息
@@ -72,5 +69,5 @@ public interface CardStorageRpc {
 	 * @param dto 提供卡号即可
 	 */
 	@PostMapping("/batchActivate")
-	BaseOutput<?> activateCardByInUse(BatchActivateCardDto dto);
+	BaseOutput<?> activateCardByInUse(CardStorageActivateDto dto);
 }
