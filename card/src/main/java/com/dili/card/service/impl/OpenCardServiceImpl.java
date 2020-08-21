@@ -19,6 +19,7 @@ import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.OpenCardRpc;
 import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.SerialRecordRpc;
@@ -29,6 +30,7 @@ import com.dili.card.service.IOpenCardService;
 import com.dili.card.service.IRuleFeeService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.BizNoType;
+import com.dili.card.type.CustomerState;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateState;
 import com.dili.card.type.OperateType;
@@ -37,7 +39,10 @@ import com.dili.card.type.SystemSubjectType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
+import com.dili.customer.sdk.domain.Customer;
+import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.rule.sdk.rpc.ChargeRuleRpc;
+import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.google.common.collect.Lists;
 
@@ -69,6 +74,8 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	private PayRpc payRpc;
 	@Resource
 	IRuleFeeService ruleFeeService;
+	@Resource
+	private CustomerRpc customerRpc;
 
 	@Override
 	public Long getOpenCostFee() {
@@ -81,6 +88,12 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
 	public OpenCardResponseDto openCard(OpenCardDto openCardInfo) {
+		//校验客户信息
+		Customer customer = GenericRpcResolver.resolver(customerRpc.get(openCardInfo.getCustomerId(), openCardInfo.getFirmId()),
+				ServiceName.CUSTOMER);
+		if(!customer.getState().equals(CustomerState.VALID.getCode())){
+			throw new CardAppBizException(ResultCode.PARAMS_ERROR,"客户已" + CustomerState.getStateName(customer.getState()));
+		}
 		// 获取当前账务周期
 		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(openCardInfo.getCreatorId(),
 				openCardInfo.getCreator(), openCardInfo.getCreatorCode());

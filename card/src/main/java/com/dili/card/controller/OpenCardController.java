@@ -20,6 +20,7 @@ import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.OpenCardResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.AccountQueryRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IAccountQueryService;
@@ -27,10 +28,12 @@ import com.dili.card.service.ICardStorageService;
 import com.dili.card.service.IOpenCardService;
 import com.dili.card.type.CardStorageState;
 import com.dili.card.type.CardType;
+import com.dili.card.type.CustomerState;
 import com.dili.card.type.CustomerType;
 import com.dili.card.util.AssertUtils;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.rpc.CustomerRpc;
+import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 
@@ -67,9 +70,11 @@ public class OpenCardController implements IControllerHandler {
 		// 操作人信息
 		UserTicket user = getUserTicket();
 		AssertUtils.notEmpty(openCardInfo.getCustomerCertificateNumber(), "请输入证件号!");
-		Customer customer = GenericRpcResolver.resolver(
-				customerRpc.getByCertificateNumber(openCardInfo.getCustomerCertificateNumber(), user.getFirmId()),
+		Customer customer = GenericRpcResolver.resolver(customerRpc.getByCertificateNumber(openCardInfo.getCustomerCertificateNumber(), user.getFirmId()),
 				ServiceName.CUSTOMER);
+		if(!customer.getState().equals(CustomerState.VALID.getCode())){
+			throw new CardAppBizException(ResultCode.PARAMS_ERROR,"客户已" + CustomerState.getStateName(customer.getState()));
+		}
 		CustomerResponseDto response = new CustomerResponseDto();
 		if (customer != null) {
 			BeanUtils.copyProperties(customer, response);
