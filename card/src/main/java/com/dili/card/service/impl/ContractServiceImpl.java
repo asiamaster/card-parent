@@ -329,9 +329,9 @@ public class ContractServiceImpl implements IContractService {
 		FundConsignorDo fundConsignorDo = new FundConsignorDo();
 		// 构建合同被委托人核心数据
 		fundConsignorDo.setConsigneeIdCode(consignorRequestDto.getConsigneeIdCode());
-		fundConsignorDo.setConsigneeIdMobile(consignorRequestDto.getConsigneeIdMobile());
-		fundConsignorDo.setConsigneeName(consignorRequestDto.getConsigneeName());
-		fundConsignorDo.setSignatureImagePath(consignorRequestDto.getSignatureImagePath());
+		fundConsignorDo.setConsigneeIdMobile(consignorRequestDto.getConsigneeIdMobile().trim());
+		fundConsignorDo.setConsigneeName(consignorRequestDto.getConsigneeName().trim());
+		fundConsignorDo.setSignatureImagePath(consignorRequestDto.getSignatureImagePath().trim());
 		// 构建商户信息
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		fundConsignorDo.setFirmId(userTicket.getFirmId());
