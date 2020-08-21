@@ -193,6 +193,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		commitDto.setBusinessId(accountId);
 		commitDto.setChannelId(TradeChannel.CASH.getCode());
 		commitDto.setPassword(openCardInfo.getLoginPwd());
+		commitDto.addServiceFeeItem(openCardInfo.getCostFee(), FundItem.IC_CARD_COST);
 		GenericRpcResolver.resolver(payRpc.commitTrade(commitDto), ServiceName.PAY);
 		return createTradeResp.getTradeId();
 	}
