@@ -388,7 +388,6 @@
 </div>
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
-<#contract_indexJs/>
 <#common_customerJs/>
 <#common_commonJs/>
 <#common_cardBaseJs/>
@@ -400,7 +399,7 @@
         let options = {
             //必须加这个唯一标识
             uniqueId: "id",
-			url : "${contextPath}/contract/list.action",
+			url : "${contextPath}/contract/page.action",
 			detailUrl : "${contextPath}/contract/detail.html?id={id}",
 			previewUrl : "${contextPath}/contract/preview.html?id={id}",
 			removeUrl : "${contextPath}/contract/remove.html?id={id}",
