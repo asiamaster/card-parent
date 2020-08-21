@@ -122,6 +122,7 @@ public class OpenCardController implements IControllerHandler {
 	@RequestMapping(value = "getOpenCardFee.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public BaseOutput<Long> getOpenCardFee() {
+		log.info("查询开卡费用项");
 		Long openCostFee = openCardService.getOpenCostFee();
 		log.info("查询开卡费用项*****{}", openCostFee);
 		return BaseOutput.successData(openCostFee);
