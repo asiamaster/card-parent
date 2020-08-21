@@ -95,7 +95,7 @@ public class ContractManagementController implements IControllerHandler {
     @PostMapping("/page.action")
     @ResponseBody
     public Map<String, Object> page(@Validated(ConstantValidator.Page.class) FundContractQueryDto contractQueryDto) {
-    	log.info("新增合同*****{}", JSONObject.toJSONString(contractQueryDto));
+    	log.info("列表合同*****{}", JSONObject.toJSONString(contractQueryDto));
     	return successPage(iContractService.page(contractQueryDto));
     }
 
