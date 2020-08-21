@@ -393,9 +393,6 @@
 <#common_cardBaseJs/>
 <script>
     $(function () {
-    	$("#addFirstModal").on("hidden.bs.modal", function() {
-    		$(this).removeData("bs.modal");
-    		});
         let options = {
             //必须加这个唯一标识
             uniqueId: "id",
@@ -409,10 +406,16 @@
 		$.table.init(options);
 	});
     
+    /**
+	 * 打印
+	 */
     function printContract(){
     	print("grid", "MoneyContractsDocument", "${contextPath}/contract/print.aciton");
     }
 
+    /**
+	 * 添加被委托人信息
+	 */
 	function openAddView() {
 		$('#addFirstModal').modal('show');
 		$("#addFirstModal").modal().css({
@@ -422,6 +425,9 @@
        });
 	}
 
+	/**
+	 * 添加被委托人信息
+	 */
 	$("#save_form").validate({
 	    onkeyup: false,
 	    rules: {
@@ -443,6 +449,9 @@
 	    focusCleanup: true
 	});
 
+	/**
+	 * 下一步
+	 */
 	function nextStepView() {
 		if (!$.validate.form("save_form")) {
 	        return false;
