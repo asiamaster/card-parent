@@ -70,7 +70,7 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 		// 判断系统科目 是否是工本费，只取第一个
 		QueryFeeInput queryFeeInput = null;
 		for (BusinessChargeItemDto item : chargeItemList) {
-			if (systemSubjectType.getCode() == item.getSystemSubject()) {
+			if (Integer.valueOf(systemSubjectType.getCode()).equals(item.getSystemSubject())) {
 				queryFeeInput = new QueryFeeInput();
 				queryFeeInput.setMarketId(userTicket.getFirmId());
 				queryFeeInput.setBusinessType(ruleFeeBusinessType.getCode());
