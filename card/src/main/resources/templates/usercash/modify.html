@@ -38,7 +38,7 @@
 	                </td>
 	            </tr>
 	            <tr>
-	                <td class="info-column">交款金额</td>
+	                <td class="info-column">${usercash.actionText!}金额</td>
 	                <td class="info-cell">
 	                	<input id="amountYuan" maxlength="10" name="amountYuan" type="text" value="${usercash.amountText!}" class="form-control"/>
 	                </td>
@@ -96,7 +96,7 @@ function selectUser(){
 }
 
 $(function(){
-	userNameAutoCompleteOption.displayFieldName='serialNumber';
+	userNameAutoCompleteOption.displayFieldName='userName';
 	$('#bigAmount').html($.common.changeNumMoneyToChinese($('#amountYuan').val()));
 	$('#amountYuan').bind(' input propertychange ', function(){
 		$('#bigAmount').html($.common.changeNumMoneyToChinese($('#amountYuan').val()));

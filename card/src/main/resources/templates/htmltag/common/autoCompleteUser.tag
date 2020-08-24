@@ -22,8 +22,8 @@
             }
         },
         selectFn: function (suggestion) {
-        	$('#_userCode').text(suggestion.serialNumber);
-            $('#userCode').val(suggestion.serialNumber);
+        	$('#_userCode').text(suggestion.userName);
+            $('#userCode').val(suggestion.userName);
             $('#_userName').text(suggestion.realName);
         	$('#inputuserName').val(suggestion.realName);
         	$('#inputuserId').val(suggestion.id);

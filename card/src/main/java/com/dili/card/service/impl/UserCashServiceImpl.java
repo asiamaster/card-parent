@@ -10,6 +10,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dao.IUserCashDao;
+import com.dili.card.dto.AccountCycleDto;
 import com.dili.card.dto.UserCashDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.UserCashDo;
@@ -141,9 +142,15 @@ public class UserCashServiceImpl implements IUserCashService {
 	 */
 	private UserCashDo buildUserCashEntity(UserCashDto userCashDto) {
 		UserCashDo userCash = new UserCashDo();
-		
+		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDto.getUserId(),
+				userCashDto.getUserName(), userCashDto.getUserCode());
+		if (userCashDto.getAction().equals(CashAction.PAYER.getCode())) {//校验现金余额
+			AccountCycleDto accountCycleDto = accountCycleService.detail(accountCycle.getId());
+			if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < userCashDto.getAmount()) {
+				throw new CardAppBizException(ResultCode.DATA_ERROR, "交款金额大于现金余额");
+			}
+		}
 		this.validateAmount(userCashDto.getAmount());
-		
 		userCash.setCashNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CASH_NO.getCode())));
 		userCash.setAction(userCashDto.getAction());
 		userCash.setAmount(userCashDto.getAmount());
@@ -159,8 +166,6 @@ public class UserCashServiceImpl implements IUserCashService {
 		userCash.setCreator(userTicket.getRealName());
 		userCash.setFirmId(userTicket.getFirmId());
 		userCash.setFirmName(userTicket.getFirmName());
-		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDto.getUserId(),
-				userCashDto.getUserName(), userCash.getUserCode());
 		userCash.setCycleNo(accountCycle.getCycleNo());
 		return userCash;
 	}

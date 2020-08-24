@@ -92,7 +92,7 @@ function selectUser(){
 	});	
 }
 $(function(){
-		userNameAutoCompleteOption.displayFieldName='serialNumber';
+		userNameAutoCompleteOption.displayFieldName='userName';
 		$('#amountYuan').bind(' input propertychange ', function(){
 			$('#bigAmount').html($.common.changeNumMoneyToChinese($('#amountYuan').val()));
 		} );
@@ -145,7 +145,7 @@ function submitHandler(e) {
         return false;
     }
     let url = "${contextPath}/cash/save.action";
-    $.modal.confirm("确认对员工" + '<font color="#FC1D24"><span style="font-size: 18px;">' + $("#_userName").html() + '</font></span>' +"新增"+ $("#actionText").val() + '<font color="#FC1D24"> <span style="font-size: 18px;">' + $("#amountYuan").val() + '</font></span>' +"元吗?", function (sure) {
+    $.modal.confirm("<div style='text-align: center;'>确认" + '<font color="#FC1D24"><span style="font-size: 18px;">' + $("#_userName").html() + '</font></span>' + $("#actionText").val() +"</div>"+ '<p><font color="#FC1D24"> <span style="font-size: 18px;"> ￥' + $("#amountYuan").val() + "</font></span></p>", function (sure) {
         if (!sure) {
             return;
         }
