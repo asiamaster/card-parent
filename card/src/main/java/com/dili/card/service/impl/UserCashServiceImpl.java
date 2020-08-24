@@ -60,10 +60,19 @@ public class UserCashServiceImpl implements IUserCashService {
 		if (CashState.UNSETTLED.getCode() != userCashDo.getState()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能删除");
 		}
+		// 获取账务周期
+		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDo.getUserId(),
+				userCashDo.getUserName(), userCashDo.getUserCode());
+		AccountCycleDto accountCycleDto = accountCycleService.detail(accountCycle.getId());
+		// 校验现金余额 领款删除不能导致现金余额小于0 并且校验是本人
+		if (userCashDo.getAction().equals(CashAction.PAYEE.getCode())) {
+			if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < userCashDo.getAmount()) {
+				throw new CardAppBizException(ResultCode.DATA_ERROR, "修改领款金额后导致现金余额统计小于0");
+			}
+		}
 		if (!userCashDao.delete(id)) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "删除失败");
 		}
-		;
 	}
 
 	@Override
@@ -72,26 +81,29 @@ public class UserCashServiceImpl implements IUserCashService {
 		if (CashState.UNSETTLED.getCode() != userCashDo.getState()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能修改");
 		}
-		//金额校验
+		// 金额校验
 		this.validateAmount(userCashDto.getAmount());
-		//获取账务周期
+		// 获取账务周期
 		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDto.getUserId(),
 				userCashDto.getUserName(), userCashDto.getUserCode());
 		AccountCycleDto accountCycleDto = accountCycleService.detail(accountCycle.getId());
-		//校验现金余额  领款修改不能导致现金余额小于0  并且校验是本人
-		if (userCashDto.getAction().equals(CashAction.PAYEE.getCode()) && userCashDo.getUserId().equals(userCashDto.getUserId())) {
-			if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < userCashDo.getAmount() - userCashDto.getAmount()) {
+		// 校验现金余额 领款修改不能导致现金余额小于0 并且校验是本人
+		if (userCashDto.getAction().equals(CashAction.PAYEE.getCode())
+				&& userCashDo.getUserId().equals(userCashDto.getUserId())) {
+			if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < userCashDo.getAmount()
+					- userCashDto.getAmount()) {
 				throw new CardAppBizException(ResultCode.DATA_ERROR, "修改领款金额后导致现金余额统计小于0");
 			}
 		}
-		//校验现金余额
+		// 校验现金余额
 		if (userCashDto.getAction().equals(CashAction.PAYER.getCode())) {
-			//修改原来人的交款验证
+			// 修改原来人的交款验证
 			if (userCashDo.getUserId().equals(userCashDto.getUserId())) {
-				if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < userCashDto.getAmount() - userCashDo.getAmount()) {
+				if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < userCashDto.getAmount()
+						- userCashDo.getAmount()) {
 					throw new CardAppBizException(ResultCode.DATA_ERROR, "修改交款金额后导致现金余额统计小于0");
 				}
-			}else {//修改换了人后的操作就是新增交款  原来的数据直接换掉
+			} else {// 修改换了人后的操作就是新增交款 原来的数据直接换掉
 				if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < userCashDto.getAmount()) {
 					throw new CardAppBizException(ResultCode.DATA_ERROR, "修改交款金额后导致现金余额统计小于0");
 				}
@@ -167,7 +179,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		UserCashDo userCash = new UserCashDo();
 		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDto.getUserId(),
 				userCashDto.getUserName(), userCashDto.getUserCode());
-		if (userCashDto.getAction().equals(CashAction.PAYER.getCode())) {//校验现金余额
+		if (userCashDto.getAction().equals(CashAction.PAYER.getCode())) {// 校验现金余额
 			AccountCycleDto accountCycleDto = accountCycleService.detail(accountCycle.getId());
 			if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < userCashDto.getAmount()) {
 				throw new CardAppBizException(ResultCode.DATA_ERROR, "交款金额大于现金余额");
@@ -246,18 +258,19 @@ public class UserCashServiceImpl implements IUserCashService {
 		cashDto.setAction(userCashDo.getAction());
 		return cashDto;
 	}
-	
 
 	/**
 	 * 校验金额
 	 */
 	private void validateAmount(Long amount) {
 		if (amount < Constant.MIN_AMOUNT) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能低于"+ CurrencyUtils.toCurrency(Constant.MIN_AMOUNT) + "元");
+			throw new CardAppBizException(ResultCode.DATA_ERROR,
+					"金额不能低于" + CurrencyUtils.toCurrency(Constant.MIN_AMOUNT) + "元");
 		}
 		if (amount > Constant.MAX_AMOUNT) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "金额不能超过"+ CurrencyUtils.toCurrency(Constant.MAX_AMOUNT) + "元");
+			throw new CardAppBizException(ResultCode.DATA_ERROR,
+					"金额不能超过" + CurrencyUtils.toCurrency(Constant.MAX_AMOUNT) + "元");
 		}
-		
+
 	}
 }
