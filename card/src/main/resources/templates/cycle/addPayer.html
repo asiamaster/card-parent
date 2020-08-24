@@ -87,7 +87,8 @@ function submitHandler(e) {
         return false;
     }
     let url = "${contextPath}/cash/save.action";
-    $.modal.confirm("确认对员工" + '<font color="#FC1D24"><span style="font-size: 18px;">' + $("#_userName").html() + '</font></span>' +"新增"+ $("#actionText").val() + '<font color="#FC1D24"> <span style="font-size: 18px;">' + $("#amountYuan").val() + '</font></span>' +"元吗?", function (sure) {
+    $.modal.confirm("<div style='text-align: center;margin-bottom:10px;'>确认" + '<font color="#FC1D24"><span>' + $("#_userName").html() + '</span></font>' + $("#actionText").val() +"</div>"+ 
+    	    '<p style="text-align: center;"><font> <span style="font-size: 30px;"> ￥' + $("#amountYuan").val() + "</span></font></p>" + '<p style="text-align: center;"><font color="#FC1D24"> <span style="font-size: 30px;">' + $("#bigAmount").html() + "</span></font></p>", function (sure) {
         if (!sure) {
             return;
         }

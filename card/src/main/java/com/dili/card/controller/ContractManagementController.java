@@ -3,6 +3,10 @@ package com.dili.card.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -188,6 +192,21 @@ public class ContractManagementController implements IControllerHandler {
     @ResponseBody
     public BaseOutput<String> confirm(@RequestBody FundContractRequestDto fundContractRequest) {
     	log.info("签名合同确认");
+    	ScriptEngineManager sem = new ScriptEngineManager();
+    	ScriptEngine se = sem.getEngineByName("js");
+        try
+        {
+         String script = "function say(){ return 'hello';}";
+         se.eval(script);
+         Invocable inv2 = (Invocable) se;
+         String res=(String)inv2.invokeFunction("say");
+         System.out.println(res);
+        }
+        catch(Exception e)
+        {
+          e.printStackTrace();
+        }
+
         return BaseOutput.successData(fundContractRequest.getContractNo());
     }
     

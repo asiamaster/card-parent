@@ -258,7 +258,7 @@
 									<div class="form-inline">
 										<div class="input-group">
 											<input type="text" name="startTime" id="startTime"
-												class="form-control laydate" />
+												class="form-control laydate" readonly/>
 											<div class="input-group-append">
 												<label for="startTime"
 													class="input-group-text fa fa-calendar"></label>
@@ -267,7 +267,7 @@
 										&nbsp;&nbsp;至&nbsp;&nbsp;
 										<div class="input-group">
 											<input type="text" name="endTime" id="endTime"
-												class="form-control laydate" />
+												class="form-control laydate" readonly/>
 											<div class="input-group-append">
 												<label for="endTime" class="input-group-text fa fa-calendar"></label>
 											</div>
@@ -331,6 +331,7 @@
            </div>
 			<div class="modal-body" style="overflow:auto;">
 				<div style="background-color: #FFFACD;">
+				<input id="confirmContract" name="confirmContract" type="text" style="opacity: 0;" value=""/>
 					<h4 style="text-align: center">资金授权委托协议书</h4>
 					<p>寿光地利农产品物流园有限公司：</p>
 					<p style="text-indent: 2em">
@@ -364,7 +365,7 @@
 							</div>
 						</div>
 						<button id="signature" style="height: 30px;" type="button"
-							class="btn btn-primary per_div_child" onclick="signature()">请签名</button>
+							class="btn btn-primary per_div_child" onclick="signature()" disabled="disabled">请签名</button>
 							<input type="hidden" id="signatureImagePath" name="signatureImagePath" value="tt">
 					</div>
 				</div>
@@ -482,7 +483,7 @@
 					'<div class="triangle per_div_child div_container"><div class="div_container_content">' +
 					'<span style="background-color: #FFFFFF;">consugneeName</span></div>' +
 					'</div><button id="signature" type="button" style="height: 30px;"' +
-					'class="btn btn-primary per_div_child" onclick="signature()">请签名</button><input type="hidden" id="signatureImagePathConsugnee" name="signatureImagePathConsugnee" value="rr"></div>';
+					'class="btn btn-primary per_div_child" onclick="signature()" disabled="disabled">请签名</button><input type="hidden" id="signatureImagePathConsugnee" name="signatureImagePathConsugnee" value="rr"></div>';
 
 
     function addConsignee() {
@@ -601,6 +602,7 @@
 			$("#consigneeAlls").append(consigneeReplace);
 			$("#consignorCustomer").append(consugnee2);
 		}
+		data.contractNo = uuid();
 	}
 
 	function backToFirst(){

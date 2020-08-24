@@ -58,6 +58,7 @@
 	 	<set>
 			<if test="userId != null">`user_id` = #{userId}, </if>
 			<if test="userName != null">`user_name` = #{userName}, </if>
+			<if test="userCode != null">`user_code` = #{userCode}, </if>
 			<if test="action != null">`action` = #{action}, </if>
 			<if test="cycleNo != null">`cycle_no` = #{cycleNo}, </if>
 			<if test="amount != null">`amount` = #{amount}, </if>

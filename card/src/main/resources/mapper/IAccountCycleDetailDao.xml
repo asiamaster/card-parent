@@ -127,7 +127,7 @@
  		FROM
  			card_user_cash
  		WHERE
- 			`cycle_no` = #{cycleNo}
+ 			`cycle_no` = #{cycleNo} and state != 10
  		GROUP BY type, tradeChannel;
  			
 	</select>
