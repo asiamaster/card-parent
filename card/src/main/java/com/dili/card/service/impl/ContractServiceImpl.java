@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dao.IFundConsignorDao;
 import com.dili.card.dao.IFundContractDao;
 import com.dili.card.dto.FundConsignorDto;
@@ -30,9 +32,11 @@ import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.entity.FundConsignorDo;
 import com.dili.card.entity.FundContractDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.DFSRpc;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.DataDictionaryRpcResovler;
+import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IContractService;
 import com.dili.card.type.BizNoType;
@@ -67,6 +71,8 @@ public class ContractServiceImpl implements IContractService {
 	private IAccountQueryService accountQueryService;
 	@Autowired
 	private DataDictionaryRpcResovler dataDictionaryRpcResovler;
+	@Autowired
+	private DFSRpc dfsRpc;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -178,6 +184,11 @@ public class ContractServiceImpl implements IContractService {
         	throw new CardAppBizException(ResultCode.DATA_ERROR, "该客户没有办理主卡");
 		};
 		return itemList;
+	}
+
+	@Override
+	public String upload(MultipartFile multipartFile) {
+		return GenericRpcResolver.resolver(dfsRpc.upload(multipartFile, null), ServiceName.DFS);
 	}
 
 	/**

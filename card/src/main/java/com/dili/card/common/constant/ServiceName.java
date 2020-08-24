@@ -11,4 +11,5 @@ public class ServiceName {
 	public static final String PAY = "pay-service";
 	public static final String CUSTOMER = "customer-service";
 	public static final String RULE = "dili-rule";
+	public static final String DFS = "dili-dfs";
 }

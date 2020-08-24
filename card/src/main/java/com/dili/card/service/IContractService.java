@@ -2,6 +2,8 @@ package com.dili.card.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.dili.card.dto.FundContractPrintDto;
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
@@ -67,5 +69,10 @@ public interface IContractService {
 	 * 合同打印
 	 */
 	FundContractPrintDto print(FundContractRequestDto fundContractRequest);
+
+	/**
+	 * 文件上传
+	 */
+	String upload(MultipartFile multipartFile);
 
 }

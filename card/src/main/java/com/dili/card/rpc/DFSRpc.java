@@ -16,9 +16,7 @@ import com.dili.ss.domain.BaseOutput;
 public interface DFSRpc {
 
     /**
-     * 根据业务类型获取业务号
-     * @param type
-     * @return
+     * 文件上传
      */
     @PostMapping(value = "/file/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     BaseOutput<String> upload(@RequestPart("file") MultipartFile multipartFile, @RequestParam("accesstoken") String accesstoken);
