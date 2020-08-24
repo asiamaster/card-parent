@@ -23,7 +23,6 @@
     // 作废
     $("#voidOkBtn").click(function(){
     	let cardNo = $.table.selectColumns("cardNo");
-    	alert(cardNo);
     	$.ajax({
             type:'POST',
             url:'${contextPath}/cardStorage/cardVoid.action',
