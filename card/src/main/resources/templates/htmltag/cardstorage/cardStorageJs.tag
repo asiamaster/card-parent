@@ -35,7 +35,7 @@
                 if (result.success) {
                 	showInfo("操作成功");
                 }else {
-                	showError("作废失败");
+                	showError(result.message);
                 }
             }
         });
