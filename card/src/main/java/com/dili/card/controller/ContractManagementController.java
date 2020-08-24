@@ -181,5 +181,23 @@ public class ContractManagementController implements IControllerHandler {
         return BaseOutput.successData(iContractService.upload(multipartFile));
     }
     
+    /**
+     * 合同确认
+     */
+    @PostMapping("/confirm.action")
+    @ResponseBody
+    public BaseOutput<String> confirm(@RequestBody FundContractRequestDto fundContractRequest) {
+    	log.info("签名合同确认");
+        return BaseOutput.successData(fundContractRequest.getContractNo());
+    }
     
+    /**
+     * 返回上一步
+     */
+    @PostMapping("/back.action")
+    @ResponseBody
+    public BaseOutput<String> back(@RequestBody FundContractRequestDto fundContractRequest) {
+    	log.info("签名合同返回上一步");
+        return BaseOutput.successData(fundContractRequest.getContractNo());
+    }
 }
