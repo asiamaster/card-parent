@@ -73,7 +73,7 @@ public class FundServiceImpl implements IFundService {
 		UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(requestDto);
 
 		BalanceResponseDto balance = payRpcResolver.findBalanceByFundAccountId(accountCard.getFundAccountId());
-		if (requestDto.getAmount() >= balance.getAvailableAmount()) {
+		if (requestDto.getAmount() > balance.getAvailableAmount()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "可用余额不足");
 		}
 
@@ -89,10 +89,10 @@ public class FundServiceImpl implements IFundService {
 		createTradeRequestDto.setExtension(this.serializeFrozenExtra(requestDto));
 		createTradeRequestDto.setDescription(requestDto.getMark());
         FundOpResponseDto fundOpResponseDto = payRpcResolver.postFrozenFund(createTradeRequestDto);
-       
+
         businessRecord.setTradeNo(String.valueOf(fundOpResponseDto.getFrozenId()));
 		serialService.saveBusinessRecord(businessRecord);
-		
+
 		TradeResponseDto transaction = fundOpResponseDto.getTransaction();
 		transaction.addVirtualPrincipalFundItem(-requestDto.getAmount());
 		SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, transaction, (serialRecord, feeType) -> {
