@@ -77,7 +77,26 @@ public class UserCashServiceImpl implements IUserCashService {
 		//获取账务周期
 		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDto.getUserId(),
 				userCashDto.getUserName(), userCashDto.getUserCode());
-
+		AccountCycleDto accountCycleDto = accountCycleService.detail(accountCycle.getId());
+		//校验现金余额  领款修改不能导致现金余额小于0  并且校验是本人
+		if (userCashDto.getAction().equals(CashAction.PAYEE.getCode()) && userCashDo.getUserId().equals(userCashDto.getUserId())) {
+			if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < userCashDo.getAmount() - userCashDto.getAmount()) {
+				throw new CardAppBizException(ResultCode.DATA_ERROR, "修改领款金额后导致现金余额统计小于0");
+			}
+		}
+		//校验现金余额
+		if (userCashDto.getAction().equals(CashAction.PAYER.getCode())) {
+			//修改原来人的交款验证
+			if (userCashDo.getUserId().equals(userCashDto.getUserId())) {
+				if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < userCashDto.getAmount() - userCashDo.getAmount()) {
+					throw new CardAppBizException(ResultCode.DATA_ERROR, "修改交款金额后导致现金余额统计小于0");
+				}
+			}else {//修改换了人后的操作就是新增交款  原来的数据直接换掉
+				if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < userCashDto.getAmount()) {
+					throw new CardAppBizException(ResultCode.DATA_ERROR, "修改交款金额后导致现金余额统计小于0");
+				}
+			}
+		}
 		userCashDo = new UserCashDo();
 		userCashDo.setId(userCashDto.getId());
 		userCashDo.setUserId(userCashDto.getUserId());
@@ -86,6 +105,10 @@ public class UserCashServiceImpl implements IUserCashService {
 		userCashDo.setAmount(userCashDto.getAmount());
 		userCashDo.setNotes(userCashDto.getNotes());
 		userCashDo.setCycleNo(accountCycle.getCycleNo());
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		userCashDo.setCreatorId(userTicket.getId());
+		userCashDo.setCreatorCode(userTicket.getUserName());
+		userCashDo.setCreator(userTicket.getRealName());
 		userCashDao.update(userCashDo);
 	}
 
@@ -162,7 +185,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		// 构建商户信息和创建者
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		userCash.setCreatorId(userTicket.getId());
-		userCash.setCreatorCode(userTicket.getSerialNumber());
+		userCash.setCreatorCode(userTicket.getUserName());
 		userCash.setCreator(userTicket.getRealName());
 		userCash.setFirmId(userTicket.getFirmId());
 		userCash.setFirmName(userTicket.getFirmName());
