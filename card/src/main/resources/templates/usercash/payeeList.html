@@ -34,7 +34,7 @@
 		<button id="btn_add" type="button" class="btn btn-primary" onclick="$.operate.addWithTitle(null,'50%','75%','新增领款')"><i class="fa fa-list"></i> 新增</button>
 	</#resource>
 	<#resource code="modifyPayee">
-		<button id="btn_modify" type="button" class="btn btn-primary" onclick="$.operate.editWithTitle(null,'50%','91%','修改领款')"><i class="fa fa-pencil-square-o"></i> 修改</button>
+		<button id="btn_modify" type="button" class="btn btn-primary" onclick="modify()"><i class="fa fa-pencil-square-o"></i> 修改</button>
 	</#resource>
 	<#resource code="deletePayee">
 		<button id="btn_delete" type="button" class="btn btn-primary" onclick="$.operate.removeWithTitle(null,'50%','50%','信息确认')"><i class="fa fa-trash-o"></i> 删除</button>
@@ -110,4 +110,13 @@
         	statisticTotalAmount(1);
         });
     });
+    
+    function modify(){
+    	var row=$("#grid").bootstrapTable('getSelections');
+    	if(row[0].state == 2){
+    		$.modal.alertError("已对账不能修改");
+    		return;
+    	}
+    	$.operate.editWithTitle(id,'50%','91%','修改领款');
+    }
 </script>
