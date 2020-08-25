@@ -140,7 +140,7 @@ tab = {
                             return "";
                         }
                     });
-                },300)
+                },10)
             },
             // 获取实例ID，如存在多个返回#id1,#id2 delimeter分隔符
             getOptionsIds: function (separator) {
