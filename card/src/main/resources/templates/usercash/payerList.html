@@ -114,10 +114,14 @@
     
     function modify(){
     	var row=$("#grid").bootstrapTable('getSelections');
+    	if (row.length == 0) {
+            $.modal.alertWarning("请至少选择一条记录");
+            return false;
+        }
     	if(row[0].state == 2){
     		$.modal.alertError("已对账不能修改");
-    		return;
+    		return false;
     	}
-    	$.operate.editWithTitle(id,'50%','91%','修改交款');
+    	$.operate.editWithTitle(null,'50%','91%','修改交款');
     }
 </script>
