@@ -39,10 +39,10 @@
             <button id="btn_add" type="button" class="btn btn-primary" onclick="$.operate.detailToPage(null)"><i class="fa fa-list"></i> 查看详情</button>
         </#resource>
         <#resource code="sponsorPay">
-        <button id="btn_modify" type="button" class="btn btn-primary" onclick="$.operate.addWithTitleAndSelect(null,'50%','91%','新增交款')"><i class="fa fa-pencil-square-o"></i> 发起交款</button>
+        <button id="btn_modify" type="button" class="btn btn-primary" onclick="addPayer()"><i class="fa fa-pencil-square-o"></i> 发起交款</button>
     </#resource>
     <#resource code="flatedCycle">
-    <button id="btn_delete" type="button" class="btn btn-primary" onclick="$.operate.editWithTitle(null,'50%','65%','信息确认')"><i class="fa fa-paypal"></i> 平账</button>
+    <button id="btn_delete" type="button" class="btn btn-primary" onclick="flated()"><i class="fa fa-paypal"></i> 平账</button>
     </#resource>
     <#resource code="exportCycle">
     <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
@@ -115,4 +115,38 @@
         };
         $.table.init(options);
     });
+    
+    function flated(){
+    	var row=$("#grid").bootstrapTable('getSelections');
+    	if (row.length == 0) {
+            $.modal.alertWarning("请至少选择一条记录");
+            return false;
+        }
+    	if(row[0].state == 1){
+    		$.modal.alertError("活跃账单不能平账");
+    		return false;
+    	}
+    	if(row[0].state == 3){
+    		$.modal.alertError("已平账账单不能重复操作");
+    		return false;
+    	}
+    	$.operate.editWithTitle(null,'50%','65%','信息确认');
+    }
+    
+    function addPayer(){
+    	var row=$("#grid").bootstrapTable('getSelections');
+    	if (row.length == 0) {
+            $.modal.alertWarning("请至少选择一条记录");
+            return false;
+        }
+    	if(row[0].state == 2){
+    		$.modal.alertError("结账账单不能发起交款");
+    		return false;
+    	}
+    	if(row[0].state == 3){
+    		$.modal.alertError("已平账账单不能发起交款");
+    		return false;
+    	}
+    	$.operate.addWithTitleAndSelect(null,'50%','91%','新增交款');
+    }
 </script>
