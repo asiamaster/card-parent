@@ -32,19 +32,19 @@ public class DuplicateCommitAspect {
 
 
     /**
-    * 切入点
-    * @author miaoguoxin
-    * @date 2020/7/7
-    */
+     * 切入点
+     * @author miaoguoxin
+     * @date 2020/7/7
+     */
     @Pointcut("@annotation(com.dili.card.common.annotation.ForbidDuplicateCommit)")
     public void logPointCut() {
     }
 
     /**
-    * 环绕通知
-    * @author miaoguoxin
-    * @date 2020/7/7
-    */
+     * 环绕通知
+     * @author miaoguoxin
+     * @date 2020/7/7
+     */
     @Around("@annotation(forbid)&&logPointCut()")
     public Object around(ProceedingJoinPoint pjp, ForbidDuplicateCommit forbid) throws Throwable {
         if (forbid == null) {
@@ -63,7 +63,7 @@ public class DuplicateCommitAspect {
             if (2L == increment) {
                 return pjp.proceed();
             }
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "commit token过期或不存在，请刷新后重试");
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "token过期或不存在，请刷新后重试");
         } finally {
             redisUtil.remove(key);
         }

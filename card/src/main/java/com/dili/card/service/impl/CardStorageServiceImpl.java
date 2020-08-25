@@ -1,15 +1,5 @@
 package com.dili.card.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dili.card.dao.IStorageOutDao;
 import com.dili.card.dao.IStorageOutDetailDao;
 import com.dili.card.dto.BatchActivateCardDto;
@@ -29,6 +19,15 @@ import com.dili.ss.domain.PageOutput;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Auther: miaoguoxin
@@ -62,7 +61,7 @@ public class CardStorageServiceImpl implements ICardStorageService {
         List<String> cardList = Lists.newArrayList(requestDto.getCardNos().split(","));
         BatchActivateCardDto request = new BatchActivateCardDto();
         request.setCardNos(cardList);
-        cardStorageRpc.batchActivate(request);
+        GenericRpcResolver.resolver(cardStorageRpc.batchActivate(request),"account-service");
     }
 
     @Override
@@ -111,12 +110,12 @@ public class CardStorageServiceImpl implements ICardStorageService {
 	}
 
 
-	@Override
-	public CardStorageDto getCardStorageByCardNo(String cardNo) {
-		CardStorageDto queryParam=new CardStorageDto();
-		queryParam.setCardNo(cardNo);
+    @Override
+    public CardStorageDto getCardStorageByCardNo(String cardNo) {
+        CardStorageDto queryParam = new CardStorageDto();
+        queryParam.setCardNo(cardNo);
         return GenericRpcResolver.resolver(cardStorageRpc.getCardStorageByCardNo(queryParam), "account-service");
-	}
+    }
 
 
     private CardStorageOutResponseDto convert2ResponseDto(CardStorageOut record) {

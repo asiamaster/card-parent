@@ -7,7 +7,6 @@ import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
-import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICardManageService;
 import com.dili.card.util.AssertUtils;
@@ -22,13 +21,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
 /**
- * 卡片管理服务，退卡、挂失、解挂、补卡等
+ * 卡片管理
  * @author ：WangBo
  * @time ：2020年4月28日下午4:04:46
  */
@@ -104,27 +102,17 @@ public class CardManageController implements IControllerHandler {
         LOGGER.info("换卡*****{}", JSONObject.toJSONString(cardParam));
         AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
         AssertUtils.notEmpty(cardParam.getNewCardNo(), "新开卡号不能为空");
-        // cardParam.setServiceFee(100L);
         AssertUtils.notNull(cardParam.getServiceFee(), "工本费不能为空");
         this.validateCommonParam(cardParam);
         this.buildOperatorInfo(cardParam);
-        try {
-            cardManageService.changeCard(cardParam);
-        } catch (CardAppBizException e) {
-            return BaseOutput.failure(e.getMessage());
-        } catch (Exception e) {
-            LOGGER.error("换卡失败", e);
-            LOGGER.error("换卡请求参数:{}", JSON.toJSONString(cardParam));
-            return BaseOutput.failure();
-        }
+        cardManageService.changeCard(cardParam);
         return BaseOutput.success();
     }
 
     /**
      * 查询换卡费用项(返回金额：分)
      */
-    @RequestMapping(value = "/getChangeCardFee.action", method = {RequestMethod.GET, RequestMethod.POST})
-    @ResponseBody
+    @GetMapping(value = "/getChangeCardFee.action")
     public BaseOutput<Long> getChangeCardFee() {
         LOGGER.info("查询换卡费用项 *****");
         CardRequestDto cardRequestDto = new CardRequestDto();

@@ -67,9 +67,9 @@ public class CardManageServiceImpl implements ICardManageService {
     /**
      * @param cardParam
      */
+    @Override
     @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
-    @Override
     public void unLostCard(CardRequestDto cardParam) {
         UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
         query.setCardNo(cardParam.getCardNo());
