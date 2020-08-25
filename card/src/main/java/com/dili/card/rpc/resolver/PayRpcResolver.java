@@ -80,5 +80,12 @@ public class PayRpcResolver {
     public void unregister(CreateTradeRequestDto requestDto) {
         GenericRpcResolver.resolver(payRpc.unregister(requestDto), ServiceType.PAY_SERVICE.getName());
     }
+    
+    /**
+     *  密码重置
+     */
+    public void resetPwd(CreateTradeRequestDto requestDto) {
+        GenericRpcResolver.resolver(payRpc.resetPwd(requestDto), ServiceType.PAY_SERVICE.getName());
+    }
 }
 
