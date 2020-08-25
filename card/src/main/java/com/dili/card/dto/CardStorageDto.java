@@ -138,5 +138,4 @@ public class CardStorageDto extends BaseDto {
 	public void setCreatorId(Long creatorId) {
 		this.creatorId = creatorId;
 	}
-
 }

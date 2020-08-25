@@ -96,4 +96,10 @@ public interface PayRpc {
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.account.service:freeze", method = RequestMethod.POST)
     BaseOutput<?> freeze(CreateTradeRequestDto requestDto);
+    
+    /**
+     * 密码重置
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.permission.service:resetPwd", method = RequestMethod.POST)
+    BaseOutput<?> resetPwd(CreateTradeRequestDto requestDto);
 }

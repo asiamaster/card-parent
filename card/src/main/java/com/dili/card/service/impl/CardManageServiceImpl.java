@@ -11,6 +11,7 @@ import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.rpc.resolver.CardManageRpcResolver;
+import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
@@ -98,11 +99,14 @@ public class CardManageServiceImpl implements ICardManageService {
     public void resetLoginPwd(CardRequestDto cardParam) {
         //获取卡信息
         UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam.getAccountId());
+       //校验卡信息与客户信息
         AccountValidator.validateMatchAccount(cardParam, accountCard);
         //保存本地操作记录
         BusinessRecordDo businessRecordDo = saveLocalSerialRecordNoFundSerial(cardParam, accountCard, OperateType.RESET_PWD);
-        //远程重置密码操作
+        //远程账户重置密码操作
         cardManageRpcResolver.resetLoginPwd(cardParam);
+        //远程支付重置密码操作
+        payRpcResolver.resetPwd(CreateTradeRequestDto.createPwd(accountCard.getFundAccountId(), cardParam.getLoginPwd()));
         //记录远程操作记录
         this.saveRemoteSerialRecord(businessRecordDo);
     }
