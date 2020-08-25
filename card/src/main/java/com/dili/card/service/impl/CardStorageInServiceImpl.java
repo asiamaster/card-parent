@@ -1,12 +1,5 @@
 package com.dili.card.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dao.IStorageInDao;
 import com.dili.card.dto.BatchCardAddStorageDto;
@@ -20,49 +13,52 @@ import com.dili.card.util.PageUtils;
 import com.dili.ss.domain.PageOutput;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import io.seata.spring.annotation.GlobalTransactional;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @description： 卡片入库相关功能实现
- * 
+ *
  * @author ：WangBo
  * @time ：2020年7月17日上午10:21:03
  */
 @Service
 public class CardStorageInServiceImpl implements ICardStorageInService {
-	@Autowired
-	private CardStorageRpc cardStorageRpc;
-	@Autowired
-	private IStorageInDao storageInDao;
+    @Autowired
+    private CardStorageRpc cardStorageRpc;
+    @Autowired
+    private IStorageInDao storageInDao;
 
-	@Override
-	@GlobalTransactional(rollbackFor = Exception.class)
-	@Transactional(rollbackFor = Exception.class)
-	public void batchCardStorageIn(StorageInDo storageIn) {
-		// 按号段入库
-		BatchCardAddStorageDto batchInfo = new BatchCardAddStorageDto();
-		batchInfo.setCardType(storageIn.getCardType());
-		batchInfo.setCreator(storageIn.getCreator());
-		batchInfo.setCreatorId(storageIn.getCreatorId());
-		batchInfo.setStartCardNo(storageIn.getStartCardNo());
-		batchInfo.setEndCardNo(storageIn.getEndCardNo());
-		batchInfo.setFirmId(storageIn.getFirmId());
-		batchInfo.setFirmName(storageIn.getFirmName());
-		batchInfo.setNotes(storageIn.getNotes());
-		GenericRpcResolver.resolver(cardStorageRpc.batchAddCard(batchInfo), ServiceName.ACCOUNT);
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void batchCardStorageIn(StorageInDo storageIn) {
+        // 按号段入库
+        BatchCardAddStorageDto batchInfo = new BatchCardAddStorageDto();
+        batchInfo.setCardType(storageIn.getCardType());
+        batchInfo.setCreator(storageIn.getCreator());
+        batchInfo.setCreatorId(storageIn.getCreatorId());
+        batchInfo.setStartCardNo(storageIn.getStartCardNo());
+        batchInfo.setEndCardNo(storageIn.getEndCardNo());
+        batchInfo.setFirmId(storageIn.getFirmId());
+        batchInfo.setFirmName(storageIn.getFirmName());
+        batchInfo.setNotes(storageIn.getNotes());
+        GenericRpcResolver.resolver(cardStorageRpc.batchAddCard(batchInfo), ServiceName.ACCOUNT);
 
-		// 保存入库记录
-		storageIn.setCreateTime(LocalDateTime.now());
-		storageIn.setModifyTime(LocalDateTime.now());
-		storageInDao.save(storageIn);
-	}
+        // 保存入库记录
+        storageIn.setCreateTime(LocalDateTime.now());
+        storageIn.setModifyTime(LocalDateTime.now());
+        storageInDao.save(storageIn);
+    }
 
-	@Override
-	public PageOutput<List<StorageInDto>> list(CardStorageOutQueryDto queryParam) {
-		Page<Object> startPage = PageHelper.startPage(queryParam.getPage(), queryParam.getRows());
-		List<StorageInDto> list = storageInDao.selectList(queryParam);
-		return PageUtils.convert2PageOutput(startPage, list);
-	}
+    @Override
+    public PageOutput<List<StorageInDto>> list(CardStorageOutQueryDto queryParam) {
+        Page<Object> startPage = PageHelper.startPage(queryParam.getPage(), queryParam.getRows());
+        List<StorageInDto> list = storageInDao.selectList(queryParam);
+        return PageUtils.convert2PageOutput(startPage, list);
+    }
 
 }
