@@ -88,11 +88,11 @@
     function readCard() {
         let cardNo = readerCardNumber();
         if ($.common.isEmpty(cardNo)){
-            $.modal.alertWarning("请将卡片放置在读卡器上");
+            parent.$.modal.alertWarning("请将卡片放置在读卡器上");
             return;
         }
         if(temp.cardNos.indexOf(cardNo) > -1){
-            $.modal.alertWarning("该卡片已经在待出库序列中。。。");
+            parent.$.modal.alertWarning("该卡片已经在待出库序列中。。。");
             return;
         }
         let params = {
@@ -105,7 +105,7 @@
             data: params,
             success: (result) => {
                 if (result.code != web_status.SUCCESS) {
-                    $.modal.alertWarning(result.message)
+                    parent.$.modal.alertWarning(result.message)
                 }else {
                     temp.total++;
                     temp.cardNos.push(cardNo);
