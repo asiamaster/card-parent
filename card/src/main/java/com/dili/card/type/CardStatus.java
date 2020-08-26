@@ -12,7 +12,7 @@ import java.util.List;
 public enum CardStatus {
     NORMAL("正常", 1),
 
-    LOCKED("锁定", 2),
+    //LOCKED("锁定", 2),
 
     LOSS("挂失", 3),
 
