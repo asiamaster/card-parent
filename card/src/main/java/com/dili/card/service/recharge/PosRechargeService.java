@@ -50,7 +50,7 @@ public class PosRechargeService extends AbstractRechargeManager {
             extra = new JSONObject();
         }
         String bankTypeName = BankCardType.getNameByCode(extra.getInteger(Constant.BANK_TYPE));
-        return String.format("pos存款，%s,凭证号:%s", bankTypeName, extra.getString(Constant.POS_CERT_NUM));
+        return String.format("pos存款:%s,凭证号:%s", bankTypeName, extra.getString(Constant.POS_CERT_NUM));
     }
 
     @Override

@@ -4,8 +4,8 @@
         rules: {
             amount: {
                 required: true,
-                gt: 0.00,
-                max: 999999.99
+                min: 0.01,
+                max: 9999999.99
             },
             mark: {
                 maxlength: 30
@@ -14,7 +14,7 @@
         messages: {
             amount: {
                 required: "冻结金额必填",
-                gt: "冻结金额必须大于{0}元",
+                min: "冻结金额最低{0}元",
                 max: "冻结金额不能超过{0}元"
             },
             mark: {
