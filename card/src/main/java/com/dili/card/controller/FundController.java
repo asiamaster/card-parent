@@ -34,7 +34,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -144,11 +148,15 @@ public class FundController implements IControllerHandler {
     public BaseOutput<?> frozen(@RequestBody @Validated(FundValidator.FrozenFund.class)
                                         FundRequestDto requestDto) {
         LOGGER.info("冻结资金*****{}", JSONObject.toJSONString(requestDto));
+        AssertUtils.notNull(requestDto.getAmount(),"冻结金额不能为空");
+        AssertUtils.isTrue(1L <= requestDto.getAmount() &&
+                requestDto.getAmount() <= 999999999L, "冻结金额最少0.01元，最多9999999.99元");
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
         fundService.frozen(requestDto);
         return BaseOutput.success();
     }
+
 
     /**
      * 未解冻记录
