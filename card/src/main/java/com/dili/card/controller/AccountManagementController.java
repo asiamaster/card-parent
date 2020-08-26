@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -68,6 +69,7 @@ public class AccountManagementController implements IControllerHandler{
 	 * 冻结账户
 	 */
 	@PostMapping("/frozen.action")
+	@ResponseBody
 	public BaseOutput<String> frozen(@RequestBody CardRequestDto cardRequestDto) {
 		log.info("冻结账户*****{}", JSONObject.toJSONString(cardRequestDto));
 		buildOperatorInfo(cardRequestDto);
@@ -79,6 +81,7 @@ public class AccountManagementController implements IControllerHandler{
 	 * 解冻账户
 	 */
 	@PostMapping("/unfrozen.action")
+	@ResponseBody
 	public BaseOutput<String> unfrozen(@RequestBody CardRequestDto cardRequestDto) {
 		log.info("解冻账户*****{}", JSONObject.toJSONString(cardRequestDto));
 		buildOperatorInfo(cardRequestDto);
