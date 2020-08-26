@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
 import com.dili.card.common.constant.ServiceName;
+import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.OpenCardResponseDto;
 import com.dili.card.dto.SerialDto;
@@ -20,6 +21,7 @@ import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.rpc.OpenCardRpc;
 import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.SerialRecordRpc;
@@ -76,6 +78,8 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	IRuleFeeService ruleFeeService;
 	@Resource
 	private CustomerRpc customerRpc;
+	@Resource
+	private CardManageRpc cardManageRpc;
 
 	@Override
 	public Long getOpenCostFee() {
@@ -88,11 +92,18 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
 	public OpenCardResponseDto openCard(OpenCardDto openCardInfo) {
-		//校验客户信息
-		Customer customer = GenericRpcResolver.resolver(customerRpc.get(openCardInfo.getCustomerId(), openCardInfo.getFirmId()),
-				ServiceName.CUSTOMER);
-		if(!customer.getState().equals(CustomerState.VALID.getCode())){
-			throw new CardAppBizException(ResultCode.PARAMS_ERROR,"客户已" + CustomerState.getStateName(customer.getState()));
+		// 校验父账号登录密码
+		CardRequestDto checkPwdParam = new CardRequestDto();
+		checkPwdParam.setAccountId(openCardInfo.getParentAccountId());
+		checkPwdParam.setLoginPwd(openCardInfo.getParentLoginPwd());
+		GenericRpcResolver.resolver(cardManageRpc.checkPassword(checkPwdParam), ServiceName.ACCOUNT);
+
+		// 校验客户信息
+		Customer customer = GenericRpcResolver.resolver(
+				customerRpc.get(openCardInfo.getCustomerId(), openCardInfo.getFirmId()), ServiceName.CUSTOMER);
+		if (!customer.getState().equals(CustomerState.VALID.getCode())) {
+			throw new CardAppBizException(ResultCode.PARAMS_ERROR,
+					"客户已" + CustomerState.getStateName(customer.getState()));
 		}
 		// 获取当前账务周期
 		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(openCardInfo.getCreatorId(),
