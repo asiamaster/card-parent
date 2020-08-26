@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 城市提供者
@@ -21,7 +22,9 @@ public class CardStateProvider implements ValueProvider {
     private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
 
     static {
-        CardStatus.getAll()
+        //暂时不需要锁定状态
+        CardStatus.getAll().stream().filter(c -> c != CardStatus.LOCKED)
+                .collect(Collectors.toList())
                 .forEach(c -> BUFFER.add(new ValuePairImpl(c.getName(), c.getCode())));
     }
 
