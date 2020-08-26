@@ -48,6 +48,7 @@
             success:function(result) {
                 if (result.success) {
                 	showInfo("操作成功");
+                	$.table.refresh();
                 }else {
                 	showError(result.message);
                 }

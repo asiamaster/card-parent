@@ -7,20 +7,19 @@
 <div class="container-fluid">
     <div id="update-modal">
         <form id="save-form">
-            <table id="add-table" class="table">
-                <tbody>
-                <tr>
-                    <td>确认冻结金额？</td>
-                </tr>
-                <tr>
-                    <td>解冻说明</td>
-                    <td>
-                        <input type="hidden" name="frozenIds"
+        	<input type="hidden" name="frozenIds"
                                value="${frozenIds!}">
                         <input type="hidden" id="accountId" name="accountId"
                                value="${accountId!}">
-                        <textarea id="remark" name="remark" class="form-control" rows="3" placeholder="不超过30个字符">
-                        </textarea>
+            <table id="add-table" class="table">
+                <tbody>
+                <tr>
+                    <td>确认解冻金额？</td>
+                </tr>
+                <tr>
+                    <td>解冻说明
+                    &nbsp;
+                        <textarea id="remark" name="remark" class="form-control" rows="3" placeholder="不超过30个字符"></textarea>
                     </td>
                 </tr>
             </table>

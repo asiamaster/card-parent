@@ -14,12 +14,12 @@
 					<tr>
 						<td class="info-column-card-out">起始卡号</td>
 						<td><input id="startCardNo" name="startCardNo" type="text"
-							class="form-control isInt"  min="0" required/></td>
+							class="form-control calculateAmount isInt"  min="0" required/></td>
 					</tr>
 					<tr>
 						<td class="info-column-card-out">结束卡号</td>
 						<td><input id="endCardNo" name="endCardNo"  type="text"
-							class="form-control isInt"  min="0" required/></td>
+							class="form-control calculateAmount isInt"  min="0" required/></td>
 					</tr>
 					<tr>
 						<td class="info-column-card-out">入库张数</td>
@@ -66,7 +66,8 @@
 		},
 		focusCleanup : true
 	});
-
+    
+	// 提交入库
 	function submitHandler(e) {
 		var startCardNo = $("#startCardNo").val();
 		var endCardNo = $("#endCardNo").val();
