@@ -28,4 +28,7 @@ public class Constant {
     /** 最大最小金额 单位 分 */
     public static final Long MAX_AMOUNT = 99999999L;
     public static final Long MIN_AMOUNT = 1L;
+
+    public static final int TRUE_INT_FLAG = 1;
+    public static final int FALSE_INT_FLAG = 0;
 }

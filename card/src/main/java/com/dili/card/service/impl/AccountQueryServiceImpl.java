@@ -1,5 +1,6 @@
 package com.dili.card.service.impl;
 
+import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.AccountSimpleResponseDto;
@@ -65,12 +66,17 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     }
 
     @Override
-    public AccountDetailResponseDto getDetail(String cardNo,Long accountId) {
+    public AccountDetailResponseDto getDetail(String cardNo, Long accountId) {
         AccountDetailResponseDto detail = new AccountDetailResponseDto();
         UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
         query.setCardNo(cardNo);
         query.setAccountId(accountId);
-        AccountWithAssociationResponseDto cardAssociation = this.getAssociation(query);
+        AccountWithAssociationResponseDto cardAssociation = this.getAssociation(query, Constant.FALSE_INT_FLAG);
+        //排除掉“退还”状态关联卡
+        List<UserAccountCardResponseDto> collect = cardAssociation.getAssociation().stream()
+                .filter(c -> c.getCardState() != CardStatus.RETURNED.getCode())
+                .collect(Collectors.toList());
+        cardAssociation.setAssociation(collect);
 
         UserAccountCardResponseDto primary = cardAssociation.getPrimary();
         CustomerResponseDto customer = customerRpcResolver.findCustomerByIdWithConvert(primary.getCustomerId(), primary.getFirmId());
@@ -125,7 +131,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     public AccountWithAssociationResponseDto getAssociationByAccountId(Long accountId) {
         UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
         query.setAccountId(accountId);
-        return this.getAssociation(query);
+        return this.getAssociation(query, Constant.TRUE_INT_FLAG);
     }
 
 
@@ -164,7 +170,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
      * @author miaoguoxin
      * @date 2020/7/28
      */
-    private AccountWithAssociationResponseDto getAssociation(UserAccountSingleQueryDto query) {
+    private AccountWithAssociationResponseDto getAssociation(UserAccountSingleQueryDto query, int excludeUnusualState) {
         UserAccountCardResponseDto primary = accountQueryRpcResolver.findSingleWithoutValidate(query);
         //查询关联卡，primaryCard为主卡就查副卡，副卡就查主卡
         UserAccountCardQuery param = new UserAccountCardQuery();
@@ -173,8 +179,9 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         } else if (CardType.isSlave(primary.getCardType())) {
             param.setAccountIds(Lists.newArrayList(primary.getParentAccountId()));
         }
-        param.setExcludeUnusualState(1);
+        param.setExcludeUnusualState(excludeUnusualState);
         List<UserAccountCardResponseDto> association = accountQueryRpcResolver.findByQueryCondition(param);
         return new AccountWithAssociationResponseDto(primary, association);
     }
+
 }
