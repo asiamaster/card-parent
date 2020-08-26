@@ -19,6 +19,7 @@
         <div class="panel-body" style="display: block;">
             <form id="frozen-account-form">
             	<input id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}" type="hidden">
+                <input id="disabledState" name="disabledState" value="${detail.cardAssociation.primary.disabledState!}" type="hidden">
                 <table id="baseInfo" class="table table-bordered">
                     <tbody>
                     <tr>
@@ -40,7 +41,7 @@
                     </tbody>
                 </table>
                 <div style="margin: auto" align="center">
-                    <button id="frozen" type="button"  class="btn btn-primary" onclick="submitFrozenAccount()">
+                    <button id="frozen" type="button"  class="btn btn-primary"   onclick="submitFrozenAccount()">
                         冻结账户
                     </button>
                     <button id="record" style="margin-left: 50px" type="button" class="btn btn-outline-primary" onclick="showOrHideFrozenAccountRecord()">

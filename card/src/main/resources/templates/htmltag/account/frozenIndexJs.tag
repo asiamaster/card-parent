@@ -61,6 +61,9 @@
 
     //初始化表格
     $(() => {
+    	if($("#disabledState").val() == 2){
+    		$("#frozen").attr("disabled", "disabled");
+    	}
     	let data = $.common.formToJSON('query-frozen-account');
     	data.page=1;
     	data.rows=20;

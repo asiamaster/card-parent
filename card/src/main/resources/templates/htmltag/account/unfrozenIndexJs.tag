@@ -36,4 +36,11 @@ $("#unfrozen-account-form").validate({
 	            }), 1000, true)
 	        });
 		}
+	 
+	 $(() => {
+	    	if($("#disabledState2").val() == 1){
+	    		$("#unfrozen").attr("disabled", "disabled");
+	    	}
+	    });
+
 </script>
