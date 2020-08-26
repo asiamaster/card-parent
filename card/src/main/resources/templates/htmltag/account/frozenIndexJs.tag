@@ -32,6 +32,7 @@
             let data = $.common.formToJSON('frozen-account-form');
             bui.util.debounce($.operate.post(url, $.extend(requestData, data), function (result) {
                 if (result.code == web_status.SUCCESS) {
+                	$("#frozen").attr("disabled", "disabled");
                     $.tab.refresh()
                 }
             }), 1000, true);
@@ -60,6 +61,9 @@
 
     //初始化表格
     $(() => {
+    	if($("#disabledState").val() == 2){
+    		$("#frozen").attr("disabled", "disabled");
+    	}
     	let data = $.common.formToJSON('query-frozen-account');
     	data.page=1;
     	data.rows=20;
