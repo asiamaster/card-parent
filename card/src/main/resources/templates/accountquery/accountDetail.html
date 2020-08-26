@@ -75,10 +75,9 @@
         </div>
     </div>
     <div>
+        <% if(detail.cardAssociation.association.~size>0) { %>
         <div class="panel-heading">
-            <% if(detail.cardAssociation.association.~size>0) { %>
             <h4 class="panel-title"><strong>关联卡信息</strong></h4>
-            <% } %>
         </div>
         <div class="panel-body" style="display: block;">
             <table id="cardAssociation" class="table table-bordered">
@@ -100,5 +99,6 @@
                 </tbody>
             </table>
         </div>
+        <% } %>
     </div>
 </div>
