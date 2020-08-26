@@ -32,6 +32,7 @@ import com.dili.card.service.IOpenCardService;
 import com.dili.card.service.IRuleFeeService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.BizNoType;
+import com.dili.card.type.CardType;
 import com.dili.card.type.CustomerState;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateState;
@@ -92,12 +93,15 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
 	public OpenCardResponseDto openCard(OpenCardDto openCardInfo) {
-		// 校验父账号登录密码
-		CardRequestDto checkPwdParam = new CardRequestDto();
-		checkPwdParam.setAccountId(openCardInfo.getParentAccountId());
-		checkPwdParam.setLoginPwd(openCardInfo.getParentLoginPwd());
-		GenericRpcResolver.resolver(cardManageRpc.checkPassword(checkPwdParam), ServiceName.ACCOUNT);
-
+		// 校验父账号登录密码 TODO:等待客户端更新
+		if(CardType.isSlave(openCardInfo.getCardType())) {
+			if(openCardInfo.getParentLoginPwd() != null) {
+				CardRequestDto checkPwdParam = new CardRequestDto();
+				checkPwdParam.setAccountId(openCardInfo.getParentAccountId());
+				checkPwdParam.setLoginPwd(openCardInfo.getParentLoginPwd());
+				GenericRpcResolver.resolver(cardManageRpc.checkPassword(checkPwdParam), ServiceName.ACCOUNT);
+			}
+		}
 		// 校验客户信息
 		Customer customer = GenericRpcResolver.resolver(
 				customerRpc.get(openCardInfo.getCustomerId(), openCardInfo.getFirmId()), ServiceName.CUSTOMER);
