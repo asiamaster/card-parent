@@ -83,13 +83,13 @@
         <div class="panel-body" style="display: block;">
             <table id="cardAssociation" class="table table-bordered">
                 <tbody style="text-align: center">
-                <% for(item in detail.cardAssociation.association) { %>
                 <tr>
                     <td class="info-column">卡号</td>
                     <td class="info-column">卡类别</td>
                     <td class="info-column">开卡时间</td>
                     <td class="info-column">卡片状态</td>
                 </tr>
+                <% for(item in detail.cardAssociation.association) { %>
                 <tr>
                     <td class="info-cell">${item.cardNo!}</td>
                     <td class="info-cell">${item.cardTypeText!}</td>
