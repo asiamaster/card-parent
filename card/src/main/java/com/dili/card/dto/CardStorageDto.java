@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * @description： 卡片入库条件查询
- * 
+ *
  * @author ：WangBo
  * @time ：2020年7月17日上午10:07:34
  */
@@ -46,10 +46,11 @@ public class CardStorageDto extends BaseDto {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime modifyTime;
-	/** 结束时间 */
-	private LocalDate startDate;
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime startDate;
 	/** 开始时间 */
-	private LocalDate endDate;
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime endDate;
 
 	public String getCardNo() {
 		return cardNo;
@@ -75,19 +76,19 @@ public class CardStorageDto extends BaseDto {
 		this.state = state;
 	}
 
-	public LocalDate getStartDate() {
+	public LocalDateTime getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
+	public void setStartDate(LocalDateTime startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDate getEndDate() {
+	public LocalDateTime getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDate endDate) {
+	public void setEndDate(LocalDateTime endDate) {
 		this.endDate = endDate;
 	}
 

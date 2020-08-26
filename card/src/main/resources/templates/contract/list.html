@@ -85,7 +85,7 @@
             <div class="form-group col-auto">
                 <label for="customerName" class="">委托人</label>
                 <div class="input-group">
-                	<#bautoCompleteProvider _hiddenDomainId="consignorCustomerId" _hiddenDomainName="consignorCustomerId" _displayDomainId="customerName" _displayDomainName="customerName" _placeholder="" _optionVariable="customerNameQueryAutoCompleteOption"/>
+                	<#bautoCompleteProvider _hiddenDomainId="consignorCustomerId" _hiddenDomainName="consignorCustomerId" _displayDomainId="customerCode" _displayDomainName="customerCode" _placeholder="" _optionVariable="customerNameQueryAutoCompleteOption"/>
             		<input type="text" class="form-control" id="show_customer_name" readonly/>
             	</div>
             </div>
@@ -406,7 +406,7 @@
 		};
 		$.table.init(options);
 	});
-    
+
     /**
 	 * 打印
 	 */
@@ -500,7 +500,7 @@
 			}
 		});
 		if(!next){
-			return !next; 
+			return !next;
 		}
 		$('#notesBefore').before(consignee);
 	}
@@ -508,7 +508,7 @@
 	function minusConsignee(e) {
 		$(e).closest(".consignee").remove();
 	}
-	
+
 	let data = {};
 	function nextStep(){
 		data = {};
@@ -549,7 +549,7 @@
 		if(now > end){
 			$.modal.alertError("合同截止时间不能小于当前时间");
 			return false;
-		}	
+		}
 		data.startTime=$('#startTime').val();
 		data.endTime=$('#endTime').val();
 		let items = [];
@@ -632,11 +632,11 @@
 		})
 		$('#addFirstModal').modal('hide');
 	}
-	
+
 	function closeFirst(){
 		cancleAddView();
 	}
-	
+
 	function closeSecond(){
 		$('#addSecondModal').modal('hide');
 		$("#consigneeAlls").empty();
@@ -727,7 +727,7 @@
             }
         });
 	}
-	
+
 	function getConsignorIdCard() {
 		var consigneeIdCodeList = [];
 		$("#consignorCustomerIDCode").val("");
@@ -811,8 +811,8 @@
 		    }
 		});
 	}
-	
+
 	function signature(){
-		
+
 	}
 </script>
