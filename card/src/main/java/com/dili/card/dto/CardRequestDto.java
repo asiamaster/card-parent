@@ -36,6 +36,8 @@ public class CardRequestDto extends BaseDto{
 	private Long customerId;
 	/**工本费*/
 	private Long serviceFee;
+	/**备注*/
+	private String notes;
 
 	public String getCardNo() {
 		return cardNo;
@@ -99,5 +101,13 @@ public class CardRequestDto extends BaseDto{
 
 	public void setServiceFee(Long serviceFee) {
 		this.serviceFee = serviceFee;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 }

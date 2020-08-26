@@ -30,7 +30,6 @@ $("#unfrozen-account-form").validate({
 	            let data = $.common.formToJSON('unfrozen-account-form');
 	            bui.util.debounce($.operate.post(url, $.extend(requestData, data), function (result) {
 	                if (result.code == web_status.SUCCESS) {
-	                	$.modal.alertSuccess("解冻成功");
 	                    $.tab.refresh();
 	                }
 	            }), 1000, true)
