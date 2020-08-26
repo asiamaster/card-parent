@@ -97,8 +97,8 @@ public class FundServiceImpl implements IFundService {
 		transaction.addVirtualPrincipalFundItem(-requestDto.getAmount());
 		SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, transaction, (serialRecord, feeType) -> {
 			if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
-				serialRecord.setFundItem(FundItem.TRADE_FREEZE.getCode());
-				serialRecord.setFundItemName(FundItem.TRADE_FREEZE.getName());
+				serialRecord.setFundItem(FundItem.MANDATORY_FREEZE_FUND.getCode());
+				serialRecord.setFundItemName(FundItem.MANDATORY_FREEZE_FUND.getName());
 			}
 			serialRecord.setNotes(requestDto.getMark());
 		}, true);

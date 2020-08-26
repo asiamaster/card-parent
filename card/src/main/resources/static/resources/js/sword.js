@@ -653,6 +653,15 @@ tab = {
                     height: height,
                     content: content,
                     btns: [{
+                        label: '取消', className: 'sword-modal btn-secondary btn', onClick(e, $iframe) {
+                            try {
+                                return $iframe[0].contentWindow.cancelHandler(e)
+                            } catch (ex) {
+                                console.log(ex);
+                                return true;
+                            }
+                        }
+                    },{
                         label: '确定', className: 'sword-modal btn-primary btn ', onClick(e, $iframe) {
                             try {
                                 $iframe[0].contentWindow.submitHandler(e);
@@ -660,15 +669,6 @@ tab = {
                             } catch (ex) {
                                 console.log(ex);
                                 return false;
-                            }
-                        }
-                    },{
-                        label: '取消', className: 'sword-modal btn-secondary btn', onClick(e, $iframe) {
-                            try {
-                                return $iframe[0].contentWindow.cancelHandler(e)
-                            } catch (ex) {
-                                console.log(ex);
-                                return true;
                             }
                         }
                     }]
