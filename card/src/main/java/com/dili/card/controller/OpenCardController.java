@@ -72,15 +72,18 @@ public class OpenCardController implements IControllerHandler {
 		AssertUtils.notEmpty(openCardInfo.getCustomerCertificateNumber(), "请输入证件号!");
 		Customer customer = GenericRpcResolver.resolver(customerRpc.getByCertificateNumber(openCardInfo.getCustomerCertificateNumber(), user.getFirmId()),
 				ServiceName.CUSTOMER);
-		if(!customer.getState().equals(CustomerState.VALID.getCode())){
-			throw new CardAppBizException(ResultCode.PARAMS_ERROR,"客户已" + CustomerState.getStateName(customer.getState()));
-		}
 		CustomerResponseDto response = new CustomerResponseDto();
 		if (customer != null) {
+			// 判断客户是否已禁用或注销
+			if(!customer.getState().equals(CustomerState.VALID.getCode())){
+				throw new CardAppBizException(ResultCode.PARAMS_ERROR,"客户已" + CustomerState.getStateName(customer.getState()));
+			}
 			BeanUtils.copyProperties(customer, response);
 			response.setCustomerContactsPhone(customer.getContactsPhone());
 			response.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
 			response.setCustomerType(customer.getCustomerMarket().getType());
+		}else {
+			return BaseOutput.failure("未找到客户信息!");
 		}
 		log.info("开卡证件号查询客户信息完成*****{}", JSONObject.toJSONString(response));
 		return BaseOutput.successData(response);
