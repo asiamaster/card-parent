@@ -100,7 +100,7 @@ public class FundServiceImpl implements IFundService {
 				serialRecord.setFundItem(FundItem.TRADE_FREEZE.getCode());
 				serialRecord.setFundItemName(FundItem.TRADE_FREEZE.getName());
 			}
-			serialRecord.setNotes("手动冻结资金");
+			serialRecord.setNotes(requestDto.getMark());
 		}, true);
 		serialService.handleSuccess(serialDto);
     }
