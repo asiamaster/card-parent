@@ -3,7 +3,7 @@
     <#bs4nav>
     <form  id="queryForm" role="form" >
         <div class="row row-cols-6">
-            <div class="form-group col-auto">
+            <div class="form-group col">
                 <label for="userId">柜员</label>
                 <#bautoCompleteProvider
                 _hiddenDomainId="userId"
@@ -12,7 +12,7 @@
                 _displayDomainName="userName"
                 _placeholder="" _optionVariable="userNameQueryAutoCompleteOption"/>
             </div>
-            <div class="form-group col-auto">
+            <div class="form-group col">
                 <label for="creatorId">财务员</label>
                 <#bautoCompleteProvider _hiddenDomainId="auditorId" _hiddenDomainName="auditorId" _displayDomainId="creatorName" _displayDomainName="creatorName" _placeholder="" _optionVariable="userNameQueryAutoCompleteOption"/>
             </div>
@@ -29,10 +29,9 @@
 
     </form>
 </#bs4nav>
-</div>
 
-
-<div class="row" style="width: 100%;margin-left: 0px">
+<hr>
+<div class="row" >
     <div class="col-12">
         <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
             <#resource code="viewCycle">
@@ -96,6 +95,7 @@
             </thead>
         </table>
     </div>
+</div>
 </div>
 
 </#bs4Body>
