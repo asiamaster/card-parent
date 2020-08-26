@@ -82,29 +82,29 @@
                 <select name="state" id="state"  class="form-control"></select>
                 <#bcomboProvider _id="state" _provider="contractStateProvider" _queryParams='{emptyText:"全部"}'/>
             </div>
-            <div class="form-group col">
+            <div class="form-group col-auto">
                 <label for="customerName" class="">委托人</label>
                 <div class="input-group">
                 	<#bautoCompleteProvider _hiddenDomainId="consignorCustomerId" _hiddenDomainName="consignorCustomerId" _displayDomainId="customerCode" _displayDomainName="customerCode" _placeholder="" _optionVariable="customerNameQueryAutoCompleteOption"/>
             		<input type="text" class="form-control" id="show_customer_name" readonly/>
             	</div>
             </div>
-            <div class="form-group col">
+            <div class="form-group col-auto">
                 <label for="cardNo">委托卡</label>
                 <div class="input-group">
                     <input type="text" class="form-control" name="cardNo" id="cardNo" maxlength="16" oninput="queryCustomerByCardNo(this.value, 'show_customer_name_by_card');return false;"/>
                     <input type="text" class="form-control" id="show_customer_name_by_card" readonly/>
                 </div>
             </div>
-             <div class="form-group col">
+             <div class="form-group col-auto">
                 <label for="consigneeMobile">被委托人手机号</label>
                 <input param-multiple="true" name="consigneeMobile" id="consigneeMobile" maxlength="11" type="text" class="form-control" onkeypress="keyPress()"/>
             </div>
-             <div class="form-group col">
+             <div class="form-group col-auto">
                 <label for="contractNo">合同编号</label>
                 <input param-multiple="true" name="contractNo" id="contractNo" maxlength="20" type="text" class="form-control"  />
             </div>
-             <div class="form-group col">
+             <div class="form-group col-auto">
                 <label for="days">距离到期天数</label>
                 <input param-multiple="true" name="days" id="days" type="text" maxlength="5" class="form-control"  />
             </div>
@@ -117,10 +117,12 @@
                 <button id="query" type="button" class="btn btn-outline-primary" onclick="$.table.search()"><i class="fa fa-search"></i> 查询</button>
             </div>
         </div>
+
     </form>
 </#bs4nav>
+</div>
 <hr>
-<div class="row">
+<div class="row" style="width: 100%;margin-left: 0px">
     <div class="col-12">
 		<div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
 			<#resource code="addContract">
@@ -188,8 +190,6 @@
         </table>
     </div>
 </div>
-</div>
-
 <div class="modal fade" id="addFirstModal" tabindex="-1" role="dialog" aria-labelledby="addFirstModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 960px;height: 500px;">
 		<div class="modal-content" style="width: 960px;height: 500px;">
@@ -202,7 +202,7 @@
 					<table id="contract-save" class="table table-bordered">
 						<tbody>
 							<tr>
-								<td class="info-column">委托人</td>
+								<td class="info-column">委托人<a onclick="return false"  href="${contextPath}/contract/confirm.action">00</a></td>
 								<td class="info-cell">
 								<input placeholder="客户id"
 									name="customerId"  type="hidden"
@@ -309,14 +309,13 @@
 				</form>
 			</div>
 			<div style="display: table-cell; text-align: center;margin-top:10px;margin-bottom:20px;">
-
+				<div style="width: 49%;float: left;">
+					<button type="button" class="btn btn-primary"
+					style="margin-right:50px;width: 100px;" onclick="nextStepView()">下一步</button>
+				</div>
 				<div style="width: 49%;float: left;">
 					<button type="button" class="btn btn-secondary"
 					style="margin-left:50px;width: 100px;" onclick="cancleAddView()">取消</button>
-				</div>
-				<div style="width: 49%;float: left;">
-					<button type="button" class="btn btn-primary"
-							style="margin-right:50px;width: 100px;" onclick="nextStepView()">下一步</button>
 				</div>
 			</div>
 		</div>
@@ -407,7 +406,7 @@
 		};
 		$.table.init(options);
 	});
-
+    
     /**
 	 * 打印
 	 */
@@ -501,7 +500,7 @@
 			}
 		});
 		if(!next){
-			return !next;
+			return !next; 
 		}
 		$('#notesBefore').before(consignee);
 	}
@@ -509,7 +508,7 @@
 	function minusConsignee(e) {
 		$(e).closest(".consignee").remove();
 	}
-
+	
 	let data = {};
 	function nextStep(){
 		data = {};
@@ -550,7 +549,7 @@
 		if(now > end){
 			$.modal.alertError("合同截止时间不能小于当前时间");
 			return false;
-		}
+		}	
 		data.startTime=$('#startTime').val();
 		data.endTime=$('#endTime').val();
 		let items = [];
@@ -603,10 +602,12 @@
 			$("#consigneeAlls").append(consigneeReplace);
 			$("#consignorCustomer").append(consugnee2);
 		}
-		data.contractNo = uuid();
 	}
 
 	function backToFirst(){
+		$(".per_div_child").each(function () {
+			$(this).attr("disabled", "disabled");
+		})
 		$('#addSecondModal').modal('hide');
 		$("#consigneeAlls").empty();
 		$("#consignorCustomer").empty();
@@ -633,11 +634,11 @@
 		})
 		$('#addFirstModal').modal('hide');
 	}
-
+	
 	function closeFirst(){
 		cancleAddView();
 	}
-
+	
 	function closeSecond(){
 		$('#addSecondModal').modal('hide');
 		$("#consigneeAlls").empty();
@@ -728,7 +729,7 @@
             }
         });
 	}
-
+	
 	function getConsignorIdCard() {
 		var consigneeIdCodeList = [];
 		$("#consignorCustomerIDCode").val("");
@@ -772,6 +773,7 @@
 		$.modal.alertSuccess("读卡成功");
 	}
 
+	/** 查询按钮 */
 	function searchCustomer(){
 		var idCard = $("#consignorCustomerIDCode").val();
 		if($.common.isEmpty(idCard)){
@@ -781,6 +783,7 @@
 		getUserInfo(idCard);
 	}
 
+	/** 远程获取客户信息 */
 	function getUserInfo(obj){
 		$.ajax({
 		    type: "POST",
@@ -812,8 +815,42 @@
 		    }
 		});
 	}
-
+	
+	/** 客户端点击签名弹出签名设备框 */
 	function signature(){
-
+		
+	}
+	/** 签名设备触发器  客户端页面联动  1 同意  2 返回*/
+	function signatureTrigger(type){
+		if(type == 1){//同意签名  签名按钮可用
+			$(".per_div_child").each(function () {
+				$(this).removeAttr("disabled");
+			})
+		}
+		if(type == 2){//返回
+			backToFirst();
+		}
+	}
+	
+	/** 输入签名设备图片 base64  进行处理并上传 */
+	function inputImage(imageStr){
+		var imgFile = base64ToImageFile(base64Img);
+		const fileReader = new FileReader();  // 创建一个 fileReader
+		fileReader.readAsDataURL(imgFile);
+		
+	}
+	
+	/** 图片转化 */
+	function base64ToImageFile(imageStr){
+		let bstr = atob(imageStr);
+		let n = bstr.length;
+		let u8arr = new Uint8Array(n);
+		while (n--) {
+			u8arr[n] = bstr.charCodeAt(n);
+		}
+		var filename = randomString(12) + '.jpg';
+		return new File([u8arr], filename, {
+		    type: 'image/jpg'
+		})         
 	}
 </script>
