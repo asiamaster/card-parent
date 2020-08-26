@@ -103,6 +103,8 @@ public class AccountQueryManagementController implements IControllerHandler {
                                             UserAccountCardQuery param) {
     	LOGGER.info("分页查询卡账户列表*****{}", JSONObject.toJSONString(param));
         this.buildOperatorInfo(param);
+        //不要根据客户名字来查询
+        param.setCustomerName(null);
         PageOutput<List<AccountListResponseDto>> page = accountQueryService.getPage(param);
         return successPage(page);
 

@@ -24,7 +24,6 @@ public class UserAccountCardQuery extends BaseDto {
 	private List<String> cardNos;
 	/** 主账户ID */
 	private Long parentAccountId;
-
 	/** 市场ID */
 	private Long firmId;
 	/** 结束时间 */
@@ -37,7 +36,6 @@ public class UserAccountCardQuery extends BaseDto {
 	private Integer cardType;
 	/** 卡状态 {@link com.dili.card.type.CardStatus} */
 	private Integer cardState;
-
 	/**是否要排除异常状态的账户 ex：卡退还、账户被禁用*/
 	private Integer excludeUnusualState;
 

@@ -154,7 +154,6 @@ tab = {
             // 查询条件
             queryParams: function (params) {
                 let currentId = $.common.isEmpty(table.options.formId) ? 'queryForm' : table.options.formId;
-                let prefixKey = table.options.modalName + "_";
                 let curParams = {
                     // 传递参数查询参数
                     rows: params.limit,
@@ -163,10 +162,7 @@ tab = {
                     sort: params.sort,
                     order: params.order
                 };
-                let dataParam = $.extend(curParams, $.common.formToPairValue(currentId));
-                //记忆查询参数
-                sessionStorage.setItem(prefixKey + currentId, JSON.stringify(dataParam));
-                return dataParam;
+                return $.extend(curParams, $.common.formToPairValue(currentId));
             },
             //初始化已记忆的页面参数
             initRememberedViewParams: function(options){
@@ -579,12 +575,8 @@ tab = {
             reset: function (formId, tableId) {
                 table.set(tableId);
                 let currentId = $.common.isEmpty(formId) ? $('form').attr('id') : formId;
-                let prefixKey = table.options.modalName + "_";
-                //清空session记录
-                sessionStorage.removeItem(prefixKey + currentId);
                 let form = $("#" + currentId);
                 form[0].reset();
-                //重置时间
                 $.form.resetDate();
                 //特别处理hidden
                 $.each(form.find('input:hidden'), (i, e) => {
