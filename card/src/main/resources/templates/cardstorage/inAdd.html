@@ -69,8 +69,8 @@
     
 	// 提交入库
 	function submitHandler(e) {
-		var startCardNo = $("#startCardNo").val();
-		var endCardNo = $("#endCardNo").val();
+		let startCardNo = parseInt($("#startCardNo").val());
+		let endCardNo = parseInt($("#endCardNo").val());
 		if(startCardNo > endCardNo){
 			bs4pop.alert("结束卡必须大于起始卡号", {type : "warning"});
 			return;
