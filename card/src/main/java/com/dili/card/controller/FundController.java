@@ -229,7 +229,9 @@ public class FundController implements IControllerHandler {
         LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto));
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
+        long beginTime = System.currentTimeMillis();
         fundService.recharge(requestDto);
+        LOGGER.info("充值耗费时间：{}ms", System.currentTimeMillis() - beginTime);
         return BaseOutput.success();
     }
 
