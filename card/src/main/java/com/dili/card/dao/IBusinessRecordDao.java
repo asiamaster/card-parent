@@ -1,9 +1,9 @@
 package com.dili.card.dao;
 
-import java.util.List;
-
 import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.entity.BusinessRecordDo;
+
+import java.util.List;
 
 /**
  * 柜台业务办理记录
@@ -64,4 +64,11 @@ public interface IBusinessRecordDao {
 	 * @return
 	 */
     List<BusinessRecordDo> list(SerialQueryDto serialQueryDto);
+
+	/**
+	 * 根据操作流水号查询办理记录
+	 * @param serialNo
+	 * @return
+	 */
+	BusinessRecordDo getBySerialNo(String serialNo);
 }

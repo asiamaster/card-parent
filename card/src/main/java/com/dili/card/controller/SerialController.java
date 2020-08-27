@@ -156,4 +156,19 @@ public class SerialController implements IControllerHandler {
         PageOutput<List<BusinessRecordResponseDto>> lists = serialService.queryPage(queryDto);
         return successPage(lists);
     }
+
+    /**
+     * 根据操作流水号查询业务办理记录
+     * @param serialNo
+     * @return
+     */
+    @RequestMapping(value = "/business/getBySerialNo.action")
+    @ResponseBody
+    public BaseOutput<BusinessRecordResponseDto> findBusinessRecordBySerialNo(String serialNo) {
+        LOGGER.info("根据操作流水号查询业务办理记录*****{}", serialNo);
+        if (StrUtil.isBlank(serialNo)) {
+            return BaseOutput.failure("操作流水号为空");
+        }
+        return BaseOutput.success().setData(serialService.findBusinessRecordBySerialNo(serialNo));
+    }
 }

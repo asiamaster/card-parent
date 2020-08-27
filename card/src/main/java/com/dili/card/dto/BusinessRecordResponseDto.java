@@ -1,15 +1,15 @@
 package com.dili.card.dto;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.FenToYuanProvider;
 import com.dili.card.common.provider.OperationTypeProvider;
+import com.dili.card.common.provider.TradeChannelProvider;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * @Auther: miaoguoxin
@@ -48,6 +48,7 @@ public class BusinessRecordResponseDto implements Serializable {
     /** 交易类型-充值、提现、消费、转账、其他 */
     private Integer tradeType;
     /** 交易渠道-现金、POS、网银 */
+    @TextDisplay(TradeChannelProvider.class)
     private Integer tradeChannel;
     /** 银行卡类型-借记卡、信用卡 */
     private Integer bankCardType;
@@ -60,10 +61,13 @@ public class BusinessRecordResponseDto implements Serializable {
     /** 新卡卡号 */
     private String newCardNo;
     /** 押金-分 */
+    @TextDisplay(FenToYuanProvider.class)
     private Long deposit;
     /** 工本费-分 */
+    @TextDisplay(FenToYuanProvider.class)
     private Long cardCost;
     /** 手续费-分 */
+    @TextDisplay(FenToYuanProvider.class)
     private Long serviceCost;
     /** 附加内容-存储不太重要的内容，否则请扩充该表字段 */
     private String attach;

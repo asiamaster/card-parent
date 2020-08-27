@@ -43,7 +43,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
     @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void withdraw(FundRequestDto fundRequestDto) {
+    public String withdraw(FundRequestDto fundRequestDto) {
         validate(fundRequestDto);//参数验证
         UserAccountCardResponseDto accountCard = check(fundRequestDto);//验证卡状态、余额等
         BusinessRecordDo businessRecord = createBusinessRecord(fundRequestDto, accountCard);
@@ -75,6 +75,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         //取款成功后修改业务单状态、存储流水
         SerialDto serialDto = createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
         serialService.handleSuccess(serialDto);
+        return businessRecord.getSerialNo();
     }
 
     /**

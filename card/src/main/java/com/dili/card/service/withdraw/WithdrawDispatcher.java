@@ -22,6 +22,9 @@ public class WithdrawDispatcher {
 
     private Map<Integer, IWithdrawService> withdrawServiceMap = new ConcurrentHashMap<>();
 
+    /**
+     * 初始化
+     */
     @PostConstruct
     public void init() {
         if (CollUtil.isEmpty(withdrawServiceList)) {
@@ -32,10 +35,10 @@ public class WithdrawDispatcher {
         }
     }
     /**
-     * 提现分发
+     * 提现分发 返回 操作流水号
      * @param fundRequestDto
      */
-    public void dispatch(FundRequestDto fundRequestDto) {
+    public String dispatch(FundRequestDto fundRequestDto) {
         if (fundRequestDto.getTradeChannel() == null) {
             throw new CardAppBizException("", "请选择提款方式");
         }
@@ -43,6 +46,6 @@ public class WithdrawDispatcher {
         if (service == null) {
             throw new CardAppBizException("", "不支持该提款方式");
         }
-        service.withdraw(fundRequestDto);
+        return service.withdraw(fundRequestDto);
     }
 }

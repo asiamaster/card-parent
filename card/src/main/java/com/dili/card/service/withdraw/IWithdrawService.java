@@ -8,10 +8,10 @@ import com.dili.card.dto.FundRequestDto;
 public interface IWithdrawService {
 
     /**
-     * 取款
+     * 取款 返回操作流水号
      * @param fundRequestDto
      */
-    void withdraw(FundRequestDto fundRequestDto);
+    String withdraw(FundRequestDto fundRequestDto);
 
     /**
      * 支持的交易渠道

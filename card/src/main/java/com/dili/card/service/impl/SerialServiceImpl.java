@@ -283,6 +283,17 @@ public class SerialServiceImpl implements ISerialService {
         return serialDto;
     }
 
+    @Override
+    public BusinessRecordResponseDto findBusinessRecordBySerialNo(String serialNo) {
+        BusinessRecordDo businessRecordDo = businessRecordDao.getBySerialNo(serialNo);
+        if (businessRecordDo == null) {
+            return null;
+        }
+        BusinessRecordResponseDto responseDto = new BusinessRecordResponseDto();
+        BeanUtils.copyProperties(businessRecordDo, responseDto);
+        return responseDto;
+    }
+
     private static Long getOpAmount(TradeResponseDto tradeResponseDto, boolean isFrozen) {
         if (isFrozen) {
             //冻结是正，解冻是负，这里需要倒一下正负

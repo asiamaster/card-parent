@@ -122,4 +122,10 @@ public interface ISerialService {
      */
     SerialDto createAccountSerialWithFund(BusinessRecordDo businessRecord, TradeResponseDto tradeResponseDto, IAccountSerialFilter filter, boolean isFrozen);
 
+    /**
+     * 根据操作流水查询办理记录
+     * @param serialNo
+     * @return
+     */
+    BusinessRecordResponseDto findBusinessRecordBySerialNo(String serialNo);
 }

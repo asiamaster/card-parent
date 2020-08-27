@@ -9,15 +9,13 @@ import com.dili.card.common.annotation.ForbidDuplicateCommit;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
-import com.dili.card.dto.FundFrozenRecordParamDto;
-import com.dili.card.dto.FundRequestDto;
-import com.dili.card.dto.UnfreezeFundDto;
-import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.*;
 import com.dili.card.dto.pay.FreezeFundRecordParam;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.IRuleFeeService;
+import com.dili.card.service.ISerialService;
 import com.dili.card.service.withdraw.WithdrawDispatcher;
 import com.dili.card.type.PayFreezeFundType;
 import com.dili.card.type.RuleFeeBusinessType;
@@ -63,6 +61,8 @@ public class FundController implements IControllerHandler {
     private WithdrawDispatcher withdrawDispatcher;
     @Resource
     private IRuleFeeService ruleFeeService;
+    @Autowired
+    private ISerialService serialService;
 
     /**
      * 跳转冻结资金页面
@@ -112,12 +112,13 @@ public class FundController implements IControllerHandler {
     @RequestMapping(value = "/withdraw.action")
     @ResponseBody
     @ForbidDuplicateCommit
-    public BaseOutput<?> withdraw(@RequestBody FundRequestDto fundRequestDto) {
+    public BaseOutput<BusinessRecordResponseDto> withdraw(@RequestBody FundRequestDto fundRequestDto) {
         LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto));
         validateCommonParam(fundRequestDto);
         buildOperatorInfo(fundRequestDto);
-        withdrawDispatcher.dispatch(fundRequestDto);
-        return BaseOutput.success();
+        String serialNo = withdrawDispatcher.dispatch(fundRequestDto);
+        BusinessRecordResponseDto businessRecordResponseDto = serialService.findBusinessRecordBySerialNo(serialNo);
+        return BaseOutput.success().setData(businessRecordResponseDto);
     }
 
     /**
