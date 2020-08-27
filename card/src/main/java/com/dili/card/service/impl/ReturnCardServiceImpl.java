@@ -13,6 +13,7 @@ import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.TradeRequestDto;
+import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardStorageRpc;
@@ -24,6 +25,7 @@ import com.dili.card.service.IReturnCardService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.DisableState;
+import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.ServiceType;
@@ -77,7 +79,7 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 		}
 		cardParam.setServiceFee(fee);
 		// 是主卡 同时卡余额存在并且小于1元需要进行流水
-		boolean masterHasTradeSerial = master && fee != 0L;
+		boolean masterHasTradeSerial = master && fee > 0L;
 		// 构建记录
 		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardParam, accountCard, record -> {
 			record.setType(OperateType.REFUND_CARD.getCode());
@@ -87,39 +89,56 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 				record.setTradeChannel(TradeChannel.BALANCE.getCode());
 			}
 		});
-		// 如果金额等于0不进行交易号创建 直接退卡 注销账号
-		String tradeId = null;
-		if (master && fee != 0L) {
-			CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(TradeType.FEE.getCode(),
-					accountCard.getAccountId(), accountCard.getFundAccountId(), fee, businessRecord.getSerialNo(),
-					String.valueOf(businessRecord.getCycleNo()));
-			// 创建交易
-			tradeId = payRpcResolver.prePay(tradeRequest).getTradeId();
-		}
-		businessRecord.setTradeNo(tradeId);
-		serialService.saveBusinessRecord(businessRecord);
+		
 		// 退卡
 		cardManageRpcResolver.returnCard(cardParam);
 		// 激活卡
 		GenericRpcResolver.resolver(
 				cardStorageRpc.activateCardByInUse(CardStorageActivateDto.create(accountCard.getCardNo())),
 				ServiceType.ACCOUNT_SERVCIE.getName());
-		// 主卡退卡注销账户 副卡不做此操作
+		
+		String tradeId = null;
+		TradeResponseDto tradeResponseDto = null;
+		SerialDto serialDto = null;
+		
 		if (master) {
-			if (masterHasTradeSerial) {// 存在余额在一元内需要进行缴费操作
+			//转出零钱
+			if(fee > 0L) {
+				CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(TradeType.FEE.getCode(),
+						accountCard.getAccountId(), accountCard.getFundAccountId(), fee, businessRecord.getSerialNo(),
+						String.valueOf(businessRecord.getCycleNo()));
+				// 创建交易
+				tradeId = payRpcResolver.prePay(tradeRequest).getTradeId();
+				
 				// 执行实际缴费操作
 				TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(accountCard, tradeId,
 						TradeChannel.BALANCE.getCode(), cardParam.getLoginPwd());
 				tradeRequestDto.addServiceFeeItem(cardParam.getServiceFee(), FundItem.RETURN_CARD_CHANGE);
-				payRpcResolver.trade(tradeRequestDto);
+				tradeResponseDto =  payRpcResolver.trade(tradeRequestDto);
 			}
-			// 账号注销
+			// 主卡退卡注销账户 副卡不做此操作
 			CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto
 					.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId());
 			payRpcResolver.unregister(createTradeRequestDto);
 		}
-		// 流水建立
-		SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
+		
+		//保存本地记录
+		businessRecord.setTradeNo(tradeId);
+		serialService.saveBusinessRecord(businessRecord);
+		
+		
+		if (masterHasTradeSerial) {//主卡  并且有余额
+			// 流水建立主卡退卡零钱流水
+			serialDto = serialService.createAccountSerialWithFund(businessRecord, tradeResponseDto, (serialRecord, feeType) -> {
+	            if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
+	                serialRecord.setFundItem(FundItem.RETURN_CARD_CHANGE.getCode());
+	                serialRecord.setFundItemName(FundItem.RETURN_CARD_CHANGE.getName());
+	            }
+	        });
+		}else {
+			// 流水建立副卡没有退卡零钱流水
+			serialDto = serialService.createAccountSerial(businessRecord, null);
+		}
 		serialService.handleSuccess(serialDto, masterHasTradeSerial);
 	}
 
