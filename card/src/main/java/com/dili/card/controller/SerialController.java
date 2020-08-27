@@ -1,5 +1,6 @@
 package com.dili.card.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.BusinessRecordResponseDto;
@@ -56,7 +57,9 @@ public class SerialController implements IControllerHandler {
         Map<String, Object> result = new HashMap<>();
         UserTicket userTicket = getUserTicket();
         serialQueryDto.setFirmId(userTicket.getFirmId());
-        serialQueryDto.setSerialSort("operate_time desc, id desc");
+        if (StrUtil.isBlank(serialQueryDto.getSort()) && StrUtil.isBlank(serialQueryDto.getOrder())) {
+            serialQueryDto.setSerialSort("operate_time desc, id desc");
+        }
         PageOutput<List<SerialRecordDo>> pageOutput = serialRecordRpcResolver.listPage(serialQueryDto);
         if (pageOutput.isSuccess()) {
         	result.put("code", ResultCode.OK);
