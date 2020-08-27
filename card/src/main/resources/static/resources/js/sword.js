@@ -29,6 +29,22 @@ tab = {
 };
 
 (function ($) {
+    $.fn.watch = function (callback) {
+        return this.each(function () {
+            //缓存以前的值
+            $.data(this, 'originVal', $(this).val());
+            //event
+            $(this).on('keyup paste', function () {
+                let originVal = $.data(this, 'originVal');
+                let currentVal = $(this).val();
+
+                if (originVal !== currentVal) {
+                    $.data(this, 'originVal', currentVal);
+                    callback(currentVal);
+                }
+            });
+        });
+    };
     $.extend({
         _tree: {},
         bttTable: {},

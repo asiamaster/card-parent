@@ -35,7 +35,7 @@ public class RechargeFactory implements InitializingBean {
     public AbstractRechargeManager getRechargeManager(Integer tradeChannel) {
         AbstractRechargeManager manager = RECHARGE_MAP.get(tradeChannel);
         if (manager == null) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "没有对应的充值策略");
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "没有对应的充值类型");
         }
         return manager;
     }

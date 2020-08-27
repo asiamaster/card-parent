@@ -53,6 +53,13 @@
         $.modal.changeEnsureTxt("出库")
     });
 
+    //名字发生变化的时候清空工号
+    $("#applyUserName").watch(function(value) {
+        console.log(value);
+        $('#_userCode').text('');
+        $('#userCode').val('');
+    });
+
     let formId = "save-form";
     $("#" + formId).validate({
         onkeyup: false,

@@ -1,5 +1,5 @@
 <script>
-    var userNameAutoCompleteOption = {
+    let userNameAutoCompleteOption = {
         serviceUrl: '/user/listByKeyword.action',
         paramName: 'keyword',
         displayFieldName: 'realName',
@@ -8,9 +8,6 @@
         transformResult: function (result) {
             if(result.success){
                 let data = result.data;
-                if (data.length==0){
-                    clear()
-                }
                 return {
                     suggestions: $.map(data, function (dataItem) {
                         return $.extend(dataItem, {
@@ -34,13 +31,13 @@
         }
     };
 
-    function clear() {
+  /*  function clear() {
         $('#_userCode').text('');
         $('#userCode').val('');
         $('#_userName').text('');
         $('#inputuserName').val('');
         $('#inputuserId').val('');
         $('#inputuserId').focus();
-    }
+    }*/
 
 </script>
