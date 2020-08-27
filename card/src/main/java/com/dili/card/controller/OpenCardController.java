@@ -161,6 +161,7 @@ public class OpenCardController implements IControllerHandler {
 		log.info("开副卡信息*****{}", JSONObject.toJSONString(openCardInfo));
 		// 主要参数校验
 		AssertUtils.notNull(openCardInfo.getParentAccountId(), "主卡信息不能为空!");
+		AssertUtils.notEmpty(openCardInfo.getParentLoginPwd(), "主卡密码不能为空!");
 		// 设置操作人信息
 		UserTicket user = getUserTicket();
 		setOpUser(openCardInfo, user);

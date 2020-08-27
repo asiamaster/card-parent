@@ -24,7 +24,7 @@ public class CreateTradeRequestDto {
 	/** 业务账号ID */
 	private Long businessId;
 	/** 业务账号ID */
-	private String pwd;
+	private String password;
 
 	public static CreateTradeRequestDto createCommon(Long fundAccountId, Long businessId) {
 		CreateTradeRequestDto requestDto = new CreateTradeRequestDto();
@@ -36,7 +36,7 @@ public class CreateTradeRequestDto {
 	public static CreateTradeRequestDto createPwd(Long fundAccountId, String pwd) {
 		CreateTradeRequestDto requestDto = new CreateTradeRequestDto();
 		requestDto.setAccountId(fundAccountId);
-		requestDto.setPwd(pwd);
+		requestDto.setPassword(pwd);
 		return requestDto;
 	}
 
@@ -121,11 +121,11 @@ public class CreateTradeRequestDto {
 		this.businessId = businessId;
 	}
 
-	public String getPwd() {
-		return pwd;
+	public String getaPpssword() {
+		return password;
 	}
 
-	public void setPwd(String pwd) {
-		this.pwd = pwd;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

@@ -1,7 +1,5 @@
 package com.dili.card.service.recharge;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
@@ -19,12 +17,17 @@ import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @Auther: miaoguoxin
  * @Date: 2020/7/2 10:22
  */
 public abstract class AbstractRechargeManager implements IRechargeManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRechargeManager.class);
+
     @Autowired
     protected IPayService payService;
     @Autowired
@@ -51,6 +54,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
             record.setPosType(this.getPosType(requestDto));
         });
 
+        long l = System.currentTimeMillis();
         CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(
                 this.getTradeType(requestDto).getCode(),
                 userAccount.getAccountId(),
@@ -60,19 +64,22 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
                 String.valueOf(businessRecord.getCycleNo()));
         //创建交易
         String tradeNo = payService.createTrade(tradeRequest);
+        LOGGER.info("创建充值交易耗费时间:{}ms", System.currentTimeMillis() - l);
         //保存业务办理记录
         businessRecord.setTradeNo(tradeNo);
         businessRecord.setNotes(this.buildBusinessRecordNote(requestDto));
         serialService.saveBusinessRecord(businessRecord);
 
+        long l1 = System.currentTimeMillis();
         FundItem serviceCostItem = this.getServiceCostItem(requestDto);
 
         TradeRequestDto dto = TradeRequestDto.createTrade(userAccount, tradeNo, requestDto.getTradeChannel(), requestDto.getTradePwd());
         if (serviceCostItem != null && requestDto.getServiceCost() != null) {
             dto.addServiceFeeItem(requestDto.getServiceCost(), serviceCostItem);
         }
-
         TradeResponseDto tradeResponseDto = payService.commitTrade(dto);
+        LOGGER.info("提交充值交易耗费时间:{}ms", System.currentTimeMillis() - l1);
+
         //没有手续费的时候需要添加一个空项
         if (serviceCostItem != null && this.canAddEmptyFundItem(requestDto)) {
             tradeResponseDto.addEmptyFeeItem(serviceCostItem);
@@ -103,7 +110,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         return null;
     }
 
-    private String getPosType(FundRequestDto requestDto){
+    private String getPosType(FundRequestDto requestDto) {
         if (requestDto.getTradeChannel() == TradeChannel.POS.getCode()) {
             JSONObject extra = requestDto.getExtra();
             if (extra == null) {

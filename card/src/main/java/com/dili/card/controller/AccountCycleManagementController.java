@@ -166,7 +166,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 */
 	@PostMapping("/checkExistActiveCycle.action")
 	@ResponseBody
-	public BaseOutput<Boolean> checkExistActiveCycle(@RequestBody @Validated(value = {ConstantValidator.Check.class}) AccountCycleDto accountCycleDto) {
+	public BaseOutput<Boolean> checkExistActiveCycle(@RequestBody AccountCycleDto accountCycleDto) {
 		log.info("校验是否存在活跃的账务周期*****{}", JSONObject.toJSONString(accountCycleDto));
 		return BaseOutput.successData(iAccountCycleService.checkExistActiveCycle(accountCycleDto.getUserId()));
 	}
