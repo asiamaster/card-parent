@@ -24,8 +24,7 @@
 			<if test="endDate != null"><![CDATA[AND create_time <= #{endDate}  ]]></if>
 			<if test="firmId != null">AND `firm_id` = #{firmId} </if>
 		</where>
-		ORDER BY
-			create_time DESC
+		ORDER BY ${sort} ${order}
 	</select>
 	
 	<insert id="save">

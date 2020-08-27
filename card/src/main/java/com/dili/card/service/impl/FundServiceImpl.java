@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
@@ -82,28 +83,27 @@ public class FundServiceImpl implements IFundService {
 			record.setAmount(requestDto.getAmount());
 			record.setNotes(requestDto.getMark());
 		});
-        CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto.createFrozenAmount(
-                accountCard.getFundAccountId(),
-                accountCard.getAccountId(),
-                requestDto.getAmount());
+		CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto
+				.createFrozenAmount(accountCard.getFundAccountId(), accountCard.getAccountId(), requestDto.getAmount());
 		createTradeRequestDto.setExtension(this.serializeFrozenExtra(requestDto));
 		createTradeRequestDto.setDescription(requestDto.getMark());
-        FundOpResponseDto fundOpResponseDto = payRpcResolver.postFrozenFund(createTradeRequestDto);
+		FundOpResponseDto fundOpResponseDto = payRpcResolver.postFrozenFund(createTradeRequestDto);
 
-        businessRecord.setTradeNo(String.valueOf(fundOpResponseDto.getFrozenId()));
+		businessRecord.setTradeNo(String.valueOf(fundOpResponseDto.getFrozenId()));
 		serialService.saveBusinessRecord(businessRecord);
 
 		TradeResponseDto transaction = fundOpResponseDto.getTransaction();
 		transaction.addVirtualPrincipalFundItem(-requestDto.getAmount());
-		SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, transaction, (serialRecord, feeType) -> {
-			if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
-				serialRecord.setFundItem(FundItem.MANDATORY_FREEZE_FUND.getCode());
-				serialRecord.setFundItemName(FundItem.MANDATORY_FREEZE_FUND.getName());
-			}
-			serialRecord.setNotes(requestDto.getMark());
-		}, true);
+		SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, transaction,
+				(serialRecord, feeType) -> {
+					if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
+						serialRecord.setFundItem(FundItem.MANDATORY_FREEZE_FUND.getCode());
+						serialRecord.setFundItemName(FundItem.MANDATORY_FREEZE_FUND.getName());
+					}
+					serialRecord.setNotes(requestDto.getMark());
+				}, true);
 		serialService.handleSuccess(serialDto);
-    }
+	}
 
 	@Override
 	@GlobalTransactional(rollbackFor = Exception.class)
@@ -111,14 +111,14 @@ public class FundServiceImpl implements IFundService {
 	public void unfrozen(UnfreezeFundDto unfreezeFundDto) {
 		AccountWithAssociationResponseDto accountInfo = accountQueryService
 				.getAssociationByAccountId(unfreezeFundDto.getAccountId());
-		List<SerialRecordDo> serialList =new ArrayList<SerialRecordDo>();
+		List<SerialRecordDo> serialList = new ArrayList<SerialRecordDo>();
 		for (Long frozenId : unfreezeFundDto.getFrozenIds()) {
 			// 对应支付的frozenId
 			UnfreezeFundDto dto = new UnfreezeFundDto();
 			dto.setFrozenId(frozenId);
-			GenericRpcResolver.resolver(payRpc.unfrozenFund(dto), "pay-service");
+			FundOpResponseDto payResponse = GenericRpcResolver.resolver(payRpc.unfrozenFund(dto), ServiceName.PAY);
 			// 保存操作记录
-			SerialRecordDo serialRecord = buildSerialRecord(accountInfo, unfreezeFundDto);
+			SerialRecordDo serialRecord = buildSerialRecord(accountInfo, unfreezeFundDto, payResponse);
 			serialList.add(serialRecord);
 		}
 		SerialDto serialDto = new SerialDto();
@@ -126,19 +126,20 @@ public class FundServiceImpl implements IFundService {
 		serialDto.setSerialRecordList(serialList);
 		serialService.saveSerialRecord(serialDto);
 	}
-    @Override
+
+	@Override
 	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
-    public void recharge(FundRequestDto requestDto) {
+	public void recharge(FundRequestDto requestDto) {
 		AbstractRechargeManager rechargeManager = rechargeFactory.getRechargeManager(requestDto.getTradeChannel());
 		rechargeManager.doRecharge(requestDto);
-    }
+	}
 
-    @Override
+	@Override
 	public PageOutput<List<FreezeFundRecordDto>> frozenRecord(FreezeFundRecordParam queryParam) {
 		// 从支付查询 默认查询从当日起一年内的未解冻记录
-		PageOutput<List<FreezeFundRecordDto>> pageOutPut = GenericRpcResolver.resolver(payRpc.listFrozenRecord(queryParam),
-				"pay-service");
+		PageOutput<List<FreezeFundRecordDto>> pageOutPut = GenericRpcResolver
+				.resolver(payRpc.listFrozenRecord(queryParam), "pay-service");
 		for (FreezeFundRecordDto record : pageOutPut.getData()) {
 			if (StringUtils.isNoneBlank(record.getExtension())) {
 				// 在冻结资金时会以json格式存入当时的操作人及其编号
@@ -157,7 +158,7 @@ public class FundServiceImpl implements IFundService {
 	 * @param unfreezeFundDto
 	 */
 	private SerialRecordDo buildSerialRecord(AccountWithAssociationResponseDto accountInfo,
-			UnfreezeFundDto unfreezeFundDto) {
+			UnfreezeFundDto unfreezeFundDto, FundOpResponseDto payResponse) {
 		SerialRecordDo record = new SerialRecordDo();
 		record.setAccountId(accountInfo.getPrimary().getAccountId());
 		record.setCardNo(accountInfo.getPrimary().getCardNo());
@@ -175,13 +176,20 @@ public class FundServiceImpl implements IFundService {
 		record.setFundItem(FundItem.MANDATORY_UNFREEZE_FUND.getCode());
 		record.setFundItemName(FundItem.MANDATORY_UNFREEZE_FUND.getName());
 		record.setOperateTime(LocalDateTime.now());
+		// 计算期初期末
+		Long balance = payResponse.getTransaction().getBalance();
+		Long frozenBalance = payResponse.getTransaction().getFrozenBalance();
+		Long frozenAmount = payResponse.getTransaction().getFrozenAmount(); // 解冻金额该值为负数，冻结金额为正数
+		record.setStartBalance(balance - frozenBalance);
+		record.setEndBalance(balance - frozenBalance - frozenAmount);
+		record.setAmount(Math.abs(frozenAmount));//操作记录对于可用余额要显示+
 		return record;
 	}
 
-	private String serializeFrozenExtra(FundRequestDto requestDto){
+	private String serializeFrozenExtra(FundRequestDto requestDto) {
 		JSONObject extra = new JSONObject();
-		extra.put(Constant.OP_NAME,requestDto.getOpName());
-		extra.put(Constant.OP_NO,requestDto.getOpNo());
+		extra.put(Constant.OP_NAME, requestDto.getOpName());
+		extra.put(Constant.OP_NO, requestDto.getOpNo());
 		return extra.toJSONString();
 	}
 }

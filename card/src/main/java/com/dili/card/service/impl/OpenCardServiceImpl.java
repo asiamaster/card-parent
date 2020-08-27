@@ -95,12 +95,10 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	public OpenCardResponseDto openCard(OpenCardDto openCardInfo) {
 		// 校验父账号登录密码 TODO:等待客户端更新
 		if(CardType.isSlave(openCardInfo.getCardType())) {
-			if(openCardInfo.getParentLoginPwd() != null) {
-				CardRequestDto checkPwdParam = new CardRequestDto();
-				checkPwdParam.setAccountId(openCardInfo.getParentAccountId());
-				checkPwdParam.setLoginPwd(openCardInfo.getParentLoginPwd());
-				GenericRpcResolver.resolver(cardManageRpc.checkPassword(checkPwdParam), ServiceName.ACCOUNT);
-			}
+			CardRequestDto checkPwdParam = new CardRequestDto();
+			checkPwdParam.setAccountId(openCardInfo.getParentAccountId());
+			checkPwdParam.setLoginPwd(openCardInfo.getParentLoginPwd());
+			GenericRpcResolver.resolver(cardManageRpc.checkPassword(checkPwdParam), ServiceName.ACCOUNT);
 		}
 		// 校验客户信息
 		Customer customer = GenericRpcResolver.resolver(
@@ -183,6 +181,9 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		record.setType(OperateType.ACCOUNT_TRANSACT.getCode());
 		record.setFundItem(FundItem.IC_CARD_COST.getCode());
 		record.setFundItemName(FundItem.IC_CARD_COST.getName());
+		record.setStartBalance(0L);
+		record.setAmount(openCardInfo.getCostFee());
+		record.setEndBalance(0L);
 		record.setOperateTime(LocalDateTime.now());
 
 		SerialDto serialDto = new SerialDto();
