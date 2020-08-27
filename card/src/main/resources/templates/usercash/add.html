@@ -19,7 +19,6 @@
 			value="${usercash.action!}" class="form-control" />
 			<input id="inputuserName" name="userName" type="hidden" class="form-control"/>
 	         <input id="inputuserId" name="inputuserId" type="text" style="opacity: 0;" value=""/>
-			<input id="inputuserId" name="inputuserId" type="hidden" class="form-control"/>
 			<input id="actionText" name="actionText" type="hidden" value="${actionText!}" class="form-control"/>
 		<table id="out-detail" class="table table-bordered"  style="table-layout:fixed;">
 			<tbody>
@@ -61,8 +60,10 @@
 <#common_autoCompleteUser/>
 <script>
 	//名字发生变化的时候清空工号
-	$("#applyUserName").watch(function(value) {
-		$('.inputuserId').val('');
+	$("#userCode").watch(function(value) {
+		$('#inputuserId').val('');
+		$('#inputuserName').val('');
+		$("#_userName").text("");
 	});
 
 	function selectUser() {

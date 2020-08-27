@@ -63,6 +63,12 @@
 <#common_autoCompleteUser/>
 <script>
 
+$("#userCode").watch(function(value) {
+	$('#inputuserId').val('');
+	$('#inputuserName').val('');
+	$("#_userName").text("");
+});
+
 function selectUser(){
 	var ckeckUserCycleUrl = "${contextPath}/cycle/checkExistActiveCycle.action"
 	var userId = $('#inputuserId').val();
