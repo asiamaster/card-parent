@@ -23,6 +23,7 @@ import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.DisableState;
+import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.ss.constant.ResultCode;
 
@@ -60,7 +61,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
     		payRpcResolver.freezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
     	}
     	//更新最終记录
-    	this.saveRemoteSerialRecord(businessRecord);
+    	this.saveRemoteSerialRecord(businessRecord, FundItem.MANDATORY_FREEZE_ACCOUNT);
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
     		payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
 		}
 		//更新最終记录
-    	this.saveRemoteSerialRecord(businessRecord);
+    	this.saveRemoteSerialRecord(businessRecord, FundItem.MANDATORY_UNFREEZE_ACCOUNT);
 	}
 
 	/**
@@ -118,9 +119,14 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	 /**
      * 保存远程流水记录
      */
-	private void saveRemoteSerialRecord(BusinessRecordDo businessRecord) {
+	private void saveRemoteSerialRecord(BusinessRecordDo businessRecord, FundItem fundItem) {
         //成功则修改状态及期初期末金额，存储操作流水
-        SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
+        SerialDto serialDto = serialService.createAccountSerial(businessRecord, (serialRecord, feeType) -> {
+			
+        	serialRecord.setFundItem(fundItem.getCode());
+            serialRecord.setFundItemName(fundItem.getName());
+			
+		});
         serialService.handleSuccess(serialDto, true);
     }
 
