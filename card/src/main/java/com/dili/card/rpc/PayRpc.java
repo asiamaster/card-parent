@@ -24,8 +24,7 @@ import java.util.List;
  * @author ：WangBo
  * @time ：2020年6月22日下午5:52:52
  */
-@FeignClient(value = "pay-service", configuration = PayServiceFeignConfig.class
-        /*, url = "http://10.28.1.188:8080"*/)
+@FeignClient(value = "pay-service", configuration = PayServiceFeignConfig.class)
 public interface PayRpc {
     static final String SERVICE_NAME = "pay-service";
 
@@ -62,7 +61,7 @@ public interface PayRpc {
      * 解冻资金
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.fund.service:unfreeze", method = RequestMethod.POST)
-    BaseOutput<UnfreezeFundDto> unfrozenFund(UnfreezeFundDto unfreezeFundDto);
+    BaseOutput<FundOpResponseDto> unfrozenFund(UnfreezeFundDto unfreezeFundDto);
 
     /**
      * 查询人工冻结及解冻记录
