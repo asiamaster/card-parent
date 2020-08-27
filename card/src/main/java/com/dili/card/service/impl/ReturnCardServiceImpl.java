@@ -80,7 +80,7 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 		cardParam.setServiceFee(fee);
 		// 是主卡 同时卡余额存在并且小于1元需要进行流水
 		boolean masterHasTradeSerial = master && fee > 0L;
-		// 构建记录
+		// 构建本地记录
 		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardParam, accountCard, record -> {
 			record.setType(OperateType.REFUND_CARD.getCode());
 			if (masterHasTradeSerial) {
