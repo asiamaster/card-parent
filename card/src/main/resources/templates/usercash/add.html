@@ -46,7 +46,7 @@
 				</tr>
 				<tr>
 					<td class="info-column">备注</td>
-					<td class="info-cell"><textarea style="width: 280px;"
+					<td class="info-cell"><textarea style="width: 280px; "
 							id="notes" name="notes" maxlength="30"></textarea></td>
 				</tr>
 		</table>
@@ -151,6 +151,9 @@
 	function submitHandler(e) {
 		if (!$.validate.form(formId)) {
 			return false;
+		}
+		if($.common.isEmpty($("#_userName").text(""))){
+			$.modal.alertError("柜员名称为空");
 		}
 		let url = "${contextPath}/cash/save.action";
 		$.modal.confirm("<div style='text-align: center;margin-bottom:10px;'>确认" + '<font color="#FC1D24"><span>' + $("#_userName").html() + '</span></font>' + $("#actionText").val() + "</div>" +

@@ -10,7 +10,7 @@ function statisticTotalAmount(action){
 		name = '交款';
 	}
 	var toolbar = $('.fixed-table-toolbar');
-	var divModel = '<div id="totalAmount"><h5>'+ name +'总金额：?</h5></div>';
+	var divModel = '<h4 id="totalAmount" class="float-left" style="height:60px;line-height:60px;margin-left:30px;"><span>'+ name +'总金额：?</span></h4>';
 	let data = $.common.formToJSON('queryForm');
 	data.action=action;
 	$.ajax({
@@ -23,12 +23,16 @@ function statisticTotalAmount(action){
         success:function(result) {
             if (result.code == '200') {
             	divModel = divModel.replace("?", result.data+"");
-            	toolbar.after(divModel);
+            	toolbar.append(divModel);
             }else {
             	divModel = divModel.replace("?", 0+"");
-            	toolbar.before(divModel);
+            	toolbar.append(divModel);
             }
-        }
+        },
+        error: function (result) {
+        	divModel = divModel.replace("?", 0+"");
+        	toolbar.append(divModel);
+		}
     });
 }
 </script>

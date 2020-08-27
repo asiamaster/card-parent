@@ -157,6 +157,9 @@ function submitHandler(e) {
     if (!$.validate.form(formId)) {
         return false;
     }
+    if($.common.isEmpty($("#_userName").text(""))){
+		$.modal.alertError("柜员名称为空");
+	}
     let url = "${contextPath}/cash/modify.action";
     $.modal.confirm("<div style='text-align: center;margin-bottom:10px;'>确认" + '<font color="#FC1D24"><span>' + $("#_userName").html() + '</span></font>' + $("#actionText").val() +"</div>"+ 
     	    '<p style="text-align: center;"><font> <span style="font-size: 30px;"> ￥' + $("#amountYuan").val() + "</span></font></p>" + '<p style="text-align: center;"><font color="#FC1D24"> <span style="font-size: 30px;">' + $("#bigAmount").html() + "</span></font></p>", function (sure) {
