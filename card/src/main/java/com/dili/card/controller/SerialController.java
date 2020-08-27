@@ -10,7 +10,6 @@ import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.service.ISerialService;
-import com.dili.card.util.DateUtil;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
@@ -21,8 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,10 +55,11 @@ public class SerialController implements IControllerHandler {
     public Map<String, Object> listPage(SerialQueryDto serialQueryDto) {
     	LOGGER.info("分页加载操作流水*****{}", JSONObject.toJSONString(serialQueryDto));
         Map<String, Object> result = new HashMap<>();
-        checkAndSetDefaultTimeRange(serialQueryDto);
         UserTicket userTicket = getUserTicket();
         serialQueryDto.setFirmId(userTicket.getFirmId());
-        serialQueryDto.setSerialSort("operate_time desc, id desc");
+        if (StrUtil.isBlank(serialQueryDto.getSort()) && StrUtil.isBlank(serialQueryDto.getOrder())) {
+            serialQueryDto.setSerialSort("operate_time desc, id desc");
+        }
         PageOutput<List<SerialRecordDo>> pageOutput = serialRecordRpcResolver.listPage(serialQueryDto);
         if (pageOutput.isSuccess()) {
         	result.put("code", ResultCode.OK);
@@ -69,19 +67,6 @@ public class SerialController implements IControllerHandler {
             result.put("total", pageOutput.getTotal());
         }
         return result;
-    }
-
-    /**
-     * 检查并设置默认时间 当时间范围为空时，默认时间范围 当前时间年-1 天+1 - 当前时间
-     * @param serialQueryDto
-     */
-    private void checkAndSetDefaultTimeRange(SerialQueryDto serialQueryDto) {
-        if (!StrUtil.isBlank(serialQueryDto.getOperateTimeStart()) || !StrUtil.isBlank(serialQueryDto.getOperateTimeEnd())) {
-            return;
-        }
-        LocalDateTime localDateTime = DateUtil.nowDateTime();
-        serialQueryDto.setOperateTimeEnd(DateUtil.formatDateTime(localDateTime, "yyyy-MM-dd HH:mm:ss"));
-        serialQueryDto.setOperateTimeStart(DateUtil.formatDateTime(localDateTime.minus(1, ChronoUnit.YEARS).plus(1, ChronoUnit.DAYS), "yyyy-MM-dd HH:mm:ss"));
     }
 
     /**
