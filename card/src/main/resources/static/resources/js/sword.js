@@ -312,9 +312,11 @@ tab = {
             // 搜索-默认第一个form
             search: function (formId, tableId, data) {
                 table.set(tableId);
-                var currentId = $.common.isEmpty(formId) ? $('form').attr('id') : formId;
-                var params = $.common.isEmpty(tableId) ? $("#" + table.options.id).bootstrapTable('getOptions') : $("#" + tableId).bootstrapTable('getOptions');
-                params.queryParams = function (params) {
+                let currentId = $.common.isEmpty(formId) ? $('form').attr('id') : formId;
+                let params = $.common.isEmpty(tableId) ? $("#" + table.options.id).bootstrapTable('getOptions') : $("#" + tableId).bootstrapTable('getOptions');
+                //需求要求重置为第一页
+                params.pageNumber = 1;
+               /* params.queryParams = function (params) {
                     let search = $.common.formToJSON(currentId);
                     if ($.common.isNotEmpty(data)) {
                         $.each(data, function (key) {
@@ -326,16 +328,14 @@ tab = {
                     search.searchValue = params.search;
                     search.orderByColumn = params.sort;
                     search.isAsc = params.order;
-                    console.log(search)
                     return search;
-                }
+                };*/
 
                 if ($.common.isNotEmpty(tableId)) {
                     $("#" + tableId).bootstrapTable('refresh', params);
                 } else {
                     $("#" + table.options.id).bootstrapTable('refresh', params);
                 }
-                data = {};
             },
             // 导出数据
             exportExcel: function (formId) {

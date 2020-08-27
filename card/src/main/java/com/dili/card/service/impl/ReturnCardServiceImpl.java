@@ -109,7 +109,7 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 			if (masterHasTradeSerial) {// 存在余额在一元内需要进行缴费操作
 				// 执行实际缴费操作
 				TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(accountCard, tradeId,
-						TradeChannel.CASH.getCode(), cardParam.getLoginPwd());
+						TradeChannel.BALANCE.getCode(), cardParam.getLoginPwd());
 				tradeRequestDto.addServiceFeeItem(cardParam.getServiceFee(), FundItem.RETURN_CARD_CHANGE);
 				payRpcResolver.trade(tradeRequestDto);
 			}

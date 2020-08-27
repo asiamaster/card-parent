@@ -166,6 +166,9 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Override
 	public Boolean checkExistActiveCycle(Long userId) {
 		AccountCycleDo  accountCycleDo = this.findLatestCycleByUserId(userId);
+		if (userId == null) {
+			return true;
+		}
 		if (accountCycleDo == null) {
 			return true;
 		}
