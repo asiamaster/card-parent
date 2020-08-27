@@ -3,8 +3,14 @@ function statisticTotalAmount(action){
 	if($("#totalAmount")){
 		$("#totalAmount").remove();
 	}
+	var name;
+	if(action == 1){
+		name = '领款';
+	}else{
+		name = '交款';
+	}
 	var toolbar = $('.fixed-table-toolbar');
-	var divModel = '<div id="totalAmount"><h5>领款总金额：?</h5></div>';
+	var divModel = '<div id="totalAmount"><h5>'+ name +'总金额：?</h5></div>';
 	let data = $.common.formToJSON('queryForm');
 	data.action=action;
 	$.ajax({

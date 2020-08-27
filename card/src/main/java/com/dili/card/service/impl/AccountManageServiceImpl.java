@@ -121,7 +121,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	private void saveRemoteSerialRecord(BusinessRecordDo businessRecord) {
         //成功则修改状态及期初期末金额，存储操作流水
         SerialDto serialDto = serialService.createAccountSerial(businessRecord, null);
-        serialService.handleSuccess(serialDto, false);
+        serialService.handleSuccess(serialDto, true);
     }
 
 }
