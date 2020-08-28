@@ -11,14 +11,14 @@
         <li class="nav-item">
             <a class="nav-link" id="card-tab" uri="/accountQuery/accountDetail.html" data-toggle="tab" href="#cardInfo"
                role="tab" aria-selected="true">
-                <h5>卡信息</h5>
+                <h4>卡信息</h4>
             </a>
         </li>
         <#resource code="frozen-fund">
         <% if(isMaster) { %>
             <li class="nav-item">
                 <a class="nav-link" id="frozen-fund-tab" uri="/fund/frozen.html" data-toggle="tab" href="#frozen-fund" role="tab">
-                    <h5>冻结资金</h5>
+                    <h4>冻结资金</h4>
                 </a>
             </li>
         <% } %>
@@ -28,7 +28,7 @@
         <% if(isMaster) { %>
             <li class="nav-item">
                 <a class="nav-link" id="unfrozen-fund-tab" uri="/fund/unfrozenFund.html" data-toggle="tab" href="#unfrozen-fund" role="tab">
-                    <h5>解冻资金</h5>
+                    <h4>解冻资金</h4>
                 </a>
             </li>
         <% } %>
@@ -36,14 +36,14 @@
         <#resource code="frozen-account">
             <li class="nav-item">
                 <a class="nav-link" id="frozen-account-tab" uri="/account/frozenAccount.html" data-toggle="tab" href="#frozen-account" role="tab">
-                    <h5>冻结账户</h5>
+                    <h4>冻结账户</h4>
                 </a>
             </li>
        </#resource>
         <#resource code="unfrozen-account">
             <li class="nav-item">
                 <a class="nav-link" id="unfrozen-account-tab" uri="/account/unfrozenAccount.html" data-toggle="tab" href="#unfrozen-account" role="tab">
-                    <h5>解冻账户</h5>
+                    <h4>解冻账户</h4>
                 </a>
             </li>
        </#resource>
@@ -66,6 +66,7 @@
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
+<link rel="stylesheet" href="${contextPath}/resources/css/sword.css">
 <script>
     let prefix = '${contextPath}';
     let cardNo = $.common.getQueryVariable("cardNo");
