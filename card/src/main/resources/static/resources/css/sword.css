@@ -42,21 +42,25 @@
 }
 
 .nav-link.active {
-    border-bottom: 3px solid #007BFF !important;
     background-color: #f0f3f6 !important;
 }
 
-.nav-link.active > h4 {
-    font-weight: bold;
-    color: black;
-}
-
 .nav-link {
-    margin-left: .8rem;
+    padding-bottom: 0;
+    padding-top: 0;
 }
 
-.nav-link > h4 {
-    color: gray;
+.nav-link.active > h4,h5,h6 {
+    font-weight: bold;
+    color: #212529;
+    border-bottom: .37rem solid #007BFF !important;
+}
+
+
+.nav-link > h1,h2,h3,h4,h5,h6 {
+    line-height: 2;
+    color: #6C757D;
+    margin-bottom: 0;
 }
 
 .nav-tabs {
