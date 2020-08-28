@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
-import com.dili.card.dto.AccountWithAssociationResponseDto;
+import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UnfreezeFundDto;
@@ -109,8 +109,9 @@ public class FundServiceImpl implements IFundService {
 	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
 	public void unfrozen(UnfreezeFundDto unfreezeFundDto) {
-		AccountWithAssociationResponseDto accountInfo = accountQueryService
-				.getAssociationByAccountId(unfreezeFundDto.getAccountId());
+		CardRequestDto  query=new CardRequestDto();
+		query.setAccountId(unfreezeFundDto.getAccountId());
+		UserAccountCardResponseDto accountInfo = accountQueryService.getByAccountId(query);
 		List<SerialRecordDo> serialList = new ArrayList<SerialRecordDo>();
 		for (Long frozenId : unfreezeFundDto.getFrozenIds()) {
 			// 对应支付的frozenId
@@ -157,14 +158,14 @@ public class FundServiceImpl implements IFundService {
 	 * @param accountInfo
 	 * @param unfreezeFundDto
 	 */
-	private SerialRecordDo buildSerialRecord(AccountWithAssociationResponseDto accountInfo,
+	private SerialRecordDo buildSerialRecord(UserAccountCardResponseDto accountInfo,
 			UnfreezeFundDto unfreezeFundDto, FundOpResponseDto payResponse) {
 		SerialRecordDo record = new SerialRecordDo();
-		record.setAccountId(accountInfo.getPrimary().getAccountId());
-		record.setCardNo(accountInfo.getPrimary().getCardNo());
-		record.setCustomerId(accountInfo.getPrimary().getCustomerId());
-		record.setCustomerName(accountInfo.getPrimary().getCustomerName());
-		record.setCustomerNo(accountInfo.getPrimary().getCustomerCode());
+		record.setAccountId(accountInfo.getAccountId());
+		record.setCardNo(accountInfo.getCardNo());
+		record.setCustomerId(accountInfo.getCustomerId());
+		record.setCustomerName(accountInfo.getCustomerName());
+		record.setCustomerNo(accountInfo.getCustomerCode());
 		record.setFirmId(unfreezeFundDto.getFirmId());
 		record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
 		record.setNotes(unfreezeFundDto.getRemark());
