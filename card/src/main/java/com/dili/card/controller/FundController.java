@@ -224,15 +224,15 @@ public class FundController implements IControllerHandler {
     @PostMapping("recharge.action")
     @ResponseBody
     @ForbidDuplicateCommit
-    public BaseOutput<?> recharge(@RequestBody @Validated({FundValidator.Trade.class})
+    public BaseOutput<String> recharge(@RequestBody @Validated({FundValidator.Trade.class})
                                           FundRequestDto requestDto) {
         LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto));
         this.validateCommonParam(requestDto);
         this.buildOperatorInfo(requestDto);
         long beginTime = System.currentTimeMillis();
-        fundService.recharge(requestDto);
+        String serialNo = fundService.recharge(requestDto);
         LOGGER.info("充值耗费时间：{}ms", System.currentTimeMillis() - beginTime);
-        return BaseOutput.success();
+        return BaseOutput.successData(serialNo);
     }
 
     /**

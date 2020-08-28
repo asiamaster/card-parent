@@ -135,7 +135,7 @@ public class CardManageServiceImpl implements ICardManageService {
     @Override
     @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
-    public void reportLossCard(CardRequestDto cardParam) {
+    public String reportLossCard(CardRequestDto cardParam) {
         UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(cardParam.getCardNo());
         AccountValidator.validateMatchAccount(cardParam, userAccount);
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardParam, userAccount,
@@ -145,12 +145,13 @@ public class CardManageServiceImpl implements ICardManageService {
         cardManageRpcResolver.reportLossCard(cardParam);
 
         this.saveRemoteSerialRecord(businessRecord);
+        return businessRecord.getSerialNo();
     }
 
     @Override
     @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
-    public void changeCard(CardRequestDto requestDto) {
+    public String changeCard(CardRequestDto requestDto) {
         UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(requestDto.getCardNo());
         AccountValidator.validateMatchAccount(requestDto, userAccount);
         this.validateCanChange(requestDto, userAccount);
@@ -194,6 +195,7 @@ public class CardManageServiceImpl implements ICardManageService {
             serialRecord.setNotes("补卡，工本费转为市场收入");
         });
         serialService.handleSuccess(serialDto);
+        return businessRecord.getSerialNo();
     }
 
     @Override

@@ -38,5 +38,5 @@ public interface IFundService {
 	* @author miaoguoxin
 	* @date 2020/8/13
 	*/
-	void recharge(FundRequestDto requestDto);
+	String recharge(FundRequestDto requestDto);
 }
