@@ -112,13 +112,12 @@ public class FundController implements IControllerHandler {
     @RequestMapping(value = "/withdraw.action")
     @ResponseBody
     @ForbidDuplicateCommit
-    public BaseOutput<BusinessRecordResponseDto> withdraw(@RequestBody FundRequestDto fundRequestDto) {
+    public BaseOutput<String> withdraw(@RequestBody FundRequestDto fundRequestDto) {
         LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto));
         validateCommonParam(fundRequestDto);
         buildOperatorInfo(fundRequestDto);
         String serialNo = withdrawDispatcher.dispatch(fundRequestDto);
-        BusinessRecordResponseDto businessRecordResponseDto = serialService.findBusinessRecordBySerialNo(serialNo);
-        return BaseOutput.success().setData(businessRecordResponseDto);
+        return BaseOutput.success().setData(serialNo);
     }
 
     /**
