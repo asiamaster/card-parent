@@ -50,14 +50,13 @@
     padding-top: 0;
 }
 
-.nav-link.active > h4,h5,h6 {
+.nav-link.active > .nav-title {
     font-weight: bold;
     color: #212529;
     border-bottom: .37rem solid #007BFF !important;
 }
 
-
-.nav-link > h1,h2,h3,h4,h5,h6 {
+.nav-link >.nav-title {
     line-height: 2;
     color: #6C757D;
     margin-bottom: 0;
