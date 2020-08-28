@@ -13,8 +13,8 @@ import java.util.List;
 public enum OperateType
 {
 	ACCOUNT_TRANSACT("办卡", 10),
-	ACCOUNT_CHARGE("充值", 11),
-	ACCOUNT_WITHDRAW("提款", 12),
+	ACCOUNT_CHARGE("存款", 11),
+	ACCOUNT_WITHDRAW("取款", 12),
 	CHANGE("换卡", 13),
 	LOSS_CARD("挂失", 14),
 	LOSS_REMOVE("解挂", 15),

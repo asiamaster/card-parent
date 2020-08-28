@@ -10,12 +10,14 @@ import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.service.ISerialService;
+import com.dili.card.service.print.PrintDispatcher;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +38,8 @@ public class SerialController implements IControllerHandler {
     private SerialRecordRpcResolver serialRecordRpcResolver;
     @Resource
     private ISerialService serialService;
+    @Autowired
+    private PrintDispatcher printDispatcher;
     /**
      * 跳转到操作流水页面
      * @return
@@ -158,17 +162,21 @@ public class SerialController implements IControllerHandler {
     }
 
     /**
-     * 根据操作流水号查询业务办理记录
+     * 根据操作流水号获取打印数据
      * @param serialNo
      * @return
      */
-    @RequestMapping(value = "/business/getBySerialNo.action")
+    @RequestMapping(value = "/business/getPrintData.action")
     @ResponseBody
-    public BaseOutput<BusinessRecordResponseDto> findBusinessRecordBySerialNo(String serialNo) {
-        LOGGER.info("根据操作流水号查询业务办理记录*****{}", serialNo);
+    public BaseOutput<Map<String, Object>> getPrintData(String serialNo, boolean reprint) {
+        LOGGER.info("根据操作流水号获取打印数据*****{}", serialNo);
         if (StrUtil.isBlank(serialNo)) {
             return BaseOutput.failure("操作流水号为空");
         }
-        return BaseOutput.success().setData(serialService.findBusinessRecordBySerialNo(serialNo));
+        BusinessRecordDo recordDo = serialService.findBusinessRecordBySerialNo(serialNo);
+        if (recordDo == null) {
+            return BaseOutput.failure("业务办理记录不存在");
+        }
+        return BaseOutput.success().setData(printDispatcher.create(recordDo, reprint));
     }
 }

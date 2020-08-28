@@ -121,11 +121,13 @@ public class CreateTradeRequestDto {
 		this.businessId = businessId;
 	}
 
-	public String getaPpssword() {
+	public String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	
 }

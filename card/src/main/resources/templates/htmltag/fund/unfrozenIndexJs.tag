@@ -23,7 +23,7 @@
             accountId:${account.accountId!}
         };
         let url = "${contextPath}/fund/unfrozenFundModal.html?" + $.common.jsonObj2UrlParams(params)
-        $.modal.openDefault("解冻说明", url, '30%', '60%')
+        $.modal.openDefault("解冻说明", url, '60%', '400')
     });
 
 </script>
