@@ -130,11 +130,9 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 		if (masterHasTradeSerial) {//主卡  并且有余额
 			// 流水建立主卡退卡零钱流水
 			serialDto = serialService.createAccountSerialWithFund(businessRecord, tradeResponseDto, (serialRecord, feeType) -> {
-	            if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
-	                serialRecord.setFundItem(FundItem.RETURN_CARD_CHANGE.getCode());
-	                serialRecord.setFundItemName(FundItem.RETURN_CARD_CHANGE.getName());
-	                serialRecord.setNotes("退卡：零钱转入市场收益账户");
-	            }
+				serialRecord.setFundItem(FundItem.RETURN_CARD_CHANGE.getCode());
+                serialRecord.setFundItemName(FundItem.RETURN_CARD_CHANGE.getName());
+                serialRecord.setNotes("退卡：零钱转入市场收益账户");   
 	        });
 		}else {
 			// 流水建立副卡没有退卡零钱流水
