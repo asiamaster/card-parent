@@ -284,14 +284,8 @@ public class SerialServiceImpl implements ISerialService {
     }
 
     @Override
-    public BusinessRecordResponseDto findBusinessRecordBySerialNo(String serialNo) {
-        BusinessRecordDo businessRecordDo = businessRecordDao.getBySerialNo(serialNo);
-        if (businessRecordDo == null) {
-            return null;
-        }
-        BusinessRecordResponseDto responseDto = new BusinessRecordResponseDto();
-        BeanUtils.copyProperties(businessRecordDo, responseDto);
-        return responseDto;
+    public BusinessRecordDo findBusinessRecordBySerialNo(String serialNo) {
+        return businessRecordDao.getBySerialNo(serialNo);
     }
 
     private static Long getOpAmount(TradeResponseDto tradeResponseDto, boolean isFrozen) {

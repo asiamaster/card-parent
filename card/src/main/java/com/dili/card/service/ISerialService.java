@@ -127,5 +127,5 @@ public interface ISerialService {
      * @param serialNo
      * @return
      */
-    BusinessRecordResponseDto findBusinessRecordBySerialNo(String serialNo);
+    BusinessRecordDo findBusinessRecordBySerialNo(String serialNo);
 }
