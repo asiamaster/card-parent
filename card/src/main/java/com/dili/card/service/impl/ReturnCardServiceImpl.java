@@ -133,6 +133,7 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 	            if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
 	                serialRecord.setFundItem(FundItem.RETURN_CARD_CHANGE.getCode());
 	                serialRecord.setFundItemName(FundItem.RETURN_CARD_CHANGE.getName());
+	                serialRecord.setNotes("退卡：零钱转入市场收益账户");
 	            }
 	        });
 		}else {
