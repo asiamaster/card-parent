@@ -41,7 +41,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
      * @author miaoguoxin
      * @date 2020/7/2
      */
-    public final void doRecharge(FundRequestDto requestDto) {
+    public final String doRecharge(FundRequestDto requestDto) {
         UserAccountCardResponseDto userAccount = accountQueryService.getByAccountId(requestDto);
         Long rechargeAmount = requestDto.getAmount();
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {
@@ -87,6 +87,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         this.afterCommitRecharge(requestDto, businessRecord);
         //记录远程日志数据
         this.doRecordCompleteLog(requestDto, businessRecord, tradeResponseDto);
+        return businessRecord.getSerialNo();
     }
 
 
