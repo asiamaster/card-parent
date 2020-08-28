@@ -114,7 +114,7 @@ p {
 			<button id="apply" style="height: 40px; width: 100px;" type="button"
 				class="btn btn-primary" onclick="applySettlement()">申请结账</button>
 			<% } %>
-			<input id="cycleState" type="hidden" value="${detail.state!}"> 
+			<input id="cycleState" type="hidden" value="${detail.state!}">
 		</div>
 	</form>
 </div>
@@ -251,6 +251,7 @@ p {
 	src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <script type="text/javascript"
 	src="${contextPath}/resources/js/form.formatter.js"></script>
+<link rel="stylesheet" href="${contextPath}/resources/css/sword.css">
 <script>
 	let cycleNo = $.trim($("#cycle").text());
 	let operatorId = $("#userId").val();
@@ -283,13 +284,13 @@ p {
 		$('#settleCycle').modal('show');
 		return true;
 	}
-	
+
 	function close() {
 		$('#settleAmount').val("");
 		$('#settleCycle').modal('hide');
 		return true;
 	}
-	
+
 	$("#settleForm").validate({
 	    onkeyup: false,
 	    rules: {
@@ -310,7 +311,7 @@ p {
 	function doSettle() {
 		if (!$.validate.form("settleForm")) {
 	        return false;
-	    } 
+	    }
 		var settleAmount = $("#settleAmount").val();
 		var balanceCash = $("#unDeliverAmount").html();
 		if(settleAmount != balanceCash){

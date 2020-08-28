@@ -1,3 +1,4 @@
+/*
 .search-collapse, .select-table {
     width: 100%;
     background: #fff;
@@ -7,26 +8,59 @@
     padding-bottom: 13px;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, .2);
 }
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(0,0,0,0);
+*/
+
+/*.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0);
 }
+
 .table-striped table thead {
     background-color: #eff3f8;
-}
-.btn {
-    margin-right: 5px;
-}
-/** 表单验证 样式布局 **/
-.control-label.is-required:before {
-    content: '* ';
-    color: red;
+}*/
 
-}
-.col-form-label {
+/*.btn {
+    margin-right: 5px;
+}*/
+
+
+
+/*.col-form-label {
     text-align: right;
 }
-.container-fluid{
+
+.container-fluid {
     margin-top: 15px;
+}*/
+
+
+.nav-tabs {
+    background-color: #f0f3f6
+}
+
+.nav-tabs .nav-link {
+    border: none;
+}
+
+.nav-link.active {
+    border-bottom: 3px solid #007BFF !important;
+    background-color: #f0f3f6 !important;
+}
+
+.nav-link.active > h4 {
+    font-weight: bold;
+    color: black;
+}
+
+.nav-link {
+    margin-left: .8rem;
+}
+
+.nav-link > h4 {
+    color: gray;
+}
+
+.nav-tabs {
+    border: none;
 }
 
 
