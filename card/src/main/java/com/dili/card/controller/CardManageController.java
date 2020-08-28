@@ -98,15 +98,14 @@ public class CardManageController implements IControllerHandler {
      * @date 2020/7/14
      */
     @PostMapping("/changeCard.action")
-    public BaseOutput<?> changeCard(@RequestBody CardRequestDto cardParam) {
+    public BaseOutput<String> changeCard(@RequestBody CardRequestDto cardParam) {
         LOGGER.info("换卡*****{}", JSONObject.toJSONString(cardParam));
         AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
         AssertUtils.notEmpty(cardParam.getNewCardNo(), "新开卡号不能为空");
         AssertUtils.notNull(cardParam.getServiceFee(), "工本费不能为空");
         this.validateCommonParam(cardParam);
         this.buildOperatorInfo(cardParam);
-        cardManageService.changeCard(cardParam);
-        return BaseOutput.success();
+        return BaseOutput.successData(cardManageService.changeCard(cardParam));
     }
 
     /**
@@ -126,13 +125,12 @@ public class CardManageController implements IControllerHandler {
      * @date 2020/7/14
      */
     @PostMapping("/reportLossCard.action")
-    public BaseOutput<?> reportLoss(@RequestBody CardRequestDto cardParam) {
+    public BaseOutput<String> reportLoss(@RequestBody CardRequestDto cardParam) {
         LOGGER.info("挂失请求参数:{}", JSON.toJSONString(cardParam));
         AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
         this.validateCommonParam(cardParam);
         this.buildOperatorInfo(cardParam);
-        cardManageService.reportLossCard(cardParam);
-        return BaseOutput.success();
+        return BaseOutput.successData(cardManageService.reportLossCard(cardParam));
     }
 
     /**

@@ -35,14 +35,14 @@ public interface ICardManageService {
 	* @author miaoguoxin
 	* @date 2020/7/14
 	*/
-    void reportLossCard(CardRequestDto cardParam);
+    String reportLossCard(CardRequestDto cardParam);
 
     /**
     * 换卡
     * @author miaoguoxin
     * @date 2020/7/29
     */
-    void changeCard(CardRequestDto cardParam);
+    String changeCard(CardRequestDto cardParam);
 
 	/**
 	 * 查询换卡工本费(返回金额：分)

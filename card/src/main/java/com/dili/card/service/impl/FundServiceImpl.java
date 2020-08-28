@@ -130,9 +130,9 @@ public class FundServiceImpl implements IFundService {
 	@Override
 	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
-	public void recharge(FundRequestDto requestDto) {
+	public String recharge(FundRequestDto requestDto) {
 		AbstractRechargeManager rechargeManager = rechargeFactory.getRechargeManager(requestDto.getTradeChannel());
-		rechargeManager.doRecharge(requestDto);
+		return rechargeManager.doRecharge(requestDto);
 	}
 
 	@Override
