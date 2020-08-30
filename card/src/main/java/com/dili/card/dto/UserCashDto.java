@@ -69,6 +69,8 @@ public class UserCashDto extends BaseDto implements Serializable {
 	private Long firmId;
 	/** 是否统计*/
 	private Boolean isStatistic = true;
+	/** 是否结账申请来源*/
+	private Boolean settledApply = false;
 
     /**
      * UserCashEntity constructor
@@ -273,6 +275,14 @@ public class UserCashDto extends BaseDto implements Serializable {
 
 	public void setIsStatistic(Boolean isStatistic) {
 		this.isStatistic = isStatistic;
+	}
+
+	public Boolean getSettledApply() {
+		return settledApply;
+	}
+
+	public void setSettledApply(Boolean settledApply) {
+		this.settledApply = settledApply;
 	}
 
 }

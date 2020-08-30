@@ -161,6 +161,17 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			throw new CardAppBizException("更新现金柜失败");
 		}
 	}
+	
+	/**
+	 * 更新账务周期状态
+	 */
+	@Override
+	public void updateStateById(Long id, Integer state, Integer version) {
+		int update = accountCycleDao.updateStateById(id, state, version);
+		if (update == 0) {
+			throw new CardAppBizException("结账失败");
+		}
+	}
 
 
 	@Override
@@ -213,16 +224,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		accountCycleDetail.setFirmId(userTicket.getFirmId());
 		accountCycleDetail.setFirmName(userTicket.getFirmName());
-	}
-
-	/**
-	 * 更新账务周期状态
-	 */
-	private void updateStateById(Long id, Integer state, Integer version) {
-		int update = accountCycleDao.updateStateById(id, state, version);
-		if (update == 0) {
-			throw new CardAppBizException("结账失败");
-		}
 	}
 
 	/**
@@ -358,6 +359,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		cashDto.setUserName(accountCycleDto.getUserName());
 		cashDto.setAmount(accountCycleDto.getCashAmount());
 		cashDto.setAction(CashAction.PAYER.getCode());
+		cashDto.setSettledApply(true);
 		return cashDto;
 	}
 

@@ -82,7 +82,7 @@ public class UserCashServiceImpl implements IUserCashService {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能修改");
 		}
 		// 金额校验
-		this.validateAmount(userCashDto.getAmount());
+		this.validateAmount(userCashDto.getAmount(), userCashDto.getSettledApply());
 		// 获取账务周期
 		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDto.getUserId(),
 				userCashDto.getUserName(), userCashDto.getUserCode());
@@ -185,7 +185,7 @@ public class UserCashServiceImpl implements IUserCashService {
 				throw new CardAppBizException(ResultCode.DATA_ERROR, "交款金额大于现金余额");
 			}
 		}
-		this.validateAmount(userCashDto.getAmount());
+		this.validateAmount(userCashDto.getAmount(), userCashDto.getSettledApply());
 		userCash.setCashNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CASH_NO.getCode())));
 		userCash.setAction(userCashDto.getAction());
 		userCash.setAmount(userCashDto.getAmount());
@@ -262,7 +262,10 @@ public class UserCashServiceImpl implements IUserCashService {
 	/**
 	 * 校验金额
 	 */
-	private void validateAmount(Long amount) {
+	private void validateAmount(Long amount, Boolean settledApply) {
+		if (Boolean.TRUE.equals(settledApply)) {
+			return;
+		}
 		if (amount < Constant.MIN_AMOUNT) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR,
 					"金额不能低于" + CurrencyUtils.toCurrency(Constant.MIN_AMOUNT) + "元");
