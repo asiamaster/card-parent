@@ -110,7 +110,7 @@ p {
 			<button id="back"
 				style="height: 40px; width: 100px; border-color: #FB0E12"
 				type="button" class="btn btn-light" onclick="backList()">返回</button>
-			<% }else if(settled != 2){ %>
+			<% }else if(settled != 2 && detail.state == 1){ %>
 			<button id="apply" style="height: 40px; width: 100px;" type="button"
 				class="btn btn-primary" onclick="applySettlement()">申请结账</button>
 			<% } %>
@@ -310,8 +310,8 @@ p {
 		if (!$.validate.form("settleForm")) {
 	        return false;
 	    }
-		var settleAmount = $("#settleAmount").val();
-		var balanceCash = $("#unDeliverAmount").html();
+		var settleAmount = parseFloat($.trim($("#settleAmount").val()));
+		var balanceCash = parseFloat($.trim($("#unDeliverAmount").html()));
 		if(settleAmount != balanceCash){
 			$.modal.alertError("交款金额与现金余额不一致");
 			return false;
@@ -324,10 +324,11 @@ p {
 		data.cashAmount = parseInt(parseFloat($('#settleAmount').val())*100);
 		bui.util.debounce($.operate.saveModal(url, JSON.stringify(data), function (result) {
 	            if (result.code == web_status.SUCCESS) {
+	            	$("#apply").attr("disabled", "disabled");
 	                $.table.refresh()
 	            }
 	    }), 1000, true)
-		$("#apply").attr("disabled", "disabled");
+		$("#apply").hide();
 		$('#settleAmount').val("");
 		$('#settleCycle').modal('hide');
 	}
