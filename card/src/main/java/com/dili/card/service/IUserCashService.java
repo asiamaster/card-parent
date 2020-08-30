@@ -67,4 +67,9 @@ public interface IUserCashService {
 	 */
 	Long findTotalAmountByUserId(UserCashDto userCashDto);
 
+	/**
+	 * 获取最新的现金领取款
+	 */
+	UserCashDo getLastestUesrCash(Long userId, int cashAction);
+
 }

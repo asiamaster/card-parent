@@ -53,6 +53,11 @@ public class UserCashServiceImpl implements IUserCashService {
 		List<UserCashDo> userCashs = userCashDao.findEntityByCondition(userCashDto);
 		return this.buildPageUserCash(userCashs);
 	}
+	
+	@Override
+	public UserCashDo getLastestUesrCash(Long userId, int cashAction) {
+		return userCashDao.getLastestUesrCash(userId, cashAction);
+	}
 
 	@Override
 	public void delete(Long id) {

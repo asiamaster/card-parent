@@ -127,4 +127,10 @@
 		FROM
 			card_user_cash
 	</sql>
+	
+	<select id="getLastestUesrCash" resultType="com.dili.card.entity.UserCashDo">
+		<include refid="selectsql"></include>
+		WHERE user_id = #{userId} AND action = #{cashAction}
+	    ORDER BY create_time DESC LIMIT 1
+	</select>
 </mapper>
