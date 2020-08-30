@@ -70,6 +70,6 @@ public interface IUserCashService {
 	/**
 	 * 获取最新的现金领取款
 	 */
-	UserCashDo getLastestUesrCash(Long userId, int cashAction);
+	UserCashDo getLastestUesrCash(Long userId, Long cycle, int cashAction);
 
 }

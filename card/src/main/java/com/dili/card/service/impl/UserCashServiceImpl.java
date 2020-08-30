@@ -55,8 +55,8 @@ public class UserCashServiceImpl implements IUserCashService {
 	}
 	
 	@Override
-	public UserCashDo getLastestUesrCash(Long userId, int cashAction) {
-		return userCashDao.getLastestUesrCash(userId, cashAction);
+	public UserCashDo getLastestUesrCash(Long userId, Long cycle, int cashAction) {
+		return userCashDao.getLastestUesrCash(userId, cycle, cashAction);
 	}
 
 	@Override

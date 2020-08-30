@@ -317,7 +317,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		if (cycle != null && CycleState.ACTIVE.getCode() == cycle.getState()) {//活跃期
 			accountCycleDetail.setUnDeliverAmount(unDeliverAmount);
 		}else {//非活跃期 最近一次交现金金额就是最终交款金额
-			UserCashDo userCashDo = userCashService.getLastestUesrCash(cycle.getUserId(), CashAction.PAYER.getCode());
+			UserCashDo userCashDo = userCashService.getLastestUesrCash(cycle.getUserId(), cycle.getCycleNo(), CashAction.PAYER.getCode());
 			accountCycleDetail.setLastDeliverAmount(userCashDo.getAmount());
 		}
 		accountCycleDto.setAccountCycleDetailDto(accountCycleDetail);

@@ -65,6 +65,6 @@ public interface IUserCashDao {
 	/**
 	 * 获取最新一次交款领款
 	 */
-	UserCashDo getLastestUesrCash(@Param("userId") Long userId, @Param("cashAction") Integer cashAction);
+	UserCashDo getLastestUesrCash(@Param("userId") Long userId, @Param("cycle") Long cycle, @Param("cashAction") Integer cashAction);
 	
 }
