@@ -56,7 +56,9 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		//生成交款信息
 		if (accountCycleDto.getCashAmount() > 0) {
 			userCashService.save(buildUserCash(accountCycleDto));
-		}else if(accountCycleDto.getCashAmount() < 0){
+		}
+		//校验结账交款余额
+		if(accountCycleDto.getCashAmount() < 0){
 			throw new CardAppBizException("结账申请交款金额不能小于0元");
 		}
 		// 更新账务周期状态
