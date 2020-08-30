@@ -42,21 +42,24 @@
 }
 
 .nav-link.active {
-    border-bottom: 3px solid #007BFF !important;
     background-color: #f0f3f6 !important;
 }
 
-.nav-link.active > h4 {
-    font-weight: bold;
-    color: black;
-}
-
 .nav-link {
-    margin-left: .8rem;
+    padding-bottom: 0;
+    padding-top: 0;
 }
 
-.nav-link > h4 {
-    color: gray;
+.nav-link.active > .nav-title {
+    font-weight: bold;
+    color: #212529;
+    border-bottom: .37rem solid #007BFF !important;
+}
+
+.nav-link >.nav-title {
+    line-height: 2;
+    color: #6C757D;
+    margin-bottom: 0;
 }
 
 .nav-tabs {

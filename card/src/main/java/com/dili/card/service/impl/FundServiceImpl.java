@@ -109,9 +109,7 @@ public class FundServiceImpl implements IFundService {
 	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
 	public void unfrozen(UnfreezeFundDto unfreezeFundDto) {
-		CardRequestDto  query=new CardRequestDto();
-		query.setAccountId(unfreezeFundDto.getAccountId());
-		UserAccountCardResponseDto accountInfo = accountQueryService.getByAccountId(query);
+		UserAccountCardResponseDto accountInfo = accountQueryService.getByAccountId(unfreezeFundDto.getAccountId());
 		List<SerialRecordDo> serialList = new ArrayList<SerialRecordDo>();
 		for (Long frozenId : unfreezeFundDto.getFrozenIds()) {
 			// 对应支付的frozenId
