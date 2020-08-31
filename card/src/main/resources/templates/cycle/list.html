@@ -103,11 +103,6 @@
 <#common_userJs/>
 <script>
     $(function () {
-    	let data = $.common.formToJSON('queryForm');
-    	data.page=1;
-    	data.rows=20;
-    	data.order="DESC";
-    	data.sort="create_time";
         let options = {
             //必须加这个唯一标识
             uniqueId: "id",
@@ -116,11 +111,14 @@
             updateUrl: "${contextPath}/cycle/flated.html?id={id}",
             url: "${contextPath}/cycle/page.action",
             singleSelect : true,
-            modalName: "对账款列表查询",
-            queryParams:data
+            modalName: "对账款列表查询"
         };
         $.table.init(options);
     });
+    
+    function search(){
+    	
+    }
     
     function flated(){
     	var row=$("#grid").bootstrapTable('getSelections');
