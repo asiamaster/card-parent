@@ -1032,11 +1032,11 @@ tab = {
                         //$.modal.msgReload("保存成功,正在刷新数据请稍后……", modal_status.SUCCESS);
                     }
                 } else if (result.code == web_status.WARNING) {
-                    $.modal.alertWarning(result.message)
+                    _$ele.$.modal.alertWarning(result.message)
                 } else if (result.code == web_status.BIZERROR) {
-                    $.modal.alertWarning(result.message)
+                    _$ele.$.modal.alertWarning(result.message)
                 } else {
-                    $.modal.alertError(result.message);
+                    _$ele.$.modal.alertError(result.message);
                 }
 
             },
@@ -1367,7 +1367,7 @@ tab = {
                    console.log(e.message)
                 }
                 //对比是否是同源host
-                if (parentLocation == window.location.host){
+                if (parentLocation != window.location.host){
                     return window;
                 }
                 return window.parent;

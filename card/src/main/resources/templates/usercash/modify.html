@@ -98,7 +98,7 @@ function selectUser(){
 	    		return false;
 	    	}
 	    }
-	});	
+	});
 }
 
 $(function(){
@@ -107,7 +107,7 @@ $(function(){
 	$('#amountYuan').bind(' input propertychange ', function(){
 		$('#bigAmount').html($.common.changeNumMoneyToChinese($('#amountYuan').val()));
 	} );
-	
+
 	$('#inputuserId').focus(function(){
 		selectUser();
 		$('#inputuserId').blur();
@@ -116,11 +116,11 @@ $(function(){
 	$("#amountYuan").on('input  propertychange',function(){
 		//如果输入非数字，则替换为''
 		this.value = this.value.replace(/[^\d\.]/g, '');
-		//必须保证第一个为数字而不是.     
+		//必须保证第一个为数字而不是.
 	    this.value = this.value.replace(/^\./g,'');
-	    //保证只有出现一个.而没有多个.     
+	    //保证只有出现一个.而没有多个.
 	    this.value = this.value.replace(/\.{2,}/g,'.');
-	    //保证.只出现一次，而不能出现两次以上     
+	    //保证.只出现一次，而不能出现两次以上
 	    this.value = this.value.replace('.','$#$').replace(/\./g,'').replace('$#$','.');
 	    //只能输入两位小数
 	    this.value = this.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');
@@ -161,18 +161,14 @@ function submitHandler(e) {
 		$.modal.alertError("柜员名称为空");
 	}
     let url = "${contextPath}/cash/modify.action";
-    $.modal.confirm("<div style='text-align: center;margin-bottom:10px;'>确认" + '<font color="#FC1D24"><span>' + $("#_userName").html() + '</span></font>' + $("#actionText").val() +"</div>"+ 
+    $.modal.confirm("<div style='text-align: center;margin-bottom:10px;'>确认" + '<font color="#FC1D24"><span>' + $("#_userName").html() + '</span></font>' + $("#actionText").val() +"</div>"+
     	    '<p style="text-align: center;"><font> <span style="font-size: 30px;"> ￥' + $("#amountYuan").val() + "</span></font></p>" + '<p style="text-align: center;"><font color="#FC1D24"> <span style="font-size: 30px;">' + $("#bigAmount").html() + "</span></font></p>", function (sure) {
         if (!sure) {
             return;
         }
         let data = $.common.formToJSON(formId);
         data.amount=parseInt(parseFloat(data.amountYuan)*100);
-        bui.util.debounce($.operate.post(url, data, function (result) {
-            if (result.code == web_status.SUCCESS) {
-                $.table.refresh()
-            }
-        }), 1000, true)
+        bui.util.debounce($.operate.post(url, data), 1000, true)
 
     });
     return true;
