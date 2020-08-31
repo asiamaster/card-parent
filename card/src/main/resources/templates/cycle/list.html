@@ -103,21 +103,21 @@
 <#common_userJs/>
 <script>
     $(function () {
-        let options = {
-            //必须加这个唯一标识
-            uniqueId: "id",
-            detailUrl: "${contextPath}/cycle/detail.html?id={id}",
-            createUrl: "${contextPath}/cycle/addPayer.html?id={id}",
-            updateUrl: "${contextPath}/cycle/flated.html?id={id}",
-            url: "${contextPath}/cycle/page.action",
-            singleSelect : true,
-            modalName: "对账款列表查询"
-        };
-        $.table.init(options);
+    	setTimeout("initCycle()",800);
     });
     
-    function search(){
-    	
+    function initCycle(){
+    	let options = {
+                //必须加这个唯一标识
+                uniqueId: "id",
+                detailUrl: "${contextPath}/cycle/detail.html?id={id}",
+                createUrl: "${contextPath}/cycle/addPayer.html?id={id}",
+                updateUrl: "${contextPath}/cycle/flated.html?id={id}",
+                url: "${contextPath}/cycle/page.action",
+                singleSelect : true,
+                modalName: "对账款列表查询"
+            };
+            $.table.init(options);
     }
     
     function flated(){
