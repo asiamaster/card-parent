@@ -133,7 +133,7 @@ public class UserCashServiceImpl implements IUserCashService {
 	public UserCashDo findById(Long id) {
 		UserCashDo userCashDo = userCashDao.getById(id);
 		if (userCashDo == null) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "该记录不存在");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "该记录已被刪除");
 		}
 		return userCashDo;
 	}
