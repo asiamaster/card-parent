@@ -1,21 +1,18 @@
 <script>
     function readerIDCard() {
         if (typeof (callbackObj) == "undefined") return;
-        var idCard = callbackObj.readIDCard();
-        idCard = eval("(" + idCard + ")");
-        return idCard;
+        let result = callbackObj.readIDCard();
+
+        //idCard = eval("(" + idCard + ")");
+        //return idCard;
+        return JSON.parse(result);
     }
 
     function readerCardNumber() {
         if (typeof (callbackObj) == "undefined") return;
-        var cardNo = callbackObj.readCardNumber();
-        return cardNo;
+        let resultJson = callbackObj.readCardNumber();
+        return JSON.parse(resultJson);
     }
 
 
-    function readerPwd() {
-        if (typeof (callbackObj) == "undefined") return;
-        var pwd = callbackObj.readPWDkeyboard();
-        return pwd;
-    }
 </script>

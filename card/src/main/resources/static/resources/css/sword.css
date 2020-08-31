@@ -34,6 +34,7 @@
 
 
 .nav-tabs {
+    border: none;
     background-color: #f0f3f6
 }
 
@@ -57,13 +58,10 @@
 }
 
 .nav-link >.nav-title {
-    line-height: 2;
+    line-height: 2.5;
     color: #6C757D;
     margin-bottom: 0;
 }
 
-.nav-tabs {
-    border: none;
-}
 
 

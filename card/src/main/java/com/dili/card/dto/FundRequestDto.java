@@ -1,6 +1,7 @@
 package com.dili.card.dto;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.constant.Constant;
 import com.dili.card.validator.FundValidator;
 
 import javax.validation.constraints.Max;
@@ -21,8 +22,8 @@ public class FundRequestDto extends CardRequestDto {
     private Integer tradeChannel;
     /** 金额*/
     @NotNull(message = "金额不能为空", groups = {FundValidator.Trade.class})
-    @Min(value = 1, message = "最少0.01元", groups = {FundValidator.Trade.class})
-    @Max(value = 99999999, message = "最多999999.99元", groups = {FundValidator.Trade.class})
+    @Min(value = Constant.MIN_AMOUNT, message = "最少0.01元", groups = {FundValidator.Trade.class})
+    @Max(value = Constant.MAX_AMOUNT, message = "最多999999.99元", groups = {FundValidator.Trade.class})
     private Long amount;
     /** 交易密码*/
     @NotBlank(message = "交易密码不能为空", groups = FundValidator.Trade.class)

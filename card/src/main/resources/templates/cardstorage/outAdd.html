@@ -93,7 +93,12 @@
     }
 
     function readCard() {
-        let cardNo = readerCardNumber();
+        let result = readerCardNumber();
+        if (!result.success){
+            parent.$.modal.alertWarning(result.message);
+            return;
+        }
+        let cardNo = result.data;
         if ($.common.isEmpty(cardNo)){
             parent.$.modal.alertWarning("请将卡片放置在读卡器上");
             return;
@@ -103,7 +108,7 @@
             return;
         }
         let params = {
-            cardNo: cardNo,
+            cardNo: result.data,
             checkCardActionType: 2
         };
         let config = {

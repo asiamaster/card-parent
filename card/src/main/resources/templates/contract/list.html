@@ -406,7 +406,7 @@
 		};
 		$.table.init(options);
 	});
-    
+
     /**
 	 * 打印
 	 */
@@ -500,7 +500,7 @@
 			}
 		});
 		if(!next){
-			return !next; 
+			return !next;
 		}
 		$('#notesBefore').before(consignee);
 	}
@@ -508,7 +508,7 @@
 	function minusConsignee(e) {
 		$(e).closest(".consignee").remove();
 	}
-	
+
 	let data = {};
 	function nextStep(){
 		data = {};
@@ -549,7 +549,7 @@
 		if(now > end){
 			$.modal.alertError("合同截止时间不能小于当前时间");
 			return false;
-		}	
+		}
 		data.startTime=$('#startTime').val();
 		data.endTime=$('#endTime').val();
 		let items = [];
@@ -634,11 +634,11 @@
 		})
 		$('#addFirstModal').modal('hide');
 	}
-	
+
 	function closeFirst(){
 		cancleAddView();
 	}
-	
+
 	function closeSecond(){
 		$('#addSecondModal').modal('hide');
 		$("#consigneeAlls").empty();
@@ -691,13 +691,14 @@
 
 	function readCardNo() {
 		$("#consignorCardNo").val("");
-	   	var cardNo = readerCardNumber();
-	   	if(cardNo == ""){
+		let result = readerCardNumber();
+		if (!result.success){
+			$.modal.alertError(result.message);
+			return false;
+		}
+		let cardNo = result.data;
+	   	if($.common.isEmpty(cardNo)){
 	   		$.modal.alertError("请正确放置卡片位置");
-	   		return false;
-	   	}
-	   	if(cardNo == "-1"){
-	   		$.modal.alertError("读卡失败");
 	   		return false;
 	   	}
 	   	$.ajax({
@@ -729,13 +730,17 @@
             }
         });
 	}
-	
+
 	function getConsignorIdCard() {
 		var consigneeIdCodeList = [];
 		$("#consignorCustomerIDCode").val("");
         $("#consignorCustomerName").val("");
         $("#consignorCustomerMobile").val("");
         var idCard = readerIDCard();
+		if (idCard.IsErr){
+			$.modal.alertError(idCard.ErrMsg);
+			return false;
+		}
         $(".consignee").each(function () {
 			if(!$.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				consigneeIdCodeList.push($(this).find("#consigneeIdCode").val());
@@ -754,6 +759,10 @@
 		$(obj).parent().find("#consigneeName").val("");
 		$(obj).parent().find("#consigneeIdMobile").val("");
 		var idCard = readerIDCard();
+		if (idCard.IsErr){
+			$.modal.alertError(idCard.ErrMsg);
+			return false;
+		}
 		 $(".consignee").each(function () {
 				if(!$.common.isEmpty($(this).find("#consigneeIdCode").val())){
 					consigneeIdCodeList.push($(this).find("#consigneeIdCode").val());
@@ -815,10 +824,10 @@
 		    }
 		});
 	}
-	
+
 	/** 客户端点击签名弹出签名设备框 */
 	function signature(){
-		
+
 	}
 	/** 签名设备触发器  客户端页面联动  1 同意  2 返回*/
 	function signatureTrigger(type){
@@ -831,15 +840,15 @@
 			backToFirst();
 		}
 	}
-	
+
 	/** 输入签名设备图片 base64  进行处理并上传 */
 	function inputImage(imageStr){
 		var imgFile = base64ToImageFile(base64Img);
 		const fileReader = new FileReader();  // 创建一个 fileReader
 		fileReader.readAsDataURL(imgFile);
-		
+
 	}
-	
+
 	/** 图片转化 */
 	function base64ToImageFile(imageStr){
 		let bstr = atob(imageStr);
@@ -851,6 +860,6 @@
 		var filename = randomString(12) + '.jpg';
 		return new File([u8arr], filename, {
 		    type: 'image/jpg'
-		})         
+		})
 	}
 </script>

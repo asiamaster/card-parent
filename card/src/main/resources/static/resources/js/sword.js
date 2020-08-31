@@ -579,10 +579,10 @@ tab = {
         form: {
             resetDate: function (duration, timeUnit) {
                 if ($.common.isEmpty(duration)) {
-                    duration = 3;
+                    duration = 1;
                 }
                 if ($.common.isEmpty(timeUnit)) {
-                    timeUnit = 'month';
+                    timeUnit = 'day';
                 }
                 $(".laystart").attr("value", moment().subtract(duration, timeUnit).startOf('day').format('YYYY-MM-DD HH:mm:ss'));
                 $(".layend").attr("value", moment().endOf('day').format('YYYY-MM-DD HH:mm:ss'));
@@ -752,6 +752,8 @@ tab = {
                         $.modal.disable();
                     },
                     success: (result) => {
+                        $.modal.closeLoading();
+                        $.modal.enable();
                         if (typeof callback == "function") {
                             callback(result);
                         }
@@ -1017,16 +1019,12 @@ tab = {
             },
             // 成功回调执行事件（父窗体静默更新）
             successCallback: function (result) {
-                $.modal.closeLoading();
-                //启用按钮
-                $.modal.enable();
                 let _$ele = window.parent;
                 if (result.code == web_status.SUCCESS) {
                     //关闭弹框
                     if (!$.common.isEmpty(_$ele.table.options.dialog)) {
                         _$ele.table.options.dialog.hide();
                     }
-                    //let parent = window.parent;
                     if (_$ele.table.options.type == table_type.bootstrapTable) {
                         _$ele.$.modal.alertSuccess(result.message);
                         _$ele.$.table.refresh();
@@ -1282,16 +1280,6 @@ tab = {
             random: function (min, max) {
                 return Math.floor((Math.random() * max) + min);
             },
-            // 判断字符串是否是以start开头
-            startWith: function (value, start) {
-                var reg = new RegExp("^" + start);
-                return reg.test(value)
-            },
-            // 判断字符串是否是以end结尾
-            endWith: function (value, end) {
-                var reg = new RegExp(end + "$");
-                return reg.test(value)
-            },
             // 数组去重
             uniqueFn: function (array) {
                 var result = [];
@@ -1371,27 +1359,6 @@ tab = {
                     }
                 }
                 return "";
-            },
-            //判断两个对象的属性值是否相等
-            isObjectValueEqual: function (a, b) {
-                //取对象a和b的属性名
-                let aProps = Object.getOwnPropertyNames(a);
-                let bProps = Object.getOwnPropertyNames(b);
-                //判断属性名的length是否一致
-                if (aProps.length != bProps.length) {
-                    return false;
-                }
-                //循环取出属性名，再判断属性值是否一致
-                for (let i = 0; i < aProps.length; i++) {
-                    let propName = aProps[i];
-                    if (a[propName] === undefined || b[propName] ===undefined){
-                        continue;
-                    }
-                    if (a[propName] != b[propName]) {
-                        return false;
-                    }
-                }
-                return true;
             },
             changeNumMoneyToChinese: function(money){
         		var cnNums = new Array("零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"); //汉字的数字
