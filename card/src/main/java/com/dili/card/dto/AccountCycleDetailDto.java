@@ -5,28 +5,29 @@ import com.dili.card.common.provider.FenToYuanProvider;
 
 /**
  * 柜员账务周期详情
+ * 
  * @author zx
  */
 public class AccountCycleDetailDto {
-	
+
 	/** 账务周期流水号 */
 	private Long cycleNo;
-	private Integer receiveTimes = 0; 
+	private Integer receiveTimes = 0;
 	/** 领款金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
-	private Long receiveAmount = 0L;  
+	private Long receiveAmount = 0L;
 	/** 交款次数 */
 	private Integer deliverTimes = 0;
 	/** 交款金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
-	private Long deliverAmount = 0L; 
+	private Long deliverAmount = 0L;
 	/** 现金充值次数 */
 	private Integer depoCashTimes = 0;
 	/** 现金充值金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long depoCashAmount = 0L;
 	/** POS充值次数 */
-	private Integer depoPosTimes = 0; 
+	private Integer depoPosTimes = 0;
 	/** POS充值金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long depoPosAmount = 0L;
@@ -41,10 +42,10 @@ public class AccountCycleDetailDto {
 	@TextDisplay(FenToYuanProvider.class)
 	private Long drawCashAmount = 0L;
 	/** 网银提现次数 */
-	private Integer bankOutTimes = 0; 
+	private Integer bankOutTimes = 0;
 	/** 网银提现金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
-	private Long bankOutAmount = 0L; 
+	private Long bankOutAmount = 0L;
 	/** 现金收益金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long revenueAmount = 0L;
@@ -57,10 +58,22 @@ public class AccountCycleDetailDto {
 	/** 银行存取款 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long inOutBankAmount = 0L;
-	/** 工本费次数 */
-	private Integer costFeetimes = 0;
-	/** 工本费-分 */
-	private Long costAmount = 0L;
+	/** 开卡工本费次数 */
+	private Integer openCostFeetimes = 0;
+	/** 开卡工本费-分 */
+	private Long openCostAmount = 0L;
+	/** 换卡工本费次数 */
+	private Integer changeCostFeetimes = 0;
+	/** 换卡工本费-分 */
+	private Long changeCostAmount = 0L;
+
+	public Long getCycleNo() {
+		return cycleNo;
+	}
+
+	public void setCycleNo(Long cycleNo) {
+		this.cycleNo = cycleNo;
+	}
 
 	public Integer getReceiveTimes() {
 		return receiveTimes;
@@ -206,28 +219,36 @@ public class AccountCycleDetailDto {
 		this.inOutBankAmount = inOutBankAmount;
 	}
 
-	public Integer getCostFeetimes() {
-		return costFeetimes;
+	public Integer getOpenCostFeetimes() {
+		return openCostFeetimes;
 	}
 
-	public void setCostFeetimes(Integer costFeetimes) {
-		this.costFeetimes = costFeetimes;
+	public void setOpenCostFeetimes(Integer openCostFeetimes) {
+		this.openCostFeetimes = openCostFeetimes;
 	}
 
-	public Long getCostAmount() {
-		return costAmount;
+	public Long getOpenCostAmount() {
+		return openCostAmount;
 	}
 
-	public void setCostAmount(Long costAmount) {
-		this.costAmount = costAmount;
+	public void setOpenCostAmount(Long openCostAmount) {
+		this.openCostAmount = openCostAmount;
 	}
 
-	public Long getCycleNo() {
-		return cycleNo;
+	public Integer getChangeCostFeetimes() {
+		return changeCostFeetimes;
 	}
 
-	public void setCycleNo(Long cycleNo) {
-		this.cycleNo = cycleNo;
+	public void setChangeCostFeetimes(Integer changeCostFeetimes) {
+		this.changeCostFeetimes = changeCostFeetimes;
+	}
+
+	public Long getChangeCostAmount() {
+		return changeCostAmount;
+	}
+
+	public void setChangeCostAmount(Long changeCostAmount) {
+		this.changeCostAmount = changeCostAmount;
 	}
 
 }

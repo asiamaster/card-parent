@@ -286,8 +286,8 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 				e.printStackTrace();
 			}
 		}
-		// 计算现金收支余额 工本费+ 现金充值 -现金取款
-		accountCycleDetail.setRevenueAmount(accountCycleDetail.getCostAmount() + accountCycleDetail.getDepoCashAmount()
+		// 计算现金收支余额 开卡/换卡工本费+ 现金充值 -现金取款
+		accountCycleDetail.setRevenueAmount(accountCycleDetail.getOpenCostAmount() + accountCycleDetail.getChangeCostAmount() + accountCycleDetail.getDepoCashAmount()
 				- accountCycleDetail.getDrawCashAmount());
 		return accountCycleDetail;
 	}
@@ -321,7 +321,12 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			accountCycleDetail.setLastDeliverAmount(userCashDo.getAmount());
 			accountCycleDetail.setUnDeliverAmount(userCashDo.getAmount());
 		}
+		//现金收款包括充值和工本费
+		accountCycleDetail.setDepoCashAmount(accountCycleDetail.getDepoCashAmount() + accountCycleDetail.getOpenCostAmount() + accountCycleDetail.getChangeCostAmount());
+		accountCycleDetail.setDepoCashTimes(accountCycleDetail.getDepoCashTimes() + accountCycleDetail.getOpenCostFeetimes() + accountCycleDetail.getChangeCostFeetimes());
+		
 		accountCycleDto.setAccountCycleDetailDto(accountCycleDetail);
+		
 		return accountCycleDto;
 	}
 
