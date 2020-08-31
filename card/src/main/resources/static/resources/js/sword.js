@@ -1367,7 +1367,7 @@ tab = {
                    console.log(e.message)
                 }
                 //对比是否是同源host
-                if (parentLocation == window.location.host){
+                if (parentLocation != window.location.host){
                     return window;
                 }
                 return window.parent;
