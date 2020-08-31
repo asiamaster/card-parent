@@ -1360,14 +1360,14 @@ tab = {
             //获取父窗口对象,为了兼顾客户端嵌套和浏览器
             getParentWin(){
                 let parentLocation = '';
+                //拿不到父窗口host说明出现跨域问题
                 try {
                     parentLocation = parent.location.host;
                 }catch (e) {
                    console.log(e.message)
                 }
-                //拿不到父窗口host说明出现跨域问题
-                //那么顶层就是自身
-                if ($.common.isEmpty(parentLocation)){
+                //对比是否是同源host
+                if (parentLocation == window.location.host){
                     return window;
                 }
                 return window.parent;
