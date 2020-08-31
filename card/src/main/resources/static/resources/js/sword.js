@@ -1018,25 +1018,25 @@ tab = {
             successCallback: function (result) {
                 let _$ele = $.common.getParentWin();
                 if (result.code == web_status.SUCCESS) {
-                    if (_$ele.table.options.type == table_type.bootstrapTable) {
-                        $.modal.alertSuccess(result.message);
-                        _$ele.$.table.refresh();
-                    } else if (_$ele.table.options.type == table_type.bootstrapTreeTable) {
-                        $.modal.alertSuccess(result.message);
-                        _$ele.$.treeTable.refresh();
-                    } else {
-                        //$.modal.msgReload("保存成功,正在刷新数据请稍后……", modal_status.SUCCESS);
-                    }
                     //关闭弹框
                     if (!$.common.isEmpty(_$ele.table.options.dialog)) {
                         _$ele.table.options.dialog.hide();
                     }
+                    if (_$ele.table.options.type == table_type.bootstrapTable) {
+                        _$ele.$.modal.alertSuccess(result.message);
+                        _$ele.$.table.refresh();
+                    } else if (_$ele.table.options.type == table_type.bootstrapTreeTable) {
+                        _$ele.$.modal.alertSuccess(result.message);
+                        _$ele.$.treeTable.refresh();
+                    } else {
+                        //$.modal.msgReload("保存成功,正在刷新数据请稍后……", modal_status.SUCCESS);
+                    }
                 } else if (result.code == web_status.WARNING) {
-                    $.modal.alertWarning(result.message)
+                    _$ele.$.modal.alertWarning(result.message)
                 } else if (result.code == web_status.BIZERROR) {
-                    $.modal.alertWarning(result.message)
+                    _$ele.$.modal.alertWarning(result.message)
                 } else {
-                    $.modal.alertError(result.message);
+                    _$ele.$.modal.alertError(result.message);
                 }
 
             },
