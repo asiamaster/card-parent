@@ -44,7 +44,7 @@
 	
 	<select id="getById" resultType="com.dili.card.entity.UserCashDo">
 		<include refid="selectsql"></include>
-		WHERE id = #{id}
+		WHERE id = #{id} and state !=10
 	</select>
 	
 	<select id="findEntityByCondition" parameterType="com.dili.card.dto.UserCashDto" resultType="com.dili.card.entity.UserCashDo">
