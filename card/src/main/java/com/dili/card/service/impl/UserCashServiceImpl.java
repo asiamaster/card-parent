@@ -53,6 +53,11 @@ public class UserCashServiceImpl implements IUserCashService {
 		List<UserCashDo> userCashs = userCashDao.findEntityByCondition(userCashDto);
 		return this.buildPageUserCash(userCashs);
 	}
+	
+	@Override
+	public UserCashDo getLastestUesrCash(Long userId, Long cycle, int cashAction) {
+		return userCashDao.getLastestUesrCash(userId, cycle, cashAction);
+	}
 
 	@Override
 	public void delete(Long id) {
@@ -82,7 +87,7 @@ public class UserCashServiceImpl implements IUserCashService {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能修改");
 		}
 		// 金额校验
-		this.validateAmount(userCashDto.getAmount());
+		this.validateAmount(userCashDto.getAmount(), userCashDto.getSettledApply());
 		// 获取账务周期
 		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDto.getUserId(),
 				userCashDto.getUserName(), userCashDto.getUserCode());
@@ -128,7 +133,7 @@ public class UserCashServiceImpl implements IUserCashService {
 	public UserCashDo findById(Long id) {
 		UserCashDo userCashDo = userCashDao.getById(id);
 		if (userCashDo == null) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "该记录不存在");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "该记录已被刪除");
 		}
 		return userCashDo;
 	}
@@ -185,7 +190,7 @@ public class UserCashServiceImpl implements IUserCashService {
 				throw new CardAppBizException(ResultCode.DATA_ERROR, "交款金额大于现金余额");
 			}
 		}
-		this.validateAmount(userCashDto.getAmount());
+		this.validateAmount(userCashDto.getAmount(), userCashDto.getSettledApply());
 		userCash.setCashNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CASH_NO.getCode())));
 		userCash.setAction(userCashDto.getAction());
 		userCash.setAmount(userCashDto.getAmount());
@@ -262,7 +267,10 @@ public class UserCashServiceImpl implements IUserCashService {
 	/**
 	 * 校验金额
 	 */
-	private void validateAmount(Long amount) {
+	private void validateAmount(Long amount, Boolean settledApply) {
+		if (Boolean.TRUE.equals(settledApply)) {
+			return;
+		}
 		if (amount < Constant.MIN_AMOUNT) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR,
 					"金额不能低于" + CurrencyUtils.toCurrency(Constant.MIN_AMOUNT) + "元");

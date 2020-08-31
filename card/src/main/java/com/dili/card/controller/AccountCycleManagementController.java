@@ -47,7 +47,8 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 * 列表页面
 	 */
 	@GetMapping("/list.html")
-	public String listView() {
+	public String listView(ModelMap map) {
+		map.put("state", CycleState.SETTLED.getCode());
 		return "cycle/list";
 	}
 

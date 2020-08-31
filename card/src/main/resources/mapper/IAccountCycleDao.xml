@@ -143,7 +143,7 @@
 	<update id="updateStateById">
 		UPDATE card_account_cycle SET
 			`state` = #{state},`version` = version + 1, `modify_time` = NOW()
-			<if test="state != null and state ==3 ">, `end_time` = NOW() </if>
+			<if test="state != null and state ==2 ">, `end_time` = NOW(), cash_box = 0 </if>
 		WHERE
 			id = #{id} and version = #{version}
 	</update>

@@ -18,6 +18,7 @@ import com.dili.card.dto.CycleStatistcDto;
 import com.dili.card.dto.UserCashDto;
 import com.dili.card.entity.AccountCycleDetailDo;
 import com.dili.card.entity.AccountCycleDo;
+import com.dili.card.entity.UserCashDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
@@ -51,8 +52,8 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	public void settle(AccountCycleDto accountCycleDto) {
 		//获取最新的账务周期
 		AccountCycleDo accountCycle = this.findLatestCycleByUserId(accountCycleDto.getUserId());
-		// 对账状态校验
-		this.validateCycleSettledState(accountCycle);
+		// 对账状态校验和交款金额校验
+		this.validateCycleSettledState(accountCycle, accountCycleDto);
 		//生成交款信息
 		userCashService.save(buildUserCash(accountCycleDto));
 		// 更新账务周期状态
@@ -161,6 +162,17 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			throw new CardAppBizException("更新现金柜失败");
 		}
 	}
+	
+	/**
+	 * 更新账务周期状态
+	 */
+	@Override
+	public void updateStateById(Long id, Integer state, Integer version) {
+		int update = accountCycleDao.updateStateById(id, state, version);
+		if (update == 0) {
+			throw new CardAppBizException("结账失败");
+		}
+	}
 
 
 	@Override
@@ -216,21 +228,18 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	}
 
 	/**
-	 * 更新账务周期状态
-	 */
-	private void updateStateById(Long id, Integer state, Integer version) {
-		int update = accountCycleDao.updateStateById(id, state, version);
-		if (update == 0) {
-			throw new CardAppBizException("结账失败");
-		}
-	}
-
-	/**
 	 * 对账前状态校验
 	 */
-	private void validateCycleSettledState(AccountCycleDo accountCycle) {
+	private void validateCycleSettledState(AccountCycleDo accountCycle, AccountCycleDto accountCycleDto) {
 		if (accountCycle == null) {
 			throw new CardAppBizException("当前没有账务周期");
+		}
+		if(accountCycleDto.getCashAmount() < 0){
+			throw new CardAppBizException("结账申请交款金额不能小于0元");
+		}	
+		AccountCycleDto aCycleDto = this.buildAccountCycleWrapper(accountCycle);
+		if (!accountCycleDto.getCashAmount().equals(aCycleDto.getAccountCycleDetailDto().getUnDeliverAmount())) {
+			throw new CardAppBizException("交款金额不等于现金余额");
 		}
 		if (accountCycle.getState() == CycleState.SETTLED.getCode()) {
 			throw new CardAppBizException("当前账务周期已结账,不能重复操作");
@@ -307,8 +316,9 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 				- accountCycleDetail.getDeliverAmount();
 		if (cycle != null && CycleState.ACTIVE.getCode() == cycle.getState()) {//活跃期
 			accountCycleDetail.setUnDeliverAmount(unDeliverAmount);
-		}else {//非活跃期 未交现金金额就是最终交款金额
-			accountCycleDetail.setLastDeliverAmount(unDeliverAmount);
+		}else {//非活跃期 最近一次交现金金额就是最终交款金额
+			UserCashDo userCashDo = userCashService.getLastestUesrCash(cycle.getUserId(), cycle.getCycleNo(), CashAction.PAYER.getCode());
+			accountCycleDetail.setLastDeliverAmount(userCashDo.getAmount());
 		}
 		accountCycleDto.setAccountCycleDetailDto(accountCycleDetail);
 		return accountCycleDto;
@@ -352,12 +362,14 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	 * 生成交款信息
 	 */
 	private UserCashDto buildUserCash(AccountCycleDto accountCycleDto) {
+		//校验结账交款余额
 		UserCashDto cashDto = new UserCashDto();
 		cashDto.setUserId(accountCycleDto.getUserId());
 		cashDto.setUserCode(accountCycleDto.getUserCode());
 		cashDto.setUserName(accountCycleDto.getUserName());
 		cashDto.setAmount(accountCycleDto.getCashAmount());
 		cashDto.setAction(CashAction.PAYER.getCode());
+		cashDto.setSettledApply(true);
 		return cashDto;
 	}
 

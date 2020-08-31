@@ -61,5 +61,10 @@ public interface IUserCashDao {
 	 * 获取交款取款分类处理的总金额
 	 */
 	Long findTotalAmountByUserId(UserCashDto userCashDto);
+
+	/**
+	 * 获取最新一次交款领款
+	 */
+	UserCashDo getLastestUesrCash(@Param("userId") Long userId, @Param("cycle") Long cycle, @Param("cashAction") Integer cashAction);
 	
 }

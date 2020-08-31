@@ -91,4 +91,11 @@ public interface IAccountCycleService {
 	 */
 	Boolean checkExistActiveCycle(Long userId);
 	
+	/**
+	 * 更新状态 
+	 * @param id 账务周期主键id
+	 * @param state 状态
+	 */
+	void updateStateById(Long id, Integer state, Integer version);
+	
 }
