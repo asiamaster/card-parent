@@ -72,6 +72,13 @@ p {
 						id="isStatistic" name="isStatistic" value="false"> <input
 						type="hidden" name="operatorId" id="operatorId"
 						value="${detail.userId!}">
+						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="10">
+						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="11">
+						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="12">
+						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="13">
+						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="25">
+						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="26">
+						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="20">
 					</td>
 				</tr>
 				<tr>
@@ -389,7 +396,8 @@ p {
 		$("#operation-record").append(tetoperation);
 		var options = {
 			id : "serial-table",
-			url : "${contextPath}/serial/business/page.action"
+			url : "${contextPath}/serial/business/page.action",
+			sortName: "operate_time"
 		};
 		$.table.init(options);
 	}

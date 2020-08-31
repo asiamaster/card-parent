@@ -319,6 +319,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}else {//非活跃期 最近一次交现金金额就是最终交款金额
 			UserCashDo userCashDo = userCashService.getLastestUesrCash(cycle.getUserId(), cycle.getCycleNo(), CashAction.PAYER.getCode());
 			accountCycleDetail.setLastDeliverAmount(userCashDo.getAmount());
+			accountCycleDetail.setUnDeliverAmount(userCashDo.getAmount());
 		}
 		accountCycleDto.setAccountCycleDetailDto(accountCycleDetail);
 		return accountCycleDto;
