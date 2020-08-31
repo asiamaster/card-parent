@@ -275,7 +275,7 @@ tab = {
                         input.select();
                         document.execCommand("copy");
                     } else if ($.common.equals("open", target)) {
-                        parent.bs4pop.alert(input.val(),
+                        $.common.getParentWin().bs4pop.alert(input.val(),
                             {type: 'success'}
                         );
                     }
@@ -705,19 +705,19 @@ tab = {
             },
             //修改“确定”按钮文本
             changeEnsureTxt: (txt)=>{
-                let doc = window.parent.document;
+                let doc = $.common.getParentWin().document;
                 let $button = $("button[class*='btn sword-modal btn-primary']", doc);
                 $button.text(txt)
             },
             // 禁用按钮
             disable: function () {
-                let doc = window.parent.document;
+                let doc = $.common.getParentWin().document;
                 let $button = $("button[class*='btn sword-modal btn-primary']", doc);
                 $button.attr("disabled", "disabled");
             },
             // 启用按钮
             enable: function () {
-                let doc = window.parent.document;
+                let doc = $.common.getParentWin().document;
                 let $button = $("button[class*='btn sword-modal btn-primary']", doc);
                 $button.removeAttr("disabled");
             },
@@ -727,9 +727,6 @@ tab = {
             },
             // 关闭遮罩层
             closeLoading: function () {
-                // setTimeout(function(){
-                //     $.unblockUI();
-                // }, 50);
                 bui.loading.hide();
             },
             // 重新加载
@@ -1019,7 +1016,7 @@ tab = {
             },
             // 成功回调执行事件（父窗体静默更新）
             successCallback: function (result) {
-                let _$ele = window.parent;
+                let _$ele = $.common.getParentWin();
                 if (result.code == web_status.SUCCESS) {
                     //关闭弹框
                     if (!$.common.isEmpty(_$ele.table.options.dialog)) {
@@ -1359,6 +1356,21 @@ tab = {
                     }
                 }
                 return "";
+            },
+            //获取父窗口对象,为了兼顾客户端嵌套和浏览器
+            getParentWin(){
+                let parentLocation = '';
+                try {
+                    parentLocation = parent.location.host;
+                }catch (e) {
+                   console.log(e.message)
+                }
+                //拿不到父窗口host说明出现跨域问题
+                //那么顶层就是自身
+                if ($.common.isEmpty(parentLocation)){
+                    return window;
+                }
+                return window.parent;
             },
             changeNumMoneyToChinese: function(money){
         		var cnNums = new Array("零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"); //汉字的数字
