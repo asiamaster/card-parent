@@ -371,6 +371,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		cashDto.setAmount(accountCycleDto.getCashAmount());
 		cashDto.setAction(CashAction.PAYER.getCode());
 		cashDto.setSettledApply(true);
+		cashDto.setNotes("结账申请创建");
 		return cashDto;
 	}
 
