@@ -28,8 +28,8 @@ public class PosRechargeService extends AbstractRechargeManager {
             return;
         }
         Long amount = requestDto.getAmount();
-        if (serviceCost >= amount) {
-            throw new CardAppBizException("手续费必须小于充值金额");
+        if (amount < serviceCost) {
+            throw new CardAppBizException("手续费不能超过充值金额");
         }
     }
 
