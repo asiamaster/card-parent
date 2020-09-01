@@ -192,6 +192,7 @@ public class CardManageServiceImpl implements ICardManageService {
             serialRecord.setType(OperateType.CHANGE.getCode());
             serialRecord.setFundItem(FundItem.IC_CARD_COST.getCode());
             serialRecord.setFundItemName(FundItem.IC_CARD_COST.getName());
+            serialRecord.setAmount(requestDto.getServiceFee());
             serialRecord.setNotes("补卡，工本费转为市场收入");
         });
         serialService.handleSuccess(serialDto);

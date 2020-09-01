@@ -20,8 +20,10 @@ public enum CycleStatisticType {
 	RECIEVE_CASH(1, 2, "receiveTimes", "receiveAmount"),
 	/** 交款 */
 	DELIVER_CASH(2, 2, "deliverTimes", "deliverAmount"),
-	/** 工本费 */
-	COST_FEE_CASH(10, 2, "costFeetimes", "costAmount");
+	/** 办卡工本费 */
+	COST_FEE_CASH_OPEN(10, 2, "openCostFeetimes", "openCostAmount"),
+	/** 换卡工本费 */
+	COST_FEE_CASH_CHANGE(13, 2, "changeCostFeetimes", "changeCostAmount");
 	
 	private int type;
 	private int tradeChannel;

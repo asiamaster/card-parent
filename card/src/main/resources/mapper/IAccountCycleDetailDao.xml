@@ -108,17 +108,8 @@
  		FROM
  			card_business_record
  		WHERE
- 			operator_id = #{operatorId} AND `cycle_no` = #{cycleNo} AND type IN (11,12)
+ 			operator_id = #{operatorId} AND `cycle_no` = #{cycleNo} AND type IN (10,11,12,13)
  		GROUP BY type,trade_channel
- 		
- 		UNION ALL
- 		
- 		SELECT
-			10 AS type,2 AS tradeChannel, 1 AS times, SUM(card_cost) AS amount
- 		FROM
- 			card_business_record
- 		WHERE
- 			operator_id = #{operatorId} AND `cycle_no` = #{cycleNo} 
  			
  		UNION ALL
  		
