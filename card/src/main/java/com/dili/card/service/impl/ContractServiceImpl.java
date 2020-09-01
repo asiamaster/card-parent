@@ -149,8 +149,8 @@ public class ContractServiceImpl implements IContractService {
 	}
 
 	@Override
-	public FundContractPrintDto print(FundContractRequestDto fundContractRequest) {
-		FundContractResponseDto fundContractResponseDto = this.detail(fundContractRequest.getId());
+	public FundContractPrintDto print(Long id) {
+		FundContractResponseDto fundContractResponseDto = this.detail(id);
 		return FundContractPrintDto.wrapperPrintDetai(fundContractResponseDto);
 	}
 

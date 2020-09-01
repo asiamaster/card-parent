@@ -29,61 +29,23 @@
         return currentdate;
     }
     
-    /**打印信息 tableId展示的表格id  templateName 打印模板名称  需要向晓辉索取   url 加载打印数据的接口  自定义 */
-    function print(tableId, templateName, url){
-    	var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
-   	 	if (id.length == 0) {
-            $.modal.alertWarning("请至少选择一条记录");
-            return;
-        }
-        if(typeof callbackObj != 'undefined'){
+    function printData(data,templateName){
+    	if(typeof callbackObj != 'undefined'){
             window.printFinish=function(){
             }
-            var paramStr ="";
-            var data=loadPrintData(id, url);
-            debugger;
             if(!data){
                 return;
             }
-            paramStr = JSON.stringify(data);
-            console.log("打印信息--:"+paramStr);
-            if(paramStr==""){
+            console.log("打印信息--:"+ data);
+            if(data==""){
                 return;
             }
-            callbackObj.printDirect(paramStr,templateName);
+            callbackObj.printDirect(data,templateName);
         }else{
             bs4pop.alert("请检查打印的设备是否已连接", { type: "error" });
         }
     }
-    //加载打印数据
-    function loadPrintData(id,url){
-        console.log("调用打印信息："+id);
-        data = {};
-    	data.id = id;
-        $.ajax({
-    	    type: "POST",
-    	    url:url,
-    	    data:JSON.stringify(data),
-    	    contentType: "application/json; charset=utf-8",
-    	    traditional:true,
-    	    dataType:'json',
-    	    async: false,
-    	    error: function(result) {
-    	    	$.modal.alertError(result.message);
-    	    	return "";
-    	    },
-    	    success: function(result) {
-    	    	debugger;
-    	    	if(result.code=="200"){
-    	    		return result.data;
-    	    	}else{
-    	    		$.modal.alertError(result.message);
-    	    		return "";
-    	    	}
-    	    }
-    	});	
-    }
-
+    
     function randomString(len) {
     	len = len || 16;
 	  　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/

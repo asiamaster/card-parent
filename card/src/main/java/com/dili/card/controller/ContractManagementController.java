@@ -1,11 +1,7 @@
 package com.dili.card.controller;
 
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +23,13 @@ import com.dili.card.dto.FundContractPrintDto;
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.schedule.ContractScheduleHandler;
 import com.dili.card.service.IContractService;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
+import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 
@@ -62,6 +60,9 @@ public class ContractManagementController implements IControllerHandler {
 	 */
 	@GetMapping("/detail.html")
 	public String detail(Long id, ModelMap modelMap) {
+		if (id == null || id < 0L) {
+			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "请求参数错误");
+		}
 		modelMap.put("detail", iContractService.detail(id));
 		return "contract/detail";
 	}
@@ -71,6 +72,9 @@ public class ContractManagementController implements IControllerHandler {
 	 */
 	@GetMapping("/preview.html")
 	public String preview(Long id, ModelMap modelMap) {
+		if (id == null || id < 0L) {
+			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "请求参数错误");
+		}
 		modelMap.put("detail", iContractService.detail(id));
 		return "contract/preview";
 	}
@@ -170,11 +174,14 @@ public class ContractManagementController implements IControllerHandler {
 	/**
 	 * 打印合同
 	 */
-	@PostMapping("/print.action")
+	@GetMapping("/print.action")
 	@ResponseBody
-	public BaseOutput<FundContractPrintDto> print(@RequestBody FundContractRequestDto fundContractRequest) {
-		log.info("打印合同*****{}", JSONObject.toJSONString(fundContractRequest));
-		return BaseOutput.successData(iContractService.print(fundContractRequest));
+	public BaseOutput<FundContractPrintDto> print(FundContractRequestDto fundContractRequest) {
+		if (fundContractRequest == null || fundContractRequest.getId() == null) {
+			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "请求参数错误");
+		}
+		log.info("打印合同*****{}", fundContractRequest.getId());
+		return BaseOutput.successData(iContractService.print(fundContractRequest.getId()));
 	}
 
 	/**
