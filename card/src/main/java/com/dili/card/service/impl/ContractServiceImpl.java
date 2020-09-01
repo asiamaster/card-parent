@@ -333,7 +333,7 @@ public class ContractServiceImpl implements IContractService {
 	private FundConsignorDo buildConsignorForDataBase(FundConsignorDto consignorRequestDto, String contractNo) {
 		FundConsignorDo fundConsignorDo = new FundConsignorDo();
 		// 构建合同被委托人核心数据
-		fundConsignorDo.setConsigneeIdCode(consignorRequestDto.getConsigneeIdCode());
+		fundConsignorDo.setConsigneeIdCode(consignorRequestDto.getConsigneeIdCode().trim());
 		fundConsignorDo.setConsigneeIdMobile(consignorRequestDto.getConsigneeIdMobile().trim());
 		fundConsignorDo.setConsigneeName(consignorRequestDto.getConsigneeName().trim());
 		fundConsignorDo.setSignatureImagePath(consignorRequestDto.getSignatureImagePath().trim());
