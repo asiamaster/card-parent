@@ -107,12 +107,13 @@ public class FundContractPrintDto implements Serializable{
 		fundContractPrintDto.setCardNo(fundContractResponseDto.getConsignorCard());
 		fundContractPrintDto.setConsigneeName(fundContractResponseDto.getConsignorName());
 		fundContractPrintDto.setConsigneeNames(fundContractResponseDto.getConsigneeNames());
+		fundContractPrintDto.setConsignorIdCode(fundContractResponseDto.getConsignorIdCode());
 		LocalDateTime startTime = fundContractResponseDto.getStartTime();
-		fundContractPrintDto.setStartTime( startTime.getYear() + " 年 " + startTime.getMonth() + " 月 " + startTime.getDayOfMonth() + " 日 ");
+		fundContractPrintDto.setStartTime( startTime.getYear() + " 年 " + startTime.getMonthValue() + " 月 " + startTime.getDayOfMonth() + " 日 ");
 		LocalDateTime endTime = fundContractResponseDto.getStartTime();
-		fundContractPrintDto.setEndTime(endTime.getYear() + " 年 " + endTime.getMonth() + " 月 " + endTime.getDayOfMonth() + " 日 ");
+		fundContractPrintDto.setEndTime(endTime.getYear() + " 年 " + endTime.getMonthValue() + " 月 " + endTime.getDayOfMonth() + " 日 ");
 		LocalDateTime currentTime = LocalDateTime.now();
-		fundContractPrintDto.setCurrentTime(currentTime.getYear() + " 年 " + currentTime.getMonth() + " 月 " + currentTime.getDayOfMonth() + " 日 ");
+		fundContractPrintDto.setCurrentTime(currentTime.getYear() + " 年 " + currentTime.getMonthValue() + " 月 " + currentTime.getDayOfMonth() + " 日 ");
 		fundContractPrintDto.setConsignors(fundContractResponseDto.getConsignorDtos());
 		fundContractPrintDto.setConsignorMobile(fundContractResponseDto.getConsignorMobile());
 		return fundContractPrintDto;
