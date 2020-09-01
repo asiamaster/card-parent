@@ -87,7 +87,7 @@
                 <div class="input-group">
                 	<#bautoCompleteProvider _hiddenDomainId="consignorCustomerId" _hiddenDomainName="consignorCustomerId" _displayDomainId="customerCode" _displayDomainName="customerCode" _placeholder="" _optionVariable="customerNameQueryAutoCompleteOption"/>
             		<input type="text" class="form-control" id="show_customer_name" readonly/>
-            		<input type="text" class="form-control" id="show_print_data" />
+            		<input type="hidden" class="form-control" id="show_print_data" />
             	</div>
             </div>
             <div class="form-group col-auto">
@@ -440,6 +440,7 @@
    	 	var url = '${contextPath}/contract/print.action?id=' + id;
      	loadPrintData(url);
     	setTimeout('printData($("#show_print_data").val(), "MoneyContractsDocument")',500);
+    	$("#show_print_data").val("");
     }
 
     /**
