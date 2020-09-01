@@ -195,17 +195,17 @@ public class UserCashServiceImpl implements IUserCashService {
 		userCash.setAction(userCashDto.getAction());
 		userCash.setAmount(userCashDto.getAmount());
 		userCash.setUserId(userCashDto.getUserId());
-		userCash.setUserCode(userCashDto.getUserCode());
-		userCash.setUserName(userCashDto.getUserName());
+		userCash.setUserCode(userCashDto.getUserCode().trim());
+		userCash.setUserName(userCashDto.getUserName().trim());
 		userCash.setState(CashState.UNSETTLED.getCode());
 		userCash.setNotes(userCashDto.getNotes());
 		// 构建商户信息和创建者
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		userCash.setCreatorId(userTicket.getId());
-		userCash.setCreatorCode(userTicket.getUserName());
-		userCash.setCreator(userTicket.getRealName());
+		userCash.setCreatorCode(userTicket.getUserName().trim());
+		userCash.setCreator(userTicket.getRealName().trim());
 		userCash.setFirmId(userTicket.getFirmId());
-		userCash.setFirmName(userTicket.getFirmName());
+		userCash.setFirmName(userTicket.getFirmName().trim());
 		userCash.setCycleNo(accountCycle.getCycleNo());
 		return userCash;
 	}
