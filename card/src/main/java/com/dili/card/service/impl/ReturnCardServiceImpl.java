@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dili.card.dto.CardRequestDto;
-import com.dili.card.dto.CardStorageActivateDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
@@ -16,19 +15,15 @@ import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
-import com.dili.card.rpc.CardStorageRpc;
 import com.dili.card.rpc.resolver.CardManageRpcResolver;
-import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IReturnCardService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.DisableState;
-import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
-import com.dili.card.type.ServiceType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.validator.AccountValidator;
@@ -45,8 +40,6 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 	private PayRpcResolver payRpcResolver;
 	@Resource
 	protected IAccountQueryService accountQueryService;
-	@Autowired
-	private CardStorageRpc cardStorageRpc;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
