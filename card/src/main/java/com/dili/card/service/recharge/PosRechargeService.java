@@ -21,18 +21,6 @@ import org.springframework.stereotype.Component;
 @TradeChannelMark(TradeChannel.POS)
 public class PosRechargeService extends AbstractRechargeManager {
 
-    @Override
-    protected void beforeRecharge(FundRequestDto requestDto) {
-        Long serviceCost = requestDto.getServiceCost();
-        if (serviceCost == null) {
-            return;
-        }
-        Long amount = requestDto.getAmount();
-        if (amount < serviceCost) {
-            throw new CardAppBizException("手续费不能超过充值金额");
-        }
-    }
-
 
     @Override
     public String buildBusinessRecordNote(FundRequestDto requestDto) {
