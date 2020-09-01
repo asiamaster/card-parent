@@ -230,12 +230,6 @@ public class ContractServiceImpl implements IContractService {
 			contractQueryDto.setExpirationTime(
 					DateUtils.format(DateUtils.addDays(new Date(), contractQueryDto.getDays()), "yyyy-MM-dd"));
 		}
-		if (contractQueryDto.getCreateStartTime() != null && contractQueryDto.getCreateEndTime() != null && contractQueryDto.getCreateStartTime().isAfter(contractQueryDto.getCreateEndTime())) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "开始时间大于结束时间");
-		}
-//		if (contractQueryDto.getCreateEndTime() != null && contractQueryDto.getCreateStartTime() == null ) {
-//			contractQueryDto.setCreateStartTime(contractQueryDto.getCreateEndTime().minusDays(365L));
-//		}
 	}
 
 	/**

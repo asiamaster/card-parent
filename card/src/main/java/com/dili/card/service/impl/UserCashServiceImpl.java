@@ -219,14 +219,6 @@ public class UserCashServiceImpl implements IUserCashService {
 		if (cashAction != null) {
 			userCashDto.setAction(cashAction.getCode());
 		}
-		if (userCashDto.getCreateStartTime() != null && userCashDto.getCreateEndTime() != null
-				&& userCashDto.getCreateStartTime().isAfter(userCashDto.getCreateEndTime())) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "开始时间大于结束时间");
-		}
-		// 默认365天
-//		if (userCashDto.getCreateEndTime() != null && userCashDto.getCreateStartTime() == null) {
-//			userCashDto.setCreateStartTime(userCashDto.getCreateEndTime().minusDays(365L));
-//		}
 	}
 
 	/**
