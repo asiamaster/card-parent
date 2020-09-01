@@ -69,7 +69,7 @@ function laydateInt() {
             type: 'date',
             theme: '#007bff',
             done: function () {
-                isStartEndDatetime(this.elem);
+//                isStartEndDatetime(this.elem);
             }
         });
     });
@@ -80,7 +80,7 @@ function laydateInt() {
             type: 'datetime',
             theme: '#007bff',
             done: function () {
-                isStartEndDatetime(this.elem);
+//                isStartEndDatetime(this.elem);
             }
         });
     });
