@@ -149,8 +149,8 @@ public class ContractServiceImpl implements IContractService {
 	}
 
 	@Override
-	public FundContractPrintDto print(FundContractRequestDto fundContractRequest) {
-		FundContractResponseDto fundContractResponseDto = this.detail(fundContractRequest.getId());
+	public FundContractPrintDto print(Long id) {
+		FundContractResponseDto fundContractResponseDto = this.detail(id);
 		return FundContractPrintDto.wrapperPrintDetai(fundContractResponseDto);
 	}
 
@@ -230,12 +230,6 @@ public class ContractServiceImpl implements IContractService {
 			contractQueryDto.setExpirationTime(
 					DateUtils.format(DateUtils.addDays(new Date(), contractQueryDto.getDays()), "yyyy-MM-dd"));
 		}
-		if (contractQueryDto.getCreateStartTime() != null && contractQueryDto.getCreateEndTime() != null && contractQueryDto.getCreateStartTime().isAfter(contractQueryDto.getCreateEndTime())) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "开始时间大于结束时间");
-		}
-//		if (contractQueryDto.getCreateEndTime() != null && contractQueryDto.getCreateStartTime() == null ) {
-//			contractQueryDto.setCreateStartTime(contractQueryDto.getCreateEndTime().minusDays(365L));
-//		}
 	}
 
 	/**
@@ -339,7 +333,7 @@ public class ContractServiceImpl implements IContractService {
 	private FundConsignorDo buildConsignorForDataBase(FundConsignorDto consignorRequestDto, String contractNo) {
 		FundConsignorDo fundConsignorDo = new FundConsignorDo();
 		// 构建合同被委托人核心数据
-		fundConsignorDo.setConsigneeIdCode(consignorRequestDto.getConsigneeIdCode());
+		fundConsignorDo.setConsigneeIdCode(consignorRequestDto.getConsigneeIdCode().trim());
 		fundConsignorDo.setConsigneeIdMobile(consignorRequestDto.getConsigneeIdMobile().trim());
 		fundConsignorDo.setConsigneeName(consignorRequestDto.getConsigneeName().trim());
 		fundConsignorDo.setSignatureImagePath(consignorRequestDto.getSignatureImagePath().trim());

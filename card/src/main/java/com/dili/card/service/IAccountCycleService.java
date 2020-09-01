@@ -3,6 +3,7 @@ package com.dili.card.service;
 import java.util.List;
 
 import com.dili.card.dto.AccountCycleDto;
+import com.dili.card.dto.AccountCyclePageListDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.ss.domain.PageOutput;
 
@@ -30,7 +31,7 @@ public interface IAccountCycleService {
 	/**
 	 * 账务周期分页查询
 	 */
-	PageOutput<List<AccountCycleDto>> page(AccountCycleDto accountCycleDto);
+	PageOutput<List<AccountCyclePageListDto>> page(AccountCycleDto accountCycleDto);
 
 	/**
 	 * 账务周期详情

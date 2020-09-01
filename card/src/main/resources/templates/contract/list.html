@@ -87,6 +87,7 @@
                 <div class="input-group">
                 	<#bautoCompleteProvider _hiddenDomainId="consignorCustomerId" _hiddenDomainName="consignorCustomerId" _displayDomainId="customerCode" _displayDomainName="customerCode" _placeholder="" _optionVariable="customerNameQueryAutoCompleteOption"/>
             		<input type="text" class="form-control" id="show_customer_name" readonly/>
+            		<input type="hidden" class="form-control" id="show_print_data" />
             	</div>
             </div>
             <div class="form-group col-auto">
@@ -406,12 +407,40 @@
 		};
 		$.table.init(options);
 	});
+    
+    //加载打印数据
+    function loadPrintData(url){
+        console.log("调用打印信息："+url);
+        $.ajax({
+    	    type: "GET",
+    	    url:url,
+    	    contentType: "application/x-www-form-urlencoded",
+    	    error: function(result) {
+    	    	$.modal.alertError(result.message);
+    	    },
+    	    success: function(result) {
+    	    	if(result.code=="200"){
+    	    		$("#show_print_data").val(JSON.stringify(result.data));
+    	    	}else{
+    	    		$.modal.alertError(result.message);
+    	    	}
+    	    }
+    	});	
+    }
 
     /**
 	 * 打印
 	 */
     function printContract(){
-    	print("grid", "MoneyContractsDocument", "${contextPath}/contract/print.aciton");
+    	var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+   	 	if (id.length == 0) {
+            $.modal.alertWarning("请至少选择一条记录");
+            return;
+        }
+   	 	var url = '${contextPath}/contract/print.action?id=' + id;
+     	loadPrintData(url);
+    	setTimeout('printData($("#show_print_data").val(), "MoneyContractsDocument")',500);
+    	$("#show_print_data").val("");
     }
 
     /**

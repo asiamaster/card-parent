@@ -9,11 +9,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.dili.card.dao.IAccountCycleDao;
 import com.dili.card.dao.IAccountCycleDetailDao;
 import com.dili.card.dto.AccountCycleDetailDto;
 import com.dili.card.dto.AccountCycleDto;
+import com.dili.card.dto.AccountCyclePageListDto;
 import com.dili.card.dto.CycleStatistcDto;
 import com.dili.card.dto.UserCashDto;
 import com.dili.card.entity.AccountCycleDetailDo;
@@ -118,10 +120,10 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	}
 	
 	@Override
-	public PageOutput<List<AccountCycleDto>> page(AccountCycleDto accountCycleDto) {
+	public PageOutput<List<AccountCyclePageListDto>> page(AccountCycleDto accountCycleDto) {
 		Page<?> page = PageHelper.startPage(accountCycleDto.getPage(), accountCycleDto.getRows());
 		List<AccountCycleDto> accountCycles = this.list(accountCycleDto);
-		return PageUtils.convert2PageOutput(page, accountCycles);
+		return PageUtils.convert2PageOutput(page, buildCyclePageList(accountCycles));
 	}
 
 	@Override
@@ -378,6 +380,34 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		cashDto.setSettledApply(true);
 		cashDto.setNotes("结账申请创建");
 		return cashDto;
+	}
+	
+	/**
+	 * 账务周期列表数据
+	 */
+	private List<AccountCyclePageListDto> buildCyclePageList(List<AccountCycleDto> accountCycles) {
+		List<AccountCyclePageListDto> accountCyclePageListDtos = new ArrayList<AccountCyclePageListDto>();
+		if (CollectionUtils.isEmpty(accountCycles)) {
+			return accountCyclePageListDtos;
+		}
+		for (AccountCycleDto accountCycleDto : accountCycles) {
+			AccountCyclePageListDto accountCyclePageListDto = new AccountCyclePageListDto();
+			accountCyclePageListDto.setId(accountCycleDto.getId());
+			accountCyclePageListDto.setUserId(accountCycleDto.getUserId());
+			accountCyclePageListDto.setUserCode(accountCycleDto.getUserCode());
+			accountCyclePageListDto.setUserName(accountCycleDto.getUserName());
+			accountCyclePageListDto.setCycleNo(accountCycleDto.getCycleNo().toString());
+			accountCyclePageListDto.setState(accountCycleDto.getState());
+			accountCyclePageListDto.setReceiveAmount(accountCycleDto.getAccountCycleDetailDto().getReceiveAmount());
+			accountCyclePageListDto.setRevenueAmount(accountCycleDto.getAccountCycleDetailDto().getRevenueAmount());
+			accountCyclePageListDto.setDepoPosAmount(accountCycleDto.getAccountCycleDetailDto().getDepoPosAmount());
+			accountCyclePageListDto.setInOutBankAmount(accountCycleDto.getAccountCycleDetailDto().getInOutBankAmount());
+			accountCyclePageListDto.setDeliverAmount(accountCycleDto.getAccountCycleDetailDto().getDeliverAmount());
+			accountCyclePageListDto.setUnDeliverAmount(accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount());
+			accountCyclePageListDto.setLastDeliverAmount(accountCycleDto.getAccountCycleDetailDto().getLastDeliverAmount());
+			accountCyclePageListDtos.add(accountCyclePageListDto);
+		}
+		return accountCyclePageListDtos;
 	}
 
 }

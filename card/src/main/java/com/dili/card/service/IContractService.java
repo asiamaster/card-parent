@@ -68,7 +68,7 @@ public interface IContractService {
 	/**
 	 * 合同打印
 	 */
-	FundContractPrintDto print(FundContractRequestDto fundContractRequest);
+	FundContractPrintDto print(Long id);
 
 	/**
 	 * 文件上传

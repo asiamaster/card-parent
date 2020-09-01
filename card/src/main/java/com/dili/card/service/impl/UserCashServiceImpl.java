@@ -195,17 +195,17 @@ public class UserCashServiceImpl implements IUserCashService {
 		userCash.setAction(userCashDto.getAction());
 		userCash.setAmount(userCashDto.getAmount());
 		userCash.setUserId(userCashDto.getUserId());
-		userCash.setUserCode(userCashDto.getUserCode());
-		userCash.setUserName(userCashDto.getUserName());
+		userCash.setUserCode(userCashDto.getUserCode().trim());
+		userCash.setUserName(userCashDto.getUserName().trim());
 		userCash.setState(CashState.UNSETTLED.getCode());
 		userCash.setNotes(userCashDto.getNotes());
 		// 构建商户信息和创建者
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		userCash.setCreatorId(userTicket.getId());
-		userCash.setCreatorCode(userTicket.getUserName());
-		userCash.setCreator(userTicket.getRealName());
+		userCash.setCreatorCode(userTicket.getUserName().trim());
+		userCash.setCreator(userTicket.getRealName().trim());
 		userCash.setFirmId(userTicket.getFirmId());
-		userCash.setFirmName(userTicket.getFirmName());
+		userCash.setFirmName(userTicket.getFirmName().trim());
 		userCash.setCycleNo(accountCycle.getCycleNo());
 		return userCash;
 	}
@@ -219,14 +219,6 @@ public class UserCashServiceImpl implements IUserCashService {
 		if (cashAction != null) {
 			userCashDto.setAction(cashAction.getCode());
 		}
-		if (userCashDto.getCreateStartTime() != null && userCashDto.getCreateEndTime() != null
-				&& userCashDto.getCreateStartTime().isAfter(userCashDto.getCreateEndTime())) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "开始时间大于结束时间");
-		}
-		// 默认365天
-//		if (userCashDto.getCreateEndTime() != null && userCashDto.getCreateStartTime() == null) {
-//			userCashDto.setCreateStartTime(userCashDto.getCreateEndTime().minusDays(365L));
-//		}
 	}
 
 	/**
@@ -249,13 +241,14 @@ public class UserCashServiceImpl implements IUserCashService {
 	private UserCashDto buildSingleCashDtoy(UserCashDo userCashDo) {
 		UserCashDto cashDto = new UserCashDto();
 		cashDto.setCashNo(userCashDo.getCashNo());
+		cashDto.setCashNoText(userCashDo.getCashNo().toString());
 		cashDto.setAmount(userCashDo.getAmount());
 		cashDto.setCreatorId(userCashDo.getCreatorId());
 		cashDto.setCreatorCode(userCashDo.getCreatorCode());
 		cashDto.setCreator(userCashDo.getCreator());
 		cashDto.setUserId(userCashDo.getUserId());
-		cashDto.setUserCode(userCashDo.getUserCode());
-		cashDto.setUserName(userCashDo.getUserName());
+		cashDto.setUserCode(userCashDo.getUserCode().trim());
+		cashDto.setUserName(userCashDo.getUserName().trim());
 		cashDto.setCreateTime(userCashDo.getCreateTime());
 		cashDto.setNotes(userCashDo.getNotes());
 		cashDto.setState(userCashDo.getState());

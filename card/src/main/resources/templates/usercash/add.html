@@ -69,7 +69,7 @@
 	function selectUser() {
 		var ckeckUserCycleUrl = "${contextPath}/cycle/checkExistActiveCycle.action"
 		var userId = $('#inputuserId').val();
-		data = {};
+		var data = {};
 		data.userId = userId;
 		$.ajax({
 			type: "POST",

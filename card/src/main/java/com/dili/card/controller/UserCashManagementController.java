@@ -19,10 +19,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.UserCashDto;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IUserCashService;
 import com.dili.card.type.CashAction;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.ConstantValidator;
+import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 
 /**
@@ -99,6 +101,9 @@ public class UserCashManagementController implements IControllerHandler {
 	 */
 	@GetMapping("/modify.html")
 	public String modify(Long id, ModelMap modelMap) {
+		if (id == null || id < 0L) {
+			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期详情请求参数错误");
+		}
 		 String json = JSON.toJSONString(iUserCashService.detail(id),
 	                new EnumTextDisplayAfterFilter());
 		 modelMap.put("usercash", JSON.parseObject(json));
@@ -110,6 +115,9 @@ public class UserCashManagementController implements IControllerHandler {
 	 */
 	@GetMapping("/delete.html")
 	public String delete(Long id, ModelMap modelMap) {
+		if (id == null || id < 0L) {
+			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期详情请求参数错误");
+		}
 		 String json = JSON.toJSONString(iUserCashService.detail(id),
 	                new EnumTextDisplayAfterFilter());
 		 modelMap.put("usercash", JSON.parseObject(json));
