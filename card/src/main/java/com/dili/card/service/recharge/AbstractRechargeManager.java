@@ -42,6 +42,8 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
      * @date 2020/7/2
      */
     public final String doRecharge(FundRequestDto requestDto) {
+        this.beforeRecharge(requestDto);
+
         UserAccountCardResponseDto userAccount = accountQueryService.getByAccountId(requestDto);
         Long rechargeAmount = requestDto.getAmount();
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {
@@ -84,19 +86,27 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         if (serviceCostItem != null && this.canAddEmptyFundItem(requestDto)) {
             tradeResponseDto.addEmptyFeeItem(serviceCostItem);
         }
-        this.afterCommitRecharge(requestDto, businessRecord);
+        this.afterRecharge(requestDto, businessRecord);
         //记录远程日志数据
         this.doRecordCompleteLog(requestDto, businessRecord, tradeResponseDto);
         return businessRecord.getSerialNo();
     }
 
+    /**
+    * 开始充值前的一些逻辑
+    * @author miaoguoxin
+    * @date 2020/9/1
+    */
+    protected void beforeRecharge(FundRequestDto requestDto){
+
+    }
 
     /**
-     * 提交充值请求之后的一些逻辑
+     * 充值请求之后的一些逻辑
      * @author miaoguoxin
      * @date 2020/7/20
      */
-    protected void afterCommitRecharge(FundRequestDto requestDto, BusinessRecordDo record) {
+    protected void afterRecharge(FundRequestDto requestDto, BusinessRecordDo record) {
 
     }
 

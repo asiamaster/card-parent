@@ -9,13 +9,6 @@ import com.dili.card.type.TradeType;
  * @Date: 2020/7/2 10:20
  */
 public interface IRechargeManager {
-    /**
-    * 获取充值金额（这里是包含计算手续费和本金）
-    * @author miaoguoxin
-    * @date 2020/7/6
-    */
-    @Deprecated
-    Long getRechargeAmount(FundRequestDto requestDto);
 
     /**
     *  构建业务流水备注信息

@@ -243,6 +243,8 @@ public final class HTMLFilter {
             s = regexReplace(P_STRAY_LEFT_ARROW, "&lt;$1", s);
             s = regexReplace(P_STRAY_RIGHT_ARROW, "$1$2&gt;<", s);
 
+            s = s.replaceAll("<","&lt;");
+            s = s.replaceAll(">","&gt;");
             //
             // the last regexp causes '<>' entities to appear
             // (we need to do a lookahead assertion so that the last bracket can
