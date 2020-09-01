@@ -241,6 +241,7 @@ public class UserCashServiceImpl implements IUserCashService {
 	private UserCashDto buildSingleCashDtoy(UserCashDo userCashDo) {
 		UserCashDto cashDto = new UserCashDto();
 		cashDto.setCashNo(userCashDo.getCashNo());
+		cashDto.setCashNoText(userCashDo.getCashNo().toString());
 		cashDto.setAmount(userCashDo.getAmount());
 		cashDto.setCreatorId(userCashDo.getCreatorId());
 		cashDto.setCreatorCode(userCashDo.getCreatorCode());
