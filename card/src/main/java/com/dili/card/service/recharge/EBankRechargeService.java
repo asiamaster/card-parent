@@ -18,10 +18,6 @@ import org.springframework.stereotype.Service;
 @TradeChannelMark(TradeChannel.E_BANK)
 public class EBankRechargeService extends AbstractRechargeManager {
 
-    @Override
-    public Long getRechargeAmount(FundRequestDto requestDto) {
-        return NumberUtil.add(requestDto.getAmount(), requestDto.getServiceCost()).longValue();
-    }
 
     @Override
     public String buildBusinessRecordNote(FundRequestDto requestDto) {
