@@ -1,6 +1,5 @@
 package com.dili.card.service.recharge;
 
-import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.annotation.TradeChannelMark;
 import com.dili.card.common.constant.Constant;
@@ -11,7 +10,6 @@ import com.dili.card.type.FundItem;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
-import com.dili.ss.constant.ResultCode;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,14 +21,6 @@ import org.springframework.stereotype.Component;
 @TradeChannelMark(TradeChannel.POS)
 public class PosRechargeService extends AbstractRechargeManager {
 
-    @Override
-    public Long getRechargeAmount(FundRequestDto requestDto) {
-        long amount = NumberUtil.sub(requestDto.getAmount(), requestDto.getServiceCost()).longValue();
-        if (amount <= 0) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "非法的充值金额");
-        }
-        return amount;
-    }
 
     @Override
     public String buildBusinessRecordNote(FundRequestDto requestDto) {

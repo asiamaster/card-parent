@@ -184,6 +184,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		record.setStartBalance(0L);
 		record.setAmount(openCardInfo.getCostFee());
 		record.setEndBalance(0L);
+		record.setTradeChannel(TradeChannel.CASH.getCode());
 		record.setOperateTime(LocalDateTime.now());
 
 		SerialDto serialDto = new SerialDto();

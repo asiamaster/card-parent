@@ -23,11 +23,6 @@ public class CashRechargeService extends AbstractRechargeManager {
     private IAccountCycleService accountCycleService;
 
     @Override
-    public Long getRechargeAmount(FundRequestDto requestDto) {
-        return requestDto.getAmount();
-    }
-
-    @Override
     public String buildBusinessRecordNote(FundRequestDto requestDto) {
         return "现金存款";
     }
@@ -60,7 +55,7 @@ public class CashRechargeService extends AbstractRechargeManager {
 
 
     @Override
-    protected void afterCommitRecharge(FundRequestDto requestDto, BusinessRecordDo record) {
+    protected void afterRecharge(FundRequestDto requestDto, BusinessRecordDo record) {
         //添加现金资金池
         accountCycleService.increaseCashBox(record.getCycleNo(), requestDto.getAmount());
     }

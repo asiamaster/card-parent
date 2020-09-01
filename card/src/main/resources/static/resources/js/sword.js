@@ -1023,20 +1023,20 @@ tab = {
                         _$ele.table.options.dialog.hide();
                     }
                     if (_$ele.table.options.type == table_type.bootstrapTable) {
-                        _$ele.$.modal.alertSuccess(result.message);
+                        $.modal.alertSuccess(result.message);
                         _$ele.$.table.refresh();
                     } else if (_$ele.table.options.type == table_type.bootstrapTreeTable) {
-                        _$ele.$.modal.alertSuccess(result.message);
+                        $.modal.alertSuccess(result.message);
                         _$ele.$.treeTable.refresh();
                     } else {
                         //$.modal.msgReload("保存成功,正在刷新数据请稍后……", modal_status.SUCCESS);
                     }
                 } else if (result.code == web_status.WARNING) {
-                    _$ele.$.modal.alertWarning(result.message)
+                    $.modal.alertWarning(result.message)
                 } else if (result.code == web_status.BIZERROR) {
-                    _$ele.$.modal.alertWarning(result.message)
+                    $.modal.alertWarning(result.message)
                 } else {
-                    _$ele.$.modal.alertError(result.message);
+                    $.modal.alertError(result.message);
                 }
 
             },
