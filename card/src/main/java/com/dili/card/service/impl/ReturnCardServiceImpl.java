@@ -92,10 +92,6 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 		
 		// 退卡
 		cardManageRpcResolver.returnCard(cardParam);
-		// 激活卡
-		GenericRpcResolver.resolver(
-				cardStorageRpc.activateCardByInUse(CardStorageActivateDto.create(accountCard.getCardNo())),
-				ServiceType.ACCOUNT_SERVCIE.getName());
 		
 		String tradeId = null;
 		TradeResponseDto tradeResponseDto = null;
