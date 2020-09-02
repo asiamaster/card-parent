@@ -66,8 +66,7 @@ public class UserCashServiceImpl implements IUserCashService {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能删除");
 		}
 		// 获取账务周期
-		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDo.getUserId(),
-				userCashDo.getUserName(), userCashDo.getUserCode());
+		AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(userCashDo.getUserId());
 		AccountCycleDto accountCycleDto = accountCycleService.detail(accountCycle.getId());
 		// 校验现金余额 领款删除不能导致现金余额小于0 并且校验是本人
 		if (userCashDo.getAction().equals(CashAction.PAYEE.getCode())) {
