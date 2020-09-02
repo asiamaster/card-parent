@@ -250,9 +250,6 @@ public class ContractServiceImpl implements IContractService {
 		userAccountCardQuery.setExcludeUnusualState(0);
 		Map<Long, UserAccountCardResponseDto> userAccountCardMsp = accountQueryRpcResolver
 				.findAccountCardsMapByAccountIds(userAccountCardQuery);
-		System.out.println();
-		System.out.println(accountIds + "-----" + JSONUtil.toJsonStr(userAccountCardMsp));
-		System.out.println();
 		//客户信息构建
 		List<Long> customerIds = fundContracts.stream().map(c -> c.getConsignorCustomerId())
 				.collect(Collectors.toList());
@@ -260,7 +257,6 @@ public class ContractServiceImpl implements IContractService {
 				fundContracts.get(0).getFirmId());
 		//合同信息构建
 		for (FundContractDo fundContractDo : fundContracts) {
-			System.out.println(JSONUtil.toJsonStr(fundContractDo));
 			contractResponseDtos.add(this.buildContractResponse(fundContractDo,
 					userAccountCardMsp.get(fundContractDo.getConsignorAccountId()),
 					customerMap.get(fundContractDo.getConsignorCustomerId())));

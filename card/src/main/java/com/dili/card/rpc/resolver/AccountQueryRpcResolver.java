@@ -51,9 +51,6 @@ public class AccountQueryRpcResolver {
      */
     public Map<Long, UserAccountCardResponseDto> findAccountCardsMapByAccountIds(UserAccountCardQuery userAccountCardQuery) {
         List<UserAccountCardResponseDto> userAccountCards = this.findByQueryCondition(userAccountCardQuery);
-		System.out.println();
-		System.out.println("-----" + JSONUtil.toJsonStr(userAccountCards));
-		System.out.println();
         return userAccountCards.stream().filter(x -> CardStatus.RETURNED.getCode() != x.getCardState() )
                 .collect(Collectors.toMap(UserAccountCardResponseDto::getAccountId,
                         a -> a,
