@@ -393,7 +393,7 @@ public class ContractServiceImpl implements IContractService {
 		}
 		// 构建合同委托人核心数据
 		fundContractDo.setConsignorAccountId(fundContractRequest.getConsignorAccountId());
-		if (Timestamp.valueOf(fundContractRequest.getEndTime()).getTime() < Timestamp.valueOf(LocalDateTime.now())
+		if (Timestamp.valueOf(fundContractRequest.getEndTime()).getTime() < Timestamp.valueOf(LocalDate.now().atStartOfDay())
 				.getTime()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "合同结束时间不小于今天");
 		}
