@@ -251,7 +251,7 @@ public class ContractServiceImpl implements IContractService {
 		Map<Long, UserAccountCardResponseDto> userAccountCardMsp = accountQueryRpcResolver
 				.findAccountCardsMapByAccountIds(userAccountCardQuery);
 		System.out.println();
-		System.out.println("-----" + JSONUtil.toJsonStr(userAccountCardMsp));
+		System.out.println(accountIds + "-----" + JSONUtil.toJsonStr(userAccountCardMsp));
 		System.out.println();
 		//客户信息构建
 		List<Long> customerIds = fundContracts.stream().map(c -> c.getConsignorCustomerId())

@@ -10,6 +10,9 @@ import com.dili.card.type.CardStatus;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
+
+import cn.hutool.json.JSONUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +51,9 @@ public class AccountQueryRpcResolver {
      */
     public Map<Long, UserAccountCardResponseDto> findAccountCardsMapByAccountIds(UserAccountCardQuery userAccountCardQuery) {
         List<UserAccountCardResponseDto> userAccountCards = this.findByQueryCondition(userAccountCardQuery);
+		System.out.println();
+		System.out.println("-----" + JSONUtil.toJsonStr(userAccountCards));
+		System.out.println();
         return userAccountCards.stream().filter(x -> CardStatus.RETURNED.getCode() != x.getCardState() )
                 .collect(Collectors.toMap(UserAccountCardResponseDto::getAccountId,
                         a -> a,
