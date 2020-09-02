@@ -132,16 +132,16 @@
 		<#resource code="cancleContract">
 		<button id="btn_remove" type="button" class="btn btn-primary" onclick="$.operate.removeWithTitle(null,'48%','53%','信息确认')"><i class="fa fa-trash-o"></i> 解除</button>
 	</#resource>
-	<#resource code="cancleContract">
+	<#resource code="preViewContract">
 	<button id="btn_preview" type="button" class="btn btn-primary" onclick="$.operate.preview(null,'70%','75%', '合同预览')"><i class="fa fa-list"></i> 合同预览</button>
 	</#resource>
 	<#resource code="viewContract">
 	<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'80%','85%')"><i class="fa fa-list"></i> 查看</button>
 	</#resource>
-	<#resource code="cancleContract">
+	<#resource code="printContract">
 	<button id="btn_reprint" type="button" class="btn btn-primary" onclick="printContract()"><i class="fa fa-list"></i>补打合同</button>
 	</#resource>
-	<#resource code="cancleContract">
+	<#resource code="exportContract">
 	<button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
 		class="fa fa-file-excel-o"></i>
 		导出
@@ -203,7 +203,7 @@
 					<table id="contract-save" class="table table-bordered">
 						<tbody>
 							<tr>
-								<td class="info-column">委托人<a onclick="return false"  href="${contextPath}/contract/confirm.action">00</a></td>
+								<td class="info-column">委托人</td>
 								<td class="info-cell">
 								<input placeholder="客户id"
 									name="customerId"  type="hidden"
