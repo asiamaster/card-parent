@@ -805,13 +805,9 @@
 	/** 查询按钮 */
 	function searchCustomer(){
 		var idCard = $("#consignorCustomerIDCode").val();
-		var consignor = $("#consignorCustomerName").val();
 		if($.common.isEmpty(idCard)){
 			$("#consignorCustomerName").val("");
 			$.modal.alertError("证件号必填");
-			return false;
-		}
-		if(!$.common.isEmpty(consignor)){
 			return false;
 		}
 		getUserInfo(idCard, "查询成功");
