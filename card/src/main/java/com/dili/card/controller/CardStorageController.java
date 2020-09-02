@@ -26,7 +26,7 @@ import com.dili.ss.domain.BaseOutput;
 @Controller
 @RequestMapping("cardStorage")
 public class CardStorageController implements IControllerHandler {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(CardStorageController.class);
 
 
@@ -48,6 +48,7 @@ public class CardStorageController implements IControllerHandler {
 	@ResponseBody
 	public Map<String, Object> queryCardStorageList(CardStorageDto queryDto) {
 		log.info("卡片库存列表 *****{}", JSONObject.toJSONString(queryDto));
+		buildOperatorInfo(queryDto);
 		return successPage(cardStorageService.cardStorageList(queryDto));
 	}
 
