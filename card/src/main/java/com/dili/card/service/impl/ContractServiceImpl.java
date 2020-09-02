@@ -54,6 +54,8 @@ import com.dili.uap.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
+import cn.hutool.json.JSONUtil;
+
 @Service
 public class ContractServiceImpl implements IContractService {
 
@@ -255,6 +257,7 @@ public class ContractServiceImpl implements IContractService {
 				fundContracts.get(0).getFirmId());
 		//合同信息构建
 		for (FundContractDo fundContractDo : fundContracts) {
+			System.out.println(JSONUtil.toJsonStr(fundContractDo));
 			contractResponseDtos.add(this.buildContractResponse(fundContractDo,
 					userAccountCardMsp.get(fundContractDo.getConsignorAccountId()),
 					customerMap.get(fundContractDo.getConsignorCustomerId())));
