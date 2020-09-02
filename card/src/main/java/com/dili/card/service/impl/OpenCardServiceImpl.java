@@ -158,6 +158,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		serial.setTradeType(TradeType.FEE.getCode());
 		serial.setTradeNo(tradeId);
 		serial.setType(OperateType.ACCOUNT_TRANSACT.getCode());
+		serial.setTradeChannel(TradeChannel.CASH.getCode());
 		return serial;
 	}
 
@@ -173,7 +174,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		record.setCustomerNo(openCardInfo.getCustomerCode());
 		record.setFirmId(openCardInfo.getFirmId());
 		record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
-		record.setNotes("开卡工本费转为市场收入");
+		record.setNotes("开卡，工本费转为市场收入");
 		record.setOperatorId(openCardInfo.getCreatorId());
 		record.setOperatorName(openCardInfo.getCreator());
 		record.setOperatorNo(openCardInfo.getCreatorCode());
@@ -181,9 +182,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		record.setType(OperateType.ACCOUNT_TRANSACT.getCode());
 		record.setFundItem(FundItem.IC_CARD_COST.getCode());
 		record.setFundItemName(FundItem.IC_CARD_COST.getName());
-		record.setStartBalance(0L);
 		record.setAmount(openCardInfo.getCostFee());
-		record.setEndBalance(0L);
 		record.setTradeChannel(TradeChannel.CASH.getCode());
 		record.setOperateTime(LocalDateTime.now());
 

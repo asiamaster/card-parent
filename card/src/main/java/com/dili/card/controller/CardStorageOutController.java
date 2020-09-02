@@ -90,7 +90,7 @@ public class CardStorageOutController implements IControllerHandler {
     public Map<String, Object> getPage(@Validated(ConstantValidator.Page.class)
                                                CardStorageOutQueryDto queryDto) {
         log.info("出库列表分页 *****{}", JSONObject.toJSONString(queryDto));
-        // this.buildOperatorInfo(queryDto);
+        this.buildOperatorInfo(queryDto);
         return successPage(cardStorageService.getPage(queryDto));
     }
 
