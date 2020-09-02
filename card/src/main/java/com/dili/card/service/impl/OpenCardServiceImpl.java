@@ -8,10 +8,13 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
 import com.dili.card.common.constant.ServiceName;
+import com.dili.card.config.OpenCardMQConfig;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.OpenCardDto;
+import com.dili.card.dto.OpenCardMqDto;
 import com.dili.card.dto.OpenCardResponseDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
@@ -42,6 +45,7 @@ import com.dili.card.type.SystemSubjectType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
+import com.dili.commons.rabbitmq.RabbitMQMessageService;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.rule.sdk.rpc.ChargeRuleRpc;
@@ -81,6 +85,8 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	private CustomerRpc customerRpc;
 	@Resource
 	private CardManageRpc cardManageRpc;
+	@Resource
+    private RabbitMQMessageService rabbitMQMessageService;
 
 	@Override
 	public Long getOpenCostFee() {
@@ -93,7 +99,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
 	public OpenCardResponseDto openCard(OpenCardDto openCardInfo) {
-		// 校验父账号登录密码 TODO:等待客户端更新
+		// 校验父账号登录密码
 		if(CardType.isSlave(openCardInfo.getCardType())) {
 			CardRequestDto checkPwdParam = new CardRequestDto();
 			checkPwdParam.setAccountId(openCardInfo.getParentAccountId());
@@ -131,7 +137,24 @@ public class OpenCardServiceImpl implements IOpenCardService {
 
 		// 保存全局操作交易记录 开卡工本费
 		saveSerialRecord(openCardInfo, accountId);
+		
+		// 发送MQ通知
+		sendMQ(openCardInfo);
 		return openCardResponse;
+	}
+
+	/**
+	 * 发送MQ
+	 * @param openCardInfo
+	 */
+	private void sendMQ(OpenCardDto openCardInfo) {
+		OpenCardMqDto mqDto=new OpenCardMqDto();
+		mqDto.setCustomerId(openCardInfo.getCustomerId());
+		mqDto.setCustomerCode(openCardInfo.getCustomerCode());
+		mqDto.setCustomerName(openCardInfo.getCustomerName());
+		mqDto.setCardNo(openCardInfo.getCardNo());
+		mqDto.setFirmId(openCardInfo.getFirmId());
+		rabbitMQMessageService.send(OpenCardMQConfig.EXCHANGE, OpenCardMQConfig.ROUTING, JSONObject.toJSONString(mqDto));
 	}
 
 	/**
@@ -213,4 +236,6 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		GenericRpcResolver.resolver(payRpc.commitTrade(commitDto), ServiceName.PAY);
 		return createTradeResp.getTradeId();
 	}
+	
+	
 }
