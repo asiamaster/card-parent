@@ -349,7 +349,7 @@
 					</p>
 					<p >委托人：</p>
 					<p style="text-indent: 2em">
-						名称：<font color="#FC1D24"><span id="consignorCustomerName3"></span></font> ， 身份证号：<font color="#FC1D24"><span id="consignorCustomerIDCode2"></span></font>，
+						证件名称：<font color="#FC1D24"><span id="consignorCustomerName3"></span></font> ， 身份证号：<font color="#FC1D24"><span id="consignorCustomerIDCode2"></span></font>，
 						联系电话：<font color="#FC1D24"><span id="consignorCustomerMobile2"></span></font>
 					</p>
 					<p>被委托人：</p>
@@ -514,6 +514,7 @@
 	let data = {};
 	function nextStep(){
 		data = {};
+		data.notes=parseInt($('#notes').val());
 		data.customerId=parseInt($('#customerId').val());
 		data.consignorCustomerName=$('#consignorCustomerName').val();
 		if($.common.isEmpty($('#consignorCustomerIDCode').val())){
@@ -626,6 +627,7 @@
 		$('#consignorAccountId').val('');
 		$('#startTime').val('');
 		$('#endTime').val('');
+		$('#notes').val('');
 		$(".consignee").each(function () {
 			$(this).find("#consigneeName").val('');
 			$(this).find("#consigneeIdCode").val('');
