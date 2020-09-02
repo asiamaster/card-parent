@@ -727,7 +727,7 @@
             url:'${contextPath}/accountQuery/single.action?cardNo='+cardNo,
             success:function(result) {
                 if (result.code=="200") {
-                	if(!result.data.cardType == 10){
+                	if(result.data.cardType != 10){
                 		$.modal.alertError("必须是主卡");
                 		return;
                 	}
