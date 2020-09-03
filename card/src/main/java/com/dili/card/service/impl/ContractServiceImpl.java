@@ -290,11 +290,13 @@ public class ContractServiceImpl implements IContractService {
 		}
 		expireDay = Long.valueOf(readyExpireDay);
 		LocalDate plusDaysResult = LocalDate.now().plusDays(expireDay);
-		if (Timestamp.valueOf(fundContractDo.getEndTime()).getTime() < Timestamp
-				.valueOf(plusDaysResult.atStartOfDay()).getTime()) {
-			contractResponseDto.setReadyExpire(true);
-		}
+		if (fundContractDo.getState().equals(ContractState.ENTUST.getCode())) {
+			if (Timestamp.valueOf(fundContractDo.getEndTime()).getTime() < Timestamp
+					.valueOf(plusDaysResult.atStartOfDay()).getTime()) {
+				contractResponseDto.setReadyExpire(true);
+			}
 
+		}
 		List<FundConsignorDo> consignors = fundConsignorDao.findConsignorsByContractNo(fundContractDo.getContractNo());
 		// 列表被委托人信息
 		List<FundConsignorDto> consignorDtos = new ArrayList<FundConsignorDto>();

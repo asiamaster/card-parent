@@ -419,7 +419,13 @@
 			previewUrl : "${contextPath}/contract/preview.html?id={id}",
 			removeUrl : "${contextPath}/contract/remove.html?id={id}",
 			sortName : "create_time",
-			modalName : "查看资金委托信息"
+			modalName : "查看资金委托信息",
+			rowStyle:function(row, index){
+				if(row.readyExpire){
+		             return {css:{'background-color':'#ff0033'}};
+		        }
+		        return '';
+			}
 		};
 		$.table.init(options);
 	});
