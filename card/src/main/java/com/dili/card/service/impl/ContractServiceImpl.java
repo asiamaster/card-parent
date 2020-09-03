@@ -195,7 +195,6 @@ public class ContractServiceImpl implements IContractService {
 	 */
 	private void validateIdCodeAndMobile(FundContractRequestDto fundContractRequest) {
 		List<String> consigneeCustomerIdCodes = new ArrayList<String>();
-		List<String> consigneeCustomerMobiles = new ArrayList<String>();
 		for (FundConsignorDto fundConsignorDto : fundContractRequest.getConsignors()) {
 			if (fundContractRequest.getConsignorCustomerIDCode()
 					.equalsIgnoreCase(fundConsignorDto.getConsigneeIdCode())) {
@@ -205,9 +204,7 @@ public class ContractServiceImpl implements IContractService {
 				throw new CardAppBizException(ResultCode.DATA_ERROR, "被委托人证件号不能相同");
 			}
 			consigneeCustomerIdCodes.add(fundConsignorDto.getConsigneeIdCode());
-			consigneeCustomerMobiles.add(fundConsignorDto.getConsigneeIdMobile());
 		}
-
 	}
 
 	/**
