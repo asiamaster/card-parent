@@ -24,7 +24,6 @@ import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
 import com.dili.card.exception.CardAppBizException;
-import com.dili.card.schedule.ContractScheduleHandler;
 import com.dili.card.service.IContractService;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.customer.sdk.domain.Customer;
