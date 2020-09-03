@@ -257,7 +257,6 @@ public class ContractServiceImpl implements IContractService {
 				fundContracts.get(0).getFirmId());
 		//合同信息构建
 		for (FundContractDo fundContractDo : fundContracts) {
-			System.out.println(JSONUtil.toJsonStr(fundContractDo));
 			contractResponseDtos.add(this.buildContractResponse(fundContractDo,
 					userAccountCardMsp.get(fundContractDo.getConsignorAccountId()),
 					customerMap.get(fundContractDo.getConsignorCustomerId())));
@@ -291,11 +290,13 @@ public class ContractServiceImpl implements IContractService {
 		}
 		expireDay = Long.valueOf(readyExpireDay);
 		LocalDate plusDaysResult = LocalDate.now().plusDays(expireDay);
-		if (Timestamp.valueOf(fundContractDo.getEndTime()).getTime() < Timestamp
-				.valueOf(plusDaysResult.atStartOfDay()).getTime()) {
-			contractResponseDto.setReadyExpire(true);
-		}
+		if (fundContractDo.getState().equals(ContractState.ENTUST.getCode())) {
+			if (Timestamp.valueOf(fundContractDo.getEndTime()).getTime() < Timestamp
+					.valueOf(plusDaysResult.atStartOfDay()).getTime()) {
+				contractResponseDto.setReadyExpire(true);
+			}
 
+		}
 		List<FundConsignorDo> consignors = fundConsignorDao.findConsignorsByContractNo(fundContractDo.getContractNo());
 		// 列表被委托人信息
 		List<FundConsignorDto> consignorDtos = new ArrayList<FundConsignorDto>();
