@@ -44,8 +44,6 @@ public class ContractManagementController implements IControllerHandler {
 
 	@Autowired
 	private IContractService iContractService;
-	@Autowired
-	private ContractScheduleHandler contractScheduleHandler;
 
 	/**
 	 * 列表页面
@@ -139,17 +137,6 @@ public class ContractManagementController implements IControllerHandler {
 	public BaseOutput<Boolean> remove(@RequestBody FundContractRequestDto fundContractRequest) {
 		log.info("解除合同*****{}", JSONObject.toJSONString(fundContractRequest));
 		iContractService.remove(fundContractRequest);
-		return BaseOutput.success();
-	}
-
-	/**
-	 * 更新合同状态
-	 */
-	@PostMapping("/updateStateTask.action")
-	@ResponseBody
-	public BaseOutput<Boolean> updateStateTask() {
-		log.info("更新合同状态*****");
-		contractScheduleHandler.execute();
 		return BaseOutput.success();
 	}
 
