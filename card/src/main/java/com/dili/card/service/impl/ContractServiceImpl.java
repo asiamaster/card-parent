@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.dili.card.dto.UserAccountSingleQueryDto;
-import com.dili.card.service.IAccountQueryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +27,7 @@ import com.dili.card.dto.FundContractRequestDto;
 import com.dili.card.dto.FundContractResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.entity.FundConsignorDo;
 import com.dili.card.entity.FundContractDo;
 import com.dili.card.exception.CardAppBizException;
@@ -38,6 +37,7 @@ import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.DataDictionaryRpcResovler;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
+import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IContractService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CardStatus;
@@ -54,8 +54,6 @@ import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-
-import cn.hutool.json.JSONUtil;
 
 @Service
 public class ContractServiceImpl implements IContractService {
@@ -80,7 +78,7 @@ public class ContractServiceImpl implements IContractService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void save(FundContractRequestDto fundContractRequest) {
-		//校验委托人和被委托人身份证手机号校验
+		// 校验委托人和被委托人身份证手机号校验
 		this.validateIdCodeAndMobile(fundContractRequest);
 		// 构建合同主体
 		FundContractDo fundContract = this.buildContractEntity(fundContractRequest);
@@ -133,7 +131,8 @@ public class ContractServiceImpl implements IContractService {
 		if (fundContract == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "该合同号不存在");
 		}
-		UserAccountCardResponseDto userAccountCard = accountQueryService.getByAccountId(fundContract.getConsignorAccountId());
+		UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver
+				.findSingleWithoutValidate(UserAccountSingleQueryDto.newDto(fundContract.getConsignorAccountId()));
 		Customer customer = customerRpcResolver.getWithNotNull(userAccountCard.getCustomerId(),
 				fundContract.getFirmId());
 		return this.buildContractResponse(fundContract, userAccountCard, customer);
@@ -175,7 +174,8 @@ public class ContractServiceImpl implements IContractService {
 		List<Customer> itemList = customerRpcResolver.list(query);
 		if (CollectionUtils.isEmpty(itemList)) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "无相应客户信息");
-		};
+		}
+		;
 		Customer customer = itemList.get(0);
 		if (!customer.getState().equals(CustomerState.VALID.getCode())) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR,
@@ -196,7 +196,8 @@ public class ContractServiceImpl implements IContractService {
 		List<String> consigneeCustomerIdCodes = new ArrayList<String>();
 		List<String> consigneeCustomerMobiles = new ArrayList<String>();
 		for (FundConsignorDto fundConsignorDto : fundContractRequest.getConsignors()) {
-			if (fundContractRequest.getConsignorCustomerIDCode().equalsIgnoreCase(fundConsignorDto.getConsigneeIdCode())) {
+			if (fundContractRequest.getConsignorCustomerIDCode()
+					.equalsIgnoreCase(fundConsignorDto.getConsigneeIdCode())) {
 				throw new CardAppBizException(ResultCode.DATA_ERROR, "被委托人证件号与委托人证件号不能相同");
 			}
 			if (consigneeCustomerIdCodes.contains(fundConsignorDto.getConsigneeIdCode())) {
@@ -219,9 +220,11 @@ public class ContractServiceImpl implements IContractService {
 		contractQueryDto.setFirmId(userTicket.getFirmId());
 		if (!StringUtils.isBlank(contractQueryDto.getCardNo())) {
 			// 构建卡数据
-			UserAccountCardResponseDto userAccountCard = accountQueryService.getByCardNoWithoutValidate(contractQueryDto.getCardNo());
-			//如果卡为退卡状态不能卡出卡信息
-			contractQueryDto.setConsignorAccountId(userAccountCard.getCardState() == CardStatus.RETURNED.getCode() ? -1 : userAccountCard.getAccountId());
+			UserAccountCardResponseDto userAccountCard = accountQueryService
+					.getByCardNoWithoutValidate(contractQueryDto.getCardNo());
+			// 如果卡为退卡状态不能卡出卡信息
+			contractQueryDto.setConsignorAccountId(userAccountCard.getCardState() == CardStatus.RETURNED.getCode() ? -1
+					: userAccountCard.getAccountId());
 		}
 		// 过期时间构建
 		if (contractQueryDto.getDays() != null && contractQueryDto.getDays() >= 0) {
@@ -238,7 +241,7 @@ public class ContractServiceImpl implements IContractService {
 		if (CollectionUtils.isEmpty(fundContracts)) {
 			return contractResponseDtos;
 		}
-		//账户信息构建
+		// 账户信息构建
 		List<Long> accountIds = fundContracts.stream().map(c -> c.getConsignorAccountId()).collect(Collectors.toList());
 		UserAccountCardQuery userAccountCardQuery = new UserAccountCardQuery();
 		userAccountCardQuery.setAccountIds(accountIds);
@@ -246,12 +249,12 @@ public class ContractServiceImpl implements IContractService {
 		userAccountCardQuery.setExcludeUnusualState(0);
 		Map<Long, UserAccountCardResponseDto> userAccountCardMsp = accountQueryRpcResolver
 				.findAccountCardsMapByAccountIds(userAccountCardQuery);
-		//客户信息构建
+		// 客户信息构建
 		List<Long> customerIds = fundContracts.stream().map(c -> c.getConsignorCustomerId())
 				.collect(Collectors.toList());
 		Map<Long, Customer> customerMap = customerRpcResolver.findCustomerMapByCustomerIds(customerIds,
 				fundContracts.get(0).getFirmId());
-		//合同信息构建
+		// 合同信息构建
 		for (FundContractDo fundContractDo : fundContracts) {
 			contractResponseDtos.add(this.buildContractResponse(fundContractDo,
 					userAccountCardMsp.get(fundContractDo.getConsignorAccountId()),
@@ -366,35 +369,37 @@ public class ContractServiceImpl implements IContractService {
 		FundContractDo fundContractDo = new FundContractDo();
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 
-		Customer customer = customerRpcResolver.getWithNotNull(fundContractRequest.getCustomerId(), (userTicket.getFirmId()));
+		Customer customer = customerRpcResolver.getWithNotNull(fundContractRequest.getCustomerId(),
+				(userTicket.getFirmId()));
 		if (customer == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "系统没有客户信息");
 		}
 		UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
 		query.setAccountId(fundContractRequest.getConsignorAccountId());
-		UserAccountCardResponseDto userAccountCardResponseDto = accountQueryRpcResolver.findSingleWithoutValidate(query);
+		UserAccountCardResponseDto userAccountCardResponseDto = accountQueryRpcResolver
+				.findSingleWithoutValidate(query);
 		if (userAccountCardResponseDto == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "卡号不存在");
 		}
-        if (CardStatus.RETURNED.getCode() == userAccountCardResponseDto.getCardState()) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡为退还状态，不能进行此操作");
-        }
-        if (DisableState.DISABLED.getCode().equals(userAccountCardResponseDto.getDisabledState())) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡账户为禁用状态，不能进行此操作");
-        }
-        if (CardStatus.LOSS.getCode() == userAccountCardResponseDto.getCardState()) {
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡为挂失状态，不能进行此操作");
-        }
-        if (!customer.getId().equals(userAccountCardResponseDto.getCustomerId())) {
-        	throw new CardAppBizException(ResultCode.DATA_ERROR, "卡主和持卡人不一致");
+		if (CardStatus.RETURNED.getCode() == userAccountCardResponseDto.getCardState()) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡为退还状态，不能进行此操作");
 		}
-        if (userAccountCardResponseDto.getCardType() != 10) {
-        	throw new CardAppBizException(ResultCode.DATA_ERROR, "卡必须是主卡");
+		if (DisableState.DISABLED.getCode().equals(userAccountCardResponseDto.getDisabledState())) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡账户为禁用状态，不能进行此操作");
+		}
+		if (CardStatus.LOSS.getCode() == userAccountCardResponseDto.getCardState()) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡为挂失状态，不能进行此操作");
+		}
+		if (!customer.getId().equals(userAccountCardResponseDto.getCustomerId())) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "卡主和持卡人不一致");
+		}
+		if (userAccountCardResponseDto.getCardType() != 10) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "卡必须是主卡");
 		}
 		// 构建合同委托人核心数据
 		fundContractDo.setConsignorAccountId(fundContractRequest.getConsignorAccountId());
-		if (Timestamp.valueOf(fundContractRequest.getEndTime()).getTime() < Timestamp.valueOf(LocalDate.now().atStartOfDay())
-				.getTime()) {
+		if (Timestamp.valueOf(fundContractRequest.getEndTime()).getTime() < Timestamp
+				.valueOf(LocalDate.now().atStartOfDay()).getTime()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "合同结束时间不小于今天");
 		}
 		if (Timestamp.valueOf(fundContractRequest.getEndTime()).getTime() < Timestamp
