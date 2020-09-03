@@ -12,6 +12,7 @@ import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -24,6 +25,9 @@ import java.lang.reflect.Proxy;
 @Component
 @ConditionalOnProperty(name = "ribbon.eager-load.enabled", havingValue = "true")
 public class FeignClientInitBeanPostProcessor implements BeanPostProcessor {
+    private static final String FEIGN_CLAZZ_NAME = "feign.ReflectiveFeign$FeignInvocationHandler";
+    private static final String HYSTRIX_CLAZZ_NAME = "feign.hystrix.HystrixInvocationHandler";
+
     private static Logger LOGGER = LoggerFactory.getLogger(FeignClientInitBeanPostProcessor.class);
     @Autowired
     private SpringClientFactory springClientFactory;
@@ -33,9 +37,13 @@ public class FeignClientInitBeanPostProcessor implements BeanPostProcessor {
         if (!Proxy.isProxyClass(bean.getClass())) {
             return bean;
         }
-        if (beanName.toLowerCase().endsWith("mapper") || beanName.toLowerCase().endsWith("dao")) {
+
+        InvocationHandler handler = Proxy.getInvocationHandler(bean);
+        if (!FEIGN_CLAZZ_NAME.equals(handler.getClass().getName())
+                && !HYSTRIX_CLAZZ_NAME.equals(handler.getClass().getName())) {
             return bean;
         }
+
         try {
             FeignClient annotation = Class.forName(beanName).getAnnotation(FeignClient.class);
             if (annotation == null) {
