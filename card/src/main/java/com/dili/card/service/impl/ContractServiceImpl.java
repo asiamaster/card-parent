@@ -203,9 +203,6 @@ public class ContractServiceImpl implements IContractService {
 			if (consigneeCustomerIdCodes.contains(fundConsignorDto.getConsigneeIdCode())) {
 				throw new CardAppBizException(ResultCode.DATA_ERROR, "被委托人证件号不能相同");
 			}
-			if (consigneeCustomerMobiles.contains(fundConsignorDto.getConsigneeIdMobile())) {
-				throw new CardAppBizException(ResultCode.DATA_ERROR, "被委托人手机号不能相同");
-			}
 			consigneeCustomerIdCodes.add(fundConsignorDto.getConsigneeIdCode());
 			consigneeCustomerMobiles.add(fundConsignorDto.getConsigneeIdMobile());
 		}
