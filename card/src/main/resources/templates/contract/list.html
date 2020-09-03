@@ -566,7 +566,7 @@
 		}
 		var start=new Date($('#startTime').val().replace("-", "/").replace("-", "/"));
 		var end=new Date($('#endTime').val().replace("-", "/").replace("-", "/"));
-		var now = new Date(getNowFormatDate('-','-','-'));
+		var now = new Date(getNowFormatDate('-','-','-').replace("-", "/").replace("-", "/"));
 		if(start > end){
 			$.modal.alertError("合同开始时间不能大于截止时间");
 			return false;
