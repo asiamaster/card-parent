@@ -31,6 +31,7 @@ import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.entity.FundConsignorDo;
 import com.dili.card.entity.FundContractDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.exception.ErrorCode;
 import com.dili.card.rpc.DFSRpc;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
@@ -217,11 +218,18 @@ public class ContractServiceImpl implements IContractService {
 		contractQueryDto.setFirmId(userTicket.getFirmId());
 		if (!StringUtils.isBlank(contractQueryDto.getCardNo())) {
 			// 构建卡数据
-			UserAccountCardResponseDto userAccountCard = accountQueryService
-					.getByCardNoWithoutValidate(contractQueryDto.getCardNo());
+			UserAccountCardResponseDto userAccountCard = null;
+			try {
+				userAccountCard = accountQueryService.getByCardNoWithoutValidate(contractQueryDto.getCardNo());
+			} catch (CardAppBizException e) {
+				//卡号不存在不需要报错 自己处理就好
+				if (!ErrorCode.CARD_NO_NOT_EXIST.equals(e.getCode())) {
+					throw e;
+				}
+			}
 			// 如果卡为退卡状态不能卡出卡信息
-			contractQueryDto.setConsignorAccountId(userAccountCard.getCardState() == CardStatus.RETURNED.getCode() ? -1
-					: userAccountCard.getAccountId());
+			Long accountId = userAccountCard == null || userAccountCard.getCardState() == CardStatus.RETURNED.getCode() ? -1: userAccountCard.getAccountId();
+			contractQueryDto.setConsignorAccountId(accountId);
 		}
 		// 过期时间构建
 		if (contractQueryDto.getDays() != null && contractQueryDto.getDays() >= 0) {
