@@ -163,7 +163,7 @@
                     委托人
                 </th>
                 <th data-field="consignorCard" data-align="center">
-                    委托卡
+                    委托卡信息
                 </th>
                 <th data-field="consigneeNames" data-align="center">
                     被委托人
@@ -566,7 +566,7 @@
 		}
 		var start=new Date($('#startTime').val().replace("-", "/").replace("-", "/"));
 		var end=new Date($('#endTime').val().replace("-", "/").replace("-", "/"));
-		var now = new Date(getNowFormatDate('-','-','-'));
+		var now = new Date(getNowFormatDate('-','-','-').replace("-", "/").replace("-", "/"));
 		if(start > end){
 			$.modal.alertError("合同开始时间不能大于截止时间");
 			return false;
@@ -579,15 +579,18 @@
 		data.endTime=$('#endTime').val();
 		let items = [];
 		let consigneeNames='';
+		var validate = true;
 		$(".consignee").each(function () {
 			let item = {};
 			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				$.modal.alertError("请添加被委托人身份证号");
-				return false;
+				validate = false;
+				break;
 			}
 			if($.common.isEmpty($(this).find("#consigneeIdMobile").val())){
 				$.modal.alertError("请添加被委托人手机号");
-				return false;
+				validate = false;
+				break;
 			}
 			item.consigneeName=$(this).find("#consigneeName").val();
 			consigneeNames = consigneeNames.concat("、",item.consigneeName);
@@ -597,6 +600,9 @@
 		})
         data.consignors=items;
 		data.consigneeNames=consigneeNames.substring(1);
+		if(!validate){
+			return validate;
+		}
 		return true;
 	}
 

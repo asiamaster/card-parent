@@ -42,6 +42,7 @@ import com.dili.card.service.IContractService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.ContractState;
+import com.dili.card.type.CustomerState;
 import com.dili.card.type.DisableState;
 import com.dili.card.util.PageUtils;
 import com.dili.customer.sdk.domain.Customer;
@@ -175,16 +176,11 @@ public class ContractServiceImpl implements IContractService {
 		if (CollectionUtils.isEmpty(itemList)) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "无相应客户信息");
 		};
-		List<Long> customerIds = new ArrayList<Long>();
-		for (Customer customer : itemList) {
-			customerIds.add(customer.getId());
+		Customer customer = itemList.get(0);
+		if (!customer.getState().equals(CustomerState.VALID.getCode())) {
+			throw new CardAppBizException(ResultCode.PARAMS_ERROR,
+					"客户已" + CustomerState.getStateName(customer.getState()));
 		}
-        UserAccountCardQuery param = new UserAccountCardQuery();
-        param.setFirmId(query.getMarketId());
-        param.setCustomerIds(customerIds);
-        if (CollectionUtils.isEmpty(accountQueryService.getList(param))) {
-        	throw new CardAppBizException(ResultCode.DATA_ERROR, "该客户没有办理主卡");
-		};
 		return itemList;
 	}
 
