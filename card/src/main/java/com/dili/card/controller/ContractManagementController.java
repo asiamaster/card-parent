@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.FundContractPrintDto;
 import com.dili.card.dto.FundContractQueryDto;
 import com.dili.card.dto.FundContractRequestDto;
@@ -60,7 +62,8 @@ public class ContractManagementController implements IControllerHandler {
 		if (id == null || id < 0L) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "请求参数错误");
 		}
-		modelMap.put("detail", iContractService.detail(id));
+        String json = JSON.toJSONString(iContractService.detail(id), new EnumTextDisplayAfterFilter());
+		modelMap.put("detail", JSON.parseObject(json));
 		return "contract/detail";
 	}
 
