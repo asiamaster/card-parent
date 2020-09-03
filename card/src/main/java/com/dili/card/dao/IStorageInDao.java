@@ -24,7 +24,7 @@ public interface IStorageInDao {
      * @param storageIn
      * @return
      */
-	int save(StorageInDo storageIn);
+	Long save(StorageInDo storageIn);
 
     /**
      * 根据id查询

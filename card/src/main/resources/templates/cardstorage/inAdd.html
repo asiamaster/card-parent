@@ -11,15 +11,24 @@
 								_id="cardType" _provider="cardTypeProvider"
 								_queryParams='{emptyText:"-- 请选择 --"}' /></td>
 					</tr>
+					<tr id="cardFaceTr" style="display: none">
+						<td class="info-column-card-out">卡面信息</td>
+						<td class="info-cell-card-out"><select name="cardFace"
+							id="cardFace" class="form-control"></select> <#bcomboProvider
+								_id="cardFace" _provider="customerTypeProvider"
+								_queryParams='{emptyText:"-- 请选择 --"}' /></td>
+					</tr>
 					<tr>
 						<td class="info-column-card-out">起始卡号</td>
 						<td><input id="startCardNo" name="startCardNo" type="text"
-							class="form-control calculateAmount isInt"   minlength="12" maxlength="12" required/></td>
+							class="form-control calculateAmount isInt" minlength="12"
+							maxlength="12" required /></td>
 					</tr>
 					<tr>
 						<td class="info-column-card-out">结束卡号</td>
-						<td><input id="endCardNo" name="endCardNo"  type="text"
-							class="form-control calculateAmount isInt"   minlength="12" maxlength="12" required/></td>
+						<td><input id="endCardNo" name="endCardNo" type="text"
+							class="form-control calculateAmount isInt" minlength="12"
+							maxlength="12" required /></td>
 					</tr>
 					<tr>
 						<td class="info-column-card-out">入库张数</td>
@@ -66,26 +75,46 @@
 		},
 		focusCleanup : true
 	});
-    
+
 	// 提交入库
 	function submitHandler(e) {
+
 		let startCardNo = parseInt($("#startCardNo").val());
 		let endCardNo = parseInt($("#endCardNo").val());
-		if(startCardNo > endCardNo){
-			bs4pop.alert("结束卡必须大于起始卡号", {type : "warning"});
+		if (startCardNo > endCardNo) {
+			bs4pop.alert("结束卡必须大于起始卡号", {
+				type : "warning"
+			});
 			return;
 		}
 		var amount = $("#amount").val();
-		if(amount > 2000){
-			bs4pop.alert("每次最多入库2000张卡片！", {type : "warning"});
+		if (amount > 2000) {
+			bs4pop.alert("每次最多入库2000张卡片！", {
+				type : "warning"
+			});
 			return;
 		}
 		if (!$.validate.form(formId)) {
 			return false;
 		}
 		let url = "${contextPath}/cardStorageIn/save.action";
+		let cardFace = $("#cardFace").val();
+		let cardType = $("#cardType").val();
+		if(cardType == 10 && cardFace == ""){
+			bs4pop.alert("主卡入库时请选择卡面！", {
+				type : "warning"
+			});
+			return;
+		}
 		let data = $.common.formToJSON(formId);
-		$.operate.post(url, data);
+		$.modal.confirm("将根据输入的卡号段解析卡号，完成批量入库。请确保入库卡号的连续性和信息正确性。<br>确定入库？",
+			function(sure) {
+				if (!sure) {
+					return;
+				}
+				$.operate.post(url, data);
+			});
+
 	}
 	// 计算数量
 	$('.calculateAmount').bind('input propertychange', function() {
@@ -97,5 +126,14 @@
 		}
 		var count = endCardNo - startCardNo + 1;
 		$("#amount").val(count);
+	});
+	// 根据卡类型隐藏卡面信息选择框 
+	$('#cardType').change(function() {
+		let cardType = $(this).val();
+		if (10 == cardType) {
+			$('#cardFaceTr').show();
+		} else {
+			$('#cardFaceTr').hide();
+		}
 	});
 </script>
