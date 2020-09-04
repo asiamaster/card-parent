@@ -644,15 +644,25 @@
 		let consigneeNames='';
 		var validate = true;
 		$(".consignee").each(function () {
-			let item = {};
 			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				$.modal.alertError("请添加被委托人身份证号");
 				validate = false;
 			}
+		})
+		if(!validate){
+			return validate;
+		}
+		$(".consignee").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdMobile").val())){
 				$.modal.alertError("请添加被委托人手机号");
 				validate = false;
 			}
+		})
+		if(!validate){
+			return validate;
+		}
+		$(".consignee").each(function () {
+			let item = {};
 			item.consigneeName=$(this).find("#consigneeName").val();
 			consigneeNames = consigneeNames.concat("、",item.consigneeName);
 			item.consigneeIdCode=$(this).find("#consigneeIdCode").val();
