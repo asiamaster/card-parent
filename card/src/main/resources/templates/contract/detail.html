@@ -21,6 +21,11 @@
 	    margin-right:50px;
 	    width:150px;
 		}
+	.suonue{
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+	}
 	.child_li{
 		background-color:#CCCCCC;
 	}
@@ -73,7 +78,7 @@
       	<div id="nav">
 			<ul>
 	    		<li class="child_li">${detail.consignorCode!}</li>
-	    		<li class="child_li">${detail.consignorName!}</li>    
+	    		<li class="child_li suonue">${detail.consignorName!}</li>    
 	    		<li class="child_li">${detail.consignorCard!}</li>
 	  		</ul>
       	</div>
@@ -94,7 +99,7 @@
 		      </div>
 		      <div id="nav">
 				<ul>
-		    		<li class="child_li">${item.consigneeName!}</li>
+		    		<li class="child_li suonue">${item.consigneeName!}</li>
 		    		<li class="child_li">${item.consigneeIdMobile!}</li>    
 		    		<li class="child_li">${item.consigneeIdCode!}</li>
 		  		</ul>
