@@ -1,5 +1,8 @@
 package com.dili.card.type;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description： 客户类型 <br>
@@ -9,8 +12,6 @@ package com.dili.card.type;
  * @time ：2020年6月23日下午3:32:47
  */
 public enum CustomerType {
-	/** 买家 */
-	BUYER("买家", "buyer"),
 	/** 园外买家 */
 	OUTSIDE_BUYER("园外买家", "outside_buyer"),
 	/** 园内买家 */
@@ -37,8 +38,11 @@ public enum CustomerType {
 		}
 		return null;
 	}
-	
-	
+
+	public static List<CustomerType> getAll() {
+		return new ArrayList<>(Arrays.asList(CustomerType.values()));
+	}
+
 	public String getName() {
 		return name;
 	}

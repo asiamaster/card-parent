@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.CardTypeProvider;
+import com.dili.card.common.provider.CustomerTypeProvider;
 import com.dili.card.type.CardType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -33,6 +34,8 @@ public class StorageInDto implements Serializable {
 	/** 卡类型 */
 	@TextDisplay(value = CardTypeProvider.class)
 	private Integer cardType;
+	@TextDisplay(value = CustomerTypeProvider.class)
+	private String cardFace;
 	/** 操作人员ID */
 	private Long creatorId;
 	/** 操作人员名称-保留字段 */
@@ -235,6 +238,14 @@ public class StorageInDto implements Serializable {
 	 */
 	public String getNotes() {
 		return notes;
+	}
+
+	public String getCardFace() {
+		return cardFace;
+	}
+
+	public void setCardFace(String cardFace) {
+		this.cardFace = cardFace;
 	}
 
 	/**

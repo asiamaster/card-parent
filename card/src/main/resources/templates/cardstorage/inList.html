@@ -29,8 +29,14 @@
 			aria-label="Toolbar with button groups">
 			<#resource code="card_storage_in">
 			<button id="btn_query" type="button" class="btn btn-primary"
-				onclick="$.operate.add(null,'60%','80%')">
+				onclick="$.operate.add(null,'70%','80%')">
 				<i class="fa fa-plus"></i> 新增入库
+			</button>
+			</#resource>
+			<#resource code="card_storage_in_del">
+			<button id="btn_query" type="button" class="btn btn-primary"
+				onclick="$.operate.add(null,'70%','80%')">
+				<i class="fa fa-plus"></i> 删除
 			</button>
 			</#resource>
 		</div>
@@ -41,6 +47,7 @@
 					<th data-radio="true"></th>
 					<th data-field="amount" data-align="center">入库张数</th>
 					<th data-field="cardTypeText" data-align="center">类别</th>
+					<th data-field="cardFaceText" data-align="center">卡面信息</th>
 					<th data-field="cardNoRange" data-align="center">号段</th>
 					<th data-field="createTime" data-sortable="true"
 						data-sort-name="create_time" data-align="center">入库时间</th>

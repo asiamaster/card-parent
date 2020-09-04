@@ -36,9 +36,16 @@ public class CardStorageInServiceImpl implements ICardStorageInService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void batchCardStorageIn(StorageInDo storageIn) {
+    	// 保存入库记录
+        storageIn.setCreateTime(LocalDateTime.now());
+        storageIn.setModifyTime(LocalDateTime.now());
+        storageInDao.save(storageIn);
+    	
         // 按号段入库
         BatchCardAddStorageDto batchInfo = new BatchCardAddStorageDto();
         batchInfo.setCardType(storageIn.getCardType());
+        batchInfo.setCardFace(storageIn.getCardFace());
+        batchInfo.setStorageInId(storageIn.getId());
         batchInfo.setCreator(storageIn.getCreator());
         batchInfo.setCreatorId(storageIn.getCreatorId());
         batchInfo.setStartCardNo(storageIn.getStartCardNo());
@@ -46,12 +53,8 @@ public class CardStorageInServiceImpl implements ICardStorageInService {
         batchInfo.setFirmId(storageIn.getFirmId());
         batchInfo.setFirmName(storageIn.getFirmName());
         batchInfo.setNotes(storageIn.getNotes());
+        
         GenericRpcResolver.resolver(cardStorageRpc.batchAddCard(batchInfo), ServiceName.ACCOUNT);
-
-        // 保存入库记录
-        storageIn.setCreateTime(LocalDateTime.now());
-        storageIn.setModifyTime(LocalDateTime.now());
-        storageInDao.save(storageIn);
     }
 
     @Override

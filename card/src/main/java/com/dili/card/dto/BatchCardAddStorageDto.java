@@ -19,6 +19,10 @@ public class BatchCardAddStorageDto {
 	private Long creatorId;
 	/** 卡类型 */
 	private Integer cardType;
+	/** 卡面（与客户类型值相同,司机园内买园外买卖） */
+	private String cardFace;
+	/** 入库记录ID */
+	private Long storageInId;
 	/** 卡片起始号 */
 	private String startCardNo;
 	/** 卡片结束号 */
@@ -86,6 +90,22 @@ public class BatchCardAddStorageDto {
 
 	public void setEndCardNo(String endCardNo) {
 		this.endCardNo = endCardNo;
+	}
+
+	public String getCardFace() {
+		return cardFace;
+	}
+
+	public void setCardFace(String cardFace) {
+		this.cardFace = cardFace;
+	}
+
+	public Long getStorageInId() {
+		return storageInId;
+	}
+
+	public void setStorageInId(Long storageInId) {
+		this.storageInId = storageInId;
 	}
 
 }
