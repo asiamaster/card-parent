@@ -1,5 +1,6 @@
 package com.dili.card.service.print;
 
+import cn.hutool.core.convert.Convert;
 import com.dili.card.dto.PrintDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
@@ -30,6 +31,7 @@ public class WithdrawPrintServiceImpl extends PrintServiceImpl {
     public void createSpecial(PrintDto printDto, BusinessRecordDo recordDo, boolean reprint) {
         Long totalAmount = recordDo.getServiceCost() != null ? recordDo.getAmount() + recordDo.getServiceCost() : recordDo.getAmount();
         printDto.setTotalAmount(CurrencyUtils.toYuanWithStripTrailingZeros(totalAmount));
+        printDto.setTotalAmountWords(Convert.digitToChinese(Double.valueOf(printDto.getTotalAmount())));
     }
 
     @Override

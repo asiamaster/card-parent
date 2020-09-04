@@ -19,6 +19,8 @@ public class PrintDto {
     private String amount;
     /** 合计金额 */
     private String totalAmount;
+    /** 合计金额大写*/
+    private String totalAmountWords;
     /** 余额 */
     private String balance;
     /** 交易渠道 */
@@ -90,6 +92,14 @@ public class PrintDto {
 
     public void setTotalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public String getTotalAmountWords() {
+        return totalAmountWords;
+    }
+
+    public void setTotalAmountWords(String totalAmountWords) {
+        this.totalAmountWords = totalAmountWords;
     }
 
     public String getBalance() {
