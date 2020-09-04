@@ -19,7 +19,7 @@ import com.dili.ss.domain.PageOutput;
  * @time ：2020年7月17日上午10:22:18
  */
 @FeignClient(name = "account-service", contextId = "cardStorgeRpc", path = "/api/account/cardStorage" 
-/* , url = "http://127.0.0.1:8186" */)
+/* , url = "http://127.0.0.1:8186" */ )
 public interface CardStorageRpc {
 
 	/**
@@ -71,4 +71,10 @@ public interface CardStorageRpc {
 	 */
 	@PostMapping("/activateCardByInUse")
 	BaseOutput<?> activateCardByInUse(CardStorageActivateDto dto);
+	
+	/**
+	 * 卡片库存数据删除，根据号段入库ID，如果有非激活状态的卡片则删除失败
+	 */
+	@PostMapping("/delByStorageInId")
+	BaseOutput<?> delByStorageInId(CardStorageDto param);
 }

@@ -24,4 +24,9 @@ public interface ICardStorageInService {
      * 查询入库记录
      */
     PageOutput<List<StorageInDto>> list(CardStorageOutQueryDto queryParam);
+    
+    /**
+     * 删除入库记录
+     */
+	void delStorageIn(Long[] ids,Long firmId);
 }

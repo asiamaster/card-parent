@@ -34,8 +34,8 @@
 			</button>
 			</#resource>
 			<#resource code="card_storage_in_del">
-			<button id="btn_query" type="button" class="btn btn-primary"
-				onclick="$.operate.add(null,'70%','80%')">
+			<button id="btn_del" type="button" class="btn btn-primary"
+				onclick="delData()">
 				<i class="fa fa-plus"></i> 删除
 			</button>
 			</#resource>
@@ -63,7 +63,7 @@
 <script type="text/javascript"
 	src="${contextPath}/resources/js/sword.js"></script>
 <#common_userJs />
-
+<#common_commonJs/>
 <script>
     $(() => {
         let options = {
@@ -75,6 +75,43 @@
         };
         $.table.init(options);
     });
-
+	
+ // 根据选中行状态，对作废按钮进行禁用或启用
+    $("#cardStorageTable").on('check.bs.table', function (e, row, $element) {
+    		$("#btn_del").removeAttr("disabled", "disabled");
+    });
+    
+    // 删除入库记录数据
+    function delData(){
+    	let rows = $("#grid").bootstrapTable('getSelections').length;
+    	if(rows>0){
+    		$("#voidModal").modal("show");
+    	}else{
+    		showError("您没有选择任何数据!");
+    		return;
+    	}
+    	$.modal.confirm("确定删除当前相应卡的入库记录？",function(sure) {
+				if (!sure) {
+ 					return;
+ 				}
+ 		    	$.ajax({
+ 		            type:'POST',
+ 		            url:'${contextPath}/cardStorageIn/del.action',
+ 		            dataType:'json',
+ 		            traditional:true,
+ 		            data: {
+ 		            	ids: $.table.selectColumns("id")
+ 		            },
+ 		            success:function(result) {
+ 		                if (result.success) {
+ 		                	showInfo("操作成功");
+ 		                	$.table.refresh();
+ 		                }else {
+ 		                	showError(result.message);
+ 		                }
+ 		            }
+ 		        });
+    	});
+    }
 </script>
 
