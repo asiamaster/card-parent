@@ -645,7 +645,7 @@
 		var validate = true;
 		$(".consignee").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
-				$.modal.alertError("请添加被委托人身份证号");
+				$.modal.alertError("请添加被委托人身份信息");
 				validate = false;
 			}
 		})
@@ -671,9 +671,6 @@
 		})
         data.consignors=items;
 		data.consigneeNames=consigneeNames.substring(1);
-		if(!validate){
-			return validate;
-		}
 		return true;
 	}
 
