@@ -33,7 +33,8 @@
     };
 
     function queryCustomerByCardNo(cardNo, domId) {
-        $('#' + domId).val('');
+        $('#' + domId).val('')
+        $('#hidden_account_id').val('');
         if (!cardNo || $.trim(cardNo).length !== 12) {
             return;
         }
@@ -43,9 +44,11 @@
             dataType:'json',
             success:function(result) {
                 if (result.success) {
+                    $('#hidden_account_id').val(result.data.accountId);
                     $('#' + domId).val(result.data.customerName);
                 } else {
-
+                    $('#hidden_account_id').val('');
+                    $('#' + domId).val('');
                 }
             },
             error:function(){

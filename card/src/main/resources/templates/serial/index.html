@@ -19,6 +19,7 @@
                 <label for="cardNo" class="">业务卡号</label>
                 <div class="input-group">
                     <input type="text" class="form-control" name="cardNo" id="cardNo" maxlength="20" oninput="queryCustomerByCardNo(this.value, 'show_customer_name_by_card');return false;"/>
+                    <input type="hidden" class="form-control" id="hidden_account_id" name="accountId"/>
                     <input type="text" class="form-control" id="show_customer_name_by_card" readonly/>
                 </div>
             </div>
