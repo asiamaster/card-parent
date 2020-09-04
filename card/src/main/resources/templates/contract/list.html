@@ -222,15 +222,15 @@
 								<input placeholder="客户名称"
 									name="consignorCustomerName" disabled="disabled" type="text"
 									class="form-control td_input" id="consignorCustomerName"
-									maxlength="20" value="" />
+									maxlength="20" value="1" />
 								<input placeholder="证件号码"
 									name="consignorCustomerIDCode"  type="text"
 									class="form-control td_input" id="consignorCustomerIDCode"
-									maxlength="18" value="" />
+									maxlength="18" value="1" />
 								<input placeholder="手机号"
 									name="consignorCustomerMobile" type="hidden"
 									class="form-control td_input" id="consignorCustomerMobile"
-									maxlength="11" value="" />
+									maxlength="11" value="1" />
 								<button id="readIdCode" type="button"
 										class="btn btn-primary td_button" onclick="getConsignorIdCard()">
 										<i class="fa fa-search"></i>读取身份证
@@ -247,7 +247,7 @@
 								<input placeholder="园区卡"
 									disabled="disabled" name="consignorCardNo" type="text"
 									class="form-control td_input" id="consignorCardNo" maxlength="20"
-									value="" />
+									value="1" />
 								<input name="consignorAccountId" type="text"
 									class="form-control td_input" style="opacity: 0;"
 									id="consignorAccountId" maxlength="20" value="" />
@@ -288,15 +288,15 @@
 								<input placeholder="姓名"
 									disabled="disabled" name="consigneeName" type="text"
 									class="form-control td_input" id="consigneeName" maxlength="20"
-									value="" />
+									value="1" />
 								<input placeholder="身份证号" disabled="disabled"
 									name="consigneeIdCode" type="text"
 									class="form-control td_input" id="consigneeIdCode"
-									maxlength="18" value="" />
+									maxlength="18" value="1" />
 								<input placeholder="手机号"
 									name="consigneeIdMobile" type="text"
 									class="form-control td_input" id="consigneeIdMobile"
-									maxlength="12" value="" />
+									maxlength="12" value="1" />
 								<button type="button"
 										class="btn btn-primary td_button readID"
 										onclick="getConsigneeIdCard(this)">
@@ -647,12 +647,10 @@
 			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				$.modal.alertError("请添加被委托人身份证号");
 				validate = false;
-				break;
 			}
 			if($.common.isEmpty($(this).find("#consigneeIdMobile").val())){
 				$.modal.alertError("请添加被委托人手机号");
 				validate = false;
-				break;
 			}
 			item.consigneeName=$(this).find("#consigneeName").val();
 			consigneeNames = consigneeNames.concat("、",item.consigneeName);
