@@ -946,11 +946,11 @@
             $.modal.alertWarning("请至少选择一条记录");
             return false;
         }
-    	if(row[0].state == 3){
+    	if(row[0].state == 4){
     		$.modal.alertError("该合同已解除不能重复操作");
     		return false;
     	}
-    	if(row[0].state == 4){
+    	if(row[0].state == 3){
     		$.modal.alertError("该合同已过期不能操作");
     		return false;
     	}
