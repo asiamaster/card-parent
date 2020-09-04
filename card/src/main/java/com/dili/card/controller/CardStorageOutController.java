@@ -8,7 +8,6 @@ import com.dili.card.dto.CardStorageOutRequestDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.ICardStorageService;
 import com.dili.card.type.CardStorageState;
-import com.dili.card.type.CheckCardActionType;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
@@ -111,31 +110,40 @@ public class CardStorageOutController implements IControllerHandler {
 
 
     /**
-     * 校验卡状态
+     * 校验卡状态（用于换卡）
      * @author miaoguoxin
      * @date 2020/7/29
      */
     @GetMapping("checkCard.action")
     @ResponseBody
-    public BaseOutput<CardStorageDto> checkCard(String cardNo, Integer checkCardActionType) {
-        log.info("校验卡状态 *****{} , {}", cardNo, checkCardActionType);
+    public BaseOutput<CardStorageDto> checkCard(String cardNo) {
+        log.info("校验卡状态 *****{}", cardNo);
         AssertUtils.notEmpty(cardNo, "卡号不能为空");
         CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardNo);
-        if (cardStorage == null) {
-            return BaseOutput.failure("卡仓库中不存在该卡片");
-        }
-        if (checkCardActionType == null) {
-            checkCardActionType = CheckCardActionType.CHANGE_CARD.getCode();
-        }
-        if (checkCardActionType == CheckCardActionType.CHANGE_CARD.getCode()) {
-            if (cardStorage.getState() != CardStorageState.ACTIVE.getCode()) {
-                return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "]，不能进行此操作!");
-            }
-        } else {
-            if (cardStorage.getState() != CardStorageState.UNACTIVATE.getCode()) {
-                return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "]，不能进行此操作!");
-            }
+        if (cardStorage.getState() != CardStorageState.ACTIVE.getCode()) {
+            return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "]，不能进行此操作!");
         }
         return BaseOutput.successData(cardStorage);
+    }
+
+    /**
+     * 出库的时候进行卡校验
+     * @author miaoguoxin
+     * @date 2020/9/2
+     */
+    @GetMapping("/checkCardForOut.action")
+    @ResponseBody
+    public BaseOutput<?> checkCardForOut(String cardNo, Integer cardType, String customerType) {
+        log.info("出库校验卡状态 *****{} -- {}", cardNo, cardType);
+        AssertUtils.notEmpty(cardNo, "卡号不能为空");
+        AssertUtils.notNull(cardType, "卡类型不能为空");
+        CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardNo);
+        if (cardStorage.getState() != CardStorageState.UNACTIVATE.getCode()) {
+            return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "]，不能进行此操作!");
+        }
+        if (!cardStorage.getType().equals(cardType)){
+            return BaseOutput.failure("卡类型不一致");
+        }
+        return BaseOutput.success();
     }
 }

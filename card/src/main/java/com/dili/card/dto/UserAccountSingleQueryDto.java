@@ -9,11 +9,31 @@ import java.io.Serializable;
  */
 public class UserAccountSingleQueryDto implements Serializable {
     /** */
-	private static final long serialVersionUID = 3420897440951735189L;
-	/**账户ID */
+    private static final long serialVersionUID = 3420897440951735189L;
+    /**account主键id*/
+    private Long accountPkId;
+    /**card主键id*/
+    private Long cardPkId;
+    /**账户ID */
     private Long accountId;
     /** 卡号 */
     private String cardNo;
+
+    public Long getAccountPkId() {
+        return accountPkId;
+    }
+
+    public void setAccountPkId(Long accountPkId) {
+        this.accountPkId = accountPkId;
+    }
+
+    public Long getCardPkId() {
+        return cardPkId;
+    }
+
+    public void setCardPkId(Long cardPkId) {
+        this.cardPkId = cardPkId;
+    }
 
     public Long getAccountId() {
         return accountId;

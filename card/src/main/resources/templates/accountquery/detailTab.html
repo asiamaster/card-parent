@@ -69,8 +69,10 @@
 <link rel="stylesheet" href="${contextPath}/resources/css/sword.css">
 <script>
     let prefix = '${contextPath}';
-    let cardNo = $.common.getQueryVariable("cardNo");
-    let accountId = $.common.getQueryVariable("accountId");
+   // let cardNo = $.common.getQueryVariable("cardNo");
+   // let accountId = $.common.getQueryVariable("accountId");
+    let accountPkId = $.common.getQueryVariable("accountPkId");
+    let cardPkId = $.common.getQueryVariable("cardPkId");
     //初始化函数
     $(() => {
         let options = {
@@ -78,8 +80,8 @@
             activeId: 'card-tab',
             prefixUrl: prefix,
             params: {
-                cardNo: cardNo,
-                accountId: accountId
+                accountPkId: accountPkId,
+                cardPkId: cardPkId
             }
         };
         $.tab.init(options);

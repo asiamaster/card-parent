@@ -25,6 +25,7 @@ import java.lang.reflect.Proxy;
 @Component
 @ConditionalOnProperty(name = "ribbon.eager-load.enabled", havingValue = "true")
 public class FeignClientInitBeanPostProcessor implements BeanPostProcessor {
+    //TODO sentinel
     private static final String FEIGN_CLAZZ_NAME = "feign.ReflectiveFeign$FeignInvocationHandler";
     private static final String HYSTRIX_CLAZZ_NAME = "feign.hystrix.HystrixInvocationHandler";
 

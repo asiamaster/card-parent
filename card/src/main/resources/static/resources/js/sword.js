@@ -34,7 +34,7 @@ tab = {
             //缓存以前的值
             $.data(this, 'originVal', $(this).val());
             //event
-            $(this).on('keyup paste', function () {
+            $(this).on('change keyup paste', function () {
                 let originVal = $.data(this, 'originVal');
                 let currentVal = $(this).val();
 
