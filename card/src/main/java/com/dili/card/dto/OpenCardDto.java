@@ -1,6 +1,7 @@
 package com.dili.card.dto;
 
 import com.dili.card.type.CardType;
+import com.dili.card.type.CustomerType;
 
 /**
  * @description： 开卡所需要的用户信息
@@ -15,7 +16,7 @@ public class OpenCardDto extends BaseSerialLogDto {
 	private Long customerId;
 	/** 客户编号 */
 	private String customerCode;
-	/** 客户类型买卖司机等 */
+	/** 客户类型买卖司机等  {@link CustomerType} */
 	private String customerType;
 	/** 个人、对公 */
 	private String customerOrganizationType;

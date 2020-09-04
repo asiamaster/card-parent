@@ -116,6 +116,9 @@ public class OpenCardController implements IControllerHandler {
 		if (cardStorage.getType().intValue() != openCardInfo.getCardType()) {
 			return BaseOutput.failure("请使用" + CardType.getName(openCardInfo.getCardType()) + "办理当前业务!");
 		}
+		if (!cardStorage.getCardFace().equals(openCardInfo.getCustomerType())) {
+			return BaseOutput.failure("卡面信息和客户身份类型不符");
+		}
 		return BaseOutput.success();
 	}
 
