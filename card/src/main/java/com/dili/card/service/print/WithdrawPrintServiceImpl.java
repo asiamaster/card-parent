@@ -18,10 +18,10 @@ public class WithdrawPrintServiceImpl extends PrintServiceImpl {
     @Override
     public String getPrintTemplate(BusinessRecordDo recordDo) {
         if (Integer.valueOf(TradeChannel.CASH.getCode()).equals(recordDo.getTradeChannel())) {//现金模板
-            return "CashWithdrawPrintDocument";
+            return "WithdrawalCashDocument";
         }
         if (Integer.valueOf(TradeChannel.E_BANK.getCode()).equals(recordDo.getTradeChannel())) {//现金模板
-            return "EBankWithdrawPrintDocument";
+            return "WithdrawalBankDocument";
         }
         throw new CardAppBizException("未找到合适的票据模板");
     }
