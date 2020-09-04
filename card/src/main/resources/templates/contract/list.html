@@ -198,8 +198,8 @@
     </div>
 </div>
 <div class="modal fade" id="addFirstModal" tabindex="-1" role="dialog" aria-labelledby="addFirstModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 960px;height: 500px;">
-		<div class="modal-content" style="width: 960px;height: 500px;">
+    <div class="modal-dialog" style="width: 1200px;height: 500px;">
+		<div class="modal-content" style="width: 1200px;height: 500px;">
 			<div class="modal-header" style="background-color: #E6E6E6;height: 45px;">
                <h5 style="height-line:45px;">新增资金委托关系</h5>
                <label onclick="closeFirst()"><i class="fa fa-times"></i></label>
@@ -288,15 +288,15 @@
 								<input placeholder="姓名"
 									disabled="disabled" name="consigneeName" type="text"
 									class="form-control td_input" id="consigneeName" maxlength="20"
-									value="1" />
+									value="" />
 								<input placeholder="身份证号" disabled="disabled"
 									name="consigneeIdCode" type="text"
 									class="form-control td_input" id="consigneeIdCode"
-									maxlength="18" value="1" />
+									maxlength="18" value="" />
 								<input placeholder="手机号"
 									name="consigneeIdMobile" type="text"
 									class="form-control td_input" id="consigneeIdMobile"
-									maxlength="12" value="1" />
+									maxlength="12" value="" />
 								<button type="button"
 										class="btn btn-primary td_button readID"
 										onclick="getConsigneeIdCard(this)">
@@ -491,19 +491,22 @@
 	 * 添加被委托人信息
 	 */
 	 let consignee='<tr class="consignee"><td class="info-column">被委托人</td><td class="info-cell">' +
- 	'<input placeholder="姓名" disabled="disabled" value="1" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="20"/>' +
- 	'<input placeholder="身份证号" disabled="disabled" value="1" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="18"/>' +
- 	'<input placeholder="手机号" name="consigneeIdMobile" value="1" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="11"/>' +
+ 	'<input placeholder="姓名" disabled="disabled" value="" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="20"/>' +
+ 	'<input placeholder="身份证号" disabled="disabled" value="" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="18"/>' +
+ 	'<input placeholder="手机号" name="consigneeIdMobile" value="" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="11"/>' +
  	'<button type="button" class="btn btn-primary td_button readID" onclick="getConsigneeIdCard(this)"><i class="fa fa-search"></i>读取身份证</button>' +
  	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus blue" style="font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' +
  	'<label onclick="addConsignee()" class = "plus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-plus red" style="font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label></td</tr>';
 
+ 	let redPlus = '<label onclick="addConsignee()" class = "plus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-plus red" style="font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>';
+ 	let blueMinus = '<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus blue" style="font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' ;
+ 	
  	let consignee1='<tr class="consignee"><td class="info-column">被委托人</td><td class="info-cell">' +
  	'<input placeholder="姓名" disabled="disabled" value="" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="20"/>' +
  	'<input placeholder="身份证号" disabled="disabled" value="" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="18"/>' +
  	'<input placeholder="手机号" name="consigneeIdMobile" value="" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="11"/>' +
  	'<button type="button" class="btn btn-primary td_button readID" onclick="getConsigneeIdCard(this)"><i class="fa fa-search"></i>读取身份证</button>' +
- 	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus blue" style="font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>';
+ 	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus blue" style="font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label></td</tr>';
  	
  	let consugnee1= '<div class="per_div"><div style="width: 100px;" class="per_div_child">' +
 				'<p style="height: 30px; line-height: 30px;">被委托人签名：</p></div>' +
@@ -534,7 +537,8 @@
 			$(".consignee").each(function () {
 				$(this).find("i").each(function(i){
 					if(i ==1){
-						$(this).attr("class","fa fa-minus blue");
+						$(this).parent().after(blueMinus);
+						$(this).parent().remove();
 					}
 				});
 			});
@@ -552,12 +556,39 @@
 		var list=$(".consignee");
 		var all = list.length;
 		$(".consignee").each(function (i) {
-			if(all == 1){
+			if(all == 1){//只有一行
 				$(this).find("i").each(function(index){
 					if(index ==1){
-						$(this).attr("class","fa fa-plus red");
+						$(this).parent().after(redPlus);//添加红色
+						$(this).parent().remove();//删除蓝色
+					}
+					if(index == 2){
+						$(this).parent().remove();
 					}
 				});
+			}
+			if(all == 2){//有两行
+				if(i == 0){//第一行
+					$(this).find("i").each(function(index){
+						if(index ==1){
+							$(this).parent().after(blueMinus);
+							$(this).parent().remove();
+						}
+						if(index == 2){
+							$(this).parent().remove();
+						}
+					});
+				}
+				if(i == 1){
+					var len = $(this).find("i").length;
+					$(this).find("i").each(function(index){
+						if(len ==2 && index ==1){
+							$(this).parent().after(redPlus);
+							$(this).parent().after(blueMinus);
+							$(this).parent().remove();
+						}
+					});
+				}
 			}
 		});
 		
