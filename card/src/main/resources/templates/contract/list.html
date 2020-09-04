@@ -1,5 +1,11 @@
 <#bs4Body>
 <style>
+	.blue{
+		color:#4F94CD;
+	}
+	.red{
+		color: #fF0000; 
+	}
     #contract-save em{
        display: block;
     }
@@ -99,7 +105,7 @@
             </div>
              <div class="form-group col-auto">
                 <label for="consigneeMobile">被委托人手机号</label>
-                <input param-multiple="true" name="consigneeMobile" id="consigneeMobile" maxlength="11" type="text" class="form-control" onkeypress="keyPress()"/>
+                <input param-multiple="true" name="consigneeMobile" id="consigneeMobile" maxlength="12" type="text" class="form-control" onkeypress="keyPress()"/>
             </div>
              <div class="form-group col-auto">
                 <label for="contractNo">合同编号</label>
@@ -130,13 +136,13 @@
 			<button id="btn_add" type="button" class="btn btn-primary" onclick="openAddView()"><i class="fa fa-plus"></i> 新增</button>
 		</#resource>
 		<#resource code="cancleContract">
-		<button id="btn_remove" type="button" class="btn btn-primary" onclick="$.operate.removeWithTitle(null,'48%','53%','信息确认')"><i class="fa fa-trash-o"></i> 解除</button>
+		<button id="btn_remove" type="button" class="btn btn-primary" onclick="removeContract()"><i class="fa fa-trash-o"></i> 解除</button>
 	</#resource>
 	<#resource code="preViewContract">
 	<button id="btn_preview" type="button" class="btn btn-primary" onclick="$.operate.preview(null,'70%','75%', '合同预览')"><i class="fa fa-list"></i> 合同预览</button>
 	</#resource>
 	<#resource code="viewContract">
-	<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'80%','85%')"><i class="fa fa-list"></i> 查看</button>
+	<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'88%','85%')"><i class="fa fa-list"></i> 查看</button>
 	</#resource>
 	<#resource code="printContract">
 	<button id="btn_reprint" type="button" class="btn btn-primary" onclick="printContract()"><i class="fa fa-list"></i>补打合同</button>
@@ -282,23 +288,23 @@
 								<input placeholder="姓名"
 									disabled="disabled" name="consigneeName" type="text"
 									class="form-control td_input" id="consigneeName" maxlength="20"
-									value="" />
+									value="1" />
 								<input placeholder="身份证号" disabled="disabled"
 									name="consigneeIdCode" type="text"
 									class="form-control td_input" id="consigneeIdCode"
-									maxlength="18" value="" />
+									maxlength="18" value="1" />
 								<input placeholder="手机号"
 									name="consigneeIdMobile" type="text"
 									class="form-control td_input" id="consigneeIdMobile"
-									maxlength="12" value="" />
+									maxlength="12" value="1" />
 								<button type="button"
 										class="btn btn-primary td_button readID"
 										onclick="getConsigneeIdCard(this)">
 										<i class="fa fa-search"></i>读取身份证
 								</button> <label onclick="addConsignee()"
 									style="height: 34px; padding: 0px 15px;"><i
-										class="fa fa-plus"
-										style="color: #fF0000; font-size: 20px; margin-top: 7px;"
+										class="fa fa-plus red"
+										style="font-size: 20px; margin-top: 7px;"
 										aria-hidden="true"></i></label></td>
 							</tr>
 							<tr id="notesBefore">
@@ -397,20 +403,10 @@
     $(function () {
     	
     	$(".consignee").each(function () {
-    		$(this).find("#consigneeIdMobile").on('input  propertychange', function () {
-    			//如果输入非数字，则替换为''
-    			this.value = this.value.replace(/[^\d\.]/g, '');
-    			//必须保证第一个为数字而不是.
-    			this.value = this.value.replace(/^\./g, '');
-    			//保证只有出现一个.而没有多个.
-    			this.value = this.value.replace(/\.{2,}/g, '.');
-    			//保证.只出现一次，而不能出现两次以上
-    			this.value = this.value.replace('.', '$#$').replace(/\./g, '').replace('$#$', '.');
-    			//只能输入两位小数
-    			this.value = this.value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');
-    		});
+    		$(this).find("#consigneeIdMobile").on('input  propertychange', validateNumber);
 		});
-    	
+    	$("#days").on('input  propertychange', validateNumber);
+    	$("#consigneeMobile").on('input  propertychange', validateNumber);
         let options = {
             //必须加这个唯一标识
             uniqueId: "id",
@@ -494,20 +490,27 @@
 	/**
 	 * 添加被委托人信息
 	 */
-	let consignee='<tr class="consignee"><td class="info-column">被委托人</td><td class="info-cell">' +
-        	'<input placeholder="姓名" disabled="disabled" value="" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="20"/>' +
-        	'<input placeholder="身份证号" disabled="disabled" value="" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="18"/>' +
-        	'<input placeholder="手机号" name="consigneeIdMobile" value="" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="11"/>' +
-        	'<button type="button" class="btn btn-primary td_button readID" onclick="getConsigneeIdCard(this)"><i class="fa fa-search"></i>读取身份证</button>' +
-        	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus" style="color:#4F94CD;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' +
-        	'<label onclick="addConsignee()" class = "plus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-plus" style="color:#fF0000;font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label></td</tr>';
+	 let consignee='<tr class="consignee"><td class="info-column">被委托人</td><td class="info-cell">' +
+ 	'<input placeholder="姓名" disabled="disabled" value="1" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="20"/>' +
+ 	'<input placeholder="身份证号" disabled="disabled" value="1" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="18"/>' +
+ 	'<input placeholder="手机号" name="consigneeIdMobile" value="1" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="11"/>' +
+ 	'<button type="button" class="btn btn-primary td_button readID" onclick="getConsigneeIdCard(this)"><i class="fa fa-search"></i>读取身份证</button>' +
+ 	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus blue" style="font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' +
+ 	'<label onclick="addConsignee()" class = "plus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-plus red" style="font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label></td</tr>';
 
-    let consugnee1= '<div class="per_div"><div style="width: 100px;" class="per_div_child">' +
-					'<p style="height: 30px; line-height: 30px;">被委托人签名：</p></div>' +
-					'<div class="triangle per_div_child div_container"><div class="div_container_content">' +
-					'<span style="background-color: #FFFFFF;">consugneeName</span></div>' +
-					'</div><button id="signature" type="button" style="height: 30px;"' +
-					'class="btn btn-primary per_div_child" onclick="signature()" disabled="disabled">请签名</button><input type="hidden" id="signatureImagePathConsugnee" name="signatureImagePathConsugnee" value="rr"></div>';
+ 	let consignee1='<tr class="consignee"><td class="info-column">被委托人</td><td class="info-cell">' +
+ 	'<input placeholder="姓名" disabled="disabled" value="" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="20"/>' +
+ 	'<input placeholder="身份证号" disabled="disabled" value="" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="18"/>' +
+ 	'<input placeholder="手机号" name="consigneeIdMobile" value="" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="11"/>' +
+ 	'<button type="button" class="btn btn-primary td_button readID" onclick="getConsigneeIdCard(this)"><i class="fa fa-search"></i>读取身份证</button>' +
+ 	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus blue" style="font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>';
+ 	
+ 	let consugnee1= '<div class="per_div"><div style="width: 100px;" class="per_div_child">' +
+				'<p style="height: 30px; line-height: 30px;">被委托人签名：</p></div>' +
+				'<div class="triangle per_div_child div_container"><div class="div_container_content">' +
+				'<span style="background-color: #FFFFFF;">consugneeName</span></div>' +
+				'</div><button id="signature" type="button" style="height: 30px;"' +
+				'class="btn btn-primary per_div_child" onclick="signature()" disabled="disabled">请签名</button><input type="hidden" id="signatureImagePathConsugnee" name="signatureImagePathConsugnee" value="rr"></div>';
 
 
     function addConsignee() {
@@ -517,6 +520,7 @@
 			$.modal.alertWarning("最多三位被委托人")
 			return false;
 		}
+		var all = list.length;
 		$(".consignee").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				$.modal.alertWarning("请读取身份证后添加下一位")
@@ -526,11 +530,38 @@
 		if(!next){
 			return !next;
 		}
-		$('#notesBefore').before(consignee);
+		if(all == 1){
+			$(".consignee").each(function () {
+				$(this).find("i").each(function(i){
+					if(i ==1){
+						$(this).attr("class","fa fa-minus blue");
+					}
+				});
+			});
+		}
+		if(all == 2){
+			$('#notesBefore').before(consignee1);
+		}else{
+			$('#notesBefore').before(consignee);
+		}
+		
 	}
 
 	function minusConsignee(e) {
 		$(e).closest(".consignee").remove();
+		var list=$(".consignee");
+		var all = list.length;
+		$(".consignee").each(function (i) {
+			if(all == 1){
+				$(this).find("i").each(function(index){
+					if(index ==1){
+						$(this).attr("class","fa fa-plus red");
+					}
+				});
+			}
+		});
+		
+		
 	}
 
 	let data = {};
@@ -656,7 +687,15 @@
 		$('#startTime').val('');
 		$('#endTime').val('');
 		$('#notes').val('');
-		$(".consignee").each(function () {
+		$("#cardCustomerId").val("");
+		$(".consignee").each(function (i) {
+			if(i == 0){
+				$(this).find("i").each(function(i){
+					if(i ==1){
+						$(this).attr("class","fa fa-plus red");
+					}
+				});
+			}
 			$(this).find("#consigneeName").val('');
 			$(this).find("#consigneeIdCode").val('');
 			$(this).find("#consigneeIdMobile").val('');
@@ -856,6 +895,32 @@
 		    	}
 		    }
 		});
+	}
+	
+	function validateNumber(){
+		//如果输入非数字，则替换为''
+		this.value = this.value.replace(/[^\d\.]/g, '');
+		//必须保证第一个为数字而不是.
+		this.value = this.value.replace(/^\./g, '');
+		//保证只有出现一个.而没有多个.
+		this.value = this.value.replace(/\.{2,}/g, '.');
+		//保证.只出现一次，而不能出现两次以上
+		this.value = this.value.replace('.', '$#$').replace(/\./g, '').replace('$#$', '.');
+		//只能输入两位小数
+		this.value = this.value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');
+	}
+	
+	function removeContract(){
+		var row=$("#grid").bootstrapTable('getSelections');
+    	if (row.length == 0) {
+            $.modal.alertWarning("请至少选择一条记录");
+            return false;
+        }
+    	if(row[0].state == 4){
+    		$.modal.alertError("该合同已解除不能重复操作");
+    		return false;
+    	}
+		$.operate.removeWithTitle(null,'48%','53%','信息确认');
 	}
 
 	/** 客户端点击签名弹出签名设备框 */

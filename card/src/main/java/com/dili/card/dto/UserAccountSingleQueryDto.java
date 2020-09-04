@@ -50,4 +50,10 @@ public class UserAccountSingleQueryDto implements Serializable {
     public void setCardNo(String cardNo) {
         this.cardNo = cardNo;
     }
+    
+    public static UserAccountSingleQueryDto newDto(Long accountId) {
+    	UserAccountSingleQueryDto userAccountSingleQueryDto = new UserAccountSingleQueryDto();
+    	userAccountSingleQueryDto.setAccountId(accountId);
+    	return userAccountSingleQueryDto;
+    }
 }

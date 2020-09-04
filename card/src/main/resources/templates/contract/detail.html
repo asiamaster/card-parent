@@ -34,7 +34,7 @@
 	
  
 </style>
-<div>
+<div  style="width: auto;overflow: auto;">
 <!-- 	<div class="top_div">
 		<span style="margin-left:10px;">查看资金委托信息</span>
 		<span style="float:right; margin-right:10px;"><i class="fa fa-times" aria-hidden="true"></i></span>
@@ -51,7 +51,7 @@
       <div id="nav">
 		<ul>
     		<li class="child_li">${detail.contractNo!}</li>
-    		<li class="child_li">${detail.state!}</li>    
+    		<li class="child_li">${detail.stateText!}</li>    
     		<li class="child_li">${detail.startTime!}</li>
     		<li class="child_li">${detail.endTime!}</li>
   		</ul>
@@ -130,7 +130,7 @@
 			<ul>
 	    		<li class="child_li">${detail.terminater!'--'}</li>
 	    		<li class="child_li">${detail.terminateTime!'--:--'}</li> 
-	    		<li class="child_li">${detail.terminateNotes!'--'}</li>    
+	    		<li style="width: 400px;"><span class="child_li">${detail.terminateNotes!'--'}</span></li>    
   			</ul>
       	</div>
       </div>

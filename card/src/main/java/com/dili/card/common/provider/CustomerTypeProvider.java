@@ -18,10 +18,11 @@ import java.util.stream.Collectors;
  */
 @Component
 public class CustomerTypeProvider implements ValueProvider {
-    private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
+	private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
 
     static {
-        CustomerType.getAll().forEach(c -> BUFFER.add(new ValuePairImpl(c.getName(), c.getCode())));
+        CustomerType.getAll().stream()
+                .forEach(c -> BUFFER.add(new ValuePairImpl(c.getName(), c.getCode())));
     }
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {

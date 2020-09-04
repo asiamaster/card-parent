@@ -28,7 +28,7 @@
 		ORDER BY ${sort} ${order}
 	</select>
 	
-	<insert id="save">
+	<insert id="save" parameterType="com.dili.card.entity.StorageInDo" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
 		INSERT INTO card_storage_in (
 			`start_card_no`, 
 			`end_card_no`, 
