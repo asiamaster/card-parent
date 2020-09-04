@@ -1,5 +1,6 @@
 package com.dili.card.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardStorageOutQueryDto;
 import com.dili.card.entity.StorageInDo;
 import com.dili.card.service.ICardStorageInService;
+import com.dili.card.util.AssertUtils;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 
@@ -77,6 +79,19 @@ public class CardStorageInController implements IControllerHandler {
 		UserTicket userTicket = getUserTicket();
 		queryDto.setFirmId(userTicket.getFirmId());
 		return successPage(cardStorageInService.list(queryDto));
+	}
+
+	/**
+	 * 入库记录
+	 */
+	@PostMapping("del.action")
+	@ResponseBody
+	public BaseOutput<?> del(Long[] ids) {
+		LOG.info("入库记录删除*****" + JSONObject.toJSONString(ids));
+		AssertUtils.notEmpty(ids, "参数缺失：ids");
+		UserTicket userTicket = getUserTicket();
+		cardStorageInService.delStorageIn(ids, userTicket.getFirmId());
+		return BaseOutput.success();
 	}
 
 }

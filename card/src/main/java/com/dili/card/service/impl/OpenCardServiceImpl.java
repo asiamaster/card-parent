@@ -13,9 +13,11 @@ import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.config.OpenCardMQConfig;
 import com.dili.card.dto.CardRequestDto;
+import com.dili.card.dto.FundAccountDto;
 import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.OpenCardMqDto;
 import com.dili.card.dto.OpenCardResponseDto;
+import com.dili.card.dto.PayCreateFundReponseDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.CreateTradeResponseDto;
@@ -36,6 +38,7 @@ import com.dili.card.service.IRuleFeeService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CardType;
+import com.dili.card.type.CustomerOrgType;
 import com.dili.card.type.CustomerState;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateState;
@@ -120,6 +123,11 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		// 工本费更新现金柜金额
 		accountCycleService.increaseCashBox(cycleDo.getCycleNo(), openCardInfo.getCostFee());
 
+		// 创建资金账户
+		FundAccountDto fundAccount = buildFundAccount(openCardInfo);
+		PayCreateFundReponseDto payAccount = GenericRpcResolver.resolver(payRpc.createFundAccount(fundAccount),ServiceName.PAY);
+		openCardInfo.setFundAccountId(payAccount.getAccountId());
+		
 		// 调用账户服务开卡
 		BaseOutput<OpenCardResponseDto> baseOutPut = openCardRpc.openCard(openCardInfo);
 		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, ServiceName.ACCOUNT);
@@ -214,6 +222,27 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		serialService.saveSerialRecord(serialDto);
 	}
 
+	/**
+	 * 构建资金账户数据
+	 * 
+	 * @param openCardInfo
+	 * @param accountId     业务主键
+	 * @param fundAccountId 资金账号ID
+	 * @return
+	 */
+	private FundAccountDto buildFundAccount(OpenCardDto openCardInfo) {
+		FundAccountDto fundAccount = new FundAccountDto();
+		fundAccount.setCustomerId(openCardInfo.getCustomerId());
+		fundAccount.setType(CustomerOrgType.getPayCode(openCardInfo.getCustomerOrganizationType()));
+		fundAccount.setType(1);
+		fundAccount.setUseFor(1); // TODO 寿光只有一个交易账户，其它市场将允许多账户
+		fundAccount.setName(openCardInfo.getCustomerName());
+		fundAccount.setMobile(openCardInfo.getCustomerContactsPhone());
+		fundAccount.setCode(openCardInfo.getCardNo());
+		fundAccount.setPassword(openCardInfo.getLoginPwd());
+		return fundAccount;
+	}
+	
 	/**
 	 * 调用支付系统向市场账户充值工本费
 	 */

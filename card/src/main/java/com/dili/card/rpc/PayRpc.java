@@ -1,6 +1,14 @@
 package com.dili.card.rpc;
 
+import java.util.List;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import com.dili.card.config.PayServiceFeignConfig;
+import com.dili.card.dto.FundAccountDto;
+import com.dili.card.dto.PayCreateFundReponseDto;
 import com.dili.card.dto.UnfreezeFundDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
@@ -12,11 +20,6 @@ import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import java.util.List;
 
 /**
  * @description： 支付服务调用
@@ -101,4 +104,12 @@ public interface PayRpc {
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.permission.service:resetPwd", method = RequestMethod.POST)
     BaseOutput<?> resetPwd(CreateTradeRequestDto requestDto);
+    
+    /**
+     * 创建资金账户服务
+     * @param type
+     * @return
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.account.service:register", method = RequestMethod.POST)
+    BaseOutput<PayCreateFundReponseDto> createFundAccount(FundAccountDto type);
 }

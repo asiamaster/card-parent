@@ -1,6 +1,5 @@
 package com.dili.card.dto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,6 +31,10 @@ public class CardStorageDto extends BaseDto {
 	private Long creatorId;
 	/** 操作员名称 */
 	private String creator;
+	/** 卡面（与客户类型值相同,司机园内买园外买卖） */
+	private String cardFace;
+	/** 入库记录ID */
+	private Long storageInId;
 	/** 备注 */
 	private String notes;
 	/** 商户ID */
@@ -139,4 +142,21 @@ public class CardStorageDto extends BaseDto {
 	public void setCreatorId(Long creatorId) {
 		this.creatorId = creatorId;
 	}
+
+	public String getCardFace() {
+		return cardFace;
+	}
+
+	public void setCardFace(String cardFace) {
+		this.cardFace = cardFace;
+	}
+
+	public Long getStorageInId() {
+		return storageInId;
+	}
+
+	public void setStorageInId(Long storageInId) {
+		this.storageInId = storageInId;
+	}
+
 }
