@@ -1,42 +1,79 @@
 <#bs4Body>
+<style>
+    .info-column-card-out {
+        font-weight: bold;
+        text-align: right;
+        border: 1px solid #eee;
+        padding-top: .5rem;
+        padding-bottom: .5rem;
+    }
+    .grid{
+        margin-left: .5rem;
+    }
+</style>
 <div class="container-fluid">
-    <div id="add-modal">
-        <form id="save-form">
-            <table id="add-table" class="table table-bordered">
-                <tbody>
-                <tr>
-                    <td class="info-column-card-out">领取人</td>
-                    <td class="info-cell-card-out">
-                        <#bautoCompleteProvider
-                        _hiddenDomainId="applyUserId"
-                        _hiddenDomainName="applyUserId"
-                        _displayDomainId="applyUserName"
-                        _displayDomainName="applyUserName"
-                        _placeholder=""
-                        _optionVariable="userNameAutoCompleteOption"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="info-column-card-out">工号</td>
-                    <td id="_userCode" class="info-cell-card-out"></td>
+    <form id="check-card-form">
+        <div class="row grid">
+            <div class="col-3 info-column-card-out">
+                <label>卡片类别</label>
+            </div>
+            <div class="col-6 info-column-card-out">
+                <div>
+                    <select id="cardType" name="cardType" class="form-control"></select>
+                    <#bcomboProvider _id="cardType" _provider="cardTypeProvider" _queryParams='{emptyText:"-- 请选择 --"}'/>
+                </div>
+            </div>
+        </div>
+        <div id="customerTypeRow" class="row grid">
+            <div class="col-3 info-column-card-out">
+                <label>卡面类型</label>
+            </div>
+            <div class="col-6 info-column-card-out">
+                <div>
+                    <select id="customerType" name="customerType" class="form-control"></select>
+                    <#bcomboProvider _id="customerType" _provider="customerTypeProvider" _queryParams='{emptyText:"-- 请选择 --"}'/>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form id="save-form">
+        <div class="row grid">
+            <div class="col-3 info-column-card-out">
+                <label>领取人</label>
+            </div>
+            <div class="col-6 info-column-card-out" >
+                <div>
+                    <#bautoCompleteProvider
+                    _hiddenDomainId="applyUserId"
+                    _hiddenDomainName="applyUserId"
+                    _displayDomainId="applyUserName"
+                    _displayDomainName="applyUserName"
+                    _placeholder=""
+                    _optionVariable="userNameAutoCompleteOption"/>
                     <input id="userCode" name="applyUserCode" type="hidden" class="form-control"/>
-                </tr>
-                <tr>
-                    <td class="info-column-card-out">已读数量</td>
-                    <td>
-                        <input id="amount" name="amount" type="text" class="form-control" readonly/>
-                        <input id="cardNos" name="cardNos" type="hidden" class="form-control"/>
-                    </td>
-                    <td>
-                        <button id="btn-out" type="button" class="btn btn-primary" onclick="readCard()">
-                            开启读卡器
-                        </button>
-                    </td>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row grid">
+            <div class="col-3 info-column-card-out">
+                <label>已读数量</label>
+            </div>
+            <div class="col-2 info-column-card-out" style="border-right: none">
+                <div>
+                    <input id="amount" name="amount" type="text" class="form-control" readonly/>
+                    <input id="cardNos" name="cardNos" type="hidden" class="form-control"/>
+                </div>
+            </div>
+            <div class="col-4 info-column-card-out" style="border-left: none">
+                <div>
+                    <button id="btn-out" type="button" class="btn btn-primary" onclick="readCard()">
+                        开启读卡器
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
@@ -44,26 +81,61 @@
 <#common_autoCompleteUser/>
 <#common_cardBaseJs/>
 <script>
+    let cardType = {
+        "master": 10,//主卡
+        "slave": 20,//副卡
+    };
+
     let temp = {
         total: 0,
         cardNos: []
     };
-    $(() =>{
+    $(() => {
         //修改一下“确定”按钮文本
         $.modal.changeEnsureTxt("出库")
+        $("#customerTypeRow").hide();
     });
 
     //名字发生变化的时候清空工号
-    $("#applyUserName").watch(function(value) {
-        console.log(value);
-        $('#_userCode').text('');
+    $("#applyUserName").watch(function (value) {
         $('#userCode').val('');
+        $('#applyUserId').val('');
+    });
+
+    //监听卡类型下拉变化
+    $("#cardType").watch((value)=>{
+        let $customerType = $("#customerTypeRow");
+        $("#customerType").val('');
+        if (cardType.master == value){
+            $customerType.show();
+        }else {
+            $customerType.hide();
+        }
+    });
+
+    let checkCardFormId = 'check-card-form';
+    $("#" + checkCardFormId).validate({
+        onkeyup: false,
+        rules: {
+            cardType: {
+                required: true,
+            },
+        },
+        messages: {
+            cardType: {
+                required: "卡类型必填",
+            },
+        },
+        focusCleanup: true
     });
 
     let formId = "save-form";
     $("#" + formId).validate({
         onkeyup: false,
         rules: {
+            cardType: {
+                required: true,
+            },
             applyUserName: {
                 required: true,
             },
@@ -72,6 +144,9 @@
             }
         },
         messages: {
+            cardType: {
+                required: "卡类型必填",
+            },
             applyUserName: {
                 required: "领取人必填",
             },
@@ -82,6 +157,7 @@
         focusCleanup: true
     });
 
+    //提交出库请求
     function submitHandler(e) {
         if (!$.validate.form(formId)) {
             return false;
@@ -92,33 +168,38 @@
         $.operate.post(url, data);
     }
 
+    //读卡
     function readCard() {
+        if (!$.validate.form(checkCardFormId)) {
+            return;
+        }
         let result = readerCardNumber();
-        if (!result.success){
+        if (!result.success) {
             parent.$.modal.alertWarning(result.message);
             return;
         }
         let cardNo = result.data;
-        if ($.common.isEmpty(cardNo)){
+        if ($.common.isEmpty(cardNo)) {
             parent.$.modal.alertWarning("请将卡片放置在读卡器上");
             return;
         }
-        if(temp.cardNos.indexOf(cardNo) > -1){
+        if (temp.cardNos.indexOf(cardNo) > -1) {
             parent.$.modal.alertWarning("该卡片已经在待出库序列中。。。");
             return;
         }
         let params = {
             cardNo: result.data,
-            checkCardActionType: 2
+            cardType : $('#cardType').val(),
+            customerType: $('#customerType').val(),
         };
         let config = {
-            url: "${contextPath}/cardStorage/checkCard.action",
+            url: "${contextPath}/cardStorage/checkCardForOut.action",
             type: 'get',
             data: params,
             success: (result) => {
-                if (result.code != web_status.SUCCESS) {
+                if (!result.success) {
                     parent.$.modal.alertWarning(result.message)
-                }else {
+                } else {
                     temp.total++;
                     temp.cardNos.push(cardNo);
                     $('#amount').val(temp.total);

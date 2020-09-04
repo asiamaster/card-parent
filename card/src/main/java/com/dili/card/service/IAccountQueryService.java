@@ -38,7 +38,7 @@ public interface IAccountQueryService {
      * @author miaoguoxin
      * @date 2020/6/28
      */
-    AccountDetailResponseDto getDetail(String cardNo, Long accountId);
+    AccountDetailResponseDto getDetail(Long cardPkId, Long accountPkId);
 
     /**
      * 根据卡号查询（只查询卡账户信息）

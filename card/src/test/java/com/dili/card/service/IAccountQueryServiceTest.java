@@ -80,17 +80,6 @@ class IAccountQueryServiceTest extends BaseTest {
         LOGGER.info("获取到结果:{}", JSON.toJSONString(page.getData()));
     }
 
-    @Test
-    void testGetDetailByCardNo() {
-        AccountDetailResponseDto detail = accountQueryService.getDetail("888800034670",23L);
-        doReturn(this.createCustomerResponse(Lists.newArrayList(105L)).get(0))
-                .when(customerRpcResolver)
-                .findCustomerByIdWithConvert(105L, 1L);
-        assertNotNull(detail);
-        assertNotNull(detail.getCardAssociation());
-        assertNotNull(detail.getCardAssociation().getPrimary());
-        LOGGER.info("获取到的详情:{}", JSON.toJSONString(detail));
-    }
 
     private List<CustomerResponseDto> createCustomerResponse(List<Long> customerIds) {
         List<CustomerResponseDto> customerResponseDtos = new ArrayList<>();

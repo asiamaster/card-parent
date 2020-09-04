@@ -66,11 +66,11 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     }
 
     @Override
-    public AccountDetailResponseDto getDetail(String cardNo, Long accountId) {
+    public AccountDetailResponseDto getDetail(Long cardPkId, Long accountPkId) {
         AccountDetailResponseDto detail = new AccountDetailResponseDto();
         UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
-        query.setCardNo(cardNo);
-        query.setAccountId(accountId);
+        query.setAccountPkId(accountPkId);
+        query.setCardPkId(cardPkId);
         AccountWithAssociationResponseDto cardAssociation = this.getAssociation(query, Constant.FALSE_INT_FLAG);
         //排除掉“退还”状态关联卡
         List<UserAccountCardResponseDto> collect = cardAssociation.getAssociation().stream()

@@ -22,7 +22,7 @@
             }
         },
         selectFn: function (suggestion) {
-        	$('#_userCode').text(suggestion.userName);
+        	//$('#_userCode').text(suggestion.userName);
             $('#userCode').val(suggestion.userName);
             $('#_userName').text(suggestion.realName);
         	$('#inputuserName').val(suggestion.realName);
@@ -30,14 +30,4 @@
             $('#inputuserId').focus();
         }
     };
-
-  /*  function clear() {
-        $('#_userCode').text('');
-        $('#userCode').val('');
-        $('#_userName').text('');
-        $('#inputuserName').val('');
-        $('#inputuserId').val('');
-        $('#inputuserId').focus();
-    }*/
-
 </script>

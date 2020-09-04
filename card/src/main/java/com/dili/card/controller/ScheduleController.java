@@ -1,7 +1,10 @@
 package com.dili.card.controller;
 
 import java.util.Date;
+import java.util.List;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +18,20 @@ import com.dili.ss.domain.BaseOutput;
 
 import cn.hutool.core.date.DateUtil;
 
+/**
+*
+* @author miaoguoxin
+* @date 2020/9/3
+*/
 @Controller
 @RequestMapping("/api")
 public class ScheduleController {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(ContractManagementController.class);
-	
+
 	@Autowired
 	private ContractScheduleHandler contractScheduleHandler;
-	
+
 	/**
 	 * 更新合同状态
 	 */
@@ -35,5 +43,4 @@ public class ScheduleController {
 		return BaseOutput.success();
 	}
 
-	
 }

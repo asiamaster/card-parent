@@ -63,13 +63,13 @@ public class AccountQueryManagementController implements IControllerHandler {
      * @date 2020/6/28
      */
     @GetMapping("/detailTab.html")
-    public String detailFacadeView(String cardNo, Long accountId, ModelMap map) {
-        AssertUtils.notEmpty(cardNo, "卡号不能为空");
-        AssertUtils.notNull(accountId, "账户id不能为空");
+    public String detailFacadeView(Long cardPkId, Long accountPkId, ModelMap map) {
+        AssertUtils.notNull(cardPkId, "cardPkId不能为空");
+        AssertUtils.notNull(accountPkId, "accountPkId不能为空");
 
         UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
-        query.setAccountId(accountId);
-        query.setCardNo(cardNo);
+        query.setAccountPkId(accountPkId);
+        query.setCardPkId(cardPkId);
         UserAccountCardResponseDto userAccount = accountQueryRpcResolver.findSingleWithoutValidate(query);
         map.put("isMaster", CardType.isMaster(userAccount.getCardType()));
         map.put("cardState", userAccount.getCardState());
@@ -83,10 +83,11 @@ public class AccountQueryManagementController implements IControllerHandler {
      * @date 2020/6/28
      */
     @GetMapping("/accountDetail.html")
-    public String accountDetailView(String cardNo, Long accountId, ModelMap map) {
-        AssertUtils.notEmpty(cardNo, "卡号不能为空");
-        AssertUtils.notNull(accountId, "账户id不能为空");
-        String json = JSON.toJSONString(accountQueryService.getDetail(cardNo, accountId),
+    public String accountDetailView(Long cardPkId, Long accountPkId, ModelMap map) {
+        AssertUtils.notNull(cardPkId, "cardPkId不能为空");
+        AssertUtils.notNull(accountPkId, "accountPkId不能为空");
+
+        String json = JSON.toJSONString(accountQueryService.getDetail(cardPkId, accountPkId),
                 new EnumTextDisplayAfterFilter());
         map.put("detail", JSON.parseObject(json));
         return "accountquery/accountDetail";
@@ -133,7 +134,7 @@ public class AccountQueryManagementController implements IControllerHandler {
     @PostMapping("/list.action")
     @ResponseBody
     public BaseOutput<List<UserAccountCardResponseDto>> getList(@RequestBody UserAccountCardQuery param) {
-    	LOGGER.info("分页查询卡账户列表*****{}", JSONObject.toJSONString(param));
+    	LOGGER.info("条件查询卡账户列表*****{}", JSONObject.toJSONString(param));
     	AssertUtils.notNull(param.getFirmId(), "市场id不能为空");
         return BaseOutput.successData(accountQueryService.getList(param));
     }

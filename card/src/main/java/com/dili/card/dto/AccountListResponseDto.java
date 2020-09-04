@@ -17,7 +17,11 @@ import java.time.LocalDateTime;
 public class AccountListResponseDto extends BaseDto implements Serializable {
     /** */
 	private static final long serialVersionUID = -1775032495865427107L;
-	/**账户业务主键*/
+    /**account主键id*/
+    private Long accountPkId;
+    /**card主键id*/
+    private Long cardPkId;
+	/**账户业务id*/
     private Long accountId;
     /**卡号*/
     private String cardNo;
@@ -41,6 +45,22 @@ public class AccountListResponseDto extends BaseDto implements Serializable {
     /**开卡时间*/
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime cardCreateTime;
+
+    public Long getAccountPkId() {
+        return accountPkId;
+    }
+
+    public void setAccountPkId(Long accountPkId) {
+        this.accountPkId = accountPkId;
+    }
+
+    public Long getCardPkId() {
+        return cardPkId;
+    }
+
+    public void setCardPkId(Long cardPkId) {
+        this.cardPkId = cardPkId;
+    }
 
     public Long getAccountId() {
         return accountId;

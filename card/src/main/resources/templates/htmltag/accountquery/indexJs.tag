@@ -15,10 +15,11 @@
             $.modal.alertWarning("请至少选中一行");
             return
         }
-        let accountId = $.table.selectColumns("accountId");
         let params = {
             cardNo: selectedCardNo,
-            accountId: accountId
+            accountId: $.table.selectColumns("accountId"),
+            accountPkId: $.table.selectColumns("accountPkId"),
+            cardPkId: $.table.selectColumns("cardPkId")
         };
         let urlParams = $.common.jsonObj2UrlParams(params);
         window.location.href = "${contextPath}/accountQuery/detailTab.html?" + urlParams

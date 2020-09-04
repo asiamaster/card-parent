@@ -9,13 +9,16 @@ import com.dili.card.common.annotation.ForbidDuplicateCommit;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
-import com.dili.card.dto.*;
+import com.dili.card.dto.FundFrozenRecordParamDto;
+import com.dili.card.dto.FundRequestDto;
+import com.dili.card.dto.UnfreezeFundDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.dto.pay.FreezeFundRecordParam;
-import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.IRuleFeeService;
-import com.dili.card.service.ISerialService;
 import com.dili.card.service.withdraw.WithdrawDispatcher;
 import com.dili.card.type.PayFreezeFundType;
 import com.dili.card.type.RuleFeeBusinessType;
@@ -23,9 +26,7 @@ import com.dili.card.type.SystemSubjectType;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.FundValidator;
-import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ public class FundController implements IControllerHandler {
     @Resource
     private IRuleFeeService ruleFeeService;
     @Autowired
-    private ISerialService serialService;
+    private AccountQueryRpcResolver accountQueryRpcResolver;
 
     /**
      * 跳转冻结资金页面
@@ -71,11 +72,11 @@ public class FundController implements IControllerHandler {
      * @date 2020/6/29
      */
     @GetMapping("/frozen.html")
-    public String frozenFundView(String cardNo, Long accountId, ModelMap map) {
-        if (StringUtils.isBlank(cardNo)) {
-            throw new CardAppBizException(ResultCode.PARAMS_ERROR, "卡号不能为空");
-        }
-        String json = JSON.toJSONString(accountQueryService.getDetail(cardNo, accountId),
+    public String frozenFundView(Long cardPkId, Long accountPkId, ModelMap map) {
+        AssertUtils.notNull(cardPkId, "cardPkId不能为空");
+        AssertUtils.notNull(accountPkId, "accountPkId不能为空");
+
+        String json = JSON.toJSONString(accountQueryService.getDetail(cardPkId, accountPkId),
                 new EnumTextDisplayAfterFilter());
         map.put("detail", JSON.parseObject(json));
         return "fund/frozen";
@@ -85,9 +86,15 @@ public class FundController implements IControllerHandler {
      * 跳转解冻资金页面
      */
     @GetMapping("/unfrozenFund.html")
-    public String unfrozenFundView(Long accountId, ModelMap map) {
-    	LOGGER.info("跳转解冻资金页面*****{}", accountId);
-        UserAccountCardResponseDto account = accountQueryService.getByAccountIdWithoutValidate(accountId);
+    public String unfrozenFundView(Long cardPkId, Long accountPkId, ModelMap map) {
+        LOGGER.info("跳转解冻资金页面*****{} --- {}", cardPkId, accountPkId);
+        AssertUtils.notNull(cardPkId, "cardPkId不能为空");
+        AssertUtils.notNull(accountPkId, "accountPkId不能为空");
+
+        UserAccountSingleQueryDto queryDto = new UserAccountSingleQueryDto();
+        queryDto.setAccountPkId(accountPkId);
+        queryDto.setCardPkId(cardPkId);
+        UserAccountCardResponseDto account =  accountQueryRpcResolver.findSingleWithoutValidate(queryDto);
         map.put("account", account);
         return "fund/unfrozenFund";
     }
