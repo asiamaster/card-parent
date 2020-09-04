@@ -99,17 +99,25 @@ public class CardManageServiceImpl implements ICardManageService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void resetLoginPwd(CardRequestDto cardParam) {
-        //获取卡信息
+       
+    	//获取卡信息
         UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam.getAccountId());
-       //校验卡信息与客户信息
+       
+        //校验卡信息与客户信息
         AccountValidator.validateMatchAccount(cardParam, accountCard);
+        
         //保存本地操作记录
         BusinessRecordDo businessRecordDo = saveLocalSerialRecordNoFundSerial(cardParam, accountCard, OperateType.RESET_PWD);
+       
         //远程账户重置密码操作
+        System.out.println("-------------->1111");
         cardManageRpcResolver.resetLoginPwd(cardParam);
         //远程支付重置密码操作
+        System.out.println("-------------->2222");
         payRpcResolver.resetPwd(CreateTradeRequestDto.createPwd(accountCard.getFundAccountId(), cardParam.getLoginPwd()));
+        
         //记录远程操作记录
+        System.out.println("-------------->3333");
         this.saveRemoteSerialRecord(businessRecordDo);
     }
 
