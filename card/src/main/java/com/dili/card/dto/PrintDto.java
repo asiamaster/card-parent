@@ -37,6 +37,8 @@ public class PrintDto {
     private String operatorName;
     /** 备注 */
     private String notes;
+    /**旧卡卡号(换卡时需要)*/
+    private String oldCardNo;
 
     public String getName() {
         return name;
@@ -164,5 +166,13 @@ public class PrintDto {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getOldCardNo() {
+        return oldCardNo;
+    }
+
+    public void setOldCardNo(String oldCardNo) {
+        this.oldCardNo = oldCardNo;
     }
 }
