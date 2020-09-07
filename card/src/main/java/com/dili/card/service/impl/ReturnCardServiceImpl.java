@@ -105,11 +105,12 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 				tradeRequestDto.addServiceFeeItem(cardParam.getServiceFee(), FundItem.RETURN_CARD_CHANGE);
 				tradeResponseDto =  payRpcResolver.trade(tradeRequestDto);
 			}
-			// 主卡退卡注销账户 副卡不做此操作
-			CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto
-					.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId());
-			payRpcResolver.unregister(createTradeRequestDto);
 		}
+		
+		// 主 副卡退卡注销资金账户
+		CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto
+				.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId());
+		payRpcResolver.unregister(createTradeRequestDto);
 		
 		//保存本地记录
 		businessRecord.setTradeNo(tradeId);
