@@ -12,6 +12,7 @@ import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,118 +37,121 @@ import java.util.Map;
 @RequestMapping("cardStorage")
 public class CardStorageOutController implements IControllerHandler {
 
-	private static final Logger log = LoggerFactory.getLogger(CardStorageOutController.class);
+    private static final Logger log = LoggerFactory.getLogger(CardStorageOutController.class);
 
-	@Autowired
-	private ICardStorageService cardStorageService;
+    @Autowired
+    private ICardStorageService cardStorageService;
 
-	/**
-	 * 跳转出库页面
-	 * 
-	 * @author miaoguoxin
-	 * @date 2020/7/1
-	 */
-	@GetMapping("outList.html")
-	public String outListView() {
-		return "cardstorage/outList";
-	}
+    /**
+     * 跳转出库页面
+     *
+     * @author miaoguoxin
+     * @date 2020/7/1
+     */
+    @GetMapping("outList.html")
+    public String outListView() {
+        return "cardstorage/outList";
+    }
 
-	/**
-	 * 跳转到出库详情
-	 *
-	 * @author miaoguoxin
-	 * @date 2020/7/2
-	 */
-	@GetMapping("outDetail.html")
-	public String outDetailView(Long id, ModelMap modelMap) {
-		if (id == null || id <= 0) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "id不能为空");
-		}
-		modelMap.put("detail", cardStorageService.getById(id));
-		return "cardstorage/outDetail";
-	}
+    /**
+     * 跳转到出库详情
+     *
+     * @author miaoguoxin
+     * @date 2020/7/2
+     */
+    @GetMapping("outDetail.html")
+    public String outDetailView(Long id, ModelMap modelMap) {
+        if (id == null || id <= 0) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "id不能为空");
+        }
+        modelMap.put("detail", cardStorageService.getById(id));
+        return "cardstorage/outDetail";
+    }
 
-	/**
-	 * 跳转到添加页面
-	 *
-	 * @author miaoguoxin
-	 * @date 2020/7/2
-	 */
-	@GetMapping("outAdd.html")
-	public String outAddView() {
-		return "cardstorage/outAdd";
-	}
+    /**
+     * 跳转到添加页面
+     *
+     * @author miaoguoxin
+     * @date 2020/7/2
+     */
+    @GetMapping("outAdd.html")
+    public String outAddView() {
+        return "cardstorage/outAdd";
+    }
 
-	/**
-	 * 列表分页
-	 *
-	 * @author miaoguoxin
-	 * @date 2020/7/1
-	 */
-	@PostMapping("outPage.action")
-	@ResponseBody
-	public Map<String, Object> getPage(@Validated(ConstantValidator.Page.class) CardStorageOutQueryDto queryDto) {
-		log.info("出库列表分页 *****{}", JSONObject.toJSONString(queryDto));
-		this.buildOperatorInfo(queryDto);
-		return successPage(cardStorageService.getPage(queryDto));
-	}
+    /**
+     * 列表分页
+     *
+     * @author miaoguoxin
+     * @date 2020/7/1
+     */
+    @PostMapping("outPage.action")
+    @ResponseBody
+    public Map<String, Object> getPage(@Validated(ConstantValidator.Page.class) CardStorageOutQueryDto queryDto) {
+        log.info("出库列表分页 *****{}", JSONObject.toJSONString(queryDto));
+        this.buildOperatorInfo(queryDto);
+        return successPage(cardStorageService.getPage(queryDto));
+    }
 
-	/**
-	 * 添加出库记录
-	 * 
-	 * @author miaoguoxin
-	 * @date 2020/7/3
-	 */
-	@PostMapping("addOut.action")
-	@ResponseBody
-	public BaseOutput<?> addOutRecord(
-			@RequestBody @Validated(ConstantValidator.Insert.class) CardStorageOutRequestDto requestDto) {
-		log.info("添加出库记录 *****{}", JSONObject.toJSONString(requestDto));
-		this.buildOperatorInfo(requestDto);
-		cardStorageService.saveOutRecord(requestDto);
-		return BaseOutput.success();
-	}
+    /**
+     * 添加出库记录
+     *
+     * @author miaoguoxin
+     * @date 2020/7/3
+     */
+    @PostMapping("addOut.action")
+    @ResponseBody
+    public BaseOutput<?> addOutRecord(
+            @RequestBody @Validated(ConstantValidator.Insert.class) CardStorageOutRequestDto requestDto) {
+        log.info("添加出库记录 *****{}", JSONObject.toJSONString(requestDto));
+        this.buildOperatorInfo(requestDto);
+        cardStorageService.saveOutRecord(requestDto);
+        return BaseOutput.success();
+    }
 
-	/**
-	 * 校验卡状态（用于换卡）
-	 * 
-	 * @author miaoguoxin
-	 * @date 2020/7/29
-	 */
-	@GetMapping("checkCard.action")
-	@ResponseBody
-	public BaseOutput<CardStorageDto> checkCard(String cardNo, String customerType) {
-		log.info("校验卡状态 *****{}={}", cardNo,customerType);
-		AssertUtils.notEmpty(cardNo, "卡号不能为空");
-		CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardNo);
-		if (cardStorage.getState() != CardStorageState.ACTIVE.getCode()) {
-			return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "]，不能进行此操作!");
-		}
-		if (!cardStorage.getCardFace().equals(customerType)) {
-			return BaseOutput.failure("卡面信息和客户身份类型不符");
-		}
-		return BaseOutput.successData(cardStorage);
-	}
+    /**
+     * 校验卡状态（用于换卡）
+     *
+     * @author miaoguoxin
+     * @date 2020/7/29
+     */
+    @GetMapping("checkCard.action")
+    @ResponseBody
+    public BaseOutput<CardStorageDto> checkCard(String cardNo, String customerType) {
+        log.info("校验卡状态 *****{}={}", cardNo, customerType);
+        AssertUtils.notEmpty(cardNo, "卡号不能为空");
+        CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardNo);
+        if (cardStorage.getState() != CardStorageState.ACTIVE.getCode()) {
+            return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "]，不能进行此操作!");
+        }
+        if (!cardStorage.getCardFace().equals(customerType)) {
+            return BaseOutput.failure("卡面信息和客户身份类型不符");
+        }
+        return BaseOutput.successData(cardStorage);
+    }
 
-	/**
-	 * 出库的时候进行卡校验
-	 * 
-	 * @author miaoguoxin
-	 * @date 2020/9/2
-	 */
-	@GetMapping("/checkCardForOut.action")
-	@ResponseBody
-	public BaseOutput<?> checkCardForOut(String cardNo, Integer cardType, String customerType) {
-		log.info("出库校验卡状态 *****{} -- {}", cardNo, cardType);
-		AssertUtils.notEmpty(cardNo, "卡号不能为空");
-		AssertUtils.notNull(cardType, "卡类型不能为空");
-		CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardNo);
-		if (cardStorage.getState() != CardStorageState.UNACTIVATE.getCode()) {
-			return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "]，不能进行此操作!");
-		}
-		if (!cardStorage.getType().equals(cardType)) {
-			return BaseOutput.failure("卡类型不一致");
-		}
-		return BaseOutput.success();
-	}
+    /**
+     * 出库的时候进行卡校验
+     *
+     * @author miaoguoxin
+     * @date 2020/9/2
+     */
+    @GetMapping("/checkCardForOut.action")
+    @ResponseBody
+    public BaseOutput<?> checkCardForOut(String cardNo, Integer cardType, String customerType) {
+        log.info("出库校验卡状态 *****{} -- {} -- {}", cardNo, cardType, customerType);
+        AssertUtils.notEmpty(cardNo, "卡号不能为空");
+        AssertUtils.notNull(cardType, "卡类型不能为空");
+        CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardNo);
+        if (cardStorage.getState() != CardStorageState.UNACTIVATE.getCode()) {
+            return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "]，不能进行此操作!");
+        }
+        if (!cardStorage.getType().equals(cardType)) {
+            return BaseOutput.failure("卡片类型不一致");
+        }
+        if (StringUtils.isNoneBlank(customerType) && !customerType.equals(cardStorage.getCardFace())) {
+            return BaseOutput.failure("卡面类型不一致");
+        }
+        return BaseOutput.success();
+    }
 }
