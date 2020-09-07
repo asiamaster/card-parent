@@ -4,8 +4,6 @@ package com.dili.card.type;
  * 资金类型枚举
  */
 public enum FundItem {
-    /** 资金本金 */
-    PRINCIPAL(0,"资金本金"),
     /** 现金存款 */
     CASH_CHARGE(1, "现金存款"),
     /** POS存款 */
