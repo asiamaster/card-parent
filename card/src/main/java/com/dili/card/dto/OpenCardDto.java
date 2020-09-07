@@ -16,7 +16,7 @@ public class OpenCardDto extends BaseSerialLogDto {
 	private Long customerId;
 	/** 客户编号 */
 	private String customerCode;
-	/** 客户类型买卖司机等  {@link CustomerType} */
+	/** 客户类型买卖司机等 {@link CustomerType} */
 	private String customerType;
 	/** 个人、对公 */
 	private String customerOrganizationType;
@@ -28,6 +28,8 @@ public class OpenCardDto extends BaseSerialLogDto {
 	private String customerContactsPhone;
 	/** 资金账户ID */
 	private Long fundAccountId;
+	/** 父资金账户ID */
+	private Long parentFundAccountId;
 	/** 登录密码 */
 	private String loginPwd;
 	/** 交易密码 */
@@ -210,6 +212,14 @@ public class OpenCardDto extends BaseSerialLogDto {
 
 	public void setParentLoginPwd(String parentLoginPwd) {
 		this.parentLoginPwd = parentLoginPwd;
+	}
+
+	public Long getParentFundAccountId() {
+		return parentFundAccountId;
+	}
+
+	public void setParentFundAccountId(Long parentFundAccountId) {
+		this.parentFundAccountId = parentFundAccountId;
 	}
 
 }

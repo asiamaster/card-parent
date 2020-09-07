@@ -19,6 +19,7 @@ import com.dili.card.dto.OpenCardMqDto;
 import com.dili.card.dto.OpenCardResponseDto;
 import com.dili.card.dto.PayCreateFundReponseDto;
 import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.CreateTradeResponseDto;
 import com.dili.card.dto.pay.TradeRequestDto;
@@ -33,6 +34,7 @@ import com.dili.card.rpc.SerialRecordRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
+import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IOpenCardService;
 import com.dili.card.service.IRuleFeeService;
 import com.dili.card.service.ISerialService;
@@ -90,6 +92,8 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	private CardManageRpc cardManageRpc;
 	@Resource
     private RabbitMQMessageService rabbitMQMessageService;
+	@Resource
+	IAccountQueryService accountQueryService;
 
 	@Override
 	public Long getOpenCostFee() {
@@ -124,6 +128,12 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		accountCycleService.increaseCashBox(cycleDo.getCycleNo(), openCardInfo.getCostFee());
 
 		// 创建资金账户
+		if(CardType.isSlave(openCardInfo.getCardType())) {
+			UserAccountCardResponseDto parentAccount = accountQueryService.getByAccountId(openCardInfo.getParentAccountId());
+			openCardInfo.setParentFundAccountId(parentAccount.getFundAccountId());
+		}else {
+			openCardInfo.setParentFundAccountId(null);
+		}
 		FundAccountDto fundAccount = buildFundAccount(openCardInfo);
 		PayCreateFundReponseDto payAccount = GenericRpcResolver.resolver(payRpc.createFundAccount(fundAccount),ServiceName.PAY);
 		openCardInfo.setFundAccountId(payAccount.getAccountId());
@@ -240,6 +250,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		fundAccount.setMobile(openCardInfo.getCustomerContactsPhone());
 		fundAccount.setCode(openCardInfo.getCardNo());
 		fundAccount.setPassword(openCardInfo.getLoginPwd());
+		fundAccount.setParentId(openCardInfo.getParentAccountId());
 		return fundAccount;
 	}
 	
