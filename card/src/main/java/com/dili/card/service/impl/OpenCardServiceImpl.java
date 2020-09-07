@@ -13,6 +13,7 @@ import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.config.OpenCardMQConfig;
 import com.dili.card.dto.CardRequestDto;
+import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.FundAccountDto;
 import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.OpenCardMqDto;
@@ -35,10 +36,12 @@ import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.ICardStorageService;
 import com.dili.card.service.IOpenCardService;
 import com.dili.card.service.IRuleFeeService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.BizNoType;
+import com.dili.card.type.CardStorageState;
 import com.dili.card.type.CardType;
 import com.dili.card.type.CustomerOrgType;
 import com.dili.card.type.CustomerState;
@@ -91,9 +94,11 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@Resource
 	private CardManageRpc cardManageRpc;
 	@Resource
-    private RabbitMQMessageService rabbitMQMessageService;
+	private RabbitMQMessageService rabbitMQMessageService;
 	@Resource
 	IAccountQueryService accountQueryService;
+	@Resource
+	ICardStorageService cardStorageService;
 
 	@Override
 	public Long getOpenCostFee() {
@@ -106,8 +111,11 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
 	public OpenCardResponseDto openCard(OpenCardDto openCardInfo) {
+		// 二次校验新卡状态
+		checkNewCardNo(openCardInfo);
+		
 		// 校验父账号登录密码
-		if(CardType.isSlave(openCardInfo.getCardType())) {
+		if (CardType.isSlave(openCardInfo.getCardType())) {
 			CardRequestDto checkPwdParam = new CardRequestDto();
 			checkPwdParam.setAccountId(openCardInfo.getParentAccountId());
 			checkPwdParam.setLoginPwd(openCardInfo.getParentLoginPwd());
@@ -128,16 +136,18 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		accountCycleService.increaseCashBox(cycleDo.getCycleNo(), openCardInfo.getCostFee());
 
 		// 创建资金账户
-		if(CardType.isSlave(openCardInfo.getCardType())) {
-			UserAccountCardResponseDto parentAccount = accountQueryService.getByAccountId(openCardInfo.getParentAccountId());
+		if (CardType.isSlave(openCardInfo.getCardType())) {
+			UserAccountCardResponseDto parentAccount = accountQueryService
+					.getByAccountId(openCardInfo.getParentAccountId());
 			openCardInfo.setParentFundAccountId(parentAccount.getFundAccountId());
-		}else {
+		} else {
 			openCardInfo.setParentFundAccountId(null);
 		}
 		FundAccountDto fundAccount = buildFundAccount(openCardInfo);
-		PayCreateFundReponseDto payAccount = GenericRpcResolver.resolver(payRpc.createFundAccount(fundAccount),ServiceName.PAY);
+		PayCreateFundReponseDto payAccount = GenericRpcResolver.resolver(payRpc.createFundAccount(fundAccount),
+				ServiceName.PAY);
 		openCardInfo.setFundAccountId(payAccount.getAccountId());
-		
+
 		// 调用账户服务开卡
 		BaseOutput<OpenCardResponseDto> baseOutPut = openCardRpc.openCard(openCardInfo);
 		OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, ServiceName.ACCOUNT);
@@ -155,24 +165,40 @@ public class OpenCardServiceImpl implements IOpenCardService {
 
 		// 保存全局操作交易记录 开卡工本费
 		saveSerialRecord(openCardInfo, accountId);
-		
+
 		// 发送MQ通知
 		sendMQ(openCardInfo);
 		return openCardResponse;
 	}
+	
+	@Override
+	public void checkNewCardNo(OpenCardDto openCardInfo) {
+		CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(openCardInfo.getCardNo());
+		if (cardStorage.getState() != CardStorageState.ACTIVE.getCode()) {
+			throw new CardAppBizException("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "],不能开卡!");
+		}
+		if (cardStorage.getType().intValue() != openCardInfo.getCardType()) {
+			throw new CardAppBizException("请使用" + CardType.getName(openCardInfo.getCardType()) + "办理当前业务!");
+		}
+		if (!cardStorage.getCardFace().equals(openCardInfo.getCustomerType())) {
+			throw new CardAppBizException("卡面信息和客户身份类型不符");
+		}
+	}
 
 	/**
 	 * 发送MQ
+	 * 
 	 * @param openCardInfo
 	 */
 	private void sendMQ(OpenCardDto openCardInfo) {
-		OpenCardMqDto mqDto=new OpenCardMqDto();
+		OpenCardMqDto mqDto = new OpenCardMqDto();
 		mqDto.setCustomerId(openCardInfo.getCustomerId());
 		mqDto.setCustomerCode(openCardInfo.getCustomerCode());
 		mqDto.setCustomerName(openCardInfo.getCustomerName());
 		mqDto.setCardNo(openCardInfo.getCardNo());
 		mqDto.setFirmId(openCardInfo.getFirmId());
-		rabbitMQMessageService.send(OpenCardMQConfig.EXCHANGE, OpenCardMQConfig.ROUTING, JSONObject.toJSONString(mqDto));
+		rabbitMQMessageService.send(OpenCardMQConfig.EXCHANGE, OpenCardMQConfig.ROUTING,
+				JSONObject.toJSONString(mqDto));
 	}
 
 	/**
@@ -253,7 +279,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		fundAccount.setParentId(openCardInfo.getParentFundAccountId());
 		return fundAccount;
 	}
-	
+
 	/**
 	 * 调用支付系统向市场账户充值工本费
 	 */
@@ -276,6 +302,5 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		GenericRpcResolver.resolver(payRpc.commitTrade(commitDto), ServiceName.PAY);
 		return createTradeResp.getTradeId();
 	}
-	
-	
+
 }
