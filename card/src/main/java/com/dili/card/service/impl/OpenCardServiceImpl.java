@@ -250,7 +250,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		fundAccount.setMobile(openCardInfo.getCustomerContactsPhone());
 		fundAccount.setCode(openCardInfo.getCardNo());
 		fundAccount.setPassword(openCardInfo.getLoginPwd());
-		fundAccount.setParentId(openCardInfo.getParentAccountId());
+		fundAccount.setParentId(openCardInfo.getParentFundAccountId());
 		return fundAccount;
 	}
 	
