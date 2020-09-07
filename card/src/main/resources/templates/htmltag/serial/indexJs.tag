@@ -28,4 +28,16 @@
         };
         return $.extend(temp, bui.util.bindGridMeta2Form('grid', 'queryForm'));
     }
+
+    /**
+     * 用于导出  当数据为空时给出信息提示
+     */
+    function exportExcel() {
+        let totalRows = $('#grid').bootstrapTable("getOptions").totalRows;
+        if (totalRows === 0) {
+            showWarning("暂无数据，无法导出");
+            return;
+        }
+        bui.util.doExport("grid", "queryForm");
+    }
 </script>
