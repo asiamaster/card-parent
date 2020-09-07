@@ -12,7 +12,7 @@ public enum DisableState {
 	/** 启用 */
 	ENABLED(1, "正常"),
 	/** 禁用 */
-	DISABLED(2, "禁用");
+	DISABLED(2, "冻结");
 
 	private Integer code;
 	private String name;
