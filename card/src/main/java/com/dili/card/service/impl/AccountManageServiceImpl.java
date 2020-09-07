@@ -56,10 +56,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.FROZEN_ACCOUNT);
 		//远程冻结卡账户操作
     	accountManageRpcResolver.frozen(cardRequestDto);
-        //远程冻结资金账户必須是主卡
-    	if (accountCard.getMaster()) {
-    		payRpcResolver.freezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
-    	}
+        //远程冻结资金账户必須是主副卡
+    	payRpcResolver.freezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
     	//更新最終记录
     	this.saveRemoteSerialRecord(businessRecord, FundItem.MANDATORY_FREEZE_ACCOUNT);
 	}
@@ -75,10 +73,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.UNFROZEN_ACCOUNT);
 		//远程解冻账户操作
 		accountManageRpcResolver.unfrozen(cardRequestDto);
-        //远程解冻资金账户 必須是主卡
-		if (accountCard.getMaster()) {
-    		payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
-		}
+        //远程解冻资金账户 必須是主副卡
+    	payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
 		//更新最終记录
     	this.saveRemoteSerialRecord(businessRecord, FundItem.MANDATORY_UNFREEZE_ACCOUNT);
 	}

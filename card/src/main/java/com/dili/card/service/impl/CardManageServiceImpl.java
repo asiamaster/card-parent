@@ -109,14 +109,12 @@ public class CardManageServiceImpl implements ICardManageService {
         BusinessRecordDo businessRecordDo = saveLocalSerialRecordNoFundSerial(cardParam, accountCard, OperateType.RESET_PWD);
 
         //远程账户重置密码操作
-        System.out.println("-------------->1111");
         cardManageRpcResolver.resetLoginPwd(cardParam);
+        
         //远程支付重置密码操作
-        System.out.println("-------------->2222");
         payRpcResolver.resetPwd(CreateTradeRequestDto.createPwd(accountCard.getFundAccountId(), cardParam.getLoginPwd()));
 
         //记录远程操作记录
-        System.out.println("-------------->3333");
         this.saveRemoteSerialRecord(businessRecordDo);
     }
 
