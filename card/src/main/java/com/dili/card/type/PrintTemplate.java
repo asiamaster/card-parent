@@ -10,6 +10,7 @@ public enum PrintTemplate implements Serializable {
 	CASH_WITHDRAW("WithdrawalCashDocument", "现金提款"),
 	E_BANK_WITHDRAW("WithdrawalBankDocument", "网银提款"),
 	CHANGE_CARD("ReissueCardDocument", "换卡"),
+	OPEN_CARD("OpenCardDocument", "办卡"),
 	;
 
 	private String type;
