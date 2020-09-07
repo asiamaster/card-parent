@@ -16,7 +16,7 @@ import com.dili.card.type.PrintTemplate;
 public class ReturnCardPrintServiceImpl extends PrintServiceImpl{
     @Override
     public String getPrintTemplate(BusinessRecordDo recordDo) {
-        return PrintTemplate.CHANGE_CARD.getType();
+        return PrintTemplate.RETURN_CARD.getType();
     }
 
     @Override
