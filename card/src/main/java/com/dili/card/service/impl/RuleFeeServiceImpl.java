@@ -81,12 +81,14 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 		if (queryFeeInput == null) {
 			throw new CardAppBizException("请在规则系统中配置" + systemSubjectType.getName() + " ,并选择对应的系统科目!");
 		}
-		// 计算条件，金额由分改为元避免计算公式里面有加减法时数据错误
+		// 计算条件及判断条件，金额由分改为元避免计算公式里面有加减法时数据错误
 		if (amount != null && amount != 0) {
 			HashMap<String, Object> calcParams = new HashMap<String, Object>();
 			calcParams.put("amount", CurrencyUtils.cent2TenNoSymbol(amount));
 			queryFeeInput.setCalcParams(calcParams);
+			queryFeeInput.setConditionParams(calcParams);
 		}
+		
 		BaseOutput<QueryFeeOutput> queryFee = chargeRuleRpc.queryFee(queryFeeInput);
 		QueryFeeOutput resolver = GenericRpcResolver.resolver(queryFee, ServiceName.RULE);
 		return resolver.getTotalFee();
