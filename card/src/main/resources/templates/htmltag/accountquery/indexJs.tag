@@ -26,7 +26,7 @@
     }
 
     function cardNoFormatter(value, row, index, field) {
-        return '<div class="" style="color: #007BFF" href="javascript:void(0);">' + insertSpace(value) + '</div> ';
+        return '<div class="" style="color: #007BFF" href="javascript:void(0);">' + value + '</div> ';
     }
 
     /*每隔4位空格一下*/
