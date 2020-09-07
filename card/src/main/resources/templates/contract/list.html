@@ -645,20 +645,20 @@
 		var validate = true;
 		$(".consignee").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
-				$.modal.alertError("请添加被委托人身份信息");
 				validate = false;
 			}
 		})
 		if(!validate){
+			$.modal.alertError("请添加被委托人身份信息");
 			return validate;
 		}
 		$(".consignee").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdMobile").val())){
-				$.modal.alertError("请添加被委托人手机号");
 				validate = false;
 			}
 		})
 		if(!validate){
+			$.modal.alertError("请添加被委托人手机号");
 			return validate;
 		}
 		$(".consignee").each(function () {
