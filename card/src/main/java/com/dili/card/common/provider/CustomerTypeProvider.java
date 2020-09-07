@@ -21,7 +21,7 @@ public class CustomerTypeProvider implements ValueProvider {
 	private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
 
     static {
-        CustomerType.getAll().stream()
+        CustomerType.getAll()
                 .forEach(c -> BUFFER.add(new ValuePairImpl(c.getName(), c.getCode())));
     }
     @Override

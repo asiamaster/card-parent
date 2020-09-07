@@ -1,13 +1,7 @@
 package com.dili.card.service.impl;
 
-import java.math.BigDecimal;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -37,8 +31,13 @@ import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-
 import io.seata.spring.annotation.GlobalTransactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
 
 
 /**
@@ -99,23 +98,23 @@ public class CardManageServiceImpl implements ICardManageService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void resetLoginPwd(CardRequestDto cardParam) {
-       
+
     	//获取卡信息
         UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam.getAccountId());
-       
+
         //校验卡信息与客户信息
         AccountValidator.validateMatchAccount(cardParam, accountCard);
-        
+
         //保存本地操作记录
         BusinessRecordDo businessRecordDo = saveLocalSerialRecordNoFundSerial(cardParam, accountCard, OperateType.RESET_PWD);
-       
+
         //远程账户重置密码操作
         System.out.println("-------------->1111");
         cardManageRpcResolver.resetLoginPwd(cardParam);
         //远程支付重置密码操作
         System.out.println("-------------->2222");
         payRpcResolver.resetPwd(CreateTradeRequestDto.createPwd(accountCard.getFundAccountId(), cardParam.getLoginPwd()));
-        
+
         //记录远程操作记录
         System.out.println("-------------->3333");
         this.saveRemoteSerialRecord(businessRecordDo);
@@ -170,6 +169,10 @@ public class CardManageServiceImpl implements ICardManageService {
             record.setAmount(serviceFee);
             record.setTradeType(TradeType.FEE.getCode());
             record.setTradeChannel(TradeChannel.CASH.getCode());
+            //记录老卡卡号，用于生成打印数据
+            JSONObject obj = new JSONObject();
+            obj.put(Constant.OLD_CARD_NO_PARAM, requestDto.getCardNo());
+            record.setAttach(obj.toJSONString());
             record.setNotes("换卡，工本费转为市场收入");
         });
 

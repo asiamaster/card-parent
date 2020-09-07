@@ -19,7 +19,7 @@ public class Constant {
     public static final String POS_TYPE = "posType";
     /**充值extra  pos凭证号字段*/
     public static final String POS_CERT_NUM = "posCertNum";
-
+    /**操作员字段（用于冻结资金额外字段）*/
     public static final String OP_NO = "opNo";
     public static final String OP_NAME = "opName";
     /**合同快到期时间提醒*/
@@ -28,7 +28,9 @@ public class Constant {
     /** 最大最小金额 单位 分 */
     public static final Long MAX_AMOUNT = 99999999L;
     public static final Long MIN_AMOUNT = 1L;
-
+    /**boolean字段*/
     public static final int TRUE_INT_FLAG = 1;
     public static final int FALSE_INT_FLAG = 0;
+    /**卡号字段（用于换卡记录）*/
+    public static final String OLD_CARD_NO_PARAM = "old_card_no";
 }
