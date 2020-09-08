@@ -54,6 +54,9 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
             record.setServiceCost(requestDto.getServiceCost());
             record.setBankCardType(this.getBankType(requestDto));
             record.setPosType(this.getPosType(requestDto));
+            if (requestDto.getExtra() != null) {
+                record.setAttach(requestDto.getExtra().toJSONString());
+            }
         });
 
         long l = System.currentTimeMillis();
@@ -93,11 +96,11 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
     }
 
     /**
-    * 开始充值前的一些逻辑
-    * @author miaoguoxin
-    * @date 2020/9/1
-    */
-    protected void beforeRecharge(FundRequestDto requestDto){
+     * 开始充值前的一些逻辑
+     * @author miaoguoxin
+     * @date 2020/9/1
+     */
+    protected void beforeRecharge(FundRequestDto requestDto) {
 
     }
 

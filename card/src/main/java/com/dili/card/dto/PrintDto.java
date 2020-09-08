@@ -39,6 +39,7 @@ public class PrintDto {
     private String notes;
     /**旧卡卡号(换卡时需要)*/
     private String oldCardNo;
+    private String posCerNum;
 
     public String getName() {
         return name;

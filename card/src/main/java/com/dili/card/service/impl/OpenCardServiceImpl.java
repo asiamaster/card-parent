@@ -180,8 +180,11 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		if (cardStorage.getType().intValue() != openCardInfo.getCardType()) {
 			throw new CardAppBizException("请使用" + CardType.getName(openCardInfo.getCardType()) + "办理当前业务!");
 		}
-		if (!cardStorage.getCardFace().equals(openCardInfo.getCustomerType())) {
-			throw new CardAppBizException("卡面信息和客户身份类型不符");
+		// 副卡入库时没有卡面信息
+		if(!CardType.isSlave(cardStorage.getType())) {
+			if (!cardStorage.getCardFace().equals(openCardInfo.getCustomerType())) {
+				throw new CardAppBizException("卡面信息和客户身份类型不符");
+			}
 		}
 	}
 
