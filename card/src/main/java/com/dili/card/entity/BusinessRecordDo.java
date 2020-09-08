@@ -1,18 +1,14 @@
 package com.dili.card.entity;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.alibaba.fastjson.annotation.JSONField;
-import com.dili.card.type.BankCardType;
-import com.dili.card.type.OperateState;
-import com.dili.card.type.OperateType;
-import com.dili.card.type.TradeChannel;
-import com.dili.card.type.TradeType;
+import com.dili.card.type.*;
 import com.dili.card.util.CurrencyUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.Transient;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 柜台业务办理记录
@@ -91,6 +87,10 @@ public class BusinessRecordDo implements Serializable {
 	private Integer version;
 	/**pos类型，从字典中获取*/
 	private String posType;
+
+	/** 客户身份类型  用于构建交易流水，业务办理记录不存储该字段*/
+	@Transient
+	private String customerType;
     /**
      * BusinessRecordEntity constructor
      */
@@ -222,6 +222,22 @@ public class BusinessRecordDo implements Serializable {
      */
 	public String getCustomerName() {
 		return customerName;
+	}
+
+	/**
+	 * getter for 客户身份
+	 * @return
+	 */
+	public String getCustomerType() {
+		return customerType;
+	}
+
+	/**
+	 * setter for 客户身份
+	 * @param customerType
+	 */
+	public void setCustomerType(String customerType) {
+		this.customerType = customerType;
 	}
 
     /**

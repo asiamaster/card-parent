@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.common.handler.IControllerHandler;
-import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.OpenCardResponseDto;
@@ -26,7 +25,6 @@ import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICardStorageService;
 import com.dili.card.service.IOpenCardService;
-import com.dili.card.type.CardStorageState;
 import com.dili.card.type.CardType;
 import com.dili.card.type.CustomerState;
 import com.dili.card.type.CustomerType;
@@ -108,19 +106,12 @@ public class OpenCardController implements IControllerHandler {
 	@RequestMapping(value = "checkNewCardNo.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public BaseOutput<?> checkNewCardNo(@RequestBody OpenCardDto openCardInfo) {
+		log.info("开卡检查新卡状态*****{}", JSONObject.toJSONString(openCardInfo));
 		AssertUtils.notNull(openCardInfo.getCardNo(), "请输入卡号!");
-		CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(openCardInfo.getCardNo());
-		if (cardStorage.getState() != CardStorageState.ACTIVE.getCode()) {
-			return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "],不能开卡!");
-		}
-		if (cardStorage.getType().intValue() != openCardInfo.getCardType()) {
-			return BaseOutput.failure("请使用" + CardType.getName(openCardInfo.getCardType()) + "办理当前业务!");
-		}
-		if (!cardStorage.getCardFace().equals(openCardInfo.getCustomerType())) {
-			return BaseOutput.failure("卡面信息和客户身份类型不符");
-		}
+		openCardService.checkNewCardNo(openCardInfo);
 		return BaseOutput.success();
 	}
+
 
 	/**
 	 * 查询开卡费用项（C）
