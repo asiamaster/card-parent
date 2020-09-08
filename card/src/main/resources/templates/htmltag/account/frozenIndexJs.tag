@@ -33,6 +33,7 @@
             bui.util.debounce($.operate.post(url, $.extend(requestData, data), function (result) {
                 if (result.code == web_status.SUCCESS) {
                 	$("#frozen").attr("disabled", "disabled");
+                	$("#disabledState").val("2");
                     $.tab.refresh()
                 }
             }), 1000, true);
