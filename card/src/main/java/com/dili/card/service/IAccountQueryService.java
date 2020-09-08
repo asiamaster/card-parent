@@ -82,7 +82,7 @@ public interface IAccountQueryService {
      * @author miaoguoxin
      * @date 2020/7/28
      */
-    AccountWithAssociationResponseDto getAssociationByAccountId(Long accountId);
+    AccountWithAssociationResponseDto getAssociationByAccountId(Long accountId, int excludeUnusualState);
 
     /**
      * 查询账户信息（包含余额）

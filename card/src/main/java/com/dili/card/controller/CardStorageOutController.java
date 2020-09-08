@@ -8,6 +8,7 @@ import com.dili.card.dto.CardStorageOutRequestDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.ICardStorageService;
 import com.dili.card.type.CardStorageState;
+import com.dili.card.type.CardType;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
@@ -117,15 +118,21 @@ public class CardStorageOutController implements IControllerHandler {
      */
     @GetMapping("checkCard.action")
     @ResponseBody
-    public BaseOutput<CardStorageDto> checkCard(String cardNo, String customerType) {
+	public BaseOutput<CardStorageDto> checkCard(String cardNo, String customerType, Integer cardType) {
         log.info("校验卡状态 *****{}={}", cardNo, customerType);
         AssertUtils.notEmpty(cardNo, "卡号不能为空");
         CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardNo);
         if (cardStorage.getState() != CardStorageState.ACTIVE.getCode()) {
             return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "]，不能进行此操作!");
         }
-        if (!cardStorage.getCardFace().equals(customerType)) {
-            return BaseOutput.failure("卡面信息和客户身份类型不符");
+		if (cardType != null && cardStorage.getType().intValue() != cardType) {
+			throw new CardAppBizException("请使用" + CardType.getName(cardType) + "办理当前业务!");
+		}
+		// 副卡入库时没有卡面信息
+        if(!CardType.isSlave(cardStorage.getType())) {
+	        if (!cardStorage.getCardFace().equals(customerType)) {
+	            return BaseOutput.failure("卡面信息和客户身份类型不符");
+	        }
         }
         return BaseOutput.successData(cardStorage);
     }
