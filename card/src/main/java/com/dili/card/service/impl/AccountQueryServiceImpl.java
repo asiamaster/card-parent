@@ -128,10 +128,10 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     }
 
     @Override
-    public AccountWithAssociationResponseDto getAssociationByAccountId(Long accountId) {
+    public AccountWithAssociationResponseDto getAssociationByAccountId(Long accountId, int excludeUnusualState) {
         UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
         query.setAccountId(accountId);
-        return this.getAssociation(query, Constant.TRUE_INT_FLAG);
+        return this.getAssociation(query, excludeUnusualState);
     }
 
 
