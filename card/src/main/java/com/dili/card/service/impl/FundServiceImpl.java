@@ -114,7 +114,7 @@ public class FundServiceImpl implements IFundService {
             UnfreezeFundDto dto = new UnfreezeFundDto();
             dto.setFrozenId(frozenId);
             FundOpResponseDto payResponse = GenericRpcResolver.resolver(payRpc.unfrozenFund(dto), ServiceName.PAY);
-            // 保存操作记录
+            // 构建全局操作记录
             SerialRecordDo serialRecord = buildSerialRecord(accountInfo, unfreezeFundDto, payResponse);
             serialList.add(serialRecord);
         }
