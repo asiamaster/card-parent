@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +71,9 @@ import io.seata.spring.annotation.GlobalTransactional;
  */
 @Service("openCardService")
 public class OpenCardServiceImpl implements IOpenCardService {
+
+	private static final Logger log = LoggerFactory.getLogger(OpenCardServiceImpl.class);
+
 	@Resource
 	private OpenCardRpc openCardRpc;
 	@Resource
@@ -110,8 +115,9 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@Transactional(rollbackFor = Exception.class)
 	public OpenCardResponseDto openCard(OpenCardDto openCardInfo) {
 		// 二次校验新卡状态
-		cardStorageService.checkAndGetByCardNo(openCardInfo.getCardNo(), openCardInfo.getCardType(), openCardInfo.getCustomerType());
-		
+		cardStorageService.checkAndGetByCardNo(openCardInfo.getCardNo(), openCardInfo.getCardType(),
+				openCardInfo.getCustomerType());
+
 		// 校验父账号登录密码
 		if (CardType.isSlave(openCardInfo.getCardType())) {
 			CardRequestDto checkPwdParam = new CardRequestDto();
@@ -169,7 +175,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		sendMQ(openCardInfo);
 		return openCardResponse;
 	}
-	
+
 	/**
 	 * 发送MQ
 	 * 
@@ -182,6 +188,8 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		mqDto.setCustomerName(openCardInfo.getCustomerName());
 		mqDto.setCardNo(openCardInfo.getCardNo());
 		mqDto.setFirmId(openCardInfo.getFirmId());
+		log.info("开卡MQ通知>>>>>EXCHANGE[{}]ROUTING[{}]", OpenCardMQConfig.EXCHANGE, OpenCardMQConfig.ROUTING,
+				JSONObject.toJSONString(mqDto));
 		rabbitMQMessageService.send(OpenCardMQConfig.EXCHANGE, OpenCardMQConfig.ROUTING,
 				JSONObject.toJSONString(mqDto));
 	}
