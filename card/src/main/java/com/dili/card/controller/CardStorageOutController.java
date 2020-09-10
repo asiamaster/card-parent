@@ -119,7 +119,7 @@ public class CardStorageOutController implements IControllerHandler {
     @GetMapping("checkCard.action")
     @ResponseBody
 	public BaseOutput<CardStorageDto> checkCard(String cardNo, String customerType, Integer cardType) {
-        log.info("校验卡状态 *****{}={}", cardNo, customerType);
+        log.info("校验卡状态 *****{}={}={}", cardNo, customerType, cardType);
         AssertUtils.notEmpty(cardNo, "卡号不能为空");
 		CardStorageDto cardStorage = cardStorageService.checkAndGetByCardNo(cardNo, cardType, customerType);
         return BaseOutput.successData(cardStorage);
