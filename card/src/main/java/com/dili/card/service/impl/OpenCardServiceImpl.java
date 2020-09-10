@@ -162,6 +162,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		// 保存卡务柜台开卡操作记录 使用seate后状态默认为成功
 		BusinessRecordDo busiRecord = buildBusinessRecordDo(openCardInfo, accountId, cycleDo.getCycleNo(), tradeId);
 		serialService.saveBusinessRecord(busiRecord);
+		openCardResponse.setSerialNo(busiRecord.getSerialNo());
 
 		// 保存全局操作交易记录 开卡工本费
 		saveSerialRecord(openCardInfo, accountId);

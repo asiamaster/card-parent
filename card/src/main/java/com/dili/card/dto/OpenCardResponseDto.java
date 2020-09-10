@@ -12,6 +12,8 @@ public class OpenCardResponseDto {
 
 	private Long fundAccountId; // 资金账号ID
 
+	private String serialNo; // 柜台操作流水
+
 	public Long getLoginUserId() {
 		return loginUserId;
 	}
@@ -50,6 +52,14 @@ public class OpenCardResponseDto {
 
 	public void setAccountId(Long accountId) {
 		this.accountId = accountId;
+	}
+
+	public String getSerialNo() {
+		return serialNo;
+	}
+
+	public void setSerialNo(String serialNo) {
+		this.serialNo = serialNo;
 	}
 
 }

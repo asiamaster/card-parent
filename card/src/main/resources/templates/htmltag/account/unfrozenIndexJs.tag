@@ -31,6 +31,7 @@ $("#unfrozen-account-form").validate({
 	            bui.util.debounce($.operate.post(url, $.extend(requestData, data), function (result) {
 	                if (result.code == web_status.SUCCESS) {
 	                	$("#unfrozen").attr("disabled", "disabled");
+	                	$("#disabledState2").val("1");
 	                    $.tab.refresh();
 	                }
 	            }), 1000, true)

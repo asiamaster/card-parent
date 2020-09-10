@@ -38,7 +38,6 @@ public class CardStorageInServiceImpl implements ICardStorageInService {
 	private IStorageInDao storageInDao;
 
 	@Override
-	@GlobalTransactional
 	@Transactional(rollbackFor = Exception.class)
 	public void batchCardStorageIn(StorageInDo storageIn) {
 		// 保存入库记录
