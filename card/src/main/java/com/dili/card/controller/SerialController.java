@@ -177,6 +177,6 @@ public class SerialController implements IControllerHandler {
         if (recordDo == null) {
             return BaseOutput.failure("业务办理记录不存在");
         }
-        return BaseOutput.success().setData(printDispatcher.create(recordDo, reprint));
+        return BaseOutput.successData(printDispatcher.create(recordDo, reprint));
     }
 }
