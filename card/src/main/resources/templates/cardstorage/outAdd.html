@@ -173,6 +173,10 @@
         if (!$.validate.form(checkCardFormId)) {
             return;
         }
+        if (temp.total == 50) {
+            parent.$.modal.alertWarning("最多一次出库50张卡片");
+            return;
+        }
         let result = readerCardNumber();
         if (!result.success) {
             parent.$.modal.alertWarning(result.message);
