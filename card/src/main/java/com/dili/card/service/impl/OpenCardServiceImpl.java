@@ -238,6 +238,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		record.setCustomerId(openCardInfo.getCustomerId());
 		record.setCustomerName(openCardInfo.getCustomerName());
 		record.setCustomerNo(openCardInfo.getCustomerCode());
+		record.setCustomerType(openCardInfo.getCustomerType());
 		record.setFirmId(openCardInfo.getFirmId());
 		record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
 		record.setNotes("开卡，工本费转为市场收入");
