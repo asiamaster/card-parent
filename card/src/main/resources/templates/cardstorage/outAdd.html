@@ -24,14 +24,14 @@
                 </div>
             </div>
         </div>
-        <div id="customerTypeRow" class="row grid">
+        <div id="cardFaceRow" class="row grid">
             <div class="col-3 info-column-card-out">
                 <label>卡面类型</label>
             </div>
             <div class="col-6 info-column-card-out">
                 <div>
-                    <select id="customerType" name="customerType" class="form-control"></select>
-                    <#bcomboProvider _id="customerType" _provider="customerTypeProvider" _queryParams='{emptyText:"-- 请选择 --"}'/>
+                    <select id="cardFace" name="cardFace" class="form-control"></select>
+                    <#bcomboProvider _id="cardFace" _provider="cardFaceProvider" _queryParams='{emptyText:"-- 请选择 --"}'/>
                 </div>
             </div>
         </div>
@@ -93,7 +93,7 @@
     $(() => {
         //修改一下“确定”按钮文本
         $.modal.changeEnsureTxt("出库")
-        $("#customerTypeRow").hide();
+        $("#cardFaceRow").hide();
     });
 
     //名字发生变化的时候清空工号
@@ -104,12 +104,12 @@
 
     //监听卡类型下拉变化
     $("#cardType").watch((value)=>{
-        let $customerType = $("#customerTypeRow");
-        $("#customerType").val('');
+        let $cardFace = $("#cardFaceRow");
+        $("#cardFace").val('');
         if (cardType.master == value){
-            $customerType.show();
+            $cardFace.show();
         }else {
-            $customerType.hide();
+            $cardFace.hide();
         }
     });
 
@@ -194,7 +194,7 @@
         let params = {
             cardNo: result.data,
             cardType : $('#cardType').val(),
-            customerType: $('#customerType').val(),
+            cardFace: $('#cardFace').val(),
         };
         let config = {
             url: "${contextPath}/cardStorage/checkCardForOut.action",

@@ -1,18 +1,7 @@
 package com.dili.card.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.dili.card.common.handler.IControllerHandler;
-import com.dili.card.dto.CardStorageDto;
-import com.dili.card.dto.CardStorageOutQueryDto;
-import com.dili.card.dto.CardStorageOutRequestDto;
-import com.dili.card.exception.CardAppBizException;
-import com.dili.card.service.ICardStorageService;
-import com.dili.card.type.CardStorageState;
-import com.dili.card.type.CardType;
-import com.dili.card.util.AssertUtils;
-import com.dili.card.validator.ConstantValidator;
-import com.dili.ss.constant.ResultCode;
-import com.dili.ss.domain.BaseOutput;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +15,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.dto.CardStorageDto;
+import com.dili.card.dto.CardStorageOutQueryDto;
+import com.dili.card.dto.CardStorageOutRequestDto;
+import com.dili.card.exception.CardAppBizException;
+import com.dili.card.service.ICardStorageService;
+import com.dili.card.type.CardStorageState;
+import com.dili.card.util.AssertUtils;
+import com.dili.card.validator.ConstantValidator;
+import com.dili.ss.constant.ResultCode;
+import com.dili.ss.domain.BaseOutput;
 
 /**
  * 卡仓库管理
@@ -121,19 +121,7 @@ public class CardStorageOutController implements IControllerHandler {
 	public BaseOutput<CardStorageDto> checkCard(String cardNo, String customerType, Integer cardType) {
         log.info("校验卡状态 *****{}={}", cardNo, customerType);
         AssertUtils.notEmpty(cardNo, "卡号不能为空");
-        CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardNo);
-        if (cardStorage.getState() != CardStorageState.ACTIVE.getCode()) {
-            return BaseOutput.failure("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "]，不能进行此操作!");
-        }
-		if (cardType != null && cardStorage.getType().intValue() != cardType) {
-			throw new CardAppBizException("请使用" + CardType.getName(cardType) + "办理当前业务!");
-		}
-		// 副卡入库时没有卡面信息
-        if(!CardType.isSlave(cardStorage.getType())) {
-	        if (!cardStorage.getCardFace().equals(customerType)) {
-	            return BaseOutput.failure("卡面信息和客户身份类型不符");
-	        }
-        }
+		CardStorageDto cardStorage = cardStorageService.checkAndGetByCardNo(cardNo, cardType, customerType);
         return BaseOutput.successData(cardStorage);
     }
 
@@ -145,8 +133,8 @@ public class CardStorageOutController implements IControllerHandler {
      */
     @GetMapping("/checkCardForOut.action")
     @ResponseBody
-    public BaseOutput<?> checkCardForOut(String cardNo, Integer cardType, String customerType) {
-        log.info("出库校验卡状态 *****{} -- {} -- {}", cardNo, cardType, customerType);
+    public BaseOutput<?> checkCardForOut(String cardNo, Integer cardType, String cardFace) {
+        log.info("出库校验卡状态 *****{} -- {} -- {}", cardNo, cardType, cardFace);
         AssertUtils.notEmpty(cardNo, "卡号不能为空");
         AssertUtils.notNull(cardType, "卡类型不能为空");
         CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(cardNo);
@@ -156,7 +144,7 @@ public class CardStorageOutController implements IControllerHandler {
         if (!cardStorage.getType().equals(cardType)) {
             return BaseOutput.failure("卡片类型不一致");
         }
-        if (StringUtils.isNoneBlank(customerType) && !customerType.equals(cardStorage.getCardFace())) {
+        if (StringUtils.isNoneBlank(cardFace) && !cardFace.equals(cardStorage.getCardFace())) {
             return BaseOutput.failure("卡面类型不一致");
         }
         return BaseOutput.success();

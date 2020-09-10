@@ -1,8 +1,17 @@
 package com.dili.card.service.impl;
 
+import java.math.BigDecimal;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.CardRequestDto;
+import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
@@ -17,10 +26,14 @@ import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICardManageService;
+import com.dili.card.service.ICardStorageService;
 import com.dili.card.service.IReturnCardService;
 import com.dili.card.service.IRuleFeeService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
+import com.dili.card.type.CardStorageState;
+import com.dili.card.type.CardType;
+import com.dili.card.type.CustomerType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.RuleFeeBusinessType;
@@ -31,13 +44,8 @@ import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-import io.seata.spring.annotation.GlobalTransactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import java.math.BigDecimal;
+import io.seata.spring.annotation.GlobalTransactional;
 
 
 /**
@@ -65,6 +73,8 @@ public class CardManageServiceImpl implements ICardManageService {
     private IReturnCardService returnCardService;
     @Autowired
     private IRuleFeeService ruleFeeService;
+    @Resource
+	ICardStorageService cardStorageService;
 
     /**
      * @param cardParam
@@ -161,6 +171,8 @@ public class CardManageServiceImpl implements ICardManageService {
         AccountValidator.validateMatchAccount(requestDto, userAccount);
         this.validateCanChange(requestDto, userAccount);
 
+        cardStorageService.checkAndGetByCardNo(requestDto.getNewCardNo(), userAccount.getCardType(), userAccount.getCustomerMarketType());
+        
         Long serviceFee = requestDto.getServiceFee();
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {
             record.setType(OperateType.CHANGE.getCode());

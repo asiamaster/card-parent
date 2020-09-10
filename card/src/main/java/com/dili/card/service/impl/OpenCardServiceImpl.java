@@ -13,7 +13,6 @@ import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.config.OpenCardMQConfig;
 import com.dili.card.dto.CardRequestDto;
-import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.FundAccountDto;
 import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.OpenCardMqDto;
@@ -41,7 +40,6 @@ import com.dili.card.service.IOpenCardService;
 import com.dili.card.service.IRuleFeeService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.BizNoType;
-import com.dili.card.type.CardStorageState;
 import com.dili.card.type.CardType;
 import com.dili.card.type.CustomerOrgType;
 import com.dili.card.type.CustomerState;
@@ -112,7 +110,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@Transactional(rollbackFor = Exception.class)
 	public OpenCardResponseDto openCard(OpenCardDto openCardInfo) {
 		// 二次校验新卡状态
-		checkNewCardNo(openCardInfo);
+		cardStorageService.checkAndGetByCardNo(openCardInfo.getCardNo(), openCardInfo.getCardType(), openCardInfo.getCustomerType());
 		
 		// 校验父账号登录密码
 		if (CardType.isSlave(openCardInfo.getCardType())) {
@@ -172,23 +170,6 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		return openCardResponse;
 	}
 	
-	@Override
-	public void checkNewCardNo(OpenCardDto openCardInfo) {
-		CardStorageDto cardStorage = cardStorageService.getCardStorageByCardNo(openCardInfo.getCardNo());
-		if (cardStorage.getState() != CardStorageState.ACTIVE.getCode()) {
-			throw new CardAppBizException("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "],不能开卡!");
-		}
-		if (cardStorage.getType().intValue() != openCardInfo.getCardType()) {
-			throw new CardAppBizException("请使用" + CardType.getName(openCardInfo.getCardType()) + "办理当前业务!");
-		}
-		// 副卡入库时没有卡面信息
-		if(!CardType.isSlave(cardStorage.getType())) {
-			if (!cardStorage.getCardFace().equals(openCardInfo.getCustomerType())) {
-				throw new CardAppBizException("卡面信息和客户身份类型不符");
-			}
-		}
-	}
-
 	/**
 	 * 发送MQ
 	 * 

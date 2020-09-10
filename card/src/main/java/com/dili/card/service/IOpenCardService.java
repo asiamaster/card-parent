@@ -28,11 +28,4 @@ public interface IOpenCardService {
 	 */
 	Long getOpenCostFee();
 
-	/**
-	 * 校验新卡状态,卡类型，卡面与客户类型
-	 * 
-	 * @param openCardInfo
-	 */
-	void checkNewCardNo(OpenCardDto openCardInfo);
-
 }

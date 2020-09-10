@@ -108,7 +108,7 @@ public class OpenCardController implements IControllerHandler {
 	public BaseOutput<?> checkNewCardNo(@RequestBody OpenCardDto openCardInfo) {
 		log.info("开卡检查新卡状态*****{}", JSONObject.toJSONString(openCardInfo));
 		AssertUtils.notNull(openCardInfo.getCardNo(), "请输入卡号!");
-		openCardService.checkNewCardNo(openCardInfo);
+		cardStorageService.checkAndGetByCardNo(openCardInfo.getCardNo(), openCardInfo.getCardType(), openCardInfo.getCustomerType());
 		return BaseOutput.success();
 	}
 

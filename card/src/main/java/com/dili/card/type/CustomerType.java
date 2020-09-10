@@ -13,27 +13,49 @@ import java.util.List;
  */
 public enum CustomerType {
 	/** 园外买家 */
-	OUTSIDE_BUYER("园外买家", "outside_buyer"),
+	OUTSIDE_BUYER("园外买家", "outside_buyer", CardFaceType.BUYER),
 	/** 园内买家 */
-	INSIDE_BUYER("园内买家", "inside_buyer"),
+	INSIDE_BUYER("园内买家", "inside_buyer", CardFaceType.BUYER_VIP),
 	/** 卖家卡 */
-	SELLER("卖家", "seller"),
+	SELLER("卖家", "seller", CardFaceType.SELLER),
 
 	/** 司机 */
-	DRIVER("司机", "driver");
+	DRIVER("司机", "driver", CardFaceType.DRIVER);
 
 	private String name;
 	private String code;
+	private CardFaceType cardFaceType;
 
-	private CustomerType(String name, String code) {
+	private CustomerType(String name, String code, CardFaceType cardFaceType) {
 		this.name = name;
 		this.code = code;
+		this.cardFaceType = cardFaceType;
 	}
 
-	public static String getTypeName(String customerCode) {
+	public static String getTypeName(String customerTypeCode) {
 		for (CustomerType type : CustomerType.values()) {
-			if (type.getCode().equals(customerCode)) {
+			if (type.getCode().equals(customerTypeCode)) {
 				return type.getName();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 校验客户类型和卡面是否一致，对应关系固定
+	 */
+	public static boolean checkCardFace(String customerTypeCode, String cardFace) {
+		CustomerType type = getType(customerTypeCode);
+		if (type == null) {
+			return false;
+		}
+		return cardFace.equals(type.getCardFaceType().getCode());
+	}
+
+	public static CustomerType getType(String customerTypeCode) {
+		for (CustomerType type : CustomerType.values()) {
+			if (type.getCode().equals(customerTypeCode)) {
+				return type;
 			}
 		}
 		return null;
@@ -63,6 +85,14 @@ public enum CustomerType {
 	 */
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public CardFaceType getCardFaceType() {
+		return cardFaceType;
+	}
+
+	public void setCardFaceType(CardFaceType cardFaceType) {
+		this.cardFaceType = cardFaceType;
 	}
 
 }

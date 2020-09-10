@@ -66,6 +66,7 @@ public class CardStorageInController implements IControllerHandler {
 		storageInDo.setFirmId(userTicket.getFirmId());
 		storageInDo.setFirmName(userTicket.getFirmName());
 		cardStorageInService.batchCardStorageIn(storageInDo);
+		LOG.info("批量入库保存*****END");
 		return BaseOutput.success();
 	}
 

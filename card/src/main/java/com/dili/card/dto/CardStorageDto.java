@@ -31,7 +31,7 @@ public class CardStorageDto extends BaseDto {
 	private Long creatorId;
 	/** 操作员名称 */
 	private String creator;
-	/** 卡面（与客户类型值相同,司机园内买园外买卖） */
+	/** 卡面 */
 	private String cardFace;
 	/** 入库记录ID */
 	private Long storageInId;
