@@ -6,8 +6,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
+import com.dili.card.common.provider.CardFaceProvider;
 import com.dili.card.common.provider.CardStorageStateProvider;
 import com.dili.card.common.provider.CardTypeProvider;
+import com.dili.card.type.CardFaceType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -24,6 +26,9 @@ public class CardStorageDto extends BaseDto {
 	/** 卡类型 */
 	@TextDisplay(value = CardTypeProvider.class)
 	private Integer type;
+	/** 卡面 */
+	@TextDisplay(value = CardFaceProvider.class)
+	private String cardFace;
 	/** 卡片在仓库状态 */
 	@TextDisplay(value = CardStorageStateProvider.class)
 	private Integer state;
@@ -31,8 +36,6 @@ public class CardStorageDto extends BaseDto {
 	private Long creatorId;
 	/** 操作员名称 */
 	private String creator;
-	/** 卡面 */
-	private String cardFace;
 	/** 入库记录ID */
 	private Long storageInId;
 	/** 备注 */
