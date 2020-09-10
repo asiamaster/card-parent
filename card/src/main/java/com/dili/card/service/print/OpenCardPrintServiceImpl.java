@@ -1,14 +1,18 @@
 package com.dili.card.service.print;
 
-import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.PrintDto;
 import com.dili.card.entity.BusinessRecordDo;
+import com.dili.card.exception.CardAppBizException;
+import com.dili.card.type.CardType;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.PrintTemplate;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
 
 /**
  * @description： 主卡打印
@@ -18,17 +22,34 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class OpenCardPrintServiceImpl extends PrintServiceImpl {
-	@Override
-	public String getPrintTemplate(BusinessRecordDo recordDo) {
-		return PrintTemplate.OPEN_CARD.getType();
-	}
+
+	private static final Logger LOG = LoggerFactory.getLogger(OpenCardPrintServiceImpl.class);
 
 	@Override
-	public void createSpecial(PrintDto printDto, BusinessRecordDo recordDo, boolean reprint) {
+	public String getPrintTemplate(BusinessRecordDo recordDo) {
+		String attach = recordDo.getAttach();
+		if (StringUtils.isNotBlank(attach)) {
+			Integer cardType = JSONObject.parseObject(attach).getInteger(Constant.BUSINESS_RECORD_ATTACH_CARDTYPE);
+			if (CardType.isMaster(cardType)) {
+				return PrintTemplate.OPEN_MASTER_CARD.getType();
+			} else if (CardType.isSlave(cardType)) {
+				return PrintTemplate.OPEN_SLAVE_CARD.getType();
+			} else {
+				LOG.error("开卡操作记录扩展字段无法获取卡类型,流水号[{}],attach[{}]", recordDo.getSerialNo(), attach);
+			}
+		}
+		throw new CardAppBizException("未找到合适的票据模板");
 	}
+
 
 	@Override
 	public Integer support() {
 		return OperateType.ACCOUNT_TRANSACT.getCode();
+	}
+
+
+	@Override
+	public void createSpecial(PrintDto printDto, BusinessRecordDo recordDo, boolean reprint) {
+		
 	}
 }

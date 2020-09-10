@@ -2,6 +2,8 @@ package com.dili.card.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
+import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.config.OpenCardMQConfig;
 import com.dili.card.dto.CardRequestDto;
@@ -219,6 +222,9 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		serial.setTradeNo(tradeId);
 		serial.setType(OperateType.ACCOUNT_TRANSACT.getCode());
 		serial.setTradeChannel(TradeChannel.CASH.getCode());
+		Map<String, Object> attach=new HashMap<String, Object>(); 
+		attach.put(Constant.BUSINESS_RECORD_ATTACH_CARDTYPE, openCardInfo.getCardType());
+		serial.setAttach(JSONObject.toJSONString(attach));
 		return serial;
 	}
 
