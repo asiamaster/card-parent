@@ -32,8 +32,8 @@
             let data = $.common.formToJSON('frozen-account-form');
             bui.util.debounce($.operate.post(url, $.extend(requestData, data), function (result) {
                 if (result.code == web_status.SUCCESS) {
-                	$("#frozen").attr("disabled", "disabled");
-                	$("#disabledState").val("2");
+                	$("#frozenAccount").attr("disabled", "disabled");
+                	$("#disabledState3").val("2");
                     $.tab.refresh()
                 }
             }), 1000, true);
@@ -62,8 +62,8 @@
 
     //初始化表格
     $(() => {
-    	if($("#disabledState").val() == 2){
-    		$("#frozen").attr("disabled", "disabled");
+    	if($("#disabledState3").val() == 2){
+    		$("#frozenAccount").attr("disabled", "disabled");
     	}
     	let data = $.common.formToJSON('query-frozen-account');
     	data.page=1;
