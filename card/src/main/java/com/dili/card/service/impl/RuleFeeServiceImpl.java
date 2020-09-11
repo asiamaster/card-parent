@@ -1,6 +1,7 @@
 package com.dili.card.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.assets.sdk.dto.BusinessChargeItemDto;
 import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
 import com.dili.card.common.constant.ServiceName;
@@ -54,7 +56,7 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 		businessChargeItemDto.setMarketId(firmId);
 		BaseOutput<List<BusinessChargeItemDto>> businessChargeList = businessChargeItemRpc
 				.listByExample(businessChargeItemDto);
-		List<BusinessChargeItemDto> chargeItemList = GenericRpcResolver.resolver(businessChargeList, "获取费用项");
+		List<BusinessChargeItemDto> chargeItemList = GenericRpcResolver.resolver(businessChargeList, ServiceName.ASSETS);
 		return chargeItemList;
 	}
 
@@ -83,10 +85,16 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 		}
 		// 计算条件及判断条件，金额由分改为元避免计算公式里面有加减法时数据错误
 		if (amount != null && amount != 0) {
+			BigDecimal b = new BigDecimal(amount);
+			BigDecimal div = b.divide(new BigDecimal(100),2, RoundingMode.HALF_UP);
 			HashMap<String, Object> calcParams = new HashMap<String, Object>();
-			calcParams.put("amount", CurrencyUtils.cent2TenNoSymbol(amount));
+//			String amountStr = CurrencyUtils.cent2TenNoSymbol(amount);
+			calcParams.put("amount", div.doubleValue() );
 			queryFeeInput.setCalcParams(calcParams);
-			queryFeeInput.setConditionParams(calcParams);
+			
+			HashMap<String, Object> conditionParams = new HashMap<String, Object>();
+			conditionParams.put("amount", div.doubleValue());
+			queryFeeInput.setConditionParams(conditionParams);
 		}
 		
 		BaseOutput<QueryFeeOutput> queryFee = chargeRuleRpc.queryFee(queryFeeInput);
@@ -99,6 +107,11 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 		return this.getRuleFee(null, ruleFeeBusinessType, systemSubjectType);
 	}
 	public static void main(String[] args) {
-		System.out.println();
+		HashMap<String, Object> calcParams = new HashMap<String, Object>();
+		calcParams.put("amount", CurrencyUtils.cent2TenNoSymbol(3l));
+		QueryFeeInput queryFeeInput = new QueryFeeInput();
+		queryFeeInput.setCalcParams(calcParams);
+		queryFeeInput.setConditionParams(calcParams);
+		System.out.println(JSONObject.toJSON(queryFeeInput));
 	}
 }
