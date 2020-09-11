@@ -30,7 +30,6 @@ import com.dili.card.type.CardType;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
-import com.dili.card.type.TradeType;
 import com.dili.ss.domain.PageOutput;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.commons.lang3.StringUtils;
