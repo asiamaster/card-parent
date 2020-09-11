@@ -25,6 +25,7 @@ import com.dili.card.service.IFundService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.recharge.AbstractRechargeManager;
 import com.dili.card.service.recharge.RechargeFactory;
+import com.dili.card.type.ActionType;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CardType;
 import com.dili.card.type.FeeType;
@@ -173,6 +174,7 @@ public class FundServiceImpl implements IFundService {
         record.setFundItem(FundItem.MANDATORY_UNFREEZE_FUND.getCode());
         record.setFundItemName(FundItem.MANDATORY_UNFREEZE_FUND.getName());
         record.setOperateTime(LocalDateTime.now());
+        record.setAction(ActionType.INCOME.getCode());
         // 计算期初期末
         Long balance = payResponse.getTransaction().getBalance();
         Long frozenBalance = payResponse.getTransaction().getFrozenBalance();
