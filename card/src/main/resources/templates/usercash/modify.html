@@ -83,7 +83,7 @@ function selectUser(){
 	    dataType:'json',
 	    async: false,
 	    error: function(result) {
-	    	$.modal.alertError(result.message);
+	    	$.modal.alertError("服务异常，请联系管理员");
 	    	$('#_userName').html("");
 	    	$('#userCode').val("");
 	    	return false;
@@ -92,7 +92,7 @@ function selectUser(){
 	    	if(result.code=="200"){
 	    		return true;
 	    	}else{
-	    		$.modal.alertError(result.message);
+	    		$.modal.alertError("服务异常，请联系管理员");
 	    		$('#_userName').html("");
 	    		$('#userCode').val("");
 	    		return false;
