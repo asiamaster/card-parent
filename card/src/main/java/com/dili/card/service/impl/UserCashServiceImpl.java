@@ -21,6 +21,7 @@ import com.dili.card.service.IUserCashService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CashAction;
 import com.dili.card.type.CashState;
+import com.dili.card.type.CycleState;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.constant.ResultCode;
@@ -67,6 +68,9 @@ public class UserCashServiceImpl implements IUserCashService {
 		}
 		// 获取账务周期
 		AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(userCashDo.getUserId());
+		if (!accountCycle.getState().equals(CycleState.ACTIVE.getCode())) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "账期状态已[" + CycleState.getNameByCode(accountCycle.getState()) + "不能删除");
+		}
 		AccountCycleDto accountCycleDto = accountCycleService.detail(accountCycle.getId());
 		// 校验现金余额 领款删除不能导致现金余额小于0 并且校验是本人
 		if (userCashDo.getAction().equals(CashAction.PAYEE.getCode())) {
