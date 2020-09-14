@@ -79,7 +79,9 @@
 		UPDATE card_user_cash SET
 			`state` = #{state}
 		WHERE
-			`cycle_no` = #{cycleNo}
+			`cycle_no` = #{cycleNo} 
+		AND
+			state != 10;
 	</update>
 	
 	<update id="delete">
