@@ -69,7 +69,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		// 获取账务周期
 		AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(userCashDo.getUserId());
 		if (!accountCycle.getState().equals(CycleState.ACTIVE.getCode())) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "账期状态已[" + CycleState.getNameByCode(accountCycle.getState()) + "不能删除");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "账期状态" + CycleState.getNameByCode(accountCycle.getState()) + "不能删除");
 		}
 		AccountCycleDto accountCycleDto = accountCycleService.detail(accountCycle.getId());
 		// 校验现金余额 领款删除不能导致现金余额小于0 并且校验是本人
@@ -94,7 +94,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		// 获取账务周期
 		AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(userCashDto.getUserId());
 		if (!accountCycle.getState().equals(CycleState.ACTIVE.getCode())) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "账期状态已[" + CycleState.getNameByCode(accountCycle.getState()) + "不能删除");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "账期状态" + CycleState.getNameByCode(accountCycle.getState()) + "不能删除");
 		}
 		AccountCycleDto accountCycleDto = accountCycleService.detail(accountCycle.getId());
 		// 校验现金余额 领款修改不能导致现金余额小于0 并且校验是本人
@@ -119,21 +119,10 @@ public class UserCashServiceImpl implements IUserCashService {
 				}
 			}
 		}
-		userCashDo = new UserCashDo();
-		userCashDo.setId(userCashDto.getId());
-		userCashDo.setUserId(userCashDto.getUserId());
-		userCashDo.setUserCode(userCashDto.getUserCode());
-		userCashDo.setUserName(userCashDto.getUserName());
-		userCashDo.setAmount(userCashDto.getAmount());
-		userCashDo.setNotes(userCashDto.getNotes());
-		userCashDo.setCycleNo(accountCycle.getCycleNo());
-		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		userCashDo.setCreatorId(userTicket.getId());
-		userCashDo.setCreatorCode(userTicket.getUserName());
-		userCashDo.setCreator(userTicket.getRealName());
-		userCashDao.update(userCashDo);
+		//更新记录
+		userCashDao.update(buildUpdateEntity(userCashDto, accountCycle.getCycleNo()));
 	}
-
+	
 	@Override
 	public UserCashDo findById(Long id) {
 		UserCashDo userCashDo = userCashDao.getById(id);
@@ -278,5 +267,24 @@ public class UserCashServiceImpl implements IUserCashService {
 					"金额不能超过" + CurrencyUtils.toCurrency(Constant.MAX_AMOUNT) + "元");
 		}
 
+	}
+	
+	/**
+	 * 构造需要更新的数据
+	 */
+	private UserCashDo buildUpdateEntity(UserCashDto userCashDto, Long cycleNo) {
+		UserCashDo updateUserCashDo = new UserCashDo();
+		updateUserCashDo.setId(userCashDto.getId());
+		updateUserCashDo.setUserId(userCashDto.getUserId());
+		updateUserCashDo.setUserCode(userCashDto.getUserCode());
+		updateUserCashDo.setUserName(userCashDto.getUserName());
+		updateUserCashDo.setAmount(userCashDto.getAmount());
+		updateUserCashDo.setNotes(userCashDto.getNotes());
+		updateUserCashDo.setCycleNo(cycleNo);
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		updateUserCashDo.setCreatorId(userTicket.getId());
+		updateUserCashDo.setCreatorCode(userTicket.getUserName());
+		updateUserCashDo.setCreator(userTicket.getRealName());
+		return updateUserCashDo;
 	}
 }
