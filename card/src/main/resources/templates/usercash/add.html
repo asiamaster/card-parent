@@ -80,7 +80,7 @@
 			dataType: 'json',
 			async: false,
 			error: function (result) {
-				$.modal.alertError("服务异常，请联系管理员");
+				$.modal.alertError(result.message);
 				$('#_userName').html("");
 				$('#userCode').val("");
 				return false;
@@ -89,7 +89,7 @@
 				if (result.code == "200") {
 					return true;
 				} else {
-					$.modal.alertError("服务异常，请联系管理员");
+					$.modal.alertError(result.message);
 					$('#_userName').html("");
 					$('#userCode').val("");
 					return false;
