@@ -99,4 +99,14 @@ public interface IAccountCycleService {
 	 */
 	void updateStateById(Long id, Integer state, Integer version);
 	
+	/**
+	 * 构建账务周期包装实体实体
+	 */
+	AccountCycleDto buildAccountCycleWrapperDetail(AccountCycleDo cycle, boolean detail);
+	
+	/**
+	 * 构建账务周期包装实体实体
+	 */
+	AccountCycleDto buildAccountCycleWrapper(AccountCycleDo cycle);
+	
 }
