@@ -91,10 +91,14 @@ public class UserCashServiceImpl implements IUserCashService {
 		}
 		// 金额校验
 		this.validateAmount(userCashDto.getAmount(), userCashDto.getSettledApply());
+		AccountCycleDo oldAccountCycle = accountCycleService.findLatestCycleByUserId(userCashDo.getUserId());
+		if (!oldAccountCycle.getState().equals(CycleState.ACTIVE.getCode())) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, userCashDo.getUserName() + "的账期状态" + CycleState.getNameByCode(oldAccountCycle.getState()) + "不能修改");
+		}
 		// 获取账务周期
 		AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(userCashDto.getUserId());
 		if (!accountCycle.getState().equals(CycleState.ACTIVE.getCode())) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "账期状态" + CycleState.getNameByCode(accountCycle.getState()) + "不能修改");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, userCashDto.getUserName() + "的账期状态" + CycleState.getNameByCode(accountCycle.getState()) + "不能修改");
 		}
 		AccountCycleDto accountCycleDto = accountCycleService.detail(accountCycle.getId());
 		// 校验现金余额 领款修改不能导致现金余额小于0 并且校验是本人
