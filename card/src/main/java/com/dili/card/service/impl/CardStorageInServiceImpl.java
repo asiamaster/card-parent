@@ -69,7 +69,7 @@ public class CardStorageInServiceImpl implements ICardStorageInService {
 	}
 
 	@Override
-	@GlobalTransactional
+	//@GlobalTransactional
 	@Transactional(rollbackFor = Exception.class)
 	public void delStorageIn(Long[] ids, Long firmId) {
 		storageInDao.batchRemove(ids);
