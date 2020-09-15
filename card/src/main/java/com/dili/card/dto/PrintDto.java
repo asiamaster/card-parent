@@ -39,7 +39,36 @@ public class PrintDto {
     private String notes;
     /**旧卡卡号(换卡时需要)*/
     private String oldCardNo;
-    private String posCerNum;
+    /**凭证号(充值需要)*/
+    private String posCertNum;
+    /**银行卡类型(充值需要) {@link com.dili.card.type.BankCardType}*/
+    private Integer bankType;
+    /**pos类型(充值需要),从字典获取*/
+    private Integer posType;
+
+    public String getPosCertNum() {
+        return posCertNum;
+    }
+
+    public void setPosCertNum(String posCertNum) {
+        this.posCertNum = posCertNum;
+    }
+
+    public Integer getBankType() {
+        return bankType;
+    }
+
+    public void setBankType(Integer bankType) {
+        this.bankType = bankType;
+    }
+
+    public Integer getPosType() {
+        return posType;
+    }
+
+    public void setPosType(Integer posType) {
+        this.posType = posType;
+    }
 
     public String getName() {
         return name;
