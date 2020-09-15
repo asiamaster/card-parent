@@ -142,6 +142,16 @@ public class UserCashServiceImpl implements IUserCashService {
 		}
 		return userCashDo;
 	}
+	
+	@Override
+	public UserCashDo getByIdAllState(Long id) {
+		UserCashDo userCashDo = userCashDao.getByIdAllState(id);
+		if (userCashDo == null) {
+			userCashDo = new UserCashDo();
+			userCashDo.setState(0);
+		}
+		return userCashDo;
+	}
 
 	@Override
 	public UserCashDto detail(Long id) {
@@ -190,7 +200,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(userCashDto.getUserId(),
 				userCashDto.getUserName(), userCashDto.getUserCode());
 		if (userCashDto.getAction().equals(CashAction.PAYER.getCode())) {// 校验现金余额
-			AccountCycleDto accountCycleDto = accountCycleService.detail(accountCycle.getId());
+			AccountCycleDto accountCycleDto = accountCycleService.buildAccountCycleWrapperDetail(accountCycle, true);
 			if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < userCashDto.getAmount()) {
 				throw new CardAppBizException(ResultCode.DATA_ERROR, "交款金额大于现金余额");
 			}

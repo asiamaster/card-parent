@@ -32,6 +32,13 @@ public interface IUserCashService {
 	 */
 	UserCashDo findById(Long id);
 	
+    /**
+     * 根据id查询 所有状态
+     * @param id
+     * @return
+     */
+	UserCashDo getByIdAllState(Long id);
+	
 	/**
 	 * 查找操作记录
 	 */

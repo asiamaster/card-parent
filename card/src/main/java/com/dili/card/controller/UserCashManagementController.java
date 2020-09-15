@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.UserCashDto;
+import com.dili.card.entity.UserCashDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IUserCashService;
 import com.dili.card.type.CashAction;
@@ -178,6 +179,16 @@ public class UserCashManagementController implements IControllerHandler {
 		log.info("删除领款*****{}", JSONObject.toJSONString(userCashDto));
 		iUserCashService.delete(userCashDto.getId());
 		return BaseOutput.success("删除成功");
+	}
+	
+	/**
+	 * 详情
+	 */
+	@PostMapping("/detail.action")
+	@ResponseBody
+	public BaseOutput<UserCashDo> detail(@RequestBody @Validated(value = {ConstantValidator.Delete.class}) UserCashDto userCashDto) {
+		log.info("详情*****{}", JSONObject.toJSONString(userCashDto));
+		return BaseOutput.successData(iUserCashService.getByIdAllState(userCashDto.getId()));
 	}
 
 	/**

@@ -208,6 +208,46 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}
 		return accountCycle;
 	}
+	
+	@Override
+	public AccountCycleDto buildAccountCycleWrapper(AccountCycleDo cycle) {
+		return buildAccountCycleWrapperDetail(cycle, false);
+	}
+	
+	@Override
+	public AccountCycleDto buildAccountCycleWrapperDetail(AccountCycleDo cycle, boolean detail) {
+		// 构建账务周期实体
+		AccountCycleDto accountCycleDto = this.buildAccountCycleDto(cycle);
+		// 构建账务周期详情
+		AccountCycleDetailDto accountCycleDetail = this.buildCycleDetail(cycle);
+		// 计算网银存取款
+		accountCycleDetail
+				.setInOutBankAmount(accountCycleDetail.getBankInAmount() - accountCycleDetail.getBankOutAmount());
+		// 计算未交现金金额  领款金额 + 现金收支收益金额 - 现金交款金额
+		Long unDeliverAmount = accountCycleDetail.getReceiveAmount() + accountCycleDetail.getRevenueAmount()
+				- accountCycleDetail.getDeliverAmount();
+		if(cycle != null) {
+			if (CycleState.ACTIVE.getCode() == cycle.getState()) {//活跃期
+				accountCycleDetail.setUnDeliverAmount(unDeliverAmount);
+			}else {//非活跃期 最近一次交现金金额就是最终交款金额
+				UserCashDo userCashDo = userCashService.getLastestUesrCash(cycle.getUserId(), cycle.getCycleNo(), CashAction.PAYER.getCode());
+				accountCycleDetail.setLastDeliverAmount(userCashDo.getAmount());
+				accountCycleDetail.setUnDeliverAmount(userCashDo.getAmount());
+				//详情分两种情况  平账 都要统计 不做处理    //结账申请后不统计     || //结账申请状态和平账状态列表   需要减去最后一次结账交款记录
+				if ((detail && CycleState.SETTLED.getCode() == cycle.getState()) || !detail) {
+					accountCycleDetail.setDeliverAmount(accountCycleDetail.getDeliverAmount() - userCashDo.getAmount());
+					accountCycleDetail.setDeliverTimes(accountCycleDetail.getDeliverTimes() - 1);
+				}
+			}
+		}
+		//现金收款包括充值和工本费
+		accountCycleDetail.setDepoCashAmount(accountCycleDetail.getDepoCashAmount() + accountCycleDetail.getOpenCostAmount() + accountCycleDetail.getChangeCostAmount());
+		accountCycleDetail.setDepoCashTimes(accountCycleDetail.getDepoCashTimes() + accountCycleDetail.getOpenCostFeetimes() + accountCycleDetail.getChangeCostFeetimes());
+		
+		accountCycleDto.setAccountCycleDetailDto(accountCycleDetail);
+		return accountCycleDto;
+	}
+
 
 	/**
 	 * 构造页面响应实体列表
@@ -301,49 +341,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		accountCycleDto.setFirmId(userTicket.getFirmId());
 	}
-
-	/**
-	 * 构建账务周期包装实体实体
-	 */
-	private AccountCycleDto buildAccountCycleWrapper(AccountCycleDo cycle) {
-		return buildAccountCycleWrapperDetail(cycle, false);
-	}
 	
-	/**
-	 * 构建账务周期包装实体实体
-	 */
-	private AccountCycleDto buildAccountCycleWrapperDetail(AccountCycleDo cycle, boolean detail) {
-		// 构建账务周期实体
-		AccountCycleDto accountCycleDto = this.buildAccountCycleDto(cycle);
-		// 构建账务周期详情
-		AccountCycleDetailDto accountCycleDetail = this.buildCycleDetail(cycle);
-		// 计算网银存取款
-		accountCycleDetail
-				.setInOutBankAmount(accountCycleDetail.getBankInAmount() - accountCycleDetail.getBankOutAmount());
-		// 计算未交现金金额  领款金额 + 现金收支收益金额 - 现金交款金额
-		Long unDeliverAmount = accountCycleDetail.getReceiveAmount() + accountCycleDetail.getRevenueAmount()
-				- accountCycleDetail.getDeliverAmount();
-		if (cycle != null && CycleState.ACTIVE.getCode() == cycle.getState()) {//活跃期
-			accountCycleDetail.setUnDeliverAmount(unDeliverAmount);
-		}else {//非活跃期 最近一次交现金金额就是最终交款金额
-			UserCashDo userCashDo = userCashService.getLastestUesrCash(cycle.getUserId(), cycle.getCycleNo(), CashAction.PAYER.getCode());
-			accountCycleDetail.setLastDeliverAmount(userCashDo.getAmount());
-			accountCycleDetail.setUnDeliverAmount(userCashDo.getAmount());
-			//详情分两种情况  平账 都要统计 不做处理    //结账申请后不统计     || //结账申请状态和平账状态列表   需要减去最后一次结账交款记录
-			if ((detail && CycleState.SETTLED.getCode() == cycle.getState()) || !detail) {
-				accountCycleDetail.setDeliverAmount(accountCycleDetail.getDeliverAmount() - userCashDo.getAmount());
-				accountCycleDetail.setDeliverTimes(accountCycleDetail.getDeliverTimes() - 1);
-			}
-		}
-		//现金收款包括充值和工本费
-		accountCycleDetail.setDepoCashAmount(accountCycleDetail.getDepoCashAmount() + accountCycleDetail.getOpenCostAmount() + accountCycleDetail.getChangeCostAmount());
-		accountCycleDetail.setDepoCashTimes(accountCycleDetail.getDepoCashTimes() + accountCycleDetail.getOpenCostFeetimes() + accountCycleDetail.getChangeCostFeetimes());
-		
-		accountCycleDto.setAccountCycleDetailDto(accountCycleDetail);
-		
-		return accountCycleDto;
-	}
-
 	/**
 	 * 构建账务周期相应实体
 	 */
