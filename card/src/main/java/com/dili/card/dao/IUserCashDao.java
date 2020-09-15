@@ -21,11 +21,18 @@ public interface IUserCashDao {
 	int save(UserCashDo userCash);
 
     /**
-     * 根据id查询
+     * 根据id查询 没有属于10状态的值
      * @param id
      * @return
      */
 	UserCashDo getById(Long id);
+	
+    /**
+     * 根据id查询 所有状态
+     * @param id
+     * @return
+     */
+	UserCashDo getByIdAllState(Long id);
 
     /**
      * 修改

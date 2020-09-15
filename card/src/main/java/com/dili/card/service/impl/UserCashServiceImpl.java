@@ -142,6 +142,16 @@ public class UserCashServiceImpl implements IUserCashService {
 		}
 		return userCashDo;
 	}
+	
+	@Override
+	public UserCashDo getByIdAllState(Long id) {
+		UserCashDo userCashDo = userCashDao.getByIdAllState(id);
+		if (userCashDo == null) {
+			userCashDo = new UserCashDo();
+			userCashDo.setState(0);
+		}
+		return userCashDo;
+	}
 
 	@Override
 	public UserCashDto detail(Long id) {
