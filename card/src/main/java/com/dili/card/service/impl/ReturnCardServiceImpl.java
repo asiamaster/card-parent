@@ -43,7 +43,7 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void handle(CardRequestDto cardParam) {
+	public String handle(CardRequestDto cardParam) {
 		// 校验卡状态
 		UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam.getAccountId());
 		AccountValidator.validateMatchAccount(cardParam, accountCard);
@@ -129,6 +129,8 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 			serialDto = serialService.createAccountSerial(businessRecord, null);
 		}
 		serialService.handleSuccess(serialDto, masterHasTradeSerial);
+		
+		return businessRecord.getSerialNo();
 	}
 
 }

@@ -133,12 +133,12 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	public AccountCycleDto detail(Long id) {
-		return this.buildAccountCycleWrapper(accountCycleDao.getById(id));
+		return this.buildAccountCycleWrapperDetail(accountCycleDao.getById(id), true);
 	}
 	
 	@Override
 	public AccountCycleDto applyDetail(Long userId) {
-		return this.buildAccountCycleWrapper(accountCycleDao.findLatestCycleByUserId(userId));
+		return this.buildAccountCycleWrapperDetail(accountCycleDao.findLatestCycleByUserId(userId), true);
 	}
 	
 	@Override
@@ -306,6 +306,13 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	 * 构建账务周期包装实体实体
 	 */
 	private AccountCycleDto buildAccountCycleWrapper(AccountCycleDo cycle) {
+		return buildAccountCycleWrapperDetail(cycle, false);
+	}
+	
+	/**
+	 * 构建账务周期包装实体实体
+	 */
+	private AccountCycleDto buildAccountCycleWrapperDetail(AccountCycleDo cycle, boolean detail) {
 		// 构建账务周期实体
 		AccountCycleDto accountCycleDto = this.buildAccountCycleDto(cycle);
 		// 构建账务周期详情
@@ -322,6 +329,11 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			UserCashDo userCashDo = userCashService.getLastestUesrCash(cycle.getUserId(), cycle.getCycleNo(), CashAction.PAYER.getCode());
 			accountCycleDetail.setLastDeliverAmount(userCashDo.getAmount());
 			accountCycleDetail.setUnDeliverAmount(userCashDo.getAmount());
+			//详情分两种情况  平账 都要统计 不做处理    //结账申请后不统计     || //结账申请状态和平账状态列表   需要减去最后一次结账交款记录
+			if ((detail && CycleState.SETTLED.getCode() == cycle.getState()) || !detail) {
+				accountCycleDetail.setDeliverAmount(accountCycleDetail.getDeliverAmount() - userCashDo.getAmount());
+				accountCycleDetail.setDeliverTimes(accountCycleDetail.getDeliverTimes() - 1);
+			}
 		}
 		//现金收款包括充值和工本费
 		accountCycleDetail.setDepoCashAmount(accountCycleDetail.getDepoCashAmount() + accountCycleDetail.getOpenCostAmount() + accountCycleDetail.getChangeCostAmount());

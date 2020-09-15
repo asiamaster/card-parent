@@ -9,5 +9,5 @@ public interface IReturnCardService {
 	/**
 	 * 实际退卡处理
 	 */
-	void handle(CardRequestDto cardParam);
+	String handle(CardRequestDto cardParam);
 }

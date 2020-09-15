@@ -100,8 +100,8 @@ public class CardManageServiceImpl implements ICardManageService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     @GlobalTransactional(rollbackFor = Exception.class)
-    public void returnCard(CardRequestDto cardParam) {
-        returnCardService.handle(cardParam);
+    public String returnCard(CardRequestDto cardParam) {
+        return returnCardService.handle(cardParam);
     }
 
     @GlobalTransactional(rollbackFor = Exception.class)

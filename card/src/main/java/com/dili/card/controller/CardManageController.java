@@ -55,11 +55,10 @@ public class CardManageController implements IControllerHandler {
      * 退卡
      */
     @PostMapping("/returnCard.action")
-    public BaseOutput<Boolean> returnCard(@RequestBody @Validated(value = {CardValidator.Generic.class}) CardRequestDto cardRequest) {
+    public BaseOutput<String> returnCard(@RequestBody @Validated(value = {CardValidator.Generic.class}) CardRequestDto cardRequest) {
         LOGGER.info("退卡*****{}", JSONObject.toJSONString(cardRequest));
         buildOperatorInfo(cardRequest);
-        cardManageService.returnCard(cardRequest);
-        return BaseOutput.success();
+        return BaseOutput.successData(cardManageService.returnCard(cardRequest));
     }
 
     /**

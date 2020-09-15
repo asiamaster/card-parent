@@ -18,7 +18,7 @@ public interface ICardManageService {
 	/**
 	 * 退卡
 	 */
-	void returnCard(CardRequestDto cardParam);
+	String returnCard(CardRequestDto cardParam);
 
 	/**
 	 * @description：重置登陆密码
