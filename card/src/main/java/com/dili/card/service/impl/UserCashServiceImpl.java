@@ -62,7 +62,10 @@ public class UserCashServiceImpl implements IUserCashService {
 
 	@Override
 	public void delete(Long id) {
-		UserCashDo userCashDo = this.findById(id);
+		UserCashDo userCashDo = this.getByIdAllState(id);
+		if (userCashDo.getState().equals(CashState.DELETED.getCode())) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "该记录已删除,勿重复操作");
+		}
 		if (CashState.UNSETTLED.getCode() != userCashDo.getState()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能删除");
 		}
@@ -79,7 +82,7 @@ public class UserCashServiceImpl implements IUserCashService {
 			}
 		}
 		if (!userCashDao.delete(id)) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "删除失败");
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "删除失败,请重试");
 		}
 	}
 
@@ -148,7 +151,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		UserCashDo userCashDo = userCashDao.getByIdAllState(id);
 		if (userCashDo == null) {
 			userCashDo = new UserCashDo();
-			userCashDo.setState(0);
+			userCashDo.setState(10);
 		}
 		return userCashDo;
 	}
@@ -156,6 +159,11 @@ public class UserCashServiceImpl implements IUserCashService {
 	@Override
 	public UserCashDto detail(Long id) {
 		return this.buildSingleCashDtoy(this.findById(id));
+	}
+	
+	@Override
+	public UserCashDto detailAllState(Long id) {
+		return this.buildSingleCashDtoy(this.getByIdAllState(id));
 	}
 
 	@Override
