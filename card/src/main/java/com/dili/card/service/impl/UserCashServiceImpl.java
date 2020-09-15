@@ -91,16 +91,22 @@ public class UserCashServiceImpl implements IUserCashService {
 		}
 		// 金额校验
 		this.validateAmount(userCashDto.getAmount(), userCashDto.getSettledApply());
+		// 校验原来柜员的账务周期
 		AccountCycleDo oldAccountCycle = accountCycleService.findLatestCycleByUserId(userCashDo.getUserId());
 		if (!oldAccountCycle.getState().equals(CycleState.ACTIVE.getCode())) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, userCashDo.getUserName() + "的账期状态" + CycleState.getNameByCode(oldAccountCycle.getState()) + "不能修改");
 		}
-		// 获取账务周期
-		AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(userCashDto.getUserId());
-		if (!accountCycle.getState().equals(CycleState.ACTIVE.getCode())) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, userCashDto.getUserName() + "的账期状态" + CycleState.getNameByCode(accountCycle.getState()) + "不能修改");
+		Long cycleId = oldAccountCycle.getId();
+		// 校验更改后柜员的账务周期
+		AccountCycleDo accountCycle = null;
+		if(!userCashDto.getUserId().equals(userCashDo.getUserId())) {
+			accountCycle = accountCycleService.findLatestCycleByUserId(userCashDto.getUserId());
+			if (!accountCycle.getState().equals(CycleState.ACTIVE.getCode())) {
+				throw new CardAppBizException(ResultCode.DATA_ERROR, userCashDto.getUserName() + "的账期状态" + CycleState.getNameByCode(accountCycle.getState()) + "不能修改");
+			}
+			cycleId = accountCycle.getId();
 		}
-		AccountCycleDto accountCycleDto = accountCycleService.detail(accountCycle.getId());
+		AccountCycleDto accountCycleDto = accountCycleService.detail(cycleId);
 		// 校验现金余额 领款修改不能导致现金余额小于0 并且校验是本人
 		if (userCashDto.getAction().equals(CashAction.PAYEE.getCode())
 				&& userCashDo.getUserId().equals(userCashDto.getUserId())) {
