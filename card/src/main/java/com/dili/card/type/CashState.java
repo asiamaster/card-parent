@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  */
 public enum CashState {
 
-	UNSETTLED(1, "未对账"), SETTLED(2, "已对账"), DELETED(-1, "删除");
+	UNSETTLED(1, "未对账"), SETTLED(2, "已对账"), DELETED(10, "删除");
 
 	private int code;
 	private String name;
