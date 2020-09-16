@@ -1,6 +1,7 @@
 package com.dili.card.config;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 import feign.RequestInterceptor;
 
@@ -27,12 +28,12 @@ public class PayServiceFeignConfig {
         return template -> {
             template.header("appid", APPID);
             template.header("token", TOKEN);
-            SessionContext sessionContext = FeignGlobalConfig.getSessionContext();
-            if (sessionContext == null) {
-            	log.info(JSONObject.toJSONString(sessionContext));
+            UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+            if (userTicket == null) {
+            	log.info(JSONObject.toJSONString(userTicket));
                 return;
             }
-            Long firmId = sessionContext.getUserTicket().getFirmId();
+            Long firmId = userTicket.getFirmId();
             template.header("mchId", firmId + "");
         };
     }
