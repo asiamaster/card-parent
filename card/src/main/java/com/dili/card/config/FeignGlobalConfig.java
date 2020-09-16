@@ -1,5 +1,7 @@
 package com.dili.card.config;
 
+import cn.hutool.core.math.MathUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -50,7 +52,7 @@ public class FeignGlobalConfig {
                 return;
             }
             String bodyStr = new String(bodyBytes, utf8);
-            SessionContext sessionContext = this.getSessionContext();
+            SessionContext sessionContext = getSessionContext();
             if (sessionContext == null) {
                 return;
             }
@@ -81,7 +83,7 @@ public class FeignGlobalConfig {
         };
     }
 
-    private SessionContext getSessionContext() {
+    protected static SessionContext getSessionContext() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         if (requestAttributes == null) {
             return null;

@@ -1,7 +1,7 @@
 package com.dili.card.config;
 
+import com.dili.uap.sdk.session.SessionContext;
 import feign.RequestInterceptor;
-import feign.RequestTemplate;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -20,6 +20,12 @@ public class PayServiceFeignConfig {
         return template -> {
             template.header("appid", APPID);
             template.header("token", TOKEN);
+            SessionContext sessionContext = FeignGlobalConfig.getSessionContext();
+            if (sessionContext == null) {
+                return;
+            }
+            Long firmId = sessionContext.getUserTicket().getFirmId();
+            template.header("mchId", firmId + "");
         };
     }
 }

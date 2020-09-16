@@ -20,36 +20,31 @@
 			<input id="inputuserName" name="userName" type="hidden" class="form-control"/>
 	         <input id="inputuserId" name="inputuserId" type="text" style="opacity: 0;" value=""/>
 			<input id="actionText" name="actionText" type="hidden" value="${actionText!}" class="form-control"/>
-		<table id="out-detail" class="table table-bordered"  style="table-layout:fixed;">
-			<tbody>
-				<tr>
-					<td class="info-column">柜员工号</td>
-					<td class="info-cell"><#bautoCompleteProvider id="userCode"
+				<div class="form-group col">
+					<label for="userCode">柜员工号</label>
+					<#bautoCompleteProvider id="userCode"
 							_hiddenDomainId="userId" _hiddenDomainName="userId"
 							_displayDomainId="userCode" _displayDomainName="userCode"
 							_placeholder="" _optionVariable="userNameAutoCompleteOption" />
-					</td>
-				</tr>
-				<tr>
-					<td class="info-column">柜员姓名</td>
-					<td id="_userName" class="info-cell">
-					</td>
-				</tr>
-				<tr>
-					<td class="info-column" id="payCash">${actionText!}金额</td>
-					<td class="info-cell"><input id="amountYuan" maxlength="10" name="amountYuan"
-						type="text" class="form-control" /></td>
-				</tr>
-				<tr>
-					<td class="info-column">大写金额</td>
-					<td class="info-cell" style="word-wrap:break-word;word-break:break-all;"><font color="#FC1D24"><strong><span  id="bigAmount"></span></strong></font></td>
-				</tr>
-				<tr>
-					<td class="info-column">备注</td>
-					<td class="info-cell"><textarea style="width: 280px; "
-							id="notes" name="notes" maxlength="30"></textarea></td>
-				</tr>
-		</table>
+				</div>
+				<div class="form-group col">
+					<label for="customerName">柜员姓名</label>
+					<div id="_userName"></div>
+				</div>
+				<div class="form-group col">
+					<label for="amountYuan">${actionText!}金额</label>
+					<input id="amountYuan" maxlength="10" name="amountYuan"
+						type="text" class="form-control" />
+				</div>
+				<div class="form-group col">
+					<label for="customerName">大写金额</label>
+					<font color="#FC1D24"><strong><span  id="bigAmount"></span></strong></font>
+				</div>
+				<div class="form-group col">
+					<label for="customerName">备注</label>
+					<textarea style="width: 280px; "
+							id="notes" name="notes" maxlength="30"></textarea>
+				</div>
 	</form>
 </div>
 </#bs4Body>
