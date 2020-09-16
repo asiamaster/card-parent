@@ -25,7 +25,7 @@ public class PayServiceFeignConfig {
                 return;
             }
             Long firmId = sessionContext.getUserTicket().getFirmId();
-            template.header("mchid", firmId + "");
+            template.header("mchId", firmId + "");
         };
     }
 }

@@ -2,40 +2,34 @@
 <div class="container-fluid">
 	<div id="add-modal">
 		<form id="save-form">
-			<table id="add-table" class="table table-bordered">
-				<tbody>
-					<tr>
-						<td class="info-column-card-out">入库类型</td>
-						<td class="info-cell-card-out"><select name="cardType"
-							id="cardType" class="form-control"></select> <#bcomboProvider
-								_id="cardType" _provider="cardTypeProvider"
-								_queryParams='{emptyText:"-- 请选择 --"}' /></td>
-					</tr>
-					<tr id="cardFaceTr" style="display: none">
-						<td class="info-column-card-out">卡面信息</td>
-						<td class="info-cell-card-out"><select name="cardFace"
-							id="cardFace" class="form-control"></select> <#bcomboProvider
-								_id="cardFace" _provider="cardFaceProvider"
-								_queryParams='{emptyText:"-- 请选择 --"}' /></td>
-					</tr>
-					<tr>
-						<td class="info-column-card-out">起始卡号</td>
-						<td><input id="startCardNo" name="startCardNo" type="text"
-							class="form-control calculateAmount isInt" minlength="12"
-							maxlength="12" required /></td>
-					</tr>
-					<tr>
-						<td class="info-column-card-out">结束卡号</td>
-						<td><input id="endCardNo" name="endCardNo" type="text"
-							class="form-control calculateAmount isInt" minlength="12"
-							maxlength="12" required /></td>
-					</tr>
-					<tr>
-						<td class="info-column-card-out">入库张数</td>
-						<td><input id="amount" name="amount" type="text"
-							class="form-control" readonly="readonly" /></td>
-					</tr>
-			</table>
+			<div class="form-group col">
+				<label for="cardType">入库类型</label> 
+				<select name="cardType" id="cardType" class="form-control"></select>
+				<#bcomboProvider _id="cardType" _provider="cardTypeProvider"
+					_queryParams='{emptyText:"-- 请选择 --"}' />
+			</div>
+			<div class="form-group col" id="cardFaceTr" style="display: none">
+				<label for="cardFace">卡面信息</label> 
+				<select name="cardFace" id="cardFace" class="form-control"></select>
+				<#bcomboProvider _id="cardFace" _provider="cardFaceProvider"
+					_queryParams='{emptyText:"-- 请选择 --"}' />
+			</div>
+			<div class="form-group col">
+				<label for="startCardNo">起始卡号</label> 
+				<input id="startCardNo" name="startCardNo"
+					type="text" class="form-control calculateAmount isInt"
+					minlength="12" maxlength="12" required />
+			</div>
+			<div class="form-group col">
+				<label for="endCardNo">结束卡号</label> 
+				<input id="endCardNo" name="endCardNo"
+					type="text" class="form-control calculateAmount isInt"
+					minlength="12" maxlength="12" required />
+			</div>
+			<div class="form-group col">
+				<label for="amount">入库张数</label> 
+				<input id="amount" name="amount" type="text" class="form-control" readonly="readonly" />
+			</div>
 		</form>
 	</div>
 </div>
@@ -100,7 +94,7 @@
 		let url = "${contextPath}/cardStorageIn/save.action";
 		let cardFace = $("#cardFace").val();
 		let cardType = $("#cardType").val();
-		if(cardType == 10 && cardFace == ""){
+		if (cardType == 10 && cardFace == "") {
 			bs4pop.alert("主卡入库时请选择卡面！", {
 				type : "warning"
 			});
@@ -108,12 +102,12 @@
 		}
 		let data = $.common.formToJSON(formId);
 		$.modal.confirm("将根据输入的卡号段解析卡号，完成批量入库。请确保入库卡号的连续性和信息正确性。<br>确定入库？",
-			function(sure) {
-				if (!sure) {
-					return;
-				}
-				$.operate.post(url, data);
-			});
+				function(sure) {
+					if (!sure) {
+						return;
+					}
+					$.operate.post(url, data);
+				});
 
 	}
 	// 计算数量
