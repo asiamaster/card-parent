@@ -1,7 +1,11 @@
 package com.dili.card.config;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.uap.sdk.session.SessionContext;
 import feign.RequestInterceptor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -11,6 +15,9 @@ import org.springframework.context.annotation.Bean;
  * @Date: 2020/6/29 17:01
  */
 public class PayServiceFeignConfig {
+	
+	private static final Logger log = LoggerFactory.getLogger(PayServiceFeignConfig.class);
+
 
     private static final String APPID = "1010";
     private static final String TOKEN = "abcd1010";
@@ -22,6 +29,7 @@ public class PayServiceFeignConfig {
             template.header("token", TOKEN);
             SessionContext sessionContext = FeignGlobalConfig.getSessionContext();
             if (sessionContext == null) {
+            	log.info(JSONObject.toJSONString(sessionContext));
                 return;
             }
             Long firmId = sessionContext.getUserTicket().getFirmId();
