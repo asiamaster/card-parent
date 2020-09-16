@@ -106,12 +106,4 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 	public BigDecimal getRuleFee(RuleFeeBusinessType ruleFeeBusinessType, SystemSubjectType systemSubjectType) {
 		return this.getRuleFee(null, ruleFeeBusinessType, systemSubjectType);
 	}
-	public static void main(String[] args) {
-		HashMap<String, Object> calcParams = new HashMap<String, Object>();
-		calcParams.put("amount", CurrencyUtils.cent2TenNoSymbol(3l));
-		QueryFeeInput queryFeeInput = new QueryFeeInput();
-		queryFeeInput.setCalcParams(calcParams);
-		queryFeeInput.setConditionParams(calcParams);
-		System.out.println(JSONObject.toJSON(queryFeeInput));
-	}
 }

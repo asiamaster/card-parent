@@ -43,6 +43,11 @@ public interface IUserCashService {
 	 * 查找操作记录
 	 */
 	UserCashDto detail(Long id);
+	
+	/**
+	 * 查找操作记录
+	 */
+	UserCashDto detailAllState(Long id);
 
 	/**
 	 * 现金领款记录列表

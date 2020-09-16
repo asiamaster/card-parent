@@ -23,6 +23,7 @@ import com.dili.card.entity.UserCashDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IUserCashService;
 import com.dili.card.type.CashAction;
+import com.dili.card.util.AssertUtils;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
@@ -119,7 +120,7 @@ public class UserCashManagementController implements IControllerHandler {
 		if (id == null || id < 0L) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期详情请求参数错误");
 		}
-		 String json = JSON.toJSONString(iUserCashService.detail(id),
+		 String json = JSON.toJSONString(iUserCashService.detailAllState(id),
 	                new EnumTextDisplayAfterFilter());
 		 modelMap.put("usercash", JSON.parseObject(json));
 		return "usercash/delete";
@@ -184,10 +185,11 @@ public class UserCashManagementController implements IControllerHandler {
 	/**
 	 * 详情
 	 */
-	@PostMapping("/detail.action")
+	@GetMapping("/detail.action")
 	@ResponseBody
-	public BaseOutput<UserCashDo> detail(@RequestBody @Validated(value = {ConstantValidator.Delete.class}) UserCashDto userCashDto) {
+	public BaseOutput<UserCashDo> detail(UserCashDto userCashDto) {
 		log.info("详情*****{}", JSONObject.toJSONString(userCashDto));
+		AssertUtils.notNull(userCashDto.getId(), "请求参数不能为空");
 		return BaseOutput.successData(iUserCashService.getByIdAllState(userCashDto.getId()));
 	}
 

@@ -91,7 +91,7 @@
 	
 	<update id="delete">
 		UPDATE card_user_cash SET
-			`state` = 10
+			`state` = 10, modify_time = NOW()
 		WHERE
 			`id` = #{id}
 	</update>
