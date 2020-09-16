@@ -992,7 +992,11 @@
 		var imgFile = base64ToImageFile(base64Img);
 		const fileReader = new FileReader();  // 创建一个 fileReader
 		fileReader.readAsDataURL(imgFile);
-
+		fileReader.onload = function(e){
+            alert("ok");
+            //alert(this.result);
+            //result.innerHTML = '<img src="'+this.result+'" alt=""/>'
+        }
 	}
 
 	/** 图片转化 */
@@ -1003,9 +1007,9 @@
 		while (n--) {
 			u8arr[n] = bstr.charCodeAt(n);
 		}
-		var filename = randomString(12) + '.jpg';
+		var filename = randomString(12) + '.png';
 		return new File([u8arr], filename, {
-		    type: 'image/jpg'
+		    type: 'image/png'
 		})
 	}
 </script>
