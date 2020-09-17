@@ -28,26 +28,26 @@
 				type="hidden" value="${detail.userId!}" />
 		</div>
 		<div class="form-group col">
-			<label for="userName" class="info-column">柜员姓名</label>
+			<label for="userName" >柜员姓名</label>
 			<div class="info-cell" id="_userName">${detail.userName!}</div>
 			<input id="userName" name="userName" type="hidden"
 				value="${detail.userName!}" />
 		</div>
 		<div class="form-group col">
-			<label for="amountYuan" class="info-column">交款金额</label> <input
-				id="amountYuan" name="amountYuan" type="text" class="form-control" />
+			<label for="amountYuan">交款金额</label> <input
+				id="amountYuan" name="amountYuan" type="text" maxlength="10" class="form-control" />
 		</div>
-		<div class="form-group col" style="margin: 20px 0px;">
-			<label for="bigAmount" class="info-column vertical-td">大写金额</label>
-			<div class="info-cell"
+		<div class="form-group col">
+			<label for="bigAmount">大写金额</label>
+			<div 
 				style="word-wrap: break-word; word-break: break-all;">
 				<font color="#FC1D24"><strong><span id="bigAmount"></span></strong></font>
 			</div>
 		</div>
 		<div class="form-group col">
-			<label for="notes" class="info-column vertical-td">备注</label>
-			<div class="info-cell">
-				<textarea style="width: 240px;" maxlength="20" id="notes"
+			<label for="notes">备&emsp;&emsp;注</label>
+			<div>
+				<textarea style="width: 420px;" maxlength="20" id="notes"
 					name="notes"></textarea>
 			</div>
 		</div>
