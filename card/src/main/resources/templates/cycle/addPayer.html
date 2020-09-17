@@ -20,37 +20,35 @@
 		<input id="action" name="action" type="hidden" value="2"
 			class="form-control" /> <input id="actionText" name="actionText"
 			type="hidden" value="交款" class="form-control" />
-		<div class="row row-cols-5">
-			<div class="form-group col">
-				<label for="userCode">柜员工号</label>
-				<div class="info-cell">${detail.userCode!}</div>
-				<input id="userCode" name="userCode" type="hidden"
-					value="${detail.userCode!}" /> <input id="userId" name="userId"
-					type="hidden" value="${detail.userId!}" />
+		<div class="form-group col">
+			<label for="userCode">柜员工号</label>
+			<div class="info-cell">${detail.userCode!}</div>
+			<input id="userCode" name="userCode" type="hidden"
+				value="${detail.userCode!}" /> <input id="userId" name="userId"
+				type="hidden" value="${detail.userId!}" />
+		</div>
+		<div class="form-group col">
+			<label for="userName" class="info-column">柜员姓名</label>
+			<div class="info-cell" id="_userName">${detail.userName!}</div>
+			<input id="userName" name="userName" type="hidden"
+				value="${detail.userName!}" />
+		</div>
+		<div class="form-group col">
+			<label for="amountYuan" class="info-column">交款金额</label> <input
+				id="amountYuan" name="amountYuan" type="text" class="form-control" />
+		</div>
+		<div class="form-group col" style="margin: 20px 0px;">
+			<label for="bigAmount" class="info-column vertical-td">大写金额</label>
+			<div class="info-cell"
+				style="word-wrap: break-word; word-break: break-all;">
+				<font color="#FC1D24"><strong><span id="bigAmount"></span></strong></font>
 			</div>
-			<div class="form-group col">
-				<label for="userName" class="info-column">柜员姓名</label>
-				<div class="info-cell" id="_userName">${detail.userName!}</div>
-				<input id="userName" name="userName" type="hidden"
-					value="${detail.userName!}" />
-			</div>
-			<div class="form-group col">
-				<label for="amountYuan" class="info-column">交款金额</label> <input
-					id="amountYuan" name="amountYuan" type="text" class="form-control" />
-			</div>
-			<div class="form-group col">
-				<label for="bigAmount" class="info-column vertical-td">大写金额</label>
-				<div class="info-cell"
-					style="word-wrap: break-word; word-break: break-all;">
-					<font color="#FC1D24"><strong><span id="bigAmount"></span></strong></font>
-				</div>
-			</div>
-			<div class="form-group col">
-				<label for="notes" class="info-column vertical-td">备注</label>
-				<div class="info-cell">
-					<textarea style="width: 240px;" maxlength="20" id="notes"
-						name="notes"></textarea>
-				</div>
+		</div>
+		<div class="form-group col">
+			<label for="notes" class="info-column vertical-td">备注</label>
+			<div class="info-cell">
+				<textarea style="width: 240px;" maxlength="20" id="notes"
+					name="notes"></textarea>
 			</div>
 		</div>
 	</form>
