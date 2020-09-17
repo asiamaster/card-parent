@@ -223,6 +223,8 @@ public class ContractServiceImpl implements IContractService {
 				if (!ErrorCode.CARD_NO_NOT_EXIST.equals(e.getCode())) {
 					throw e;
 				}
+			}catch (Exception e) {
+				throw e;
 			}
 			// 如果卡为退卡状态不能卡出卡信息
 			Long accountId = userAccountCard == null || userAccountCard.getCardState() == CardStatus.RETURNED.getCode() ? -1: userAccountCard.getAccountId();
