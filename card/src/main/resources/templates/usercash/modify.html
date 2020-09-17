@@ -26,32 +26,35 @@
 			type="hidden" value="${usercash.action!}" class="form-control" /> <input
 			id="actionText" name="actionText" type="hidden"
 			value="${usercash.actionText!}" class="form-control" />
-		<div class="form-group col">
-			<label for="userCode">柜员工号</label>
-			<#bautoCompleteProvider id="userCode" _hiddenDomainId="userId"
-				_hiddenDomainName="userId" _displayDomainId="userCode"
-				_displayDomainName="userCode" _placeholder=""
-				_text="${usercash.userCode!}" _value="${usercash.userId!}"
-				_optionVariable="userNameAutoCompleteOption" />
-		</div>
-		<div class="form-group col">
-			<label for="userName">柜员姓名</label>
-			<div id="_userName">${usercash.userName!}</div>
-		</div>
-		<div class="form-group col">
-			<label for="amountYuan">${usercash.actionText!}金额</label> <input
-				id="amountYuan" maxlength="10" name="amountYuan" type="text"
-				value="${usercash.amountText!}" class="form-control" />
-		</div>
-		<div class="form-group col">
-			<label for="bigAmount">大写金额</label> <font color="#FC1D24"><strong><span
-					id="bigAmount"></span></strong></font>
-		</div>
-		<div class="form-group col">
-			<label for="notes">备注</label>
-			<textarea style="width: 300px;" maxlength="30" id="notes"
-				name="notes">${usercash.notes!}</textarea>
-		</div>
+		
+			<div class="row row-cols-5">
+				<div class="form-group col">
+					<label for="userCode">柜员工号</label>
+					<#bautoCompleteProvider id="userCode" _hiddenDomainId="userId"
+						_hiddenDomainName="userId" _displayDomainId="userCode"
+						_displayDomainName="userCode" _placeholder=""
+						_text="${usercash.userCode!}" _value="${usercash.userId!}"
+						_optionVariable="userNameAutoCompleteOption" />
+				</div>
+				<div class="form-group col">
+					<label for="userName">柜员姓名</label>
+					<div id="_userName">${usercash.userName!}</div>
+				</div>
+				<div class="form-group col">
+					<label for="amountYuan">${usercash.actionText!}金额</label> <input
+						id="amountYuan" maxlength="10" name="amountYuan" type="text"
+						value="${usercash.amountText!}" class="form-control" />
+				</div>
+				<div class="form-group col">
+					<label for="bigAmount">大写金额</label> <font color="#FC1D24"><strong><span
+							id="bigAmount"></span></strong></font>
+				</div>
+				<div class="form-group col">
+					<label for="notes">备注</label>
+					<textarea style="width: 300px;" maxlength="30" id="notes"
+						name="notes">${usercash.notes!}</textarea>
+				</div>
+			</div>
 	</form>
 </div>
 </#bs4Body>
