@@ -20,30 +20,32 @@
 			<input id="inputuserName" name="userName" type="hidden" class="form-control"/>
 	         <input id="inputuserId" name="inputuserId" type="text" style="opacity: 0;" value=""/>
 			<input id="actionText" name="actionText" type="hidden" value="${actionText!}" class="form-control"/>
-				<div class="form-group col">
-					<label for="userCode">柜员工号</label>
-					<#bautoCompleteProvider id="userCode"
-							_hiddenDomainId="userId" _hiddenDomainName="userId"
-							_displayDomainId="userCode" _displayDomainName="userCode"
-							_placeholder="" _optionVariable="userNameAutoCompleteOption" />
-				</div>
-				<div class="form-group col">
-					<label for="customerName">柜员姓名</label>
-					<div id="_userName"></div>
-				</div>
-				<div class="form-group col">
-					<label for="amountYuan">${actionText!}金额</label>
-					<input id="amountYuan" maxlength="10" name="amountYuan"
-						type="text" class="form-control" />
-				</div>
-				<div class="form-group col">
-					<label for="customerName">大写金额</label>
-					<font color="#FC1D24"><strong><span  id="bigAmount"></span></strong></font>
-				</div>
-				<div class="form-group col">
-					<label for="customerName">备注</label>
-					<textarea style="width: 280px; "
-							id="notes" name="notes" maxlength="30"></textarea>
+				<div class="row row-cols-5">
+					<div class="form-group col">
+						<label for="userCode">柜员工号</label>
+						<#bautoCompleteProvider id="userCode"
+								_hiddenDomainId="userId" _hiddenDomainName="userId"
+								_displayDomainId="userCode" _displayDomainName="userCode"
+								_placeholder="" _optionVariable="userNameAutoCompleteOption" />
+					</div>
+					<div class="form-group col">
+						<label for="userName">柜员姓名</label>
+						<div id="_userName"></div>
+					</div>
+					<div class="form-group col">
+						<label for="amountYuan">${actionText!}金额</label>
+						<input id="amountYuan" maxlength="10" name="amountYuan"
+							type="text" class="form-control" />
+					</div>
+					<div class="form-group col">
+						<label for="bigAmount">大写金额</label>
+						<font color="#FC1D24"><strong><span  id="bigAmount"></span></strong></font>
+					</div>
+					<div class="form-group col">
+						<label for="notes">备注</label>
+						<textarea style="width: 280px; "
+								id="notes" name="notes" maxlength="30"></textarea>
+					</div>
 				</div>
 	</form>
 </div>
