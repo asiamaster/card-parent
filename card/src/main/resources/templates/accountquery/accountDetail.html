@@ -2,76 +2,76 @@
     .info-column {
         width: 10%;
         font-weight: bold ;
+        text-align: right;
     }
 
     .info-cell {
         width: 15%;
     }
+    .panel-heading{
+        margin-top:.5rem
+    }
+    .row-interval{
+        margin-top:1rem;
+        margin-bottom: 1rem;
+    }
 </style>
-<div class="main-container container-fluid">
+<div class="container-fluid ">
     <div>
         <div class="panel-heading">
             <h4 class="panel-title"><strong>基本信息</strong></h4>
         </div>
-        <div class="panel-body" style="display: block;">
-            <table id="baseInfo" class="table table-bordered">
-                <tbody>
-                <tr>
-                    <td class="info-column">卡号</td>
-                    <td class="info-cell">${detail.cardAssociation.primary.cardNo!}</td>
-                    <td class="info-column">卡类别</td>
-                    <td class="info-cell">${detail.cardAssociation.primary.cardTypeText!}</td>
-                    <td class="info-column">卡片状态</td>
-                    <td class="info-cell">${detail.cardAssociation.primary.cardStateText!}</td>
-                    <td class="info-column">账户状态</td>
-                    <td class="info-cell">${detail.cardAssociation.primary.disabledStateText!}</td>
-                </tr>
-                <tr>
-                    <td class="info-column">可用余额</td>
-                    <td class="info-cell">
-                        <% if(detail.cardAssociation.primary.cardType ==10) { %>
-                             ${detail.accountFund.availableAmountText!}
-                        <% }else{ %>
-                             ***
-                        <% } %>
+        <div id="base-info" class="panel-heading" >
+            <div class="row row-interval" >
+                <div class="info-column col">卡号</div>
+                <div class="info-cell col">${detail.cardAssociation.primary.cardNo!}</div>
+                <div class="info-column col">卡类别</div>
+                <div class="info-cell col">${detail.cardAssociation.primary.cardTypeText!}</div>
+                <div class="info-column col">卡片状态</div>
+                <div class="info-cell col">${detail.cardAssociation.primary.cardStateText!}</div>
+                <div class="info-column col-1">账户状态</div>
+                <div class="info-cell col-2">${detail.cardAssociation.primary.disabledStateText!}</div>
+            </div>
+            <div class="row row-interval">
+                <div class="info-column col">可用余额</div>
+                <div class="info-cell col">
+                    <% if(detail.cardAssociation.primary.cardType ==10) { %>
+                    ${detail.accountFund.availableAmountText!}
+                    <% }else{ %>
+                    ***
+                    <% } %>
 
-                    </td>
-                    <td class="info-column">冻结金额</td>
-                    <td class="info-cell">
-                        <% if(detail.cardAssociation.primary.cardType ==10) { %>
-                             ${detail.accountFund.frozenAmountText!}
-                        <% }else{ %>
-                            ***
-                        <% } %>
-                    </td>
-                    <td class="info-column">创建人</td>
-                    <td class="info-cell">${detail.cardAssociation.primary.creator!}</td>
-                    <td class="info-column">创建时间</td>
-                    <td class="info-cell">${detail.cardAssociation.primary.cardCreateTime!}</td>
-                </tr>
-                </tbody>
-            </table>
+                </div>
+                <div class="info-column col">冻结金额</div>
+                <div class="info-cell col">
+                    <% if(detail.cardAssociation.primary.cardType ==10) { %>
+                    ${detail.accountFund.frozenAmountText!}
+                    <% }else{ %>
+                    ***
+                    <% } %>
+                </div>
+                <div class="info-column col">创建人</div>
+                <div class="info-cell col">${detail.cardAssociation.primary.creator!}</div>
+                <div class="info-column col-1">创建时间</div>
+                <div class="info-cell col-2">${detail.cardAssociation.primary.cardCreateTime!}</div>
+            </div>
         </div>
     </div>
     <div>
         <div class="panel-heading">
             <h4 class="panel-title"><strong>开卡人信息</strong></h4>
         </div>
-        <div class="panel-body" style="display: block;">
-            <table id="customerInfo" class="table table-bordered">
-                <tbody>
-                <tr>
-                    <td class="info-column">客户编号</td>
-                    <td class="info-cell">${detail.customer.code!}</td>
-                    <td class="info-column">客户名称</td>
-                    <td class="info-cell">${detail.customer.name!}</td>
-                    <td class="info-column">联系方式</td>
-                    <td class="info-cell">${detail.customer.customerContactsPhone!}</td>
-                    <td class="info-column">联系地址</td>
-                    <td class="info-cell">${detail.customer.certificateAddr!}</td>
-                </tr>
-                </tbody>
-            </table>
+        <div  id="customerInfo" class="panel-heading">
+            <div class="row row-interval">
+                <div class="info-column col">客户编号</div>
+                <div class="info-cell col">${detail.customer.code!}</div>
+                <div class="info-column col">客户名称</div>
+                <div class="info-cell col">${detail.customer.name!}</div>
+                <div class="info-column col">联系方式</div>
+                <div class="info-cell col">${detail.customer.customerContactsPhone!}</div>
+                <div class="info-column col">联系地址</div>
+                <div class="info-cell col">${detail.customer.certificateAddr!}</div>
+            </div>
         </div>
     </div>
     <div>
@@ -79,8 +79,8 @@
         <div class="panel-heading">
             <h4 class="panel-title"><strong>关联卡信息</strong></h4>
         </div>
-        <div class="panel-body" style="display: block;">
-            <table id="cardAssociation" class="table table-bordered">
+        <div  id="cardAssociation" class="panel-heading" >
+            <table  class="table table-bordered">
                 <tbody style="text-align: center">
                 <tr>
                     <td class="info-column">卡号</td>
