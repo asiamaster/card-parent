@@ -13,39 +13,44 @@
         display: table-cell;
         vertical-align: middle !important;
     }
+
+    .row-interval{
+        margin-top:1rem;
+        margin-bottom: 1rem;
+    }
 </style>
-<div class="main-container container-fluid">
+<div class="container-fluid">
     <div>
         <div class="panel-body" style="display: block;">
             <form id="frozen-fund-form">
-                <table id="baseInfo" class="table table-bordered">
-                    <tbody>
-                    <tr>
-                        <td class="info-column-frozen-fund">园区卡号</td>
-                        <td class="info-cell-frozen-fund">${detail.cardAssociation.primary.cardNo!}</td>
-                        <td class="info-column-frozen-fund">客户名称</td>
-                        <td class="info-cell-frozen-fund">${detail.customer.name!}</td>
-                    </tr>
-                    <tr>
-                        <td class="info-column-frozen-fund">可用余额</td>
-                        <td class="info-cell-frozen-fund">${detail.accountFund.availableAmountText!}</td>
-                        <td class="info-column-frozen-fund">手动冻结金额</td>
-                        <td class="info-cell-frozen-fund">${detail.accountFund.frozenAmountText!}</td>
-                    </tr>
-                    <tr>
-                        <td class="vertical-td info-column-frozen-fund">冻结金额<i class="red">*</i></td>
-                        <td>
+                <div id="baseInfo" >
+                    <div class="row row-interval">
+                        <div class="info-column-frozen-fund col-2">园区卡号</div>
+                        <div class="info-cell-frozen-fund col-2">${detail.cardAssociation.primary.cardNo!}</div>
+                        <div class="info-column-frozen-fund col-2">客户名称</div>
+                        <div class="info-cell-frozen-fund col-2">${detail.customer.name!}</div>
+                    </div>
+                    <div class="row row-interval">
+                        <div class="info-column-frozen-fund col-2">可用余额</div>
+                        <div class="info-cell-frozen-fund col-2">${detail.accountFund.availableAmountText!}</div>
+                        <div class="info-column-frozen-fund col-2">手动冻结金额</div>
+                        <div class="info-cell-frozen-fund col-2">${detail.accountFund.frozenAmountText!}</div>
+                    </div>
+                    <div class="row row-interval">
+                        <div class="vertical-td info-column-frozen-fund col-2">冻结金额<i class="red">*</i></div>
+                        <div class="col-5">
                             <input id="amount" name="amount" type="number"
                                    oninput="limitNum(this)"
                                    class="form-control" val-formatter="yuanToFen"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="vertical-td info-column-frozen-fund ">备注</td>
-                        <td><textarea id="mark" name="mark" class="form-control" rows="3" placeholder="不超过30个字符"></textarea></td>
-                    </tr>
-                    </tbody>
-                </table>
+                        </div>
+                    </div>
+                    <div class="row row-interval">
+                        <div class="vertical-td info-column-frozen-fund col-2">备注</div>
+                        <div class="col-5">
+                            <textarea id="mark" name="mark" class="form-control" rows="3" placeholder="不超过30个字符"></textarea>
+                        </div>
+                    </div>
+                </div>
                 <div style="margin: auto" align="center">
                     <button id="frozen" type="button" class="btn btn-outline-primary" onclick="submitFrozen()">
                         冻结资金
