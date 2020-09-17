@@ -20,26 +20,24 @@
             <form id="frozen-account-form">
             	<input id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}" type="hidden">
                 <input id="disabledState3" name="disabledState" value="${detail.cardAssociation.primary.disabledState!}" type="hidden">
-                <table id="baseInfo" class="table table-bordered">
-                    <tbody>
-                    <tr>
-                        <td class="info-column-frozen-fund">园区卡号</td>
-                        <td class="info-cell-frozen-fund">${detail.cardAssociation.primary.cardNo!}</td>
-                        <td class="info-column-frozen-fund">客户名称</td>
-                        <td class="info-cell-frozen-fund">${detail.customer.name!}</td>
-                    </tr>
-                    <tr>
-                        <td class="info-column-frozen-fund">可用余额</td>
-                        <td class="info-cell-frozen-fund">${detail.accountFund.availableAmountText!}</td>
-                        <td class="info-column-frozen-fund">手动冻结金额</td>
-                        <td class="info-cell-frozen-fund">${detail.accountFund.frozenAmountText!}</td>
-                    </tr>
-                    <tr>
-                        <td class="vertical-td info-column-frozen-fund ">备注</td>
-                        <td><textarea id="mark" name="notes" class="form-control" rows="3" maxlength="30" placeholder="不超过30个字符"></textarea></td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div id="baseInfo" >
+                    <div class="row row-interval">
+                        <div class="info-column-frozen-fund col-2">园区卡号</div>
+                        <div class="info-cell-frozen-fund col-2">${detail.cardAssociation.primary.cardNo!}</div>
+                        <div class="info-column-frozen-fund col-2">客户名称</div>
+                        <div class="info-cell-frozen-fund col-2">${detail.customer.name!}</div>
+                    </div>
+                    <div class="row row-interval">
+                        <div class="info-column-frozen-fund col-2">可用余额</div>
+                        <div class="info-cell-frozen-fund col-2">${detail.accountFund.availableAmountText!}</div>
+                        <div class="info-column-frozen-fund col-2">手动冻结金额</div>
+                        <div class="info-cell-frozen-fund col-2">${detail.accountFund.frozenAmountText!}</div>
+                    </div>
+                    <div class="row row-interval">
+                        <div class="vertical-td info-column-frozen-fund col-2">备注</div>
+                        <div><textarea id="mark" style="width: 420px;" name="notes" class="form-control" rows="3" maxlength="30" placeholder="不超过30个字符"></textarea></div>
+                    </div>
+                   </div>
                 <div style="margin: auto" align="center">
                     <button id="frozenAccount" type="button"  class="btn btn-primary"   onclick="submitFrozenAccount()">
                         冻结账户
