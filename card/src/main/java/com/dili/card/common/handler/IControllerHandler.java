@@ -41,10 +41,6 @@ public interface IControllerHandler {
         if(userTicket == null) {
         	throw new CardAppBizException("无法获取用户信息，请重新登录!");
         }
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        if (requestAttributes != null) {
-            requestAttributes.setAttribute(Constant.SESSION, sessionContext, RequestAttributes.SCOPE_SESSION);
-        }
         return userTicket;
     }
 
