@@ -988,8 +988,12 @@
 	}
 
 	/** 输入签名设备图片 base64  进行处理并上传 */
-	function inputImage(imageStr){
-		var imgFile = base64ToImageFile(base64Img);
+	function inputImage(obj){
+		if(obj.code == 0){
+			$.modal.alertError("传输图片错误");
+    		return false;
+		}
+		var imgFile = base64ToImageFile(obj.data);
 		const fileReader = new FileReader();  // 创建一个 fileReader
 		fileReader.readAsDataURL(imgFile);
 		fileReader.onload = function(e){
