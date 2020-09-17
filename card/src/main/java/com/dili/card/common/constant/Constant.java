@@ -6,7 +6,7 @@ package com.dili.card.common.constant;
  * @Description:
  */
 public class Constant {
-	public static final String SESSION = "context_session";
+	public static final String SESSION_TICKET = "context_ticket";
 	/** 交易号，临时threadLocal 字段 */
 	public static final String TRADE_ID_KEY = "tradeId";
 	/** 流水记录，临时threadLocal 字段 */

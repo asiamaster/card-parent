@@ -1,11 +1,10 @@
 package com.dili.card.config;
 
-import cn.hutool.core.math.MathUtil;
-import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
+import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 import feign.Request;
 import feign.RequestInterceptor;
@@ -52,16 +51,16 @@ public class FeignGlobalConfig {
                 return;
             }
             String bodyStr = new String(bodyBytes, utf8);
-            SessionContext sessionContext = getSessionContext();
-            if (sessionContext == null) {
+            UserTicket userTicket = getTicket();
+            if (userTicket == null) {
                 return;
             }
 
             //兼容性
             try {
                 Request.Body mutatedBody;
-                Long firmId = sessionContext.getUserTicket().getFirmId();
-                if (this.isArrayJson(bodyStr)){
+                Long firmId = userTicket.getFirmId();
+                if (this.isArrayJson(bodyStr)) {
                     JSONArray array = JSON.parseArray(bodyStr);
                     for (int i = 0; i < array.size(); i++) {
                         JSONObject jsonObject = array.getJSONObject(i);
@@ -69,7 +68,7 @@ public class FeignGlobalConfig {
                         jsonObject.putIfAbsent("firmId", firmId);
                     }
                     mutatedBody = Request.Body.encoded(array.toJSONString().getBytes(utf8), utf8);
-                }else {
+                } else {
                     JSONObject jsonObject = JSON.parseObject(bodyStr);
                     //服务的市场字段名不一样
                     jsonObject.putIfAbsent("marketId", firmId);
@@ -83,16 +82,22 @@ public class FeignGlobalConfig {
         };
     }
 
-    protected static SessionContext getSessionContext() {
+    /**
+    *  使用hystrix的时候{@link com.dili.card.common.hystrix.SessionCallableWrapper}
+    * @author miaoguoxin
+    * @date 2020/9/17
+    */
+    protected static UserTicket getTicket() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         if (requestAttributes == null) {
             return null;
         }
-        Object attribute = requestAttributes.getAttribute(Constant.SESSION, RequestAttributes.SCOPE_SESSION);
-        if (!(attribute instanceof SessionContext)) {
-            return null;
+        Object attribute = requestAttributes.getAttribute(Constant.SESSION_TICKET, RequestAttributes.SCOPE_REQUEST);
+        if (attribute instanceof UserTicket) {
+            return (UserTicket) attribute;
         }
-        return (SessionContext) attribute;
+        //这里是为了兼容，在没有使用hystrix的时候，可以直接获取
+        return SessionContext.getSessionContext().getUserTicket();
     }
 
     private boolean isJsonContentType(Map<String, Collection<String>> headers) {
@@ -103,7 +108,7 @@ public class FeignGlobalConfig {
         return contentTypes.stream().anyMatch(s -> s.contains("json"));
     }
 
-    private boolean isArrayJson(String json){
+    private boolean isArrayJson(String json) {
         return json.startsWith("[") && json.endsWith("]");
     }
 }
