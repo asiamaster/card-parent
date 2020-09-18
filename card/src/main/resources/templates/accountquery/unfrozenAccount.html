@@ -20,15 +20,16 @@
             <form id="unfrozen-account-form">
             	<input id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}" type="hidden">
                 <input id="disabledState2" name="disabledState2" value="${detail.cardAssociation.primary.disabledState!}" type="hidden">
-                <table id="baseInfo" class="table table-bordered">
-                    <tbody>
-	                    <tr>
-	                        <td class="vertical-td info-column-frozen-fund ">备注</td>
-	                        <td><textarea id="mark" name="notes" class="form-control" maxlength="30" rows="3" placeholder="不超过30个字符"></textarea></td>
-	                    </tr>
-                    </tbody>
-                </table>
-                <div style="margin: auto" align="center">
+				<div id="baseInfo">
+					<div class="row row-interval">
+						<div class="vertical-td info-column-frozen-fund col-2">备注</div>
+						<div class="col-2">
+							<textarea id="mark" style="width: 420px;" name="notes" class="form-control"
+								maxlength="30" rows="3" placeholder="不超过30个字符"></textarea>
+						</div>
+					</div>
+				</div>
+				<div style="margin: auto" align="center">
                     <button id="unfrozen" type="button" class="btn btn-primary" onclick="submitUnFrozenAccount()">
                         解冻账户
                     </button>
