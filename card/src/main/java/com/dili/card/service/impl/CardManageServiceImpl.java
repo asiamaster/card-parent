@@ -80,10 +80,6 @@ public class CardManageServiceImpl implements ICardManageService {
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         }
-        //远程解冻账户操作
-        if(CardType.isMaster(accountCard.getCardType())){
-            accountManageRpcResolver.unfrozen(cardParam);
-        }
         //远程解冻资金账户 必須是主副卡
         payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
         this.saveRemoteSerialRecord(businessRecordDo);
@@ -150,10 +146,7 @@ public class CardManageServiceImpl implements ICardManageService {
         serialService.saveBusinessRecord(businessRecord);
 
         cardManageRpcResolver.reportLossCard(cardParam);
-        //主卡需要冻结
-        if(CardType.isMaster(userAccount.getCardType())){
-            accountManageRpcResolver.frozen(cardParam);
-        }
+
         payRpcResolver.freezeFundAccount(
             CreateTradeRequestDto.createCommon(
                     userAccount.getFundAccountId(), userAccount.getAccountId()));
