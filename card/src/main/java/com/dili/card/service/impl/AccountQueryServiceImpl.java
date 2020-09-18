@@ -48,7 +48,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     private AccountQueryRpcResolver accountQueryRpcResolver;
 
     @Override
-    public PageOutput<List<AccountListResponseDto>> getPage(UserAccountCardQuery param) {
+    public PageOutput<List<AccountListResponseDto>>  getPage(UserAccountCardQuery param) {
         //查询所有卡状态，包含已禁用账户
         param.setExcludeUnusualState(0);
         PageOutput<List<UserAccountCardResponseDto>> page = accountQueryRpcResolver.findPageByCondition(param);
