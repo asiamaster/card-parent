@@ -1,6 +1,5 @@
 package com.dili.card.config;
 
-import com.dili.uap.sdk.domain.UserTicket;
 import feign.RequestInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +24,10 @@ public class PayServiceFeignConfig {
         return template -> {
             template.header("appid", APPID);
             template.header("token", TOKEN);
-            UserTicket userTicket = FeignGlobalConfig.getTicket();
-            if (userTicket == null) {
+            Long firmId = FeignGlobalConfig.getFirmId();
+            if (firmId == null) {
                 return;
             }
-            Long firmId = userTicket.getFirmId();
             template.header("mchId", firmId + "");
         };
     }

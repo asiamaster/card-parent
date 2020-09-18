@@ -39,4 +39,7 @@ public class Constant {
 
 	/** 柜台操作记录扩展字段，卡类型 */
 	public static final String BUSINESS_RECORD_ATTACH_CARDTYPE = "cardType";
+
+	/**uap相关*/
+	public static final String UAP_FIRMID = "UAP_firmId";
 }
