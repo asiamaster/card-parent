@@ -116,7 +116,7 @@ public class CardManageServiceImpl implements ICardManageService {
 
         //远程账户重置密码操作
         cardManageRpcResolver.resetLoginPwd(cardParam);
-        
+
         //远程支付重置密码操作
         payRpcResolver.resetPwd(CreateTradeRequestDto.createPwd(accountCard.getFundAccountId(), cardParam.getLoginPwd()));
 
@@ -154,7 +154,10 @@ public class CardManageServiceImpl implements ICardManageService {
         serialService.saveBusinessRecord(businessRecord);
 
         cardManageRpcResolver.reportLossCard(cardParam);
-
+        //远程冻结资金账户必須是主副卡
+        payRpcResolver.freezeFundAccount(
+                CreateTradeRequestDto.createCommon(
+                        userAccount.getFundAccountId(), userAccount.getAccountId()));
         this.saveRemoteSerialRecord(businessRecord);
         return businessRecord.getSerialNo();
     }
@@ -168,7 +171,7 @@ public class CardManageServiceImpl implements ICardManageService {
         this.validateCanChange(requestDto, userAccount);
 
         cardStorageService.checkAndGetByCardNo(requestDto.getNewCardNo(), userAccount.getCardType(), userAccount.getCustomerMarketType());
-        
+
         Long serviceFee = requestDto.getServiceFee();
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {
             record.setType(OperateType.CHANGE.getCode());
