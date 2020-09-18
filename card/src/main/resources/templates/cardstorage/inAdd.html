@@ -101,14 +101,18 @@
 			return;
 		}
 		let data = $.common.formToJSON(formId);
-		$.modal.confirm("将根据输入的卡号段解析卡号，完成批量入库。请确保入库卡号的连续性和信息正确性。<br>确定入库？",
-				function(sure) {
-					if (!sure) {
-						return;
-					}
-					$.operate.post(url, data);
-				});
-
+		let content="将根据输入的卡号段解析卡号，完成批量入库。请确保入库卡号的连续性和信息正确性。<br>确定入库？";
+		let option = {
+			    width: '100%',
+			    language: 'zh-CN',
+			    
+		};
+		bs4pop.confirm(content,option,function(sure) {
+			if (!sure) {
+				return;
+			}
+			$.operate.post(url, data);
+		});
 	}
 	// 计算数量
 	$('.calculateAmount').bind('input propertychange', function() {
