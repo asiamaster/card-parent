@@ -68,7 +68,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	public void unfrozen(CardRequestDto cardRequestDto) {
 		LOGGER.info("解冻账户：" + cardRequestDto.getAccountId());
 		//校验账户信息
-		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), false, DisableState.DISABLED);
+		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), true, DisableState.DISABLED);
 		//保存本地记录
 		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.UNFROZEN_ACCOUNT);
 		//远程解冻账户操作
