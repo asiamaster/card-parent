@@ -1,5 +1,15 @@
 package com.dili.card.service.impl;
 
+import java.math.BigDecimal;
+
+import javax.annotation.Resource;
+
+import com.dili.card.rpc.resolver.AccountManageRpcResolver;
+import com.dili.card.type.CardType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.CardRequestDto;
@@ -12,7 +22,6 @@ import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
-import com.dili.card.rpc.resolver.AccountManageRpcResolver;
 import com.dili.card.rpc.resolver.CardManageRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.*;
@@ -22,12 +31,6 @@ import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import io.seata.spring.annotation.GlobalTransactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Resource;
-import java.math.BigDecimal;
 
 
 /**
@@ -59,7 +62,6 @@ public class CardManageServiceImpl implements ICardManageService {
 	ICardStorageService cardStorageService;
     @Autowired
     private AccountManageRpcResolver accountManageRpcResolver;
-
     /**
      * @param cardParam
      */
@@ -146,10 +148,14 @@ public class CardManageServiceImpl implements ICardManageService {
         serialService.saveBusinessRecord(businessRecord);
 
         cardManageRpcResolver.reportLossCard(cardParam);
-        //远程冻结资金账户必須是主副卡
+        //主卡需要冻结
+        if(CardType.isMaster(userAccount.getCardType())){
+            accountManageRpcResolver.frozen(cardParam);
+        }
         payRpcResolver.freezeFundAccount(
-                CreateTradeRequestDto.createCommon(
-                        userAccount.getFundAccountId(), userAccount.getAccountId()));
+            CreateTradeRequestDto.createCommon(
+                    userAccount.getFundAccountId(), userAccount.getAccountId()));
+
         this.saveRemoteSerialRecord(businessRecord);
         return businessRecord.getSerialNo();
     }
