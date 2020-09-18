@@ -214,23 +214,23 @@
 								<input placeholder="客户id"
 									name="customerId"  type="hidden"
 									class="form-control td_input" id="customerId"
-									maxlength="50" value="" />
+									maxlength="50" value="1" />
 								<input placeholder="编号"
 									name="consignorCustomerCode" disabled="disabled" type="hidden"
 									class="form-control td_input" id="consignorCustomerCode"
-									maxlength="50" value="" />
+									maxlength="50" value="1" />
 								<input placeholder="客户名称"
 									name="consignorCustomerName" disabled="disabled" type="text"
 									class="form-control td_input" id="consignorCustomerName"
-									maxlength="20" value="" />
+									maxlength="20" value="1" />
 								<input placeholder="证件号码"
 									name="consignorCustomerIDCode"  type="text"
 									class="form-control td_input" id="consignorCustomerIDCode"
-									maxlength="18" value="" />
+									maxlength="18" value="1" />
 								<input placeholder="手机号"
 									name="consignorCustomerMobile" type="hidden"
 									class="form-control td_input" id="consignorCustomerMobile"
-									maxlength="11" value="" />
+									maxlength="11" value="1" />
 								<button id="readIdCode" type="button"
 										class="btn btn-primary td_button" onclick="getConsignorIdCard()">
 										<i class="fa fa-search"></i>读取身份证
@@ -250,7 +250,7 @@
 									value="1" />
 								<input name="consignorAccountId" type="text"
 									class="form-control td_input" style="opacity: 0;"
-									id="consignorAccountId" maxlength="20" value="" />
+									id="consignorAccountId" maxlength="20" value="1" />
 								<input name="cardCustomerId" type="hidden"
 									class="form-control td_input"
 									id="cardCustomerId" maxlength="20" value="" />
@@ -288,15 +288,15 @@
 								<input placeholder="姓名"
 									disabled="disabled" name="consigneeName" type="text"
 									class="form-control td_input" id="consigneeName" maxlength="20"
-									value="" />
+									value="1" />
 								<input placeholder="身份证号" disabled="disabled"
 									name="consigneeIdCode" type="text"
 									class="form-control td_input" id="consigneeIdCode"
-									maxlength="18" value="" />
+									maxlength="18" value="1" />
 								<input placeholder="手机号"
 									name="consigneeIdMobile" type="text"
 									class="form-control td_input" id="consigneeIdMobile"
-									maxlength="12" value="" />
+									maxlength="12" value="1" />
 								<button type="button"
 										class="btn btn-primary td_button readID"
 										onclick="getConsigneeIdCard(this)">
@@ -372,7 +372,7 @@
 							</div>
 						</div>
 						<button id="signature" style="height: 30px;" type="button"
-							class="btn btn-primary per_div_child" onclick="signature()" disabled="disabled">请签名</button>
+							class="btn btn-primary per_div_child" onclick="signature()">请签名</button>
 							<input type="hidden" id="signatureImagePath" name="signatureImagePath" value="tt">
 					</div>
 				</div>
@@ -514,7 +514,7 @@
 				'<div class="triangle per_div_child div_container"><div class="div_container_content">' +
 				'<span style="background-color: #FFFFFF;">consugneeName</span></div>' +
 				'</div><button id="signature" type="button" style="height: 30px;"' +
-				'class="btn btn-primary per_div_child" onclick="signature()" disabled="disabled">请签名</button><input type="hidden" id="signatureImagePathConsugnee" name="signatureImagePathConsugnee" value="rr"></div>';
+				'class="btn btn-primary per_div_child" onclick="signature()">请签名</button><input type="hidden" id="signatureImagePathConsugnee" name="signatureImagePathConsugnee" value="rr"></div>';
 
 
     function addConsignee() {
@@ -973,7 +973,7 @@
 
 	/** 客户端点击签名弹出签名设备框 */
 	function signature(){
-
+		callbackObj.signatureShow(JSON.stringify(data));
 	}
 	/** 签名设备触发器  客户端页面联动  1 同意  2 返回*/
 	function signatureTrigger(type){
@@ -988,16 +988,21 @@
 	}
 
 	/** 输入签名设备图片 base64  进行处理并上传 */
-	function inputImage(obj){
-		if(obj.code == 0){
-			$.modal.alertError("传输图片错误");
+	function inputImage(str){
+		var obj = eval('(' + str + ')');
+		if(obj.code != 0){
+			if($.common.isEmpty(obj.message)){
+				$.modal.alertError("设备返回信息失败");
+			}else{
+				$.modal.alertError(obj.message);
+			}
     		return false;
 		}
 		var imgFile = base64ToImageFile(obj.data);
 		const fileReader = new FileReader();  // 创建一个 fileReader
 		fileReader.readAsDataURL(imgFile);
 		fileReader.onload = function(e){
-            alert("ok");
+            alert(obj.data);
             //alert(this.result);
             //result.innerHTML = '<img src="'+this.result+'" alt=""/>'
         }
