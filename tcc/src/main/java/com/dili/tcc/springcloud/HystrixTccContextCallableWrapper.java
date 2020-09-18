@@ -1,5 +1,6 @@
 package com.dili.tcc.springcloud;
 
+import com.dili.feign.hystrix.HystrixCallableWrapper;
 import com.dili.tcc.common.TccContext;
 import com.dili.tcc.core.TccContextHolder;
 

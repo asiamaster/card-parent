@@ -1,14 +1,9 @@
 package com.dili.card.common.hystrix;
 
-import com.dili.card.common.constant.Constant;
-import com.dili.tcc.springcloud.HystrixCallableWrapper;
-import com.dili.uap.sdk.domain.UserTicket;
-import com.dili.uap.sdk.session.SessionContext;
+import com.dili.feign.hystrix.HystrixCallableWrapper;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.Callable;
 
 /**

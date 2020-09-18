@@ -2,6 +2,7 @@ package com.dili.tcc.config;
 
 import java.util.List;
 
+import com.dili.feign.hystrix.HystrixCallableWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -19,9 +20,6 @@ import com.dili.tcc.repository.RedisTccTransactionRepository;
 import com.dili.tcc.repository.TccTransactionRepository;
 import com.dili.tcc.serializer.KryoSerializer;
 import com.dili.tcc.serializer.ObjectSerializer;
-import com.dili.tcc.springcloud.ContextHystrixConcurrencyStrategy;
-import com.dili.tcc.springcloud.HystrixCallableWrapper;
-import com.dili.tcc.springcloud.HystrixTccContextCallableWrapper;
 import com.dili.tcc.springcloud.TccFeignBeanPostProcessor;
 import com.dili.tcc.util.SpringContext;
 
@@ -85,20 +83,4 @@ public class TccSpringCloudAutoConfiguration {
     public DisruptorBootstrap<TccTransaction> disruptorProvider(TccProperties tccProperties){
         return new DisruptorBootstrap<>(tccProperties);
     }
-
-    @Configuration
-    @ConditionalOnProperty(name = "feign.hystrix.enabled", havingValue = "true")
-    public class HystrixTccConfig {
-
-        @Bean
-        public HystrixTccContextCallableWrapper hystrixTccContextCallableWrapper() {
-            return new HystrixTccContextCallableWrapper();
-        }
-
-        @Bean
-        public ContextHystrixConcurrencyStrategy contextHystrixConcurrencyStrategy(@Autowired(required = false) List<HystrixCallableWrapper> wrappers) {
-            return new ContextHystrixConcurrencyStrategy(wrappers);
-        }
-    }
-
 }

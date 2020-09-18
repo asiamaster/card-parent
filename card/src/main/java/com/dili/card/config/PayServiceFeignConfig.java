@@ -1,5 +1,6 @@
 package com.dili.card.config;
 
+import com.dili.feign.support.UapCookieUtils;
 import feign.RequestInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ public class PayServiceFeignConfig {
         return template -> {
             template.header("appid", APPID);
             template.header("token", TOKEN);
-            Long firmId = FeignGlobalConfig.getFirmId();
+            Long firmId = UapCookieUtils.getFirmId();
             if (firmId == null) {
                 return;
             }
