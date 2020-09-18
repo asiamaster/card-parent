@@ -24,12 +24,12 @@ public abstract class PrintServiceImpl implements IPrintService{
         printDto.setReprint(reprint ? "补打" : "");
         printDto.setCustomerName(recordDo.getCustomerName());
         printDto.setCardNo(recordDo.getCardNo());
-        printDto.setAmount(CurrencyUtils.toYuanWithStripTrailingZeros(recordDo.getAmount()));
-        printDto.setBalance(CurrencyUtils.toYuanWithStripTrailingZeros(recordDo.getEndBalance()));
+        printDto.setAmount(CurrencyUtils.toNoSymbolCurrency(recordDo.getAmount()));
+        printDto.setBalance(CurrencyUtils.toNoSymbolCurrency(recordDo.getEndBalance()));
         printDto.setTradeChannel(recordDo.getTradeChannel() != null ? TradeChannel.getNameByCode(recordDo.getTradeChannel()) : "");
-        printDto.setDeposit(CurrencyUtils.toYuanWithStripTrailingZeros(recordDo.getDeposit()));
-        printDto.setCardCost(CurrencyUtils.toYuanWithStripTrailingZeros(recordDo.getCardCost()));
-        printDto.setServiceCost(CurrencyUtils.toYuanWithStripTrailingZeros(recordDo.getServiceCost()));
+        printDto.setDeposit(CurrencyUtils.toNoSymbolCurrency(recordDo.getDeposit()));
+        printDto.setCardCost(CurrencyUtils.toNoSymbolCurrency(recordDo.getCardCost()));
+        printDto.setServiceCost(CurrencyUtils.toNoSymbolCurrency(recordDo.getServiceCost()));
         printDto.setOperatorNo(recordDo.getOperatorNo());
         printDto.setOperatorName(recordDo.getOperatorName());
         printDto.setNotes(recordDo.getNotes());

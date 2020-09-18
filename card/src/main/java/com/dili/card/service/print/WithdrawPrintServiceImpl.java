@@ -31,7 +31,7 @@ public class WithdrawPrintServiceImpl extends PrintServiceImpl {
     @Override
     public void createSpecial(PrintDto printDto, BusinessRecordDo recordDo, boolean reprint) {
         Long totalAmount = recordDo.getServiceCost() != null ? recordDo.getAmount() + recordDo.getServiceCost() : recordDo.getAmount();
-        printDto.setTotalAmount(CurrencyUtils.toYuanWithStripTrailingZeros(totalAmount));
+        printDto.setTotalAmount(CurrencyUtils.toNoSymbolCurrency(totalAmount));
         printDto.setTotalAmountWords(Convert.digitToChinese(Double.valueOf(printDto.getTotalAmount())));
     }
 
