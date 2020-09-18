@@ -1,13 +1,5 @@
 package com.dili.card.service.impl;
 
-import java.math.BigDecimal;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.CardRequestDto;
@@ -20,28 +12,22 @@ import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
+import com.dili.card.rpc.resolver.AccountManageRpcResolver;
 import com.dili.card.rpc.resolver.CardManageRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
-import com.dili.card.service.IAccountCycleService;
-import com.dili.card.service.IAccountQueryService;
-import com.dili.card.service.ICardManageService;
-import com.dili.card.service.ICardStorageService;
-import com.dili.card.service.IReturnCardService;
-import com.dili.card.service.IRuleFeeService;
-import com.dili.card.service.ISerialService;
-import com.dili.card.type.CardStatus;
-import com.dili.card.type.FundItem;
-import com.dili.card.type.OperateType;
-import com.dili.card.type.RuleFeeBusinessType;
-import com.dili.card.type.SystemSubjectType;
-import com.dili.card.type.TradeChannel;
-import com.dili.card.type.TradeType;
+import com.dili.card.service.*;
+import com.dili.card.type.*;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-
 import io.seata.spring.annotation.GlobalTransactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
 
 
 /**
@@ -71,6 +57,8 @@ public class CardManageServiceImpl implements ICardManageService {
     private IRuleFeeService ruleFeeService;
     @Resource
 	ICardStorageService cardStorageService;
+    @Autowired
+    private AccountManageRpcResolver accountManageRpcResolver;
 
     /**
      * @param cardParam
@@ -90,6 +78,10 @@ public class CardManageServiceImpl implements ICardManageService {
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         }
+        //远程解冻账户操作
+        accountManageRpcResolver.unfrozen(cardParam);
+        //远程解冻资金账户 必須是主副卡
+        payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
         this.saveRemoteSerialRecord(businessRecordDo);
     }
 
