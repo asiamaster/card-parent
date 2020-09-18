@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import javax.annotation.Resource;
 
+import com.dili.card.rpc.resolver.AccountManageRpcResolver;
+import com.dili.card.type.CardType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,6 +73,8 @@ public class CardManageServiceImpl implements ICardManageService {
     private IRuleFeeService ruleFeeService;
     @Resource
 	ICardStorageService cardStorageService;
+    @Autowired
+    private AccountManageRpcResolver accountManageRpcResolver;
 
     /**
      * @param cardParam
@@ -154,10 +158,14 @@ public class CardManageServiceImpl implements ICardManageService {
         serialService.saveBusinessRecord(businessRecord);
 
         cardManageRpcResolver.reportLossCard(cardParam);
-        //远程冻结资金账户必須是主副卡
+        //主卡需要冻结
+        if(CardType.isMaster(userAccount.getCardType())){
+            accountManageRpcResolver.frozen(cardParam);
+        }
         payRpcResolver.freezeFundAccount(
-                CreateTradeRequestDto.createCommon(
-                        userAccount.getFundAccountId(), userAccount.getAccountId()));
+            CreateTradeRequestDto.createCommon(
+                    userAccount.getFundAccountId(), userAccount.getAccountId()));
+
         this.saveRemoteSerialRecord(businessRecord);
         return businessRecord.getSerialNo();
     }
