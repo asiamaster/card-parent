@@ -86,109 +86,144 @@ public class ContractServiceImpl implements IContractService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void save(FundContractRequestDto fundContractRequest) {
+		
 		// 校验委托人和被委托人身份证手机号校验
 		this.validateIdCodeAndMobile(fundContractRequest);
+		
 		// 构建合同主体
 		FundContractDo fundContract = this.buildContractEntity(fundContractRequest);
+		
 		// 构建被委托人主体
 		List<FundConsignorDo> consignors = this.buildConsignorEntities(fundContractRequest);
+		
 		// 保存委托人数据
 		contractDao.save(fundContract);
+		
 		// 保存被委托人数据
 		fundConsignorDao.saveBatch(consignors);
 	}
 
 	@Override
 	public List<FundContractResponseDto> list(FundContractQueryDto contractQueryDto) {
+		
 		// 构建查询条件
 		this.buildQueryContractConditon(contractQueryDto);
+		
 		// 查询条件
 		List<FundContractDo> fundContracts = contractDao.findEntityByCondition(contractQueryDto);
+		
 		// 数据转换
 		return this.buildPageResponseContracts(fundContracts);
 	}
 
 	@Override
 	public PageOutput<List<FundContractResponseDto>> page(FundContractQueryDto contractQueryDto) {
+		
 		Page<?> page = PageHelper.startPage(contractQueryDto.getPage(), contractQueryDto.getRows());
+		
 		List<FundContractResponseDto> contractResponses = this.list(contractQueryDto);
+		
 		return PageUtils.convert2PageOutput(page, contractResponses);
 	}
 
 	@Override
 	public void remove(FundContractRequestDto fundContractRequest) {
+		
 		FundContractDo fundContract = contractDao.getById(fundContractRequest.getId());
+		
 		if (fundContract == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "该合同号不存在");
 		}
 		if (ContractState.REMOVED.getCode() == fundContract.getState()) {
 			return;
 		}
+		
 		FundContractDo updateFundContract = new FundContractDo();
 		updateFundContract.setId(fundContractRequest.getId());
 		updateFundContract.setState(ContractState.REMOVED.getCode());
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		updateFundContract.setTerminater(userTicket.getRealName());
 		updateFundContract.setTerminateNotes(fundContractRequest.getNotes());
+		
 		contractDao.update(updateFundContract);
 	}
 
 	@Override
 	public FundContractResponseDto detail(Long id) {
+		
 		FundContractDo fundContract = contractDao.getById(id);
+		
 		if (fundContract == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "该合同号不存在");
 		}
+		
 		UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver
 				.findSingleWithoutValidate(UserAccountSingleQueryDto.newDto(fundContract.getConsignorAccountId()));
+		
 		Customer customer = customerRpcResolver.getWithNotNull(userAccountCard.getCustomerId(),
 				fundContract.getFirmId());
+		
 		return this.buildContractResponse(fundContract, userAccountCard, customer);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void closeOverdueContract() {
+		
 		contractDao.closeOverdueContract();
+		
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void activeOverdueContract() {
+		
 		contractDao.activeOverdueContract();
+		
 	}
 
 	@Override
 	public FundContractPrintDto print(Long id) {
+		
 		FundContractResponseDto fundContractResponseDto = this.detail(id);
+		
 		return FundContractPrintDto.wrapperPrintDetai(fundContractResponseDto);
 	}
 
 	@Override
 	public FundContractResponseDto findActiveContractByAccountId(FundContractQueryDto contractQueryDto) {
+		
 		List<FundContractResponseDto> fundContractResponseDtos = this.list(contractQueryDto);
+		
 		if (CollectionUtils.isEmpty(fundContractResponseDtos)) {
 			return null;
 		}
+		
 		FundContractResponseDto fundContractResponseDto = fundContractResponseDtos.get(0);
+		
 		for (int i = 1; i < fundContractResponseDtos.size(); i++) {
 			fundContractResponseDto.getConsignorDtos().addAll(fundContractResponseDtos.get(i).getConsignorDtos());
 		}
+		
 		return fundContractResponseDto;
 	}
 
 	@Override
 	public List<Customer> findCustomers(CustomerQueryInput query) {
+		
 		List<Customer> itemList = customerRpcResolver.list(query);
+		
 		if (CollectionUtils.isEmpty(itemList)) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "无相应客户信息");
 		}
 		;
+		
 		Customer customer = itemList.get(0);
 		if (!customer.getState().equals(CustomerState.VALID.getCode())) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR,
 					"客户已" + CustomerState.getStateName(customer.getState()));
 		}
+		
 		return itemList;
 	}
 
@@ -413,10 +448,8 @@ public class ContractServiceImpl implements IContractService {
 				.valueOf(fundContractRequest.getStartTime()).getTime()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "合同结束时间不小于开始时间");
 		}
-		
 		fundContractDo.setStartTime(fundContractRequest.getStartTime());
 		fundContractDo.setEndTime(fundContractRequest.getEndTime());
-		fundContractDo.setSignatureImagePath(fundContractRequest.getSignatureImagePath());
 		fundContractDo.setNotes(fundContractRequest.getNotes());
 		
 		// 构建商户信息
