@@ -23,7 +23,7 @@ import feign.form.spring.SpringFormEncoder;
 /**
  * 文件上传
  */
-@FeignClient(name = "dili-dfs", configuration = DFSRpc.FileConfiguration.class)
+@FeignClient(name = "dili-dfs", configuration = DFSRpc.FeignFileUploadConfiguration.class)
 public interface DFSRpc {
 
 	/**
@@ -36,7 +36,7 @@ public interface DFSRpc {
 	/**
 	 * 文件上传需要的这个类
 	 */
-	class FileConfiguration {
+	class FeignFileUploadConfiguration {
 
 		@Bean
 		public Encoder encoder() {
