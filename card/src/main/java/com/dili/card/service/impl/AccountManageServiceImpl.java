@@ -52,14 +52,22 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		LOGGER.info("冻结账户：" + cardRequestDto.getAccountId());
 		//校验账户信息
 		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), false, DisableState.ENABLED);
+		
 		//保存本地记录
 		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.FROZEN_ACCOUNT);
+		
 		//远程冻结卡账户操作
     	accountManageRpcResolver.frozen(cardRequestDto);
-        //远程冻结资金账户必須是主副卡
-    	payRpcResolver.freezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
-    	//更新最終记录
-    	this.saveRemoteSerialRecord(businessRecord, FundItem.MANDATORY_FREEZE_ACCOUNT);
+    	
+    	//挂失不处理资金账户
+    	if (Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
+    		
+    		//远程解冻资金账户 必須是主副卡 
+    		payRpcResolver.freezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
+        	
+    		//更新最終记录
+        	this.saveRemoteSerialRecord(businessRecord, FundItem.MANDATORY_FREEZE_ACCOUNT);
+    	}
 	}
 
 	@Override
@@ -67,16 +75,25 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	@Transactional(rollbackFor = Exception.class)
 	public void unfrozen(CardRequestDto cardRequestDto) {
 		LOGGER.info("解冻账户：" + cardRequestDto.getAccountId());
+		
 		//校验账户信息
-		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), true, DisableState.DISABLED);
+		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), false, DisableState.DISABLED);
+		
 		//保存本地记录
 		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.UNFROZEN_ACCOUNT);
+		
 		//远程解冻账户操作
 		accountManageRpcResolver.unfrozen(cardRequestDto);
-        //远程解冻资金账户 必須是主副卡
-    	payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
-		//更新最終记录
-    	this.saveRemoteSerialRecord(businessRecord, FundItem.MANDATORY_UNFREEZE_ACCOUNT);
+       
+		//挂失不处理资金账户
+    	if (Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
+    		
+    		//远程解冻资金账户 必須是主副卡 
+    		payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
+    		
+    		//更新最終记录
+        	this.saveRemoteSerialRecord(businessRecord, FundItem.MANDATORY_UNFREEZE_ACCOUNT);
+		}
 	}
 
 	/**
