@@ -15,14 +15,14 @@ public class CardStorageOutRequestDto extends CardRequestDto {
     /** */
 	private static final long serialVersionUID = 1L;
 	/**申领人id*/
-    @NotNull(message = "申领人信息缺失", groups = ConstantValidator.Insert.class)
+    @NotNull(message = "申领人信息错误", groups = ConstantValidator.Insert.class)
     @Min(value = 1, message = "申领人信息缺失", groups = ConstantValidator.Insert.class)
     private Long applyUserId;
     /**申领人名字*/
-    @NotBlank(message = "申领人信息缺失", groups = ConstantValidator.Insert.class)
+    @NotBlank(message = "申领人信息错误", groups = ConstantValidator.Insert.class)
     private String applyUserName;
     /**申领人工号*/
-    @NotBlank(message = "申领人信息缺失", groups = ConstantValidator.Insert.class)
+    @NotBlank(message = "申领人信息错误", groups = ConstantValidator.Insert.class)
     private String applyUserCode;
     /**申领卡集合string , 逗号隔开*/
     @NotBlank(message = "申领卡号不能为空", groups = ConstantValidator.Insert.class)
