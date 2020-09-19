@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
+import com.dili.card.config.DFSProperties;
 import com.dili.card.dao.IFundConsignorDao;
 import com.dili.card.dao.IFundContractDao;
 import com.dili.card.dto.FundConsignorDto;
@@ -45,6 +46,7 @@ import com.dili.card.type.CardStatus;
 import com.dili.card.type.ContractState;
 import com.dili.card.type.CustomerState;
 import com.dili.card.type.DisableState;
+import com.dili.card.util.DateUtil;
 import com.dili.card.util.PageUtils;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
@@ -55,6 +57,9 @@ import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+
+import cn.hutool.core.codec.Base64;
+import feign.form.ContentType;
 
 @Service
 public class ContractServiceImpl implements IContractService {
@@ -75,113 +80,150 @@ public class ContractServiceImpl implements IContractService {
 	private DataDictionaryRpcResovler dataDictionaryRpcResovler;
 	@Autowired
 	private DFSRpc dfsRpc;
+	@Autowired
+	private DFSProperties dfsProperties;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void save(FundContractRequestDto fundContractRequest) {
+		
 		// 校验委托人和被委托人身份证手机号校验
 		this.validateIdCodeAndMobile(fundContractRequest);
+		
 		// 构建合同主体
 		FundContractDo fundContract = this.buildContractEntity(fundContractRequest);
+		
 		// 构建被委托人主体
 		List<FundConsignorDo> consignors = this.buildConsignorEntities(fundContractRequest);
+		
 		// 保存委托人数据
 		contractDao.save(fundContract);
+		
 		// 保存被委托人数据
 		fundConsignorDao.saveBatch(consignors);
 	}
 
 	@Override
 	public List<FundContractResponseDto> list(FundContractQueryDto contractQueryDto) {
+		
 		// 构建查询条件
 		this.buildQueryContractConditon(contractQueryDto);
+		
 		// 查询条件
 		List<FundContractDo> fundContracts = contractDao.findEntityByCondition(contractQueryDto);
+		
 		// 数据转换
 		return this.buildPageResponseContracts(fundContracts);
 	}
 
 	@Override
 	public PageOutput<List<FundContractResponseDto>> page(FundContractQueryDto contractQueryDto) {
+		
 		Page<?> page = PageHelper.startPage(contractQueryDto.getPage(), contractQueryDto.getRows());
+		
 		List<FundContractResponseDto> contractResponses = this.list(contractQueryDto);
+		
 		return PageUtils.convert2PageOutput(page, contractResponses);
 	}
 
 	@Override
 	public void remove(FundContractRequestDto fundContractRequest) {
+		
 		FundContractDo fundContract = contractDao.getById(fundContractRequest.getId());
+		
 		if (fundContract == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "该合同号不存在");
 		}
 		if (ContractState.REMOVED.getCode() == fundContract.getState()) {
 			return;
 		}
+		
 		FundContractDo updateFundContract = new FundContractDo();
 		updateFundContract.setId(fundContractRequest.getId());
 		updateFundContract.setState(ContractState.REMOVED.getCode());
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		updateFundContract.setTerminater(userTicket.getRealName());
 		updateFundContract.setTerminateNotes(fundContractRequest.getNotes());
+		
 		contractDao.update(updateFundContract);
 	}
 
 	@Override
 	public FundContractResponseDto detail(Long id) {
+		
 		FundContractDo fundContract = contractDao.getById(id);
+		
 		if (fundContract == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "该合同号不存在");
 		}
+		
 		UserAccountCardResponseDto userAccountCard = accountQueryRpcResolver
 				.findSingleWithoutValidate(UserAccountSingleQueryDto.newDto(fundContract.getConsignorAccountId()));
+		
 		Customer customer = customerRpcResolver.getWithNotNull(userAccountCard.getCustomerId(),
 				fundContract.getFirmId());
+		
 		return this.buildContractResponse(fundContract, userAccountCard, customer);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void closeOverdueContract() {
+		
 		contractDao.closeOverdueContract();
+		
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void activeOverdueContract() {
+		
 		contractDao.activeOverdueContract();
+		
 	}
 
 	@Override
 	public FundContractPrintDto print(Long id) {
+		
 		FundContractResponseDto fundContractResponseDto = this.detail(id);
+		
 		return FundContractPrintDto.wrapperPrintDetai(fundContractResponseDto);
 	}
 
 	@Override
 	public FundContractResponseDto findActiveContractByAccountId(FundContractQueryDto contractQueryDto) {
+		
 		List<FundContractResponseDto> fundContractResponseDtos = this.list(contractQueryDto);
+		
 		if (CollectionUtils.isEmpty(fundContractResponseDtos)) {
 			return null;
 		}
+		
 		FundContractResponseDto fundContractResponseDto = fundContractResponseDtos.get(0);
+		
 		for (int i = 1; i < fundContractResponseDtos.size(); i++) {
 			fundContractResponseDto.getConsignorDtos().addAll(fundContractResponseDtos.get(i).getConsignorDtos());
 		}
+		
 		return fundContractResponseDto;
 	}
 
 	@Override
 	public List<Customer> findCustomers(CustomerQueryInput query) {
+		
 		List<Customer> itemList = customerRpcResolver.list(query);
+		
 		if (CollectionUtils.isEmpty(itemList)) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "无相应客户信息");
 		}
 		;
+		
 		Customer customer = itemList.get(0);
 		if (!customer.getState().equals(CustomerState.VALID.getCode())) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR,
 					"客户已" + CustomerState.getStateName(customer.getState()));
 		}
+		
 		return itemList;
 	}
 
@@ -194,6 +236,9 @@ public class ContractServiceImpl implements IContractService {
 	 * 校验委托人和被委托人身份证校验
 	 */
 	private void validateIdCodeAndMobile(FundContractRequestDto fundContractRequest) {
+		if (StringUtils.isBlank(fundContractRequest.getSignatureImagePath())) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "委托人未签名");
+		}
 		List<String> consigneeCustomerIdCodes = new ArrayList<String>();
 		for (FundConsignorDto fundConsignorDto : fundContractRequest.getConsignors()) {
 			if (fundContractRequest.getConsignorCustomerIDCode()
@@ -202,6 +247,9 @@ public class ContractServiceImpl implements IContractService {
 			}
 			if (consigneeCustomerIdCodes.contains(fundConsignorDto.getConsigneeIdCode())) {
 				throw new CardAppBizException(ResultCode.DATA_ERROR, "被委托人证件号不能相同");
+			}
+			if (StringUtils.isBlank(fundConsignorDto.getSignatureImagePath())) {
+				throw new CardAppBizException(ResultCode.DATA_ERROR, "被委托人未完成签名");
 			}
 			consigneeCustomerIdCodes.add(fundConsignorDto.getConsigneeIdCode());
 		}
@@ -370,14 +418,64 @@ public class ContractServiceImpl implements IContractService {
 	 * 构建合同主体详情
 	 */
 	private FundContractDo buildContractEntity(FundContractRequestDto fundContractRequest) {
+		
 		FundContractDo fundContractDo = new FundContractDo();
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 
+		// 获取客户信息
 		Customer customer = customerRpcResolver.getWithNotNull(fundContractRequest.getCustomerId(),
 				(userTicket.getFirmId()));
 		if (customer == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "系统没有客户信息");
 		}
+		fundContractDo.setConsignorCustomerCode(customer.getCode());
+		fundContractDo.setConsignorCustomerId(customer.getId());
+		
+		//上传签名图片
+		uploadSignatureImage(fundContractDo, fundContractRequest);
+		
+		//校验持卡人的卡状态
+		validateAccountId(fundContractRequest, customer);
+		
+		
+		// 构建合同委托人核心数据
+		fundContractDo.setConsignorAccountId(fundContractRequest.getConsignorAccountId());
+		if (Timestamp.valueOf(fundContractRequest.getEndTime()).getTime() < Timestamp
+				.valueOf(LocalDate.now().atStartOfDay()).getTime()) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "合同结束时间不小于今天");
+		}
+		if (Timestamp.valueOf(fundContractRequest.getEndTime()).getTime() < Timestamp
+				.valueOf(fundContractRequest.getStartTime()).getTime()) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "合同结束时间不小于开始时间");
+		}
+		fundContractDo.setStartTime(fundContractRequest.getStartTime());
+		fundContractDo.setEndTime(fundContractRequest.getEndTime());
+		fundContractDo.setNotes(fundContractRequest.getNotes());
+		
+		// 构建商户信息
+		fundContractDo.setCreatorId(userTicket.getId());
+		fundContractDo.setCreator(userTicket.getRealName());
+		fundContractDo.setFirmId(userTicket.getFirmId());
+		fundContractDo.setFirmName(userTicket.getFirmName());
+		
+		fundContractDo.setState(ContractState.UNSTARTED.getCode());
+		if (Timestamp.valueOf(fundContractRequest.getStartTime()).getTime() <= Timestamp.valueOf(LocalDateTime.now())
+				.getTime()) {
+			fundContractDo.setState(ContractState.ENTUST.getCode());
+		}
+		
+		// 获取业务编号
+		String contractNo = uidRpcResovler.bizNumber(BizNoType.CONTRACT_NO.getCode());
+		fundContractDo.setContractNo(contractNo);
+		fundContractRequest.setContractNo(contractNo);
+		
+		return fundContractDo;
+	}
+
+	/**
+	 * 校验持卡人的卡状态
+	 */
+	private void validateAccountId(FundContractRequestDto fundContractRequest, Customer customer) {
 		UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
 		query.setAccountId(fundContractRequest.getConsignorAccountId());
 		UserAccountCardResponseDto userAccountCardResponseDto = accountQueryRpcResolver
@@ -400,38 +498,19 @@ public class ContractServiceImpl implements IContractService {
 		if (userAccountCardResponseDto.getCardType() != 10) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "卡必须是主卡");
 		}
-		// 构建合同委托人核心数据
-		fundContractDo.setConsignorAccountId(fundContractRequest.getConsignorAccountId());
-		if (Timestamp.valueOf(fundContractRequest.getEndTime()).getTime() < Timestamp
-				.valueOf(LocalDate.now().atStartOfDay()).getTime()) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "合同结束时间不小于今天");
-		}
-		if (Timestamp.valueOf(fundContractRequest.getEndTime()).getTime() < Timestamp
-				.valueOf(fundContractRequest.getStartTime()).getTime()) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, "合同结束时间不小于开始时间");
-		}
-		fundContractDo.setStartTime(fundContractRequest.getStartTime());
-		fundContractDo.setEndTime(fundContractRequest.getEndTime());
-		fundContractDo.setSignatureImagePath(fundContractRequest.getSignatureImagePath());
-		fundContractDo.setNotes(fundContractRequest.getNotes());
-		// 构建商户信息
-		fundContractDo.setCreatorId(userTicket.getId());
-		fundContractDo.setCreator(userTicket.getRealName());
-		fundContractDo.setFirmId(userTicket.getFirmId());
-		fundContractDo.setFirmName(userTicket.getFirmName());
-		fundContractDo.setState(ContractState.UNSTARTED.getCode());
-		if (Timestamp.valueOf(fundContractRequest.getStartTime()).getTime() <= Timestamp.valueOf(LocalDateTime.now())
-				.getTime()) {
-			fundContractDo.setState(ContractState.ENTUST.getCode());
-		}
-		// 获取业务编号
-		String contractNo = uidRpcResovler.bizNumber(BizNoType.CONTRACT_NO.getCode());
-		fundContractDo.setContractNo(contractNo);
-		fundContractRequest.setContractNo(contractNo);
-		// 获取客户信息
-		fundContractDo.setConsignorCustomerCode(customer.getCode());
-		fundContractDo.setConsignorCustomerId(customer.getId());
-		return fundContractDo;
+		
+	}
+
+	/**
+	 * 上传签名图片
+	 */
+	private void uploadSignatureImage(FundContractDo fundContractDo, FundContractRequestDto fundContractRequest) {
+		String fileName = DateUtil.formatDateTime("yyyyMMddHHmm") + "_" + fundContractRequest.getConsignorCustomerCode();
+		byte[] image = Base64.decode(fundContractRequest.getSignatureImagePath());
+		MultipartFile multipartFile = DFSRpc.ByteMultipartFile.getInstance(fileName, fileName, ContentType.MULTIPART.getHeader(), image);
+		String fileId = GenericRpcResolver.resolver(
+                dfsRpc.upload(multipartFile, dfsProperties.getAccessToken()), "dili-dfs");
+		fundContractDo.setSignatureImagePath(fileId);
 	}
 
 }
