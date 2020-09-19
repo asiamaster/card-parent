@@ -999,12 +999,13 @@
 		}
 		var obj = $(e).parent();
 		$("#signatureIsCompleted").val(1);
-		inputImage(stt,obj);
-		//callbackObj.signatureShow(JSON.stringify(data));
+		//inputImage(stt,obj);
+		data.node=obj.find('input').attr("name");
+		callbackObj.signatureShow(JSON.stringify(data));
 	}
 	
 	/** 输入签名设备图片 base64  进行处理并上传 */
-	function inputImage(obj,obj0){
+	function inputImage(obj){
 		if(obj.code != 0){
 			if($.common.isEmpty(obj.message)){
 				$.modal.alertError("设备返回信息失败");
@@ -1014,7 +1015,7 @@
     		return false;
 		}
 		var base64Image = obj.data;
-		obj0.find('input').val(base64Image);
+		$('#' + obj.result).val(base64Image);
 		var imgFile = base64ToImageFile(base64Image);
 		const fileReader = new FileReader();  // 创建一个 fileReader
 		fileReader.readAsDataURL(imgFile);
