@@ -1,4 +1,9 @@
 <#bs4Body>
+<style>
+    .modal-dialog {
+        width: 90% !important;
+    }
+</style>
 <div class="container-fluid">
 	<div id="add-modal">
 		<form id="save-form">
@@ -103,8 +108,9 @@
 		let data = $.common.formToJSON(formId);
 		let content="将根据输入的卡号段解析卡号，完成批量入库。请确保入库卡号的连续性和信息正确性。<br>确定入库？";
 		let option = {
-			    width: '100%',
-			    language: 'zh-CN',
+		    width: '80%',
+		    language: 'zh-CN',
+		    target: 'body',
 			    
 		};
 		bs4pop.confirm(content,option,function(sure) {
