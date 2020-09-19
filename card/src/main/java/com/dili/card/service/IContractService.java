@@ -58,7 +58,7 @@ public interface IContractService {
 	/**
 	 * 获取客户信息
 	 */
-	List<Customer> findCustomers(CustomerQueryInput query);
+	Customer findCustomers(CustomerQueryInput query);
 
 	/**
 	 * 通过账号查询合同

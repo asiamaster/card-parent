@@ -930,15 +930,15 @@
 		    },
 		    success: function(result) {
 		    	if(result.code=="200"){
-		    		if(!$.common.isEmpty($("#cardCustomerId").val()) && result.data[0].id != $("#cardCustomerId").val()){
+		    		if(!$.common.isEmpty($("#cardCustomerId").val()) && result.data.id != $("#cardCustomerId").val()){
                 		$.modal.alertError("卡主与持卡人不一致");
                 		return false;
                 	}
-		            $("#consignorCustomerIDCode").val(result.data[0].certificateNumber);
-		            $("#consignorCustomerName").val(result.data[0].name);
-			    	$("#consignorCustomerMobile").val(result.data[0].contactsPhone);
-			    	$("#customerId").val(result.data[0].id);
-			    	$("#consignorCustomerCode").val(result.data[0].code);
+		            $("#consignorCustomerIDCode").val(result.data.certificateNumber);
+		            $("#consignorCustomerName").val(result.data.name);
+			    	$("#consignorCustomerMobile").val(result.data.contactsPhone);
+			    	$("#customerId").val(result.data.id);
+			    	$("#consignorCustomerCode").val(result.data.code);
 			    	$.modal.alertSuccess(msg);
 		    	}else{
 		    		$.modal.alertError(result.message);

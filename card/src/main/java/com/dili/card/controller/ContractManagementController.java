@@ -151,7 +151,7 @@ public class ContractManagementController implements IControllerHandler {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findCustomersByKeyword.action")
 	@ResponseBody
-	public BaseOutput<List<Customer>> findCustomersByKeyword(String keyword) {
+	public BaseOutput<Customer> findCustomersByKeyword(String keyword) {
 		log.info("查询客户列表*****{}", keyword);
 		CustomerQueryInput query = new CustomerQueryInput();
 		UserTicket userTicket = getUserTicket();
