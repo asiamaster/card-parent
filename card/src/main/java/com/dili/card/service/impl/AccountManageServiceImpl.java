@@ -60,7 +60,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
     	accountManageRpcResolver.frozen(cardRequestDto);
     	
     	//挂失不处理资金账户
-    	if (Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
+    	if (!Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
     		
     		//远程解冻资金账户 必須是主副卡 
     		payRpcResolver.freezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
@@ -86,7 +86,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		accountManageRpcResolver.unfrozen(cardRequestDto);
        
 		//挂失不处理资金账户
-    	if (Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
+    	if (!Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
     		
     		//远程解冻资金账户 必須是主副卡 
     		payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
