@@ -1,5 +1,6 @@
 package com.dili.card.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,9 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
+import com.dili.card.config.DFSProperties;
 import com.dili.card.dao.IFundConsignorDao;
 import com.dili.card.dao.IFundContractDao;
 import com.dili.card.dto.FundConsignorDto;
@@ -56,6 +60,9 @@ import com.dili.uap.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
+import cn.hutool.core.codec.Base64;
+import feign.form.ContentType;
+
 @Service
 public class ContractServiceImpl implements IContractService {
 
@@ -75,6 +82,8 @@ public class ContractServiceImpl implements IContractService {
 	private DataDictionaryRpcResovler dataDictionaryRpcResovler;
 	@Autowired
 	private DFSRpc dfsRpc;
+	@Autowired
+	private DFSProperties dfsProperties;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -194,6 +203,9 @@ public class ContractServiceImpl implements IContractService {
 	 * 校验委托人和被委托人身份证校验
 	 */
 	private void validateIdCodeAndMobile(FundContractRequestDto fundContractRequest) {
+		if (StringUtils.isBlank(fundContractRequest.getSignatureImagePath())) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, "委托人未签名");
+		}
 		List<String> consigneeCustomerIdCodes = new ArrayList<String>();
 		for (FundConsignorDto fundConsignorDto : fundContractRequest.getConsignors()) {
 			if (fundContractRequest.getConsignorCustomerIDCode()
@@ -202,6 +214,9 @@ public class ContractServiceImpl implements IContractService {
 			}
 			if (consigneeCustomerIdCodes.contains(fundConsignorDto.getConsigneeIdCode())) {
 				throw new CardAppBizException(ResultCode.DATA_ERROR, "被委托人证件号不能相同");
+			}
+			if (StringUtils.isBlank(fundConsignorDto.getSignatureImagePath())) {
+				throw new CardAppBizException(ResultCode.DATA_ERROR, "被委托人未完成签名");
 			}
 			consigneeCustomerIdCodes.add(fundConsignorDto.getConsigneeIdCode());
 		}
@@ -378,6 +393,11 @@ public class ContractServiceImpl implements IContractService {
 		if (customer == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "系统没有客户信息");
 		}
+		byte[] image = Base64.decode(fundContractRequest.getSignatureImagePath());
+		MultipartFile multipartFile = DFSRpc.ByteMultipartFile.getInstance(fundContractDo.getConsignorCustomerCode(), customer.getName(), ContentType.MULTIPART.getHeader(), image);
+		String fileId = GenericRpcResolver.resolver(
+                dfsRpc.upload(multipartFile, dfsProperties.getAccessToken()), "dili-dfs");
+		fundContractDo.setSignatureImagePath(fileId);
 		UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
 		query.setAccountId(fundContractRequest.getConsignorAccountId());
 		UserAccountCardResponseDto userAccountCardResponseDto = accountQueryRpcResolver
