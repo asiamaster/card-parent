@@ -23,94 +23,102 @@ import feign.form.spring.SpringFormEncoder;
 /**
  * 文件上传
  */
-@FeignClient(name = "dili-dfs", configuration = DFSRpc.FileConfiguration.class)
+@FeignClient(name = "dili-dfs", configuration = DFSRpc.FeignFileUploadConfiguration.class)
 public interface DFSRpc {
 
-    /**
-     * 文件上传
-     */
-    @PostMapping(value = "/file/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    BaseOutput<String> upload(@RequestPart("file") MultipartFile multipartFile, @RequestParam("accesstoken") String accesstoken);
-    
-    class FileConfiguration{
+	/**
+	 * 文件上传
+	 */
+	@PostMapping(value = "/file/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	BaseOutput<String> upload(@RequestPart("file") MultipartFile multipartFile,
+			@RequestParam("accesstoken") String accesstoken);
 
-        @Bean
-        public Encoder encoder(){
-            return new SpringFormEncoder();
-        }
-    }
-    
-   class ByteMultipartFile implements MultipartFile {
-    	
-    	String name;
+	/**
+	 * 文件上传需要的这个类
+	 */
+	class FeignFileUploadConfiguration {
 
-    	String originalFilename;
+		@Bean
+		public Encoder encoder() {
+			return new SpringFormEncoder();
+		}
+	}
 
-    	String contentType;
+	/**
+	 * 手动实现文件包装类
+	 */
+	class ByteMultipartFile implements MultipartFile {
 
-    	byte[] bytes;
-    	
-    	public ByteMultipartFile() {
-    	}
-    	
-    	public ByteMultipartFile(String name, String originalFilename, String contentType, byte[] bytes) {
-    		this.name = name;
-    		this.originalFilename = originalFilename;
-    		this.contentType = contentType;
-    		this.bytes = bytes;
-    	}
-    	
-    	public static ByteMultipartFile getInstance(String name, String originalFilename, String contentType, byte[] bytes) {
-    		return new ByteMultipartFile(name, originalFilename, contentType, bytes);
-    	}
+		String name;
 
-    	@Override
-    	public boolean isEmpty() {
-    		return bytes.length == 0;
-    	}
+		String originalFilename;
 
-    	@Override
-    	public long getSize() {
-    		return bytes.length;
-    	}
+		String contentType;
 
-    	@Override
-    	public InputStream getInputStream() {
-    		return new ByteArrayInputStream(bytes);
-    	}
+		byte[] bytes;
 
-    	@Override
-    	public void transferTo(File destination) throws IOException {
-    		OutputStream outputStream = null;
-    		try {
-    			outputStream = new FileOutputStream(destination);
-    			outputStream.write(bytes);
-    		} finally {
-    			if (outputStream != null) {
-    				outputStream.close();
-    			}
-    		}
-    	}
+		public ByteMultipartFile() {
+		}
 
-    	@Override
-    	public String getName() {
-    		return name;
-    	}
+		public ByteMultipartFile(String name, String originalFilename, String contentType, byte[] bytes) {
+			this.name = name;
+			this.originalFilename = originalFilename;
+			this.contentType = contentType;
+			this.bytes = bytes;
+		}
 
-    	@Override
-    	public String getOriginalFilename() {
-    		return originalFilename;
-    	}
+		public static ByteMultipartFile getInstance(String name, String originalFilename, String contentType,
+				byte[] bytes) {
+			return new ByteMultipartFile(name, originalFilename, contentType, bytes);
+		}
 
-    	@Override
-    	public String getContentType() {
-    		return contentType;
-    	}
+		@Override
+		public boolean isEmpty() {
+			return bytes.length == 0;
+		}
 
-    	@Override
-    	public byte[] getBytes() throws IOException {
-    		return bytes;
-    	}
+		@Override
+		public long getSize() {
+			return bytes.length;
+		}
 
-    }
+		@Override
+		public InputStream getInputStream() {
+			return new ByteArrayInputStream(bytes);
+		}
+
+		@Override
+		public void transferTo(File destination) throws IOException {
+			OutputStream outputStream = null;
+			try {
+				outputStream = new FileOutputStream(destination);
+				outputStream.write(bytes);
+			} finally {
+				if (outputStream != null) {
+					outputStream.close();
+				}
+			}
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		@Override
+		public String getOriginalFilename() {
+			return originalFilename;
+		}
+
+		@Override
+		public String getContentType() {
+			return contentType;
+		}
+
+		@Override
+		public byte[] getBytes() throws IOException {
+			return bytes;
+		}
+
+	}
 }
