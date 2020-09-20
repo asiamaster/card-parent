@@ -230,7 +230,7 @@ public class ContractServiceImpl implements IContractService {
 
 	@Override
 	public String upload(MultipartFile multipartFile) {
-		return GenericRpcResolver.resolver(dfsRpc.upload(multipartFile, null), ServiceName.DFS);
+		return GenericRpcResolver.resolver(dfsRpc.upload(multipartFile, dfsProperties.getAccessToken()), ServiceName.DFS);
 	}
 
 	/**
@@ -432,8 +432,8 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setConsignorCustomerCode(customer.getCode());
 		fundContractDo.setConsignorCustomerId(customer.getId());
 		
-		//上传签名图片
-		uploadSignatureImage(fundContractDo, fundContractRequest);
+		//保存签名图片地址
+		fundContractDo.setSignatureImagePath(fundContractRequest.getSignatureImagePath());
 		
 		//校验持卡人的卡状态
 		validateAccountId(fundContractRequest, customer);
@@ -505,7 +505,8 @@ public class ContractServiceImpl implements IContractService {
 	/**
 	 * 上传签名图片
 	 */
-	private void uploadSignatureImage(FundContractDo fundContractDo, FundContractRequestDto fundContractRequest) {
+	@Deprecated
+	public void uploadSignatureImage(FundContractDo fundContractDo, FundContractRequestDto fundContractRequest) {
 		String fileName = DateUtil.formatDateTime("yyyyMMddHHmm") + "_" + fundContractRequest.getConsignorCustomerCode();
 		byte[] image = Base64.decode(fundContractRequest.getSignatureImagePath());
 		MultipartFile multipartFile = DFSRpc.ByteMultipartFile.getInstance(fileName, fileName, ContentType.MULTIPART.getHeader(), image);

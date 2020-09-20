@@ -31,7 +31,7 @@ public interface DFSRpc {
 	 */
 	@PostMapping(value = "/file/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	BaseOutput<String> upload(@RequestPart("file") MultipartFile multipartFile,
-			@RequestParam("accesstoken") String accesstoken);
+			@RequestParam("accessToken") String accesstoken);
 
 	/**
 	 * 文件上传需要的这个类
