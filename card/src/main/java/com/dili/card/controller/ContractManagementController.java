@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -151,7 +151,7 @@ public class ContractManagementController implements IControllerHandler {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findCustomersByKeyword.action")
 	@ResponseBody
-	public BaseOutput<List<Customer>> findCustomersByKeyword(String keyword) {
+	public BaseOutput<Customer> findCustomersByKeyword(String keyword) {
 		log.info("查询客户列表*****{}", keyword);
 		CustomerQueryInput query = new CustomerQueryInput();
 		UserTicket userTicket = getUserTicket();
@@ -178,7 +178,7 @@ public class ContractManagementController implements IControllerHandler {
 	 */
 	@PostMapping("/upload.action")
 	@ResponseBody
-	public BaseOutput<String> upload(@RequestPart("file") MultipartFile multipartFile) {
+	public BaseOutput<String> upload(@RequestParam("file") MultipartFile multipartFile) {
 		log.info("签名图片上传");
 		return BaseOutput.successData(iContractService.upload(multipartFile));
 	}

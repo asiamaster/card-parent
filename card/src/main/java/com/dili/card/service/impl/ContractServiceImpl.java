@@ -50,6 +50,7 @@ import com.dili.card.util.DateUtil;
 import com.dili.card.util.PageUtils;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
+import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
 import com.dili.ss.util.DateUtils;
@@ -80,6 +81,8 @@ public class ContractServiceImpl implements IContractService {
 	private DataDictionaryRpcResovler dataDictionaryRpcResovler;
 	@Autowired
 	private DFSRpc dfsRpc;
+	@Autowired
+	private CustomerRpc customerRpc;
 	@Autowired
 	private DFSProperties dfsProperties;
 
@@ -209,27 +212,25 @@ public class ContractServiceImpl implements IContractService {
 	}
 
 	@Override
-	public List<Customer> findCustomers(CustomerQueryInput query) {
+	public Customer findCustomers(CustomerQueryInput query) {
 		
-		List<Customer> itemList = customerRpcResolver.list(query);
+		Customer customer = GenericRpcResolver.resolver(customerRpc.getByCertificateNumber(query.getKeyword(), query.getMarketId()), ServiceName.CUSTOMER);
 		
-		if (CollectionUtils.isEmpty(itemList)) {
+		if (customer == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "无相应客户信息");
-		}
-		;
+		};
 		
-		Customer customer = itemList.get(0);
 		if (!customer.getState().equals(CustomerState.VALID.getCode())) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR,
 					"客户已" + CustomerState.getStateName(customer.getState()));
 		}
 		
-		return itemList;
+		return customer;
 	}
 
 	@Override
 	public String upload(MultipartFile multipartFile) {
-		return GenericRpcResolver.resolver(dfsRpc.upload(multipartFile, null), ServiceName.DFS);
+		return GenericRpcResolver.resolver(dfsRpc.upload(multipartFile, dfsProperties.getAccessToken()), ServiceName.DFS);
 	}
 
 	/**
@@ -431,8 +432,8 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setConsignorCustomerCode(customer.getCode());
 		fundContractDo.setConsignorCustomerId(customer.getId());
 		
-		//上传签名图片
-		uploadSignatureImage(fundContractDo, fundContractRequest);
+		//保存签名图片地址
+		fundContractDo.setSignatureImagePath(fundContractRequest.getSignatureImagePath());
 		
 		//校验持卡人的卡状态
 		validateAccountId(fundContractRequest, customer);
@@ -504,7 +505,8 @@ public class ContractServiceImpl implements IContractService {
 	/**
 	 * 上传签名图片
 	 */
-	private void uploadSignatureImage(FundContractDo fundContractDo, FundContractRequestDto fundContractRequest) {
+	@Deprecated
+	public void uploadSignatureImage(FundContractDo fundContractDo, FundContractRequestDto fundContractRequest) {
 		String fileName = DateUtil.formatDateTime("yyyyMMddHHmm") + "_" + fundContractRequest.getConsignorCustomerCode();
 		byte[] image = Base64.decode(fundContractRequest.getSignatureImagePath());
 		MultipartFile multipartFile = DFSRpc.ByteMultipartFile.getInstance(fileName, fileName, ContentType.MULTIPART.getHeader(), image);

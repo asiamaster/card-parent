@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -31,7 +32,13 @@ public interface DFSRpc {
 	 */
 	@PostMapping(value = "/file/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	BaseOutput<String> upload(@RequestPart("file") MultipartFile multipartFile,
-			@RequestParam("accesstoken") String accesstoken);
+			@RequestParam("accessToken") String accesstoken);
+	
+	/**
+	 * 文件下载
+	 */
+	@PostMapping(value = "/file/download/{fileId}")
+	BaseOutput<String> download(@PathVariable("fileId") String fileId);
 
 	/**
 	 * 文件上传需要的这个类
