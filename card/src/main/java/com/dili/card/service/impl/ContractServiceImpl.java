@@ -168,12 +168,10 @@ public class ContractServiceImpl implements IContractService {
 	public FundContractResponseDto preview(Long id) {
 		
 		FundContractResponseDto fundContract = this.detail(id);
-		fundContract.setSignatureImagePath(Base64.encode(fileUpDownloadService.download(fundContract.getSignatureImagePath())));
-		for (FundConsignorDto fundConsignorDto : fundContract.getConsignorDtos()) {
-			fundConsignorDto.setSignatureImagePath(Base64.encode(fileUpDownloadService.download(fundConsignorDto.getSignatureImagePath())));
-		}
+		buildImage(fundContract);
 		return fundContract;
 	}
+
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -195,7 +193,7 @@ public class ContractServiceImpl implements IContractService {
 	public FundContractPrintDto print(Long id) {
 		
 		FundContractResponseDto fundContractResponseDto = this.detail(id);
-		
+		buildImage(fundContractResponseDto);
 		return FundContractPrintDto.wrapperPrintDetai(fundContractResponseDto);
 	}
 
@@ -508,5 +506,15 @@ public class ContractServiceImpl implements IContractService {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "卡必须是主卡");
 		}
 		
+	}
+	
+	/**
+	 * 包装图片
+	 */
+	private void buildImage(FundContractResponseDto fundContract) {
+		fundContract.setSignatureImagePath(Base64.encode(fileUpDownloadService.download(fundContract.getSignatureImagePath())));
+		for (FundConsignorDto fundConsignorDto : fundContract.getConsignorDtos()) {
+			fundConsignorDto.setSignatureImagePath(Base64.encode(fileUpDownloadService.download(fundConsignorDto.getSignatureImagePath())));
+		}
 	}
 }
