@@ -25,7 +25,7 @@ public class ChangeCardPrintServiceImpl extends PrintServiceImpl{
     @Override
     public void createSpecial(PrintDto printDto, BusinessRecordDo recordDo, boolean reprint) {
         String attach = recordDo.getAttach();
-        if (!StringUtils.isNoneBlank(attach)) {
+        if (StringUtils.isBlank(attach)) {
             return;
         }
         JSONObject attachObj = JSON.parseObject(attach);
