@@ -5,6 +5,7 @@
 	
 	<insert id="save">
 		INSERT INTO card_fund_contract (
+			`consignor_card_no`, 
 			`contract_no`, 
 			`consignor_account_id`, 
 			`consignor_customer_code`,
@@ -22,6 +23,7 @@
 			`modify_time`
 		)
 		VALUES (
+			#{consignorCardNo},
 			#{contractNo}, 
 			#{consignorAccountId},
 			#{consignorCustomerCode},
@@ -43,6 +45,7 @@
 	<select id="getById" resultType="com.dili.card.entity.FundContractDo">
 		SELECT
 			`id`, 
+			`consignor_card_no`,
 			`contract_no`, 
 			`consignor_account_id`,
 			`consignor_customer_code`, 
@@ -94,6 +97,7 @@
 		SELECT
 			`id`, 
 			`contract_no`, 
+			`consignor_card_no`,
 			`consignor_account_id`, 
 			`consignor_customer_code`,
 			`consignor_customer_id`,

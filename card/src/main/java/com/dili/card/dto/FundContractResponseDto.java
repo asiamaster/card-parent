@@ -18,6 +18,8 @@ public class FundContractResponseDto{
 	
 	/** 委托人编号 */
 	private Long id;
+	/** 委托人卡号 */
+	private String cardNo; 
 	/** 委托人编号 */
 	private String consignorCode; 
 	/** 委托人姓名 */
@@ -268,5 +270,13 @@ public class FundContractResponseDto{
 
 	public void setSignatureImagePath(String signatureImagePath) {
 		this.signatureImagePath = signatureImagePath;
+	}
+
+	public String getCardNo() {
+		return cardNo;
+	}
+
+	public void setCardNo(String cardNo) {
+		this.cardNo = cardNo;
 	}
 }

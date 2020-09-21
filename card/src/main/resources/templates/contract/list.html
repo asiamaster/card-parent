@@ -379,7 +379,7 @@
 					<div id="consigneeAlls"></div>
 				</div>
 				<div style="height: 40px; margin-top: 15px;">
-					<div class="per_div">
+					<div class="per_div" id="signatureConsignor">
 						<div style="width: 100px;" class="per_div_child">
 							<p style="height: 30px; line-height: 30px;">委托人签名：</p>
 						</div>
@@ -729,6 +729,7 @@
 		$('#addSecondModal').modal('hide');
 		$("#consigneeAlls").empty();
 		$("#consignorCustomer").empty();
+		$("#signatureConsignor").find('img').remove();
 		$('#addFirstModal').modal('show');
 	}
 
@@ -770,6 +771,7 @@
 		$('#addSecondModal').modal('hide');
 		$("#consigneeAlls").empty();
 		$("#consignorCustomer").empty();
+		$("#signatureConsignor").find('img').remove();
 		cancleAddView();
 	}
 
