@@ -1,12 +1,12 @@
 package com.dili.card.service.recharge;
 
-import cn.hutool.core.util.NumberUtil;
 import com.dili.card.common.annotation.TradeChannelMark;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -44,7 +44,7 @@ public class EBankRechargeService extends AbstractRechargeManager {
 
     @Override
     public boolean canAddEmptyFundItem(FundRequestDto fundRequestDto) {
-        return fundRequestDto.getServiceCost() == null;
+        return NumberUtils.toLong(fundRequestDto.getServiceCost() + "") <= 0L;
     }
 
     @Override

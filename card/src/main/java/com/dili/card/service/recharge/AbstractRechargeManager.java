@@ -17,6 +17,7 @@ import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,8 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
      */
     public final String doRecharge(FundRequestDto requestDto) {
         this.beforeRecharge(requestDto);
+        //手续费可能null
+        long serviceCost = NumberUtils.toLong(requestDto.getServiceCost() + "");
 
         UserAccountCardResponseDto userAccount = accountQueryService.getByAccountId(requestDto);
         Long rechargeAmount = requestDto.getAmount();
@@ -51,7 +54,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
             record.setAmount(rechargeAmount);
             record.setTradeType(TradeType.DEPOSIT.getCode());
             record.setTradeChannel(requestDto.getTradeChannel());
-            record.setServiceCost(requestDto.getServiceCost());
+            record.setServiceCost(serviceCost);
             record.setBankCardType(this.getBankType(requestDto));
             record.setPosType(this.getPosType(requestDto));
             if (requestDto.getExtra() != null) {
@@ -77,15 +80,15 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
 
         long l1 = System.currentTimeMillis();
         FundItem serviceCostItem = this.getServiceCostItem(requestDto);
-
+        //支付那边只有有手续费>0才可以正常支付
         TradeRequestDto dto = TradeRequestDto.createTrade(userAccount, tradeNo, requestDto.getTradeChannel(), requestDto.getTradePwd());
-        if (serviceCostItem != null && requestDto.getServiceCost() != null) {
+        if (serviceCostItem != null && serviceCost > 0L) {
             dto.addServiceFeeItem(requestDto.getServiceCost(), serviceCostItem);
         }
         TradeResponseDto tradeResponseDto = payService.commitTrade(dto);
         LOGGER.info("提交充值交易耗费时间:{}ms", System.currentTimeMillis() - l1);
 
-        //没有手续费的时候需要添加一个空项
+        //没有手续费的时候可能需要添加一个空项
         if (serviceCostItem != null && this.canAddEmptyFundItem(requestDto)) {
             tradeResponseDto.addEmptyFeeItem(serviceCostItem);
         }

@@ -85,6 +85,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         try {
             fund = payRpcResolver.findBalanceByFundAccountId(primary.getFundAccountId());
         } catch (Exception e) {
+            //支付异常状态不管，有可能是（资金账户被注销）
             fund = new BalanceResponseDto();
             fund.setAvailableAmount(0L);
             fund.setBalance(0L);
