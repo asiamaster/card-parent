@@ -418,7 +418,7 @@
 <script>
     $(function () {
     	
-    	$(".consignee").each(function () {
+    	$(".consignee row row-interval").each(function () {
     		$(this).find("#consigneeIdMobile").on('input  propertychange', validateNumber);
 		});
     	$("#days").on('input  propertychange', validateNotZeroStartNumber);
@@ -535,13 +535,13 @@
 
     function addConsignee() {
     	var next = true;
-		var list=$(".consignee");
+		var list=$(".consignee row row-interval");
 		if(list.length == 3){
 			$.modal.alertWarning("最多三位被委托人")
 			return false;
 		}
 		var all = list.length;
-		$(".consignee").each(function () {
+		$(".consignee row row-interval").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				$.modal.alertWarning("请读取身份证后添加下一位")
 				next = false;
@@ -551,7 +551,7 @@
 			return !next;
 		}
 		if(all == 1){
-			$(".consignee").each(function () {
+			$(".consignee row row-interval").each(function () {
 				$(this).find("i").each(function(i){
 					if(i ==1){
 						$(this).parent().after(blueMinus);
@@ -561,7 +561,7 @@
 			});
 		}
 		if(all == 2){
-			$(".consignee").each(function () {
+			$(".consignee row row-interval").each(function () {
 				$(this).find("i").each(function(i){
 					if(i ==2){
 						$(this).parent().remove();
@@ -576,10 +576,10 @@
 	}
 
 	function minusConsignee(e) {
-		$(e).closest(".consignee").remove();
-		var list=$(".consignee");
+		$(e).closest(".consignee row row-interval").remove();
+		var list=$(".consignee row row-interval");
 		var all = list.length;
-		$(".consignee").each(function (i) {
+		$(".consignee row row-interval").each(function (i) {
 			if(all == 1){//只有一行
 				$(this).find("i").each(function(index){
 					if(index ==1){
@@ -666,7 +666,7 @@
 		let items = [];
 		let consigneeNames='';
 		var validate = true;
-		$(".consignee").each(function () {
+		$(".consignee row row-interval").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				validate = false;
 			}
@@ -675,7 +675,7 @@
 			$.modal.alertError("请添加被委托人身份信息");
 			return validate;
 		}
-		$(".consignee").each(function () {
+		$(".consignee row row-interval").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdMobile").val())){
 				validate = false;
 			}
@@ -684,7 +684,7 @@
 			$.modal.alertError("请添加被委托人手机号");
 			return validate;
 		}
-		$(".consignee").each(function () {
+		$(".consignee row row-interval").each(function () {
 			let item = {};
 			item.consigneeName=$.trim($(this).find("#consigneeName").val());
 			consigneeNames = consigneeNames.concat("、",item.consigneeName);
