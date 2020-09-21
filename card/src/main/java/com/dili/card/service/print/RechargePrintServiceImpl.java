@@ -37,12 +37,21 @@ public class RechargePrintServiceImpl extends PrintServiceImpl {
 
     @Override
     public void createSpecial(PrintDto printDto, BusinessRecordDo recordDo, boolean reprint) {
-        Long totalAmount = recordDo.getServiceCost() != null ? recordDo.getAmount() + recordDo.getServiceCost() : recordDo.getAmount();
+        long totalAmount = 0;
+        if (recordDo.getServiceCost() != null) {
+            //网银相当于退款，所以是加钱
+            totalAmount = (TradeChannel.E_BANK.getCode() == recordDo.getTradeChannel()) ?
+                    recordDo.getAmount() + recordDo.getServiceCost() :
+                    recordDo.getAmount() - recordDo.getServiceCost();
+        } else {
+            totalAmount = recordDo.getAmount();
+        }
+
         printDto.setTotalAmount(CurrencyUtils.toNoSymbolCurrency(totalAmount));
         printDto.setTotalAmountWords(Convert.digitToChinese(Double.valueOf(printDto.getTotalAmount())));
 
         String json = recordDo.getAttach();
-        if (StringUtils.isBlank(json)){
+        if (StringUtils.isBlank(json)) {
             return;
         }
         JSONObject extra = JSON.parseObject(json);
