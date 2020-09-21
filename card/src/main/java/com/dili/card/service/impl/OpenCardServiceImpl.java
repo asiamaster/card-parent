@@ -166,7 +166,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 			tradeId = rechargeCostFee(accountId, openCardResponse.getFundAccountId(), openCardInfo);
 		}
 
-		// 保存卡务柜台开卡操作记录 使用seate后状态默认为成功
+		// 保存卡务柜台开卡操作记录 使用seate后状态默认为成功,开卡期初期末默认为0
 		BusinessRecordDo busiRecord = buildBusinessRecordDo(openCardInfo, accountId, cycleDo.getCycleNo(), tradeId);
 		serialService.saveBusinessRecord(busiRecord);
 		openCardResponse.setSerialNo(busiRecord.getSerialNo());
@@ -214,7 +214,9 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		serial.setOperatorName(openCardInfo.getCreator());
 		serial.setOperatorNo(openCardInfo.getCreatorCode());
 		serial.setOperateTime(LocalDateTime.now());
+		serial.setStartBalance(0L);  // 开卡期初期末默认为0
 		serial.setAmount(openCardInfo.getCostFee());
+		serial.setEndBalance(0L);   
 		serial.setState(OperateState.SUCCESS.getCode());
 		serial.setNotes("开卡，工本费转为市场收入");
 		serial.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
