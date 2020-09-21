@@ -622,9 +622,9 @@
 	let data = {};
 	function nextStep(){
 		data = {};
-		data.notes=parseInt($('#notes').val());
+		data.notes=$.trim($('#notes').val());
 		data.customerId=parseInt($('#customerId').val());
-		data.consignorCustomerName=$('#consignorCustomerName').val();
+		data.consignorCustomerName=$.trim($('#consignorCustomerName').val());
 		if($.common.isEmpty($('#consignorCustomerIDCode').val())){
 			$.modal.alertError("请添加委托人身份证号");
 			return false;
@@ -686,7 +686,7 @@
 		}
 		$(".consignee").each(function () {
 			let item = {};
-			item.consigneeName=$(this).find("#consigneeName").val();
+			item.consigneeName=$.trim($(this).find("#consigneeName").val());
 			consigneeNames = consigneeNames.concat("、",item.consigneeName);
 			item.consigneeIdCode=$(this).find("#consigneeIdCode").val();
 			item.consigneeIdMobile=$(this).find("#consigneeIdMobile").val();
