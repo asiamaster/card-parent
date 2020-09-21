@@ -75,7 +75,7 @@ public class ContractManagementController implements IControllerHandler {
 		if (id == null || id < 0L) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "请求参数错误");
 		}
-		modelMap.put("detail", iContractService.detail(id));
+		modelMap.put("detail", iContractService.preview(id));
 		return "contract/preview";
 	}
 

@@ -75,4 +75,9 @@ public interface IContractService {
 	 */
 	String upload(MultipartFile multipartFile);
 
+	/**
+	 * 合同预览
+	 */
+	FundContractResponseDto preview(Long id);
+
 }

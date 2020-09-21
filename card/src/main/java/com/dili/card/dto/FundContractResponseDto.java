@@ -28,6 +28,8 @@ public class FundContractResponseDto{
 	private String consignorMobile;
 	/** 委托人身份证 */
 	private String consignorIdCode;
+	/** 委托人签名图片地址 */
+	private String signatureImagePath;
 	/** 合同编号 */
 	private String contractNo; 
 	/** 合同开始日期 */
@@ -258,5 +260,13 @@ public class FundContractResponseDto{
 
 	public void setConsignorIdCode(String consignorIdCode) {
 		this.consignorIdCode = consignorIdCode;
+	}
+
+	public String getSignatureImagePath() {
+		return signatureImagePath;
+	}
+
+	public void setSignatureImagePath(String signatureImagePath) {
+		this.signatureImagePath = signatureImagePath;
 	}
 }
