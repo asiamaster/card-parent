@@ -28,17 +28,26 @@ p {
 }
 
 .triangle {
-	border: 1px solid #333;
-	width: 140px;
-	height: 30px;
-	background: linear-gradient(to top right, rgba(255, 255, 255, 0.1) 0%,
-		rgba(255, 255, 255, 0.1) calc(50% - 1px), rgba(0, 0, 0, 0.8) 50%,
-		rgba(255, 255, 255, 0.1) calc(50% + 1px), rgba(255, 255, 255, 0.1)
-		100%), linear-gradient(to bottom right, rgba(255, 255, 255, 0.1) 0%,
-		rgba(255, 255, 255, 0.1) calc(50% - 1px), rgba(0, 0, 0, 0.8) 50%,
-		rgba(255, 255, 255, 0.1) calc(50% + 1px), rgba(255, 255, 255, 0.1)
-		100%);
-}
+           border: 1px solid #333;
+           width: 140px;
+           height: 30px;
+           background: linear-gradient(
+              to top right,
+              rgba(255,255,255, 0.1) 0%,
+              
+              
+              
+              rgba(255,255,255, 0.1) 100%
+           ),
+          linear-gradient(
+              to bottom right,
+              rgba(255,255,255, 0.1) 0%,
+/*               rgba(255,255,255, 0.1) calc(50% - 1px),
+              rgba(0, 0, 0, 0.8) 50%,
+              rgba(255,255,255, 0.1) calc(50% + 1px), */
+              rgba(255,255,255, 0.1) 100%
+           );
+		}
 </style>
 
 <div  style="background-color: #FFFACD;">
@@ -85,9 +94,7 @@ p {
 				<p style="height: 30px; line-height: 30px;">委托人签名：</p>
 			</div>
 			<div class="triangle per_div_child div_container">
-				<div class="div_container_content">
-					<span style="background-color: #FFFFFF;">${detail.consignorName!}</span>
-				</div>
+				<input type="hidden" id="signatureImagePathConsignor" name="signatureImagePathConsignor" value="${detail.signatureImagePath!}">
 			</div>
 		</div>
 	</div>
@@ -98,10 +105,8 @@ p {
 			</div>
 			<% for(item in detail.consignorDtos) { %>
 				<div class="triangle per_div_child div_container">
-				<div class="div_container_content">
-					<span style="background-color: #FFFFFF;">${item.consigneeName!}</span>
+					<input type="hidden" name="signatureImagePathConsignee" value="${item.signatureImagePath!}">
 				</div>
-			</div>
 			<% } %>
 		</div>
 	</div>
@@ -110,6 +115,7 @@ p {
 	</div>
 </div>
 </#bs4Body>
+<#common_commonJs/>
 <script>
 $(function(){
 	var startTime01 = $("#startTime01").val();
@@ -121,5 +127,47 @@ $(function(){
 	$('#endTimeMonth').html(endTime01.substring(5,7));
 	$('#endTimeDay').html(endTime01.substring(8,10));
 	$('#currentdate').html(getNowFormatDate(' 年 ', ' 月 ',' 日 '));
+	showConsignorImage();
+	showConsigneeImage();
 });
+
+function showConsigneeImage(){
+	var nodes = $("input[name='signatureImagePathConsignee']");
+	nodes.each(function () {
+		var imgFile = base64ToImageFile($(this).val());
+		//展示图片
+		showImage($(this), imgFile);
+	});
+}
+
+function showConsignorImage(){
+	var imageStr = $("#signatureImagePathConsignor").val();
+	var imgFile = base64ToImageFile(imageStr);
+	//展示图片
+	showImage($("#signatureImagePathConsignor"), imgFile);
+}
+
+/**展示图片 */
+function showImage(obj, file){
+	const fileReader = new FileReader();  // 创建一个 fileReader
+	fileReader.readAsDataURL(file);
+	fileReader.onload = function(e){
+		obj.parent().find('img').remove();
+		obj.parent().append('<img style="width:138px;height:28px;" src="'+this.result+'" alt=""/>');
+    }
+}
+
+/** 图片转化 */
+function base64ToImageFile(imageStr){
+	let bstr = atob(imageStr);
+	let n = bstr.length;
+	let u8arr = new Uint8Array(n);
+	while (n--) {
+		u8arr[n] = bstr.charCodeAt(n);
+	}
+	var filename = randomString(12) + '.png';
+	return new File([u8arr], filename, {
+	    type: 'image/png'
+	})
+}
 </script>
