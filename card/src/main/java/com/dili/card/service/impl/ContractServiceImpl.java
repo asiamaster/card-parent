@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
-import com.dili.card.config.DFSProperties;
 import com.dili.card.dao.IFundConsignorDao;
 import com.dili.card.dao.IFundContractDao;
 import com.dili.card.dto.FundConsignorDto;
@@ -33,7 +32,6 @@ import com.dili.card.entity.FundConsignorDo;
 import com.dili.card.entity.FundContractDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.exception.ErrorCode;
-import com.dili.card.rpc.DFSRpc;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.DataDictionaryRpcResovler;
@@ -41,12 +39,12 @@ import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IContractService;
+import com.dili.card.service.IFileUpDownloadService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.ContractState;
 import com.dili.card.type.CustomerState;
 import com.dili.card.type.DisableState;
-import com.dili.card.util.DateUtil;
 import com.dili.card.util.PageUtils;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
@@ -60,7 +58,6 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
 import cn.hutool.core.codec.Base64;
-import feign.form.ContentType;
 
 @Service
 public class ContractServiceImpl implements IContractService {
@@ -80,11 +77,9 @@ public class ContractServiceImpl implements IContractService {
 	@Autowired
 	private DataDictionaryRpcResovler dataDictionaryRpcResovler;
 	@Autowired
-	private DFSRpc dfsRpc;
-	@Autowired
 	private CustomerRpc customerRpc;
 	@Autowired
-	private DFSProperties dfsProperties;
+	private IFileUpDownloadService fileUpDownloadService;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -168,6 +163,17 @@ public class ContractServiceImpl implements IContractService {
 		
 		return this.buildContractResponse(fundContract, userAccountCard, customer);
 	}
+	
+	@Override
+	public FundContractResponseDto preview(Long id) {
+		
+		FundContractResponseDto fundContract = this.detail(id);
+		fundContract.setSignatureImagePath(Base64.encode(fileUpDownloadService.download(fundContract.getSignatureImagePath())));
+		for (FundConsignorDto fundConsignorDto : fundContract.getConsignorDtos()) {
+			fundConsignorDto.setSignatureImagePath(Base64.encode(fileUpDownloadService.download(fundConsignorDto.getSignatureImagePath())));
+		}
+		return fundContract;
+	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -230,7 +236,7 @@ public class ContractServiceImpl implements IContractService {
 
 	@Override
 	public String upload(MultipartFile multipartFile) {
-		return GenericRpcResolver.resolver(dfsRpc.upload(multipartFile, dfsProperties.getAccessToken()), ServiceName.DFS);
+		return fileUpDownloadService.upload(multipartFile);
 	}
 
 	/**
@@ -333,7 +339,8 @@ public class ContractServiceImpl implements IContractService {
 		contractResponseDto.setTerminateNotes(fundContractDo.getTerminateNotes());
 		contractResponseDto.setTerminateTime(fundContractDo.getTerminateTime());
 		contractResponseDto.setState(fundContractDo.getState());
-
+		contractResponseDto.setSignatureImagePath(fundContractDo.getSignatureImagePath());
+		
 		contractResponseDto.setReadyExpire(false);
 		long expireDay = 0L;
 		String readyExpireDay = dataDictionaryRpcResovler.findByDataDictionaryValue(Constant.CONTRACT_EXPIRE_DAYS);
@@ -412,6 +419,7 @@ public class ContractServiceImpl implements IContractService {
 		fundConsignorDto.setContractNo(fundConsignorDo.getContractNo());
 		fundConsignorDto.setId(fundConsignorDo.getId());
 		fundConsignorDto.setReadyExpire(readyExpire);
+		fundConsignorDto.setSignatureImagePath(fundConsignorDo.getSignatureImagePath());
 		return fundConsignorDto;
 	}
 
@@ -501,18 +509,4 @@ public class ContractServiceImpl implements IContractService {
 		}
 		
 	}
-
-	/**
-	 * 上传签名图片
-	 */
-	@Deprecated
-	public void uploadSignatureImage(FundContractDo fundContractDo, FundContractRequestDto fundContractRequest) {
-		String fileName = DateUtil.formatDateTime("yyyyMMddHHmm") + "_" + fundContractRequest.getConsignorCustomerCode();
-		byte[] image = Base64.decode(fundContractRequest.getSignatureImagePath());
-		MultipartFile multipartFile = DFSRpc.ByteMultipartFile.getInstance(fileName, fileName, ContentType.MULTIPART.getHeader(), image);
-		String fileId = GenericRpcResolver.resolver(
-                dfsRpc.upload(multipartFile, dfsProperties.getAccessToken()), "dili-dfs");
-		fundContractDo.setSignatureImagePath(fileId);
-	}
-
 }
