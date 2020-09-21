@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.dili.ss.domain.BaseOutput;
 
+import feign.Response;
 import feign.codec.Encoder;
 import feign.form.spring.SpringFormEncoder;
 
@@ -37,8 +39,8 @@ public interface DFSRpc {
 	/**
 	 * 文件下载
 	 */
-	@PostMapping(value = "/file/download/{fileId}")
-	BaseOutput<String> download(@PathVariable("fileId") String fileId);
+	@GetMapping(value = "/file/download/{fileId}")
+	Response download(@PathVariable("fileId") String fileId);
 
 	/**
 	 * 文件上传需要的这个类

@@ -297,19 +297,19 @@
 									<input placeholder="姓名"
 										disabled="disabled" name="consigneeName" type="text"
 										class="form-control td_input" id="consigneeName" maxlength="20"
-										value="1" />
+										value="" />
 								</div>
 								<div class="info-cell  col-2">
 									<input placeholder="身份证号" disabled="disabled"
 									name="consigneeIdCode" type="text"
 									class="form-control td_input" id="consigneeIdCode"
-									maxlength="18" value="1" />
+									maxlength="18" value="" />
 								</div >
 								<div class="info-cell  col-2">
 									<input placeholder="手机号"
 									name="consigneeIdMobile" type="text"
 									class="form-control td_input" id="consigneeIdMobile"
-									maxlength="12" value="1" />
+									maxlength="12" value="" />
 								</div>
 								<div class="info-cell  col-3">
 									<button type="button"
@@ -509,9 +509,9 @@
 	 * 添加被委托人信息
 	 */
 	 let consignee='<div class="consignee row row-interval" style="margin-bottom: 20px;"><div class="info-column  col-2">被委托人</div><div class="info-cell col-2">' +
- 	'<input placeholder="姓名" disabled="disabled" value="1" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="20"/></div>' +
- 	'<div class="info-cell col-2"><input placeholder="身份证号" disabled="disabled" value="1" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="18"/></div>' +
- 	'<div class="info-cell col-2"><input placeholder="手机号" name="consigneeIdMobile" value="1" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="11"/></div>' +
+ 	'<input placeholder="姓名" disabled="disabled" value="" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="20"/></div>' +
+ 	'<div class="info-cell col-2"><input placeholder="身份证号" disabled="disabled" value="" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="18"/></div>' +
+ 	'<div class="info-cell col-2"><input placeholder="手机号" name="consigneeIdMobile" value="" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="11"/></div>' +
  	'<div class="info-cell  col-3"><button type="button" class="btn btn-primary td_button readID" onclick="getConsigneeIdCard(this)"><i class="fa fa-search"></i>读取身份证</button>' +
  	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus blue" style="font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' +
  	'<label onclick="addConsignee()" class = "plus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-plus red" style="font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label></div</div>';
@@ -520,9 +520,9 @@
  	let blueMinus = '<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus blue" style="font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label>' ;
  	
  	let consignee1='<div class="consignee row row-interval" style="margin-bottom: 20px;"><div class="info-column  col-2">被委托人</div><div class="info-cell col-2">' +
- 	'<input placeholder="姓名" disabled="disabled" value="1" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="20"/></div>' +
- 	'<div class="info-cell col-2"><input placeholder="身份证号" disabled="disabled" value="1" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="18"/></div>' +
- 	'<div class="info-cell col-2"><input placeholder="手机号" name="consigneeIdMobile" value="1" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="11"/></div>' +
+ 	'<input placeholder="姓名" disabled="disabled" value="" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="20"/></div>' +
+ 	'<div class="info-cell col-2"><input placeholder="身份证号" disabled="disabled" value="" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="18"/></div>' +
+ 	'<div class="info-cell col-2"><input placeholder="手机号" name="consigneeIdMobile" value="" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="11"/></div>' +
  	'<div class="info-cell  col-3"><button type="button" class="btn btn-primary td_button readID" onclick="getConsigneeIdCard(this)"><i class="fa fa-search"></i>读取身份证</button>' +
  	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus blue" style="font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label></div</div>';
  	
