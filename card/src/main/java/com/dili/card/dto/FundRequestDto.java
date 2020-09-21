@@ -29,7 +29,7 @@ public class FundRequestDto extends CardRequestDto {
     @NotBlank(message = "交易密码不能为空", groups = FundValidator.Trade.class)
     private String tradePwd;
     /** 手续费*/
-    @Min(value = 1, message = "手续费最少0.01元", groups = FundValidator.Trade.class)
+    //@Min(value = 1, message = "手续费最少0.01元", groups = FundValidator.Trade.class)
     private Long serviceCost;
     /**备注*/
     private String mark;
