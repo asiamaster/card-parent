@@ -13,6 +13,9 @@ import com.dili.card.exception.CardAppBizException;
 import com.dili.card.type.CardType;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.PrintTemplate;
+import com.dili.card.util.CurrencyUtils;
+
+import cn.hutool.core.convert.Convert;
 
 /**
  * @description： 主卡打印
@@ -50,6 +53,10 @@ public class OpenCardPrintServiceImpl extends PrintServiceImpl {
 
 	@Override
 	public void createSpecial(PrintDto printDto, BusinessRecordDo recordDo, boolean reprint) {
-		
+		if(recordDo.getCardCost() == null) {
+			recordDo.setCardCost(0L);	
+		}
+		printDto.setTotalAmount(CurrencyUtils.toNoSymbolCurrency(recordDo.getCardCost()));
+		printDto.setTotalAmountWords(Convert.digitToChinese(Double.valueOf(recordDo.getCardCost())));
 	}
 }
