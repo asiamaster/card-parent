@@ -418,7 +418,7 @@
 <script>
     $(function () {
     	
-    	$(".consignee row row-interval").each(function () {
+    	$(".consignee.row.row-interval").each(function () {
     		$(this).find("#consigneeIdMobile").on('input  propertychange', validateNumber);
 		});
     	$("#days").on('input  propertychange', validateNotZeroStartNumber);
@@ -535,13 +535,13 @@
 
     function addConsignee() {
     	var next = true;
-		var list=$(".consignee row row-interval");
+		var list=$(".consignee.row.row-interval");
 		if(list.length == 3){
 			$.modal.alertWarning("最多三位被委托人")
 			return false;
 		}
 		var all = list.length;
-		$(".consignee row row-interval").each(function () {
+		$(".consignee.row.row-interval").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				$.modal.alertWarning("请读取身份证后添加下一位")
 				next = false;
@@ -551,7 +551,7 @@
 			return !next;
 		}
 		if(all == 1){
-			$(".consignee row row-interval").each(function () {
+			$(".consignee.row.row-interval").each(function () {
 				$(this).find("i").each(function(i){
 					if(i ==1){
 						$(this).parent().after(blueMinus);
@@ -561,7 +561,7 @@
 			});
 		}
 		if(all == 2){
-			$(".consignee row row-interval").each(function () {
+			$(".consignee.row.row-interval").each(function () {
 				$(this).find("i").each(function(i){
 					if(i ==2){
 						$(this).parent().remove();
@@ -576,10 +576,10 @@
 	}
 
 	function minusConsignee(e) {
-		$(e).closest(".consignee row row-interval").remove();
-		var list=$(".consignee row row-interval");
+		$(e).closest(".consignee.row.row-interval").remove();
+		var list=$(".consignee.row.row-interval");
 		var all = list.length;
-		$(".consignee row row-interval").each(function (i) {
+		$(".consignee.row.row-interval").each(function (i) {
 			if(all == 1){//只有一行
 				$(this).find("i").each(function(index){
 					if(index ==1){
@@ -666,7 +666,7 @@
 		let items = [];
 		let consigneeNames='';
 		var validate = true;
-		$(".consignee row row-interval").each(function () {
+		$(".consignee.row.row-interval").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				validate = false;
 			}
@@ -675,7 +675,7 @@
 			$.modal.alertError("请添加被委托人身份信息");
 			return validate;
 		}
-		$(".consignee row row-interval").each(function () {
+		$(".consignee.row.row-interval").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdMobile").val())){
 				validate = false;
 			}
@@ -684,7 +684,7 @@
 			$.modal.alertError("请添加被委托人手机号");
 			return validate;
 		}
-		$(".consignee row row-interval").each(function () {
+		$(".consignee.row.row-interval").each(function () {
 			let item = {};
 			item.consigneeName=$.trim($(this).find("#consigneeName").val());
 			consigneeNames = consigneeNames.concat("、",item.consigneeName);
@@ -744,7 +744,7 @@
 		$('#endTime').val('');
 		$('#notes').val('');
 		$("#cardCustomerId").val("");
-		$(".consignee row row-interval").each(function (i) {
+		$(".consignee.row.row-interval").each(function (i) {
 			if(i == 0){
 				$(this).find("i").each(function(i){
 					if(i ==1){
@@ -880,7 +880,7 @@
 			$.modal.alertError(idCard.ErrMsg);
 			return false;
 		}
-        $(".consignee row row-interval").each(function () {
+        $(".consignee.row.row-interval").each(function () {
 			if(!$.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				consigneeIdCodeList.push($(this).find("#consigneeIdCode").val());
 			}
@@ -894,15 +894,15 @@
 
 	function getConsigneeIdCard(obj){
 		var consigneeIdCodeList = [];
-		$(obj).parent().find("#consigneeIdCode").val("");
-		$(obj).parent().find("#consigneeName").val("");
-		$(obj).parent().find("#consigneeIdMobile").val("");
+		$(obj).parent().parent().find("#consigneeIdCode").val("");
+		$(obj).parent().parent().find("#consigneeName").val("");
+		$(obj).parent().parent().find("#consigneeIdMobile").val("");
 		var idCard = readerIDCard();
 		if (idCard.IsErr){
 			$.modal.alertError(idCard.ErrMsg);
 			return false;
 		}
-		 $(".consignee row row-interval").each(function () {
+		 $(".consignee.row.row-interval").each(function () {
 				if(!$.common.isEmpty($(this).find("#consigneeIdCode").val())){
 					consigneeIdCodeList.push($(this).find("#consigneeIdCode").val());
 				}
@@ -915,8 +915,8 @@
         	$.modal.alertError("被委托人证件号不能相同");
         	return false;
         }
-		$(obj).parent().find("#consigneeIdCode").val(idCard.IDCardNo);
-		$(obj).parent().find("#consigneeName").val(idCard.Name);
+		$(obj).parent().parent().find("#consigneeIdCode").val(idCard.IDCardNo);
+		$(obj).parent().parent().find("#consigneeName").val(idCard.Name);
 		consigneeIdCodeList.push(idCard.IDCardNo);
 		$.modal.alertSuccess("读卡成功");
 	}
