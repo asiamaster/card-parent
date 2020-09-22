@@ -53,10 +53,11 @@ public class OpenCardPrintServiceImpl extends PrintServiceImpl {
 
 	@Override
 	public void createSpecial(PrintDto printDto, BusinessRecordDo recordDo, boolean reprint) {
-		if(recordDo.getCardCost() == null) {
-			recordDo.setCardCost(0L);	
+		// 开卡的操作金额就是工本费,打印时取其中一个就可以了
+		if(recordDo.getAmount() == null) {
+			recordDo.setAmount(0L);	
 		}
-		printDto.setTotalAmount(CurrencyUtils.toNoSymbolCurrency(recordDo.getCardCost()));
-		printDto.setTotalAmountWords(Convert.digitToChinese(Double.valueOf(recordDo.getCardCost())));
+		printDto.setTotalAmount(CurrencyUtils.toNoSymbolCurrency(recordDo.getAmount()));
+		printDto.setTotalAmountWords(Convert.digitToChinese(Double.valueOf(recordDo.getAmount())));
 	}
 }
