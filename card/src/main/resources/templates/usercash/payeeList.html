@@ -14,7 +14,7 @@
             <div class="form-group col">
                 <label for="state">当前状态</label>
                 <select name="state" id="state"  class="form-control"></select>
-                <#bcomboProvider _id="state" _provider="cashStateProvider" _queryParams='{emptyText:"全部"}'/>
+                <#bcomboProvider _id="state" _provider="cashStateProvider" _queryParams='{emptyText:"--全部--"}'/>
             </div>
             <#component_dateControls
             _labelText="创建时间"
