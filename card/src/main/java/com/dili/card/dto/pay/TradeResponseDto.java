@@ -13,120 +13,133 @@ import java.util.List;
 
 /**
  * 提现返回值
+ * 
  * @author xuliang
  */
 public class TradeResponseDto {
 
-    /** 账户ID*/
-    private Long accountId;
-    /** 余额*/
-    private Long balance;
-    /** 发生金额*/
-    private Long amount;
-    /** 期初冻结余额*/
-    private Long frozenBalance;
-    /** 冻结/解冻金额*/
-    private Long frozenAmount;
-    /** 操作时间*/
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime when;
-    /** 流水明细*/
-    private List<FeeItemDto> streams;
+	/** 账户ID */
+	private Long accountId;
+	/** 余额 */
+	private Long balance;
+	/** 发生金额 */
+	private Long amount;
+	/** 期初冻结余额 */
+	private Long frozenBalance;
+	/** 冻结/解冻金额 */
+	private Long frozenAmount;
+	/** 操作时间 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime when;
+	/** 流水明细 */
+	private List<FeeItemDto> streams;
+	/** 交易号 */
+	private String tradeId;
 
-    /**
-     *  添加一个空资金项（有些地方没有手续费的时候需要加）
-     * @author miaoguoxin
-     * @date 2020/7/24
-     */
-    public void addEmptyFeeItem(FundItem fundItem) {
-        FeeItemDto feeItemDto = new FeeItemDto();
-        feeItemDto.setType(fundItem.getCode());
-        feeItemDto.setAmount(null);
-        feeItemDto.setBalance(null);
-        if (CollectionUtils.isEmpty(this.streams)) {
-            this.streams = new ArrayList<>();
-        }
-        this.streams.add(feeItemDto);
-    }
+	/**
+	 * 添加一个空资金项（有些地方没有手续费的时候需要加）
+	 * 
+	 * @author miaoguoxin
+	 * @date 2020/7/24
+	 */
+	public void addEmptyFeeItem(FundItem fundItem) {
+		FeeItemDto feeItemDto = new FeeItemDto();
+		feeItemDto.setType(fundItem.getCode());
+		feeItemDto.setAmount(null);
+		feeItemDto.setBalance(null);
+		if (CollectionUtils.isEmpty(this.streams)) {
+			this.streams = new ArrayList<>();
+		}
+		this.streams.add(feeItemDto);
+	}
 
-    /**
-     * 添加一个本金项（有些接口没有返回资金项）
-     * @author miaoguoxin
-     * @date 2020/7/27
-     */
-    public void addVirtualPrincipalFundItem(Long amount) {
-        if (CollectionUtils.isEmpty(this.streams)) {
-            this.streams = new ArrayList<>();
-        }
-        boolean exist = this.streams.stream().anyMatch(feeItemDto -> feeItemDto.getType() == FeeType.ACCOUNT.getCode());
-        if (!exist){
-            FeeItemDto feeItemDto = new FeeItemDto();
-            feeItemDto.setType(FeeType.ACCOUNT.getCode());
-            feeItemDto.setBalance(this.balance);
-            feeItemDto.setAmount(amount);
-            this.streams.add(feeItemDto);
-        }
-    }
+	/**
+	 * 添加一个本金项（有些接口没有返回资金项）
+	 * 
+	 * @author miaoguoxin
+	 * @date 2020/7/27
+	 */
+	public void addVirtualPrincipalFundItem(Long amount) {
+		if (CollectionUtils.isEmpty(this.streams)) {
+			this.streams = new ArrayList<>();
+		}
+		boolean exist = this.streams.stream().anyMatch(feeItemDto -> feeItemDto.getType() == FeeType.ACCOUNT.getCode());
+		if (!exist) {
+			FeeItemDto feeItemDto = new FeeItemDto();
+			feeItemDto.setType(FeeType.ACCOUNT.getCode());
+			feeItemDto.setBalance(this.balance);
+			feeItemDto.setAmount(amount);
+			this.streams.add(feeItemDto);
+		}
+	}
 
-    public Long getAccountId() {
-        return accountId;
-    }
+	public Long getAccountId() {
+		return accountId;
+	}
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
-    }
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
+	}
 
-    public Long getBalance() {
-        return balance;
-    }
+	public Long getBalance() {
+		return balance;
+	}
 
-    public void setBalance(Long balance) {
-        this.balance = balance;
-    }
+	public void setBalance(Long balance) {
+		this.balance = balance;
+	}
 
-    public Long getAmount() {
-        return amount;
-    }
+	public Long getAmount() {
+		return amount;
+	}
 
-    public void setAmount(Long amount) {
-        this.amount = amount;
-    }
+	public void setAmount(Long amount) {
+		this.amount = amount;
+	}
 
-    public Long getFrozenBalance() {
-        return frozenBalance;
-    }
+	public Long getFrozenBalance() {
+		return frozenBalance;
+	}
 
-    public void setFrozenBalance(Long frozenBalance) {
-        this.frozenBalance = frozenBalance;
-    }
+	public void setFrozenBalance(Long frozenBalance) {
+		this.frozenBalance = frozenBalance;
+	}
 
-    public Long getFrozenAmount() {
-        return frozenAmount;
-    }
+	public Long getFrozenAmount() {
+		return frozenAmount;
+	}
 
-    public void setFrozenAmount(Long frozenAmount) {
-        this.frozenAmount = frozenAmount;
-    }
+	public void setFrozenAmount(Long frozenAmount) {
+		this.frozenAmount = frozenAmount;
+	}
 
-    public LocalDateTime getWhen() {
-        return when;
-    }
+	public LocalDateTime getWhen() {
+		return when;
+	}
 
-    public void setWhen(LocalDateTime when) {
-        this.when = when;
-    }
+	public void setWhen(LocalDateTime when) {
+		this.when = when;
+	}
 
-    public List<FeeItemDto> getStreams() {
-        return streams;
-    }
+	public List<FeeItemDto> getStreams() {
+		return streams;
+	}
 
-    public void setStreams(List<FeeItemDto> streams) {
-        this.streams = streams;
-    }
+	public void setStreams(List<FeeItemDto> streams) {
+		this.streams = streams;
+	}
 
-    public Long countTotalFrozenAmount() {
-        return this.frozenBalance != null && this.frozenAmount != null ? this.frozenBalance + this.frozenAmount : null;
-    }
+	public String getTradeId() {
+		return tradeId;
+	}
+
+	public void setTradeId(String tradeId) {
+		this.tradeId = tradeId;
+	}
+
+	public Long countTotalFrozenAmount() {
+		return this.frozenBalance != null && this.frozenAmount != null ? this.frozenBalance + this.frozenAmount : null;
+	}
 }

@@ -328,30 +328,18 @@ tab = {
             // 搜索-默认第一个form
             search: function (formId, tableId, data) {
                 table.set(tableId);
-                let currentId = $.common.isEmpty(formId) ? $('form').attr('id') : formId;
                 let params = $.common.isEmpty(tableId) ? $("#" + table.options.id).bootstrapTable('getOptions') : $("#" + tableId).bootstrapTable('getOptions');
                 //需求要求重置为第一页
                 params.pageNumber = 1;
-               /* params.queryParams = function (params) {
-                    let search = $.common.formToJSON(currentId);
-                    if ($.common.isNotEmpty(data)) {
-                        $.each(data, function (key) {
-                            search[key] = data[key];
-                        });
-                    }
-                    search.pageSize = params.limit;
-                    search.pageNum = params.offset / params.limit + 1;
-                    search.searchValue = params.search;
-                    search.orderByColumn = params.sort;
-                    search.isAsc = params.order;
-                    return search;
-                };*/
 
-                if ($.common.isNotEmpty(tableId)) {
-                    $("#" + tableId).bootstrapTable('refresh', params);
-                } else {
-                    $("#" + table.options.id).bootstrapTable('refresh', params);
-                }
+                setTimeout(function () {
+                    if ($.common.isNotEmpty(tableId)) {
+                        $("#" + tableId).bootstrapTable('refresh', params);
+                    } else {
+                        $("#" + table.options.id).bootstrapTable('refresh', params);
+                    }
+                },10)
+
             },
             // 导出数据
             exportExcel: function (formId) {
@@ -584,8 +572,18 @@ tab = {
                 if ($.common.isEmpty(timeUnit)) {
                     timeUnit = 'day';
                 }
-                $(".laystart").attr("value", moment().subtract(duration, timeUnit).startOf('day').format('YYYY-MM-DD HH:mm:ss'));
-                $(".layend").attr("value", moment().endOf('day').format('YYYY-MM-DD HH:mm:ss'));
+                let start = moment().subtract(duration, timeUnit).startOf('day').format('YYYY-MM-DD HH:mm:ss');
+                let end = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
+                laydate.render({
+                    elem: '#startDate',
+                    type: 'datetime',
+                    value: start //必须遵循format参数设定的格式
+                });
+                laydate.render({
+                    elem: '#endDate',
+                    type: 'datetime',
+                    value: end //必须遵循format参数设定的格式
+                });
             },
             // 表单重置
             reset: function (formId, tableId) {
