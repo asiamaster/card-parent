@@ -1,38 +1,39 @@
 <#bs4Body>
 <style>
-    .modal-dialog {
-        width: 90% !important;
-    }
+	.modal-dialog {
+		max-width: 100% !important;
+		margin:0 auto;
+	}
 </style>
 <div class="container-fluid">
 	<div id="add-modal">
 		<form id="save-form">
 			<div class="form-group col">
-				<label for="cardType">入库类型</label> 
+				<label for="cardType">入库类型</label>
 				<select name="cardType" id="cardType" class="form-control"></select>
 				<#bcomboProvider _id="cardType" _provider="cardTypeProvider"
 					_queryParams='{emptyText:"-- 请选择 --"}' />
 			</div>
 			<div class="form-group col" id="cardFaceTr" style="display: none">
-				<label for="cardFace">卡面信息</label> 
+				<label for="cardFace">卡面信息</label>
 				<select name="cardFace" id="cardFace" class="form-control"></select>
 				<#bcomboProvider _id="cardFace" _provider="cardFaceProvider"
 					_queryParams='{emptyText:"-- 请选择 --"}' />
 			</div>
 			<div class="form-group col">
-				<label for="startCardNo">起始卡号</label> 
+				<label for="startCardNo">起始卡号</label>
 				<input id="startCardNo" name="startCardNo"
 					type="text" class="form-control calculateAmount isInt"
 					minlength="12" maxlength="12" required />
 			</div>
 			<div class="form-group col">
-				<label for="endCardNo">结束卡号</label> 
+				<label for="endCardNo">结束卡号</label>
 				<input id="endCardNo" name="endCardNo"
 					type="text" class="form-control calculateAmount isInt"
 					minlength="12" maxlength="12" required />
 			</div>
 			<div class="form-group col">
-				<label for="amount">入库张数</label> 
+				<label for="amount">入库张数</label>
 				<input id="amount" name="amount" type="text" class="form-control" readonly="readonly" />
 			</div>
 		</form>
@@ -111,7 +112,7 @@
 		    width: '80%',
 		    language: 'zh-CN',
 		    target: 'body',
-			    
+
 		};
 		bs4pop.confirm(content,option,function(sure) {
 			if (!sure) {
@@ -131,7 +132,7 @@
 		var count = endCardNo - startCardNo + 1;
 		$("#amount").val(count);
 	});
-	// 根据卡类型隐藏卡面信息选择框 
+	// 根据卡类型隐藏卡面信息选择框
 	$('#cardType').change(function() {
 		let cardType = $(this).val();
 		if (10 == cardType) {

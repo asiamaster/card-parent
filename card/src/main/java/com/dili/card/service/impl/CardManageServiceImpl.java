@@ -169,6 +169,7 @@ public class CardManageServiceImpl implements ICardManageService {
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {
             record.setType(OperateType.CHANGE.getCode());
             record.setAmount(serviceFee);
+            record.setCardCost(serviceFee);
             record.setTradeType(TradeType.FEE.getCode());
             record.setTradeChannel(TradeChannel.CASH.getCode());
             //记录老卡卡号，用于生成打印数据
