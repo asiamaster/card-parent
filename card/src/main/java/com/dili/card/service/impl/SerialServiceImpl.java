@@ -300,6 +300,9 @@ public class SerialServiceImpl implements ISerialService {
                 if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeItemDto.getType())) {
                     return feeItemDto.getAmount();
                 }
+                if (Integer.valueOf(FundItem.RETURN_CARD_CHANGE.getCode()).equals(feeItemDto.getType())) {
+                    return feeItemDto.getAmount();
+                }
             }
             return 0L;
         }
