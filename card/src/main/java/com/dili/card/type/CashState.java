@@ -58,7 +58,7 @@ public enum CashState {
 	}
 
 	public static List<CashState> getAll() {
-		return new ArrayList<>(Arrays.asList(CashState.values())).stream().filter(c -> c.getCode() != -1)
+		return new ArrayList<>(Arrays.asList(CashState.values())).stream().filter(c -> c.getCode() != 10)
 				.collect(Collectors.toList());
 	}
 

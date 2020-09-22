@@ -1,5 +1,9 @@
 <#bs4Body>
 <style>
+	.modal-dialog {
+		max-width: 100% !important;
+		margin:0 auto;
+	}
 	.blue{
 		color:#4F94CD;
 	}
@@ -85,7 +89,7 @@
             <div class="form-group col">
                 <label for="state">委托状态</label>
                 <select name="state" id="state"  class="form-control"></select>
-                <#bcomboProvider _id="state" _provider="contractStateProvider" _queryParams='{emptyText:"全部"}'/>
+                <#bcomboProvider _id="state" _provider="contractStateProvider" _queryParams='{emptyText:"--全部--"}'/>
             </div>
             <div class="form-group col-auto">
                 <label for="customerName" class="">委托人</label>
@@ -435,7 +439,7 @@
 			modalName : "查看资金委托信息",
 			rowStyle:function(row, index){
 				if(row.readyExpire){
-		             return {css:{'background-color':'#ff0033'}};
+		             return {css:{'background-color':'#FFE0E0'}};
 		        }
 		        return '';
 			}

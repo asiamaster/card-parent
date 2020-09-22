@@ -54,6 +54,7 @@ p {
 	<div>
 		<input type="hidden" value="${detail.startTime!}" id="startTime01">
 		<input type="hidden" value="${detail.endTime!}"  id="endTime01">
+		<input type="hidden" value="${detail.endTime!}"  id="endTime01">
 		<h4 style="text-align: center;padding-top: 15px;">资金授权委托协议书</h4>
 		<p>寿光地利农产品物流园有限公司：</p>
 		<p style="text-indent: 2em">
@@ -111,7 +112,7 @@ p {
 		</div>
 	</div>
 	<div style="text-align: right;">
-		<span id="currentdate" style=" margin-right: 40px;"></span>
+		<span id="currentdate" style=" margin-right: 40px;">${detail.previewTime!}</span>
 	</div>
 </div>
 </#bs4Body>
@@ -126,9 +127,9 @@ $(function(){
 	$('#endTimeYear').html(endTime01.substring(0,4));
 	$('#endTimeMonth').html(endTime01.substring(5,7));
 	$('#endTimeDay').html(endTime01.substring(8,10));
-	$('#currentdate').html(getNowFormatDate(' 年 ', ' 月 ',' 日 '));
-	showConsignorImage();
-	showConsigneeImage();
+	//$('#currentdate').html(getNowFormatDate(' 年 ', ' 月 ',' 日 '));
+	setTimeout("showConsignorImage()",500);
+	setTimeout("showConsigneeImage()",500);
 });
 
 function showConsigneeImage(){

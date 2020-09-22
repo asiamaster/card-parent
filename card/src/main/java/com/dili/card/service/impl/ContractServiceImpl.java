@@ -164,6 +164,8 @@ public class ContractServiceImpl implements IContractService {
 	public FundContractResponseDto preview(Long id) {
 		
 		FundContractResponseDto fundContract = this.detail(id);
+		LocalDateTime createTime = fundContract.getCreateTime();
+		fundContract.setPreviewTime( createTime.getYear() + " 年 " + createTime.getMonthValue() + " 月 " + createTime.getDayOfMonth() + " 日 ");
 		buildImage(fundContract);
 		return fundContract;
 	}

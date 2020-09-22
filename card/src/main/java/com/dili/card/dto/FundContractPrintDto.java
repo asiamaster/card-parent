@@ -115,7 +115,7 @@ public class FundContractPrintDto implements Serializable{
 		fundContractPrintDto.setStartTime( startTime.getYear() + " 年 " + startTime.getMonthValue() + " 月 " + startTime.getDayOfMonth() + " 日 ");
 		LocalDateTime endTime = fundContractResponseDto.getEndTime();
 		fundContractPrintDto.setEndTime(endTime.getYear() + " 年 " + endTime.getMonthValue() + " 月 " + endTime.getDayOfMonth() + " 日 ");
-		LocalDateTime currentTime = LocalDateTime.now();
+		LocalDateTime currentTime = fundContractResponseDto.getCreateTime();
 		fundContractPrintDto.setCurrentTime(currentTime.getYear() + " 年 " + currentTime.getMonthValue() + " 月 " + currentTime.getDayOfMonth() + " 日 ");
 		fundContractPrintDto.setConsignors(fundContractResponseDto.getConsignorDtos());
 		fundContractPrintDto.setConsignorMobile(fundContractResponseDto.getConsignorMobile());
