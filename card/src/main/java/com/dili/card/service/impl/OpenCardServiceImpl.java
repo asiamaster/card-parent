@@ -216,6 +216,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		serial.setOperateTime(LocalDateTime.now());
 		serial.setStartBalance(0L);  // 开卡期初期末默认为0
 		serial.setAmount(openCardInfo.getCostFee());
+		serial.setCardCost(openCardInfo.getCostFee());
 		serial.setEndBalance(0L);   
 		serial.setState(OperateState.SUCCESS.getCode());
 		serial.setNotes("开卡，工本费转为市场收入");

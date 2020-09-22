@@ -17,8 +17,12 @@ public class FundContractDo implements Serializable {
 	private String contractNo; 
 	/** 委托人账号ID */
 	private Long consignorAccountId; 
+	/** 委托人卡号 */
+	private String consignorCardNo;
 	/** 委托人编号 */
 	private String consignorCustomerCode; 
+	/** 委托人姓名 */
+	private String consignorCustomerName; 
 	/** 委托人id */
 	private Long consignorCustomerId; 
 	/** 合同开始日期 */
@@ -313,6 +317,22 @@ public class FundContractDo implements Serializable {
 
 	public void setConsignorCustomerId(Long consignorCustomerId) {
 		this.consignorCustomerId = consignorCustomerId;
+	}
+
+	public String getConsignorCardNo() {
+		return consignorCardNo;
+	}
+
+	public void setConsignorCardNo(String consignorCardNo) {
+		this.consignorCardNo = consignorCardNo;
+	}
+
+	public String getConsignorCustomerName() {
+		return consignorCustomerName;
+	}
+
+	public void setConsignorCustomerName(String consignorCustomerName) {
+		this.consignorCustomerName = consignorCustomerName;
 	}
 
 }

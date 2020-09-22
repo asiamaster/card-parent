@@ -18,6 +18,9 @@ public class FundContractRequestDto{
 	private Long id;
 	/** 合同编号 */
 	private String contractNo; 
+	/** 卡号 */
+	@NotEmpty(message = "卡号信息不能为空")
+	private String cardNo; 
 	/** 委托人账号ID */
 	@NotNull(message = "卡账号信息不能为空")
 	private Long consignorAccountId; 
@@ -48,6 +51,8 @@ public class FundContractRequestDto{
 	private List<FundConsignorDto> consignors;
 	/** 委托人姓名或者编号 */
 	private String consignorCustomerCode;
+	/** 委托人姓名 */
+	private String consignorCustomerName;
     /**
      * setter for 委托人账号ID
      */
@@ -192,5 +197,21 @@ public class FundContractRequestDto{
 
 	public void setConsignorCustomerIDCode(String consignorCustomerIDCode) {
 		this.consignorCustomerIDCode = consignorCustomerIDCode;
+	}
+
+	public String getCardNo() {
+		return cardNo;
+	}
+
+	public void setCardNo(String cardNo) {
+		this.cardNo = cardNo;
+	}
+
+	public String getConsignorCustomerName() {
+		return consignorCustomerName;
+	}
+
+	public void setConsignorCustomerName(String consignorCustomerName) {
+		this.consignorCustomerName = consignorCustomerName;
 	}
 }

@@ -83,7 +83,7 @@ public class CardStorageInController implements IControllerHandler {
 	}
 
 	/**
-	 * 入库记录
+	 * 删除入库记录
 	 */
 	@PostMapping("del.action")
 	@ResponseBody
