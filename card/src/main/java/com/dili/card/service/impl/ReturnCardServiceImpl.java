@@ -86,25 +86,35 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 		// 退卡
 		cardManageRpcResolver.returnCard(cardParam);
 		
-		String tradeId = null;
 		TradeResponseDto tradeResponseDto = null;
 		SerialDto serialDto = null;
 		
-		if (master) {
+		//是主卡 同时卡余额存在并且小于1元需要进行流水
+		if (masterHasTradeSerial) {
 			//转出零钱
-			if(fee > 0L) {
-				CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(TradeType.FEE.getCode(),
-						accountCard.getAccountId(), accountCard.getFundAccountId(), fee, businessRecord.getSerialNo(),
-						String.valueOf(businessRecord.getCycleNo()));
-				// 创建交易
-				tradeId = payRpcResolver.prePay(tradeRequest).getTradeId();
-				
-				// 执行实际缴费操作
-				TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(accountCard, tradeId,
-						TradeChannel.BALANCE.getCode(), cardParam.getLoginPwd());
-				tradeRequestDto.addServiceFeeItem(cardParam.getServiceFee(), FundItem.RETURN_CARD_CHANGE);
-				tradeResponseDto =  payRpcResolver.trade(tradeRequestDto);
-			}
+			CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(TradeType.FEE.getCode(),
+					accountCard.getAccountId(), accountCard.getFundAccountId(), fee, businessRecord.getSerialNo(),
+					String.valueOf(businessRecord.getCycleNo()));
+			// 创建交易
+			String tradeId = payRpcResolver.prePay(tradeRequest).getTradeId();
+			
+			// 执行实际缴费操作
+			TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(accountCard, tradeId,
+					TradeChannel.BALANCE.getCode(), cardParam.getLoginPwd());
+			tradeRequestDto.addServiceFeeItem(cardParam.getServiceFee(), FundItem.RETURN_CARD_CHANGE);
+			tradeResponseDto =  payRpcResolver.trade(tradeRequestDto);	
+			
+			businessRecord.setTradeNo(tradeId);
+			
+			// 流水建立主卡退卡零钱流水
+			serialDto = serialService.createAccountSerialWithFund(businessRecord, tradeResponseDto, (serialRecord, feeType) -> {
+				serialRecord.setFundItem(FundItem.RETURN_CARD_CHANGE.getCode());
+                serialRecord.setFundItemName(FundItem.RETURN_CARD_CHANGE.getName());
+                serialRecord.setNotes("退卡：零钱转入市场收益账户");   
+	        });			
+		}else {
+			// 流水建立副卡没有退卡零钱流水  主卡余额为0 也走这里
+			serialDto = serialService.createAccountSerial(businessRecord, null);
 		}
 		
 		// 主 副卡退卡注销资金账户
@@ -113,23 +123,11 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 		payRpcResolver.unregister(createTradeRequestDto);
 		
 		//保存本地记录
-		businessRecord.setTradeNo(tradeId);
 		serialService.saveBusinessRecord(businessRecord);
-		
-		
-		if (masterHasTradeSerial) {//主卡  并且有余额
-			// 流水建立主卡退卡零钱流水
-			serialDto = serialService.createAccountSerialWithFund(businessRecord, tradeResponseDto, (serialRecord, feeType) -> {
-				serialRecord.setFundItem(FundItem.RETURN_CARD_CHANGE.getCode());
-                serialRecord.setFundItemName(FundItem.RETURN_CARD_CHANGE.getName());
-                serialRecord.setNotes("退卡：零钱转入市场收益账户");   
-	        });
-		}else {
-			// 流水建立副卡没有退卡零钱流水
-			serialDto = serialService.createAccountSerial(businessRecord, null);
-		}
+		//保存远程流水记录
 		serialService.handleSuccess(serialDto, masterHasTradeSerial);
 		
+		//返回操作记录流水号 补打需要使用
 		return businessRecord.getSerialNo();
 	}
 
