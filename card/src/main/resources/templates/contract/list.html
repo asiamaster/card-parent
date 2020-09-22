@@ -1,5 +1,9 @@
 <#bs4Body>
 <style>
+	.modal-dialog {
+		max-width: 100% !important;
+		margin:0 auto;
+	}
 	.blue{
 		color:#4F94CD;
 	}
@@ -435,7 +439,7 @@
 			modalName : "查看资金委托信息",
 			rowStyle:function(row, index){
 				if(row.readyExpire){
-		             return {css:{'background-color':'#ff0033'}};
+		             return {css:{'background-color':'#FFE0E0'}};
 		        }
 		        return '';
 			}

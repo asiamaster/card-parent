@@ -73,6 +73,8 @@ public class FundContractResponseDto{
 	private List<FundConsignorDto> consignorDtos;
 	/** 合同即将到期提示*/
 	private Boolean readyExpire;
+	/** 合同即将到期提示*/
+	private String previewTime; 
 	
     /**
      * setter for 合同开始日期
@@ -278,5 +280,13 @@ public class FundContractResponseDto{
 
 	public void setCardNo(String cardNo) {
 		this.cardNo = cardNo;
+	}
+
+	public String getPreviewTime() {
+		return previewTime;
+	}
+
+	public void setPreviewTime(String previewTime) {
+		this.previewTime = previewTime;
 	}
 }
