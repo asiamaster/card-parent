@@ -1,15 +1,5 @@
 package com.dili.card.service.impl;
 
-import java.math.BigDecimal;
-
-import javax.annotation.Resource;
-
-import com.dili.card.rpc.resolver.AccountManageRpcResolver;
-import com.dili.card.type.CardType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.CardRequestDto;
@@ -19,18 +9,38 @@ import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.CreateTradeResponseDto;
 import com.dili.card.dto.pay.TradeRequestDto;
+import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
+import com.dili.card.rpc.resolver.AccountManageRpcResolver;
 import com.dili.card.rpc.resolver.CardManageRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
-import com.dili.card.service.*;
-import com.dili.card.type.*;
+import com.dili.card.service.IAccountCycleService;
+import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.ICardManageService;
+import com.dili.card.service.ICardStorageService;
+import com.dili.card.service.IReturnCardService;
+import com.dili.card.service.IRuleFeeService;
+import com.dili.card.service.ISerialService;
+import com.dili.card.type.CardStatus;
+import com.dili.card.type.FundItem;
+import com.dili.card.type.OperateType;
+import com.dili.card.type.RuleFeeBusinessType;
+import com.dili.card.type.SystemSubjectType;
+import com.dili.card.type.TradeChannel;
+import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import io.seata.spring.annotation.GlobalTransactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
 
 
 /**
@@ -199,7 +209,7 @@ public class CardManageServiceImpl implements ICardManageService {
 
         TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(userAccount, tradeNo, TradeChannel.CASH.getCode(), requestDto.getLoginPwd());
         tradeRequestDto.addServiceFeeItem(serviceFee, FundItem.IC_CARD_COST);
-        payRpcResolver.trade(tradeRequestDto);
+        TradeResponseDto responseDto = payRpcResolver.trade(tradeRequestDto);
 
         SerialDto serialDto = serialService.createAccountSerial(businessRecord, (serialRecord, feeType) -> {
             serialRecord.setTradeType(OperateType.CHANGE.getCode());
@@ -208,6 +218,8 @@ public class CardManageServiceImpl implements ICardManageService {
             serialRecord.setFundItemName(FundItem.IC_CARD_COST.getName());
             serialRecord.setAmount(requestDto.getServiceFee());
             serialRecord.setNotes("补卡，工本费转为市场收入");
+            serialRecord.setStartBalance(responseDto.getBalance() - responseDto.getFrozenBalance());
+            serialRecord.setEndBalance(responseDto.getBalance() - responseDto.getFrozenBalance());
         });
         serialService.handleSuccess(serialDto);
         return businessRecord.getSerialNo();
