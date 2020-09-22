@@ -6,6 +6,9 @@ import com.dili.card.dto.PrintDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.PrintTemplate;
+import com.dili.card.util.CurrencyUtils;
+
+import cn.hutool.core.convert.Convert;
 
 /**
  * 换卡打印
@@ -21,6 +24,9 @@ public class ReturnCardPrintServiceImpl extends PrintServiceImpl{
 
     @Override
     public void createSpecial(PrintDto printDto, BusinessRecordDo recordDo, boolean reprint) {
+    	Long totalAmount = recordDo.getAmount() != null ? recordDo.getAmount() : 0L;
+        printDto.setTotalAmount(CurrencyUtils.toNoSymbolCurrency(totalAmount));
+        printDto.setTotalAmountWords(Convert.digitToChinese(Double.valueOf(printDto.getTotalAmount())));
     }
 
     @Override
