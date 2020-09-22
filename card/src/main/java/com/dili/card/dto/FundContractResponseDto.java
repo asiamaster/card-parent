@@ -32,6 +32,8 @@ public class FundContractResponseDto{
 	private String consignorIdCode;
 	/** 委托人签名图片地址 */
 	private String signatureImagePath;
+	/** 委托人签名图片地址 */
+	private byte[] signatureImagePathByte;
 	/** 合同编号 */
 	private String contractNo; 
 	/** 合同开始日期 */
@@ -288,5 +290,13 @@ public class FundContractResponseDto{
 
 	public void setPreviewTime(String previewTime) {
 		this.previewTime = previewTime;
+	}
+
+	public byte[] getSignatureImagePathByte() {
+		return signatureImagePathByte;
+	}
+
+	public void setSignatureImagePathByte(byte[] signatureImagePathByte) {
+		this.signatureImagePathByte = signatureImagePathByte;
 	}
 }

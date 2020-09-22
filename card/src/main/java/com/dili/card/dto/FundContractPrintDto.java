@@ -28,6 +28,8 @@ public class FundContractPrintDto implements Serializable{
 	private String consigneeNames;
 	/** 委托人签名图片地址 */
 	private String signatureImagePath;
+	/** 委托人签名图片地址 */
+	private byte[] signatureImagePathByte;
 	/** 被委托人列表 */
 	private List<FundConsignorDto> consignors;
 
@@ -110,7 +112,7 @@ public class FundContractPrintDto implements Serializable{
 		fundContractPrintDto.setConsigneeName(fundContractResponseDto.getConsignorName());
 		fundContractPrintDto.setConsigneeNames(fundContractResponseDto.getConsigneeNames());
 		fundContractPrintDto.setConsignorIdCode(fundContractResponseDto.getConsignorIdCode());
-		fundContractPrintDto.setSignatureImagePath(fundContractResponseDto.getSignatureImagePath());
+		fundContractPrintDto.setSignatureImagePathByte(fundContractResponseDto.getSignatureImagePathByte());
 		LocalDateTime startTime = fundContractResponseDto.getStartTime();
 		fundContractPrintDto.setStartTime( startTime.getYear() + " 年 " + startTime.getMonthValue() + " 月 " + startTime.getDayOfMonth() + " 日 ");
 		LocalDateTime endTime = fundContractResponseDto.getEndTime();
@@ -128,6 +130,14 @@ public class FundContractPrintDto implements Serializable{
 
 	public void setSignatureImagePath(String signatureImagePath) {
 		this.signatureImagePath = signatureImagePath;
+	}
+
+	public byte[] getSignatureImagePathByte() {
+		return signatureImagePathByte;
+	}
+
+	public void setSignatureImagePathByte(byte[] signatureImagePathByte) {
+		this.signatureImagePathByte = signatureImagePathByte;
 	}
 
 }

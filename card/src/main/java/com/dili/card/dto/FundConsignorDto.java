@@ -17,6 +17,8 @@ public class FundConsignorDto {
 	/** 受委托人签名图片地址 */
 	@NotEmpty(message = "受委托人签名图片地址不能为空")
 	private String signatureImagePath; 
+	/** 委托人签名图片地址 */
+	private byte[] signatureImagePathByte;
 	/** 受托人证件号 */
 	@NotEmpty(message = "受托人证件号不能为空")
 	private String consigneeIdCode; 
@@ -110,5 +112,13 @@ public class FundConsignorDto {
 
 	public void setReadyExpire(Boolean readyExpire) {
 		this.readyExpire = readyExpire;
+	}
+
+	public byte[] getSignatureImagePathByte() {
+		return signatureImagePathByte;
+	}
+
+	public void setSignatureImagePathByte(byte[] signatureImagePathByte) {
+		this.signatureImagePathByte = signatureImagePathByte;
 	}
 }
