@@ -1,143 +1,164 @@
 <#bs4Body>
 <style>
-    .model-div{
-    	border-bottom: #B5B5B5 1px solid;
+.info-column {
+        font-weight: bold ;
     }
-    
-    #nav {
-    	height: 12px;
-    	margin:15px 0px;
-	}
- 
-	#nav ul {
-	    list-style: none;
-		}
-	 
-	  
-	 
-	#nav li {
-	    display:inline-block;
-	    float:left;
-	    margin-right:50px;
-	    width:150px;
-		}
-	.suonue{
-			overflow: hidden;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-	}
-	.child_li{
-		background-color:#CCCCCC;
-	}
-	
-	.top_div{
-		background-color:#C9C9C9;
-		height: 45px;
-		line-height:45px;
-		font-size:16px;
-	}
-	
- 
+.model-div {
+	border-bottom: #B5B5B5 1px solid;
+	margin-bottom: 10px;
+}
+
+#nav {
+	height: 12px;
+	margin: 15px 0px;
+}
+
+#nav ul {
+	list-style: none;
+}
+
+#nav li {
+	display: inline-block;
+	float: left;
+	margin-right: 50px;
+	width: 150px;
+}
+
+.margin_bord{
+	margin-left: 20px;
+}
+
+.suonue {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.child_li {
+	background-color: #CCCCCC;
+}
+
+.top_div {
+	background-color: #C9C9C9;
+	height: 45px;
+	line-height: 45px;
+	font-size: 16px;
+}
 </style>
-<div  style="width: auto;overflow: auto;">
-<!-- 	<div class="top_div">
-		<span style="margin-left:10px;">查看资金委托信息</span>
-		<span style="float:right; margin-right:10px;"><i class="fa fa-times" aria-hidden="true"></i></span>
-	</div> -->
-	<div class="model-div">
-		<div id="nav">
-		<ul>
-    		<li>合同编号</li>
-    		<li>状态</li>    
-    		<li>合同开始日期</li>
-    		<li>合同结束日期</li>
-  		</ul>
-      </div>
-      <div id="nav">
-		<ul>
-    		<li class="child_li">${detail.contractNo!}</li>
-    		<li class="child_li">${detail.stateText!}</li>    
-    		<li class="child_li">${detail.startTime!}</li>
-    		<li class="child_li">${detail.endTime!}</li>
-  		</ul>
-      </div>
+<div class="model-div">
+	<div class="row row-interval margin_bord">
+		<div class="form-group col">
+			<label for="contractNo">合同编号</label>
+			<div><span class="child_li">${detail.contractNo!}</span></div>
+		</div>
+		<div class="form-group col">
+			<label for="stateText">状态</label>
+			<div><span class="child_li">${detail.contractNo!}</span></div>
+		</div>
+		<div class="form-group col">
+			<label for="startTime">合同开始日期</label>
+			<div><span class="child_li">${detail.startTime!}</span></div>
+		</div>
+		<div class="form-group col">
+			<label for="endTime">合同结束日期</label>
+			<div><span class="child_li">${detail.endTime!}</span></div>
+		</div>
 	</div>
-     <div class="model-div">
-     	<div id="nav">
-     		<ul>
-	    		<li><span style="font-weight: normal;">委托人信息</span></li>
-  			</ul>
-     	</div>
-     	<div id="nav">
-			<ul>
-	    		<li>编号</li>
-	    		<li>名称</li>    
-	    		<li>委托园区卡</li>
-	  		</ul>
-      	</div>
-      	<div id="nav">
-			<ul>
-	    		<li class="child_li">${detail.consignorCode!}</li>
-	    		<li class="child_li suonue">${detail.consignorName!}</li>    
-	    		<li class="child_li">${detail.consignorCard!}</li>
-	  		</ul>
-      	</div>
-     </div>
-      <div class="model-div">
-      	<div id="nav">
-     		<ul>
-	    		<li>被委托人信息</li>
-  			</ul>
-     	</div>
-      	<% for(item in detail.consignorDtos) { %>
-		     <div id="nav">
-				<ul>
-		    		<li>名称</li>
-		    		<li>电话</li>    
-		    		<li>身份证号</li>
-		  		</ul>
-		      </div>
-		      <div id="nav">
-				<ul>
-		    		<li class="child_li suonue">${item.consigneeName!}</li>
-		    		<li class="child_li">${item.consigneeIdMobile!}</li>    
-		    		<li class="child_li">${item.consigneeIdCode!}</li>
-		  		</ul>
-		      </div>
-      	<% } %>
-      </div>
-      <div>
-      	<div id="nav">
-     		<ul>
-	    		<li>操作信息</li>
-  			</ul>
-     	</div>
-      	<div id="nav">
-			<ul>
-	    		<li>创建人</li>
-	    		<li>创建时间</li>    
-	  		</ul>
-      	</div>
-      	<div id="nav">
-			<ul>
-	    		<li class="child_li">${detail.creator!}</li>
-	    		<li class="child_li">${detail.createTime!}</li>    
-	  		</ul>
-      	</div>
-      	<div id="nav">
-			<ul>
-	    		<li>解除人</li>
-	    		<li>解除时间</li>   
-	    		<li>解除说明</li>  
-	  		</ul>
-     	 </div>
-      	<div id="nav">
-			<ul>
-	    		<li class="child_li">${detail.terminater!'--'}</li>
-	    		<li class="child_li">${detail.terminateTime!'--:--'}</li> 
-	    		<li style="width: 400px;"><span class="child_li">${detail.terminateNotes!'--'}</span></li>    
-  			</ul>
-      	</div>
-      </div>
-</div>    
+</div>
+<div class="model-div">
+	<div class="row row-interval margin_bord">
+		<div class="form-group col">
+			<label for="contractInfo"  class="info-column">委托人信息</label>
+		</div>
+	</div>
+	<div class="row row-interval margin_bord">
+		<div class="form-group col">
+			<label for="consignorCode">编号</label>
+			<div><span class="child_li">${detail.consignorCode!}</span></div>
+		</div>
+		<div class="form-group col">
+			<label for="consignorName">名称</label>
+			<div><span class="child_li">${detail.consignorName!}</span></div>
+		</div>
+		<div class="form-group col">
+			<label for="consignorCard">委托园区卡</label>
+			<div><span class="child_li">${detail.consignorCard!}</span></div>
+		</div>
+		<div class="form-group col">
+			<label for="consignorCard">&emsp;&emsp;</label>
+			<div>&emsp;&emsp;</div>
+		</div>
+	</div>
+</div>
+<div class="model-div">
+	<div class="row row-interval margin_bord">
+		<div class="form-group col">
+			<label for="contractInfo" class="info-column">被委托人信息</label>
+		</div>
+	</div>
+	<% for(item in detail.consignorDtos) { %>
+	<div class="row row-interval margin_bord">
+		<div class="form-group col">
+			<label for="consigneeName">名称</label>
+			<div><span class="child_li">${item.consigneeName!}</span></div>
+		</div>
+		<div class="form-group col">
+			<label for="consigneeIdMobile">电话</label>
+			<div><span class="child_li">${item.consigneeIdMobile!}</span></div>
+		</div>
+		<div class="form-group col">
+			<label for="consigneeIdCode">身份证号</label>
+			<div><span class="child_li">${item.consigneeIdCode!}</span></div>
+		</div>
+		<div class="form-group col">
+			<label for="consignorCard">&emsp;&emsp;</label>
+			<div>&emsp;&emsp;</div>
+		</div>
+	</div>
+	<% } %>
+</div>
+<div class="">
+	<div class="row row-interval margin_bord">
+		<div class="form-group col">
+			<label for="contractInfo" class="info-column">操作信息</label>
+		</div>
+	</div>
+	<div class="row row-interval margin_bord">
+		<div class="form-group col">
+			<label for="consignorCode">创建人</label>
+			<div><span class="child_li">${detail.creator!}</span></div>
+		</div>
+		<div class="form-group col">
+			<label for="consignorName">创建时间</label>
+			<div><span class="child_li">${detail.createTime!}</span></div>
+		</div>
+		<div class="form-group col">
+			<label for="consignorCard">&emsp;&emsp;</label>
+			<div>&emsp;&emsp;</div>
+		</div>
+		<div class="form-group col">
+			<label for="consignorCard">&emsp;&emsp;</label>
+			<div>&emsp;&emsp;</div>
+		</div>
+	</div>
+	<div class="row row-interval margin_bord">
+		<div class="form-group col">
+			<label for="consignorCode">解除人</label>
+			<div><span class="child_li">${detail.terminater!'--'}</span></div>
+		</div>
+		<div class="form-group col">
+			<label for="consignorName">解除时间</label>
+			<div><span class="child_li">${detail.terminateTime!'--:--'}</span></div>
+		</div>
+		<div class="form-group col">
+			<label for="consignorCard">解除说明</label>
+			<div><span class="child_li">${detail.terminateNotes!'--'}</span></div>
+		</div>
+		<div class="form-group col">
+			<label for="consignorCard">&emsp;&emsp;</label>
+			<div>&emsp;&emsp;</div>
+		</div>
+	</div>
+</div>
+
 </#bs4Body>
