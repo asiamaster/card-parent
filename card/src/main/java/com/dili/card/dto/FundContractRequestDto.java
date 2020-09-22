@@ -51,6 +51,8 @@ public class FundContractRequestDto{
 	private List<FundConsignorDto> consignors;
 	/** 委托人姓名或者编号 */
 	private String consignorCustomerCode;
+	/** 委托人姓名 */
+	private String consignorCustomerName;
     /**
      * setter for 委托人账号ID
      */
@@ -203,5 +205,13 @@ public class FundContractRequestDto{
 
 	public void setCardNo(String cardNo) {
 		this.cardNo = cardNo;
+	}
+
+	public String getConsignorCustomerName() {
+		return consignorCustomerName;
+	}
+
+	public void setConsignorCustomerName(String consignorCustomerName) {
+		this.consignorCustomerName = consignorCustomerName;
 	}
 }

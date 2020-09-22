@@ -323,6 +323,8 @@ public class ContractServiceImpl implements IContractService {
 		contractResponseDto.setTerminateTime(fundContractDo.getTerminateTime());
 		contractResponseDto.setState(fundContractDo.getState());
 		contractResponseDto.setSignatureImagePath(fundContractDo.getSignatureImagePath());
+		contractResponseDto.setConsignorName(fundContractDo.getConsignorCustomerName());
+		contractResponseDto.setConsignorCode(fundContractDo.getConsignorCustomerCode());
 		
 		contractResponseDto.setReadyExpire(false);
 		long expireDay = 0L;
@@ -355,8 +357,6 @@ public class ContractServiceImpl implements IContractService {
 		// 构建卡数据
 		contractResponseDto.setConsignorCard(fundContractDo.getConsignorCardNo());
 		// 获取客户信息
-		contractResponseDto.setConsignorCode(customer.getCode());
-		contractResponseDto.setConsignorName(customer.getName());
 		contractResponseDto.setConsignorMobile(customer.getContactsPhone());
 		contractResponseDto.setConsignorIdCode(customer.getCertificateNumber());
 		return contractResponseDto;
@@ -444,6 +444,7 @@ public class ContractServiceImpl implements IContractService {
 		fundContractDo.setEndTime(fundContractRequest.getEndTime());
 		fundContractDo.setNotes(fundContractRequest.getNotes());
 		fundContractDo.setConsignorCardNo(fundContractRequest.getCardNo());
+		fundContractDo.setConsignorCustomerName(fundContractRequest.getConsignorCustomerName());
 		
 		// 构建商户信息
 		fundContractDo.setCreatorId(userTicket.getId());
