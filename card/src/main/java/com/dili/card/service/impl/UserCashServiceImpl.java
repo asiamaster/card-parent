@@ -88,29 +88,34 @@ public class UserCashServiceImpl implements IUserCashService {
 
 	@Override
 	public void modify(UserCashDto userCashDto) {
+		
 		UserCashDo userCashDo = this.findById(userCashDto.getId());
 		if (CashState.UNSETTLED.getCode() != userCashDo.getState()) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "已对账不能修改");
 		}
+		
 		// 金额校验
 		this.validateAmount(userCashDto.getAmount(), userCashDto.getSettledApply());
+		
 		// 校验原来柜员的账务周期
-		AccountCycleDo oldAccountCycle = accountCycleService.findLatestCycleByUserId(userCashDo.getUserId());
-		if (!oldAccountCycle.getState().equals(CycleState.ACTIVE.getCode())) {
-			throw new CardAppBizException(ResultCode.DATA_ERROR, userCashDo.getUserName() + "的账期状态" + CycleState.getNameByCode(oldAccountCycle.getState()) + "不能修改");
+		AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(userCashDo.getUserId());
+		if (!accountCycle.getState().equals(CycleState.ACTIVE.getCode())) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, userCashDo.getUserName() + "的账期状态" + CycleState.getNameByCode(accountCycle.getState()) + "不能修改");
 		}
-		Long cycleId = oldAccountCycle.getId();
-		// 校验更改后柜员的账务周期
-		AccountCycleDo accountCycle = null;
-		//如果修改的userID 与 数据库 userId 不一致  需要再次判断账务周期
+		
+		//如果修改的userID 与 数据库 userId 不一致  需要再次判断账务周期 校验更改后柜员的账务周期
 		if(!userCashDto.getUserId().equals(userCashDo.getUserId())) {
 			accountCycle = accountCycleService.findLatestCycleByUserId(userCashDto.getUserId());
+			if(accountCycle == null) {//如果为空就创建
+				accountCycle = accountCycleService.findActiveCycleByUserId(userCashDto.getUserId(),
+						userCashDto.getUserName(), userCashDto.getUserCode());
+			}
 			if (!accountCycle.getState().equals(CycleState.ACTIVE.getCode())) {
 				throw new CardAppBizException(ResultCode.DATA_ERROR, userCashDto.getUserName() + "的账期状态" + CycleState.getNameByCode(accountCycle.getState()) + "不能修改");
 			}
-			cycleId = accountCycle.getId();
 		}
-		AccountCycleDto accountCycleDto = accountCycleService.detail(cycleId);
+		
+		AccountCycleDto accountCycleDto = accountCycleService.buildAccountCycleWrapperDetail(accountCycle, true);
 		// 校验现金余额 领款修改不能导致现金余额小于0 并且校验是本人
 		if (userCashDto.getAction().equals(CashAction.PAYEE.getCode())
 				&& userCashDo.getUserId().equals(userCashDto.getUserId())) {
@@ -119,6 +124,7 @@ public class UserCashServiceImpl implements IUserCashService {
 				throw new CardAppBizException(ResultCode.DATA_ERROR, "修改领款金额后导致现金余额统计小于0");
 			}
 		}
+		
 		// 校验现金余额
 		if (userCashDto.getAction().equals(CashAction.PAYER.getCode())) {
 			// 修改原来人的交款验证
@@ -133,8 +139,9 @@ public class UserCashServiceImpl implements IUserCashService {
 				}
 			}
 		}
+		
 		//更新记录
-		userCashDao.update(buildUpdateEntity(userCashDto, accountCycle.getCycleNo()));
+		userCashDao.update(buildUpdateEntity(userCashDto, accountCycleDto.getCycleNo()));
 	}
 	
 	@Override

@@ -61,6 +61,7 @@
 <script type="text/javascript"
 	src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <#common_autoCompleteUser />
+<#usercash_commonJs/>
 <script>
 	$("#userCode").watch(function(value) {
 		$('#inputuserId').val('');
@@ -187,10 +188,14 @@
 							}
 							let data = $.common.formToJSON(formId);
 							data.amount = parseInt(parseFloat(data.amountYuan) * 100);
-							bui.util.debounce($.operate.post(url, data), 1000,
-									true)
+							bui.util.debounce($.operate.post(url, data, function (result) {
+				                if (result.code == "200") {
+				            		 parent.totalAmount();
+				                }
+				            }),1000,true)
 
 						});
+		
 		return true;
 	}
 </script>

@@ -9,6 +9,8 @@
 <div style="text-align: center;">
 	<div id="div_model">
 		<form  id="deleteForm" role="form" >
+			<input id="action" name="action" type="hidden"
+			value="${usercash.action!}" class="form-control" />
 			<input id="id" name="id" type="hidden" value="${usercash.id!}" class="form-control"/>
         	<div class="form-group col-auto">
                 <label for="cardNo">确认删除对<font color="#FC1D24">${usercash.userName!}</font>发起的领款记录吗？</label>
@@ -18,12 +20,18 @@
 </div>
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<#usercash_commonJs/>
 <script>
 let formId = "deleteForm";
 function submitHandler(e) {
     let url = "${contextPath}/cash/delete.action";
     let data = $.common.formToJSON(formId);
-    $.operate.post(url, data);
-    //return true;
+    $.operate.post(url, data, function (result) {
+        if (result.code == "200") {
+   		 parent.totalAmount();
+       }
+   });
+    var action = $("#action").vai();
+	setTimeout("statisticTotalAmount("+ action +")", 500 );
 }
 </script>
