@@ -167,15 +167,14 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		TradeResponseDto tradeResponseDto = new TradeResponseDto();
 		if (openCardInfo.getCostFee() > 0) {
 			tradeResponseDto = rechargeCostFee(accountId, openCardResponse.getFundAccountId(), openCardInfo);
-		} else {
-			// 不需要充值工本费时，单独查询账户余额
-			CreateTradeRequestDto requestDto = new CreateTradeRequestDto();
-			requestDto.setAccountId(openCardResponse.getFundAccountId());
-			BalanceResponseDto resolver = GenericRpcResolver.resolver(payRpc.getAccountBalance(requestDto),
-					ServiceType.PAY_SERVICE.getName());
-			tradeResponseDto.setBalance(resolver.getAvailableAmount());
-			tradeResponseDto.setFrozenBalance(0L);
-		}
+		} 
+		// 不需要充值工本费时，单独查询账户余额
+		CreateTradeRequestDto requestDto = new CreateTradeRequestDto();
+		requestDto.setAccountId(openCardResponse.getFundAccountId());
+		BalanceResponseDto resolver = GenericRpcResolver.resolver(payRpc.getAccountBalance(requestDto),
+				ServiceType.PAY_SERVICE.getName());
+		tradeResponseDto.setBalance(resolver.getAvailableAmount());
+		tradeResponseDto.setFrozenBalance(0L);
 
 		// 保存卡务柜台开卡操作记录 使用seate后状态默认为成功,开卡期初期末默认为0
 		BusinessRecordDo busiRecord = buildBusinessRecordDo(openCardInfo, accountId, cycleDo.getCycleNo(), tradeResponseDto);
