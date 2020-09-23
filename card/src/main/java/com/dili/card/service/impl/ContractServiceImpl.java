@@ -191,9 +191,9 @@ public class ContractServiceImpl implements IContractService {
 	public FundContractPrintDto print(Long id) {
 		
 		FundContractResponseDto fundContract = this.detail(id);
-		fundContract.setSignatureImagePathByte(fileUpDownloadService.download(fundContract.getSignatureImagePath()));
+		fundContract.setSignatureImagePath(Base64.encode(fileUpDownloadService.download(fundContract.getSignatureImagePath())));
 		for (FundConsignorDto fundConsignorDto : fundContract.getConsignorDtos()) {
-			fundConsignorDto.setSignatureImagePathByte(fileUpDownloadService.download(fundConsignorDto.getSignatureImagePath()));
+			fundConsignorDto.setSignatureImagePath(Base64.encode(fileUpDownloadService.download(fundConsignorDto.getSignatureImagePath())));
 		}
 		return FundContractPrintDto.wrapperPrintDetai(fundContract);
 	}
