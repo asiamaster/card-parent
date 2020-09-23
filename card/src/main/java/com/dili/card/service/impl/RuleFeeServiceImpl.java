@@ -54,10 +54,16 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 		BusinessChargeItemDto businessChargeItemDto = new BusinessChargeItemDto();
 		businessChargeItemDto.setBusinessType(type.getCode());
 		businessChargeItemDto.setMarketId(firmId);
-		BaseOutput<List<BusinessChargeItemDto>> businessChargeList = businessChargeItemRpc
-				.listByExample(businessChargeItemDto);
-		log.info("收费项>"+JSONObject.toJSONString(businessChargeList));
-		List<BusinessChargeItemDto> chargeItemList = GenericRpcResolver.resolver(businessChargeList, ServiceName.ASSETS);
+		BaseOutput<List<BusinessChargeItemDto>> businessChargeList = null;
+		try {
+			businessChargeList = businessChargeItemRpc.listByExample(businessChargeItemDto);
+		} catch (Exception e) {
+			log.error("收费项查询失败", e);
+			throw e;
+		}
+		log.info("收费项>" + JSONObject.toJSONString(businessChargeList));
+		List<BusinessChargeItemDto> chargeItemList = GenericRpcResolver.resolver(businessChargeList,
+				ServiceName.ASSETS);
 		return chargeItemList;
 	}
 
@@ -87,19 +93,24 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 		// 计算条件及判断条件，金额由分改为元避免计算公式里面有加减法时数据错误
 		if (amount != null && amount != 0) {
 			BigDecimal b = new BigDecimal(amount);
-			BigDecimal div = b.divide(new BigDecimal(100),2, RoundingMode.HALF_UP);
+			BigDecimal div = b.divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
 			HashMap<String, Object> calcParams = new HashMap<String, Object>();
 //			String amountStr = CurrencyUtils.cent2TenNoSymbol(amount);
-			calcParams.put("amount", div.doubleValue() );
+			calcParams.put("amount", div.doubleValue());
 			queryFeeInput.setCalcParams(calcParams);
-			
+
 			HashMap<String, Object> conditionParams = new HashMap<String, Object>();
 			conditionParams.put("amount", div.doubleValue());
 			queryFeeInput.setConditionParams(conditionParams);
 		}
-		
-		BaseOutput<QueryFeeOutput> queryFee = chargeRuleRpc.queryFee(queryFeeInput);
-		log.info("收费项>"+JSONObject.toJSONString(queryFee));
+		BaseOutput<QueryFeeOutput> queryFee = null;
+		try {
+			queryFee = chargeRuleRpc.queryFee(queryFeeInput);
+		} catch (Exception e) {
+			log.error("规则费用查询失败", e);
+			throw e;
+		}
+		log.info("收费项>" + JSONObject.toJSONString(queryFee));
 		QueryFeeOutput resolver = GenericRpcResolver.resolver(queryFee, ServiceName.RULE);
 		return resolver.getTotalFee();
 	}
