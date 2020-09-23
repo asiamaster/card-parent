@@ -1,16 +1,15 @@
 package com.dili.card.service.impl;
 
-import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
+import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.CreateTradeResponseDto;
 import com.dili.card.dto.pay.TradeRequestDto;
-import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
@@ -70,9 +69,10 @@ public class CardManageServiceImpl implements ICardManageService {
     @Autowired
     private IRuleFeeService ruleFeeService;
     @Resource
-	ICardStorageService cardStorageService;
+    ICardStorageService cardStorageService;
     @Autowired
     private AccountManageRpcResolver accountManageRpcResolver;
+
     /**
      * @param cardParam
      */
@@ -108,7 +108,7 @@ public class CardManageServiceImpl implements ICardManageService {
     @Override
     public void resetLoginPwd(CardRequestDto cardParam) {
 
-    	//获取卡信息
+        //获取卡信息
         UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam.getAccountId());
 
         //校验卡信息与客户信息
@@ -159,8 +159,8 @@ public class CardManageServiceImpl implements ICardManageService {
         cardManageRpcResolver.reportLossCard(cardParam);
 
         payRpcResolver.freezeFundAccount(
-            CreateTradeRequestDto.createCommon(
-                    userAccount.getFundAccountId(), userAccount.getAccountId()));
+                CreateTradeRequestDto.createCommon(
+                        userAccount.getFundAccountId(), userAccount.getAccountId()));
 
         this.saveRemoteSerialRecord(businessRecord);
         return businessRecord.getSerialNo();
@@ -172,7 +172,7 @@ public class CardManageServiceImpl implements ICardManageService {
     public String changeCard(CardRequestDto requestDto) {
         UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(requestDto.getCardNo());
         AccountValidator.validateMatchAccount(requestDto, userAccount);
-        this.validateCanChange(requestDto, userAccount);
+        //this.validateCanChange(requestDto, userAccount);
 
         cardStorageService.checkAndGetByCardNo(requestDto.getNewCardNo(), userAccount.getCardType(), userAccount.getCustomerMarketType());
 
@@ -210,7 +210,7 @@ public class CardManageServiceImpl implements ICardManageService {
 
         TradeRequestDto tradeRequestDto = TradeRequestDto.createTrade(userAccount, tradeNo, TradeChannel.CASH.getCode(), requestDto.getLoginPwd());
         tradeRequestDto.addServiceFeeItem(serviceFee, FundItem.IC_CARD_COST);
-        TradeResponseDto responseDto = payRpcResolver.trade(tradeRequestDto);
+        payRpcResolver.trade(tradeRequestDto);
 
         SerialDto serialDto = serialService.createAccountSerial(businessRecord, (serialRecord, feeType) -> {
             serialRecord.setTradeType(OperateType.CHANGE.getCode());
@@ -219,9 +219,10 @@ public class CardManageServiceImpl implements ICardManageService {
             serialRecord.setFundItemName(FundItem.IC_CARD_COST.getName());
             serialRecord.setAmount(requestDto.getServiceFee());
             serialRecord.setNotes("补卡，工本费转为市场收入");
-            long balance = NumberUtil.sub(responseDto.getBalance(), responseDto.getFrozenBalance()).longValue();
-            serialRecord.setStartBalance(balance);
-            serialRecord.setEndBalance(balance);
+            //这里需要查询一次余额，因为直接从提交交易接口中拿不到余额
+            BalanceResponseDto balance = payRpcResolver.findBalanceByFundAccountId(userAccount.getFundAccountId());
+            serialRecord.setStartBalance(balance.getAvailableAmount());
+            serialRecord.setEndBalance(balance.getAvailableAmount());
         });
         serialService.handleSuccess(serialDto);
         return businessRecord.getSerialNo();
