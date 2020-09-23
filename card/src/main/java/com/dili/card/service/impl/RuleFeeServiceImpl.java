@@ -56,6 +56,7 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 		businessChargeItemDto.setMarketId(firmId);
 		BaseOutput<List<BusinessChargeItemDto>> businessChargeList = businessChargeItemRpc
 				.listByExample(businessChargeItemDto);
+		log.info("收费项>"+JSONObject.toJSONString(businessChargeList));
 		List<BusinessChargeItemDto> chargeItemList = GenericRpcResolver.resolver(businessChargeList, ServiceName.ASSETS);
 		return chargeItemList;
 	}
@@ -98,6 +99,7 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 		}
 		
 		BaseOutput<QueryFeeOutput> queryFee = chargeRuleRpc.queryFee(queryFeeInput);
+		log.info("收费项>"+JSONObject.toJSONString(queryFee));
 		QueryFeeOutput resolver = GenericRpcResolver.resolver(queryFee, ServiceName.RULE);
 		return resolver.getTotalFee();
 	}
