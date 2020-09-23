@@ -26,7 +26,8 @@ public class EBankWithdrawServiceImpl extends WithdrawServiceImpl {
 
     @Override
     public void validateSpecial(FundRequestDto fundRequestDto) {
-        if (fundRequestDto.getServiceCost() == null || fundRequestDto.getServiceCost() < 0L) {
+        fundRequestDto.setServiceCost(fundRequestDto.getServiceCost() == null ? 0L : fundRequestDto.getServiceCost());
+        if (fundRequestDto.getServiceCost() < 0L) {
             throw new CardAppBizException("", "请正确输入手续费");
         }
     }
