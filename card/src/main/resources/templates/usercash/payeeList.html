@@ -107,9 +107,13 @@
         $.table.init(options);
         setTimeout("statisticTotalAmount(1)", 500 );
         $("#query").click(function(){
-        	statisticTotalAmount(1);
+        	totalAmount();
         });
     });
+    
+    function totalAmount(){
+    	statisticTotalAmount(1);
+    }
     
     function modify(){
     	var row=$("#grid").bootstrapTable('getSelections');
