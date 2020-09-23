@@ -77,35 +77,36 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
 			log.info("业务类型[{}]未查询到收费项!", ruleFeeBusinessType.getCode());
 			return BigDecimal.valueOf(0);
 		}
-		// 判断系统科目 是否是工本费，只取第一个
-		QueryFeeInput queryFeeInput = null;
-		for (BusinessChargeItemDto item : chargeItemList) {
-			if (Integer.valueOf(systemSubjectType.getCode()).equals(item.getSystemSubject())) {
-				queryFeeInput = new QueryFeeInput();
-				queryFeeInput.setMarketId(userTicket.getFirmId());
-				queryFeeInput.setBusinessType(ruleFeeBusinessType.getCode());
-				queryFeeInput.setChargeItem(item.getId());
-				break;
-			}
-		}
-		if (queryFeeInput == null) {
-			throw new CardAppBizException("请在规则系统中配置" + systemSubjectType.getName() + " ,并选择对应的系统科目!");
-		}
-		// 计算条件及判断条件，金额由分改为元避免计算公式里面有加减法时数据错误
-		if (amount != null && amount != 0) {
-			BigDecimal b = new BigDecimal(amount);
-			BigDecimal div = b.divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
-			HashMap<String, Object> calcParams = new HashMap<String, Object>();
-//			String amountStr = CurrencyUtils.cent2TenNoSymbol(amount);
-			calcParams.put("amount", div.doubleValue());
-			queryFeeInput.setCalcParams(calcParams);
-
-			HashMap<String, Object> conditionParams = new HashMap<String, Object>();
-			conditionParams.put("amount", div.doubleValue());
-			queryFeeInput.setConditionParams(conditionParams);
-		}
 		BaseOutput<QueryFeeOutput> queryFee = null;
 		try {
+			// 判断系统科目 是否是工本费，只取第一个
+			QueryFeeInput queryFeeInput = null;
+			for (BusinessChargeItemDto item : chargeItemList) {
+				if (Integer.valueOf(systemSubjectType.getCode()).equals(item.getSystemSubject())) {
+					queryFeeInput = new QueryFeeInput();
+					queryFeeInput.setMarketId(userTicket.getFirmId());
+					queryFeeInput.setBusinessType(ruleFeeBusinessType.getCode());
+					queryFeeInput.setChargeItem(item.getId());
+					break;
+				}
+			}
+			if (queryFeeInput == null) {
+				throw new CardAppBizException("请在规则系统中配置" + systemSubjectType.getName() + " ,并选择对应的系统科目!");
+			}
+			// 计算条件及判断条件，金额由分改为元避免计算公式里面有加减法时数据错误
+			if (amount != null && amount != 0) {
+				BigDecimal b = new BigDecimal(amount);
+				BigDecimal div = b.divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
+				HashMap<String, Object> calcParams = new HashMap<String, Object>();
+//			String amountStr = CurrencyUtils.cent2TenNoSymbol(amount);
+				calcParams.put("amount", div.doubleValue());
+				queryFeeInput.setCalcParams(calcParams);
+
+				HashMap<String, Object> conditionParams = new HashMap<String, Object>();
+				conditionParams.put("amount", div.doubleValue());
+				queryFeeInput.setConditionParams(conditionParams);
+			}
+
 			log.info("查询费用>" + JSONObject.toJSONString(queryFeeInput));
 			queryFee = chargeRuleRpc.queryFee(queryFeeInput);
 		} catch (Exception e) {
