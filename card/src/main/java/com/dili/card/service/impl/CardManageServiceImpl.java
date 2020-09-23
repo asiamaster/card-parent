@@ -1,5 +1,6 @@
 package com.dili.card.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.CardRequestDto;
@@ -35,6 +36,8 @@ import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import io.seata.spring.annotation.GlobalTransactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +54,7 @@ import java.math.BigDecimal;
  */
 @Service("cardManageService")
 public class CardManageServiceImpl implements ICardManageService {
+    private Logger LOGGER = LoggerFactory.getLogger(CardManageServiceImpl.class);
 
     @Autowired
     private CardManageRpcResolver cardManageRpcResolver;
@@ -219,11 +223,11 @@ public class CardManageServiceImpl implements ICardManageService {
             serialRecord.setFundItemName(FundItem.IC_CARD_COST.getName());
             serialRecord.setAmount(requestDto.getServiceFee());
             serialRecord.setNotes("补卡，工本费转为市场收入");
-            //这里需要查询一次余额，因为直接从提交交易接口中拿不到余额
-            BalanceResponseDto balance = payRpcResolver.findBalanceByFundAccountId(userAccount.getFundAccountId());
-            serialRecord.setStartBalance(balance.getAvailableAmount());
-            serialRecord.setEndBalance(balance.getAvailableAmount());
         });
+        //这里需要查询一次余额，因为直接从提交交易接口中拿不到余额
+        BalanceResponseDto balance = payRpcResolver.findBalanceByFundAccountId(userAccount.getFundAccountId());
+        serialDto.setStartBalance(balance.getAvailableAmount());
+        serialDto.setEndBalance(balance.getAvailableAmount());
         serialService.handleSuccess(serialDto);
         return businessRecord.getSerialNo();
     }
