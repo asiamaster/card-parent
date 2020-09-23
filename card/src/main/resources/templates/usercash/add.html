@@ -56,6 +56,7 @@
 <script type="text/javascript"
 	src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <#common_autoCompleteUser/>
+<#usercash_commonJs/>
 <script>
 	//名字发生变化的时候清空工号
 	$("#userCode").watch(function(value) {
@@ -161,9 +162,14 @@
 			}
 			let data = $.common.formToJSON(formId);
 			data.amount = parseInt(parseFloat(data.amountYuan) * 100);
-			bui.util.debounce($.operate.post(url, data), 1000, true)
-
+			bui.util.debounce($.operate.post(url, data, function (result) {
+                if (result.code == "200") {
+           		 parent.totalAmount();
+               }
+           	}), 1000, true);
+			var action = $("#action").vai();
+			setTimeout("statisticTotalAmount("+ action +")", 500 );
+			return true;
 		});
-		return true;
 	}
 </script>
