@@ -1,5 +1,6 @@
 package com.dili.card.service.impl;
 
+import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.CardRequestDto;
@@ -218,8 +219,9 @@ public class CardManageServiceImpl implements ICardManageService {
             serialRecord.setFundItemName(FundItem.IC_CARD_COST.getName());
             serialRecord.setAmount(requestDto.getServiceFee());
             serialRecord.setNotes("补卡，工本费转为市场收入");
-            serialRecord.setStartBalance(responseDto.getBalance() - responseDto.getFrozenBalance());
-            serialRecord.setEndBalance(responseDto.getBalance() - responseDto.getFrozenBalance());
+            long balance = NumberUtil.sub(responseDto.getBalance(), responseDto.getFrozenBalance()).longValue();
+            serialRecord.setStartBalance(balance);
+            serialRecord.setEndBalance(balance);
         });
         serialService.handleSuccess(serialDto);
         return businessRecord.getSerialNo();
