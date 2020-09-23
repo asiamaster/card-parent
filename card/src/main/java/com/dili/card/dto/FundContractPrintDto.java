@@ -112,7 +112,7 @@ public class FundContractPrintDto implements Serializable{
 		fundContractPrintDto.setConsigneeName(fundContractResponseDto.getConsignorName());
 		fundContractPrintDto.setConsigneeNames(fundContractResponseDto.getConsigneeNames());
 		fundContractPrintDto.setConsignorIdCode(fundContractResponseDto.getConsignorIdCode());
-		fundContractPrintDto.setSignatureImagePathByte(fundContractResponseDto.getSignatureImagePathByte());
+		fundContractPrintDto.setSignatureImagePath(fundContractResponseDto.getSignatureImagePath());
 		LocalDateTime startTime = fundContractResponseDto.getStartTime();
 		fundContractPrintDto.setStartTime( startTime.getYear() + " 年 " + startTime.getMonthValue() + " 月 " + startTime.getDayOfMonth() + " 日 ");
 		LocalDateTime endTime = fundContractResponseDto.getEndTime();
