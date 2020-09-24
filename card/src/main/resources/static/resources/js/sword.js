@@ -574,18 +574,8 @@ tab = {
                 }
                 let start = moment().subtract(duration, timeUnit).startOf('day').format('YYYY-MM-DD HH:mm:ss');
                 let end = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
-                laydate.render({
-                    elem: '#startDate',
-                    type: 'datetime',
-                    theme: '#007bff',
-                    value: start //必须遵循format参数设定的格式
-                });
-                laydate.render({
-                    elem: '#endDate',
-                    type: 'datetime',
-                    theme: '#007bff',
-                    value: end //必须遵循format参数设定的格式
-                });
+                 $(".laystart").val( start);
+                 $(".layend").val(end);
             },
             // 表单重置
             reset: function (formId, tableId) {
