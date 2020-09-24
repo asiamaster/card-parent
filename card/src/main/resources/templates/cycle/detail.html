@@ -67,13 +67,13 @@ p {
 	line-height: 33.5px;
 }
 
-.div_right{
+. {
 	 text-align: right;
 }
 </style>
 
 <div id="detail-modal" class="main-container container-fluid"
-	style="height: 380px; width: 1000px; margin-top: 20px;">
+	style=" margin-top: 20px;">
 	<form id="queryForm">
 		<input type="hidden"
 						name="userId" id="userId" value="${detail.userId!}"> <input
@@ -91,105 +91,77 @@ p {
 						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="26">
 						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="20">
 		<div id="baseInfo" style="margin-left: 120px;">
-				<div class="row row-interval">
-					<div class="col-2 div_right">
+				<div class="row row-cols">
+					<div class="form-group col-3">
 							<label for="cycleNo" class="div_label">结账单号</label>
-	            	</div>
-	            	<div class="col-2 ">
 	            			<input type="text" class="form-control" value="${detail.cycleNo!}" readonly/>
-	            	</div>
-	            	<div class="col-2 div_right">
+	           	 	</div>
+	            	<div class="form-group col-5">
 							<label for="cycleNo" class="div_label">账期时间</label>
-	            	</div>
-	            	<div class="col-5">
 	            			<input type="text" class="form-control" value='${detail.startTime!"--"}至${detail.endTime!"--"}' readonly/>
-	            	</div>
+					</div>
 				</div>
-				<div class="row row-interval">
-					<div class="col-2 div_right">
+				<div class="row row-cols">
+					<div class="form-group col-3">
 							<label for="cycleNo" class="div_label">柜员工号</label>
+							<input type="text" class="form-control" value="${detail.userCode!}" readonly/>
 	            	</div>
-	            	<div class="col-2">
-	            			<input type="text" class="form-control" value="${detail.userCode!}" readonly/>
-	            	</div>
-	            	<div class="col-2 div_right">
+	            	<div  class="form-group col-3">
 							<label for="cycleNo" class="div_label">柜员名称</label>
-	            	</div>
-	            	<div class="col-2">
-	            			<input type="text" class="form-control" value="${detail.userName!}" readonly/>
+							<input type="text" class="form-control" value="${detail.userName!}" readonly/>
 	            	</div>
 				</div>
-				<div class="row row-interval">
-					<div class="col-2 div_right">
+				<div class="row row-cols">
+					<div class="form-group col-3">
 							<label for="cycleNo" class="div_label">领款金额|${detail.accountCycleDetailDto.receiveTimes!}笔</label>
+							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.receiveAmountText!}" readonly/>
 	            	</div>
 	            	<div class="col-2">
-	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.receiveAmountText!}" readonly/>
-	            	</div>
-	            	<div class="col-2 div_right">
-							<label for="cycleNo" class="div_label">网银收款|${detail.accountCycleDetailDto.bankInTimes!}笔</label>
-	            	</div>
-	            	<div class="col-2">
+	            			<label for="cycleNo" class="div_label">网银收款|${detail.accountCycleDetailDto.bankInTimes!}笔</label>
 	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.bankInAmountText!}" readonly/>
 	            	</div>
 				</div>
-				<div class="row row-interval">
-					<div class="col-2 div_right">
+				<div class="row row-cols">
+					<div class="form-group col-3">
 							<label for="cycleNo" class="div_label">交款金额|${detail.accountCycleDetailDto.deliverTimes!}笔</label>
+							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.deliverAmountText!}" readonly/>
 	            	</div>
-	            	<div class="col-2">
-	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.deliverAmountText!}" readonly/>
-	            	</div>
-	            	<div class="col-2 div_right">
+	            	<div class="form-group col-3">
 							<label for="cycleNo" class="div_label">网银支出|${detail.accountCycleDetailDto.bankOutTimes!}笔</label>
-	            	</div>
-	            	<div class="col-2">
-	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.bankOutAmountText!}" readonly/>
+							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.bankOutAmountText!}" readonly/>
 	            	</div>
 				</div>
-				<div class="row row-interval">
-					<div class="col-2 div_right">
+				<div class="row row-cols">
+					<div class="form-group col-3">
 							<label for="cycleNo" class="div_label">现金收款|${detail.accountCycleDetailDto.depoCashTimes!}笔</label>
+							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoCashAmountText!}" readonly/>
 	            	</div>
-	            	<div class="col-2">
-	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoCashAmountText!}" readonly/>
-	            	</div>
-	            	<div class="col-2 div_right">
+	            	<div class="form-group col-3">
 							<label for="cycleNo" class="div_label">POS收款|${detail.accountCycleDetailDto.depoPosTimes!}笔</label>
-	            	</div>
-	            	<div class="col-2">
 	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoPosAmountText!}" readonly/>
 	            	</div>
 				</div>
-				<div class="row row-interval">
-					<div class="col-2 div_right">
+				<div class="row row-cols">
+					<div class="form-group col-3">
 							<label for="cycleNo" class="div_label">现金支出|${detail.accountCycleDetailDto.drawCashTimes!}笔</label>
+							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.drawCashAmountText!}" readonly/>
 	            	</div>
-	            	<div class="col-2">
-	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.drawCashAmountText!}" readonly/>
-	            	</div>
-	            	<div class="col-2 div_right">
+	            	<div class="form-group col-3">
 							<label for="cycleNo" class="div_label"></label>
 	            	</div>
-	            	<div class="col-2">
-	            	</div>
 				</div>
-				<div class="row row-interval">
-					<div class="col-2 div_right">
+				<div class="row row-cols">
+					<div class="form-group col-3">
 							<label for="cycleNo" class="div_label">现金余额</label>
+							<input type="text" id="unDeliverAmount" class="form-control" value="${detail.accountCycleDetailDto.unDeliverAmountText!}" readonly/>
 	            	</div>
-	            	<div class="col-2">
-	            			<input type="text" id="unDeliverAmount" class="form-control" value="${detail.accountCycleDetailDto.unDeliverAmountText!}" readonly/>
-	            	</div>
-	            	<div class="col-2 div_right">
+	            	<div class="form-group col-3">
 							<label for="cycleNo" class="div_label">结账交款金额</label>
-	            	</div>
-	            	<div class="col-2">
-	            		<input type="text" class="form-control" value='${detail.accountCycleDetailDto.lastDeliverAmountText!}' readonly/>
+							<input type="text" class="form-control" value='${detail.accountCycleDetailDto.lastDeliverAmountText!}' readonly/>
 	            	</div>
 				</div>
 		</div>
-		<div class="col align-self-center" style="text-align: center;margin-top: 20px;">
+		<div class="col align-self-center" style="text-align: center;">
 			<% if(settled == 2){ %>
 			<button id="back"
 				style="height: 40px; width: 100px; border-color: #FB0E12"
