@@ -10,14 +10,16 @@
 		height:100px;
 	}
 </style>
-<div style="text-align: center;">
+<div style="text-align: center;" class="container-fluid">
 	<div >
 		<form  id="saveForm">
 		<input id="id" name="id" type="hidden" value="${detail.id!}" class="form-control"/>
-        	<div class="form-group col-auto">
-                <label>确认解除<font color="#FC1D24">${detail.consignorName!}</font>和<font color="#FC1D24">${detail.consigneeNames!}</font>的委托关系？</label>
-                <div><textarea class="textarea_model" id="notes" maxlength="50" name="notes"></textarea></div>
-            </div>
+        	<div class="row row-cols-1">
+				<div class="form-group col-12">
+					<label>确认解除<span class="red font-weight-bold">${detail.consignorName!}</span>和<span class="red font-weight-bold">${detail.consigneeNames!}</span>的委托关系？</label>
+					<textarea class="form-control mt-3" id="notes" maxlength="50" rows="5" name="notes" ></textarea>
+				</div>
+			</div>
     	</form>
 	</div>
 </div>

@@ -5,7 +5,7 @@
 		<input id="action" name="action" type="hidden"
 			value="${usercash.action!}" class="form-control" />
 			<input id="inputuserName" name="userName" type="hidden" class="form-control"/>
-	         <input id="inputuserId" name="inputuserId" type="text" style="opacity: 0;" value=""/>
+	         <input id="inputuserId" name="inputuserId" type="hidden"  value=""/>
 			<input id="actionText" name="actionText" type="hidden" value="${actionText!}" class="form-control"/>
 		<div class="row row-cols-1">
 			<div class="form-group col">
@@ -26,8 +26,8 @@
 			</div>
 			<div class="form-group col">
 				<label for="bigAmount">大写金额</label>
-				<div><font color="#FC1D24"><strong><span
-						id="bigAmount"></span></strong></font></div>
+				<input type="text" class="form-control red" id="bigAmount" readonly>
+
 			</div>
 			<div class="form-group col">
 				<label for="notes">备&emsp;&emsp;注</label>
@@ -86,7 +86,7 @@
 	$(function () {
 		userNameAutoCompleteOption.displayFieldName = 'userName';
 		$('#amountYuan').bind(' input propertychange ', function () {
-			$('#bigAmount').html($.common.changeNumMoneyToChinese($('#amountYuan').val()));
+			$('#bigAmount').val($.common.changeNumMoneyToChinese($('#amountYuan').val()));
 		});
 
 		$('#inputuserId').focus(function () {
@@ -142,7 +142,7 @@
 		}
 		let url = "${contextPath}/cash/save.action";
 		$.modal.confirm("<div style='text-align: center;margin-bottom:10px;'>确认" + '<font color="#FC1D24"><span>' + $("#_userName").val() + '</span></font>' + $("#actionText").val() + "</div>" +
-				'<p style="text-align: center;"><font> <span style="font-size: 30px;"> ￥' + $("#amountYuan").val() + "</span></font></p>" + '<p style="text-align: center;"><font color="#FC1D24"> <span style="font-size: 30px;">' + $("#bigAmount").html() + "</span></font></p>", function (sure) {
+				'<p style="text-align: center;"><font> <span style="font-size: 30px;"> ￥' + $("#amountYuan").val() + "</span></font></p>" + '<p style="text-align: center;"><font color="#FC1D24"> <span style="font-size: 30px;">' + $("#bigAmount").val() + "</span></font></p>", function (sure) {
 			if (!sure) {
 				return;
 			}

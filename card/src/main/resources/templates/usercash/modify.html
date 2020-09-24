@@ -3,7 +3,7 @@
 	<form id="saveForm" class="container-fluid">
 		<input id="inputuserName" name="userName" type="hidden"
 			value="${usercash.userName!}" /> <input id="inputuserId"
-			name="inputuserId" type="text" style="opacity: 0;" value="" /> <input
+			name="inputuserId" type="hidden"  value="" /> <input
 			id="id" name="id" type="hidden" value="${usercash.id!}"
 			class="form-control" /> <input id="action" name="action"
 			type="hidden" value="${usercash.action!}" class="form-control" /> <input
@@ -20,8 +20,8 @@
 				_optionVariable="userNameAutoCompleteOption" />
 			</div>
 			<div class="form-group col">
-				<label for="userName">柜员姓名</label>
-				<div id="_userName"><input type="text" class="form-control" value="${usercash.userName!}"></div>
+				<label for="_userName">柜员姓名</label>
+				<input type="text" class="form-control" id="_userName" value="${usercash.userName!}" readonly>
 			</div>
 			<div class="form-group col">
 				<label for="amountYuan">${usercash.actionText!}金额</label> <input
@@ -29,8 +29,8 @@
 					value="${usercash.amountText!}" class="form-control" />
 			</div>
 			<div class="form-group col">
-				<label for="bigAmount">大写金额</label><div> <font color="#FC1D24"><strong><span
-					id="bigAmount"></span></strong></font></div>
+				<label for="bigAmount">大写金额</label>
+				<input type="text" class="form-control red" id="bigAmount" readonly>
 			</div>
 			<div class="form-group col">
 				<label for="notes">备&emsp;&emsp;注</label>
@@ -51,7 +51,7 @@
 	$("#userCode").watch(function(value) {
 		$('#inputuserId').val('');
 		$('#inputuserName').val('');
-		$("#_userName").text("");
+		$("#_userName").val("");
 	});
 
 	function selectUser() {
@@ -69,7 +69,7 @@
 			async : false,
 			error : function(result) {
 				$.modal.alertError(result.message);
-				$('#_userName').html("");
+				$('#_userName').val("");
 				$('#userCode').val("");
 				return false;
 			},
@@ -78,7 +78,7 @@
 					return true;
 				} else {
 					$.modal.alertError(result.message);
-					$('#_userName').html("");
+					$('#_userName').val("");
 					$('#userCode').val("");
 					return false;
 				}
@@ -88,12 +88,12 @@
 
 	$(function() {
 		userNameAutoCompleteOption.displayFieldName = 'userName';
-		$('#bigAmount').html(
+		$('#bigAmount').val(
 				$.common.changeNumMoneyToChinese($('#amountYuan').val()));
 		$('#amountYuan').bind(
 				' input propertychange ',
 				function() {
-					$('#bigAmount').html(
+					$('#bigAmount').val(
 							$.common.changeNumMoneyToChinese($('#amountYuan')
 									.val()));
 				});
@@ -150,7 +150,7 @@
 		if (!$.validate.form(formId)) {
 			return false;
 		}
-		if ($.common.isEmpty($("#_userName").text(""))) {
+		if ($.common.isEmpty($("#_userName").val(""))) {
 			$.modal.alertError("柜员名称为空");
 		}
 		let url = "${contextPath}/cash/modify.action";
@@ -158,7 +158,7 @@
 				.confirm(
 						"<div style='text-align: center;margin-bottom:10px;'>确认"
 								+ '<font color="#FC1D24"><span>'
-								+ $("#_userName").html()
+								+ $("#_userName").val()
 								+ '</span></font>'
 								+ $("#actionText").val()
 								+ "</div>"
@@ -166,7 +166,7 @@
 								+ $("#amountYuan").val()
 								+ "</span></font></p>"
 								+ '<p style="text-align: center;"><font color="#FC1D24"> <span style="font-size: 30px;">'
-								+ $("#bigAmount").html() + "</span></font></p>",
+								+ $("#bigAmount").val() + "</span></font></p>",
 						function(sure) {
 							if (!sure) {
 								return;

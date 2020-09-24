@@ -1,162 +1,94 @@
 <#bs4Body>
-<style>
-.info-column {
-        font-weight: bold ;
-    }
-.model-div {
-	border-bottom: #B5B5B5 1px solid;
-	margin-bottom: 10px;
-}
 
-#nav {
-	height: 12px;
-	margin: 15px 0px;
-}
-
-#nav ul {
-	list-style: none;
-}
-
-#nav li {
-	display: inline-block;
-	float: left;
-	margin-right: 50px;
-	width: 150px;
-}
-
-.margin_bord{
-	margin-left: 20px;
-}
-
-.suonue {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-
-.child_li {
-	background-color: #F6F7F9;
-}
-
-.top_div {
-	background-color: #C9C9C9;
-	height: 45px;
-	line-height: 45px;
-	font-size: 16px;
-}
-</style>
-<div class="model-div">
-	<div class="row row-interval margin_bord">
+<div class="model-div container-fluid">
+	<div class="breadcrumb">
+		合同信息
+	</div>
+	<div class="row row-cols-4">
 		<div class="form-group col">
-			<label for="contractNo">合同编号</label>
+			<label>合同编号</label>
 			<input  type="text" class="form-control"  readonly="readonly" value="${detail.contractNo!}" />
 		</div>
 		<div class="form-group col">
-			<label for="stateText">状态</label>
-			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.stateText!}" /></span></div>
+			<label>状态</label>
+			<input  type="text" class="form-control"  readonly="readonly" value="${detail.stateText!}" />
 		</div>
 		<div class="form-group col">
-			<label for="startTime">合同开始日期</label>
-			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.startTime!}" /></span></div>
+			<label>合同开始日期</label>
+			<input  type="text" class="form-control"  readonly="readonly" value="${detail.startTime!}" />
 		</div>
 		<div class="form-group col">
-			<label for="endTime">合同结束日期</label>
-			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.endTime!}" /></span></div>
+			<label>合同结束日期</label>
+			<input  type="text" class="form-control"  readonly="readonly" value="${detail.endTime!}" />
 		</div>
 	</div>
 </div>
-<div class="model-div">
-	<div class="row row-interval margin_bord">
-		<div class="form-group col">
-			<label for="contractInfo"  class="info-column">委托人信息</label>
-		</div>
+<div class="model-div container-fluid">
+	<div class="breadcrumb">
+		委托人信息
 	</div>
-	<div class="row row-interval margin_bord">
+	<div class="row row-cols-4">
 		<div class="form-group col">
-			<label for="consignorCode">编号</label>
-			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.consignorCode!}" /></span></div>
+			<label>编号</label>
+			<input  type="text" class="form-control"  readonly="readonly" value="${detail.consignorCode!}" />
 		</div>
 		<div class="form-group col">
-			<label for="consignorName">名称</label>
-			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.consignorName!}" /></span></div>
+			<label>名称</label>
+			<input  type="text" class="form-control"  readonly="readonly" value="${detail.consignorName!}" />
 		</div>
 		<div class="form-group col">
-			<label for="consignorCard">委托园区卡</label>
-			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.consignorCard!}" /></span></div>
-		</div>
-		<div class="form-group col">
-			<label for="consignorCard">&emsp;&emsp;</label>
-			<div>&emsp;&emsp;</div>
+			<label>委托园区卡</label>
+			<input  type="text" class="form-control"  readonly="readonly" value="${detail.consignorCard!}" />
 		</div>
 	</div>
 </div>
-<div class="model-div">
-	<div class="row row-interval margin_bord">
-		<div class="form-group col">
-			<label for="contractInfo" class="info-column">被委托人信息</label>
-		</div>
+<div class="model-div container-fluid">
+	<div class="breadcrumb">
+		被委托人信息
 	</div>
 	<% for(item in detail.consignorDtos) { %>
-	<div class="row row-interval margin_bord">
+	<div class="row row-cols-4">
 		<div class="form-group col">
-			<label for="consigneeName">名称</label>
-			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${item.consigneeName!}" /></span></div>
+			<label>名称</label>
+			<input  type="text" class="form-control"  readonly="readonly" value="${item.consigneeName!}" />
 		</div>
 		<div class="form-group col">
-			<label for="consigneeIdMobile">电话</label>
-			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${item.consigneeIdMobile!}" /></span></div>
+			<label>电话</label>
+			<input  type="text" class="form-control"  readonly="readonly" value="${item.consigneeIdMobile!}" />
 		</div>
 		<div class="form-group col">
-			<label for="consigneeIdCode">身份证号</label>
-			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${item.consigneeIdCode!}" /></span></div>
-		</div>
-		<div class="form-group col">
-			<label for="consignorCard">&emsp;&emsp;</label>
-			<div>&emsp;&emsp;</div>
+			<label>身份证号</label>
+			<input  type="text" class="form-control"  readonly="readonly" value="${item.consigneeIdCode!}" />
 		</div>
 	</div>
 	<% } %>
 </div>
-<div class="">
-	<div class="row row-interval margin_bord">
+<div class="container-fluid">
+	<div class="breadcrumb">
+		操作信息
+	</div>
+	<div class="row row-cols-4">
 		<div class="form-group col">
-			<label for="contractInfo" class="info-column">操作信息</label>
+			<label>创建人</label>
+			<input  type="text" class="form-control"  readonly="readonly" value="${detail.creator!}" />
+		</div>
+		<div class="form-group col">
+			<label>创建时间</label>
+			<input  type="text" class="form-control"  readonly="readonly" value="${detail.createTime!}" />
 		</div>
 	</div>
-	<div class="row row-interval margin_bord">
-		<div class="form-group col">
-			<label for="consignorCode">创建人</label>
-			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.creator!}" /></span></div>
-		</div>
-		<div class="form-group col">
-			<label for="consignorName">创建时间</label>
-			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.createTime!}" /></span></div>
-		</div>
-		<div class="form-group col">
-			<label for="consignorCard">&emsp;&emsp;</label>
-			<div>&emsp;&emsp;</div>
-		</div>
-		<div class="form-group col">
-			<label for="consignorCard">&emsp;&emsp;</label>
-			<div>&emsp;&emsp;</div>
-		</div>
-	</div>
-	<div class="row row-interval margin_bord">
+	<div class="row row-cols-4">
 		<div class="form-group col ">
-			<label for="consignorCode">解除人</label>
-			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" type="text" class="form-control" value="${detail.terminater!'--'}" /></span></div>
+			<label>解除人</label>
+			<input  type="text" class="form-control"  readonly="readonly" type="text" class="form-control" value="${detail.terminater!'--'}" />
 		</div>
 		<div class="form-group col">
-			<label for="consignorName">解除时间</label>
-			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.terminateTime!'--:--'}" /></span></div>
+			<label>解除时间</label>
+			<input  type="text" class="form-control"  readonly="readonly" value="${detail.terminateTime!'--:--'}" />
 		</div>
 		<div class="form-group col">
-			<label for="consignorCard">解除说明</label>
-			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.terminateNotes!'--'}" /></span></div>
-		</div>
-		<div class="form-group col">
-			<label for="consignorCard">&emsp;&emsp;</label>
-			<div>&emsp;&emsp;</div>
+			<label>解除说明</label>
+			<input  type="text" class="form-control"  readonly="readonly" value="${detail.terminateNotes!'--'}" />
 		</div>
 	</div>
 </div>
