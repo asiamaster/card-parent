@@ -1,51 +1,37 @@
 <#bs4Body>
-<style>
-.info-column {
-	width: 30%;
-	font-weight: bold;
-	text-align: right;
-	vertical-align: middle;
-}
 
-.info-cell {
-	width: 70%;
-	text-align: left;
-	vertical-align: middle;
-}
-</style>
-<div id="detail-modal">
-	<form id="saveCashForm" style="width: 90%;">
+<div id="detail-modal" class="container-fluid">
+	<form id="saveCashForm">
 		<input id="action" name="action" type="hidden"
 			value="${usercash.action!}" class="form-control" />
 			<input id="inputuserName" name="userName" type="hidden" class="form-control"/>
 	         <input id="inputuserId" name="inputuserId" type="text" style="opacity: 0;" value=""/>
 			<input id="actionText" name="actionText" type="hidden" value="${actionText!}" class="form-control"/>
-		<div class="form-group col">
-			<label for="userCode">柜员工号</label>
-			<#bautoCompleteProvider id="userCode" _hiddenDomainId="userId"
+		<div class="row row-cols-1">
+			<div class="form-group col">
+				<label for="userCode">柜员工号</label>
+				<#bautoCompleteProvider id="userCode" _hiddenDomainId="userId"
 				_hiddenDomainName="userId" _displayDomainId="userCode"
 				_displayDomainName="userCode" _placeholder=""
 				_optionVariable="userNameAutoCompleteOption" />
-		</div>
-		<div class="form-group col">
-			<label for="userName">柜员姓名</label>
-			<div id="_userName"></div>
-		</div>
-		<div class="form-group col">
-			<label for="amountYuan">${actionText!}金额</label> <input
-				id="amountYuan" maxlength="10" name="amountYuan" type="text"
-				class="form-control" />
-		</div>
-		<div class="form-group col">
-			<label for="bigAmount">大写金额</label> 
-			<div><font color="#FC1D24"><strong><span
-					id="bigAmount"></span></strong></font></div>
-		</div>
-		<div class="form-group col">
-			<label for="notes">备&emsp;&emsp;注</label>
-			<div>
-				<textarea style="width: 420px;" id="notes" name="notes"
-				maxlength="30"></textarea>
+			</div>
+			<div class="form-group col">
+				<label for="userName">柜员姓名</label>
+				<input type="text" id="_userName" class="form-control" readonly>
+			</div>
+			<div class="form-group col">
+				<label for="amountYuan">${actionText!}金额</label> <input
+					id="amountYuan" maxlength="10" name="amountYuan" type="text"
+					class="form-control" />
+			</div>
+			<div class="form-group col">
+				<label for="bigAmount">大写金额</label>
+				<div><font color="#FC1D24"><strong><span
+						id="bigAmount"></span></strong></font></div>
+			</div>
+			<div class="form-group col">
+				<label for="notes">备&emsp;&emsp;注</label>
+				<textarea id="notes" name="notes" class="form-control"  maxlength="30"></textarea>
 			</div>
 		</div>
 	</form>
@@ -62,7 +48,7 @@
 	$("#userCode").watch(function(value) {
 		$('#inputuserId').val('');
 		$('#inputuserName').val('');
-		$("#_userName").text("");
+		$("#_userName").val("");
 	});
 
 	function selectUser() {
@@ -80,7 +66,7 @@
 			async: false,
 			error: function (result) {
 				$.modal.alertError(result.message);
-				$('#_userName').html("");
+				$('#_userName').val("");
 				$('#userCode').val("");
 				return false;
 			},
@@ -89,7 +75,7 @@
 					return true;
 				} else {
 					$.modal.alertError(result.message);
-					$('#_userName').html("");
+					$('#_userName').val("");
 					$('#userCode').val("");
 					return false;
 				}
@@ -151,11 +137,11 @@
 		if (!$.validate.form(formId)) {
 			return false;
 		}
-		if($.common.isEmpty($("#_userName").text(""))){
+		if($.common.isEmpty($("#_userName").val(""))){
 			$.modal.alertError("柜员名称为空");
 		}
 		let url = "${contextPath}/cash/save.action";
-		$.modal.confirm("<div style='text-align: center;margin-bottom:10px;'>确认" + '<font color="#FC1D24"><span>' + $("#_userName").html() + '</span></font>' + $("#actionText").val() + "</div>" +
+		$.modal.confirm("<div style='text-align: center;margin-bottom:10px;'>确认" + '<font color="#FC1D24"><span>' + $("#_userName").val() + '</span></font>' + $("#actionText").val() + "</div>" +
 				'<p style="text-align: center;"><font> <span style="font-size: 30px;"> ￥' + $("#amountYuan").val() + "</span></font></p>" + '<p style="text-align: center;"><font color="#FC1D24"> <span style="font-size: 30px;">' + $("#bigAmount").html() + "</span></font></p>", function (sure) {
 			if (!sure) {
 				return;

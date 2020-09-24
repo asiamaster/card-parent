@@ -577,11 +577,13 @@ tab = {
                 laydate.render({
                     elem: '#startDate',
                     type: 'datetime',
+                    theme: '#007bff',
                     value: start //必须遵循format参数设定的格式
                 });
                 laydate.render({
                     elem: '#endDate',
                     type: 'datetime',
+                    theme: '#007bff',
                     value: end //必须遵循format参数设定的格式
                 });
             },
