@@ -19,7 +19,7 @@ import cn.hutool.core.convert.Convert;
 
 /**
  * @description： 主卡打印
- * 
+ *
  * @author ：WangBo
  * @time ：2020年9月7日下午2:01:30
  */
@@ -55,9 +55,9 @@ public class OpenCardPrintServiceImpl extends PrintServiceImpl {
 	public void createSpecial(PrintDto printDto, BusinessRecordDo recordDo, boolean reprint) {
 		// 开卡的操作金额就是工本费,打印时取其中一个就可以了
 		if(recordDo.getAmount() == null) {
-			recordDo.setAmount(0L);	
+			recordDo.setAmount(0L);
 		}
-		printDto.setTotalAmount(CurrencyUtils.toNoSymbolCurrency(recordDo.getAmount()));
+		printDto.setTotalAmount(CurrencyUtils.cent2TenNoSymbol(recordDo.getAmount()));
 		printDto.setTotalAmountWords(Convert.digitToChinese(Double.valueOf(recordDo.getAmount())));
 	}
 }

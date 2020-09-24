@@ -27,7 +27,7 @@ public class ChangeCardPrintServiceImpl extends PrintServiceImpl{
     @Override
     public void createSpecial(PrintDto printDto, BusinessRecordDo recordDo, boolean reprint) {
         Long totalAmount = recordDo.getAmount() != null ? recordDo.getAmount() : 0L;
-        printDto.setTotalAmount(CurrencyUtils.toNoSymbolCurrency(totalAmount));
+        printDto.setTotalAmount(CurrencyUtils.cent2TenNoSymbol(totalAmount));
         printDto.setTotalAmountWords(Convert.digitToChinese(Double.valueOf(printDto.getTotalAmount())));
 
         String attach = recordDo.getAttach();

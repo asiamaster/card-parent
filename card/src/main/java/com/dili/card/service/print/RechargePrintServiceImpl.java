@@ -46,9 +46,9 @@ public class RechargePrintServiceImpl extends PrintServiceImpl {
         } else {
             totalAmount = recordDo.getAmount();
         }
-
-        printDto.setTotalAmount(CurrencyUtils.toNoSymbolCurrency(totalAmount));
-        printDto.setTotalAmountWords(Convert.digitToChinese(Double.valueOf(printDto.getTotalAmount())));
+        printDto.setTotalAmount(CurrencyUtils.cent2TenNoSymbol(totalAmount));
+        String s = Convert.digitToChinese(Double.valueOf(printDto.getTotalAmount()));
+        printDto.setTotalAmountWords(s);
 
         String json = recordDo.getAttach();
         if (StringUtils.isBlank(json)) {

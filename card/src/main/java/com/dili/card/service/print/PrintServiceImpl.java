@@ -24,12 +24,12 @@ public abstract class PrintServiceImpl implements IPrintService{
         printDto.setReprint(reprint ? "补打" : "");
         printDto.setCustomerName(recordDo.getCustomerName());
         printDto.setCardNo(recordDo.getCardNo());
-        printDto.setAmount(CurrencyUtils.toNoSymbolCurrency(recordDo.getAmount()));
-        printDto.setBalance(CurrencyUtils.toNoSymbolCurrency(recordDo.getEndBalance()));
+        printDto.setAmount(CurrencyUtils.cent2TenNoSymbol(recordDo.getAmount()));
+        printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(recordDo.getEndBalance()));
         printDto.setTradeChannel(recordDo.getTradeChannel() != null ? TradeChannel.getNameByCode(recordDo.getTradeChannel()) : "");
-        printDto.setDeposit(CurrencyUtils.toNoSymbolCurrency(recordDo.getDeposit()));
-        printDto.setCardCost(CurrencyUtils.toNoSymbolCurrency(recordDo.getCardCost()));
-        printDto.setServiceCost(CurrencyUtils.toNoSymbolCurrency(recordDo.getServiceCost()));
+        printDto.setDeposit(CurrencyUtils.cent2TenNoSymbol(recordDo.getDeposit()));
+        printDto.setCardCost(CurrencyUtils.cent2TenNoSymbol(recordDo.getCardCost()));
+        printDto.setServiceCost(CurrencyUtils.cent2TenNoSymbol(recordDo.getServiceCost()));
         printDto.setOperatorNo(recordDo.getOperatorNo());
         printDto.setOperatorName(recordDo.getOperatorName());
         printDto.setNotes(recordDo.getNotes());
