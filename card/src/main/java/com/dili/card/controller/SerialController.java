@@ -169,7 +169,7 @@ public class SerialController implements IControllerHandler {
     @RequestMapping(value = "/business/getPrintData.action")
     @ResponseBody
     public BaseOutput<Map<String, Object>> getPrintData(String serialNo, boolean reprint) {
-        LOGGER.info("根据操作流水号获取打印数据*****{}", serialNo);
+        LOGGER.info("根据操作流水号获取打印数据*****{},->>>>>{}", serialNo,reprint);
         if (StrUtil.isBlank(serialNo)) {
             return BaseOutput.failure("操作流水号为空");
         }
