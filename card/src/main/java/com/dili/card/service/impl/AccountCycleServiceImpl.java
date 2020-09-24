@@ -52,12 +52,16 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void settle(AccountCycleDto accountCycleDto) {
+		
 		//获取最新的账务周期
 		AccountCycleDo accountCycle = this.findLatestCycleByUserId(accountCycleDto.getUserId());
+		
 		// 对账状态校验和交款金额校验
 		this.validateCycleSettledState(accountCycle, accountCycleDto);
+		
 		//生成交款信息
 		userCashService.save(buildUserCash(accountCycleDto));
+		
 		// 更新账务周期状态
 		this.updateStateById(accountCycle.getId(), CycleState.SETTLED.getCode(), accountCycle.getVersion());
 	}
@@ -65,25 +69,34 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void flated(Long id) {
+		
 		AccountCycleDo cycle = this.findById(id);
+		
 		// 平账状态校验
 		this.validateCycleFlatedState(cycle);
+		
 		// 账务周期详情统计信息
 		AccountCycleDetailDo accountCycleDetail = this.buildAccountCycleDetailDo(this.buildCycleDetail(cycle));
+		
 		// 构建商户相关信息
 		this.buildFirmInfo(accountCycleDetail);
+		
 		// 更新账务周期状态
 		this.updateStateById(id, CycleState.FLATED.getCode(), cycle.getVersion());
+		
 		// 保存账务周期详情信息
 		accountCycleDetailDao.save(accountCycleDetail);
+		
 		// 更新领取款记录
 		userCashService.flatedByCycle(cycle.getCycleNo());
 	}
 
 	@Override
 	public List<AccountCycleDto> list(AccountCycleDto accountCycleDto) {
+		
 		// 构建查询条件
 		this.buildQueryCondition(accountCycleDto);
+		
 		// 封装返回数据
 		return this.buildAccountCycleList(accountCycleDao.findByCondition(accountCycleDto));
 	}
