@@ -61,23 +61,21 @@ p {
 	text-align: center;
 	line-height: 20px;
 }
+
+.div_label{
+	height: 33.5px;
+	line-height: 33.5px;
+}
+
+.div_right{
+	 text-align: right;
+}
 </style>
 
 <div id="detail-modal" class="main-container container-fluid"
-	style="height: 380px; width: 1000px;">
+	style="height: 380px; width: 1000px; margin-top: 20px;">
 	<form id="queryForm">
-		<div id="baseInfo" >
-				<div class="row row-interval">
-					<div class="info-column col-2">结账单号</div>
-					<div class="info-cell col-2" id="cycle">${detail.cycleNo!"--"}</div>
-					<div class="info-column col-2">账期时间</div>
-					<div class="info-cell col-5">${detail.startTime!"--"}至${detail.endTime!"--"}</div>
-				</div>
-				<div class="row row-interval">
-					<div class="info-column col-2">柜员工号</div>
-					<div class="info-cell col-2" id="userCode">${detail.userCode!}</div>
-					<div class="info-column col-2">柜员名称</div>
-					<div class="info-cell col-2" id="userName">${detail.userName!} <input type="hidden"
+		<input type="hidden"
 						name="userId" id="userId" value="${detail.userId!}"> <input
 						type="hidden" name="cycleNo" id="cycleNo"
 						value="${detail.cycleNo!}"> <input type="hidden"
@@ -92,40 +90,106 @@ p {
 						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="25">
 						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="26">
 						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="20">
-					</div>
+		<div id="baseInfo" style="margin-left: 120px;">
+				<div class="row row-interval">
+					<div class="col-2 div_right">
+							<label for="cycleNo" class="div_label">结账单号</label>
+	            	</div>
+	            	<div class="col-2 ">
+	            			<input type="text" class="form-control" value="${detail.cycleNo!}" readonly/>
+	            	</div>
+	            	<div class="col-2 div_right">
+							<label for="cycleNo" class="div_label">账期时间</label>
+	            	</div>
+	            	<div class="col-5">
+	            			<input type="text" class="form-control" value='${detail.startTime!"--"}至${detail.endTime!"--"}' readonly/>
+	            	</div>
 				</div>
 				<div class="row row-interval">
-					<div class="info-column col-2">领款金额|${detail.accountCycleDetailDto.receiveTimes!}笔</div>
-					<div class="info-cell col-2">${detail.accountCycleDetailDto.receiveAmountText!}</div>
-					<div class="info-column col-2">网银收款|${detail.accountCycleDetailDto.bankInTimes!}笔</div>
-					<div class="info-cell col-2">${detail.accountCycleDetailDto.bankInAmountText!}</div>
+					<div class="col-2 div_right">
+							<label for="cycleNo" class="div_label">柜员工号</label>
+	            	</div>
+	            	<div class="col-2">
+	            			<input type="text" class="form-control" value="${detail.userCode!}" readonly/>
+	            	</div>
+	            	<div class="col-2 div_right">
+							<label for="cycleNo" class="div_label">柜员名称</label>
+	            	</div>
+	            	<div class="col-2">
+	            			<input type="text" class="form-control" value="${detail.userName!}" readonly/>
+	            	</div>
 				</div>
 				<div class="row row-interval">
-					<div class="info-column col-2">交款金额|${detail.accountCycleDetailDto.deliverTimes!}笔</div>
-					<div class="info-cell col-2">${detail.accountCycleDetailDto.deliverAmountText!}</div>
-					<div class="info-column col-2">网银支出|${detail.accountCycleDetailDto.bankOutTimes!}笔</div>
-					<div class="info-cell col-2">${detail.accountCycleDetailDto.bankOutAmountText!}</div>
+					<div class="col-2 div_right">
+							<label for="cycleNo" class="div_label">领款金额|${detail.accountCycleDetailDto.receiveTimes!}笔</label>
+	            	</div>
+	            	<div class="col-2">
+	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.receiveAmountText!}" readonly/>
+	            	</div>
+	            	<div class="col-2 div_right">
+							<label for="cycleNo" class="div_label">网银收款|${detail.accountCycleDetailDto.bankInTimes!}笔</label>
+	            	</div>
+	            	<div class="col-2">
+	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.bankInAmountText!}" readonly/>
+	            	</div>
 				</div>
 				<div class="row row-interval">
-					<div class="info-column col-2">现金收款|${detail.accountCycleDetailDto.depoCashTimes!}笔</div>
-					<div class="info-cell col-2">${detail.accountCycleDetailDto.depoCashAmountText!}</div>
-					<div class="info-column col-2">POS收款|${detail.accountCycleDetailDto.depoPosTimes!}笔</div>
-					<div class="info-cell col-2">${detail.accountCycleDetailDto.depoPosAmountText!}</div>
+					<div class="col-2 div_right">
+							<label for="cycleNo" class="div_label">交款金额|${detail.accountCycleDetailDto.deliverTimes!}笔</label>
+	            	</div>
+	            	<div class="col-2">
+	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.deliverAmountText!}" readonly/>
+	            	</div>
+	            	<div class="col-2 div_right">
+							<label for="cycleNo" class="div_label">网银支出|${detail.accountCycleDetailDto.bankOutTimes!}笔</label>
+	            	</div>
+	            	<div class="col-2">
+	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.bankOutAmountText!}" readonly/>
+	            	</div>
 				</div>
 				<div class="row row-interval">
-					<div class="info-column col-2">现金支出|${detail.accountCycleDetailDto.drawCashTimes!}笔</div>
-					<div class="info-cell col-2">${detail.accountCycleDetailDto.drawCashAmountText!}</div>
-					<div class="info-column col-2"></div>
-					<div class="info-cell col-2"></div>
+					<div class="col-2 div_right">
+							<label for="cycleNo" class="div_label">现金收款|${detail.accountCycleDetailDto.depoCashTimes!}笔</label>
+	            	</div>
+	            	<div class="col-2">
+	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoCashAmountText!}" readonly/>
+	            	</div>
+	            	<div class="col-2 div_right">
+							<label for="cycleNo" class="div_label">POS收款|${detail.accountCycleDetailDto.depoPosTimes!}笔</label>
+	            	</div>
+	            	<div class="col-2">
+	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoPosAmountText!}" readonly/>
+	            	</div>
 				</div>
 				<div class="row row-interval">
-					<div class="info-column col-2">现金余额</div>
-					<div class="info-cell col-2" id="unDeliverAmount">${detail.accountCycleDetailDto.unDeliverAmountText!}</div>
-					<div class="info-column col-2">结账交款金额</div>
-					<div class="info-cell col-2">${detail.accountCycleDetailDto.lastDeliverAmountText!}</div>
+					<div class="col-2 div_right">
+							<label for="cycleNo" class="div_label">现金支出|${detail.accountCycleDetailDto.drawCashTimes!}笔</label>
+	            	</div>
+	            	<div class="col-2">
+	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.drawCashAmountText!}" readonly/>
+	            	</div>
+	            	<div class="col-2 div_right">
+							<label for="cycleNo" class="div_label"></label>
+	            	</div>
+	            	<div class="col-2">
+	            	</div>
+				</div>
+				<div class="row row-interval">
+					<div class="col-2 div_right">
+							<label for="cycleNo" class="div_label">现金余额</label>
+	            	</div>
+	            	<div class="col-2">
+	            			<input type="text" id="unDeliverAmount" class="form-control" value="${detail.accountCycleDetailDto.unDeliverAmountText!}" readonly/>
+	            	</div>
+	            	<div class="col-2 div_right">
+							<label for="cycleNo" class="div_label">结账交款金额</label>
+	            	</div>
+	            	<div class="col-2">
+	            		<input type="text" class="form-control" value='${detail.accountCycleDetailDto.lastDeliverAmountText!}' readonly/>
+	            	</div>
 				</div>
 		</div>
-		<div class="col align-self-center" style="text-align: center;margin-top: 40px;">
+		<div class="col align-self-center" style="text-align: center;margin-top: 20px;">
 			<% if(settled == 2){ %>
 			<button id="back"
 				style="height: 40px; width: 100px; border-color: #FB0E12"
@@ -341,7 +405,7 @@ p {
 	        return false;
 	    }
 		var settleAmount = parseFloat($.trim($("#settleAmount").val()));
-		var balanceCash = parseFloat($.trim($("#unDeliverAmount").html()));
+		var balanceCash = parseFloat($.trim($("#unDeliverAmount").val()));
 		if(settleAmount != balanceCash){
 			$.modal.alertError("交款金额与现金余额不一致");
 			return false;
