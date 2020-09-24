@@ -864,7 +864,6 @@
                 	$("#cardCustomerId").val(result.data.customerId);
                     $("#consignorAccountId").val(result.data.accountId);
                     $("#consignorCardNo").val(cardNo);
-                    $.modal.alertSuccess("读卡成功");
                 } else {
                 	$.modal.alertError(result.message);
                 	return;
@@ -925,7 +924,6 @@
 		$(obj).parent().parent().find("#consigneeIdCode").val(idCard.IDCardNo);
 		$(obj).parent().parent().find("#consigneeName").val(idCard.Name);
 		consigneeIdCodeList.push(idCard.IDCardNo);
-		$.modal.alertSuccess("读卡成功");
 	}
 
 	/** 查询按钮 */
@@ -963,7 +961,6 @@
 			    	$("#consignorCustomerMobile").val(result.data.contactsPhone);
 			    	$("#customerId").val(result.data.id);
 			    	$("#consignorCustomerCode").val(result.data.code);
-			    	$.modal.alertSuccess(msg);
 		    	}else{
 		    		$.modal.alertError(result.message);
 		    		return false;

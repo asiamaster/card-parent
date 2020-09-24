@@ -35,7 +35,7 @@
 }
 
 .child_li {
-	background-color: #CCCCCC;
+	background-color: #F6F7F9;
 }
 
 .top_div {
@@ -49,19 +49,19 @@
 	<div class="row row-interval margin_bord">
 		<div class="form-group col">
 			<label for="contractNo">合同编号</label>
-			<div><span class="child_li">${detail.contractNo!}</span></div>
+			<input  type="text" class="form-control"  readonly="readonly" value="${detail.contractNo!}" />
 		</div>
 		<div class="form-group col">
 			<label for="stateText">状态</label>
-			<div><span class="child_li">${detail.contractNo!}</span></div>
+			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.contractNo!}" /></span></div>
 		</div>
 		<div class="form-group col">
 			<label for="startTime">合同开始日期</label>
-			<div><span class="child_li">${detail.startTime!}</span></div>
+			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.startTime!}" /></span></div>
 		</div>
 		<div class="form-group col">
 			<label for="endTime">合同结束日期</label>
-			<div><span class="child_li">${detail.endTime!}</span></div>
+			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.endTime!}" /></span></div>
 		</div>
 	</div>
 </div>
@@ -74,15 +74,15 @@
 	<div class="row row-interval margin_bord">
 		<div class="form-group col">
 			<label for="consignorCode">编号</label>
-			<div><span class="child_li">${detail.consignorCode!}</span></div>
+			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.consignorCode!}" /></span></div>
 		</div>
 		<div class="form-group col">
 			<label for="consignorName">名称</label>
-			<div><span class="child_li">${detail.consignorName!}</span></div>
+			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.consignorName!}" /></span></div>
 		</div>
 		<div class="form-group col">
 			<label for="consignorCard">委托园区卡</label>
-			<div><span class="child_li">${detail.consignorCard!}</span></div>
+			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.consignorCard!}" /></span></div>
 		</div>
 		<div class="form-group col">
 			<label for="consignorCard">&emsp;&emsp;</label>
@@ -100,15 +100,15 @@
 	<div class="row row-interval margin_bord">
 		<div class="form-group col">
 			<label for="consigneeName">名称</label>
-			<div><span class="child_li">${item.consigneeName!}</span></div>
+			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${item.consigneeName!}" /></span></div>
 		</div>
 		<div class="form-group col">
 			<label for="consigneeIdMobile">电话</label>
-			<div><span class="child_li">${item.consigneeIdMobile!}</span></div>
+			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${item.consigneeIdMobile!}" /></span></div>
 		</div>
 		<div class="form-group col">
 			<label for="consigneeIdCode">身份证号</label>
-			<div><span class="child_li">${item.consigneeIdCode!}</span></div>
+			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${item.consigneeIdCode!}" /></span></div>
 		</div>
 		<div class="form-group col">
 			<label for="consignorCard">&emsp;&emsp;</label>
@@ -126,11 +126,11 @@
 	<div class="row row-interval margin_bord">
 		<div class="form-group col">
 			<label for="consignorCode">创建人</label>
-			<div><span class="child_li">${detail.creator!}</span></div>
+			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.creator!}" /></span></div>
 		</div>
 		<div class="form-group col">
 			<label for="consignorName">创建时间</label>
-			<div><span class="child_li">${detail.createTime!}</span></div>
+			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.createTime!}" /></span></div>
 		</div>
 		<div class="form-group col">
 			<label for="consignorCard">&emsp;&emsp;</label>
@@ -142,17 +142,17 @@
 		</div>
 	</div>
 	<div class="row row-interval margin_bord">
-		<div class="form-group col">
+		<div class="form-group col ">
 			<label for="consignorCode">解除人</label>
-			<div><span class="child_li">${detail.terminater!'--'}</span></div>
+			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" type="text" class="form-control" value="${detail.terminater!'--'}" /></span></div>
 		</div>
 		<div class="form-group col">
 			<label for="consignorName">解除时间</label>
-			<div><span class="child_li">${detail.terminateTime!'--:--'}</span></div>
+			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.terminateTime!'--:--'}" /></span></div>
 		</div>
 		<div class="form-group col">
 			<label for="consignorCard">解除说明</label>
-			<div><span class="child_li">${detail.terminateNotes!'--'}</span></div>
+			<div><span class="child_li"><input  type="text" class="form-control"  readonly="readonly" value="${detail.terminateNotes!'--'}" /></span></div>
 		</div>
 		<div class="form-group col">
 			<label for="consignorCard">&emsp;&emsp;</label>

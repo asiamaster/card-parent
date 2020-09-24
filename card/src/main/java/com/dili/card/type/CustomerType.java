@@ -14,11 +14,14 @@ import java.util.List;
 public enum CustomerType {
 	/** 园外买家 */
 	OUTSIDE_BUYER("园外买家", "outside_buyer", CardFaceType.BUYER),
-	/** 园内买家 */
-	INSIDE_BUYER("园内买家", "inside_buyer", CardFaceType.BUYER_VIP),
+	/** 理货区客户 */
+	OPERATION_AREA("理货区客户", "operation_area", CardFaceType.BUYER_VIP),
+	/** 省内客户 */
+	IN_PROVINCE("省内客户", "in_province", CardFaceType.BUYER_VIP),
+	/** 理货区客户 */
+	NATIVE_CUSTOMER("本地客户", "native", CardFaceType.BUYER_VIP),
 	/** 卖家卡 */
 	SELLER("卖家", "seller", CardFaceType.SELLER),
-
 	/** 司机 */
 	DRIVER("司机", "driver", CardFaceType.DRIVER);
 

@@ -58,7 +58,7 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
             log.error("收费项查询失败", e);
             throw e;
         }
-        log.info("收费项>" + JSONObject.toJSONString(businessChargeList));
+        log.info("收费项返回>" + JSONObject.toJSONString(businessChargeList));
         List<BusinessChargeItemDto> chargeItemList = GenericRpcResolver.resolver(businessChargeList,
                 ServiceName.ASSETS);
         return chargeItemList;
@@ -69,7 +69,6 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
                                  SystemSubjectType systemSubjectType) {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         List<BusinessChargeItemDto> chargeItemList = getChargeItem(userTicket.getFirmId(), ruleFeeBusinessType);
-        log.info("费用项返回>" + JSONObject.toJSONString(chargeItemList));
         if (chargeItemList == null || chargeItemList.size() < 0) {
             log.info("业务类型[{}]未查询到收费项!", ruleFeeBusinessType.getCode());
             return BigDecimal.valueOf(0);
