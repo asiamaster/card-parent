@@ -20,33 +20,41 @@
     }
 </style>
 <div class="container-fluid">
-    <div>
+    <div >
         <div class="panel-body" style="display: block;">
             <form id="frozen-fund-form">
                 <div id="baseInfo" >
                     <div class="row row-interval">
-                        <div class="info-column-frozen-fund col-2">园区卡号</div>
-                        <div class="info-cell-frozen-fund col-2">${detail.cardAssociation.primary.cardNo!}</div>
-                        <div class="info-column-frozen-fund col-2">客户名称</div>
-                        <div class="info-cell-frozen-fund col-2">${detail.customer.name!}</div>
+                        <div class="form-group col-2 offset-1">
+                            <label class="info-column">园区卡号</label>
+                            <input  type="text" class="form-control" value="${detail.cardAssociation.primary.cardNo!}" readonly/>
+                        </div>
+                        <div class="form-group col-2 offset-1">
+                            <label class="info-column">客户名称</label>
+                            <input  type="text" class="form-control" value="${detail.customer.name!}" readonly/>
+                        </div>
                     </div>
                     <div class="row row-interval">
-                        <div class="info-column-frozen-fund col-2">可用余额</div>
-                        <div class="info-cell-frozen-fund col-2">${detail.accountFund.availableAmountText!}</div>
-                        <div class="info-column-frozen-fund col-2">手动冻结金额</div>
-                        <div class="info-cell-frozen-fund col-2">${detail.accountFund.frozenAmountText!}</div>
+                        <div class="form-group col-2 offset-1">
+                            <label class="info-column">可用余额</label>
+                            <input  type="text" class="form-control" value="${detail.accountFund.availableAmountText!}" readonly/>
+                        </div>
+                        <div class="form-group col-2 offset-1">
+                            <label class="info-column">手动冻结金额</label>
+                            <input  type="text" class="form-control" value="${detail.accountFund.frozenAmountText!}" readonly/>
+                        </div>
                     </div>
                     <div class="row row-interval">
-                        <div class="vertical-td info-column-frozen-fund col-2">冻结金额<i class="red">*</i></div>
-                        <div class="col-5">
+                        <div class="form-group col-5 offset-1">
+                            <label class="info-column">冻结金额<i class="red">*</i></label>
                             <input id="amount" name="amount" type="number"
                                    oninput="limitNum(this)"
                                    class="form-control" val-formatter="yuanToFen"/>
                         </div>
                     </div>
                     <div class="row row-interval">
-                        <div class="vertical-td info-column-frozen-fund col-2">备注</div>
-                        <div class="col-5">
+                        <div class="form-group col-5 offset-1">
+                            <label class="info-column">备注</label>
                             <textarea id="mark" name="mark" class="form-control" rows="3" placeholder="不超过30个字符"></textarea>
                         </div>
                     </div>

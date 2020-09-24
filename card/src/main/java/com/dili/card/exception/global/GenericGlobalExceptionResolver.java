@@ -40,10 +40,10 @@ public class GenericGlobalExceptionResolver {
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericGlobalExceptionResolver.class);
 
     /**
-    * 表单参数校验
-    * @author miaoguoxin
-    * @date 2020/7/10
-    */
+     * 表单参数校验
+     * @author miaoguoxin
+     * @date 2020/7/10
+     */
     @ExceptionHandler({BindException.class})
     public String handleFormArgException(BindException e) throws IOException {
         return this.writeErrorResp(ResultCode.PARAMS_ERROR, errorMessage(e.getBindingResult()), e);
@@ -57,13 +57,6 @@ public class GenericGlobalExceptionResolver {
         return this.writeErrorResp(ResultCode.PARAMS_ERROR, errorMessage(e.getBindingResult()), e);
     }
 
-    /**
-     * 参数断言异常处理
-     */
-    @ExceptionHandler({IllegalArgumentException.class})
-    public String handleIllegalArgsException(IllegalArgumentException e) throws IOException {
-        return this.writeErrorResp(ResultCode.PARAMS_ERROR, e.getMessage(), e);
-    }
 
     /**
      * 单参数校验异常处理
@@ -123,7 +116,7 @@ public class GenericGlobalExceptionResolver {
         return this.writeErrorResp(ResultCode.APP_ERROR, "服务异常，请联系管理员", e);
     }
 
-    private String writeErrorResp(String errorCode, String errorMsg, Exception e) throws IOException {
+    private String writeErrorResp(String errorCode, String errorMsg, Throwable e) throws IOException {
         if (request.getRequestURI().contains(".html")) {
             request.setAttribute("exception", e);
             return SpringUtil.getProperty("error.page.default", "error/default");

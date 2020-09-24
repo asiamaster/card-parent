@@ -1,8 +1,7 @@
 <style>
     .info-column {
-        width: 10%;
         font-weight: bold ;
-        text-align: right;
+        text-align: left;
     }
 
     .info-cell {
@@ -23,37 +22,48 @@
         </div>
         <div id="base-info" class="panel-heading" >
             <div class="row row-interval" >
-                <div class="info-column col">卡号</div>
-                <div class="info-cell col">${detail.cardAssociation.primary.cardNo!}</div>
-                <div class="info-column col">卡类别</div>
-                <div class="info-cell col">${detail.cardAssociation.primary.cardTypeText!}</div>
-                <div class="info-column col">卡片状态</div>
-                <div class="info-cell col">${detail.cardAssociation.primary.cardStateText!}</div>
-                <div class="info-column col-1">账户状态</div>
-                <div class="info-cell col-2">${detail.cardAssociation.primary.disabledStateText!}</div>
+                <div class="form-group col">
+                    <label class="info-column">卡号</label>
+                    <input  type="text" class="form-control" value="${detail.cardAssociation.primary.cardNo!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">卡类别</label>
+                    <input  type="text" class="form-control" value="${detail.cardAssociation.primary.cardTypeText!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">卡片状态</label>
+                    <input  type="text" class="form-control" value="${detail.cardAssociation.primary.cardStateText!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">账户状态</label>
+                    <input  type="text" class="form-control" value="${detail.cardAssociation.primary.disabledStateText!}" readonly/>
+                </div>
             </div>
             <div class="row row-interval">
-                <div class="info-column col">可用余额</div>
-                <div class="info-cell col">
+                <div class="form-group col">
+                    <label class="info-column">可用余额</label>
                     <% if(detail.cardAssociation.primary.cardType ==10) { %>
-                    ${detail.accountFund.availableAmountText!}
+                    <input  type="text" class="form-control" value="${detail.accountFund.availableAmountText!}" readonly/>
                     <% }else{ %>
-                    ***
-                    <% } %>
-
-                </div>
-                <div class="info-column col">冻结金额</div>
-                <div class="info-cell col">
-                    <% if(detail.cardAssociation.primary.cardType ==10) { %>
-                    ${detail.accountFund.frozenAmountText!}
-                    <% }else{ %>
-                    ***
+                    <input  type="text" class="form-control" value="***" readonly/>
                     <% } %>
                 </div>
-                <div class="info-column col">创建人</div>
-                <div class="info-cell col">${detail.cardAssociation.primary.creator!}</div>
-                <div class="info-column col-1">创建时间</div>
-                <div class="info-cell col-2">${detail.cardAssociation.primary.cardCreateTime!}</div>
+                <div class="form-group col">
+                    <label class="info-column">冻结金额</label>
+                    <% if(detail.cardAssociation.primary.cardType ==10) { %>
+                    <input  type="text" class="form-control" value="${detail.accountFund.frozenAmountText!}" readonly/>
+                    <% }else{ %>
+                    <input  type="text" class="form-control" value="***" readonly/>
+                    <% } %>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">创建人</label>
+                    <input  type="text" class="form-control" value="${detail.cardAssociation.primary.creator!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">创建时间</label>
+                    <input  type="text" class="form-control" value="${detail.cardAssociation.primary.cardCreateTime!}" readonly/>
+                </div>
             </div>
         </div>
     </div>
@@ -63,14 +73,22 @@
         </div>
         <div  id="customerInfo" class="panel-heading">
             <div class="row row-interval">
-                <div class="info-column col">客户编号</div>
-                <div class="info-cell col">${detail.customer.code!}</div>
-                <div class="info-column col">客户名称</div>
-                <div class="info-cell col">${detail.customer.name!}</div>
-                <div class="info-column col">联系方式</div>
-                <div class="info-cell col">${detail.customer.customerContactsPhone!}</div>
-                <div class="info-column col">联系地址</div>
-                <div class="info-cell col">${detail.customer.certificateAddr!}</div>
+                <div class="form-group col">
+                    <label class="info-column">客户编号</label>
+                    <input  type="text" class="form-control" value="${detail.customer.code!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">客户名称</label>
+                    <input  type="text" class="form-control" value="${detail.customer.name!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">联系方式</label>
+                    <input  type="text" class="form-control" value="${detail.customer.customerContactsPhone!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">联系地址</label>
+                    <input  type="text" class="form-control" value="${detail.customer.certificateAddr!}" readonly/>
+                </div>
             </div>
         </div>
     </div>
