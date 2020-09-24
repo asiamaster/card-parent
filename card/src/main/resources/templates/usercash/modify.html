@@ -1,23 +1,6 @@
 <#bs4Body>
-<style>
-.info-column {
-	width: 30%;
-	font-weight: bold;
-	text-align: right;
-}
-
-.info-cell {
-	width: 70%;
-	text-align: left;
-}
-
-.vertical-td {
-	display: table-cell;
-	vertical-align: middle !important;
-}
-</style>
 <div id="detail-modal">
-	<form id="saveForm" style="width: 90%;">
+	<form id="saveForm" class="container-fluid">
 		<input id="inputuserName" name="userName" type="hidden"
 			value="${usercash.userName!}" /> <input id="inputuserId"
 			name="inputuserId" type="text" style="opacity: 0;" value="" /> <input
@@ -27,31 +10,33 @@
 			id="actionText" name="actionText" type="hidden"
 			value="${usercash.actionText!}" class="form-control" />
 
-		<div class="form-group col">
-			<label for="userCode">柜员工号</label>
-			<#bautoCompleteProvider id="userCode" _hiddenDomainId="userId"
+		<div class="row row-cols-1">
+			<div class="form-group col">
+				<label for="userCode">柜员工号</label>
+				<#bautoCompleteProvider id="userCode" _hiddenDomainId="userId"
 				_hiddenDomainName="userId" _displayDomainId="userCode"
 				_displayDomainName="userCode" _placeholder=""
 				_text="${usercash.userCode!}" _value="${usercash.userId!}"
 				_optionVariable="userNameAutoCompleteOption" />
-		</div>
-		<div class="form-group col">
-			<label for="userName">柜员姓名</label>
-			<div id="_userName">${usercash.userName!}</div>
-		</div>
-		<div class="form-group col">
-			<label for="amountYuan">${usercash.actionText!}金额</label> <input
-				id="amountYuan" maxlength="10" name="amountYuan" type="text"
-				value="${usercash.amountText!}" class="form-control" />
-		</div>
-		<div class="form-group col">
-			<label for="bigAmount">大写金额</label><div> <font color="#FC1D24"><strong><span
+			</div>
+			<div class="form-group col">
+				<label for="userName">柜员姓名</label>
+				<div id="_userName"><input type="text" class="form-control" value="${usercash.userName!}"></div>
+			</div>
+			<div class="form-group col">
+				<label for="amountYuan">${usercash.actionText!}金额</label> <input
+					id="amountYuan" maxlength="10" name="amountYuan" type="text"
+					value="${usercash.amountText!}" class="form-control" />
+			</div>
+			<div class="form-group col">
+				<label for="bigAmount">大写金额</label><div> <font color="#FC1D24"><strong><span
 					id="bigAmount"></span></strong></font></div>
-		</div>
-		<div class="form-group col">
-			<label for="notes">备&emsp;&emsp;注</label>
-			<div><textarea style="width: 420px;" maxlength="30" id="notes"
-				name="notes">${usercash.notes!}</textarea></div>
+			</div>
+			<div class="form-group col">
+				<label for="notes">备&emsp;&emsp;注</label>
+				<textarea  maxlength="30" id="notes" class="form-control"
+							   name="notes">${usercash.notes!}</textarea></div>
+
 		</div>
 	</form>
 </div>
