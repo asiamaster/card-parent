@@ -200,7 +200,7 @@
         </table>
     </div>
 </div>
-<div class="modal fade" id="addFirstModal" tabindex="-1" role="dialog" aria-labelledby="addFirstModalLabel" aria-hidden="true">
+<div class="modal fade" id="addFirstModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="addFirstModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 1100px;height: 500px;">
 		<div class="modal-content" style="width: 1100px;height: 500px;">
 			<div class="modal-header" style="background-color: #E6E6E6;height: 45px;">
@@ -350,7 +350,7 @@
 	</div>
 </div>
 
-<div class="modal fade" id="addSecondModal" tabindex="-1" role="dialog" aria-labelledby="addSecondModalLabel" aria-hidden="true">
+<div class="modal fade" id="addSecondModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="addSecondModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 820px;height: 445px;">
 		<div class="modal-content" style="width: 820px;height: 445px;">
 			<div class="modal-header" style="background-color: #E6E6E6;height: 45px;">
@@ -421,6 +421,7 @@
 <#common_cardBaseJs/>
 <script>
     $(function () {
+    	
 
     	$(".consignee.row.row-interval").each(function () {
     		$(this).find("#consigneeIdMobile").on('input  propertychange', validateNumber);
@@ -486,7 +487,7 @@
 	 * 添加被委托人信息
 	 */
 	function openAddView() {
-		$('#addFirstModal').modal('show');
+		$('#addFirstModal').modal({backdrop: 'static', keyboard: false});
 		$("#addFirstModal").modal().css({
             "margin-top": function () {
                 return  10;
