@@ -245,9 +245,10 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			}else {//非活跃期 最近一次交现金金额就是最终交款金额
 				UserCashDo userCashDo = userCashService.getLastestUesrCash(cycle.getUserId(), cycle.getCycleNo(), CashAction.PAYER.getCode());
 				accountCycleDetail.setLastDeliverAmount(userCashDo.getAmount());
-				accountCycleDetail.setUnDeliverAmount(userCashDo.getAmount());
-				//详情分两种情况  平账 都要统计 不做处理    //结账申请后不统计     || //结账申请状态和平账状态列表   需要减去最后一次结账交款记录
-				if ((detail && CycleState.SETTLED.getCode() == cycle.getState()) || !detail) {
+				//结账后此字段为0 
+				accountCycleDetail.setUnDeliverAmount(0L);
+				//详情 平账 和  结账申请 后不统计结账申请交款记录
+				if ((detail && CycleState.ACTIVE.getCode() != cycle.getState())) {
 					accountCycleDetail.setDeliverAmount(accountCycleDetail.getDeliverAmount() - userCashDo.getAmount());
 					accountCycleDetail.setDeliverTimes(accountCycleDetail.getDeliverTimes() - 1);
 				}
@@ -401,7 +402,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		cashDto.setAmount(accountCycleDto.getCashAmount());
 		cashDto.setAction(CashAction.PAYER.getCode());
 		cashDto.setSettledApply(true);
-		cashDto.setNotes("结账申请创建");
+		cashDto.setNotes("结账申请记录");
 		return cashDto;
 	}
 	
