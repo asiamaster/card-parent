@@ -1,41 +1,22 @@
-<style>
-    .info-column-frozen-fund {
-        width: 20%;
-        font-weight: bold;
-        text-align: right;
-    }
 
-    .info-cell-frozen-fund {
-        width: 30%;
-    }
-
-    .vertical-td {
-        display: table-cell;
-        vertical-align: middle !important;
-    }
-</style>
 <div class="main-container container-fluid">
-    <div>
-        <div class="panel-body" style="display: block;">
-            <form id="unfrozen-account-form">
-            	<input id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}" type="hidden">
-                <input id="disabledState2" name="disabledState2" value="${detail.cardAssociation.primary.disabledState!}" type="hidden">
-				<div id="baseInfo">
-					<div class="row row-interval">
-						<div class="vertical-td info-column-frozen-fund col-2">备注</div>
-						<div class="col-2">
-							<textarea id="mark" style="width: 420px;" name="notes" class="form-control"
-								maxlength="30" rows="3" placeholder="不超过30个字符"></textarea>
-						</div>
-					</div>
-				</div>
-				<div style="margin: auto" align="center">
-                    <button id="unfrozen" type="button" class="btn btn-primary" onclick="submitUnFrozenAccount()">
-                        解冻账户
-                    </button>
+    <form id="unfrozen-account-form">
+        <input id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}" type="hidden">
+        <input id="disabledState2" name="disabledState2" value="${detail.cardAssociation.primary.disabledState!}" type="hidden">
+        <div id="baseInfo">
+            <div class="row row-cols-1">
+                <div class="col-4">
+                    <label>备注</label>
+                    <textarea id="mark"name="notes" class="form-control"
+                        maxlength="30" rows="3" placeholder="不超过30个字符"></textarea>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
+        <div style="margin: auto" align="center">
+            <button id="unfrozen" type="button" class="btn btn-primary" onclick="submitUnFrozenAccount()">
+                解冻账户
+            </button>
+        </div>
+    </form>
 </div>
 <#account_unfrozenIndexJs/>
