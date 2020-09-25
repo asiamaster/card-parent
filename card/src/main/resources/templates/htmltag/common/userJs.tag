@@ -7,7 +7,6 @@
         paramName: 'keyword',
         displayFieldName: 'realName',
         showNoSuggestionNotice: true,
-        width: 'flex',
         noSuggestionNotice: '无此用户, 请重新输入',
         transformResult: function (result) {
             if(result.success){

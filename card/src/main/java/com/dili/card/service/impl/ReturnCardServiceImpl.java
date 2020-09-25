@@ -1,11 +1,16 @@
 package com.dili.card.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -76,6 +81,9 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 		// 构建本地记录
 		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardParam, accountCard, record -> {
 			record.setType(OperateType.REFUND_CARD.getCode());
+			Map<String, Object> attach = new HashMap<String, Object>();
+			attach.put(Constant.BUSINESS_RECORD_ATTACH_CARDTYPE, accountCard.getCardType());
+			record.setAttach(JSONObject.toJSONString(attach));
 			if (masterHasTradeSerial) {
 				record.setAmount(cardParam.getServiceFee());
 				record.setTradeType(TradeType.FEE.getCode());
