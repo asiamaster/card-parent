@@ -1,64 +1,45 @@
-<style>
-    .info-column-frozen-fund {
-        width: 20%;
-        font-weight: bold;
-        text-align: right;
-    }
 
-    .info-cell-frozen-fund {
-        width: 30%;
-    }
-
-    .vertical-td {
-        display: table-cell;
-        vertical-align: middle !important;
-    }
-</style>
 <div class="main-container container-fluid">
     <div>
-        <div class="panel-body" style="display: block;">
-            <form id="frozen-account-form">
-            	<input id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}" type="hidden">
-                <input id="disabledState3" name="disabledState" value="${detail.cardAssociation.primary.disabledState!}" type="hidden">
-                <div id="baseInfo" >
-                    <div class="row row-interval">
-                        <div class="form-group col-2 offset-1">
-                            <label class="info-column">园区卡号</label>
-                            <input  type="text" class="form-control" value="${detail.cardAssociation.primary.cardNo!}" readonly/>
-                        </div>
-                        <div class="form-group col-2 offset-1">
-                            <label class="info-column">客户名称</label>
-                            <input  type="text" class="form-control" value="${detail.customer.name!}" readonly/>
-                        </div>
+        <form id="frozen-account-form">
+            <input id="accountId" name="accountId" value="${detail.cardAssociation.primary.accountId!}" type="hidden">
+            <input id="disabledState3" name="disabledState" value="${detail.cardAssociation.primary.disabledState!}" type="hidden">
+            <div id="baseInfo" >
+                <div class="row row-cols-6">
+                    <div class="form-group col">
+                        <label>园区卡号</label>
+                        <input  type="text" class="form-control" value="${detail.cardAssociation.primary.cardNo!}" readonly/>
                     </div>
-                    <div class="row row-interval">
-                        <div class="form-group col-2 offset-1">
-                            <label class="info-column">可用余额</label>
-                            <input  type="text" class="form-control" value="${detail.accountFund.availableAmountText!}" readonly/>
-                        </div>
-                        <div class="form-group col-2 offset-1">
-                            <label class="info-column">手动冻结金额</label>
-                            <input  type="text" class="form-control" value="${detail.accountFund.frozenAmountText!}" readonly/>
-                        </div>
+                    <div class="form-group col">
+                        <label>客户名称</label>
+                        <input  type="text" class="form-control" value="${detail.customer.name!}" readonly/>
                     </div>
-                    <div class="row row-interval">
-                        <div class="form-group col-5 offset-1">
-                            <label class="info-column">备注</label>
-                            <textarea id="mark" name="mark" class="form-control" rows="3" placeholder="不超过30个字符"></textarea>
-                        </div>
+                    <div class="form-group col">
+                        <label>可用余额</label>
+                        <input  type="text" class="form-control" value="${detail.accountFund.availableAmountText!}" readonly/>
+                    </div>
+                    <div class="form-group col">
+                        <label>手动冻结金额</label>
+                        <input  type="text" class="form-control" value="${detail.accountFund.frozenAmountText!}" readonly/>
                     </div>
 
-                   </div>
-                <div style="margin: auto" align="center">
-                    <button id="frozenAccount" type="button"  class="btn btn-primary"   onclick="submitFrozenAccount()">
-                        冻结账户
-                    </button>
-                    <button id="recordAccount" style="margin-left: 50px" type="button" class="btn btn-outline-primary" onclick="showOrHideFrozenAccountRecord()">
-                        冻结记录
-                    </button>
                 </div>
-            </form>
-        </div>
+                <div class="row row-cols-1">
+                    <div class="form-group col-4">
+                        <label>备注</label>
+                        <textarea id="mark" name="mark" class="form-control" rows="3" placeholder="不超过30个字符"></textarea>
+                    </div>
+                </div>
+           </div>
+            <div style="margin: auto" align="center">
+                <button id="frozenAccount" type="button"  class="btn btn-primary"   onclick="submitFrozenAccount()">
+                    冻结账户
+                </button>
+                <button id="recordAccount" style="margin-left: 50px" type="button" class="btn btn-outline-primary" onclick="showOrHideFrozenAccountRecord()">
+                    冻结记录
+                </button>
+            </div>
+        </form>
     </div>
     <div class="row" id="table-div-frozen-account" style="display: none">
         <form id="query-frozen-account">

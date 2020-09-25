@@ -1,54 +1,32 @@
 <#bs4Body>
-<style>
-    .info-column {
-        width: 30%;
-        font-weight: bold;
-        text-align: right;
-    }
-    .info-cell{
-        width: 70%;
-        text-align: left;
-    }
-
-    .vertical-td {
-        display: table-cell;
-        vertical-align: middle !important;
-    }
-</style>
-<div id="detail-modal">
+<div id="detail-modal" class="container-fluid">
 	<form id="savePayerForm">
 		<input id="action" name="action" type="hidden" value="2"
 			class="form-control" /> <input id="actionText" name="actionText"
 			type="hidden" value="交款" class="form-control" />
-		<div class="form-group col">
-			<label for="userCode">柜员工号</label>
-			<div class="info-cell">${detail.userCode!}</div>
-			<input id="userCode" name="userCode" type="hidden"
-				value="${detail.userCode!}" /> <input id="userId" name="userId"
-				type="hidden" value="${detail.userId!}" />
-		</div>
-		<div class="form-group col">
-			<label for="userName" >柜员姓名</label>
-			<div class="info-cell" id="_userName">${detail.userName!}</div>
-			<input id="userName" name="userName" type="hidden"
-				value="${detail.userName!}" />
-		</div>
-		<div class="form-group col">
-			<label for="amountYuan">交款金额</label> <input
-				id="amountYuan" name="amountYuan" type="text" maxlength="10" class="form-control" />
-		</div>
-		<div class="form-group col">
-			<label for="bigAmount">大写金额</label>
-			<div 
-				style="word-wrap: break-word; word-break: break-all;">
-				<font color="#FC1D24"><strong><span id="bigAmount"></span></strong></font>
+		<div class="row row-cols-1">
+			<div class="form-group col">
+				<label for="userCode">柜员工号</label>
+				<input type="text" class="form-control" value="${detail.userCode!}" readonly>
+				<input id="userCode" name="userCode" type="hidden" value="${detail.userCode!}" readonly/>
+				<input id="userId" name="userId" type="hidden" value="${detail.userId!}" />
 			</div>
-		</div>
-		<div class="form-group col">
-			<label for="notes">备&emsp;&emsp;注</label>
-			<div>
-				<textarea style="width: 420px;" maxlength="20" id="notes"
-					name="notes"></textarea>
+			<div class="form-group col">
+				<label for="userName" >柜员姓名</label>
+				<input type="text" id="_userName" class="form-control" value="${detail.userName!}" readonly>
+				<input id="userName" name="userName" type="hidden" value="${detail.userName!}" />
+			</div>
+			<div class="form-group col">
+				<label for="amountYuan">交款金额</label>
+				<input id="amountYuan" name="amountYuan" type="text" maxlength="10" class="form-control" />
+			</div>
+			<div class="form-group col">
+				<label for="bigAmount">大写金额</label>
+				<input type="text" id="bigAmount" class="form-control" readonly>
+			</div>
+			<div class="form-group col-12">
+				<label for="notes">备&emsp;&emsp;注</label>
+				<textarea maxlength="20" id="notes" class="form-control" name="notes"></textarea>
 			</div>
 		</div>
 	</form>
@@ -62,7 +40,7 @@
 		$('#amountYuan').bind(
 				' input propertychange ',
 				function() {
-					$('#bigAmount').html(
+					$('#bigAmount').val(
 							$.common.changeNumMoneyToChinese($('#amountYuan')
 									.val()));
 				});
@@ -111,7 +89,7 @@
 				.confirm(
 						"<div style='text-align: center;margin-bottom:10px;'>确认"
 								+ '<font color="#FC1D24"><span>'
-								+ $("#_userName").html()
+								+ $("#_userName").val()
 								+ '</span></font>'
 								+ $("#actionText").val()
 								+ "</div>"
@@ -119,7 +97,7 @@
 								+ $("#amountYuan").val()
 								+ "</span></font></p>"
 								+ '<p style="text-align: center;"><font color="#FC1D24"> <span style="font-size: 30px;">'
-								+ $("#bigAmount").html() + "</span></font></p>",
+								+ $("#bigAmount").val() + "</span></font></p>",
 						function(sure) {
 							if (!sure) {
 								return;

@@ -17,11 +17,11 @@
 </style>
 <div class="container-fluid ">
     <div>
-        <div class="panel-heading">
-            <h4 class="panel-title"><strong>基本信息</strong></h4>
+        <div class="breadcrumb">
+            基本信息
         </div>
         <div id="base-info" class="panel-heading" >
-            <div class="row row-interval" >
+            <div class="row row-cols-6" >
                 <div class="form-group col">
                     <label class="info-column">卡号</label>
                     <input  type="text" class="form-control" value="${detail.cardAssociation.primary.cardNo!}" readonly/>
@@ -39,7 +39,7 @@
                     <input  type="text" class="form-control" value="${detail.cardAssociation.primary.disabledStateText!}" readonly/>
                 </div>
             </div>
-            <div class="row row-interval">
+            <div class="row row-cols-6" >
                 <div class="form-group col">
                     <label class="info-column">可用余额</label>
                     <% if(detail.cardAssociation.primary.cardType ==10) { %>
@@ -68,11 +68,11 @@
         </div>
     </div>
     <div>
-        <div class="panel-heading">
-            <h4 class="panel-title"><strong>开卡人信息</strong></h4>
+        <div class="breadcrumb">
+            开卡人信息
         </div>
         <div  id="customerInfo" class="panel-heading">
-            <div class="row row-interval">
+            <div class="row row-cols-6">
                 <div class="form-group col">
                     <label class="info-column">客户编号</label>
                     <input  type="text" class="form-control" value="${detail.customer.code!}" readonly/>
@@ -94,8 +94,8 @@
     </div>
     <div>
         <% if(detail.cardAssociation.association.~size>0) { %>
-        <div class="panel-heading">
-            <h4 class="panel-title"><strong>关联卡信息</strong></h4>
+        <div class="breadcrumb">
+            关联卡信息
         </div>
         <div  id="cardAssociation" class="panel-heading" >
             <table  class="table table-bordered">
