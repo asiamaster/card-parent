@@ -75,14 +75,14 @@
 		</div>
 		<div class="col align-self-center" style="text-align: center;margin-bottom: 20px;margin-top: 10px;">
 
-			if(settled != 2 && detail.state == 1){ %>
+			<% if(settled != 2 && detail.state == 1){ %>
 			<button id="apply" type="button"
 					class="btn btn-primary px-5" onclick="applySettlement()">申请结账</button>
 			<% } %>
 			<% else if(settled == 2){ %>
 			<button id="back"
 				type="button" class="btn btn-secondary px-5" onclick="backList()">返回</button>
-			<% }
+			<% }%>
 			<input id="cycleState" type="hidden" value="${detail.state!}">
 		</div>
 	</form>
