@@ -51,7 +51,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void settle(AccountCycleDto accountCycleDto) {
+	public AccountCycleDto settle(AccountCycleDto accountCycleDto) {
 		
 		//获取最新的账务周期
 		AccountCycleDo accountCycle = this.findLatestCycleByUserId(accountCycleDto.getUserId());
@@ -64,6 +64,8 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		
 		// 更新账务周期状态
 		this.updateStateById(accountCycle.getId(), CycleState.SETTLED.getCode(), accountCycle.getVersion());
+		
+		return accountCycleDto;
 	}
 	
 	@Override
@@ -402,7 +404,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		cashDto.setAmount(accountCycleDto.getCashAmount());
 		cashDto.setAction(CashAction.PAYER.getCode());
 		cashDto.setSettledApply(true);
-		cashDto.setNotes("结账申请记录");
+		cashDto.setNotes("结账交款记录");
 		return cashDto;
 	}
 	

@@ -127,10 +127,9 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 */
 	@PostMapping("/applySettle.action")
 	@ResponseBody
-	public BaseOutput<Boolean> applySettle(@RequestBody @Validated(value = {ConstantValidator.Update.class}) AccountCycleDto accountCycleDto) {
+	public BaseOutput<AccountCycleDto> applySettle(@RequestBody @Validated(value = {ConstantValidator.Update.class}) AccountCycleDto accountCycleDto) {
 		log.info("结账申请对账*****{}", JSONObject.toJSONString(accountCycleDto));
-		iAccountCycleService.settle(accountCycleDto);
-		return BaseOutput.success("结账申请成功!");
+		return BaseOutput.successData(iAccountCycleService.settle(accountCycleDto));
 	}
 
 	/**

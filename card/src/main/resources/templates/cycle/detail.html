@@ -69,7 +69,7 @@
 	            	</div>
 	            	<div class="form-group col">
 							<label for="cycleNo" class="div_label">结账交款金额</label>
-							<input type="text" class="form-control" value='${detail.accountCycleDetailDto.lastDeliverAmountText!}' readonly/>
+							<input type="text" id="applyPayerAmount"  class="form-control" value='${detail.accountCycleDetailDto.lastDeliverAmountText!}' readonly/>
 	            	</div>
 				</div>
 		</div>
@@ -303,6 +303,8 @@
 		data.cashAmount = parseInt(parseFloat($('#settleAmount').val())*100);
 		bui.util.debounce($.operate.saveModal(url, JSON.stringify(data), function (result) {
 	            if (result.code == web_status.SUCCESS) {
+	            	$("#unDeliverAmount").val(0);
+	            	$("#applyPayerAmount").val(data.cashAmount);
 	                $.table.refresh()
 	            }
 	    }), 1000, true)
