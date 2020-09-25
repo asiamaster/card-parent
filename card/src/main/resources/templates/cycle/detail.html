@@ -29,11 +29,11 @@
 					</div>
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">柜员工号</label>
-							<input type="text" class="form-control" value="${detail.userCode!}" readonly/>
+							<input id="userCode" type="text" class="form-control" value="${detail.userCode!}" readonly/>
 	            	</div>
 	            	<div  class="form-group col">
 							<label for="cycleNo" class="div_label">柜员名称</label>
-							<input type="text" class="form-control" value="${detail.userName!}" readonly/>
+							<input id="userName" type="text" class="form-control" value="${detail.userName!}" readonly/>
 	            	</div>
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">领款金额|${detail.accountCycleDetailDto.receiveTimes!}笔</label>
@@ -298,8 +298,8 @@
 		let url = "${contextPath}/cycle/applySettle.action";
 		let data = {};
 		data.userId = $('#userId').val();
-		data.userCode = $('#userCode').text();
-		data.userName = $('#userName').text();
+		data.userCode = $('#userCode').val();
+		data.userName = $('#userName').val();
 		data.cashAmount = parseInt(parseFloat($('#settleAmount').val())*100);
 		bui.util.debounce($.operate.saveModal(url, JSON.stringify(data), function (result) {
 	            if (result.code == web_status.SUCCESS) {
