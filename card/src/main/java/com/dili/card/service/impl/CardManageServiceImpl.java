@@ -1,6 +1,5 @@
 package com.dili.card.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.CardRequestDto;
@@ -189,7 +188,7 @@ public class CardManageServiceImpl implements ICardManageService {
             record.setTradeChannel(TradeChannel.CASH.getCode());
             //记录老卡卡号，用于生成打印数据
             JSONObject obj = new JSONObject();
-            obj.put(Constant.OLD_CARD_NO_PARAM, requestDto.getCardNo());
+            obj.put(Constant.NEW_CARD_NO_PARAM, requestDto.getNewCardNo());
             record.setAttach(obj.toJSONString());
             record.setNotes("换卡，工本费转为市场收入");
         });

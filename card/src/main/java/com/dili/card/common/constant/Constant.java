@@ -35,7 +35,7 @@ public class Constant {
 	public static final int TRUE_INT_FLAG = 1;
 	public static final int FALSE_INT_FLAG = 0;
 	/** 卡号字段（用于换卡记录） */
-	public static final String OLD_CARD_NO_PARAM = "old_card_no";
+	public static final String NEW_CARD_NO_PARAM = "new_card_no";
 
 	/** 柜台操作记录扩展字段，卡类型 */
 	public static final String BUSINESS_RECORD_ATTACH_CARDTYPE = "cardType";

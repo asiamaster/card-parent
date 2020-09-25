@@ -37,8 +37,8 @@ public class PrintDto {
     private String operatorName;
     /** 备注 */
     private String notes;
-    /**旧卡卡号(换卡时需要)*/
-    private String oldCardNo;
+    /**新卡卡号(换卡时需要)*/
+    private String newCardNo;
     /**凭证号(充值需要)*/
     private String posCertNum;
     /**银行卡类型(充值需要) {@link com.dili.card.type.BankCardType}*/
@@ -198,11 +198,11 @@ public class PrintDto {
         this.notes = notes;
     }
 
-    public String getOldCardNo() {
-        return oldCardNo;
+    public String getNewCardNo() {
+        return newCardNo;
     }
 
-    public void setOldCardNo(String oldCardNo) {
-        this.oldCardNo = oldCardNo;
+    public void setNewCardNo(String newCardNo) {
+        this.newCardNo = newCardNo;
     }
 }

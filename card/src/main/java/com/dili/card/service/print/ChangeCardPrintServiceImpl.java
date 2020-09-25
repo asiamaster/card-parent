@@ -35,8 +35,8 @@ public class ChangeCardPrintServiceImpl extends PrintServiceImpl{
             return;
         }
         JSONObject attachObj = JSON.parseObject(attach);
-        String oldCardNo = attachObj.getString(Constant.OLD_CARD_NO_PARAM);
-        printDto.setOldCardNo(oldCardNo);
+        String newCardNo = attachObj.getString(Constant.NEW_CARD_NO_PARAM);
+        printDto.setNewCardNo(newCardNo);
     }
 
     @Override
