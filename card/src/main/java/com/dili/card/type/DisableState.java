@@ -5,38 +5,42 @@
  */
 package com.dili.card.type;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 禁用启用状态
  */
 public enum DisableState {
-	/** 启用 */
-	ENABLED(1, "正常"),
-	/** 禁用 */
-	DISABLED(2, "冻结");
+    /** 启用 */
+    ENABLED(1, "正常"),
+    /** 禁用 */
+    DISABLED(2, "冻结");
 
-	private Integer code;
-	private String name;
+    private Integer code;
+    private String name;
 
-	DisableState(Integer code, String name) {
-		this.code = code;
-		this.name = name;
-	}
+    DisableState(Integer code, String name) {
+        this.code = code;
+        this.name = name;
+    }
 
-	public Integer getCode() {
-		return code;
-	}
+    public Integer getCode() {
+        return code;
+    }
 
-	public void setCode(Integer code) {
-		this.code = code;
-	}
+    public void setCode(Integer code) {
+        this.code = code;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public static String getName(int code) {
         for (DisableState status : DisableState.values()) {
@@ -45,5 +49,9 @@ public enum DisableState {
             }
         }
         return null;
+    }
+
+    public static List<DisableState> getAll() {
+        return new ArrayList<>(Arrays.asList(DisableState.values()));
     }
 }

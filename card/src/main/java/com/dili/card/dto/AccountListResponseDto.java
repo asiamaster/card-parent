@@ -5,6 +5,7 @@ import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.CardStateProvider;
 import com.dili.card.common.provider.CardTypeProvider;
 import com.dili.card.common.provider.CustomerTypeProvider;
+import com.dili.card.common.provider.DisableStateProvider;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -42,9 +43,20 @@ public class AccountListResponseDto extends BaseDto implements Serializable {
     /**卡状态 {@link com.dili.card.type.CardStatus}*/
     @TextDisplay(CardStateProvider.class)
     private Integer cardState;
+    /** 账户是否禁用 {@link com.dili.account.type.DisableState} */
+    @TextDisplay(DisableStateProvider.class)
+    private Integer disabledState;
     /**开卡时间*/
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime cardCreateTime;
+
+    public Integer getDisabledState() {
+        return disabledState;
+    }
+
+    public void setDisabledState(Integer disabledState) {
+        this.disabledState = disabledState;
+    }
 
     public Long getAccountPkId() {
         return accountPkId;

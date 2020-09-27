@@ -139,6 +139,7 @@ public class AccountQueryManagementController implements IControllerHandler {
         return BaseOutput.successData(accountQueryService.getList(param));
     }
 
+
     /**
      * 单个查询(不校验状态)
      * @author miaoguoxin
@@ -164,5 +165,7 @@ public class AccountQueryManagementController implements IControllerHandler {
         UserAccountCardResponseDto userAccountCardResponseDto = accountQueryRpcResolver.findSingle(query);
         return BaseOutput.successData(userAccountCardResponseDto);
     }
+
+
 }
 

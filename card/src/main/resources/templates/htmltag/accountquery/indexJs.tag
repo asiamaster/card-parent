@@ -1,5 +1,9 @@
 <script>
     $(function () {
+        //清空时间
+        $(".laystart").val("");
+        $(".layend").val("");
+
         let options = {
             uniqueId: "id",
             url: "${contextPath}/accountQuery/page.action",
@@ -39,5 +43,19 @@
             }
         }
         return out.join("");
+    }
+
+    function readCard() {
+        let result = readerCardNumber();
+        if (!result.success) {
+            $.modal.alertWarning(result.message);
+            return;
+        }
+        let cardNo = result.data;
+        if ($.common.isEmpty(cardNo)) {
+            parent.$.modal.alertWarning("请将卡片放置在读卡器上");
+            return;
+        }
+        $("#cardNo").val(cardNo)
     }
 </script>

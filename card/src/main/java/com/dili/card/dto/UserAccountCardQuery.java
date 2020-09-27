@@ -36,8 +36,18 @@ public class UserAccountCardQuery extends BaseDto {
 	private Integer cardType;
 	/** 卡状态 {@link com.dili.card.type.CardStatus} */
 	private Integer cardState;
+	/**账户状态 {@link com.dili.card.type.DisableState}*/
+	private Integer disableState;
 	/**是否要排除异常状态的账户 ex：卡退还、账户被禁用*/
 	private Integer excludeUnusualState;
+
+	public Integer getDisableState() {
+		return disableState;
+	}
+
+	public void setDisableState(Integer disableState) {
+		this.disableState = disableState;
+	}
 
 	public String getCustomerName() {
 		return customerName;
