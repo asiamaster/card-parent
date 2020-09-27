@@ -1,5 +1,6 @@
 package com.dili.card.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardStorageDto;
 import com.dili.card.service.ICardStorageService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.PageOutput;
 
 /**
  * 卡仓库管理
@@ -49,7 +51,8 @@ public class CardStorageController implements IControllerHandler {
 	public Map<String, Object> queryCardStorageList(CardStorageDto queryDto) {
 		log.info("卡片库存列表 *****{}", JSONObject.toJSONString(queryDto));
 		buildOperatorInfo(queryDto);
-		return successPage(cardStorageService.cardStorageList(queryDto));
+		PageOutput<List<CardStorageDto>> cardStorageList = cardStorageService.cardStorageList(queryDto);
+		return successPage(cardStorageList);
 	}
 
 
