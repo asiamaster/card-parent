@@ -21,7 +21,7 @@
                 <select name="state" id="state"  class="form-control"></select>
                 <#bcomboProvider _id="state" _provider="cycleStateProvider" _queryParams='{emptyText:"--全部--"}'/>
             </div>
-            <div class="col align-self-center mt-3">
+            <div class="col-auto align-self-center mt-3">
                 <button id="clear" type="button" class="btn btn-outline-primary mr-2" onclick="$.form.reset()"><i class="fa fa-refresh"></i> 清空</button>
                 <button id="query" type="button" class="btn btn-outline-primary" onclick="$.table.search()"><i class="fa fa-search"></i> 查询</button>
             </div>
