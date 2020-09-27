@@ -49,6 +49,8 @@ public class RechargePrintServiceImpl extends PrintServiceImpl {
         printDto.setTotalAmount(CurrencyUtils.cent2TenNoSymbol(totalAmount));
         String s = Convert.digitToChinese(Double.valueOf(printDto.getTotalAmount()));
         printDto.setTotalAmountWords(s);
+        //由于需要展示最终的余额，因此这里要相加
+        printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(recordDo.getEndBalance() + totalAmount));
 
         String json = recordDo.getAttach();
         if (StringUtils.isBlank(json)) {
