@@ -1316,7 +1316,7 @@ tab = {
                     }
                     //通过在标签上加val-formatter指定方法名，可以对数据进行格式化
                     if ($.common.isNotEmpty(formatter)) {
-                        json[name] = eval(formatter + "(" + json[name] + ")");
+                        json[name] = eval(formatter + "('" + json[name] + "')");
                     }
                 }
                 return json;
