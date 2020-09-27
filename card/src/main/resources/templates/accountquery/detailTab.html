@@ -5,8 +5,6 @@
     }
 </style>
 <div class="main-container container-fluid">
-
-
     <ul id="detailTab" class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a class="nav-link" id="card-tab" uri="/accountQuery/accountDetail.html" data-toggle="tab" href="#cardInfo"
@@ -60,6 +58,11 @@
     <div class="tab-pane tab-info" id="frozen-account" role="tabpanel">
     </div>
     <div class="tab-pane tab-info" id="unfrozen-account" role="tabpanel">
+    </div>
+    <div style="position: absolute;bottom: 1rem;left: 50%;transform: translate(-50%, -50%);">
+        <button type="button" class="btn btn-secondary btn-lg" onclick="history.go(-1)">
+            返&nbsp&nbsp&nbsp回
+        </button>
     </div>
 </div>
 </#bs4Body>
