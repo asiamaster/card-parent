@@ -1,6 +1,6 @@
 <#bs4Body>
 
-<div id="detail-modal" class="main-container container-fluid">
+<div id="detail-modal" class="main-container container-fluid auto-margin"  style="width: 60%">
 	<form id="queryForm">
 		<input type="hidden"
 						name="userId" id="userId" value="${detail.userId!}"> <input
@@ -18,7 +18,7 @@
 						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="26">
 						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="20">
 		<div id="baseInfo" >
-				<div class="row row-cols-6">
+				<div class="row row-cols-4">
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">结账单号</label>
 	            			<input type="text" class="form-control" value="${detail.cycleNo!}" readonly/>
@@ -39,7 +39,7 @@
 							<label for="cycleNo" class="div_label">领款金额|${detail.accountCycleDetailDto.receiveTimes!}笔</label>
 							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.receiveAmountText!}" readonly/>
 	            	</div>
-	            	<div class="col-2">
+	            	<div class="form-group col">
 	            			<label for="cycleNo" class="div_label">网银收款|${detail.accountCycleDetailDto.bankInTimes!}笔</label>
 	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.bankInAmountText!}" readonly/>
 	            	</div>
@@ -94,21 +94,21 @@
 			onclick="payeeActive()" uri="/cash/payeeListTab.html"
 			data-toggle="tab" href="#payee-record" role="tab"
 			aria-selected="true">
-				<h5 class="nav-title">领款明细</h5>
+				<h6 class="nav-title">领款明细</h6>
 		</a></li>
 		</#resource>
 		<#resource code="payerList">
 		<li class="nav-item"><a class="nav-link" id="payer-tab"
 			onclick="payerActive()" uri="/cash/payerListTab.html"
 			data-toggle="tab" href="#payer-record" role="tab">
-				<h5 class="nav-title">交款明细</h5>
+				<h6 class="nav-title">交款明细</h6>
 		</a></li>
 		</#resource>
 		<#resource code="serialList">
 		<li class="nav-item"><a class="nav-link" id="operation-tab"
 			onclick="operationActive()" uri="/cycle/serialTab.html"
 			data-toggle="tab" href="#operation-record" role="tab">
-				<h5 class="nav-title">操作记录</h5>
+				<h6 class="nav-title">操作记录</h6>
 		</a></li>
 		</#resource>
 	</ul>

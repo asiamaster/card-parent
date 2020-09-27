@@ -6,8 +6,8 @@
 			<input id="action" name="action" type="hidden"
 			value="${usercash.action!}" class="form-control" />
 			<input id="id" name="id" type="hidden" value="${usercash.id!}" class="form-control"/>
-        	<div class="form-group col-auto">
-                <label>确认删除对<span class="red">${usercash.userName!}</span>发起的领款记录吗？</label>
+        	<div class="form-group col-auto" style="margin-top: 60px;">
+                <label>确认删除对<span class="red font-weight-bold">${usercash.userName!}</span>发起的领款记录吗？</label>
             </div>
     	</form>
 	</div>
@@ -25,7 +25,7 @@ function submitHandler(e) {
    		 parent.totalAmount();
        }
    });
-    var action = $("#action").vai();
+    var action = $("#action").val();
 	setTimeout("statisticTotalAmount("+ action +")", 500 );
 }
 </script>

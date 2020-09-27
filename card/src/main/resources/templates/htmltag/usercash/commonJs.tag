@@ -10,7 +10,7 @@ function statisticTotalAmount(action){
 		name = '交款';
 	}
 	var toolbar = $('.fixed-table-toolbar');
-	var divModel = '<h4 id="totalAmount" class="float-left" style="height:60px;line-height:60px;margin-left:30px;"><span>'+ name +'总金额：?</span></h4>';
+	var divModel = '<h6 id="totalAmount" class="float-left" style="height:60px;line-height:60px;margin-left:30px;"><span>'+ name +'总金额：?</span></h6>';
 	let data = $.common.formToJSON('queryForm');
 	data.action=action;
 	$.ajax({
