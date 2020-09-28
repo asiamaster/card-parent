@@ -2,6 +2,9 @@ package com.dili.card.service.impl;
 
 import javax.annotation.Resource;
 
+import com.dili.card.rpc.resolver.CustomerRpcResolver;
+import com.dili.card.type.CustomerState;
+import com.dili.customer.sdk.domain.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +47,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
     private AccountQueryRpcResolver accountQueryRpcResolver;
     @Resource
     protected IAccountQueryService accountQueryService;
+    @Autowired
+    private CustomerRpcResolver customerRpcResolver;
 
 	@Override
 	@GlobalTransactional(rollbackFor = Exception.class)
@@ -52,19 +57,19 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		LOGGER.info("冻结账户：" + cardRequestDto.getAccountId());
 		//校验账户信息
 		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), false, DisableState.ENABLED);
-		
+
 		//保存本地记录
 		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.FROZEN_ACCOUNT);
-		
+
 		//远程冻结卡账户操作
     	accountManageRpcResolver.frozen(cardRequestDto);
-    	
+
     	//挂失不处理资金账户
     	if (!Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
-    		
-    		//远程解冻资金账户 必須是主副卡 
+
+    		//远程解冻资金账户 必須是主副卡
     		payRpcResolver.freezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
-        	
+
     		//更新最終记录
         	this.saveRemoteSerialRecord(businessRecord, FundItem.MANDATORY_FREEZE_ACCOUNT);
     	}
@@ -75,22 +80,26 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	@Transactional(rollbackFor = Exception.class)
 	public void unfrozen(CardRequestDto cardRequestDto) {
 		LOGGER.info("解冻账户：" + cardRequestDto.getAccountId());
-		
+
 		//校验账户信息
 		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), false, DisableState.DISABLED);
-		
+
+		Customer customer = customerRpcResolver.getWithNotNull(accountCard.getCustomerId(), accountCard.getFirmId());
+		if (customer.getState().equals(CustomerState.DISABLED.getCode())){
+			throw new CardAppBizException("客户已被禁用");
+		}
 		//保存本地记录
 		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.UNFROZEN_ACCOUNT);
-		
+
 		//远程解冻账户操作
 		accountManageRpcResolver.unfrozen(cardRequestDto);
-       
+
 		//挂失不处理资金账户
     	if (!Integer.valueOf(CardStatus.LOSS.getCode()).equals(accountCard.getCardState())) {
-    		
-    		//远程解冻资金账户 必須是主副卡 
+
+    		//远程解冻资金账户 必須是主副卡
     		payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
-    		
+
     		//更新最終记录
         	this.saveRemoteSerialRecord(businessRecord, FundItem.MANDATORY_UNFREEZE_ACCOUNT);
 		}
@@ -135,10 +144,10 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	private void saveRemoteSerialRecord(BusinessRecordDo businessRecord, FundItem fundItem) {
         //成功则修改状态及期初期末金额，存储操作流水
         SerialDto serialDto = serialService.createAccountSerial(businessRecord, (serialRecord, feeType) -> {
-			
+
         	serialRecord.setFundItem(fundItem.getCode());
             serialRecord.setFundItemName(fundItem.getName());
-			
+
 		});
         serialService.handleSuccess(serialDto, true);
     }
