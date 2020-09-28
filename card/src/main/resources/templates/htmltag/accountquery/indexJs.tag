@@ -1,9 +1,5 @@
 <script>
     $(function () {
-        //清空时间
-        $(".laystart").val("");
-        $(".layend").val("");
-
         let options = {
             uniqueId: "id",
             url: "${contextPath}/accountQuery/page.action",

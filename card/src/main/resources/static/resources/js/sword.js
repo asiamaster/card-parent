@@ -567,7 +567,7 @@ tab = {
         form: {
             resetDate: function (duration, timeUnit) {
                 if ($.common.isEmpty(duration)) {
-                    duration = 1;
+                    duration = 0;
                 }
                 if ($.common.isEmpty(timeUnit)) {
                     timeUnit = 'day';

@@ -19,8 +19,16 @@
 </div>
 
 <script>
+    let $resetFlag = "true";
+    <% if(isEmpty(_resetDate)) {%>
+        $resetFlag="true";
+    <% }else {%>
+        $resetFlag=${_resetDate!};
+    <% }%>
     $(() => {
-        $.form.resetDate();
+        if ($resetFlag =="true"){
+            $.form.resetDate();
+        }
     })
 
 </script>

@@ -8,7 +8,9 @@
 			<#component_dateControls
 			_labelText="入库时间"
 			_startDateParam="startDate"
-			_endDateParam="endDate"/>
+			_endDateParam="endDate"
+			_resetDate="false"
+			/>
 			<div class="col-auto align-self-center mt-3">
 				<button id="clear" type="button"
 					class="btn btn-outline-primary mr-2" onclick="$.form.reset()">
@@ -73,12 +75,12 @@
         };
         $.table.init(options);
     });
-	
+
  // 根据选中行状态，对作废按钮进行禁用或启用
     $("#cardStorageTable").on('check.bs.table', function (e, row, $element) {
     		$("#btn_del").removeAttr("disabled", "disabled");
     });
-    
+
     // 删除入库记录数据
     function delData(){
     	let rows = $("#grid").bootstrapTable('getSelections').length;
