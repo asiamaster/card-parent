@@ -583,7 +583,7 @@ tab = {
                 let currentId = $.common.isEmpty(formId) ? $('form').attr('id') : formId;
                 let form = $("#" + currentId);
                 form[0].reset();
-                $.form.resetDate();
+                //$.form.resetDate();
                 //特别处理hidden
                 $.each(form.find('input:hidden'), (i, e) => {
                     e.value = '';

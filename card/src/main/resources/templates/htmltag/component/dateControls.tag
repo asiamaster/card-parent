@@ -19,14 +19,34 @@
 </div>
 
 <script>
-    let $resetFlag = "true";
-    <% if(isEmpty(_resetDate)) {%>
-        $resetFlag="true";
-    <% }else {%>
-        $resetFlag=${_resetDate!};
-    <% }%>
+    //自动补全时分秒
+    function autoCompleteDate(dateId, hours, minutes, seconds) {
+        let dateInput = laydate.render({
+            elem: '#' + dateId,
+            type: 'datetime',
+            ready: function (date) {
+                lay.extend(dateInput.config.dateTime, {
+                    hours: hours,
+                    minutes: minutes,
+                    seconds: seconds,
+                });
+            }
+        });
+    }
+
     $(() => {
-        if ($resetFlag =="true"){
+        //开始日期
+        autoCompleteDate("startDate", 0, 0, 0);
+        //结束日期
+        autoCompleteDate("endDate", 23, 59, 59);
+        //初始化默认时间
+        let $resetFlag = "true";
+        <% if(isEmpty(_resetDate)) {%>
+            $resetFlag="true";
+        <% }else {%>
+            $resetFlag=${_resetDate!};
+        <% }%>
+        if ($resetFlag === "true"){
             $.form.resetDate();
         }
     })
