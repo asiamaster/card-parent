@@ -1,7 +1,7 @@
 <style>
     .info-column {
         font-weight: bold ;
-        text-align: left;
+        text-align: center;
     }
 
     .info-cell {
@@ -9,10 +9,6 @@
     }
     .panel-heading{
         margin-top:.5rem
-    }
-    .row-interval{
-        margin-top:1rem;
-        margin-bottom: 1rem;
     }
 </style>
 <div class="container-fluid ">
@@ -118,5 +114,10 @@
             </table>
         </div>
         <% } %>
+    </div>
+    <div style="text-align: center">
+        <button type="button"  class="btn btn-outline-primary px-sm-4" onclick="history.go(-1)">
+            返回
+        </button>
     </div>
 </div>

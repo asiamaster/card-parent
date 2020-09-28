@@ -35,8 +35,11 @@
                 <button id="frozenAccount" type="button"  class="btn btn-primary"   onclick="submitFrozenAccount()">
                     冻结账户
                 </button>
-                <button id="recordAccount" style="margin-left: 50px" type="button" class="btn btn-outline-primary" onclick="showOrHideFrozenAccountRecord()">
+                <button id="recordAccount" style="margin-left: 25px" type="button" class="btn btn-outline-primary" onclick="showOrHideFrozenAccountRecord()">
                     冻结记录
+                </button>
+                <button type="button" style="margin-left: 25px"  class="btn btn-outline-primary px-sm-4" onclick="history.go(-1)">
+                    返回
                 </button>
             </div>
         </form>
@@ -70,6 +73,7 @@
             </table>
         </div>
     </div>
+
 </div>
 <#account_frozenIndexJs/>
 <script type="text/javascript"
