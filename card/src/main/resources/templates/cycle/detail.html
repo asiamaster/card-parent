@@ -39,13 +39,13 @@
 							<label for="cycleNo" class="div_label">领款金额|${detail.accountCycleDetailDto.receiveTimes!}笔</label>
 							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.receiveAmountText!}" readonly/>
 	            	</div>
+					<div class="form-group col">
+						<label for="cycleNo" class="div_label">交款金额|${detail.accountCycleDetailDto.deliverTimes!}笔</label>
+						<input type="text" class="form-control" value="${detail.accountCycleDetailDto.deliverAmountText!}" readonly/>
+					</div>
 	            	<div class="form-group col">
 	            			<label for="cycleNo" class="div_label">网银收款|${detail.accountCycleDetailDto.bankInTimes!}笔</label>
 	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.bankInAmountText!}" readonly/>
-	            	</div>
-					<div class="form-group col">
-							<label for="cycleNo" class="div_label">交款金额|${detail.accountCycleDetailDto.deliverTimes!}笔</label>
-							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.deliverAmountText!}" readonly/>
 	            	</div>
 	            	<div class="form-group col">
 							<label for="cycleNo" class="div_label">网银支出|${detail.accountCycleDetailDto.bankOutTimes!}笔</label>
@@ -55,10 +55,6 @@
 							<label for="cycleNo" class="div_label">现金收款|${detail.accountCycleDetailDto.depoCashTimes!}笔</label>
 							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoCashAmountText!}" readonly/>
 	            	</div>
-	            	<div class="form-group col">
-							<label for="cycleNo" class="div_label">POS收款|${detail.accountCycleDetailDto.depoPosTimes!}笔</label>
-	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoPosAmountText!}" readonly/>
-	            	</div>
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">现金支出|${detail.accountCycleDetailDto.drawCashTimes!}笔</label>
 							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.drawCashAmountText!}" readonly/>
@@ -67,6 +63,10 @@
 							<label for="cycleNo" class="div_label">现金余额</label>
 							<input type="text" id="unDeliverAmount" class="form-control" value="${detail.accountCycleDetailDto.unDeliverAmountText!}" readonly/>
 	            	</div>
+					<div class="form-group col">
+						<label for="cycleNo" class="div_label">POS收款|${detail.accountCycleDetailDto.depoPosTimes!}笔</label>
+						<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoPosAmountText!}" readonly/>
+					</div>
 	            	<div class="form-group col">
 							<label for="cycleNo" class="div_label">结账交款金额</label>
 							<input type="text" id="applyPayerAmount"  class="form-control" value='${detail.accountCycleDetailDto.lastDeliverAmountText!}' readonly/>
