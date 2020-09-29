@@ -84,7 +84,7 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 			Map<String, Object> attach = new HashMap<String, Object>();
 			attach.put(Constant.BUSINESS_RECORD_ATTACH_CARDTYPE, accountCard.getCardType());
 			record.setAttach(JSONObject.toJSONString(attach));
-			record.setNotes("退卡");
+			record.setNotes(master ? "退主卡" :"退副卡" );
 			if (masterHasTradeSerial) {
 				record.setAmount(cardParam.getServiceFee());
 				record.setTradeType(TradeType.FEE.getCode());
