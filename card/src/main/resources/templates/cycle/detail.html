@@ -68,11 +68,17 @@
 						<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoPosAmountText!}" readonly/>
 					</div>
 	            	<% if(settled != 2 && detail.state != 1){ %>
-	            	<div class="form-group col">
+		            	<div class="form-group col">
+								<label for="cycleNo" class="div_label">结账交款金额</label>
+								<input type="text" id="applyPayerAmount"  class="form-control" value='${detail.accountCycleDetailDto.lastDeliverAmountText!}' readonly/>
+		            	</div>
+	            	<% } %>
+	            	<% else if(settled == 2){ %>
+						<div class="form-group col">
 							<label for="cycleNo" class="div_label">结账交款金额</label>
 							<input type="text" id="applyPayerAmount"  class="form-control" value='${detail.accountCycleDetailDto.lastDeliverAmountText!}' readonly/>
 	            	</div>
-	            	<% } %>
+					<% }%>
 				</div>
 		</div>
 		<div class="col align-self-center" style="text-align: center;margin-bottom: 20px;margin-top: 10px;">
