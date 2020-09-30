@@ -8,33 +8,35 @@
 <div class="container-fluid">
 	<div id="add-modal">
 		<form id="save-form">
-			<div class="form-group col">
-				<label for="cardType">入库类型</label>
-				<select name="cardType" id="cardType" class="form-control"></select>
-				<#bcomboProvider _id="cardType" _provider="cardTypeProvider"
+			<div class="row row-cols-1">
+				<div class="form-group col">
+					<label for="cardType">入库类型</label>
+					<select name="cardType" id="cardType" class="form-control"></select>
+					<#bcomboProvider _id="cardType" _provider="cardTypeProvider"
 					_queryParams='{emptyText:"-- 请选择 --"}' />
-			</div>
-			<div class="form-group col" id="cardFaceTr" style="display: none">
-				<label for="cardFace">卡面信息</label>
-				<select name="cardFace" id="cardFace" class="form-control"></select>
-				<#bcomboProvider _id="cardFace" _provider="cardFaceProvider"
+				</div>
+				<div class="form-group col" id="cardFaceTr" style="display: none">
+					<label for="cardFace">卡面信息</label>
+					<select name="cardFace" id="cardFace" class="form-control"></select>
+					<#bcomboProvider _id="cardFace" _provider="cardFaceProvider"
 					_queryParams='{emptyText:"-- 请选择 --"}' />
-			</div>
-			<div class="form-group col">
-				<label for="startCardNo">起始卡号</label>
-				<input id="startCardNo" name="startCardNo"
-					type="text" class="form-control calculateAmount isInt"
-					minlength="12" maxlength="12" required />
-			</div>
-			<div class="form-group col">
-				<label for="endCardNo">结束卡号</label>
-				<input id="endCardNo" name="endCardNo"
-					type="text" class="form-control calculateAmount isInt"
-					minlength="12" maxlength="12" required />
-			</div>
-			<div class="form-group col">
-				<label for="amount">入库张数</label>
-				<input id="amount" name="amount" type="text" class="form-control" readonly="readonly" />
+				</div>
+				<div class="form-group col">
+					<label for="startCardNo">起始卡号</label>
+					<input id="startCardNo" name="startCardNo"
+						   type="text" class="form-control calculateAmount isInt"
+						   minlength="12" maxlength="12" required />
+				</div>
+				<div class="form-group col">
+					<label for="endCardNo">结束卡号</label>
+					<input id="endCardNo" name="endCardNo"
+						   type="text" class="form-control calculateAmount isInt"
+						   minlength="12" maxlength="12" required />
+				</div>
+				<div class="form-group col">
+					<label for="amount">入库张数</label>
+					<input id="amount" name="amount" type="text" class="form-control" readonly="readonly" />
+				</div>
 			</div>
 		</form>
 	</div>

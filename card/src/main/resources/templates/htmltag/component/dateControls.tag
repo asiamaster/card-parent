@@ -24,6 +24,7 @@
         let dateInput = laydate.render({
             elem: '#' + dateId,
             type: 'datetime',
+            theme: '#007bff',
             ready: function (date) {
                 lay.extend(dateInput.config.dateTime, {
                     hours: hours,

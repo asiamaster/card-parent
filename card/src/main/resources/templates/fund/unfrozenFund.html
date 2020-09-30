@@ -1,22 +1,6 @@
-<style>
-.info-column-frozen-fund {
-	width: 20%;
-	font-weight: bold;
-	text-align: right;
-}
 
-.info-cell-frozen-fund {
-	width: 30%;
-}
-
-.vertical-td {
-	display: table-cell;
-	vertical-align: middle !important;
-}
-</style>
-<div class="main-container container-fluid">
 	<div>
-		<button id="unfrozenBtn" type="button" class="btn btn-outline-primary"
+		<button id="unfrozenBtn" type="button" class="btn btn-primary"
 			onclick="">解冻资金</button>
 		<form id="queryForm">
 			<input type="hidden" id="accountId" name="accountId"
@@ -25,28 +9,25 @@
 				   value="${account.fundAccountId!}">
 		</form>
 		<div class="panel-body" style="display: block;">
-			<div class="col-12">
-				<table id="unfrozenTable" data-title="冻结记录" data-unique-id="id"
-					data-buttons-class="primary" data-icons="bui.variable.icons">
-					<thead>
-						<tr>
-							<th data-checkbox="true"></th>
-							<th data-field="amountText" data-align="amount">冻结金额</th>
-							<th data-field="description" data-align="center">冻结备注</th>
-							<th data-field="freezeTime" data-align="center">冻结时间</th>
-							<th data-field="opNo" data-align="center">冻结员工号</th>
-							<th data-field="opName" data-align="center">冻结员</th>
-						</tr>
-					</thead>
-				</table>
-			</div>
+			<table id="unfrozenTable" data-title="冻结记录" data-unique-id="id"
+				data-buttons-class="primary" data-icons="bui.variable.icons">
+				<thead>
+					<tr>
+						<th data-checkbox="true"></th>
+						<th data-field="amountText" data-align="amount">冻结金额</th>
+						<th data-field="description" data-align="center">冻结备注</th>
+						<th data-field="freezeTime" data-align="center">冻结时间</th>
+						<th data-field="opNo" data-align="center">冻结员工号</th>
+						<th data-field="opName" data-align="center">冻结员</th>
+					</tr>
+				</thead>
+			</table>
 		</div>
 	</div>
-	<div style="text-align: center;margin-top: .5rem">
-		<button type="button"  class="btn btn-outline-primary px-sm-4" onclick="history.go(-1)">
+	<div style="text-align: center;" class="mt-5">
+		<button type="button"  class="btn btn-secondary px-5" onclick="history.go(-1)">
 			返回
 		</button>
 	</div>
-</div>
 <#fund_unfrozenIndexJs />
 <#common_commonJs/>
