@@ -4,6 +4,7 @@
 		max-width: 100% !important;
 		margin:0 auto;
 	}
+/*
 	.blue{
 		color:#4F94CD;
 	}
@@ -40,6 +41,7 @@
     p{
     	margin: 0px;
     }
+*/
 
     .per_div{
 		display: flex;
@@ -148,7 +150,7 @@
 	<button id="btn_detail" type="button" class="btn btn-primary" onclick="$.operate.detail(null,'60%','94%')"><i class="fa fa-list"></i> 查看</button>
 	</#resource>
 	<#resource code="printContract">
-	<button id="btn_reprint" type="button" class="btn btn-primary" onclick="printContract()"><i class="fa fa-list"></i>补打合同</button>
+	<button id="btn_reprint" type="button" class="btn btn-primary" onclick="printContract()"><i class="fa fa-pencil-square-o"></i>补打合同</button>
 	</#resource>
 	<#resource code="exportContract">
 	<button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
@@ -201,150 +203,261 @@
     </div>
 </div>
 <div class="modal fade" id="addFirstModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="addFirstModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 1100px;height: 500px;">
-		<div class="modal-content" style="width: 1100px;height: 500px;">
+    <div class="modal-dialog" style="width: 70%;height: 500px;">
+		<div class="modal-content" style="width: 100%;height: 500px;">
 			<div class="modal-header" style="background-color: #E6E6E6;height: 45px;">
                <h6 style="height-line:45px;">新增资金委托关系</h6>
                <label onclick="closeFirst()"><i class="fa fa-times"></i></label>
            </div>
-			<div class="modal-body" style="overflow:auto;">
-				 <form id = "save_form">
-				 	<div  id="contract-save" >
-							<div  class="row row-interval" style="margin-bottom: 20px;">
-								<div class="info-column col-2">委托人</div>
-								<div class="info-cell col-2">
+			<div class="modal-body" style="overflow-y:auto; overflow-x: hidden">
+				<!--<form id = "save_form">
+					<div  id="contract-save" >
+						<div  class="row row-interval" style="margin-bottom: 20px;">
+							<div class="info-column col-2">委托人</div>
+							<div class="info-cell col-2">
 								<input placeholder="客户id"
-									name="customerId"  type="hidden"
-									class="form-control td_input" id="customerId"
-									maxlength="50" value="" />
+									   name="customerId"  type="hidden"
+									   class="form-control td_input" id="customerId"
+									   maxlength="50" value="" />
 								<input placeholder="编号"
-									name="consignorCustomerCode" disabled="disabled" type="hidden"
-									class="form-control td_input" id="consignorCustomerCode"
-									maxlength="50" value="" />
+									   name="consignorCustomerCode" disabled="disabled" type="hidden"
+									   class="form-control td_input" id="consignorCustomerCode"
+									   maxlength="50" value="" />
 								<input placeholder="客户名称"
-									name="consignorCustomerName" disabled="disabled" type="text"
-									class="form-control td_input" id="consignorCustomerName"
-									maxlength="20" value="" />
-								</div>
-								<div class="info-cell col-2" >
-									<input placeholder="证件号码"
-									name="consignorCustomerIDCode"  type="text"
-									class="form-control td_input" id="consignorCustomerIDCode"
-									maxlength="18" value="" />
-									<input placeholder="手机号"
-									name="consignorCustomerMobile" type="hidden"
-									class="form-control td_input" id="consignorCustomerMobile"
-									maxlength="11" value="" />
-								</div>
-								<div class="info-cell  col-2">
-									<button id="readIdCode" type="button"
+									   name="consignorCustomerName" disabled="disabled" type="text"
+									   class="form-control td_input" id="consignorCustomerName"
+									   maxlength="20" value="" />
+							</div>
+							<div class="info-cell col-2" >
+								<input placeholder="证件号码"
+									   name="consignorCustomerIDCode"  type="text"
+									   class="form-control td_input" id="consignorCustomerIDCode"
+									   maxlength="18" value="" />
+								<input placeholder="手机号"
+									   name="consignorCustomerMobile" type="hidden"
+									   class="form-control td_input" id="consignorCustomerMobile"
+									   maxlength="11" value="" />
+							</div>
+							<div class="info-cell  col-2">
+								<button id="readIdCode" type="button"
 										class="btn btn-primary" onclick="getConsignorIdCard()">
-										<i class=""></i>读取身份证
-									</button>
-								</div>
-								<div class="info-cell  col-2">
-									<button id="queryIdCode" type="button"
+									<i class=""></i>读取身份证
+								</button>
+							</div>
+							<div class="info-cell  col-2">
+								<button id="queryIdCode" type="button"
 										class="btn btn-primary" onclick="searchCustomer()">
-										<i class=""></i>&emsp;查&emsp;询&emsp;
-									</button>
-								</div>
+									<i class=""></i>&emsp;查&emsp;询&emsp;
+								</button>
 							</div>
-							<div class="row row-interval" style="margin-bottom: 20px;">
-								<div class="info-column col-2">委托人园区卡</div>
-								<div class="info-cell col-2">
+						</div>
+						<div class="row row-interval" style="margin-bottom: 20px;">
+							<div class="info-column col-2">委托人园区卡</div>
+							<div class="info-cell col-2">
 								<input placeholder="园区卡"
-									disabled="disabled" name="consignorCardNo" type="text"
-									class="form-control td_input" id="consignorCardNo" maxlength="20"
-									value="" />
+									   disabled="disabled" name="consignorCardNo" type="text"
+									   class="form-control td_input" id="consignorCardNo" maxlength="20"
+									   value="" />
 								<input name="cardCustomerId" type="hidden"
-									class="form-control td_input"
-									id="cardCustomerId" maxlength="20" value="" />
-								</div>
-								<div  class="info-cell col-2">
-									<input name="consignorAccountId" type="text"
-									class="form-control td_input" style="opacity: 0;"
-									id="consignorAccountId" maxlength="20" value="" />
-								</div>
-								<div class="info-cell col-2">
-									<button id="query" type="button"
-										class="btn btn-primary" onclick="readCardNo()">
-										<i class=""></i>&emsp;请刷卡&emsp;
-									</button>
-								</div>
+									   class="form-control td_input"
+									   id="cardCustomerId" maxlength="20" value="" />
 							</div>
-							<div  class="row row-interval" style="margin-bottom: 20px;">
-								<div class="info-column col-2">合同起止日期</div>
-								<div class="info-cell col-6">
-									<div class="form-inline">
-										<div class="input-group">
-											<input type="text" name="startTime" id="startTime"
-												class="form-control laydate" readonly/>
-											<div class="input-group-append">
-												<label for="startTime"
-													class="input-group-text fa fa-calendar"></label>
-											</div>
+							<div  class="info-cell col-2">
+								<input name="consignorAccountId" type="text"
+									   class="form-control td_input" style="opacity: 0;"
+									   id="consignorAccountId" maxlength="20" value="" />
+							</div>
+							<div class="info-cell col-2">
+								<button id="query" type="button"
+										class="btn btn-primary" onclick="readCardNo()">
+									<i class=""></i>&emsp;请刷卡&emsp;
+								</button>
+							</div>
+						</div>
+						<div  class="row row-interval" style="margin-bottom: 20px;">
+							<div class="info-column col-2">合同起止日期</div>
+							<div class="info-cell col-6">
+								<div class="form-inline">
+									<div class="input-group">
+										<input type="text" name="startTime" id="startTime"
+											   class="form-control laydate" readonly/>
+										<div class="input-group-append">
+											<label for="startTime"
+												   class="input-group-text fa fa-calendar"></label>
 										</div>
-										&nbsp;&nbsp;至&nbsp;&nbsp;
-										<div class="input-group">
-											<input type="text" name="endTime" id="endTime"
-												class="form-control laydate" readonly/>
-											<div class="input-group-append">
-												<label for="endTime" class="input-group-text fa fa-calendar"></label>
-											</div>
+									</div>
+									&nbsp;&nbsp;至&nbsp;&nbsp;
+									<div class="input-group">
+										<input type="text" name="endTime" id="endTime"
+											   class="form-control laydate" readonly/>
+										<div class="input-group-append">
+											<label for="endTime" class="input-group-text fa fa-calendar"></label>
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="consignee row row-interval" style="margin-bottom: 20px;">
-								<div class="info-column  col-2">被委托人</div>
-								<div class="info-cell  col-2">
-									<input placeholder="姓名"
-										disabled="disabled" name="consigneeName" type="text"
-										class="form-control td_input" id="consigneeName" maxlength="20"
-										value="" />
-								</div>
-								<div class="info-cell  col-2">
-									<input placeholder="身份证号" disabled="disabled"
-									name="consigneeIdCode" type="text"
-									class="form-control td_input" id="consigneeIdCode"
-									maxlength="18" value="" />
-								</div >
-								<div class="info-cell  col-2">
-									<input placeholder="手机号"
-									name="consigneeIdMobile" type="text"
-									class="form-control td_input" id="consigneeIdMobile"
-									maxlength="12" value="" />
-								</div>
-								<div class="info-cell  col-3">
-									<button type="button"
+						</div>
+						<div class="consignee row row-interval" style="margin-bottom: 20px;">
+							<div class="info-column  col-2">被委托人</div>
+							<div class="info-cell  col-2">
+								<input placeholder="姓名"
+									   disabled="disabled" name="consigneeName" type="text"
+									   class="form-control td_input" id="consigneeName" maxlength="20"
+									   value="" />
+							</div>
+							<div class="info-cell  col-2">
+								<input placeholder="身份证号" disabled="disabled"
+									   name="consigneeIdCode" type="text"
+									   class="form-control td_input" id="consigneeIdCode"
+									   maxlength="18" value="" />
+							</div >
+							<div class="info-cell  col-2">
+								<input placeholder="手机号"
+									   name="consigneeIdMobile" type="text"
+									   class="form-control td_input" id="consigneeIdMobile"
+									   maxlength="12" value="" />
+							</div>
+							<div class="info-cell  col-3">
+								<button type="button"
 										class="btn btn-primary td_button readID"
 										onclick="getConsigneeIdCard(this)">
-										<i class=""></i>读取身份证
+									<i class=""></i>读取身份证
 								</button> <label onclick="addConsignee()"
-									style="height: 34px; padding: 0px 15px;"><i
-										class="fa fa-plus red"
-										style="font-size: 20px; margin-top: 7px;"
-										aria-hidden="true"></i></label>
+												 style="height: 34px; padding: 0px 15px;"><i
+									class="fa fa-plus red"
+									style="font-size: 20px; margin-top: 7px;"
+									aria-hidden="true"></i></label>
+							</div>
+						</div>
+						<div id="notesBefore" class="row row-interval" style="margin-bottom: 20px;">
+							<div class="info-column col-2">备注</div>
+							<div class="info-cell col-6"><textarea placeholder="委托备注,不超过50字"
+																   style="width: 80%;" id="notes" name="notes" maxlength="50"></textarea>
+							</div>
+						</div>
+					</div>
+				</form>-->
+				 <form id = "save_form">
+				 	<div  id="contract-save" >
+						<div class="breadcrumb">
+							委托人
+						</div>
+						<div class="row row-cols-4">
+							<div class="form-group col">
+								<label for="">客户名称</label>
+								<input name="customerId"  type="hidden"
+									   class="form-control" id="customerId"
+									   maxlength="50" value="" />
+								<input name="consignorCustomerCode" disabled="disabled" type="hidden"
+									   class="form-control" id="consignorCustomerCode"
+									   maxlength="50" value="" />
+								<input name="consignorCustomerName" disabled="disabled" type="text"
+									   class="form-control" id="consignorCustomerName"
+									   maxlength="40" value="" />
+							</div>
+							<div class="form-group col-auto">
+								<label for="">证件号码</label>
+								<div class="input-group">
+									<input name="consignorCustomerIDCode"  type="text"
+										   class="form-control" id="consignorCustomerIDCode"
+										   maxlength="18" value="" />
+									<input name="consignorCustomerMobile" type="hidden"
+										   class="form-control" id="consignorCustomerMobile"
+										   maxlength="11" value="" />
+									<div class="input-group-append">
+										<button id="readIdCode" type="button" class="btn btn-outline-secondary" onclick="getConsignorIdCard()">读取身份证</button>
+										<button id="queryIdCode" type="button" class="btn btn-outline-secondary" onclick="searchCustomer()">查询</button>
+									</div>
 								</div>
 							</div>
-							<div id="notesBefore" class="row row-interval" style="margin-bottom: 20px;">
-								<div class="info-column col-2">备注</div>
-								<div class="info-cell col-6"><textarea placeholder="委托备注,不超过50字"
-										style="width: 80%;" id="notes" name="notes" maxlength="50"></textarea>
+							<div class="form-group col-auto">
+								<label for="">园区卡</label>
+								<div class="input-group">
+									<input placeholder="园区卡"
+										   disabled="disabled" name="consignorCardNo" type="text"
+										   class="form-control" id="consignorCardNo" maxlength="20"
+										   value="" />
+									<input name="cardCustomerId" type="hidden"
+										   class="form-control"
+										   id="cardCustomerId" maxlength="20" value="" />
+									<input name="consignorAccountId" type="text"
+										   class="form-control" style="opacity: 0;"
+										   id="consignorAccountId" maxlength="20" value="" />
+									<div class="input-group-append">
+										<button id="query" type="button" class="btn btn-outline-secondary" onclick="readCardNo()">请刷卡</button>
+									</div>
 								</div>
 							</div>
+						</div>
+						<div class="breadcrumb">
+							合同信息
+						</div>
+						<div class="row row-cols-4">
+							<div class="form-group col-auto">
+								<label for="">合同起止日期</label>
+								<div class="form-inline">
+									<div class="input-group">
+										<input type="text" name="startTime" id="startTime"
+											   class="form-control laydate" readonly/>
+										<div class="input-group-append">
+											<label for="startTime"
+												   class="input-group-text fa fa-calendar"></label>
+										</div>
+									</div>
+									&nbsp;&nbsp;至&nbsp;&nbsp;
+									<div class="input-group">
+										<input type="text" name="endTime" id="endTime"
+											   class="form-control laydate" readonly/>
+										<div class="input-group-append">
+											<label for="endTime" class="input-group-text fa fa-calendar"></label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="breadcrumb">
+							被委托人
+						</div>
+						<div class="row row-cols-4 consignee">
+							<div class="form-group col">
+								<label for="">姓名</label>
+								<input placeholder="姓名"
+									   disabled="disabled" name="consigneeName" type="text"
+									   class="form-control" id="consigneeName" maxlength="20"
+									   value="1" />
+							</div>
+							<div class="form-group col">
+								<label for="">身份证号</label>
+								<input placeholder="身份证号" disabled="disabled"
+									   name="consigneeIdCode" type="text"
+									   class="form-control" id="consigneeIdCode"
+									   maxlength="18" value="1" />
+							</div>
+							<div class="form-group col">
+								<label for="">手机号</label>
+								<input placeholder="手机号"
+									   name="consigneeIdMobile" type="text"
+									   class="form-control" id="consigneeIdMobile"
+									   maxlength="12" value="1" />
+							</div>
+							<div class="form-group col-auto align-self-center mt-4">
+								<button type="button" class="btn btn-outline-secondary td_button readID" onclick="getConsigneeIdCard(this)">读取身份证</button>
+								<label onclick="addConsignee()"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>
+							</div>
+						</div>
+
+						<div class="row row-cols-4"  id="notesBefore">
+							<div class="form-group col-6">
+								<label for="">备注</label>
+								<textarea placeholder="委托备注,不超过50字" class="form-control" id="notes" name="notes" maxlength="50"></textarea>
+							</div>
+						</div>
 					</div>
 				</form>
 			</div>
-			<div style="display: table-cell; text-align: center;margin-top:10px;margin-bottom:20px;">
-				<div style="width: 49%;float: left;">
-					<button type="button" class="btn btn-secondary"
-					style="margin-left:50px;width: 100px;" onclick="cancleAddView()">取消</button>
-				</div>
-				<div style="width: 49%;float: left;">
-					<button type="button" class="btn btn-primary"
-							style="margin-right:50px;width: 100px;" onclick="nextStepView()">下一步</button>
-				</div>
+			<div class="text-right px-5 py-3">
+				<button type="button" class="btn btn-secondary px-5"  onclick="cancleAddView()">取消</button>
+				<button type="button" class="btn btn-primary px-5" onclick="nextStepView()">下一步</button>
 			</div>
 		</div>
 	</div>
@@ -423,7 +536,7 @@
     $(function () {
     	
 
-    	$(".consignee.row.row-interval").each(function () {
+    	$(".row.row-cols-4.consignee").each(function () {
     		$(this).find("#consigneeIdMobile").on('input  propertychange', validateNumber);
 		});
     	$("#days").on('input  propertychange', validateNotZeroStartNumber);
@@ -513,7 +626,25 @@
 	/**
 	 * 添加被委托人信息
 	 */
-	 let consignee='<div class="consignee row row-interval" style="margin-bottom: 20px;"><div class="info-column  col-2">被委托人</div><div class="info-cell col-2">' +
+	let consignee='<div class="row row-cols-4 consignee"> <div class="form-group col"><label for="">姓名</label> <input placeholder="姓名" disabled="disabled" name="consigneeName" type="text" class="form-control" id="consigneeName" maxlength="20" value="" /> </div>' +
+			'<div class="form-group col"><label for="">身份证号</label><input placeholder="身份证号" disabled="disabled" name="consigneeIdCode" type="text" class="form-control" id="consigneeIdCode" maxlength="18" value="" /> </div>' +
+			'<div class="form-group col"><label for="">手机号</label><input placeholder="手机号" name="consigneeIdMobile" type="text" class="form-control" id="consigneeIdMobile" maxlength="12" value="" /> </div>' +
+			'<div class="form-group col-auto align-self-center mt-4"><button type="button"class="btn btn-outline-secondary td_button readID" onclick="getConsigneeIdCard(this)">读取身份证</button>' +
+			'<label onclick="minusConsignee(this)"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>'+
+			'<label onclick="addConsignee(this)"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label></div></div>';
+
+
+	let redPlus = '<label onclick="addConsignee(this)"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>';
+	let blueMinus = '<label onclick="minusConsignee(this)"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>';
+
+	let consignee1='<div class="row row-cols-4 consignee"> <div class="form-group col"><label for="">姓名</label> <input placeholder="姓名" disabled="disabled" name="consigneeName" type="text" class="form-control" id="consigneeName" maxlength="20" value="" /> </div>' +
+			'<div class="form-group col"><label for="">身份证号</label><input placeholder="身份证号" disabled="disabled" name="consigneeIdCode" type="text" class="form-control" id="consigneeIdCode" maxlength="18" value="" /> </div>' +
+			'<div class="form-group col"><label for="">手机号</label><input placeholder="手机号" name="consigneeIdMobile" type="text" class="form-control" id="consigneeIdMobile" maxlength="12" value="" /> </div>' +
+			'<div class="form-group col-auto align-self-center mt-4"><button type="button"class="btn btn-outline-secondary td_button readID" onclick="getConsigneeIdCard(this)">读取身份证</button>' + 
+			'<label onclick="minusConsignee(this)"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label></div></div>';
+
+
+	/*let consignee='<div class="consignee row row-interval" style="margin-bottom: 20px;"><div class="info-column  col-2">被委托人</div><div class="info-cell col-2">' +
  	'<input placeholder="姓名" disabled="disabled" value="" name="consigneeName" type="text" class="form-control td_input"  id="consigneeName" maxlength="20"/></div>' +
  	'<div class="info-cell col-2"><input placeholder="身份证号" disabled="disabled" value="" name="consigneeIdCode" type="text" class="form-control td_input"  id="consigneeIdCode" maxlength="18"/></div>' +
  	'<div class="info-cell col-2"><input placeholder="手机号" name="consigneeIdMobile" value="" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="12"/></div>' +
@@ -530,7 +661,7 @@
  	'<div class="info-cell col-2"><input placeholder="手机号" name="consigneeIdMobile" value="" type="text" class="form-control td_input"  id="consigneeIdMobile" maxlength="12"/></div>' +
  	'<div class="info-cell  col-3"><button type="button" class="btn btn-primary td_button readID" onclick="getConsigneeIdCard(this)"><i class=""></i>读取身份证</button>' +
  	'<label onclick="minusConsignee(this)" class = "minus" style="height: 34px;padding:0px 15px;"><i  class="fa fa-minus blue" style="font-size:20px;margin-top: 7px;" aria-hidden="true"></i></label></div</div>';
-
+*/
  	let consugnee1= '<div class="per_div"><div style="width: 100px;" class="per_div_child">' +
 				'<p style="height: 30px; line-height: 30px;">被委托人签名：</p></div>' +
 				'<div class="triangle per_div_child div_container">' +
@@ -540,13 +671,13 @@
 
     function addConsignee() {
     	var next = true;
-		var list=$(".consignee.row.row-interval");
+		var list=$(".row.row-cols-4.consignee");
 		if(list.length == 3){
 			$.modal.alertWarning("最多三位被委托人")
 			return false;
 		}
 		var all = list.length;
-		$(".consignee.row.row-interval").each(function () {
+		$(".row.row-cols-4.consignee").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				$.modal.alertWarning("请读取身份证后添加下一位")
 				next = false;
@@ -556,7 +687,7 @@
 			return !next;
 		}
 		if(all == 1){
-			$(".consignee.row.row-interval").each(function () {
+			$(".row.row-cols-4.consignee").each(function () {
 				$(this).find("i").each(function(i){
 					if(i ==1){
 						$(this).parent().after(blueMinus);
@@ -566,7 +697,7 @@
 			});
 		}
 		if(all == 2){
-			$(".consignee.row.row-interval").each(function () {
+			$(".row.row-cols-4.consignee").each(function () {
 				$(this).find("i").each(function(i){
 					if(i ==2){
 						$(this).parent().remove();
@@ -581,10 +712,10 @@
 	}
 
 	function minusConsignee(e) {
-		$(e).closest(".consignee.row.row-interval").remove();
-		var list=$(".consignee.row.row-interval");
+		$(e).closest(".row.row-cols-4.consignee").remove();
+		var list=$(".row.row-cols-4.consignee");
 		var all = list.length;
-		$(".consignee.row.row-interval").each(function (i) {
+		$(".row.row-cols-4.consignee").each(function (i) {
 			if(all == 1){//只有一行
 				$(this).find("i").each(function(index){
 					if(index ==1){
@@ -671,7 +802,7 @@
 		let items = [];
 		let consigneeNames='';
 		var validate = true;
-		$(".consignee.row.row-interval").each(function () {
+		$(".row.row-cols-4.consignee").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				validate = false;
 			}
@@ -680,7 +811,7 @@
 			$.modal.alertError("请添加被委托人身份信息");
 			return validate;
 		}
-		$(".consignee.row.row-interval").each(function () {
+		$(".row.row-cols-4.consignee").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdMobile").val())){
 				validate = false;
 			}
@@ -689,7 +820,7 @@
 			$.modal.alertError("请添加被委托人手机号");
 			return validate;
 		}
-		$(".consignee.row.row-interval").each(function () {
+		$(".row.row-cols-4.consignee").each(function () {
 			let item = {};
 			item.consigneeName=$.trim($(this).find("#consigneeName").val());
 			consigneeNames = consigneeNames.concat("、",item.consigneeName);
@@ -751,7 +882,7 @@
 		$('#endTime').val('');
 		$('#notes').val('');
 		$("#cardCustomerId").val("");
-		$(".consignee.row.row-interval").each(function (i) {
+		$(".row.row-cols-4.consignee").each(function (i) {
 			if(i == 0){
 				$(this).find("i").each(function(i){
 					if(i ==1){
@@ -887,7 +1018,7 @@
 			$.modal.alertError(idCard.ErrMsg);
 			return false;
 		}
-        $(".consignee.row.row-interval").each(function () {
+        $(".row.row-cols-4.consignee").each(function () {
 			if(!$.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				consigneeIdCodeList.push($(this).find("#consigneeIdCode").val());
 			}
@@ -909,7 +1040,7 @@
 			$.modal.alertError(idCard.ErrMsg);
 			return false;
 		}
-		 $(".consignee.row.row-interval").each(function () {
+		 $(".row.row-cols-4.consignee").each(function () {
 				if(!$.common.isEmpty($(this).find("#consigneeIdCode").val())){
 					consigneeIdCodeList.push($(this).find("#consigneeIdCode").val());
 				}

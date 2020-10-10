@@ -18,7 +18,7 @@
 						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="26">
 						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="20">
 		<div id="baseInfo" >
-				<div class="row row-cols-4">
+				<div class="row row-cols-4" id="baseContent">
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">结账单号</label>
 	            			<input type="text" class="form-control" value="${detail.cycleNo!}" readonly/>
@@ -39,13 +39,13 @@
 							<label for="cycleNo" class="div_label">领款金额|${detail.accountCycleDetailDto.receiveTimes!}笔</label>
 							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.receiveAmountText!}" readonly/>
 	            	</div>
+					<div class="form-group col">
+						<label for="cycleNo" class="div_label">交款金额|${detail.accountCycleDetailDto.deliverTimes!}笔</label>
+						<input type="text" class="form-control" value="${detail.accountCycleDetailDto.deliverAmountText!}" readonly/>
+					</div>
 	            	<div class="form-group col">
 	            			<label for="cycleNo" class="div_label">网银收款|${detail.accountCycleDetailDto.bankInTimes!}笔</label>
 	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.bankInAmountText!}" readonly/>
-	            	</div>
-					<div class="form-group col">
-							<label for="cycleNo" class="div_label">交款金额|${detail.accountCycleDetailDto.deliverTimes!}笔</label>
-							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.deliverAmountText!}" readonly/>
 	            	</div>
 	            	<div class="form-group col">
 							<label for="cycleNo" class="div_label">网银支出|${detail.accountCycleDetailDto.bankOutTimes!}笔</label>
@@ -54,10 +54,6 @@
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">现金收款|${detail.accountCycleDetailDto.depoCashTimes!}笔</label>
 							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoCashAmountText!}" readonly/>
-	            	</div>
-	            	<div class="form-group col">
-							<label for="cycleNo" class="div_label">POS收款|${detail.accountCycleDetailDto.depoPosTimes!}笔</label>
-	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoPosAmountText!}" readonly/>
 	            	</div>
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">现金支出|${detail.accountCycleDetailDto.drawCashTimes!}笔</label>
@@ -68,9 +64,21 @@
 							<input type="text" id="unDeliverAmount" class="form-control" value="${detail.accountCycleDetailDto.unDeliverAmountText!}" readonly/>
 	            	</div>
 	            	<div class="form-group col">
+						<label for="cycleNo" class="div_label">POS收款|${detail.accountCycleDetailDto.depoPosTimes!}笔</label>
+						<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoPosAmountText!}" readonly/>
+					</div>
+	            	<% if(settled != 2 && detail.state != 1){ %>
+		            	<div class="form-group col">
+								<label for="cycleNo" class="div_label">结账交款金额</label>
+								<input type="text" id="applyPayerAmount"  class="form-control" value='${detail.accountCycleDetailDto.lastDeliverAmountText!}' readonly/>
+		            	</div>
+	            	<% } %>
+	            	<% else if(settled == 2){ %>
+						<div class="form-group col">
 							<label for="cycleNo" class="div_label">结账交款金额</label>
 							<input type="text" id="applyPayerAmount"  class="form-control" value='${detail.accountCycleDetailDto.lastDeliverAmountText!}' readonly/>
 	            	</div>
+					<% }%>
 				</div>
 		</div>
 		<div class="col align-self-center" style="text-align: center;margin-bottom: 20px;margin-top: 10px;">
@@ -183,7 +191,7 @@
 			<div class="modal-header"
 				style="background-color: #E6E6E6; height: 45px;">
 				<h5 style="height-line: 45px;">结账确认</h5>
-				<label onclick="close()"><i class="fa fa-times"></i></label>
+				<span data-dismiss="modal""><i class="fa fa-times"></i></span>
 			</div>
 			<div class="modal-body" style="overflow: auto;">
 				<form id="settleForm" style="width: 90%;">
@@ -228,6 +236,7 @@
 	let istetee = false;
 	let istetoperation = false;
 	$(function() {
+		$('#settleCycle').on('show.bs.modal', centerModals);
 		if($("#cycleState").val() == 2){
 			$("#apply").attr("disabled", "disabled");
 		}
@@ -284,6 +293,8 @@
 	    },
 	    focusCleanup: true
 	});
+	
+	var settled = '<div class="form-group col"><label for="cycleNo" class="div_label">结账交款金额</label><input type="text" id="applyPayerAmount"  class="form-control" value="applyPayerAmountValue" readonly/></div>'
 
 	function doSettle() {
 		if (!$.validate.form("settleForm")) {
@@ -304,6 +315,9 @@
 		bui.util.debounce($.operate.saveModal(url, JSON.stringify(data), function (result) {
 	            if (result.code == web_status.SUCCESS) {
 	            	$("#applyPayerAmount").val($("#unDeliverAmount").val());
+	            	let settled1 = settled;
+	            	settled1 = settled1.replace("applyPayerAmountValue", $("#unDeliverAmount").val());
+	            	$("#baseContent").append(settled1);
 	            	$("#unDeliverAmount").val(0);
 	                $.table.refresh()
 	            }
@@ -374,5 +388,15 @@
 		};
 		$.table.init(options);
 	}
+	
+	function centerModals() {   
+		　　$('#settleCycle').each(function(i) {   
+		　　　　var $clone = $(this).clone().css('display','block').appendTo('body');
+		　　　　var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 2);
+		　　　　top = top > 0 ? top : 0;   
+		　　　　$clone.remove();   
+		　　　　$(this).find('.modal-content').css("margin-top", top);   
+		　　});   
+		};
 	
 </script>

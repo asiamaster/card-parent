@@ -55,16 +55,17 @@
                     </div>
                 </div>
             </div>
-            <div style="margin: auto" align="center">
-                <button id="frozen" type="button" class="btn btn-primary" onclick="submitFrozen()">
-                    冻结资金
-                </button>
-                <button id="record" style="margin-left: 25px" type="button" class="btn btn-outline-primary" onclick="switchTableDisplay()">
-                    冻结记录
-                </button>
-                <button type="button" style="margin-left: 25px" class="btn btn-outline-primary px-sm-4" onclick="history.go(-1)">
+            <div align="center" class="mt-5">
+                <button type="button" style="margin-left: 25px" class="btn btn-secondary px-5" onclick="history.go(-1)">
                     返回
                 </button>
+                <button id="frozen" type="button" class="btn btn-primary px-5" onclick="submitFrozen()">
+                    冻结资金
+                </button>
+                <button id="record" type="button" class="btn btn-primary px-5" onclick="switchTableDisplay()">
+                    冻结记录
+                </button>
+
             </div>
         </form>
     </div>
