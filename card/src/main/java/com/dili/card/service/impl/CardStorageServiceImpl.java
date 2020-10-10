@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class CardStorageServiceImpl implements ICardStorageService {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(CardStorageServiceImpl.class);
 
 	@Autowired
@@ -132,6 +132,10 @@ public class CardStorageServiceImpl implements ICardStorageService {
 	@Override
 	public CardStorageDto checkAndGetByCardNo(String cardNo, Integer cardType, String customerType) {
 		CardStorageDto cardStorage = getCardStorageByCardNo(cardNo);
+		if(cardStorage == null) {
+			log.warn("未找到对应的卡数据cardNo[{}]", cardNo);
+			throw new CardAppBizException("未找到对应的卡数据");
+		}
 		if (cardStorage.getState() != CardStorageState.ACTIVE.getCode()) {
 			throw new CardAppBizException("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "],不能开卡!");
 		}
@@ -139,7 +143,7 @@ public class CardStorageServiceImpl implements ICardStorageService {
 			throw new CardAppBizException("请使用" + CardType.getName(cardType) + "办理当前业务!");
 		}
 		// 副卡入库时没有卡面信息,不校验
-		if (!CardType.isSlave(cardStorage.getType())) {
+		if (null != cardStorage.getCardFace() && !CardType.isSlave(cardStorage.getType())) {
 			if (!CustomerType.checkCardFace(customerType, cardStorage.getCardFace())) {
 				log.warn("卡面信息和客户身份类型不符cardNo[{}]customerType[{}]cardFace[{}]", cardNo, customerType,
 						cardStorage.getCardFace());
