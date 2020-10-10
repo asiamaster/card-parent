@@ -203,7 +203,7 @@
     </div>
 </div>
 <div class="modal fade" id="addFirstModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="addFirstModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 60%;height: 500px;">
+    <div class="modal-dialog" style="width: 70%;height: 500px;">
 		<div class="modal-content" style="width: 100%;height: 500px;">
 			<div class="modal-header" style="background-color: #E6E6E6;height: 45px;">
                <h6 style="height-line:45px;">新增资金委托关系</h6>
@@ -418,27 +418,27 @@
 						<div class="breadcrumb">
 							被委托人
 						</div>
-						<div class="row row-cols-4">
+						<div class="row row-cols-4 consignee">
 							<div class="form-group col">
 								<label for="">姓名</label>
 								<input placeholder="姓名"
 									   disabled="disabled" name="consigneeName" type="text"
 									   class="form-control" id="consigneeName" maxlength="20"
-									   value="" />
+									   value="1" />
 							</div>
 							<div class="form-group col">
 								<label for="">身份证号</label>
 								<input placeholder="身份证号" disabled="disabled"
 									   name="consigneeIdCode" type="text"
 									   class="form-control" id="consigneeIdCode"
-									   maxlength="18" value="" />
+									   maxlength="18" value="1" />
 							</div>
 							<div class="form-group col">
 								<label for="">手机号</label>
 								<input placeholder="手机号"
 									   name="consigneeIdMobile" type="text"
 									   class="form-control" id="consigneeIdMobile"
-									   maxlength="12" value="" />
+									   maxlength="12" value="1" />
 							</div>
 							<div class="form-group col-auto align-self-center mt-4">
 								<button type="button" class="btn btn-outline-secondary td_button readID" onclick="getConsigneeIdCard(this)">读取身份证</button>
@@ -536,7 +536,7 @@
     $(function () {
     	
 
-    	$(".consignee.row.row-interval").each(function () {
+    	$(".row.row-cols-4.consignee").each(function () {
     		$(this).find("#consigneeIdMobile").on('input  propertychange', validateNumber);
 		});
     	$("#days").on('input  propertychange', validateNotZeroStartNumber);
@@ -626,23 +626,22 @@
 	/**
 	 * 添加被委托人信息
 	 */
-	let consignee='<div class="row row-cols-4 consignee"></div> <div class="form-group col"><label for="">姓名</label> <input placeholder="姓名" disabled="disabled" name="consigneeName" type="text" class="form-control" id="consigneeName" maxlength="20" value="" /> </div>' +
+	let consignee='<div class="row row-cols-4 consignee"> <div class="form-group col"><label for="">姓名</label> <input placeholder="姓名" disabled="disabled" name="consigneeName" type="text" class="form-control" id="consigneeName" maxlength="20" value="" /> </div>' +
 			'<div class="form-group col"><label for="">身份证号</label><input placeholder="身份证号" disabled="disabled" name="consigneeIdCode" type="text" class="form-control" id="consigneeIdCode" maxlength="18" value="" /> </div>' +
 			'<div class="form-group col"><label for="">手机号</label><input placeholder="手机号" name="consigneeIdMobile" type="text" class="form-control" id="consigneeIdMobile" maxlength="12" value="" /> </div>' +
-			'<div class="info-cell col-2"><input placeholder="手机号" name="consigneeIdMobile" value="" type="text" class="form-control"  id="consigneeIdMobile" maxlength="12"/></div>' +
-			'<div class="form-group col-auto align-self-center mt-4"><button type="button"class="btn btn-outline-secondary td_button readID" onclick="getConsigneeIdCard(this)">读取身份证</button> <label onclick="addConsignee()"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>'+
-			'<label onclick="minusConsignee()"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label><label onclick="addConsignee()"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label></div></div>';
+			'<div class="form-group col-auto align-self-center mt-4"><button type="button"class="btn btn-outline-secondary td_button readID" onclick="getConsigneeIdCard(this)">读取身份证</button>' +
+			'<label onclick="minusConsignee(this)"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>'+
+			'<label onclick="addConsignee(this)"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label></div></div>';
 
 
-	let redPlus = '<label onclick="addConsignee()"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>';
-	let blueMinus = '<label onclick="minusConsignee()"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>';
+	let redPlus = '<label onclick="addConsignee(this)"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>';
+	let blueMinus = '<label onclick="minusConsignee(this)"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>';
 
-	let consignee1='<div class="row row-cols-4 consignee"></div> <div class="form-group col"><label for="">姓名</label> <input placeholder="姓名" disabled="disabled" name="consigneeName" type="text" class="form-control" id="consigneeName" maxlength="20" value="" /> </div>' +
+	let consignee1='<div class="row row-cols-4 consignee"> <div class="form-group col"><label for="">姓名</label> <input placeholder="姓名" disabled="disabled" name="consigneeName" type="text" class="form-control" id="consigneeName" maxlength="20" value="" /> </div>' +
 			'<div class="form-group col"><label for="">身份证号</label><input placeholder="身份证号" disabled="disabled" name="consigneeIdCode" type="text" class="form-control" id="consigneeIdCode" maxlength="18" value="" /> </div>' +
 			'<div class="form-group col"><label for="">手机号</label><input placeholder="手机号" name="consigneeIdMobile" type="text" class="form-control" id="consigneeIdMobile" maxlength="12" value="" /> </div>' +
-			'<div class="info-cell col-2"><input placeholder="手机号" name="consigneeIdMobile" value="" type="text" class="form-control"  id="consigneeIdMobile" maxlength="12"/></div>' +
-			'<div class="form-group col-auto align-self-center mt-4"><button type="button"class="btn btn-outline-secondary td_button readID" onclick="getConsigneeIdCard(this)">读取身份证</button> <label onclick="addConsignee()"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>'+
-			'<label onclick="minusConsignee()"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label></div></div>';
+			'<div class="form-group col-auto align-self-center mt-4"><button type="button"class="btn btn-outline-secondary td_button readID" onclick="getConsigneeIdCard(this)">读取身份证</button>' + 
+			'<label onclick="minusConsignee(this)"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label></div></div>';
 
 
 	/*let consignee='<div class="consignee row row-interval" style="margin-bottom: 20px;"><div class="info-column  col-2">被委托人</div><div class="info-cell col-2">' +
@@ -672,13 +671,13 @@
 
     function addConsignee() {
     	var next = true;
-		var list=$(".consignee.row.row-interval");
+		var list=$(".row.row-cols-4.consignee");
 		if(list.length == 3){
 			$.modal.alertWarning("最多三位被委托人")
 			return false;
 		}
 		var all = list.length;
-		$(".consignee.row.row-interval").each(function () {
+		$(".row.row-cols-4.consignee").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				$.modal.alertWarning("请读取身份证后添加下一位")
 				next = false;
@@ -688,7 +687,7 @@
 			return !next;
 		}
 		if(all == 1){
-			$(".consignee.row.row-interval").each(function () {
+			$(".row.row-cols-4.consignee").each(function () {
 				$(this).find("i").each(function(i){
 					if(i ==1){
 						$(this).parent().after(blueMinus);
@@ -698,7 +697,7 @@
 			});
 		}
 		if(all == 2){
-			$(".consignee.row.row-interval").each(function () {
+			$(".row.row-cols-4.consignee").each(function () {
 				$(this).find("i").each(function(i){
 					if(i ==2){
 						$(this).parent().remove();
@@ -713,10 +712,10 @@
 	}
 
 	function minusConsignee(e) {
-		$(e).closest(".consignee.row.row-interval").remove();
-		var list=$(".consignee.row.row-interval");
+		$(e).closest(".row.row-cols-4.consignee").remove();
+		var list=$(".row.row-cols-4.consignee");
 		var all = list.length;
-		$(".consignee.row.row-interval").each(function (i) {
+		$(".row.row-cols-4.consignee").each(function (i) {
 			if(all == 1){//只有一行
 				$(this).find("i").each(function(index){
 					if(index ==1){
@@ -803,7 +802,7 @@
 		let items = [];
 		let consigneeNames='';
 		var validate = true;
-		$(".consignee.row.row-interval").each(function () {
+		$(".row.row-cols-4.consignee").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				validate = false;
 			}
@@ -812,7 +811,7 @@
 			$.modal.alertError("请添加被委托人身份信息");
 			return validate;
 		}
-		$(".consignee.row.row-interval").each(function () {
+		$(".row.row-cols-4.consignee").each(function () {
 			if($.common.isEmpty($(this).find("#consigneeIdMobile").val())){
 				validate = false;
 			}
@@ -821,7 +820,7 @@
 			$.modal.alertError("请添加被委托人手机号");
 			return validate;
 		}
-		$(".consignee.row.row-interval").each(function () {
+		$(".row.row-cols-4.consignee").each(function () {
 			let item = {};
 			item.consigneeName=$.trim($(this).find("#consigneeName").val());
 			consigneeNames = consigneeNames.concat("、",item.consigneeName);
@@ -883,7 +882,7 @@
 		$('#endTime').val('');
 		$('#notes').val('');
 		$("#cardCustomerId").val("");
-		$(".consignee.row.row-interval").each(function (i) {
+		$(".row.row-cols-4.consignee").each(function (i) {
 			if(i == 0){
 				$(this).find("i").each(function(i){
 					if(i ==1){
@@ -1019,7 +1018,7 @@
 			$.modal.alertError(idCard.ErrMsg);
 			return false;
 		}
-        $(".consignee.row.row-interval").each(function () {
+        $(".row.row-cols-4.consignee").each(function () {
 			if(!$.common.isEmpty($(this).find("#consigneeIdCode").val())){
 				consigneeIdCodeList.push($(this).find("#consigneeIdCode").val());
 			}
@@ -1041,7 +1040,7 @@
 			$.modal.alertError(idCard.ErrMsg);
 			return false;
 		}
-		 $(".consignee.row.row-interval").each(function () {
+		 $(".row.row-cols-4.consignee").each(function () {
 				if(!$.common.isEmpty($(this).find("#consigneeIdCode").val())){
 					consigneeIdCodeList.push($(this).find("#consigneeIdCode").val());
 				}
