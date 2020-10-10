@@ -99,7 +99,7 @@ public class CardManageController implements IControllerHandler {
     @PostMapping("/changeCard.action")
     public BaseOutput<String> changeCard(@RequestBody CardRequestDto cardParam) {
         LOGGER.info("换卡*****{}", JSONObject.toJSONString(cardParam));
-        AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
+        //AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
         AssertUtils.notEmpty(cardParam.getNewCardNo(), "新开卡号不能为空");
         AssertUtils.notNull(cardParam.getServiceFee(), "工本费不能为空");
         this.validateCommonParam(cardParam);
