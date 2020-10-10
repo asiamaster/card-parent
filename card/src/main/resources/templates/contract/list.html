@@ -638,6 +638,7 @@
 		$('#currentdate').html(getNowFormatDate(' 年 ', ' 月 ',' 日 '));
 		$('#addSecondModal').modal('show');
 		$("#signatureIsCompleted").val(0);
+		$('#signatureImagePathConsignor').val("");
 	}
 
 	/**
@@ -884,9 +885,11 @@
 		$("#consigneeAlls").empty();
 		$("#consignorCustomer").empty();
 		$("#signatureConsignor").find('img').remove();
+		$('#signatureImagePathConsignor').val("");
 		$('#addFirstModal').modal('show');
 	}
 
+	/** 取消页面  关闭第一个页面 */
 	function cancleAddView(){
 		$('#customerId').val('');
 		$('#consignorCustomerName').val('');
