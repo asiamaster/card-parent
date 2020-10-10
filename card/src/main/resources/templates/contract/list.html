@@ -355,7 +355,7 @@
 									   class="form-control" id="consignorCustomerName"
 									   maxlength="40" value="" />
 							</div>
-							<div class="form-group col-auto">
+							<div class="form-group col">
 								<label for="">证件号码</label>
 								<div class="input-group">
 									<input name="consignorCustomerIDCode"  type="text"
@@ -364,13 +364,20 @@
 									<input name="consignorCustomerMobile" type="hidden"
 										   class="form-control" id="consignorCustomerMobile"
 										   maxlength="11" value="" />
+								</div>
+							</div>
+							<div class="form-group col">
+								<label for="">&emsp;&emsp;</label>
+								<div class="input-group">
 									<div class="input-group-append">
 										<button id="readIdCode" type="button" class="btn btn-outline-secondary" onclick="getConsignorIdCard()">读取身份证</button>
 										<button id="queryIdCode" type="button" class="btn btn-outline-secondary" onclick="searchCustomer()">查询</button>
 									</div>
 								</div>
 							</div>
-							<div class="form-group col-auto">
+						</div>
+						<div class="row row-cols-4">
+							<div class="form-group col">
 								<label for="">园区卡</label>
 								<div class="input-group">
 									<input placeholder="园区卡"
@@ -380,9 +387,19 @@
 									<input name="cardCustomerId" type="hidden"
 										   class="form-control"
 										   id="cardCustomerId" maxlength="20" value="" />
+								</div>
+							</div>
+							<div class="form-group col">
+								<label for="">&emsp;&emsp;</label>
+								<div class="input-group">
 									<input name="consignorAccountId" type="text"
 										   class="form-control" style="opacity: 0;"
 										   id="consignorAccountId" maxlength="20" value="" />
+								</div>
+							</div>
+							<div class="form-group col">
+								<label for="">&emsp;&emsp;</label>
+								<div class="input-group">
 									<div class="input-group-append">
 										<button id="query" type="button" class="btn btn-outline-secondary" onclick="readCardNo()">请刷卡</button>
 									</div>
@@ -424,25 +441,25 @@
 								<input placeholder="姓名"
 									   disabled="disabled" name="consigneeName" type="text"
 									   class="form-control" id="consigneeName" maxlength="20"
-									   value="1" />
+									   value="" />
 							</div>
 							<div class="form-group col">
 								<label for="">身份证号</label>
 								<input placeholder="身份证号" disabled="disabled"
 									   name="consigneeIdCode" type="text"
 									   class="form-control" id="consigneeIdCode"
-									   maxlength="18" value="1" />
+									   maxlength="18" value="" />
 							</div>
 							<div class="form-group col">
 								<label for="">手机号</label>
 								<input placeholder="手机号"
 									   name="consigneeIdMobile" type="text"
 									   class="form-control" id="consigneeIdMobile"
-									   maxlength="12" value="1" />
+									   maxlength="12" value="" />
 							</div>
 							<div class="form-group col-auto align-self-center mt-4">
-								<button type="button" class="btn btn-outline-secondary td_button readID" onclick="getConsigneeIdCard(this)">读取身份证</button>
-								<label onclick="addConsignee()"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>
+								<button type="button" class="btn btn-outline-secondary td_button readID" onclick="getConsigneeIdCard(this)"><i></i>读取身份证</button>
+								<label class = "plus" onclick="addConsignee()"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>
 							</div>
 						</div>
 
@@ -629,19 +646,19 @@
 	let consignee='<div class="row row-cols-4 consignee"> <div class="form-group col"><label for="">姓名</label> <input placeholder="姓名" disabled="disabled" name="consigneeName" type="text" class="form-control" id="consigneeName" maxlength="20" value="" /> </div>' +
 			'<div class="form-group col"><label for="">身份证号</label><input placeholder="身份证号" disabled="disabled" name="consigneeIdCode" type="text" class="form-control" id="consigneeIdCode" maxlength="18" value="" /> </div>' +
 			'<div class="form-group col"><label for="">手机号</label><input placeholder="手机号" name="consigneeIdMobile" type="text" class="form-control" id="consigneeIdMobile" maxlength="12" value="" /> </div>' +
-			'<div class="form-group col-auto align-self-center mt-4"><button type="button"class="btn btn-outline-secondary td_button readID" onclick="getConsigneeIdCard(this)">读取身份证</button>' +
-			'<label onclick="minusConsignee(this)"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>'+
-			'<label onclick="addConsignee(this)"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label></div></div>';
+			'<div class="form-group col-auto align-self-center mt-4"><button type="button"class="btn btn-outline-secondary td_button readID" onclick="getConsigneeIdCard(this)"><i></i>读取身份证</button>' +
+			'<label class = "minus" onclick="minusConsignee(this)"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>'+
+			'<label class = "plus" onclick="addConsignee(this)"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label></div></div>';
 
 
-	let redPlus = '<label onclick="addConsignee(this)"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>';
-	let blueMinus = '<label onclick="minusConsignee(this)"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>';
+	let redPlus = '<label class = "plus" onclick="addConsignee(this)"><i class="fa fa-plus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>';
+	let blueMinus = '<label class = "minus" onclick="minusConsignee(this)"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label>';
 
 	let consignee1='<div class="row row-cols-4 consignee"> <div class="form-group col"><label for="">姓名</label> <input placeholder="姓名" disabled="disabled" name="consigneeName" type="text" class="form-control" id="consigneeName" maxlength="20" value="" /> </div>' +
 			'<div class="form-group col"><label for="">身份证号</label><input placeholder="身份证号" disabled="disabled" name="consigneeIdCode" type="text" class="form-control" id="consigneeIdCode" maxlength="18" value="" /> </div>' +
 			'<div class="form-group col"><label for="">手机号</label><input placeholder="手机号" name="consigneeIdMobile" type="text" class="form-control" id="consigneeIdMobile" maxlength="12" value="" /> </div>' +
-			'<div class="form-group col-auto align-self-center mt-4"><button type="button"class="btn btn-outline-secondary td_button readID" onclick="getConsigneeIdCard(this)">读取身份证</button>' + 
-			'<label onclick="minusConsignee(this)"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label></div></div>';
+			'<div class="form-group col-auto align-self-center mt-4"><button type="button"class="btn btn-outline-secondary td_button readID" onclick="getConsigneeIdCard(this)"><i></i>读取身份证</button>' + 
+			'<label class = "minus" onclick="minusConsignee(this)"><i class="fa fa-minus red ml-3 align-middle" style="font-size: 20px " aria-hidden="true"></i></label></div></div>';
 
 
 	/*let consignee='<div class="consignee row row-interval" style="margin-bottom: 20px;"><div class="info-column  col-2">被委托人</div><div class="info-cell col-2">' +
@@ -666,7 +683,7 @@
 				'<p style="height: 30px; line-height: 30px;">被委托人签名：</p></div>' +
 				'<div class="triangle per_div_child div_container">' +
 				'</div><button id="signature" type="button" style="height: 30px;"' +
-				'class="btn btn-primary per_div_child" onclick="signature(this)">请签名</button><input type="hidden" id="signatureImagePathConsugnee" name="signatureImagePathConsugnee" value="rr"></div>';
+				'class="btn btn-primary per_div_child" onclick="signature(this)">请签名</button><input type="hidden" id="signatureImagePathConsugnee" name="signatureImagePathConsugnee" value=""></div>';
 
 
     function addConsignee() {
@@ -951,6 +968,7 @@
                         $('#addSecondModal').modal('hide');
                  		$("#consigneeAlls").empty();
                  		$("#consignorCustomer").empty();
+                 		$('#signatureImagePathConsignor').val("")
                  		cancleAddView();
 
                 		$.table.refresh();

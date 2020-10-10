@@ -19,9 +19,13 @@ import com.dili.card.type.CustomerType;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
+import com.esotericsoftware.minlog.Log;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +42,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class CardStorageServiceImpl implements ICardStorageService {
+
+	private static final Logger log = LoggerFactory.getLogger(CardStorageServiceImpl.class);
+
 	@Autowired
 	private IStorageOutDao storageOutDao;
 	@Autowired
@@ -125,6 +132,10 @@ public class CardStorageServiceImpl implements ICardStorageService {
 	@Override
 	public CardStorageDto checkAndGetByCardNo(String cardNo, Integer cardType, String customerType) {
 		CardStorageDto cardStorage = getCardStorageByCardNo(cardNo);
+		if(cardStorage == null) {
+			log.warn("未找到对应的卡数据cardNo[{}]", cardNo);
+			throw new CardAppBizException("未找到对应的卡数据");
+		}
 		if (cardStorage.getState() != CardStorageState.ACTIVE.getCode()) {
 			throw new CardAppBizException("该卡状态为[" + CardStorageState.getName(cardStorage.getState()) + "],不能开卡!");
 		}
@@ -132,8 +143,10 @@ public class CardStorageServiceImpl implements ICardStorageService {
 			throw new CardAppBizException("请使用" + CardType.getName(cardType) + "办理当前业务!");
 		}
 		// 副卡入库时没有卡面信息,不校验
-		if (!CardType.isSlave(cardStorage.getType())) {
+		if (null != cardStorage.getCardFace() && !CardType.isSlave(cardStorage.getType())) {
 			if (!CustomerType.checkCardFace(customerType, cardStorage.getCardFace())) {
+				log.warn("卡面信息和客户身份类型不符cardNo[{}]customerType[{}]cardFace[{}]", cardNo, customerType,
+						cardStorage.getCardFace());
 				throw new CardAppBizException("卡面信息和客户身份类型不符");
 			}
 		}
