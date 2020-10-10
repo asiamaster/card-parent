@@ -22,7 +22,7 @@ public class WithdrawPrintServiceImpl extends PrintServiceImpl {
         if (Integer.valueOf(TradeChannel.CASH.getCode()).equals(recordDo.getTradeChannel())) {//现金模板
             return PrintTemplate.CASH_WITHDRAW.getType();
         }
-        if (Integer.valueOf(TradeChannel.E_BANK.getCode()).equals(recordDo.getTradeChannel())) {//现金模板
+        if (Integer.valueOf(TradeChannel.E_BANK.getCode()).equals(recordDo.getTradeChannel())) {//网银模板
             return PrintTemplate.E_BANK_WITHDRAW.getType();
         }
         throw new CardAppBizException("未找到合适的票据模板");
@@ -33,6 +33,10 @@ public class WithdrawPrintServiceImpl extends PrintServiceImpl {
         Long totalAmount = recordDo.getServiceCost() != null ? recordDo.getAmount() + recordDo.getServiceCost() : recordDo.getAmount();
         printDto.setTotalAmount(CurrencyUtils.cent2TenNoSymbol(totalAmount));
         printDto.setTotalAmountWords(Convert.digitToChinese(Double.valueOf(printDto.getTotalAmount())));
+        if (Integer.valueOf(TradeChannel.E_BANK.getCode()).equals(recordDo.getTradeChannel())) {//网银
+            Long balance = recordDo.getServiceCost() != null ? recordDo.getEndBalance() - recordDo.getServiceCost() : recordDo.getEndBalance();
+            printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(balance));
+        }
     }
 
     @Override
