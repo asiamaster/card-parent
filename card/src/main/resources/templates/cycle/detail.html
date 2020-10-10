@@ -1,7 +1,30 @@
 <#bs4Body>
+<style>
+	.form-inline .col {
+		padding: 0;
+	}
+	.div_label {
+		width: 180px;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		background: #F6F7F9;
+	}
+	.form-inline .form-group {
+		border-bottom: 1px solid #eee;
 
+	}
+	.form-inline .form-control {
+		border: none;
+
+	}
+	.form-inline .form-control:disabled, .form-control[readonly] {
+		background-color: #fff;
+
+	}
+
+</style>
 <div id="detail-modal" class="main-container container-fluid auto-margin"  style="width: 60%">
-	<form id="queryForm">
+	<form id="queryForm" class="form-inline">
 		<input type="hidden"
 						name="userId" id="userId" value="${detail.userId!}"> <input
 						type="hidden" name="cycleNo" id="cycleNo"
@@ -18,7 +41,7 @@
 						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="26">
 						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="20">
 		<div id="baseInfo" >
-				<div class="row row-cols-4" id="baseContent">
+				<div class="row row-cols-2" id="baseContent">
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">结账单号</label>
 	            			<input type="text" class="form-control" value="${detail.cycleNo!}" readonly/>
@@ -294,7 +317,7 @@
 	    focusCleanup: true
 	});
 	
-	var settled = '<div class="form-group col"><label for="cycleNo" class="div_label">结账交款金额</label><input type="text" id="applyPayerAmount"  class="form-control" value="applyPayerAmountValue" readonly/></div>'
+	var settled = '<div class="form-group col"><label for="cycleNo">结账交款金额</label><input type="text" id="applyPayerAmount"  class="form-control" value="applyPayerAmountValue" readonly/></div>'
 
 	function doSettle() {
 		if (!$.validate.form("settleForm")) {
