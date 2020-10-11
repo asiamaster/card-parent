@@ -11,11 +11,11 @@ import java.util.List;
  * @time ：2020年9月8日上午10:31:55
  */
 public enum CardFaceType {
-	/** 园外买家 */
+	/** 园外买方 */
 	BUYER("买方卡", "buyer"),
-	/** 园内买家 */
+	/** 园内买方 */
 	BUYER_VIP("VIP买方卡", "buyer_vip"),
-	/** 卖家卡 */
+	/** 卖方卡 */
 	SELLER("卖方卡", "seller"),
 
 	/** 司机 */

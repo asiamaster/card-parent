@@ -12,16 +12,16 @@ import java.util.List;
  * @time ：2020年6月23日下午3:32:47
  */
 public enum CustomerType {
-	/** 园外买家 */
-	OUTSIDE_BUYER("园外买家", "outside_buyer", CardFaceType.BUYER),
+	/** 园外买方 */
+	OUTSIDE_BUYER("园外买方", "outside_buyer", CardFaceType.BUYER),
 	/** 理货区客户 */
 	OPERATION_AREA("理货区客户", "operation_area", CardFaceType.BUYER_VIP),
 	/** 省内客户 */
 	IN_PROVINCE("省内客户", "in_province", CardFaceType.BUYER_VIP),
 	/** 理货区客户 */
 	NATIVE_CUSTOMER("本地客户", "native", CardFaceType.BUYER_VIP),
-	/** 卖家卡 */
-	SELLER("卖家", "seller", CardFaceType.SELLER),
+	/** 卖方卡 */
+	SELLER("卖方", "seller", CardFaceType.SELLER),
 	/** 司机 */
 	DRIVER("司机", "driver", CardFaceType.DRIVER);
 
