@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,8 @@ import com.github.pagehelper.PageHelper;
 @Service("accountCycleService")
 public class AccountCycleServiceImpl implements IAccountCycleService {
 
+	private static final Logger log = LoggerFactory.getLogger(AccountCycleServiceImpl.class);
+
 	@Autowired
 	private IAccountCycleDao accountCycleDao;
 	@Autowired
@@ -52,57 +56,57 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public AccountCycleDto settle(AccountCycleDto accountCycleDto) {
-		
-		//获取最新的账务周期
+
+		// 获取最新的账务周期
 		AccountCycleDo accountCycle = this.findLatestCycleByUserId(accountCycleDto.getUserId());
-		
+
 		// 对账状态校验和交款金额校验
 		this.validateCycleSettledState(accountCycle, accountCycleDto);
-		
-		//生成交款信息
+
+		// 生成交款信息
 		userCashService.save(buildUserCash(accountCycleDto));
-		
+
 		// 更新账务周期状态
 		this.updateStateById(accountCycle.getId(), CycleState.SETTLED.getCode(), accountCycle.getVersion());
-		
+
 		return accountCycleDto;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void flated(Long id) {
-		
+
 		AccountCycleDo cycle = this.findById(id);
-		
+
 		// 平账状态校验
 		this.validateCycleFlatedState(cycle);
-		
+
 		// 账务周期详情统计信息
 		AccountCycleDetailDo accountCycleDetail = this.buildAccountCycleDetailDo(this.buildCycleDetail(cycle));
-		
+
 		// 构建商户相关信息
 		this.buildFirmInfo(accountCycleDetail);
-		
+
 		// 更新账务周期状态
 		this.updateStateById(id, CycleState.FLATED.getCode(), cycle.getVersion());
-		
+
 		// 保存账务周期详情信息
 		accountCycleDetailDao.save(accountCycleDetail);
-		
+
 		// 更新领取款记录
 		userCashService.flatedByCycle(cycle.getCycleNo());
 	}
 
 	@Override
 	public List<AccountCycleDto> list(AccountCycleDto accountCycleDto) {
-		
+
 		// 构建查询条件
 		this.buildQueryCondition(accountCycleDto);
-		
+
 		// 封装返回数据
 		return this.buildAccountCycleList(accountCycleDao.findByCondition(accountCycleDto));
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public AccountCycleDo findActiveCycleByUserId(Long userId, String userName, String userCode) {
@@ -133,7 +137,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}
 		return accountCycle;
 	}
-	
+
 	@Override
 	public PageOutput<List<AccountCyclePageListDto>> page(AccountCycleDto accountCycleDto) {
 		Page<?> page = PageHelper.startPage(accountCycleDto.getPage(), accountCycleDto.getRows());
@@ -150,12 +154,12 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	public AccountCycleDto detail(Long id) {
 		return this.buildAccountCycleWrapperDetail(accountCycleDao.getById(id), true);
 	}
-	
+
 	@Override
 	public AccountCycleDto applyDetail(Long userId) {
 		return this.buildAccountCycleWrapperDetail(accountCycleDao.findLatestCycleByUserId(userId), true);
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void increaseCashBox(Long cycleNo, Long amount) {
@@ -167,11 +171,11 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	public void decreaseeCashBox(Long cycleNo, Long amount) {
 		this.updateCashBox(cycleNo, -amount);
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateCashBox(Long cycleNo, Long amount) {
-		if(amount == 0) {
+		if (amount == 0) {
 			return;
 		}
 		AccountCycleDo accountCycleDo = accountCycleDao.findByCycleNo(cycleNo);
@@ -179,7 +183,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			throw new CardAppBizException("更新现金柜失败");
 		}
 	}
-	
+
 	/**
 	 * 更新账务周期状态
 	 */
@@ -191,10 +195,9 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}
 	}
 
-
 	@Override
 	public Boolean checkExistActiveCycle(Long userId) {
-		AccountCycleDo  accountCycleDo = this.findLatestCycleByUserId(userId);
+		AccountCycleDo accountCycleDo = this.findLatestCycleByUserId(userId);
 		if (userId == null) {
 			return true;
 		}
@@ -206,7 +209,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 获取活跃的账务周期
 	 */
@@ -223,12 +226,12 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}
 		return accountCycle;
 	}
-	
+
 	@Override
 	public AccountCycleDto buildAccountCycleWrapper(AccountCycleDo cycle) {
 		return buildAccountCycleWrapperDetail(cycle, false);
 	}
-	
+
 	@Override
 	public AccountCycleDto buildAccountCycleWrapperDetail(AccountCycleDo cycle, boolean detail) {
 		// 构建账务周期实体
@@ -238,32 +241,34 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		// 计算网银存取款
 		accountCycleDetail
 				.setInOutBankAmount(accountCycleDetail.getBankInAmount() - accountCycleDetail.getBankOutAmount());
-		// 计算未交现金金额  领款金额 + 现金收支收益金额 - 现金交款金额
+		// 计算未交现金金额 领款金额 + 现金收支收益金额 - 现金交款金额
 		Long unDeliverAmount = accountCycleDetail.getReceiveAmount() + accountCycleDetail.getRevenueAmount()
 				- accountCycleDetail.getDeliverAmount();
-		if(cycle != null) {
-			if (CycleState.ACTIVE.getCode() == cycle.getState()) {//活跃期
+		if (cycle != null) {
+			if (CycleState.ACTIVE.getCode() == cycle.getState()) {// 活跃期
 				accountCycleDetail.setUnDeliverAmount(unDeliverAmount);
-			}else {//非活跃期 最近一次交现金金额就是最终交款金额
-				UserCashDo userCashDo = userCashService.getLastestUesrCash(cycle.getUserId(), cycle.getCycleNo(), CashAction.PAYER.getCode());
+			} else {// 非活跃期 最近一次交现金金额就是最终交款金额
+				UserCashDo userCashDo = userCashService.getLastestUesrCash(cycle.getUserId(), cycle.getCycleNo(),
+						CashAction.PAYER.getCode());
 				accountCycleDetail.setLastDeliverAmount(userCashDo.getAmount());
-				//结账后此字段为0 
+				// 结账后此字段为0
 				accountCycleDetail.setUnDeliverAmount(0L);
-				//详情 平账 和  结账申请 后不统计结账申请交款记录
+				// 详情 平账 和 结账申请 后不统计结账申请交款记录
 				if ((detail && CycleState.ACTIVE.getCode() != cycle.getState())) {
 					accountCycleDetail.setDeliverAmount(accountCycleDetail.getDeliverAmount() - userCashDo.getAmount());
 					accountCycleDetail.setDeliverTimes(accountCycleDetail.getDeliverTimes() - 1);
 				}
 			}
 		}
-		//现金收款包括充值和工本费
-		accountCycleDetail.setDepoCashAmount(accountCycleDetail.getDepoCashAmount() + accountCycleDetail.getOpenCostAmount() + accountCycleDetail.getChangeCostAmount());
-		accountCycleDetail.setDepoCashTimes(accountCycleDetail.getDepoCashTimes() + accountCycleDetail.getOpenCostFeetimes() + accountCycleDetail.getChangeCostFeetimes());
-		
+		// 现金收款包括充值和工本费
+		accountCycleDetail.setDepoCashAmount(accountCycleDetail.getDepoCashAmount()
+				+ accountCycleDetail.getOpenCostAmount() + accountCycleDetail.getChangeCostAmount());
+		accountCycleDetail.setDepoCashTimes(accountCycleDetail.getDepoCashTimes()
+				+ accountCycleDetail.getOpenCostFeetimes() + accountCycleDetail.getChangeCostFeetimes());
+
 		accountCycleDto.setAccountCycleDetailDto(accountCycleDetail);
 		return accountCycleDto;
 	}
-
 
 	/**
 	 * 构造页面响应实体列表
@@ -292,9 +297,9 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		if (accountCycle == null) {
 			throw new CardAppBizException("当前没有账务周期");
 		}
-		if(accountCycleDto.getCashAmount() < 0){
+		if (accountCycleDto.getCashAmount() < 0) {
 			throw new CardAppBizException("结账申请交款金额不能小于0元");
-		}	
+		}
 		AccountCycleDto aCycleDto = this.buildAccountCycleWrapper(accountCycle);
 		if (!accountCycleDto.getCashAmount().equals(aCycleDto.getAccountCycleDetailDto().getUnDeliverAmount())) {
 			throw new CardAppBizException("交款金额不等于现金余额");
@@ -323,8 +328,8 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	 * 账务周期详情统计信息
 	 */
 	private AccountCycleDetailDto buildCycleDetail(AccountCycleDo cycle) {
-		Long cycleNo =  cycle == null ? -1L : cycle.getCycleNo();
-		Long userId =  cycle == null ? -1L : cycle.getUserId();
+		Long cycleNo = cycle == null ? -1L : cycle.getCycleNo();
+		Long userId = cycle == null ? -1L : cycle.getUserId();
 		AccountCycleDetailDto accountCycleDetail = new AccountCycleDetailDto();
 		accountCycleDetail.setCycleNo(cycleNo);
 		List<CycleStatistcDto> cycleStatistcs = accountCycleDetailDao.statisticCycleRecord(cycleNo, userId);
@@ -341,12 +346,13 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 				amount.setAccessible(true);
 				amount.set(accountCycleDetail, cycleStatistc.getAmount() == null ? 0 : cycleStatistc.getAmount());
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("账务周期详情统计出错", e);
 			}
 		}
 		// 计算现金收支余额 开卡/换卡工本费+ 现金充值 -现金取款
-		accountCycleDetail.setRevenueAmount(accountCycleDetail.getOpenCostAmount() + accountCycleDetail.getChangeCostAmount() + accountCycleDetail.getDepoCashAmount()
-				- accountCycleDetail.getDrawCashAmount());
+		accountCycleDetail
+				.setRevenueAmount(accountCycleDetail.getOpenCostAmount() + accountCycleDetail.getChangeCostAmount()
+						+ accountCycleDetail.getDepoCashAmount() - accountCycleDetail.getDrawCashAmount());
 		return accountCycleDetail;
 	}
 
@@ -357,13 +363,13 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		accountCycleDto.setFirmId(userTicket.getFirmId());
 	}
-	
+
 	/**
 	 * 构建账务周期相应实体
 	 */
 	private AccountCycleDto buildAccountCycleDto(AccountCycleDo cycle) {
 		AccountCycleDto accountCycleDto = new AccountCycleDto();
-		if (cycle == null ) {
+		if (cycle == null) {
 			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 			accountCycleDto.setUserCode(userTicket.getSerialNumber());
 			accountCycleDto.setUserId(userTicket.getId());
@@ -391,12 +397,12 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		BeanUtils.copyProperties(accountCycleDetail, accountCycleDetailDo);
 		return accountCycleDetailDo;
 	}
-	
+
 	/**
 	 * 生成交款信息
 	 */
 	private UserCashDto buildUserCash(AccountCycleDto accountCycleDto) {
-		//校验结账交款余额
+		// 校验结账交款余额
 		UserCashDto cashDto = new UserCashDto();
 		cashDto.setUserId(accountCycleDto.getUserId());
 		cashDto.setUserCode(accountCycleDto.getUserCode());
@@ -407,7 +413,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		cashDto.setNotes("结账交款记录");
 		return cashDto;
 	}
-	
+
 	/**
 	 * 账务周期列表数据
 	 */
@@ -430,7 +436,8 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			accountCyclePageListDto.setInOutBankAmount(accountCycleDto.getAccountCycleDetailDto().getInOutBankAmount());
 			accountCyclePageListDto.setDeliverAmount(accountCycleDto.getAccountCycleDetailDto().getDeliverAmount());
 			accountCyclePageListDto.setUnDeliverAmount(accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount());
-			accountCyclePageListDto.setLastDeliverAmount(accountCycleDto.getAccountCycleDetailDto().getLastDeliverAmount());
+			accountCyclePageListDto
+					.setLastDeliverAmount(accountCycleDto.getAccountCycleDetailDto().getLastDeliverAmount());
 			accountCyclePageListDtos.add(accountCyclePageListDto);
 		}
 		return accountCyclePageListDtos;

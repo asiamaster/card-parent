@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +23,9 @@ import feign.Response;
 
 @Service
 public class FileUpDownloadService implements IFileUpDownloadService{
+	
+	private static final Logger log = LoggerFactory.getLogger(FileUpDownloadService.class);
+
 	
 	@Autowired
 	private DFSRpc dfsRpc;
@@ -62,7 +67,7 @@ public class FileUpDownloadService implements IFileUpDownloadService{
 					inputStream.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error("文件下载关闭文件流出错", e);
 			}
 		}
 	}
