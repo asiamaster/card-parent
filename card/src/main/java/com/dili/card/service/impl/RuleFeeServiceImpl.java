@@ -1,5 +1,16 @@
 package com.dili.card.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSONObject;
 import com.dili.assets.sdk.dto.BusinessChargeItemDto;
 import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
@@ -15,15 +26,6 @@ import com.dili.rule.sdk.rpc.ChargeRuleRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * @description： 规则服务统一处理
@@ -69,7 +71,7 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
                                  SystemSubjectType systemSubjectType) {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         List<BusinessChargeItemDto> chargeItemList = getChargeItem(userTicket.getFirmId(), ruleFeeBusinessType);
-        if (chargeItemList == null || chargeItemList.size() == 0) {
+        if ( chargeItemList == null || chargeItemList.size() == 0) {
             log.info("业务类型[{}]未查询到收费项!", ruleFeeBusinessType.getCode());
             return BigDecimal.valueOf(0);
         }
