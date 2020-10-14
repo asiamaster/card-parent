@@ -12,8 +12,10 @@ import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.AccountQueryRpc;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
+import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.type.CardStatus;
@@ -46,9 +48,11 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     private PayRpcResolver payRpcResolver;
     @Autowired
     private AccountQueryRpcResolver accountQueryRpcResolver;
+    @Autowired
+    private AccountQueryRpc accountQueryRpc;
 
     @Override
-    public PageOutput<List<AccountListResponseDto>>  getPage(UserAccountCardQuery param) {
+    public PageOutput<List<AccountListResponseDto>> getPage(UserAccountCardQuery param) {
         //查询所有卡状态，包含已禁用账户
         param.setExcludeUnusualState(0);
         PageOutput<List<UserAccountCardResponseDto>> page = accountQueryRpcResolver.findPageByCondition(param);
@@ -79,6 +83,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         cardAssociation.setAssociation(collect);
 
         UserAccountCardResponseDto primary = cardAssociation.getPrimary();
+        //客户信息已经在account-service中做了冗余，不进行查询也可以
         CustomerResponseDto customer = customerRpcResolver.findCustomerByIdWithConvert(primary.getCustomerId(), primary.getFirmId());
 
         BalanceResponseDto fund;
@@ -162,6 +167,28 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
             throw new CardAppBizException(ResultCode.DATA_ERROR, String.format("该账户为%s状态，不能进行此操作", DisableState.DISABLED.getName()));
         }
         return single;
+    }
+
+    @Override
+    public List<AccountWithAssociationResponseDto> getMasterAssociationList(Long customerId) {
+        UserAccountCardQuery masterParams = new UserAccountCardQuery();
+        masterParams.setCardType(CardType.MASTER.getCode());
+        masterParams.setCustomerIds(Lists.newArrayList(customerId));
+        //按照现在需求，一个customerId只有一张主卡，但是为了需求有变，这里设计成list
+        //以防customerId对应多个主卡的情况
+        List<UserAccountCardResponseDto> masterList = GenericRpcResolver.resolver(accountQueryRpc.findListV2(masterParams), "account-service");
+
+        List<AccountWithAssociationResponseDto> result = new ArrayList<>();
+        UserAccountCardQuery slaveParams = new UserAccountCardQuery();
+        slaveParams.setCardType(CardType.SLAVE.getCode());
+        for (UserAccountCardResponseDto master : masterList) {
+            slaveParams.setParentAccountId(master.getAccountId());
+            List<UserAccountCardResponseDto> slaveList = GenericRpcResolver.resolver(accountQueryRpc.findListV2(slaveParams), "account-service");
+            BalanceResponseDto fund = payRpcResolver.findBalanceByFundAccountId(master.getFundAccountId());
+            AccountWithAssociationResponseDto responseDto = new AccountWithAssociationResponseDto(master, slaveList, fund);
+            result.add(responseDto);
+        }
+        return result;
     }
 
 

@@ -98,4 +98,12 @@ public interface IAccountQueryService {
      * @date 2020/8/6
      */
     UserAccountCardResponseDto getForUnLostCard(UserAccountSingleQueryDto query);
+
+    /**
+     * 查询主卡的关联卡列表
+     * @author miaoguoxin
+     * @date 2020/10/14
+     */
+    List<AccountWithAssociationResponseDto> getMasterAssociationList(Long customerId);
 }
+

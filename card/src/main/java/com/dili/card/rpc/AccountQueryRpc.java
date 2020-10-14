@@ -16,7 +16,7 @@ import java.util.List;
  * 卡相关rpc
  */
 @FeignClient(name = "account-service", contextId = "accountQueryService",
-		path = "api/account" /*, url = "http://127.0.0.1:8186" */)
+		path = "api/account" /*, url = "http://127.0.0.1:8186"*/ )
 public interface AccountQueryRpc {
 
     /**
@@ -24,6 +24,12 @@ public interface AccountQueryRpc {
      */
     @RequestMapping(value = "/getList", method = RequestMethod.POST)
     BaseOutput<List<UserAccountCardResponseDto>> findUserCards(UserAccountCardQuery cardQuery);
+
+    /**
+     *查询卡信息列表(只排除了退卡状态)
+     */
+    @PostMapping(value = "/getAllList")
+    BaseOutput<List<UserAccountCardResponseDto>> findListV2(UserAccountCardQuery cardQuery);
 
     /**
      * 查询单个
@@ -40,6 +46,7 @@ public interface AccountQueryRpc {
      */
     @PostMapping(value = "/getSingleWithoutValidate")
     BaseOutput<UserAccountCardResponseDto> findSingleWithoutValidate(UserAccountSingleQueryDto cardQuery);
+
 
     /**
      * 查询分页

@@ -59,7 +59,6 @@ public class RechargePrintServiceImpl extends PrintServiceImpl {
         }else {
             balance = NumberUtil.sub(recordDo.getEndBalance() - recordDo.getServiceCost());
         }
-
         printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(balance.longValue()));
 
         String json = recordDo.getAttach();

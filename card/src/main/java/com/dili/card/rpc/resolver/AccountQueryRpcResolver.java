@@ -1,28 +1,19 @@
 package com.dili.card.rpc.resolver;
 
-import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.AccountQueryRpc;
-import com.dili.card.type.CardStatus;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
-
-import cn.hutool.json.JSONUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 账户查询解析器
@@ -47,33 +38,23 @@ public class AccountQueryRpcResolver {
 
 
     /**
-     * 通过账号批量查询map结构数据
+     * 单个查询
+     * @author miaoguoxin
+     * @date 2020/7/28
      */
-    public Map<Long, UserAccountCardResponseDto> findAccountCardsMapByAccountIds(UserAccountCardQuery userAccountCardQuery) {
-        List<UserAccountCardResponseDto> userAccountCards = this.findByQueryCondition(userAccountCardQuery);
-        return userAccountCards.stream().filter(x -> CardStatus.RETURNED.getCode() != x.getCardState() )
-                .collect(Collectors.toMap(UserAccountCardResponseDto::getAccountId,
-                        a -> a,
-                        (k1, k2) -> k1));
+    public UserAccountCardResponseDto findSingle(UserAccountSingleQueryDto userAccountCardQuery) {
+        return GenericRpcResolver.resolver(accountQueryRpc.findSingle(userAccountCardQuery), "account-service");
     }
 
     /**
-    * 单个查询
-    * @author miaoguoxin
-    * @date 2020/7/28
-    */
-    public UserAccountCardResponseDto findSingle(UserAccountSingleQueryDto userAccountCardQuery){
-        return GenericRpcResolver.resolver(accountQueryRpc.findSingle(userAccountCardQuery),"account-service");
+     *  查询单个(返回所有状态)
+     * @author miaoguoxin
+     * @date 2020/7/30
+     */
+    public UserAccountCardResponseDto findSingleWithoutValidate(UserAccountSingleQueryDto userAccountCardQuery) {
+        return GenericRpcResolver.resolver(accountQueryRpc.findSingleWithoutValidate(userAccountCardQuery), "account-service");
     }
 
-    /**
-    *  查询单个(返回所有状态)
-    * @author miaoguoxin
-    * @date 2020/7/30
-    */
-    public UserAccountCardResponseDto findSingleWithoutValidate(UserAccountSingleQueryDto userAccountCardQuery){
-        return GenericRpcResolver.resolver(accountQueryRpc.findSingleWithoutValidate(userAccountCardQuery),"account-service");
-    }
 
     /**
      * 通过条件查询
