@@ -48,14 +48,8 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         UserAccountCardResponseDto accountCard = check(fundRequestDto);//验证卡状态、余额等
         BusinessRecordDo businessRecord = createBusinessRecord(fundRequestDto, accountCard);
         //构建创建交易参数
-        CreateTradeRequestDto createTradeRequest = new CreateTradeRequestDto();
-        createTradeRequest.setType(TradeType.WITHDRAW.getCode());
-        createTradeRequest.setAccountId(accountCard.getFundAccountId());
-        createTradeRequest.setAmount(fundRequestDto.getAmount());
-        createTradeRequest.setSerialNo(businessRecord.getSerialNo());
-        createTradeRequest.setCycleNo(String.valueOf(businessRecord.getCycleNo()));
-        createTradeRequest.setDescription("");
-        createTradeRequest.setBusinessId(accountCard.getAccountId());
+        CreateTradeRequestDto createTradeRequest = CreateTradeRequestDto.createTrade(TradeType.WITHDRAW.getCode(), accountCard.getAccountId(), accountCard.getFundAccountId(), fundRequestDto.getAmount(), businessRecord.getSerialNo(), String.valueOf(businessRecord.getCycleNo()));
+        createTradeRequest.setDescription("提现");
         //创建交易
         String tradeNo = payService.createTrade(createTradeRequest);
         businessRecord.setTradeNo(tradeNo);
@@ -64,12 +58,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         //扣减现金池
         decreaseCashBox(businessRecord.getCycleNo(), fundRequestDto.getAmount());
         //提现提交
-        TradeRequestDto withdrawRequest = new TradeRequestDto();
-        withdrawRequest.setTradeId(tradeNo);
-        withdrawRequest.setAccountId(accountCard.getFundAccountId());
-        withdrawRequest.setChannelId(fundRequestDto.getTradeChannel());
-        withdrawRequest.setPassword(fundRequestDto.getTradePwd());
-        withdrawRequest.setBusinessId(accountCard.getAccountId());
+        TradeRequestDto withdrawRequest = TradeRequestDto.createTrade(accountCard, tradeNo, fundRequestDto.getTradeChannel(), fundRequestDto.getTradePwd());
         withdrawRequest.setFees(createFees(fundRequestDto));
         TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
         //取款成功后修改业务单状态、存储流水

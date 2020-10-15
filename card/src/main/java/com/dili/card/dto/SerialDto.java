@@ -15,10 +15,12 @@ public class SerialDto extends BaseDomain {
 	private static final long serialVersionUID = 122934787180274582L;
 	/** 流水号*/
     private String serialNo;
-    /** 总的期初余额*/
+    /** 可用期初余额*/
     private Long startBalance;
-    /** 总的期末余额*/
+    /** 可用期末余额*/
     private Long endBalance;
+    /** 总余额(包含冻结) */
+    private Long totalBalance;
     /** 流水列表 */
     private List<SerialRecordDo> serialRecordList;
 
@@ -44,6 +46,14 @@ public class SerialDto extends BaseDomain {
 
     public void setEndBalance(Long endBalance) {
         this.endBalance = endBalance;
+    }
+
+    public Long getTotalBalance() {
+        return totalBalance;
+    }
+
+    public void setTotalBalance(Long totalBalance) {
+        this.totalBalance = totalBalance;
     }
 
     public List<SerialRecordDo> getSerialRecordList() {

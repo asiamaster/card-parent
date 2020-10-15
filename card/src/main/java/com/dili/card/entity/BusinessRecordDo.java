@@ -42,6 +42,8 @@ public class BusinessRecordDo implements Serializable {
 	private Long amount;
 	/** 期末余额-分 */
 	private Long endBalance;
+	/** 总余额(包括冻结金额) */
+	private Long totalBalance;
 	/** 交易类型-充值、提现、消费、转账、其他 */
 	private Integer tradeType;
 	/** 交易渠道-现金、POS、网银 */
@@ -282,7 +284,23 @@ public class BusinessRecordDo implements Serializable {
 		return endBalance;
 	}
 
-    /**
+	/**
+	 * getter for 总余额-分
+	 * @return
+	 */
+	public Long getTotalBalance() {
+		return totalBalance;
+	}
+
+	/**
+	 * setter for 总余额-分
+	 * @param totalBalance
+	 */
+	public void setTotalBalance(Long totalBalance) {
+		this.totalBalance = totalBalance;
+	}
+
+	/**
      * setter for 交易类型-充值、提现、消费、转账、其他
      */
 	public void setTradeType(Integer tradeType) {

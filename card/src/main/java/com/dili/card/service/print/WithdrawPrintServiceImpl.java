@@ -34,7 +34,7 @@ public class WithdrawPrintServiceImpl extends PrintServiceImpl {
         printDto.setTotalAmount(CurrencyUtils.cent2TenNoSymbol(totalAmount));
         printDto.setTotalAmountWords(Convert.digitToChinese(Double.valueOf(printDto.getTotalAmount())));
         if (Integer.valueOf(TradeChannel.E_BANK.getCode()).equals(recordDo.getTradeChannel())) {//网银
-            Long balance = recordDo.getServiceCost() != null ? recordDo.getEndBalance() - recordDo.getServiceCost() : recordDo.getEndBalance();
+            Long balance = recordDo.getServiceCost() != null ? recordDo.getTotalBalance() - recordDo.getServiceCost() : recordDo.getTotalBalance();
             printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(balance));
         }
     }

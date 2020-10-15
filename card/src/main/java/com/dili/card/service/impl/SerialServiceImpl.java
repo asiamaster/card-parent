@@ -22,7 +22,6 @@ import com.dili.card.service.ISerialService;
 import com.dili.card.service.serial.IAccountSerialFilter;
 import com.dili.card.service.serial.IBusinessRecordFilter;
 import com.dili.card.type.*;
-import com.dili.card.util.CurrencyUtils;
 import com.dili.card.util.DateUtil;
 import com.dili.card.util.PageUtils;
 import com.dili.commons.rabbitmq.RabbitMQMessageService;
@@ -261,8 +260,9 @@ public class SerialServiceImpl implements ISerialService {
         tradeResponseDto = tradeResponseDto == null ? new TradeResponseDto() : tradeResponseDto;
         Long totalFrozenAmount = countFrozenBalance(tradeResponseDto, isFrozen);
         Long opAmount = getOpAmount(tradeResponseDto, isFrozen);
-        serialDto.setStartBalance(CurrencyUtils.countStartBalance(tradeResponseDto.getBalance(), totalFrozenAmount));
-        serialDto.setEndBalance(CurrencyUtils.countEndBalance(serialDto.getStartBalance(), opAmount));
+        serialDto.setStartBalance(countStartBalance(tradeResponseDto.getBalance(), totalFrozenAmount));
+        serialDto.setEndBalance(countEndBalance(serialDto.getStartBalance(), opAmount));
+        serialDto.setTotalBalance(countTotalBalance(tradeResponseDto.getBalance(), opAmount, isFrozen));
 
         if (!CollUtil.isEmpty(tradeResponseDto.getStreams())) {
             List<FeeItemDto> feeItemList = tradeResponseDto.getStreams();
@@ -271,9 +271,9 @@ public class SerialServiceImpl implements ISerialService {
                 SerialRecordDo serialRecord = new SerialRecordDo();
                 this.copyCommonFields(serialRecord, businessRecord);
                 serialRecord.setAction(feeItem.getAmount() == null ? null : feeItem.getAmount() < 0L ? ActionType.EXPENSE.getCode() : ActionType.INCOME.getCode());
-                serialRecord.setStartBalance(CurrencyUtils.countStartBalance(feeItem.getBalance(), totalFrozenAmount));
+                serialRecord.setStartBalance(countStartBalance(feeItem.getBalance(), totalFrozenAmount));
                 serialRecord.setAmount(feeItem.getAmount() == null ? null : Math.abs(feeItem.getAmount()));//由于是通过标记位表示收入或支出，固取绝对值
-                serialRecord.setEndBalance(CurrencyUtils.countEndBalance(serialRecord.getStartBalance(), feeItem.getAmount()));
+                serialRecord.setEndBalance(countEndBalance(serialRecord.getStartBalance(), feeItem.getAmount()));
                 // 操作时间-与支付系统保持一致
                 serialRecord.setOperateTime(tradeResponseDto.getWhen());
                 if (filter != null) {
@@ -314,5 +314,49 @@ public class SerialServiceImpl implements ISerialService {
         } else {
             return tradeResponseDto.countTotalFrozenAmount();
         }
+    }
+
+    /**
+     * 根据期初总余额、总冻结金额计算期初可用余额
+     * @param balance 总余额（包含冻结）
+     * @param totalFrozenAmount 冻结金额
+     * @return
+     */
+    public static Long countStartBalance(Long balance, Long totalFrozenAmount) {
+        if (balance == null || totalFrozenAmount == null) {
+            return null;
+        }
+        return balance - totalFrozenAmount;
+    }
+
+
+    /**
+     * 根据期初可用余额、操作金额计算期末可用余额
+     * @param startBalance 期初可用余额（不含冻结）
+     * @param amount 操作金额
+     * @return
+     */
+    public static Long countEndBalance(Long startBalance, Long amount) {
+        if (startBalance == null || amount == null) {
+            return null;
+        }
+        return startBalance + amount;
+    }
+
+
+    /**
+     * 根据期初可用余额、操作金额计算期末总余额(包含冻结)
+     * @param balance 总余额（冻结）
+     * @param amount 操作金额
+     * @return
+     */
+    public static Long countTotalBalance(Long balance, Long amount, boolean isFrozen) {
+        if (isFrozen) {//如果是冻结解冻，总余额不变
+            return balance;
+        }
+        if (balance == null || amount == null) {
+            return null;
+        }
+        return balance + amount;
     }
 }

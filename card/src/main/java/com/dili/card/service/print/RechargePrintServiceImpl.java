@@ -55,9 +55,9 @@ public class RechargePrintServiceImpl extends PrintServiceImpl {
         //由于需要展示最终的余额，因此这里要扣除手续费
         BigDecimal balance;
         if (TradeChannel.E_BANK.getCode() == recordDo.getTradeChannel()){
-            balance = NumberUtil.sub(recordDo.getEndBalance() + recordDo.getServiceCost());
+            balance = NumberUtil.sub(recordDo.getTotalBalance() + recordDo.getServiceCost());
         }else {
-            balance = NumberUtil.sub(recordDo.getEndBalance() - recordDo.getServiceCost());
+            balance = NumberUtil.sub(recordDo.getTotalBalance() - recordDo.getServiceCost());
         }
         printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(balance.longValue()));
 

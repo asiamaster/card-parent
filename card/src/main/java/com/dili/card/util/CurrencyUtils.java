@@ -110,31 +110,4 @@ public class CurrencyUtils {
         currency.setCharAt(0, currencySymbol);
         currency.setCharAt(1, negativeSymbol);
     }
-
-    /**
-     * 根据期初总余额、总冻结金额计算期初可用余额
-     * @param balance 总余额（包含冻结）
-     * @param totalFrozenAmount 冻结金额
-     * @return
-     */
-    public static Long countStartBalance(Long balance, Long totalFrozenAmount) {
-        if (balance == null || totalFrozenAmount == null) {
-            return null;
-        }
-        return balance - totalFrozenAmount;
-    }
-
-
-    /**
-     * 根据期初可用余额、操作金额计算期末可用余额
-     * @param startBalance 期初可用余额（不含冻结）
-     * @param amount 操作金额
-     * @return
-     */
-    public static Long countEndBalance(Long startBalance, Long amount) {
-        if (startBalance == null || amount == null) {
-            return null;
-        }
-        return startBalance + amount;
-    }
 }

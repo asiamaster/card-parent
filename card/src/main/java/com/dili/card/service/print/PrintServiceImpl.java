@@ -25,7 +25,7 @@ public abstract class PrintServiceImpl implements IPrintService{
         printDto.setCustomerName(recordDo.getCustomerName());
         printDto.setCardNo(recordDo.getCardNo());
         printDto.setAmount(CurrencyUtils.cent2TenNoSymbol(recordDo.getAmount()));
-        printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(recordDo.getEndBalance()));
+        printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(recordDo.getTotalBalance()));
         printDto.setTradeChannel(recordDo.getTradeChannel() != null ? TradeChannel.getNameByCode(recordDo.getTradeChannel()) : "");
         printDto.setDeposit(CurrencyUtils.cent2TenNoSymbol(recordDo.getDeposit()));
         printDto.setCardCost(CurrencyUtils.cent2TenNoSymbol(recordDo.getCardCost()));

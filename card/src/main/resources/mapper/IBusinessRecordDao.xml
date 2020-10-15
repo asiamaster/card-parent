@@ -17,6 +17,7 @@
 			`start_balance`,
 			`amount`,
 			`end_balance`,
+			`total_balance`,
 			`trade_type`,
 			`trade_channel`,
 			`bank_card_type`,
@@ -56,6 +57,7 @@
 			`start_balance`,
 			`amount`,
 			`end_balance`,
+			`total_balance`,
 			`trade_type`,
 			`trade_channel`,
 			`bank_card_type`,
@@ -90,6 +92,7 @@
 			#{startBalance},
 			#{amount},
 			#{endBalance},
+			#{totalBalance},
 			#{tradeType},
 			#{tradeChannel},
 			#{bankCardType},
@@ -128,6 +131,7 @@
 			`start_balance`,
 			`amount`,
 			`end_balance`,
+			`total_balance`,
 			`trade_type`,
 			`trade_channel`,
 			`bank_card_type`,
@@ -168,6 +172,7 @@
 			<if test="startBalance != null">`start_balance` = #{startBalance}, </if>
 			<if test="amount != null">`amount` = #{amount}, </if>
 			<if test="endBalance != null">`end_balance` = #{endBalance}, </if>
+			<if test="totalBalance != null">`total_balance` = #{totalBalance}, </if>
 			<if test="tradeType != null">`trade_type` = #{tradeType}, </if>
 			<if test="tradeChannel != null">`trade_channel` = #{tradeChannel}, </if>
 			<if test="bankCardType != null">`bank_card_type` = #{bankCardType}, </if>
@@ -211,7 +216,7 @@
 
 	<!-- 根据操作流水号重置操作记录为成功 -->
 	<update id="doSuccessUpdate" parameterType="com.dili.card.entity.BusinessRecordDo">
-		update card_business_record set `start_balance` = #{startBalance}, `end_balance` = #{endBalance},`state` = #{state} where `serial_no` = #{serialNo}
+		update card_business_record set `start_balance` = #{startBalance}, `end_balance` = #{endBalance}, `total_balance` = #{totalBalance},`state` = #{state} where `serial_no` = #{serialNo}
 	</update>
 
 	<!-- 查询业务操作记录列表 -->
@@ -229,6 +234,7 @@
 			`start_balance`,
 			`amount`,
 			`end_balance`,
+		    `total_balance`,
 			`trade_type`,
 			`trade_channel`,
 			`bank_card_type`,
@@ -313,6 +319,7 @@
 			`start_balance`,
 			`amount`,
 			`end_balance`,
+			`total_balance`,
 			`trade_type`,
 			`trade_channel`,
 			`bank_card_type`,
