@@ -11,6 +11,7 @@ import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.print.PrintDispatcher;
+import com.dili.card.util.DateUtil;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -45,7 +47,10 @@ public class SerialController implements IControllerHandler {
      * @return
      */
     @RequestMapping(value = "/account/forwardList.html")
-    public String forwardList() {
+    public String forwardList(ModelMap modelMap) {
+        String now = DateUtil.formatDate("yyyy-MM-dd");
+        modelMap.addAttribute("operateTimeStart", now + " 00:00:00");
+        modelMap.addAttribute("operateTimeEnd", now + " 23:59:59");
         return "serial/index";
     }
 
