@@ -13,4 +13,5 @@ public class ServiceName {
 	public static final String RULE = "dili-rule";
 	public static final String DFS = "dili-dfs";
 	public static final String ASSETS = "assets-service";
+	public static final String LOGGER = "dili-logger";
 }
