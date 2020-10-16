@@ -15,6 +15,7 @@ import com.dili.card.service.ISerialService;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
+import com.dili.card.type.PaySubject;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -70,6 +71,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
                 rechargeAmount,
                 businessRecord.getSerialNo(),
                 String.valueOf(businessRecord.getCycleNo()));
+        tradeRequest.setDescription(PaySubject.RECHARGE.getName());
         //创建交易
         String tradeNo = payService.createTrade(tradeRequest);
         LOGGER.info("创建充值交易耗费时间:{}ms", System.currentTimeMillis() - l);

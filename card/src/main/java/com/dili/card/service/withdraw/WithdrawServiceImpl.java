@@ -14,6 +14,7 @@ import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
+import com.dili.card.type.PaySubject;
 import com.dili.card.type.TradeType;
 import com.dili.card.type.UsePermissionType;
 import com.dili.ss.constant.ResultCode;
@@ -49,7 +50,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         BusinessRecordDo businessRecord = createBusinessRecord(fundRequestDto, accountCard);
         //构建创建交易参数
         CreateTradeRequestDto createTradeRequest = CreateTradeRequestDto.createTrade(TradeType.WITHDRAW.getCode(), accountCard.getAccountId(), accountCard.getFundAccountId(), fundRequestDto.getAmount(), businessRecord.getSerialNo(), String.valueOf(businessRecord.getCycleNo()));
-        createTradeRequest.setDescription("提现");
+        createTradeRequest.setDescription(PaySubject.WITHDRAW.getName());
         //创建交易
         String tradeNo = payService.createTrade(createTradeRequest);
         businessRecord.setTradeNo(tradeNo);
