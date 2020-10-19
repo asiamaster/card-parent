@@ -45,7 +45,7 @@ public class AccountManagementController implements IControllerHandler {
         AssertUtils.notNull(cardPkId, "cardPkId不能为空");
         AssertUtils.notNull(accountPkId, "accountPkId不能为空");
 
-        String json = JSON.toJSONString(accountQueryService.getDetail(cardPkId, accountPkId),
+        String json = JSON.toJSONString(accountQueryService.getDetailEx(cardPkId, accountPkId),
                 new EnumTextDisplayAfterFilter());
         map.put("detail", JSON.parseObject(json));
         return "accountquery/frozenAccount";
