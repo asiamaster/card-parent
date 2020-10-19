@@ -1,7 +1,6 @@
 package com.dili.card.service.print;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
@@ -14,8 +13,6 @@ import com.dili.card.type.TradeChannel;
 import com.dili.card.util.CurrencyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 
 /**
  * @Auther: miaoguoxin
@@ -53,13 +50,14 @@ public class RechargePrintServiceImpl extends PrintServiceImpl {
         String s = Convert.digitToChinese(Double.valueOf(printDto.getTotalAmount()));
         printDto.setTotalAmountWords(s);
         //由于需要展示最终的余额，因此这里要扣除手续费
-        BigDecimal balance;
+        //根据需求实时获取最新余额 2020-10-19
+        /*BigDecimal balance;
         if (TradeChannel.E_BANK.getCode() == recordDo.getTradeChannel()){
             balance = NumberUtil.sub(recordDo.getTotalBalance() + recordDo.getServiceCost());
         }else {
             balance = NumberUtil.sub(recordDo.getTotalBalance() - recordDo.getServiceCost());
         }
-        printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(balance.longValue()));
+        printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(balance.longValue()));*/
 
         String json = recordDo.getAttach();
         if (StringUtils.isBlank(json)) {
