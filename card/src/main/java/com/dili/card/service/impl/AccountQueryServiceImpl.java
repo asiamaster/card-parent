@@ -134,7 +134,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         detail.setAccountFund(fund);
         detail.setCustomer(customer);
         detail.setCardAssociation(cardAssociation);
-        return null;
+        return detail;
     }
 
     @Override
