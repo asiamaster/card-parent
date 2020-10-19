@@ -165,9 +165,9 @@ public class FundController implements IControllerHandler {
 		AssertUtils.notNull(requestDto.getAmount(), "冻结金额不能为空");
 		AssertUtils.isTrue(1L <= requestDto.getAmount() && requestDto.getAmount() <= 999999999L,
 				"冻结金额最少0.01元，最多9999999.99元");
-		businessLogService.saveLog(OperateType.FROZEN_FUND, getUserTicket(),
-				"业务卡号:" + requestDto.getCardNo(),
-				"冻结金额:" + requestDto.getAmount());
+//		businessLogService.saveLog(OperateType.FROZEN_FUND, getUserTicket(),
+//				"业务卡号:" + requestDto.getCardNo(),
+//				"冻结金额:" + requestDto.getAmount());
 		this.validateCommonParam(requestDto);
 		this.buildOperatorInfo(requestDto);
 		fundService.frozen(requestDto);
@@ -226,8 +226,8 @@ public class FundController implements IControllerHandler {
 		LOGGER.info("解冻资金*****{}", JSONObject.toJSONString(unfreezeFundDto));
 		AssertUtils.notNull(unfreezeFundDto.getAccountId(), "参数校验失败：缺少账户ID!");
 		AssertUtils.notNull(unfreezeFundDto.getFrozenIds(), "参数校验失败：缺少冻结ID!");
-		businessLogService.saveLog(OperateType.UNFROZEN_FUND, getUserTicket(),
-				"支付冻结ID:" + unfreezeFundDto.getFrozenId());
+//		businessLogService.saveLog(OperateType.UNFROZEN_FUND, getUserTicket(),
+//				"支付冻结ID:" + unfreezeFundDto.getFrozenId());
 		this.buildOperatorInfo(unfreezeFundDto);
 		fundService.unfrozen(unfreezeFundDto);
 		return BaseOutput.success();
