@@ -7,6 +7,7 @@ import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
+import com.dili.card.type.CardStatus;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.util.CurrencyUtils;
@@ -61,6 +62,9 @@ public abstract class PrintServiceImpl implements IPrintService{
         UserAccountCardResponseDto account = accountQueryRpcResolver.findSingleWithoutValidate(userAccountSingleQuery);
         if (account == null) {
             return 0L;
+        }
+        if(account.getCardState() == CardStatus.RETURNED.getCode()) {
+        	return 0L;
         }
         BalanceResponseDto balanceResponse = payRpcResolver.findBalanceByFundAccountId(account.getFundAccountId());
         return balanceResponse != null ? balanceResponse.getBalance() : 0L;
