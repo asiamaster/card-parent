@@ -1,6 +1,7 @@
 package com.dili.card.service.impl;
 
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +70,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		// 更新账务周期状态
 		this.updateStateById(accountCycle.getId(), CycleState.SETTLED.getCode(), accountCycle.getVersion());
 
+		accountCycleDto.setEndTime(LocalDateTime.now());
 		return accountCycleDto;
 	}
 

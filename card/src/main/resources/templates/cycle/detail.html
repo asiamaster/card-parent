@@ -51,7 +51,7 @@
 	           	 	</div>
 	            	<div class="form-group col">
 							<label for="cycleNo" class="div_label">账期时间</label>
-	            			<input type="text" class="form-control" value='${detail.startTime!"--"}至${detail.endTime!"--"}' readonly/>
+	            			<input type="text" id="startAndEndTime" class="form-control" value='${detail.startTime!"--"}至${detail.endTime!"--"}' readonly/>
 					</div>
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">柜员工号</label>
@@ -345,6 +345,8 @@
 	            	settled1 = settled1.replace("applyPayerAmountValue", $("#unDeliverAmount").val());
 	            	$("#baseContent").append(settled1);
 	            	$("#unDeliverAmount").val(0);
+	            	var dateCycle = $("#startAndEndTime").val();
+	            	$("#startAndEndTime").val(dateCycle.replace("--", result.data.endTime));
 	                $.table.refresh()
 	            }
 	    }), 1000, true)
