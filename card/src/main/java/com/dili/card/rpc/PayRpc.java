@@ -88,7 +88,7 @@ public interface PayRpc {
      * @date 2020/7/1
      */
     //@Tcc
-    @RequestMapping(value = "/payment/api/gateway.do?service=payment.trade.service:queryEx", method = RequestMethod.POST)
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.fund.service:queryEx", method = RequestMethod.POST)
     BaseOutput<BalanceResponseDto> getAccountBalanceEx(CreateTradeRequestDto createTradeRequest);
 
     /**
