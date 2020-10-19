@@ -104,6 +104,40 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     }
 
     @Override
+    public AccountDetailResponseDto getDetailEx(Long cardPkId, Long accountPkId) {
+        AccountDetailResponseDto detail = new AccountDetailResponseDto();
+        UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+        query.setAccountPkId(accountPkId);
+        query.setCardPkId(cardPkId);
+        AccountWithAssociationResponseDto cardAssociation = this.getAssociation(query, Constant.FALSE_INT_FLAG);
+        //排除掉“退还”状态关联卡
+        List<UserAccountCardResponseDto> collect = cardAssociation.getAssociation().stream()
+                .filter(c -> c.getCardState() != CardStatus.RETURNED.getCode())
+                .collect(Collectors.toList());
+        cardAssociation.setAssociation(collect);
+
+        UserAccountCardResponseDto primary = cardAssociation.getPrimary();
+        //客户信息已经在account-service中做了冗余，不进行查询也可以
+        CustomerResponseDto customer = customerRpcResolver.findCustomerByIdWithConvert(primary.getCustomerId(), primary.getFirmId());
+
+        BalanceResponseDto fund;
+        try {
+            fund = payRpcResolver.findBalanceByFundAccountIdEx(primary.getFundAccountId());
+        } catch (Exception e) {
+            //支付异常状态不管，有可能是（资金账户被注销）
+            fund = new BalanceResponseDto();
+            fund.setAvailableAmount(0L);
+            fund.setBalance(0L);
+            fund.setFrozenAmount(0L);
+        }
+
+        detail.setAccountFund(fund);
+        detail.setCustomer(customer);
+        detail.setCardAssociation(cardAssociation);
+        return null;
+    }
+
+    @Override
     public UserAccountCardResponseDto getByCardNo(String cardNo) {
         UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
         query.setCardNo(cardNo);

@@ -41,6 +41,13 @@ public interface IAccountQueryService {
     AccountDetailResponseDto getDetail(Long cardPkId, Long accountPkId);
 
     /**
+    * 查询详情(扩展)
+    * @author miaoguoxin
+    * @date 2020/10/19
+    */
+    AccountDetailResponseDto getDetailEx(Long cardPkId, Long accountPkId);
+
+    /**
      * 根据卡号查询（只查询卡账户信息）
      * @author miaoguoxin
      * @date 2020/7/2

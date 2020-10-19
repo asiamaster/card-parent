@@ -1,7 +1,6 @@
 package com.dili.card.common.provider;
 
 
-import com.dili.card.type.CardType;
 import com.dili.card.type.CustomerType;
 import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
@@ -12,18 +11,18 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  */
 @Component
 public class CustomerTypeProvider implements ValueProvider {
-	private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
+    private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
 
     static {
         CustomerType.getAll()
                 .forEach(c -> BUFFER.add(new ValuePairImpl(c.getName(), c.getCode())));
     }
+
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
         return BUFFER;

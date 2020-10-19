@@ -81,7 +81,7 @@ public class FundController implements IControllerHandler {
 		AssertUtils.notNull(cardPkId, "cardPkId不能为空");
 		AssertUtils.notNull(accountPkId, "accountPkId不能为空");
 
-		String json = JSON.toJSONString(accountQueryService.getDetail(cardPkId, accountPkId),
+		String json = JSON.toJSONString(accountQueryService.getDetailEx(cardPkId, accountPkId),
 				new EnumTextDisplayAfterFilter());
 		map.put("detail", JSON.parseObject(json));
 		return "fund/frozen";
@@ -106,7 +106,7 @@ public class FundController implements IControllerHandler {
 
 	/**
 	 * 跳转解冻资金modal框
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/31
 	 */
@@ -119,7 +119,7 @@ public class FundController implements IControllerHandler {
 
 	/**
 	 * 提现
-	 * 
+	 *
 	 * @param fundRequestDto
 	 * @return
 	 */
@@ -197,7 +197,7 @@ public class FundController implements IControllerHandler {
 
 	/**
 	 * 冻结和未冻结记录列表
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/31
 	 */
@@ -255,7 +255,7 @@ public class FundController implements IControllerHandler {
 
 	/**
 	 * 获取充值手续费(目前只支持pos)
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/8/5
 	 */

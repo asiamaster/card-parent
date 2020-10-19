@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * 提现返回值
- * 
+ *
  * @author xuliang
  */
 public class TradeResponseDto {
@@ -40,11 +40,14 @@ public class TradeResponseDto {
 
 	/**
 	 * 添加一个空资金项（有些地方没有手续费的时候需要加）
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/24
 	 */
 	public void addEmptyFeeItem(FundItem fundItem) {
+		if (fundItem == null){
+			return;
+		}
 		FeeItemDto feeItemDto = new FeeItemDto();
 		feeItemDto.setType(fundItem.getCode());
 		feeItemDto.setAmount(null);
@@ -57,7 +60,7 @@ public class TradeResponseDto {
 
 	/**
 	 * 添加一个本金项（有些接口没有返回资金项）
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/27
 	 */

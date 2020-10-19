@@ -52,6 +52,17 @@ public class PayRpcResolver {
     }
 
     /**
+     *  查询余额（扩展）
+     * @author miaoguoxin
+     * @date 2020/6/30
+     */
+    public BalanceResponseDto findBalanceByFundAccountIdEx(Long fundAccountId) {
+        CreateTradeRequestDto requestDto = new CreateTradeRequestDto();
+        requestDto.setAccountId(fundAccountId);
+        return GenericRpcResolver.resolver(payRpc.getAccountBalanceEx(requestDto), ServiceType.PAY_SERVICE.getName());
+    }
+
+    /**
      *  冻结资金操作
      * @author miaoguoxin
      * @date 2020/6/30
@@ -80,7 +91,7 @@ public class PayRpcResolver {
     public void unregister(CreateTradeRequestDto requestDto) {
         GenericRpcResolver.resolver(payRpc.unregister(requestDto), ServiceType.PAY_SERVICE.getName());
     }
-    
+
     /**
      *  密码重置
      */

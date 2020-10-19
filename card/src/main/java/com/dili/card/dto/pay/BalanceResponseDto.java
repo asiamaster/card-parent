@@ -20,6 +20,29 @@ public class BalanceResponseDto {
     @TextDisplay(FenToYuanProvider.class)
     private Long availableAmount;
 
+    /**交易冻结金额*/
+    @TextDisplay(FenToYuanProvider.class)
+    private Long tradeFrozen;
+    /**人工冻结金额*/
+    @TextDisplay(FenToYuanProvider.class)
+    private Long manFrozen;
+
+    public Long getTradeFrozen() {
+        return tradeFrozen;
+    }
+
+    public void setTradeFrozen(Long tradeFrozen) {
+        this.tradeFrozen = tradeFrozen;
+    }
+
+    public Long getManFrozen() {
+        return manFrozen;
+    }
+
+    public void setManFrozen(Long manFrozen) {
+        this.manFrozen = manFrozen;
+    }
+
     /**
      *
      * @return

@@ -81,6 +81,16 @@ public interface PayRpc {
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.fund.service:query", method = RequestMethod.POST)
     BaseOutput<BalanceResponseDto> getAccountBalance(CreateTradeRequestDto requestDto);
 
+
+    /**
+     * 查询余额（扩展）
+     * @author miaoguoxin
+     * @date 2020/7/1
+     */
+    //@Tcc
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.trade.service:queryEx", method = RequestMethod.POST)
+    BaseOutput<BalanceResponseDto> getAccountBalanceEx(CreateTradeRequestDto createTradeRequest);
+
     /**
      * 注销资金账户
      */
@@ -98,13 +108,13 @@ public interface PayRpc {
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.account.service:freeze", method = RequestMethod.POST)
     BaseOutput<?> freeze(CreateTradeRequestDto requestDto);
-    
+
     /**
      * 密码重置
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.permission.service:resetPwd", method = RequestMethod.POST)
     BaseOutput<?> resetPwd(CreateTradeRequestDto requestDto);
-    
+
     /**
      * 创建资金账户服务
      * @param type
@@ -112,4 +122,5 @@ public interface PayRpc {
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.account.service:register", method = RequestMethod.POST)
     BaseOutput<PayCreateFundReponseDto> createFundAccount(FundAccountDto type);
+
 }
