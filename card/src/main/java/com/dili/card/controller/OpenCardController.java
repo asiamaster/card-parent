@@ -20,6 +20,7 @@ import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.OpenCardResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.exception.ErrorCode;
 import com.dili.card.rpc.AccountQueryRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IAccountQueryService;
@@ -68,20 +69,22 @@ public class OpenCardController implements IControllerHandler {
 		// 操作人信息
 		UserTicket user = getUserTicket();
 		AssertUtils.notEmpty(openCardInfo.getCustomerCertificateNumber(), "请输入证件号!");
-		Customer customer = GenericRpcResolver.resolver(customerRpc.getByCertificateNumber(openCardInfo.getCustomerCertificateNumber(), user.getFirmId()),
+		Customer customer = GenericRpcResolver.resolver(
+				customerRpc.getByCertificateNumber(openCardInfo.getCustomerCertificateNumber(), user.getFirmId()),
 				ServiceName.CUSTOMER);
 		CustomerResponseDto response = new CustomerResponseDto();
 		if (customer != null) {
 			// 判断客户是否已禁用或注销
-			if(!customer.getState().equals(CustomerState.VALID.getCode())){
-				throw new CardAppBizException(ResultCode.PARAMS_ERROR,"客户已" + CustomerState.getStateName(customer.getState()));
+			if (!customer.getState().equals(CustomerState.VALID.getCode())) {
+				throw new CardAppBizException(ResultCode.PARAMS_ERROR,
+						"客户已" + CustomerState.getStateName(customer.getState()));
 			}
 			BeanUtils.copyProperties(customer, response);
 			response.setCustomerContactsPhone(customer.getContactsPhone());
 			response.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
 			response.setCustomerType(customer.getCustomerMarket().getType());
-		}else {
-			return BaseOutput.failure("未找到客户信息!");
+		} else {
+			return BaseOutput.failure(ErrorCode.CUSTOMER_NOT_EXIST, "未找到客户信息!");
 		}
 		log.info("开卡证件号查询客户信息完成*****{}", JSONObject.toJSONString(response));
 		return BaseOutput.successData(response);
@@ -108,10 +111,10 @@ public class OpenCardController implements IControllerHandler {
 	public BaseOutput<?> checkNewCardNo(@RequestBody OpenCardDto openCardInfo) {
 		log.info("开卡检查新卡状态*****{}", JSONObject.toJSONString(openCardInfo));
 		AssertUtils.notNull(openCardInfo.getCardNo(), "请输入卡号!");
-		cardStorageService.checkAndGetByCardNo(openCardInfo.getCardNo(), openCardInfo.getCardType(), openCardInfo.getCustomerType());
+		cardStorageService.checkAndGetByCardNo(openCardInfo.getCardNo(), openCardInfo.getCardType(),
+				openCardInfo.getCustomerType());
 		return BaseOutput.success();
 	}
-
 
 	/**
 	 * 查询开卡费用项（C）
