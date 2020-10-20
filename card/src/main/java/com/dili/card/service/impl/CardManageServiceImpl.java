@@ -221,7 +221,7 @@ public class CardManageServiceImpl implements ICardManageService {
             serialRecord.setFundItem(FundItem.IC_CARD_COST.getCode());
             serialRecord.setFundItemName(FundItem.IC_CARD_COST.getName());
             serialRecord.setAmount(requestDto.getServiceFee());
-            serialRecord.setNotes("补卡，工本费转为市场收入");
+            serialRecord.setNotes("换卡，工本费转为市场收入");
         });
         //这里需要查询一次余额，因为直接从提交交易接口中拿不到余额
         BalanceResponseDto balance = payRpcResolver.findBalanceByFundAccountId(userAccount.getFundAccountId());
