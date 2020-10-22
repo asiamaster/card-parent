@@ -29,6 +29,8 @@ public class UserCashDo implements Serializable {
 	private Long amount; 
 	/** 状态-预留字段 */
 	private Integer state; 
+	/** 是否结账申请创建*/
+	private Integer settled;
 	/** 备注 */
 	private String notes; 
 	/** 商户编码 */
@@ -293,6 +295,14 @@ public class UserCashDo implements Serializable {
 
 	public void setCreatorCode(String creatorCode) {
 		this.creatorCode = creatorCode;
+	}
+
+	public Integer getSettled() {
+		return settled;
+	}
+
+	public void setSettled(Integer settled) {
+		this.settled = settled;
 	}
 
 }

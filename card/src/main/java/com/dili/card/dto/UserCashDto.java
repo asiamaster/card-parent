@@ -73,6 +73,8 @@ public class UserCashDto extends BaseDto implements Serializable {
 	private Boolean isStatistic = true;
 	/** 是否结账申请来源*/
 	private Boolean settledApply = false;
+	/** 是否结账申请创建*/
+	private Boolean settled = true;
 
     /**
      * UserCashEntity constructor
@@ -293,6 +295,14 @@ public class UserCashDto extends BaseDto implements Serializable {
 
 	public void setCashNoText(String cashNoText) {
 		this.cashNoText = cashNoText;
+	}
+
+	public Boolean getSettled() {
+		return settled;
+	}
+
+	public void setSettled(Boolean settled) {
+		this.settled = settled;
 	}
 
 }

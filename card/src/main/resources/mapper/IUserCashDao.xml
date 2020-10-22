@@ -13,6 +13,7 @@
 			`cycle_no`, 
 			`amount`, 
 			`state`, 
+			settled,
 			`notes`, 
 			`firm_id`, 
 			`firm_name`, 
@@ -31,6 +32,7 @@
 			#{cycleNo}, 
 			#{amount}, 
 			#{state}, 
+			#{settled}, 
 			#{notes}, 
 			#{firmId}, 
 			#{firmName}, 
@@ -82,7 +84,9 @@
 	
 	<update id="updateStateByCycle">
 		UPDATE card_user_cash SET
-			`state` = #{state}
+			`state` = #{state},
+			`settled` = 1,
+			modify_time = NOW()
 		WHERE
 			`cycle_no` = #{cycleNo} 
 		AND
@@ -112,7 +116,7 @@
 			<if test="action != null"> AND action = #{action}</if>
 			<if test="createStartTime != null"> AND create_time &gt;= #{createStartTime}</if>
 			<if test="createEndTime != null">AND create_time &lt;= #{createEndTime} </if>
-			AND state != 10
+			AND state != 10 AND settled = 1
 	</sql>
 	
 	<sql id="selectsql">

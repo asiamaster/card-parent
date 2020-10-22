@@ -20,6 +20,7 @@ import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IUserCashService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CashAction;
+import com.dili.card.type.CashSettled;
 import com.dili.card.type.CashState;
 import com.dili.card.type.CycleState;
 import com.dili.card.util.CurrencyUtils;
@@ -228,6 +229,7 @@ public class UserCashServiceImpl implements IUserCashService {
 		userCash.setUserCode(userCashDto.getUserCode().trim());
 		userCash.setUserName(userCashDto.getUserName().trim());
 		userCash.setState(CashState.UNSETTLED.getCode());
+		userCash.setSettled(userCashDto.getSettled() ? CashSettled.NORMAL.getCode() : CashSettled.UNUSUAL.getCode());
 		userCash.setNotes(userCashDto.getNotes());
 		// 构建商户信息和创建者
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
