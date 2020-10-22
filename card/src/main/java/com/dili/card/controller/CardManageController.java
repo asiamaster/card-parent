@@ -8,7 +8,9 @@ import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.IBusinessLogService;
 import com.dili.card.service.ICardManageService;
+import com.dili.card.type.OperateType;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.CardValidator;
 import com.dili.ss.domain.BaseOutput;
@@ -39,7 +41,8 @@ public class CardManageController implements IControllerHandler {
     private ICardManageService cardManageService;
     @Autowired
     private IAccountQueryService accountQueryService;
-
+    @Resource
+	IBusinessLogService businessLogService;
     /**
      * 重置登陆密码
      */
@@ -71,6 +74,9 @@ public class CardManageController implements IControllerHandler {
         if (StrUtil.isBlank(cardParam.getLoginPwd())) {
             return BaseOutput.failure("密码为空");
         }
+        // 操作日志
+        businessLogService.saveLog(OperateType.LOSS_REMOVE, getUserTicket(),
+				"业务卡号:" + cardParam.getCardNo());
         buildOperatorInfo(cardParam);
         cardManageService.unLostCard(cardParam);
         return BaseOutput.success();
@@ -102,6 +108,9 @@ public class CardManageController implements IControllerHandler {
         //AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
         AssertUtils.notEmpty(cardParam.getNewCardNo(), "新开卡号不能为空");
         AssertUtils.notNull(cardParam.getServiceFee(), "工本费不能为空");
+        businessLogService.saveLog(OperateType.CHANGE, getUserTicket(),
+				"业务卡号:" + cardParam.getCardNo(),
+				"新卡号:" + cardParam.getNewCardNo());
         this.validateCommonParam(cardParam);
         this.buildOperatorInfo(cardParam);
         return BaseOutput.successData(cardManageService.changeCard(cardParam));
@@ -127,6 +136,8 @@ public class CardManageController implements IControllerHandler {
     public BaseOutput<String> reportLoss(@RequestBody CardRequestDto cardParam) {
         LOGGER.info("挂失请求参数:{}", JSON.toJSONString(cardParam));
         AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
+        businessLogService.saveLog(OperateType.CHANGE, getUserTicket(),
+				"业务卡号:" + cardParam.getCardNo());
         this.validateCommonParam(cardParam);
         this.buildOperatorInfo(cardParam);
         return BaseOutput.successData(cardManageService.reportLossCard(cardParam));

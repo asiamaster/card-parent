@@ -24,11 +24,13 @@ import com.dili.card.exception.ErrorCode;
 import com.dili.card.rpc.AccountQueryRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.IBusinessLogService;
 import com.dili.card.service.ICardStorageService;
 import com.dili.card.service.IOpenCardService;
 import com.dili.card.type.CardType;
 import com.dili.card.type.CustomerState;
 import com.dili.card.type.CustomerType;
+import com.dili.card.type.OperateType;
 import com.dili.card.util.AssertUtils;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.rpc.CustomerRpc;
@@ -58,6 +60,8 @@ public class OpenCardController implements IControllerHandler {
 	IAccountQueryService accountQueryService;
 	@Resource
 	ICardStorageService cardStorageService;
+	@Resource
+	IBusinessLogService businessLogService;
 
 	/**
 	 * 根据证件号查询客户信息（C）
@@ -141,6 +145,10 @@ public class OpenCardController implements IControllerHandler {
 		checkMasterParam(openCardInfo);
 		// 设置操作人信息
 		UserTicket user = getUserTicket();
+		// 操作日志
+		businessLogService.saveLog(OperateType.ACCOUNT_TRANSACT, user, "客户姓名:" + openCardInfo.getCustomerName(),
+				"客户ID:" + openCardInfo.getCustomerCode(),
+				"卡号:" + openCardInfo.getCardNo());
 		setOpUser(openCardInfo, user);
 		openCardInfo.setCardType(CardType.MASTER.getCode());
 		// 开卡
@@ -161,6 +169,10 @@ public class OpenCardController implements IControllerHandler {
 		AssertUtils.notEmpty(openCardInfo.getParentLoginPwd(), "主卡密码不能为空!");
 		// 设置操作人信息
 		UserTicket user = getUserTicket();
+		// 操作日志
+		businessLogService.saveLog(OperateType.ACCOUNT_TRANSACT, user, "客户姓名:" + openCardInfo.getCustomerName(),
+				"客户ID:" + openCardInfo.getCustomerCode(),
+				"卡号:" + openCardInfo.getCardNo());
 		setOpUser(openCardInfo, user);
 		openCardInfo.setCardType(CardType.SLAVE.getCode());
 		OpenCardResponseDto response = openCardService.openCard(openCardInfo);
