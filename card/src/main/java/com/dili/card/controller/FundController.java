@@ -40,10 +40,12 @@ import com.dili.card.type.OperateType;
 import com.dili.card.type.PayFreezeFundType;
 import com.dili.card.type.RuleFeeBusinessType;
 import com.dili.card.type.SystemSubjectType;
+import com.dili.card.type.TradeChannel;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.FundValidator;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.util.MoneyUtils;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
@@ -131,9 +133,11 @@ public class FundController implements IControllerHandler {
 	public BaseOutput<String> withdraw(@RequestBody FundRequestDto fundRequestDto) {
 		LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto));
 		validateCommonParam(fundRequestDto);
+		// 操作日志
 		businessLogService.saveLog(OperateType.ACCOUNT_WITHDRAW, getUserTicket(),
 				"业务卡号:" + fundRequestDto.getCardNo(),
-				"金额:" + fundRequestDto.getAmount());
+				"金额:" + MoneyUtils.centToYuan(fundRequestDto.getAmount()),
+				"渠道:" + TradeChannel.getNameByCode(fundRequestDto.getTradeChannel()));
 		buildOperatorInfo(fundRequestDto);
 		String serialNo = withdrawDispatcher.dispatch(fundRequestDto);
 		return BaseOutput.successData(serialNo);
@@ -170,9 +174,10 @@ public class FundController implements IControllerHandler {
 		AssertUtils.notNull(requestDto.getAmount(), "冻结金额不能为空");
 		AssertUtils.isTrue(1L <= requestDto.getAmount() && requestDto.getAmount() <= 999999999L,
 				"冻结金额最少0.01元，最多9999999.99元");
+		// 操作日志
 		businessLogService.saveLog(OperateType.FROZEN_FUND, getUserTicket(),
 				"业务卡号:" + requestDto.getCardNo(),
-				"冻结金额:" + requestDto.getAmount());
+				"冻结金额:" + MoneyUtils.centToYuan(requestDto.getAmount()));
 		this.validateCommonParam(requestDto);
 		this.buildOperatorInfo(requestDto);
 		fundService.frozen(requestDto);
@@ -253,7 +258,8 @@ public class FundController implements IControllerHandler {
 		this.validateCommonParam(requestDto);
 		businessLogService.saveLog(OperateType.ACCOUNT_CHARGE, getUserTicket(),
 				"业务卡号:" + requestDto.getCardNo(),
-				"金额:" + requestDto.getAmount());
+				"金额:" + MoneyUtils.centToYuan(requestDto.getAmount()),
+				"渠道:" + TradeChannel.getNameByCode(requestDto.getTradeChannel()));
 		this.buildOperatorInfo(requestDto);
 		long beginTime = System.currentTimeMillis();
 		String serialNo = fundService.recharge(requestDto);

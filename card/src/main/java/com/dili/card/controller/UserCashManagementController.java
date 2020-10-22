@@ -2,6 +2,8 @@ package com.dili.card.controller;
 
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +23,16 @@ import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.UserCashDto;
 import com.dili.card.entity.UserCashDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.service.IBusinessLogService;
 import com.dili.card.service.IUserCashService;
 import com.dili.card.type.CashAction;
+import com.dili.card.type.OperateType;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.util.MoneyUtils;
 
 /**
  * 现金管理
@@ -35,12 +40,13 @@ import com.dili.ss.domain.BaseOutput;
 @Controller
 @RequestMapping(value = "/cash")
 public class UserCashManagementController implements IControllerHandler {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(UserCashManagementController.class);
 
-	
 	@Autowired
 	private IUserCashService iUserCashService;
+	@Resource
+	IBusinessLogService businessLogService;
 
 	/**
 	 * 领款列表页面
@@ -106,9 +112,8 @@ public class UserCashManagementController implements IControllerHandler {
 		if (id == null || id < 0L) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期详情请求参数错误");
 		}
-		 String json = JSON.toJSONString(iUserCashService.detail(id),
-	                new EnumTextDisplayAfterFilter());
-		 modelMap.put("usercash", JSON.parseObject(json));
+		String json = JSON.toJSONString(iUserCashService.detail(id), new EnumTextDisplayAfterFilter());
+		modelMap.put("usercash", JSON.parseObject(json));
 		return "usercash/modify";
 	}
 
@@ -120,9 +125,8 @@ public class UserCashManagementController implements IControllerHandler {
 		if (id == null || id < 0L) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期详情请求参数错误");
 		}
-		 String json = JSON.toJSONString(iUserCashService.detailAllState(id),
-	                new EnumTextDisplayAfterFilter());
-		 modelMap.put("usercash", JSON.parseObject(json));
+		String json = JSON.toJSONString(iUserCashService.detailAllState(id), new EnumTextDisplayAfterFilter());
+		modelMap.put("usercash", JSON.parseObject(json));
 		return "usercash/delete";
 	}
 
@@ -134,6 +138,13 @@ public class UserCashManagementController implements IControllerHandler {
 	public BaseOutput<Boolean> savePayee(
 			@RequestBody @Validated(value = ConstantValidator.Insert.class) UserCashDto userCashDto) {
 		log.info("新增领款*****{}", JSONObject.toJSONString(userCashDto));
+		// 操作日志
+		OperateType type = OperateType.PAYER;
+		if (CashAction.PAYEE.getCode() == userCashDto.getAction()) {
+			type = OperateType.PAYEE;
+		}
+		businessLogService.saveLog(type, getUserTicket(), "领/交款人:" + userCashDto.getUserName(),
+				"金额:" + MoneyUtils.centToYuan(userCashDto.getAmount()));
 		iUserCashService.save(userCashDto);
 		return BaseOutput.success("新增成功");
 	}
@@ -147,7 +158,7 @@ public class UserCashManagementController implements IControllerHandler {
 		log.info("列表领款*****{}", JSONObject.toJSONString(userCashDto));
 		return successPage(iUserCashService.listPayee(userCashDto));
 	}
-	
+
 	/**
 	 * 统计数据交款领款总金额
 	 */
@@ -159,8 +170,7 @@ public class UserCashManagementController implements IControllerHandler {
 				.toYuanWithStripTrailingZeros(iUserCashService.findTotalAmountByUserId(userCashDto));
 		return BaseOutput.successData(amount == null ? "0" : amount);
 	}
-	
-	
+
 	/**
 	 * 列表交款
 	 */
@@ -176,12 +186,13 @@ public class UserCashManagementController implements IControllerHandler {
 	 */
 	@PostMapping("/delete.action")
 	@ResponseBody
-	public BaseOutput<Boolean> delete(@RequestBody @Validated(value = {ConstantValidator.Delete.class}) UserCashDto userCashDto) {
+	public BaseOutput<Boolean> delete(
+			@RequestBody @Validated(value = { ConstantValidator.Delete.class }) UserCashDto userCashDto) {
 		log.info("删除领款*****{}", JSONObject.toJSONString(userCashDto));
 		iUserCashService.delete(userCashDto.getId());
 		return BaseOutput.success("删除成功");
 	}
-	
+
 	/**
 	 * 详情
 	 */
@@ -199,7 +210,7 @@ public class UserCashManagementController implements IControllerHandler {
 	@PostMapping("/modify.action")
 	@ResponseBody
 	public BaseOutput<UserCashDto> modify(
-			@RequestBody @Validated(value = {ConstantValidator.Update.class}) UserCashDto userCashDto) {
+			@RequestBody @Validated(value = { ConstantValidator.Update.class }) UserCashDto userCashDto) {
 		log.info("修改领款*****{}", JSONObject.toJSONString(userCashDto));
 		iUserCashService.modify(userCashDto);
 		return BaseOutput.success("修改成功");
