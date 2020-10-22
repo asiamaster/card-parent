@@ -5,6 +5,7 @@
     // 客户名称
     var customerNameQueryAutoCompleteOption = {
         serviceUrl: '/customer/listByKeyword.action',
+        width: '320px',
         paramName: 'keyword',
         displayFieldName: 'code',
         showNoSuggestionNotice: true,
