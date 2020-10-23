@@ -2,6 +2,7 @@ package com.dili.card.controller;
 
 import cn.hutool.core.util.IdUtil;
 import com.dili.card.common.constant.CacheKey;
+import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.redis.service.RedisUtil;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @Auther: miaoguoxin
@@ -51,6 +53,12 @@ public class ApplicationCommonController {
     @GetMapping("/dictList.action")
     @ResponseBody
     public BaseOutput<List<DataDictionaryValue>> getDataDictList(String code) {
-        return dataDictionaryRpc.listDataDictionaryValueByDdCode(code);
+        BaseOutput<List<DataDictionaryValue>> listBaseOutput = dataDictionaryRpc.listDataDictionaryValueByDdCode(code);
+        List<DataDictionaryValue> resolver = GenericRpcResolver.resolver(listBaseOutput, "uap-service");
+        //只要已启用的
+        List<DataDictionaryValue> collect = resolver.stream()
+                .filter(d -> d.getState() == 1)
+                .collect(Collectors.toList());
+        return BaseOutput.successData(collect);
     }
 }
