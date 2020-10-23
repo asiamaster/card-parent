@@ -237,7 +237,7 @@ public class FundController implements IControllerHandler {
 		AssertUtils.notNull(unfreezeFundDto.getAccountId(), "参数校验失败：缺少账户ID!");
 		AssertUtils.notNull(unfreezeFundDto.getFrozenIds(), "参数校验失败：缺少冻结ID!");
 		businessLogService.saveLog(OperateType.UNFROZEN_FUND, getUserTicket(),
-				"支付系统冻结ID:" + unfreezeFundDto.getFrozenIds());
+				"支付系统冻结ID:" + JSONObject.toJSONString(unfreezeFundDto.getFrozenIds()));
 		this.buildOperatorInfo(unfreezeFundDto);
 		fundService.unfrozen(unfreezeFundDto);
 		return BaseOutput.success();

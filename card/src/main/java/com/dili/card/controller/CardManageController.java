@@ -144,7 +144,7 @@ public class CardManageController implements IControllerHandler {
 	public BaseOutput<String> reportLoss(@RequestBody CardRequestDto cardParam) {
 		LOGGER.info("挂失请求参数:{}", JSON.toJSONString(cardParam));
 		AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
-		businessLogService.saveLog(OperateType.CHANGE, getUserTicket(), "业务卡号:" + cardParam.getCardNo());
+		businessLogService.saveLog(OperateType.LOSS_CARD, getUserTicket(), "业务卡号:" + cardParam.getCardNo());
 		this.validateCommonParam(cardParam);
 		this.buildOperatorInfo(cardParam);
 		return BaseOutput.successData(cardManageService.reportLossCard(cardParam));
