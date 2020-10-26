@@ -11,7 +11,7 @@ import java.util.List;
 public enum CycleState {
 	ACTIVE(1, "活跃"),
 	SETTLED(2, "已结账"),
-	FLATED(3, "已平账");
+	FLATED(3, "已对账");
 	private int code;
 	private String name;
 	
