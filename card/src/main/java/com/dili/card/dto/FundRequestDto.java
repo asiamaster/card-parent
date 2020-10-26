@@ -23,7 +23,7 @@ public class FundRequestDto extends CardRequestDto {
     /** 金额*/
     @NotNull(message = "金额不能为空", groups = {FundValidator.Trade.class})
     @Min(value = 1, message = "最少0.01元", groups = {FundValidator.Trade.class})
-    @Max(value = 99999999L, message = "最多999999.99元", groups = {FundValidator.Trade.class})
+    @Max(value = 999999999L, message = "最多9999999.99元", groups = {FundValidator.Trade.class})
     private Long amount;
     /** 交易密码*/
     @NotBlank(message = "交易密码不能为空", groups = FundValidator.Trade.class)

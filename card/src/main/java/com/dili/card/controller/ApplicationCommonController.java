@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -57,7 +59,7 @@ public class ApplicationCommonController {
         List<DataDictionaryValue> resolver = GenericRpcResolver.resolver(listBaseOutput, "uap-service");
         //只要已启用的
         List<DataDictionaryValue> collect = resolver.stream()
-                .filter(d -> d.getState() == 1)
+                .filter(d -> d.getState() != null && d.getState() == 1)
                 .collect(Collectors.toList());
         return BaseOutput.successData(collect);
     }
