@@ -97,6 +97,13 @@ public interface IAccountCycleService {
 	 * @param id 账务周期主键id
 	 * @param state 状态
 	 */
+	void updateStateById(Long id, Integer state, Integer version, Long auditorId, String auditorName);
+	
+	/**
+	 * 更新状态 
+	 * @param id 账务周期主键id
+	 * @param state 状态
+	 */
 	void updateStateById(Long id, Integer state, Integer version);
 	
 	/**

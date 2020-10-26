@@ -87,10 +87,12 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		AccountCycleDetailDo accountCycleDetail = this.buildAccountCycleDetailDo(this.buildCycleDetail(cycle));
 
 		// 构建商户相关信息
-		this.buildFirmInfo(accountCycleDetail);
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		accountCycleDetail.setFirmId(userTicket.getFirmId());
+		accountCycleDetail.setFirmName(userTicket.getFirmName());
 
 		// 更新账务周期状态
-		this.updateStateById(id, CycleState.FLATED.getCode(), cycle.getVersion());
+		this.updateStateById(id, CycleState.FLATED.getCode(), cycle.getVersion(), userTicket.getId(), userTicket.getRealName());
 
 		// 保存账务周期详情信息
 		accountCycleDetailDao.save(accountCycleDetail);
@@ -130,8 +132,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			accountCycle.setState(CycleState.ACTIVE.getCode());
 			// 构建商户信息
 			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-			accountCycle.setAuditorId(userTicket.getId());
-			accountCycle.setAuditorName(userTicket.getRealName());
 			accountCycle.setFirmId(userTicket.getFirmId());
 			accountCycle.setFirmName(userTicket.getFirmName());
 			accountCycle.setVersion(1);
@@ -186,6 +186,23 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}
 	}
 
+	/**
+	 * 更新账务周期状态
+	 */
+	@Override
+	public void updateStateById(Long id, Integer state, Integer version, Long auditorId, String auditorName) {
+		AccountCycleDo accountCycle = new AccountCycleDo();
+		accountCycle.setAuditorId(auditorId);
+		accountCycle.setAuditorName(auditorName);
+		accountCycle.setId(id);
+		accountCycle.setVersion(version);
+		accountCycle.setState(state);
+		int update = accountCycleDao.update(accountCycle);
+		if (update == 0) {
+			throw new CardAppBizException("结账失败");
+		}
+	}
+	
 	/**
 	 * 更新账务周期状态
 	 */
@@ -281,15 +298,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			accountCycleDtos.add(this.buildAccountCycleWrapper(accountCycle));
 		}
 		return accountCycleDtos;
-	}
-
-	/**
-	 * 构建商户相关信息
-	 */
-	private void buildFirmInfo(AccountCycleDetailDo accountCycleDetail) {
-		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		accountCycleDetail.setFirmId(userTicket.getFirmId());
-		accountCycleDetail.setFirmName(userTicket.getFirmName());
 	}
 
 	/**
