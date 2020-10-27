@@ -18,8 +18,11 @@
             </div>
             <div class="form-group col">
                 <label for="states">状态</label>
-                <select name="states" id="states"  class="form-control" required multiple></select>
-                <#bselect2 _id="states" _provider="cycleStateProvider" _mode="remote" _value="[1,2]"  _queryParams='{emptyText:"--全部--"}'/>
+                <select name="states" id="states"  class="form-control" required multiple>
+                    <option value="1">已结账</option>
+                    <option value="2">未结账</option>
+                </select>
+                <#bselect2 _id="states" _provider="cycleStateProvider" _mode="remote" _value="[1,2]"  _queryParams='{emptyText:"--全部--"}' />
             </div>
             <div class="col-auto align-self-center mt-3">
                 <button id="clear" type="button" class="btn btn-outline-primary mr-2" onclick="$.form.reset()"><i class="fa fa-refresh"></i> 清空</button>
