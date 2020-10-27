@@ -104,9 +104,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Override
 	public List<AccountCycleDto> list(AccountCycleDto accountCycleDto) {
 
-		// 构建查询条件
-		this.buildQueryCondition(accountCycleDto);
-
 		// 封装返回数据
 		return this.buildAccountCycleList(accountCycleDao.findByCondition(accountCycleDto));
 	}
@@ -364,14 +361,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 				.setRevenueAmount(accountCycleDetail.getOpenCostAmount() + accountCycleDetail.getChangeCostAmount()
 						+ accountCycleDetail.getDepoCashAmount() - accountCycleDetail.getDrawCashAmount());
 		return accountCycleDetail;
-	}
-
-	/**
-	 * 查询条件
-	 */
-	private void buildQueryCondition(AccountCycleDto accountCycleDto) {
-		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		accountCycleDto.setFirmId(userTicket.getFirmId());
 	}
 
 	/**

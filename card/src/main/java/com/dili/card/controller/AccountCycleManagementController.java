@@ -149,6 +149,11 @@ public class AccountCycleManagementController implements IControllerHandler {
 	@PostMapping("/page.action")
 	@ResponseBody
 	public Map<String,Object> page(@Validated(ConstantValidator.Page.class) AccountCycleDto accountCycleDto) {
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		if(userTicket == null) {
+			throw new CardAppBizException("登录超时，请重新登录");
+		}
+		accountCycleDto.setFirmId(userTicket.getFirmId());
 		return successPage(iAccountCycleService.page(accountCycleDto));
 	}
 

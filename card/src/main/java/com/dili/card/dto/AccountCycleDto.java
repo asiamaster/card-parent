@@ -2,6 +2,7 @@ package com.dili.card.dto;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -60,6 +61,8 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 	private Long firmId; 
 	/** 账务周期详情 */
 	private AccountCycleDetailDto accountCycleDetailDto;
+	/** 列表查询是可以选择多个状态值*/
+	private List<Integer> states;
 
 	public Long getId() {
 		return id;
@@ -171,6 +174,14 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 
 	public void setUserCode(String userCode) {
 		this.userCode = userCode;
+	}
+
+	public List<Integer> getStates() {
+		return states;
+	}
+
+	public void setStates(List<Integer> states) {
+		this.states = states;
 	}
 
 }
