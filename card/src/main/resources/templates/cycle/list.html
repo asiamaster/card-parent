@@ -19,8 +19,8 @@
             <div class="form-group col">
                 <label for="states">状态</label>
                 <select name="states" id="states"  class="form-control" required multiple>
-                    <option value="1">已结账</option>
-                    <option value="2">未结账</option>
+                    <option value="1">活跃</option>
+                    <option value="2">已结账</option>
                 </select>
                 <#bselect2 _id="states" _provider="cycleStateProvider" _mode="remote" _value="[1,2]"  _queryParams='{emptyText:"--全部--"}' />
             </div>
