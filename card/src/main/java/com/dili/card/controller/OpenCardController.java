@@ -211,6 +211,9 @@ public class OpenCardController implements IControllerHandler {
 		AssertUtils.notEmpty(openCardInfo.getLoginPwd(), "账户密码不能为空!");
 	}
 
+	/**
+	 * 从数据字典中获取客户身份类型
+	 */
 	private String getCustomerTypeName(String code, Long firmId) {
 		DataDictionaryValue ddv = DTOUtils.newInstance(DataDictionaryValue.class);
 		ddv.setDdCode(Constant.CUS_CUSTOMER_TYPE);
