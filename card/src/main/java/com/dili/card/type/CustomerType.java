@@ -13,17 +13,17 @@ import java.util.List;
  */
 public enum CustomerType {
 	/** 园外买方 */
-	OUTSIDE_BUYER("园外买方", "outside_buyer", CardFaceType.BUYER),
+	OUTSIDE_BUYER("园外买方2", "outside_buyer", CardFaceType.BUYER),
 	/** 理货区客户 */
-	OPERATION_AREA("理货区客户", "operation_area", CardFaceType.BUYER_VIP),
+	OPERATION_AREA("理货区客户2", "operation_area", CardFaceType.BUYER_VIP),
 	/** 省内客户 */
-	IN_PROVINCE("省内客户", "in_province", CardFaceType.BUYER_VIP),
+	IN_PROVINCE("省内客户2", "in_province", CardFaceType.BUYER_VIP),
 	/** 理货区客户 */
-	NATIVE_CUSTOMER("本地客户", "native", CardFaceType.BUYER_VIP),
+	NATIVE_CUSTOMER("本地客户2", "native", CardFaceType.BUYER_VIP),
 	/** 卖方卡 */
-	SELLER("卖方", "seller", CardFaceType.SELLER),
+	SELLER("卖方2", "seller", CardFaceType.SELLER),
 	/** 司机 */
-	DRIVER("司机", "driver", CardFaceType.DRIVER);
+	DRIVER("司机2", "driver", CardFaceType.DRIVER);
 
 	private String name;
 	private String code;
