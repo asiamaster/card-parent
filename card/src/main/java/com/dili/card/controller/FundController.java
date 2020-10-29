@@ -1,8 +1,23 @@
 package com.dili.card.controller;
 
-import cn.hutool.core.date.DateField;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.annotation.ForbidDuplicateCommit;
@@ -25,27 +40,16 @@ import com.dili.card.type.OperateType;
 import com.dili.card.type.PayFreezeFundType;
 import com.dili.card.type.RuleFeeBusinessType;
 import com.dili.card.type.SystemSubjectType;
+import com.dili.card.type.TradeChannel;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.FundValidator;
 import com.dili.ss.domain.BaseOutput;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import com.dili.ss.util.MoneyUtils;
 
-import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 
 /**
  * 资金操作相关controller
@@ -129,9 +133,14 @@ public class FundController implements IControllerHandler {
 	public BaseOutput<String> withdraw(@RequestBody FundRequestDto fundRequestDto) {
 		LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto));
 		validateCommonParam(fundRequestDto);
+		// 操作日志
+		businessLogService.saveLog(OperateType.ACCOUNT_WITHDRAW, getUserTicket(),
+				"业务卡号:" + fundRequestDto.getCardNo(),
+				"金额:" + MoneyUtils.centToYuan(fundRequestDto.getAmount()),
+				"渠道:" + TradeChannel.getNameByCode(fundRequestDto.getTradeChannel()));
 		buildOperatorInfo(fundRequestDto);
 		String serialNo = withdrawDispatcher.dispatch(fundRequestDto);
-		return BaseOutput.success().setData(serialNo);
+		return BaseOutput.successData(serialNo);
 	}
 
 	/**
@@ -149,7 +158,7 @@ public class FundController implements IControllerHandler {
 		}
 		BigDecimal decimal = ruleFeeService.getRuleFee(amount, RuleFeeBusinessType.CARD_WITHDRAW_EBANK,
 				SystemSubjectType.CARD_WITHDRAW_EBANK_FEE);
-		return BaseOutput.success().setData(CurrencyUtils.yuan2Cent(decimal));
+		return BaseOutput.successData(CurrencyUtils.yuan2Cent(decimal));
 	}
 
 	/**
@@ -165,9 +174,10 @@ public class FundController implements IControllerHandler {
 		AssertUtils.notNull(requestDto.getAmount(), "冻结金额不能为空");
 		AssertUtils.isTrue(1L <= requestDto.getAmount() && requestDto.getAmount() <= 999999999L,
 				"冻结金额最少0.01元，最多9999999.99元");
-//		businessLogService.saveLog(OperateType.FROZEN_FUND, getUserTicket(),
-//				"业务卡号:" + requestDto.getCardNo(),
-//				"冻结金额:" + requestDto.getAmount());
+		// 操作日志
+		businessLogService.saveLog(OperateType.FROZEN_FUND, getUserTicket(),
+				"业务卡号:" + requestDto.getCardNo(),
+				"冻结金额:" + MoneyUtils.centToYuan(requestDto.getAmount()));
 		this.validateCommonParam(requestDto);
 		this.buildOperatorInfo(requestDto);
 		fundService.frozen(requestDto);
@@ -226,8 +236,8 @@ public class FundController implements IControllerHandler {
 		LOGGER.info("解冻资金*****{}", JSONObject.toJSONString(unfreezeFundDto));
 		AssertUtils.notNull(unfreezeFundDto.getAccountId(), "参数校验失败：缺少账户ID!");
 		AssertUtils.notNull(unfreezeFundDto.getFrozenIds(), "参数校验失败：缺少冻结ID!");
-//		businessLogService.saveLog(OperateType.UNFROZEN_FUND, getUserTicket(),
-//				"支付冻结ID:" + unfreezeFundDto.getFrozenId());
+		businessLogService.saveLog(OperateType.UNFROZEN_FUND, getUserTicket(),
+				"支付系统冻结ID:" + JSONObject.toJSONString(unfreezeFundDto.getFrozenIds()));
 		this.buildOperatorInfo(unfreezeFundDto);
 		fundService.unfrozen(unfreezeFundDto);
 		return BaseOutput.success();
@@ -246,6 +256,10 @@ public class FundController implements IControllerHandler {
 			@RequestBody @Validated({ FundValidator.Trade.class }) FundRequestDto requestDto) {
 		LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto));
 		this.validateCommonParam(requestDto);
+		businessLogService.saveLog(OperateType.ACCOUNT_CHARGE, getUserTicket(),
+				"业务卡号:" + requestDto.getCardNo(),
+				"金额:" + MoneyUtils.centToYuan(requestDto.getAmount()),
+				"渠道:" + TradeChannel.getNameByCode(requestDto.getTradeChannel()));
 		this.buildOperatorInfo(requestDto);
 		long beginTime = System.currentTimeMillis();
 		String serialNo = fundService.recharge(requestDto);
@@ -268,5 +282,5 @@ public class FundController implements IControllerHandler {
 				SystemSubjectType.CARD_RECHARGE_POS_FEE);
 		return BaseOutput.successData(CurrencyUtils.yuan2Cent(ruleFee));
 	}
-
+	
 }

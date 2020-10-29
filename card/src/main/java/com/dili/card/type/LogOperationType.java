@@ -13,7 +13,9 @@ public enum LogOperationType {
 	/** 有效 */
 	DEL("del", "删除"),
 	/** 禁用 */
-	EDIT("edit", "修改");
+	EDIT("edit", "修改"),
+	/** 提交 */
+	SUBMIT("submit", "提交");
 
 	private String code;
 	private String name;
