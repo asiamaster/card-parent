@@ -42,4 +42,7 @@ public class Constant {
 
 	/**uap相关*/
 	public static final String UAP_FIRMID = "UAP_firmId";
+	
+	/** 数据字典客户身份类型key */
+	public static final String CUS_CUSTOMER_TYPE = "cus_customer_type";
 }

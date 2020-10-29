@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CustomerResponseDto;
@@ -212,7 +213,7 @@ public class OpenCardController implements IControllerHandler {
 
 	private String getCustomerTypeName(String code, Long firmId) {
 		DataDictionaryValue ddv = DTOUtils.newInstance(DataDictionaryValue.class);
-		ddv.setDdCode("cus_customer_type");
+		ddv.setDdCode(Constant.CUS_CUSTOMER_TYPE);
 		ddv.setCode(code);
 		ddv.setFirmId(firmId);
 		List<DataDictionaryValue> resolver = GenericRpcResolver.resolver(dataDictionaryRpc.listDataDictionaryValue(ddv),

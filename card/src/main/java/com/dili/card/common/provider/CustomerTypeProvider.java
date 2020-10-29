@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dili.card.common.constant.Constant;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.FieldMeta;
@@ -20,6 +21,7 @@ import com.dili.uap.sdk.rpc.DataDictionaryRpc;
  */
 @Component
 public class CustomerTypeProvider implements ValueProvider {
+
 	private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
 
 	@Autowired
@@ -32,7 +34,7 @@ public class CustomerTypeProvider implements ValueProvider {
 	@Override
 	public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
 		DataDictionaryValue ddv = DTOUtils.newInstance(DataDictionaryValue.class);
-		ddv.setDdCode("cus_customer_type");
+		ddv.setDdCode(Constant.CUS_CUSTOMER_TYPE);
 		ddv.setCode((String)obj);
 		if(dataDictionaryRpc == null) {
 			// TODO 当前包下无法注入dataDictionaryRpc
