@@ -17,7 +17,7 @@ public class PageUtils {
         PageOutput<T> pageOutput = new PageOutput<>(ResultCode.OK, "success");
         pageOutput.setPageNum(page.getPageNum());
         pageOutput.setPageSize(page.getPageSize());
-        pageOutput.setTotal((int) page.getTotal());
+        pageOutput.setTotal(page.getTotal());
         pageOutput.setData(result);
         return pageOutput;
     }
