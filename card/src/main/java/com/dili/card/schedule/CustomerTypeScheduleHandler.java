@@ -52,7 +52,7 @@ public class CustomerTypeScheduleHandler {
      * @author miaoguoxin
      * @date 2020/10/30
      */
-    @Scheduled(fixedRate = 30 * 1000)
+    //@Scheduled(fixedRate = 30 * 1000)
     public void getAllCustomerType() {
         LOGGER.info("加载字典");
         DataDictionaryValue ddv = DTOUtils.newInstance(DataDictionaryValue.class);
