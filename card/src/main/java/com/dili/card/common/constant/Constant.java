@@ -42,7 +42,10 @@ public class Constant {
 
 	/**uap相关*/
 	public static final String UAP_FIRMID = "UAP_firmId";
-	
+
 	/** 数据字典客户身份类型key */
 	public static final String CUS_CUSTOMER_TYPE = "cus_customer_type";
+
+	/**用于支付流水号前缀区分*/
+	public static final String PAY_SERIAL_NO_PREFIX = "GT_";
 }

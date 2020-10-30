@@ -1,8 +1,10 @@
 package com.dili.card.dto.pay;
 
+import com.dili.card.common.constant.Constant;
+
 /**
  * 创建交易请求dto
- * 
+ *
  * @author xuliang
  */
 public class CreateTradeRequestDto {
@@ -51,7 +53,7 @@ public class CreateTradeRequestDto {
 		CreateTradeRequestDto requestDto = createCommon(fundAccountId, accountId);
 		requestDto.setType(type);
 		requestDto.setAmount(amount);
-		requestDto.setSerialNo(serialNo);
+		requestDto.setSerialNo(Constant.PAY_SERIAL_NO_PREFIX + serialNo);
 		requestDto.setCycleNo(cycleNo);
 		requestDto.setDescription("");
 		return requestDto;
@@ -129,5 +131,5 @@ public class CreateTradeRequestDto {
 		this.password = password;
 	}
 
-	
+
 }
