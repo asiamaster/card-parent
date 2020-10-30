@@ -9,7 +9,10 @@ package com.dili.card.type;
 public enum PaySubject {
     RECHARGE("充值", 1),
 
-    WITHDRAW("提现", 2);
+    WITHDRAW("提现", 2),
+	
+	RETURN_CARD("退卡", 3);
+	
     private String name;
     private Integer code;
 
