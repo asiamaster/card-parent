@@ -9,6 +9,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
 import com.dili.ss.dto.DTOScan;
@@ -26,6 +27,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @DTOScan(value={"com.dili.ss", "com.dili.card.domain"})
 @EnableDiscoveryClient
 @EnableFeignClients
+@EnableScheduling
 @RefreshScope
 public class Application extends SpringBootServletInitializer {
 
