@@ -1,6 +1,7 @@
 package com.dili.card.service.impl;
 
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
@@ -17,13 +18,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
 @Service("businessLogService")
-@SuppressWarnings("unchecked")
 public class BusinessLogServiceImpl implements IBusinessLogService {
     @Autowired
     private RabbitMQMessageService rabbitMQMessageService;
@@ -54,7 +56,7 @@ public class BusinessLogServiceImpl implements IBusinessLogService {
     @Override
     public void saveLog(OperateType operateType, LogOperationType logOperationType, UserTicket userTicket,
                         String... content) {
-        String remoteIp = RequestUtils.getIpAddress(request);
+        String remoteIp = getFirstRemoteIp(request);
         String serverIp = request.getLocalAddr();
         ThreadUtil.execute(() -> {
             try {
@@ -72,7 +74,6 @@ public class BusinessLogServiceImpl implements IBusinessLogService {
                 }
                 log.setSystemCode(LOG_SYSTEM_CODE);
                 rabbitMQMessageService.send(LoggerConstant.MQ_LOGGER_TOPIC_EXCHANGE, LoggerConstant.MQ_LOGGER_ADD_BUSINESS_KEY, JSON.toJSONString(log));
-                //GenericRpcResolver.resolver(businessLogRpc.save(log, LOG_REFERER), ServiceName.LOGGER);
             } catch (Exception e) {
                 LOGGER.error("{}保存操作日志失败,内容【{}】!", operateType.getName(), content);
                 LOGGER.error("save log error!", e);
@@ -80,4 +81,12 @@ public class BusinessLogServiceImpl implements IBusinessLogService {
         });
     }
 
+    public static String getFirstRemoteIp(HttpServletRequest request){
+        String remoteIp = RequestUtils.getIpAddress(request);
+        if (StrUtil.isBlank(remoteIp)){
+            return "";
+        }
+        //多个代理转发后只要第一个
+        return remoteIp.split(",")[0];
+    }
 }
