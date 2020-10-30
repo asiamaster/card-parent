@@ -29,6 +29,7 @@ import com.dili.card.type.CardStatus;
 import com.dili.card.type.DisableState;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
+import com.dili.card.type.PaySubject;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.validator.AccountValidator;
@@ -104,6 +105,7 @@ public class ReturnCardServiceImpl implements IReturnCardService {
 			CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(TradeType.FEE.getCode(),
 					accountCard.getAccountId(), accountCard.getFundAccountId(), fee, businessRecord.getSerialNo(),
 					String.valueOf(businessRecord.getCycleNo()));
+			tradeRequest.setDescription(PaySubject.RETURN_CARD.getName());
 			// 创建交易
 			String tradeId = payRpcResolver.prePay(tradeRequest).getTradeId();
 			
