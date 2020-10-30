@@ -1,12 +1,15 @@
 package com.dili.card.service.impl;
 
 import cn.hutool.core.thread.ThreadUtil;
+import com.alibaba.fastjson.JSON;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IBusinessLogService;
 import com.dili.card.type.LogOperationType;
 import com.dili.card.type.OperateType;
+import com.dili.commons.rabbitmq.RabbitMQMessageService;
 import com.dili.logger.sdk.domain.BusinessLog;
+import com.dili.logger.sdk.glossary.LoggerConstant;
 import com.dili.logger.sdk.rpc.BusinessLogRpc;
 import com.dili.ss.mvc.util.RequestUtils;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -22,7 +25,8 @@ import java.time.LocalDateTime;
 @Service("businessLogService")
 @SuppressWarnings("unchecked")
 public class BusinessLogServiceImpl implements IBusinessLogService {
-
+    @Autowired
+    private RabbitMQMessageService rabbitMQMessageService;
     /** 日志来源,日志服务校验格式*.diligrp.com */
     private static final String LOG_REFERER = "http://card.diligrp.com";
 
@@ -67,6 +71,7 @@ public class BusinessLogServiceImpl implements IBusinessLogService {
                     log.setContent(String.join(",", content));
                 }
                 log.setSystemCode(LOG_SYSTEM_CODE);
+                rabbitMQMessageService.send(LoggerConstant.MQ_LOGGER_TOPIC_EXCHANGE, LoggerConstant.MQ_LOGGER_ADD_BUSINESS_KEY, JSON.toJSONString(log));
                 GenericRpcResolver.resolver(businessLogRpc.save(log, LOG_REFERER), ServiceName.LOGGER);
             } catch (Exception e) {
                 LOGGER.error("{}保存操作日志失败,内容【{}】!", operateType.getName(), content);
