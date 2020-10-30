@@ -72,7 +72,7 @@ public class BusinessLogServiceImpl implements IBusinessLogService {
                 }
                 log.setSystemCode(LOG_SYSTEM_CODE);
                 rabbitMQMessageService.send(LoggerConstant.MQ_LOGGER_TOPIC_EXCHANGE, LoggerConstant.MQ_LOGGER_ADD_BUSINESS_KEY, JSON.toJSONString(log));
-                GenericRpcResolver.resolver(businessLogRpc.save(log, LOG_REFERER), ServiceName.LOGGER);
+                //GenericRpcResolver.resolver(businessLogRpc.save(log, LOG_REFERER), ServiceName.LOGGER);
             } catch (Exception e) {
                 LOGGER.error("{}保存操作日志失败,内容【{}】!", operateType.getName(), content);
                 LOGGER.error("save log error!", e);
