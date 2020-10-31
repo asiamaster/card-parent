@@ -132,6 +132,9 @@
         if (!$.validate.form(formId)) {
             return false;
         }
+        //去重
+        temp.cardNos = Array.from(new Set(temp.cardNos));
+        assignCard();
         let url = "${contextPath}/cardStorage/addOut.action";
         let data = $.common.formToJSON(formId);
         //console.log(JSON.stringify(data))
@@ -143,8 +146,8 @@
         if (!$.validate.form(checkCardFormId)) {
             return;
         }
-        if (temp.total == 50) {
-            parent.$.modal.alertWarning("最多一次出库50张卡片");
+        if (temp.cardNos.length == 200) {
+            parent.$.modal.alertWarning("最多一次出库200张卡片");
             return;
         }
         let result = readerCardNumber();
@@ -176,11 +179,15 @@
                 } else {
                     temp.total++;
                     temp.cardNos.push(cardNo);
-                    $('#amount').val(temp.total);
-                    $('#cardNos').val(temp.cardNos.join(","));
+                    assignCard();
                 }
             },
         };
         $.ajax(config);
+    }
+
+    function assignCard() {
+        $('#amount').val(temp.cardNos.length);
+        $('#cardNos').val(temp.cardNos.join(","));
     }
 </script>
