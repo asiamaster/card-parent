@@ -83,6 +83,16 @@
         }
     });
 
+
+    jQuery.validator.addMethod("cardFaceRequired", function(value, element, param) {
+        if (cardType.master == $("#cardType").val()) {
+            if ($.common.isEmpty(value)){
+                return false;
+            }
+        }
+        return true;
+    });
+
     let checkCardFormId = 'check-card-form';
     $("#" + checkCardFormId).validate({
         onkeyup: false,
@@ -90,10 +100,16 @@
             cardType: {
                 required: true,
             },
+            cardFace: {
+                cardFaceRequired:true
+            }
         },
         messages: {
             cardType: {
                 required: "卡类型必填",
+            },
+            cardFace: {
+                cardFaceRequired: "卡面类型必填",
             },
         },
         focusCleanup: true
