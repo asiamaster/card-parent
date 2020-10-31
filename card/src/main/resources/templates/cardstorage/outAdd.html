@@ -146,7 +146,7 @@
         if (!$.validate.form(checkCardFormId)) {
             return;
         }
-        if (temp.cardNos.length >=3) {
+        if (temp.cardNos.length >=200) {
             parent.$.modal.alertWarning("最多一次出库200张卡片");
             return;
         }
