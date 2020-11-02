@@ -3,6 +3,13 @@ package com.dili.card.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.dili.card.rpc.resolver.UidRpcResovler;
+import com.dili.card.type.BizNoType;
+import com.dili.card.type.CycleState;
+import com.dili.ss.util.SpringUtil;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
+
 /**
  * 柜员账务周期
  * @author bob
@@ -341,6 +348,27 @@ public class AccountCycleDo implements Serializable {
 
 	public void setUserCode(String userCode) {
 		this.userCode = userCode;
+	}
+	
+	public static class Factory{
+		
+		public static AccountCycleDo create(Long userId, String userName, String userCode) {
+			AccountCycleDo accountCycle = new AccountCycleDo();
+			accountCycle.setUserId(userId);
+			accountCycle.setUserCode(userCode);
+			accountCycle.setUserName(userName);
+			accountCycle.setCycleNo(Long.valueOf(SpringUtil.getBean(UidRpcResovler.class).bizNumber(BizNoType.CYCLET_NO.getCode())));
+			accountCycle.setCashBox(0L);
+			accountCycle.setCashAmount(0L);
+			accountCycle.setState(CycleState.ACTIVE.getCode());
+			// 构建商户信息
+			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+			accountCycle.setFirmId(userTicket.getFirmId());
+			accountCycle.setFirmName(userTicket.getFirmName());
+			accountCycle.setVersion(1);
+			return accountCycle;
+		}
+		
 	}
 
 }

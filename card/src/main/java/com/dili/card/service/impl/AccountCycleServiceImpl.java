@@ -119,24 +119,12 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			throw new CardAppBizException("当前员工账务周期正在对账中,不能操作");
 		}
 		if (accountCycle == null || accountCycle.getState().equals(CycleState.FLATED.getCode())) {
-			accountCycle = new AccountCycleDo();
-			accountCycle.setUserId(userId);
-			accountCycle.setUserCode(userCode);
-			accountCycle.setUserName(userName);
-			accountCycle.setCycleNo(Long.valueOf(uidRpcResovler.bizNumber(BizNoType.CYCLET_NO.getCode())));
-			accountCycle.setCashBox(0L);
-			accountCycle.setCashAmount(0L);
-			accountCycle.setState(CycleState.ACTIVE.getCode());
-			// 构建商户信息
-			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-			accountCycle.setFirmId(userTicket.getFirmId());
-			accountCycle.setFirmName(userTicket.getFirmName());
-			accountCycle.setVersion(1);
+			accountCycle = AccountCycleDo.Factory.create(userId, userName, userCode);
 			accountCycleDao.save(accountCycle);
 		}
 		return accountCycle;
 	}
-
+	
 	@Override
 	public PageOutput<List<AccountCyclePageListDto>> page(AccountCycleDto accountCycleDto) {
 		Page<?> page = PageHelper.startPage(accountCycleDto.getPage(), accountCycleDto.getRows());
@@ -156,7 +144,16 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	public AccountCycleDto applyDetail(Long userId) {
-		return this.buildAccountCycleWrapperDetail(accountCycleDao.findLatestCycleByUserId(userId), true);
+		AccountCycleDo accountCycleDo = accountCycleDao.findLatestCycleByUserId(userId);
+		if (accountCycleDo.getState().equals(CycleState.FLATED.getCode())) {
+			AccountCycleDto accountCycleDto = new AccountCycleDto();
+			accountCycleDto.setUserCode(accountCycleDo.getUserCode());
+			accountCycleDto.setUserId(accountCycleDo.getUserId());
+			accountCycleDto.setUserName(accountCycleDo.getUserName());
+			accountCycleDto.setAccountCycleDetailDto(new AccountCycleDetailDto());
+			return accountCycleDto;
+		}
+		return this.buildAccountCycleWrapperDetail(accountCycleDo, true);
 	}
 
 	@Override
