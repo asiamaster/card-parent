@@ -32,8 +32,7 @@
 		</rollingPolicy>
 		<encoder
 			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>%d %-5level [${LOG_NAME}-${build.profile.id}] [%t] [%c:%L]
-				-| %msg%n</pattern>
+			<pattern>%d %-5level [${LOG_NAME}-${build.profile.id}] [%t] [%c:%L] -| %msg%n</pattern>
 		</encoder>
 	</appender>
 
