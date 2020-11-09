@@ -11,6 +11,7 @@ import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.print.PrintDispatcher;
+import com.dili.card.util.CurrencyUtils;
 import com.dili.card.util.DateUtil;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
@@ -68,6 +69,8 @@ public class SerialController implements IControllerHandler {
         serialQueryDto.setFirmId(userTicket.getFirmId());
         if (StrUtil.isBlank(serialQueryDto.getSort()) && StrUtil.isBlank(serialQueryDto.getOrder())) {
             serialQueryDto.setSerialSort("operate_time desc, id desc");
+        } else {
+            serialQueryDto.setSortConvert(ifSortConvert(serialQueryDto.getSort()));
         }
         PageOutput<List<SerialRecordDo>> pageOutput = serialRecordRpcResolver.listPage(serialQueryDto);
         if (pageOutput.isSuccess()) {
@@ -76,6 +79,33 @@ public class SerialController implements IControllerHandler {
             result.put("total", pageOutput.getTotal());
         }
         return result;
+    }
+
+    /**
+     * 操作金额合计
+     * @param serialQueryDto
+     * @return
+     */
+    @RequestMapping(value = "/account/countOperateAmount.action")
+    @ResponseBody
+    public BaseOutput<String> countOperateAmount(SerialQueryDto serialQueryDto) {
+        LOGGER.info("操作金额合计*****{}", JSONObject.toJSONString(serialQueryDto));
+        UserTicket userTicket = getUserTicket();
+        serialQueryDto.setFirmId(userTicket.getFirmId());
+        Long operateAmount = serialRecordRpcResolver.countOperateAmount(serialQueryDto);
+        return BaseOutput.success().setData(CurrencyUtils.toYuanWithStripTrailingZeros(operateAmount != null ? operateAmount : 0L));
+    }
+
+    /**
+     * 非数字字段返回true，按字典表排序
+     * @param sort
+     * @return
+     */
+    private Boolean ifSortConvert(String sort) {
+        if ("customer_name".equals(sort) || "fund_item_name".equals(sort) || "operator_name".equals(sort)) {
+            return true;
+        }
+        return false;
     }
 
     /**

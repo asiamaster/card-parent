@@ -39,6 +39,8 @@ public class SerialQueryDto extends SerialDto {
     private List<Long> accountIdList;
     /** 用于流水记录排序*/
     private String serialSort;
+    /** 用于排序转换标记 */
+    private Boolean sortConvert;
 
     public Integer getFundItem() {
         return fundItem;
@@ -158,5 +160,13 @@ public class SerialQueryDto extends SerialDto {
 
     public void setSerialSort(String serialSort) {
         this.serialSort = serialSort;
+    }
+
+    public Boolean getSortConvert() {
+        return sortConvert;
+    }
+
+    public void setSortConvert(Boolean sortConvert) {
+        this.sortConvert = sortConvert;
     }
 }
