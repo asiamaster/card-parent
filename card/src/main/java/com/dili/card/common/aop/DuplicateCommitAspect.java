@@ -3,6 +3,7 @@ package com.dili.card.common.aop;
 import com.dili.card.common.annotation.ForbidDuplicateCommit;
 import com.dili.card.common.constant.CacheKey;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.exception.ErrorCode;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.redis.service.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -68,7 +69,7 @@ public class DuplicateCommitAspect {
                 return pjp.proceed();
             }
             LOGGER.warn("幂等token不存在:{}", key);
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "token过期或不存在，请刷新后重试");
+            throw new CardAppBizException(ErrorCode.IDEMPOTENT_TOKEN_CODE, "token过期或不存在，请刷新后重试");
         } finally {
             LOGGER.info("执行删除幂等token:{}", key);
             redisUtil.remove(key);
