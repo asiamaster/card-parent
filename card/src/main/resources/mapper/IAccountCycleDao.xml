@@ -130,7 +130,7 @@
 			<if test="firmId != null">`firm_id` = #{firmId}, </if>
 			<if test="firmName != null">`firm_name` = #{firmName}, </if>
 			<if test="notes != null">`notes` = #{notes}, </if>
-			<if test="modifyTime != null">`modify_time` = NOW()</if>
+			`modify_time` = NOW()
 		</set>
 		WHERE
 			id = #{id} AND `version` = #{version}
