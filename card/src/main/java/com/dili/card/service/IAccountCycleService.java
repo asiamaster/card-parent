@@ -21,7 +21,7 @@ public interface IAccountCycleService {
 	/**
 	 * 平账
 	 */
-	void flated(Long id);
+	void flated(Long id, Long auditorId, String auditorName);
 
 	/**
 	 * 账务周期列表

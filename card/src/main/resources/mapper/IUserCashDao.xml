@@ -85,10 +85,11 @@
 	<update id="updateStateByCycle">
 		UPDATE card_user_cash SET
 			`state` = #{state},
+			create_time = (CASE WHEN settled=0 THEN NOW() ELSE create_time END),
 			`settled` = 1,
 			modify_time = NOW()
 		WHERE
-			`cycle_no` = #{cycleNo} 
+			`cycle_no` = #{cycleNo}
 		AND
 			state != 10
 	</update>

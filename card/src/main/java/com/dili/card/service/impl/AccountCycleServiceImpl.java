@@ -25,10 +25,8 @@ import com.dili.card.entity.AccountCycleDetailDo;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.UserCashDo;
 import com.dili.card.exception.CardAppBizException;
-import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IUserCashService;
-import com.dili.card.type.BizNoType;
 import com.dili.card.type.CashAction;
 import com.dili.card.type.CycleState;
 import com.dili.card.type.CycleStatisticType;
@@ -49,8 +47,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	private IAccountCycleDao accountCycleDao;
 	@Autowired
 	private IAccountCycleDetailDao accountCycleDetailDao;
-	@Autowired
-	private UidRpcResovler uidRpcResovler;
 	@Autowired
 	private IUserCashService userCashService;
 
@@ -76,7 +72,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void flated(Long id) {
+	public void flated(Long id, Long auditorId, String auditorName) {
 
 		AccountCycleDo cycle = this.findById(id);
 
@@ -85,14 +81,11 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 		// 账务周期详情统计信息
 		AccountCycleDetailDo accountCycleDetail = this.buildAccountCycleDetailDo(this.buildCycleDetail(cycle));
-
-		// 构建商户相关信息
-		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		accountCycleDetail.setFirmId(userTicket.getFirmId());
-		accountCycleDetail.setFirmName(userTicket.getFirmName());
-
+		accountCycleDetail.setFirmId(cycle.getFirmId());
+		accountCycleDetail.setFirmName(cycle.getFirmName());
+		
 		// 更新账务周期状态
-		this.updateStateById(id, CycleState.FLATED.getCode(), cycle.getVersion(), userTicket.getId(), userTicket.getRealName());
+		this.updateStateById(id, CycleState.FLATED.getCode(), cycle.getVersion(), auditorId, auditorName);
 
 		// 保存账务周期详情信息
 		accountCycleDetailDao.save(accountCycleDetail);

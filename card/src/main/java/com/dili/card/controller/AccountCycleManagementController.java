@@ -139,7 +139,12 @@ public class AccountCycleManagementController implements IControllerHandler {
 	@ResponseBody
 	public BaseOutput<Boolean> flated(@RequestBody @Validated(value = {ConstantValidator.Default.class}) AccountCycleDto accountCycleDto) {
 		log.info("平账*****{}", JSONObject.toJSONString(accountCycleDto));
-		iAccountCycleService.flated(accountCycleDto.getId());
+		// 构建商户相关信息
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		if (userTicket == null) {
+			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "登录过期,请重新登录");
+		}
+		iAccountCycleService.flated(accountCycleDto.getId(), userTicket.getFirmId(), userTicket.getFirmName());
 		return BaseOutput.success("平账成功！");
 	}
 
