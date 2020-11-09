@@ -12,6 +12,24 @@
      */
     function queryDataHandler() {
         $('#grid').bootstrapTable('refreshOptions', {pageNumber : 1, url: '/serial/account/listPage.action'});
+        //查询操作金额合计
+        $('#span_operate_amount').html('');
+        $.ajax({
+            type:'POST',
+            url:'/serial/account/countOperateAmount.action',
+            dataType:'json',
+            data:bui.util.bindGridMeta2Form('grid', 'queryForm'),
+            success:function(ret) {
+                if (ret.code === '200') {
+                    $('#span_operate_amount').html('发生金额合计：' + ret.data);
+                } else {
+                    $('#span_operate_amount').html('发生金额合计：0');
+                }
+            },
+            error:function() {
+                $('#span_operate_amount').html('发生金额合计：0');
+            }
+        });
     }
 
     /**

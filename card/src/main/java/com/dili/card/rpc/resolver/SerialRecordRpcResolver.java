@@ -41,4 +41,17 @@ public class SerialRecordRpcResolver {
     public PageOutput<List<SerialRecordDo>> listPage(SerialQueryDto serialQueryDto) {
         return serialRecordRpc.listPage(serialQueryDto);
     }
+
+    /**
+     * 根据列表查询条件统计资金情况
+     * @param serialQueryDto
+     * @return
+     */
+    public Long countOperateAmount(SerialQueryDto serialQueryDto) {
+        BaseOutput<Long> baseOutput = serialRecordRpc.countOperateAmount(serialQueryDto);
+        if (!baseOutput.isSuccess()) {
+            throw new CardAppBizException("统计操作金额数据失败");
+        }
+        return baseOutput.getData();
+    }
 }

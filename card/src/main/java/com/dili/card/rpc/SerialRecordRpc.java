@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 操作流水相关rpc
  */
-@FeignClient(name = "account-service", contextId = "serialRecordRpc"/*, url = "http://127.0.0.1:8186" */)
+@FeignClient(name = "account-service", contextId = "serialRecordRpc" /*, url = "http://127.0.0.1:8186" */)
 public interface SerialRecordRpc {
 
     /**
@@ -31,4 +31,12 @@ public interface SerialRecordRpc {
      */
     @RequestMapping(value = "/api/serial/listPage", method = RequestMethod.POST)
     PageOutput<List<SerialRecordDo>> listPage(SerialQueryDto serialQueryDto);
+
+    /**
+     * 根据列表查询条件统计资金情况
+     * @param serialQueryDto
+     * @return
+     */
+    @RequestMapping(value = "/api/serial/countOperateAmount", method = RequestMethod.POST)
+    BaseOutput<Long> countOperateAmount(SerialQueryDto serialQueryDto);
 }

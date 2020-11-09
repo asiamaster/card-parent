@@ -3,6 +3,7 @@ package com.dili.card.common.aop;
 import com.dili.card.common.annotation.ForbidDuplicateCommit;
 import com.dili.card.common.constant.CacheKey;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.exception.ErrorCode;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.redis.service.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +11,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 @Aspect
 public class DuplicateCommitAspect {
+    private static Logger LOGGER = LoggerFactory.getLogger(DuplicateCommitAspect.class);
+
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
@@ -63,8 +68,10 @@ public class DuplicateCommitAspect {
             if (2L == increment) {
                 return pjp.proceed();
             }
-            throw new CardAppBizException(ResultCode.DATA_ERROR, "token过期或不存在，请刷新后重试");
+            LOGGER.warn("幂等token不存在:{}", key);
+            throw new CardAppBizException(ErrorCode.IDEMPOTENT_TOKEN_CODE, "token过期或不存在，请刷新后重试");
         } finally {
+            LOGGER.info("执行删除幂等token:{}", key);
             redisUtil.remove(key);
         }
     }
