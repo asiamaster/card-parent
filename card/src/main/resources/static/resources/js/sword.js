@@ -100,8 +100,8 @@ tab = {
                     $('#' + options.id).bootstrapTable({
                         id: options.id,
                         url: options.url,                                   // 请求后台的URL（*）
-                        contentType: "application/x-www-form-urlencoded",   // 编码类型
-                        method: 'post',                                     // 请求方式（*）
+                        contentType: $.common.isEmpty(options.contentType) ? "application/x-www-form-urlencoded" : options.contentType,   // 编码类型
+                        method: 'post',                                     // 请求方式（*）"application/x-www-form-urlencoded"
                         cache: false,                                       // 是否使用缓存
                         height: options.height,                             // 表格的高度
                         striped: options.striped,                           // 是否显示行间隔色
@@ -331,7 +331,7 @@ tab = {
                 let params = $.common.isEmpty(tableId) ? $("#" + table.options.id).bootstrapTable('getOptions') : $("#" + tableId).bootstrapTable('getOptions');
                 //需求要求重置为第一页
                 params.pageNumber = 1;
-
+                
                 setTimeout(function () {
                     if ($.common.isNotEmpty(tableId)) {
                         $("#" + tableId).bootstrapTable('refresh', params);

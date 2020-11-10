@@ -1,12 +1,15 @@
 package com.dili.card.controller;
 
+import java.util.Arrays;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -153,10 +156,16 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 */
 	@PostMapping("/page.action")
 	@ResponseBody
-	public Map<String,Object> page(@Validated(ConstantValidator.Page.class) AccountCycleDto accountCycleDto) {
+	public Map<String,Object> page(@RequestBody @Validated(ConstantValidator.Page.class) AccountCycleDto accountCycleDto) {
+		log.info("对账管理列表查询*****{}", JSONObject.toJSONString(accountCycleDto));
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		if(userTicket == null) {
-			throw new CardAppBizException("登录超时，请重新登录");
+			throw new CardAppBizException("登录过期，请重新登录");
+		}
+		if(!CollectionUtils.isEmpty(accountCycleDto.getStateStr())){
+			for (String str : accountCycleDto.getStateStr()) {
+				accountCycleDto.addStates(Integer.valueOf(str));
+			}
 		}
 		accountCycleDto.setFirmId(userTicket.getFirmId());
 		return successPage(iAccountCycleService.page(accountCycleDto));

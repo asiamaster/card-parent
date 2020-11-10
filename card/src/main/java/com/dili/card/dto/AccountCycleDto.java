@@ -2,6 +2,7 @@ package com.dili.card.dto;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -63,6 +64,9 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 	private AccountCycleDetailDto accountCycleDetailDto;
 	/** 列表查询是可以选择多个状态值*/
 	private List<Integer> states;
+	
+	
+	private List<String> stateStr;
 
 	public Long getId() {
 		return id;
@@ -182,6 +186,22 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 
 	public void setStates(List<Integer> states) {
 		this.states = states;
+	}
+
+	
+	public void addStates(Integer state) {
+		if (states == null) {
+			states = new ArrayList<Integer>();
+		}
+		states.add(state);
+	}
+
+	public List<String> getStateStr() {
+		return stateStr;
+	}
+
+	public void setStateStr(List<String> stateStr) {
+		this.stateStr = stateStr;
 	}
 
 }

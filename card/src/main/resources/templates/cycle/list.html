@@ -17,12 +17,12 @@
                 <#bautoCompleteProvider _hiddenDomainId="auditorId" _hiddenDomainName="auditorId" _displayDomainId="creatorName" _displayDomainName="creatorName" _placeholder="" _optionVariable="userNameQueryAutoCompleteOption"/>
             </div>
             <div class="form-group col">
-                <label for="states">状态</label>
-                <select name="states" id="states"  class="form-control" required multiple>
+                <label for="stateStr">状态</label>
+                <select name="stateStr" id="stateStr"  class="form-control" required multiple>
                     <option value="1">活跃</option>
                     <option value="2">已结账</option>
                 </select>
-                <#bselect2 _id="states" _provider="cycleStateProvider" _mode="remote" _value="[1,2]"  _queryParams='{emptyText:"--全部--"}' />
+                <#bselect2 _id="stateStr" _provider="cycleStateProvider" _mode="remote" _value="[1,2]"  _queryParams='{emptyText:"--全部--"}' />
             </div>
             <div class="col-auto align-self-center mt-3">
                 <button id="clear" type="button" class="btn btn-outline-primary mr-2" onclick="clearParams()"><i class="fa fa-refresh"></i> 清空</button>
@@ -118,9 +118,29 @@
                 updateUrl: "${contextPath}/cycle/flated.html?id={id}",
                 url: "${contextPath}/cycle/page.action",
                 singleSelect : true,
-                modalName: "对账款列表查询"
+                contentType: "application/json",
+                modalName: "对账款列表查询",
+                queryParams:queryParamToJson
             };
             $.table.init(options);
+    }
+    
+ // 查询条件
+    function queryParamToJson(params) {
+        let currentId = $.common.isEmpty(table.options.formId) ? 'queryForm' : table.options.formId;
+        let curParams = {
+            // 传递参数查询参数
+            rows: params.limit,
+            page: params.offset / params.limit + 1,
+            searchValue: params.search,
+            sort: params.sort,
+            order: params.order
+        };
+        let data = $.common.formToJSON(currentId);
+        if(!$.common.isEmpty(data.stateStr)){
+        	data.stateStr = data.stateStr.split(",");
+        }
+        return $.extend(curParams, data);
     }
     
     function clearParams(){
