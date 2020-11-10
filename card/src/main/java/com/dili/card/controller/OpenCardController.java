@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.JsonExcludeFilter;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CustomerResponseDto;
@@ -148,7 +149,7 @@ public class OpenCardController implements IControllerHandler {
 	@PostMapping("openMasterCard.action")
 	@ResponseBody
 	public BaseOutput<?> openMasterCard(@RequestBody OpenCardDto openCardInfo) {
-		log.info("开卡主卡信息*****{}", JSONObject.toJSONString(openCardInfo));
+		log.info("开卡主卡信息*****{}", JSONObject.toJSONString(openCardInfo), JsonExcludeFilter.FILTER);
 		// 主要参数校验
 		checkMasterParam(openCardInfo);
 		// 设置操作人信息
@@ -170,7 +171,7 @@ public class OpenCardController implements IControllerHandler {
 	@PostMapping("openSlaveCard.action")
 	@ResponseBody
 	public BaseOutput<?> openSlaveCard(@RequestBody OpenCardDto openCardInfo) throws Exception {
-		log.info("开副卡信息*****{}", JSONObject.toJSONString(openCardInfo));
+		log.info("开副卡信息*****{}", JSONObject.toJSONString(openCardInfo, JsonExcludeFilter.FILTER));
 		// 主要参数校验
 		AssertUtils.notNull(openCardInfo.getParentAccountId(), "主卡信息不能为空!");
 		AssertUtils.notEmpty(openCardInfo.getParentLoginPwd(), "主卡密码不能为空!");
