@@ -14,5 +14,13 @@
         return JSON.parse(resultJson);
     }
 
+    function continuousReadCardNumber() {
+        if (typeof (callbackObj) == "undefined") return;
+        callbackObj.continueReadCardNumber();
+    }
 
+    function cardClientHandler(json) {
+        let parse = JSON.parse(json);
+        console.log(parse)
+    }
 </script>
