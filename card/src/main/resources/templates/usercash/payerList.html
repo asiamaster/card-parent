@@ -103,7 +103,8 @@
             createUrl: "${contextPath}/cash/addPayer.html",
             updateUrl: "${contextPath}/cash/modify.html?id={id}",
             removeUrl: "${contextPath}/cash/delete.html?id={id}",
-            modalName: "交款列表查询"
+            modalName: "交款列表查询",
+            showRefresh:true
         };
         $.table.init(options);
         setTimeout("statisticTotalAmount(2)", 500 );
