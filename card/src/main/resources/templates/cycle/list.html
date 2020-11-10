@@ -53,7 +53,7 @@
     </button>
     </#resource>
 </div>
-        <table id="grid"
+        <table id="grid" 
         	   data-title="对账管理列表"
                data-show-fullscreen="true"
                data-buttons-class="primary"
@@ -104,6 +104,7 @@
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <#common_userJs/>
+<#common_commonJs/>
 <script>
     $(function () {
     	initCycle();
@@ -120,7 +121,8 @@
                 singleSelect : true,
                 contentType: "application/json",
                 modalName: "对账款列表查询",
-                queryParams:queryParamToJson
+                queryParams:queryParamToJson,
+                showRefresh:true
             };
             $.table.init(options);
     }
