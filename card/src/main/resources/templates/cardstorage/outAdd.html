@@ -51,6 +51,11 @@
 <#common_autoCompleteUser/>
 <#common_cardBaseJs/>
 <script>
+    function cardClientHandler(json) {
+        let parse = JSON.parse(json);
+        console.log(parse)
+    }
+
     let cardType = {
         "master": 10,//主卡
         "slave": 20,//副卡
@@ -160,6 +165,7 @@
     function read1() {
         continuousReadCardNumber();
     }
+
 
     //读卡
     function readCard() {
