@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.annotation.ForbidDuplicateCommit;
 import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.JsonExcludeFilter;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.FundFrozenRecordParamDto;
@@ -131,7 +132,7 @@ public class FundController implements IControllerHandler {
 	@ResponseBody
 	@ForbidDuplicateCommit
 	public BaseOutput<String> withdraw(@RequestBody FundRequestDto fundRequestDto) {
-		LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto));
+		LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto,JsonExcludeFilter.FILTER));
 		validateCommonParam(fundRequestDto);
 		// 操作日志
 		businessLogService.saveLog(OperateType.ACCOUNT_WITHDRAW, getUserTicket(),
@@ -254,7 +255,7 @@ public class FundController implements IControllerHandler {
 	@ForbidDuplicateCommit
 	public BaseOutput<String> recharge(
 			@RequestBody @Validated({ FundValidator.Trade.class }) FundRequestDto requestDto) {
-		LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto));
+		LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto, JsonExcludeFilter.FILTER));
 		this.validateCommonParam(requestDto);
 		businessLogService.saveLog(OperateType.ACCOUNT_CHARGE, getUserTicket(),
 				"业务卡号:" + requestDto.getCardNo(),
