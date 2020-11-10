@@ -38,7 +38,7 @@
                     <input id="amount" name="amount" type="text" class="form-control" readonly/>
                     <input id="cardNos" name="cardNos" type="hidden" class="form-control"/>
                     <div class="input-group-append">
-                        <span class="input-group-text"><a id="btn" href="javascript:;" onclick="readCard()" >开启读卡器</a></span>
+                        <span class="input-group-text"><a id="btn" href="javascript:;" onclick="read1()" >开启读卡器</a></span>
                     </div>
                 </div>
             </div>
@@ -51,6 +51,11 @@
 <#common_autoCompleteUser/>
 <#common_cardBaseJs/>
 <script>
+    function cardClientHandler(json) {
+        let parse = JSON.parse(json);
+        console.log(parse)
+    }
+
     let cardType = {
         "master": 10,//主卡
         "slave": 20,//副卡
@@ -160,6 +165,7 @@
     function read1() {
         continuousReadCardNumber();
     }
+
 
     //读卡
     function readCard() {
