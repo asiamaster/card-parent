@@ -17,12 +17,12 @@
                 <#bautoCompleteProvider _hiddenDomainId="auditorId" _hiddenDomainName="auditorId" _displayDomainId="creatorName" _displayDomainName="creatorName" _placeholder="" _optionVariable="userNameQueryAutoCompleteOption"/>
             </div>
             <div class="form-group col">
-                <label for="stateStr">状态</label>
-                <select name="stateStr" id="stateStr"  class="form-control" required multiple>
+                <label for="states">状态</label>
+                <select name="states" id="states"  class="form-control" required multiple>
                     <option value="1">活跃</option>
                     <option value="2">已结账</option>
                 </select>
-                <#bselect2 _id="stateStr" _provider="cycleStateProvider" _mode="remote" _value="[1,2]"  _queryParams='{emptyText:"--全部--"}' />
+                <#bselect2 _id="states" _provider="cycleStateProvider" _mode="remote" _value="[1,2]"  _queryParams='{emptyText:"--全部--"}' />
             </div>
             <div class="col-auto align-self-center mt-3">
                 <button id="clear" type="button" class="btn btn-outline-primary mr-2" onclick="clearParams()"><i class="fa fa-refresh"></i> 清空</button>
@@ -138,8 +138,8 @@
             order: params.order
         };
         let data = $.common.formToJSON(currentId);
-        if(!$.common.isEmpty(data.stateStr)){
-        	data.stateStr = data.stateStr.split(",");
+        if(!$.common.isEmpty(data.states)){
+        	data.states = data.states.split(",");
         }
         return $.extend(curParams, data);
     }
