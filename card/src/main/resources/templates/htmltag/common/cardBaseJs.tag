@@ -19,8 +19,4 @@
         callbackObj.continueReadCardNumber();
     }
 
-    function cardClientHandler(json) {
-        let parse = JSON.parse(json);
-        console.log(parse)
-    }
 </script>

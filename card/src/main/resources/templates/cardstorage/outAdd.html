@@ -2,7 +2,7 @@
 
 <div class="container-fluid">
     <form id="check-card-form">
-    	<div class="row row-cols-1">
+        <div class="row row-cols-1">
             <div class="form-group col">
                 <label for="cardType">卡片类别:</label>
                 <select id="cardType" name="cardType" class="form-control"></select>
@@ -20,25 +20,25 @@
     <form id="save-form">
         <div class="row row-cols-1">
             <div class="form-group col">
-                 <label for="applyUserId">领取人:</label>
-                 <#bautoCompleteProvider
-                     _hiddenDomainId="applyUserId"
-                     _hiddenDomainName="applyUserId"
-                     _displayDomainId="applyUserName"
-                     _displayDomainName="applyUserName"
-                     _placeholder=""
-                     _optionVariable="userNameAutoCompleteOption"/>
-                     <input id="userCode" name="applyUserCode" type="hidden" class="form-control"/>
+                <label for="applyUserId">领取人:</label>
+                <#bautoCompleteProvider
+                _hiddenDomainId="applyUserId"
+                _hiddenDomainName="applyUserId"
+                _displayDomainId="applyUserName"
+                _displayDomainName="applyUserName"
+                _placeholder=""
+                _optionVariable="userNameAutoCompleteOption"/>
+                <input id="userCode" name="applyUserCode" type="hidden" class="form-control"/>
             </div>
-             <div class="form-group col">
-                    <label for="applyUserId">已读数量:</label>
-             </div>
+            <div class="form-group col">
+                <label for="applyUserId">已读数量:</label>
+            </div>
             <div class="form-group col" >
                 <div class="input-group">
                     <input id="amount" name="amount" type="text" class="form-control" readonly/>
                     <input id="cardNos" name="cardNos" type="hidden" class="form-control"/>
                     <div class="input-group-append">
-                        <span class="input-group-text"><a id="btn" href="javascript:;" onclick="readCard()" >开启读卡器</a></span>
+                        <span class="input-group-text"><a id="btn" href="javascript:;" onclick="continuousReadCardNumber()" >开启读卡器</a></span>
                     </div>
                 </div>
             </div>
@@ -51,10 +51,7 @@
 <#common_autoCompleteUser/>
 <#common_cardBaseJs/>
 <script>
-    function cardClientHandler(json) {
-        let parse = JSON.parse(json);
-        console.log(parse)
-    }
+
 
     let cardType = {
         "master": 10,//主卡
@@ -63,7 +60,7 @@
 
     let temp = {
         total: 0,
-        cardNos: []
+        cardNos: new Set()
     };
     $(() => {
         //修改一下“确定”按钮文本
@@ -130,9 +127,9 @@
             applyUserName: {
                 required: true,
             },
-          /*  amount: {
-                required: true,
-            }*/
+            /*  amount: {
+                  required: true,
+              }*/
         },
         messages: {
             cardType: {
@@ -153,8 +150,6 @@
         if (!$.validate.form(formId)) {
             return false;
         }
-        //去重
-        temp.cardNos = Array.from(new Set(temp.cardNos));
         assignCard();
         let url = "${contextPath}/cardStorage/addOut.action";
         let data = $.common.formToJSON(formId);
@@ -162,21 +157,21 @@
         $.operate.post(url, data);
     }
 
-    function read1() {
-        continuousReadCardNumber();
+    //客户端回调读卡
+    function cardClientHandler(json) {
+        let cardResult = JSON.parse(json);
+        readCard(cardResult);
     }
 
-
     //读卡
-    function readCard() {
+    function readCard(result) {
         if (!$.validate.form(checkCardFormId)) {
             return;
         }
-        if (temp.cardNos.length >=200) {
+        if (temp.cardNos.size >=200) {
             parent.$.modal.alertWarning("最多一次出库200张卡片");
             return;
         }
-        let result = readerCardNumber();
         if (!result.success) {
             parent.$.modal.alertWarning(result.message);
             return;
@@ -186,7 +181,7 @@
             parent.$.modal.alertWarning("请将卡片放置在读卡器上");
             return;
         }
-        if (temp.cardNos.indexOf(cardNo) > -1) {
+        if (temp.cardNos.has(cardNo)) {
             parent.$.modal.alertWarning("该卡片已经在待出库序列中。。。");
             return;
         }
@@ -204,16 +199,16 @@
                     parent.$.modal.alertWarning(result.message)
                 } else {
                     temp.total++;
-                    temp.cardNos.push(cardNo);
+                    temp.cardNos.add(cardNo);
                     assignCard();
                 }
             },
         };
-        $.ajax(config);
+         $.ajax(config);
     }
 
     function assignCard() {
-        $('#amount').val(temp.cardNos.length);
-        $('#cardNos').val(temp.cardNos.join(","));
+        $('#amount').val(temp.cardNos.size);
+        $('#cardNos').val(Array.from(temp.cardNos).join(","));
     }
 </script>
