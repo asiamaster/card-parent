@@ -48,7 +48,7 @@
     </button>
     </#resource>
     </div>
-        <table id="grid"
+          <table id="grid" 
         	   data-title="交款管理列表"
                data-show-fullscreen="true"
                data-buttons-class="primary"
@@ -92,7 +92,6 @@
 
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
-<#usercash_payerListJs/>
 <#usercash_commonJs/>
 <#common_userJs/>
 <script>
@@ -103,7 +102,10 @@
             createUrl: "${contextPath}/cash/addPayer.html",
             updateUrl: "${contextPath}/cash/modify.html?id={id}",
             removeUrl: "${contextPath}/cash/delete.html?id={id}",
-            modalName: "交款列表查询"
+            modalName: "交款列表查询",
+            url: "${contextPath}/cash/payerList.action",
+            singleSelect : true,
+            showRefresh:true
         };
         $.table.init(options);
         setTimeout("statisticTotalAmount(2)", 500 );
