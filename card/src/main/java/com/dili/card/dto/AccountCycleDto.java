@@ -64,9 +64,6 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 	private AccountCycleDetailDto accountCycleDetailDto;
 	/** 列表查询是可以选择多个状态值*/
 	private List<Integer> states;
-	
-	
-	private List<String> stateStr;
 
 	public Long getId() {
 		return id;
@@ -195,13 +192,4 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 		}
 		states.add(state);
 	}
-
-	public List<String> getStateStr() {
-		return stateStr;
-	}
-
-	public void setStateStr(List<String> stateStr) {
-		this.stateStr = stateStr;
-	}
-
 }

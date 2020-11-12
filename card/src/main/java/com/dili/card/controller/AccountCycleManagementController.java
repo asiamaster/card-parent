@@ -162,11 +162,6 @@ public class AccountCycleManagementController implements IControllerHandler {
 		if(userTicket == null) {
 			throw new CardAppBizException("登录过期，请重新登录");
 		}
-		if(!CollectionUtils.isEmpty(accountCycleDto.getStateStr())){
-			for (String str : accountCycleDto.getStateStr()) {
-				accountCycleDto.addStates(Integer.valueOf(str));
-			}
-		}
 		accountCycleDto.setFirmId(userTicket.getFirmId());
 		return successPage(iAccountCycleService.page(accountCycleDto));
 	}
