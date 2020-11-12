@@ -7,16 +7,16 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.redis.service.RedisUtil;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
 import com.dili.uap.sdk.rpc.DataDictionaryRpc;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/appCommon")
 public class ApplicationCommonController {
+    private static Logger LOGGER = LoggerFactory.getLogger(ApplicationCommonController.class);
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
@@ -44,6 +45,7 @@ public class ApplicationCommonController {
         String key = CacheKey.FORBID_DUPLICATE_TOKEN_PREFIX + id;
         redisUtil.increment(key, 1L);
         redisUtil.expire(key, 30, TimeUnit.MINUTES);
+        LOGGER.info("获取到幂等token:{}", id);
         return BaseOutput.successData(id);
     }
 

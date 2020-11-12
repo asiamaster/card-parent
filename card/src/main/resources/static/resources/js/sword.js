@@ -331,7 +331,7 @@ tab = {
                 let params = $.common.isEmpty(tableId) ? $("#" + table.options.id).bootstrapTable('getOptions') : $("#" + tableId).bootstrapTable('getOptions');
                 //需求要求重置为第一页
                 params.pageNumber = 1;
-                
+
                 setTimeout(function () {
                     if ($.common.isNotEmpty(tableId)) {
                         $("#" + tableId).bootstrapTable('refresh', params);
@@ -623,25 +623,24 @@ tab = {
             msg: function (content, type) {
                 bs4pop.notice(content, {position: 'leftcenter', type: type})
             },
-            // 错误消息
-            msgError: function (content) {
-                $.modal.msg(content, modal_status.FAIL);
+            alertOptions: function (content, ops, callback) {
+                bs4pop.alert(content, ops, callback);
             },
             // 弹出提示
-            alert: function (content, type) {
-                bs4pop.alert(content, {type: type});
+            alert: function (content, type, callback) {
+                bs4pop.alert(content, {type: type}, callback);
             },
             // 错误提示
-            alertError: function (content) {
-                $.modal.alert(content, modal_status.FAIL);
+            alertError: function (content, callback) {
+                $.modal.alert(content, modal_status.FAIL, callback);
             },
             // 成功提示
-            alertSuccess: function (content) {
-                $.modal.alert(content, modal_status.SUCCESS);
+            alertSuccess: function (content, callback) {
+                $.modal.alert(content, modal_status.SUCCESS, callback);
             },
             // 警告提示
-            alertWarning: function (content) {
-                $.modal.alert(content, modal_status.WARNING);
+            alertWarning: function (content, callback) {
+                $.modal.alert(content, modal_status.WARNING, callback);
             },
             // 关闭全部窗体
             closeAll: function () {
