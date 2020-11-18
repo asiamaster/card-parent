@@ -2,7 +2,7 @@
 
 <div class="container-fluid">
     <form id="check-card-form">
-    	<div class="row row-cols-1">
+        <div class="row row-cols-1">
             <div class="form-group col">
                 <label for="cardType">卡片类别:</label>
                 <select id="cardType" name="cardType" class="form-control"></select>
@@ -12,7 +12,7 @@
             <div id="cardFaceRow" class="form-group col">
                 <label for="cardFace">卡面类型:</label>
                 <select id="cardFace" name="cardFace" class="form-control"></select>
-                <#bcomboProvider _id="cardFace" _provider="cardFaceProvider" _queryParams='{emptyText:"-- 请选择 --"}'/>
+                <#bcomboProvider _id="cardFace" _provider="cardFaceProvider"/>
             </div>
         </div>
     </form>
@@ -20,25 +20,25 @@
     <form id="save-form">
         <div class="row row-cols-1">
             <div class="form-group col">
-                 <label for="applyUserId">领取人:</label>
-                 <#bautoCompleteProvider
-                     _hiddenDomainId="applyUserId"
-                     _hiddenDomainName="applyUserId"
-                     _displayDomainId="applyUserName"
-                     _displayDomainName="applyUserName"
-                     _placeholder=""
-                     _optionVariable="userNameAutoCompleteOption"/>
-                     <input id="userCode" name="applyUserCode" type="hidden" class="form-control"/>
+                <label for="applyUserId">领取人:</label>
+                <#bautoCompleteProvider
+                _hiddenDomainId="applyUserId"
+                _hiddenDomainName="applyUserId"
+                _displayDomainId="applyUserName"
+                _displayDomainName="applyUserName"
+                _placeholder=""
+                _optionVariable="userNameAutoCompleteOption"/>
+                <input id="userCode" name="applyUserCode" type="hidden" class="form-control"/>
             </div>
-             <div class="form-group col">
-                    <label for="applyUserId">已读数量:</label>
-             </div>
+            <div class="form-group col">
+                <label for="applyUserId">已读数量:</label>
+            </div>
             <div class="form-group col" >
                 <div class="input-group">
                     <input id="amount" name="amount" type="text" class="form-control" readonly/>
                     <input id="cardNos" name="cardNos" type="hidden" class="form-control"/>
                     <div class="input-group-append">
-                        <span class="input-group-text"><a id="btn" href="javascript:;" onclick="readCard()" >开启读卡器</a></span>
+                        <span class="input-group-text"><a id="btn" href="javascript:;" onclick="continuousReadCardNumber()" >开启读卡器</a></span>
                     </div>
                 </div>
             </div>
@@ -51,10 +51,7 @@
 <#common_autoCompleteUser/>
 <#common_cardBaseJs/>
 <script>
-    function cardClientHandler(json) {
-        let parse = JSON.parse(json);
-        console.log(parse)
-    }
+
 
     let cardType = {
         "master": 10,//主卡
@@ -65,6 +62,9 @@
         total: 0,
         cardNos: new Set()
     };
+
+    //标记是否已在读卡状态，防止多个弹框
+    let outAddReadCardFlag = true;
     $(() => {
         //修改一下“确定”按钮文本
         $.modal.changeEnsureTxt("出库")
@@ -130,9 +130,9 @@
             applyUserName: {
                 required: true,
             },
-          /*  amount: {
-                required: true,
-            }*/
+            /*  amount: {
+                  required: true,
+              }*/
         },
         messages: {
             cardType: {
@@ -153,7 +153,6 @@
         if (!$.validate.form(formId)) {
             return false;
         }
-        //去重
         assignCard();
         let url = "${contextPath}/cardStorage/addOut.action";
         let data = $.common.formToJSON(formId);
@@ -161,37 +160,40 @@
         $.operate.post(url, data);
     }
 
-    function read1() {
-        continuousReadCardNumber();
+    //客户端回调读卡
+    function cardClientHandler(json) {
+        if (!outAddReadCardFlag){
+            return;
+        }
+        let cardResult = JSON.parse(json);
+        readCard(cardResult);
     }
 
-
     //读卡
-    function readCard() {
+    function readCard(result) {
         if (!$.validate.form(checkCardFormId)) {
             return;
         }
-        if (temp.cardNos.size >=200) {
-            parent.$.modal.alertWarning("最多一次出库200张卡片");
+        if (temp.cardNos.size >= 200) {
+            alertErrorMsg("最多一次出库200张卡片");
             return;
         }
-        let result = readerCardNumber();
         if (!result.success) {
-            parent.$.modal.alertWarning(result.message);
+           // alertErrorMsg(result.message);
             return;
         }
         let cardNo = result.data;
         if ($.common.isEmpty(cardNo)) {
-            parent.$.modal.alertWarning("请将卡片放置在读卡器上");
+           // alertErrorMsg("请将卡片放置在读卡器上");
             return;
         }
         if (temp.cardNos.has(cardNo)) {
-            parent.$.modal.alertWarning("该卡片已经在待出库序列中。。。");
+           // alertErrorMsg("该卡片已经在待出库序列中。。。");
             return;
         }
         let params = {
             cardNo: result.data,
-            cardType : $('#cardType').val(),
+            cardType: $('#cardType').val(),
             cardFace: $('#cardFace').val(),
         };
         let config = {
@@ -200,7 +202,7 @@
             data: params,
             success: (result) => {
                 if (!result.success) {
-                    parent.$.modal.alertWarning(result.message)
+                    alertErrorMsg(result.message);
                 } else {
                     temp.total++;
                     temp.cardNos.add(cardNo);
@@ -209,6 +211,21 @@
             },
         };
         $.ajax(config);
+    }
+
+    function alertErrorMsg(content) {
+        parent.$.modal.alertOptions(content, {
+            type: "warning",
+            onClose() {
+                alertCallback();
+            }
+        }, alertCallback);
+        outAddReadCardFlag = false;
+    }
+
+    //弹框确认回调
+    function alertCallback() {
+        outAddReadCardFlag = true;
     }
 
     function assignCard() {
