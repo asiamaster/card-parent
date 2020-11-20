@@ -160,14 +160,8 @@
         $.operate.post(url, data);
     }
 
-    //关闭弹框
-    function closeHandler(e) {
-        //关闭读卡器
-        closeContinuousReadCard();
-    }
 
-    //取消按钮回调
-    function cancelHandler(e) {
+    function closeHideStartHandler(e) {
         //关闭读卡器
         closeContinuousReadCard();
     }

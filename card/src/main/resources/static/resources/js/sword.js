@@ -664,6 +664,20 @@ tab = {
                             console.log(ex);
                         }
                     },
+                    onHideStart(e, $iframe){
+                        try {
+                            $iframe[0].contentWindow.closeHideStartHandler(e);
+                        } catch (ex) {
+                            console.log(ex);
+                        }
+                    },
+                    onHideEnd(e, $iframe){
+                        try {
+                            $iframe[0].contentWindow.closeHideEndHandler(e);
+                        } catch (ex) {
+                            console.log(ex);
+                        }
+                    },
                     btns: [{
                         label: '确定', className: 'sword-modal btn-primary btn ', onClick(e, $iframe) {
                             try {
