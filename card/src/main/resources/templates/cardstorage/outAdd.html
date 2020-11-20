@@ -154,6 +154,18 @@
         $.operate.post(url, data);
     }
 
+    //关闭弹框
+    function closeHandler(e) {
+        //关闭读卡器
+        closeContinuousReadCard();
+    }
+
+    //取消按钮回调
+    function cancelHandler(e) {
+        //关闭读卡器
+        closeContinuousReadCard();
+    }
+
     //客户端回调读卡
     function cardClientHandler(json) {
         if (!outAddReadCardFlag){
@@ -211,15 +223,16 @@
         parent.$.modal.alertOptions(content, {
             type: "warning",
             onClose() {
-                alertCallback();
+                alertOnClose();
             }
-        }, alertCallback);
+        }, alertOnClose);
         outAddReadCardFlag = false;
     }
 
-    //弹框确认回调
-    function alertCallback() {
+    //弹框关闭回调
+    function alertOnClose() {
         outAddReadCardFlag = true;
+
     }
 
     function assignCard() {

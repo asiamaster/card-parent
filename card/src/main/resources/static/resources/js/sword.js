@@ -657,6 +657,13 @@ tab = {
                     width: width,
                     height: height,
                     content: content,
+                    onClose(e, $iframe) {
+                        try {
+                            $iframe[0].contentWindow.closeHandler(e);
+                        } catch (ex) {
+                            console.log(ex);
+                        }
+                    },
                     btns: [{
                         label: '确定', className: 'sword-modal btn-primary btn ', onClick(e, $iframe) {
                             try {
