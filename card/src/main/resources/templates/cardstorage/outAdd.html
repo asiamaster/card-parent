@@ -175,9 +175,8 @@
 
     //开启读卡器
     function openCardReader() {
-        $("#cardReader").attr({"disabled": "disabled"});
         continuousReadCardNumber(() => {
-
+            $("#cardReader").attr({"disabled": "disabled"});
         });
     }
 
