@@ -38,7 +38,9 @@
                     <input id="amount" name="amount" type="text" class="form-control" readonly/>
                     <input id="cardNos" name="cardNos" type="hidden" class="form-control"/>
                     <div class="input-group-append">
-                        <span class="input-group-text"><a id="btn" href="javascript:;" onclick="continuousReadCardNumber()" >开启读卡器</a></span>
+                        <div class="input-group-append">
+                            <button id="cardReader" class="btn btn-primary" type="button" onclick="openCardReader()">开启读卡器</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -51,7 +53,17 @@
 <#common_autoCompleteUser/>
 <#common_cardBaseJs/>
 <script>
-
+    $(() => {
+        //轮询读卡器状态
+        setInterval(() => {
+            let isClosed = checkCardStatus();
+            if(isClosed == "true"){
+                $("#cardReader").removeAttr("disabled");
+            }else{
+                $("#cardReader").attr({"disabled":"disabled"});
+            }
+        }, 1000);
+    });
 
     let cardType = {
         "master": 10,//主卡
@@ -152,12 +164,21 @@
         let data = $.common.formToJSON(formId);
         //console.log(JSON.stringify(data))
         $.operate.post(url, data);
+        closeContinuousReadCard();
     }
 
-
+    //关闭弹框回调
     function closeHideStartHandler(e) {
         //关闭读卡器
         closeContinuousReadCard();
+    }
+
+    //开启读卡器
+    function openCardReader() {
+        $("#cardReader").attr({"disabled": "disabled"});
+        continuousReadCardNumber(() => {
+
+        });
     }
 
     //客户端回调读卡
