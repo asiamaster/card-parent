@@ -242,7 +242,7 @@
     function alertErrorMsg(content) {
         parent.$.modal.alertOptions(content, {
             type: "warning",
-            onClose() {
+            onHideStart() {
                 alertOnClose();
             }
         }, alertOnClose);
@@ -252,7 +252,6 @@
     //弹框关闭回调
     function alertOnClose() {
         outAddReadCardFlag = true;
-
     }
 
     function assignCard() {
