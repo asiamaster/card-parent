@@ -22,8 +22,6 @@ import com.dili.ss.domain.PageOutput;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
-import io.seata.spring.annotation.GlobalTransactional;
-
 /**
  * @description： 卡片入库相关功能实现
  *

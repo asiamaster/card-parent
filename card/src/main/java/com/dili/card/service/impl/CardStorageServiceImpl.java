@@ -1,5 +1,18 @@
 package com.dili.card.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.dili.card.common.constant.MarketCode;
 import com.dili.card.dao.IStorageOutDao;
 import com.dili.card.dao.IStorageOutDetailDao;
 import com.dili.card.dto.BatchActivateCardDto;
@@ -19,22 +32,11 @@ import com.dili.card.type.CustomerType;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
-import com.esotericsoftware.minlog.Log;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Auther: miaoguoxin
@@ -143,7 +145,7 @@ public class CardStorageServiceImpl implements ICardStorageService {
 			throw new CardAppBizException("请使用" + CardType.getName(cardType) + "办理当前业务!");
 		}
 		// 副卡入库时没有卡面信息,不校验
-		if (null != cardStorage.getCardFace() && !CardType.isSlave(cardStorage.getType())) {
+		if (cardFaceIsMust() && null != cardStorage.getCardFace() && !CardType.isSlave(cardStorage.getType())) {
 			if (!CustomerType.checkCardFace(customerType, cardStorage.getCardFace())) {
 				log.warn("卡面信息和客户身份类型不符cardNo[{}]customerType[{}]cardFace[{}]", cardNo, customerType,
 						cardStorage.getCardFace());
@@ -151,5 +153,18 @@ public class CardStorageServiceImpl implements ICardStorageService {
 			}
 		}
 		return cardStorage;
+	}
+
+	@Override
+	public boolean cardFaceIsMust() {
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        if(userTicket == null) {
+        	log.warn("卡面判断,无法获取登录用户信息,默认为非必须!");
+        	return false;
+        }
+		if(MarketCode.SG.equalsIgnoreCase(userTicket.getFirmCode())) {
+			return true;
+		}
+		return false;
 	}
 }

@@ -75,4 +75,11 @@ public interface ICardStorageService {
 	 * @return 
 	 */
 	public CardStorageDto checkAndGetByCardNo(String cardNo, Integer cardType, String customerType);
+	
+	/**
+	 * 根据当前登录用户所属市场，判断卡面信息是否必须
+	 * <br>目前只有寿光入库时必须要求选择卡面
+	 * @return
+	 */
+	public boolean cardFaceIsMust();
 }

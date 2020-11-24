@@ -1,6 +1,5 @@
 package com.dili.card.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -18,6 +17,7 @@ import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardStorageOutQueryDto;
 import com.dili.card.entity.StorageInDo;
 import com.dili.card.service.ICardStorageInService;
+import com.dili.card.service.ICardStorageService;
 import com.dili.card.util.AssertUtils;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -36,6 +36,8 @@ public class CardStorageInController implements IControllerHandler {
 
 	@Autowired
 	private ICardStorageInService cardStorageInService;
+	@Autowired
+	private ICardStorageService cardStorageService;
 
 	/**
 	 * 批量入库列表页面
@@ -95,4 +97,15 @@ public class CardStorageInController implements IControllerHandler {
 		return BaseOutput.success();
 	}
 
+	/**
+	 * @return
+	 */
+	@GetMapping("cardFaceIsMust.action")
+	@ResponseBody
+	public BaseOutput<Boolean> cardFaceIsMust() {
+		LOG.info("判断卡面信息是否为必须*****");
+		boolean cardFaceIsMust = cardStorageService.cardFaceIsMust();
+		return BaseOutput.successData(cardFaceIsMust);
+	}
+	
 }
