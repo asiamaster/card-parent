@@ -30,6 +30,8 @@ public class CustomerResponseDto implements Serializable {
 	private String certificateNumber;
 	/** 证件类型 */
 	private String certificateType;
+	/** 市场属性ID */
+	private Long firmId;
 
 	public Long getId() {
 		return id;
@@ -109,6 +111,14 @@ public class CustomerResponseDto implements Serializable {
 
 	public void setCertificateType(String certificateType) {
 		this.certificateType = certificateType;
+	}
+
+	public Long getFirmId() {
+		return firmId;
+	}
+
+	public void setFirmId(Long firmId) {
+		this.firmId = firmId;
 	}
 
 }
