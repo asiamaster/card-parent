@@ -1,0 +1,78 @@
+<#bs4Body>
+<div class="container-fluid">
+    <form id="queryForm" role="form">
+        <div class="row row-cols-6">
+            <#component_dateControls
+            _labelText="操作时间:"
+            _startDateParam="startDate"
+            _endDateParam="endDate"
+            _resetDate="false"
+            />
+            <div class="col-auto align-self-center mt-3">
+                <button id="clear" type="button" class="btn btn-outline-primary mr-2" onclick="$.form.reset()"><i
+                        class="fa fa-refresh"></i> 清空
+                </button>
+                <button id="query" type="button" class="btn btn-outline-primary" onclick="$.table.search()"><i
+                        class="fa fa-search"></i> 查询
+                </button>
+            </div>
+        </div>
+    </form>
+    <hr>
+    <div class="row">
+        <div class="col-12">
+            <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
+                <button id="btn_query" type="button" class="btn btn-primary" onclick="redirectToAddView()">
+                    <i class="fa fa-plus"></i> 新增
+                </button>
+            </div>
+            <table id="grid"
+                   class="table"
+                   data-title="冲正"
+                   data-show-fullscreen="true"
+                   data-buttons-class="primary"
+                   data-icons="bui.variable.icons">
+                <thead>
+                <tr>
+                    <th data-field="reverse_id" data-align="center">
+                        业务流水号
+                    </th>
+                    <th data-field="bizSerialNo"  data-align="center" >
+                        对应原业务流水号
+                    </th>
+                    <th data-field="amount" data-align="center">
+                        冲正金额
+                    </th>
+                    <th data-field="operatorName" data-align="center">
+                        操作员姓名
+                    </th>
+                    <th data-field="createTime" data-align="center">
+                        操作时间
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script>
+    $(function () {
+        let options = {
+            uniqueId: "id",
+            url: "${contextPath}/reverse/page.action",
+            sortName: "create_time",
+            modalName: "冲正记录"
+        };
+        $.table.init(options);
+    });
+
+    function redirectToAddView() {
+        window.location.href = '${contextPath}/reverse/add.html'
+    }
+</script>
+

@@ -9,11 +9,11 @@ import com.dili.ss.domain.BaseOutput;
 
 /**
  * @description： 开卡RPC
- * 
+ *
  * @author ：WangBo
  * @time ：2020年6月30日下午2:19:18
  */
-@FeignClient(name = "account-service", contextId = "openCard")
+@FeignClient(name = "account-service", contextId = "openCard", url = "${accountService.url:}")
 public interface OpenCardRpc {
 
 	/**

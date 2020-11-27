@@ -6,50 +6,52 @@ package com.dili.card.type;
  */
 public enum BizNoType {
 
-	CONTRACT_NO("合同编号", "fundContractNo"),
-	CYCLET_NO("账务周期编号", "cycleNo"),
-	OPERATE_SERIAL_NO("卡务操作流水号", "cardOperateSerialNo"),
-	CASH_NO("领取款编号", "cashNo");
+    CONTRACT_NO("合同编号", "fundContractNo"),
+    CYCLET_NO("账务周期编号", "cycleNo"),
+    OPERATE_SERIAL_NO("卡务操作流水号", "cardOperateSerialNo"),
+    CASH_NO("领取款编号", "cashNo"),
+    REVERS_ID("冲正id", "cardReverseId"),
+    ;
+    private String name;
+    private String code;
 
-	private String name;
-	private String code;
+    private BizNoType(String name, String code) {
+        this.name = name;
 
-	private BizNoType(String name, String code) {
-		this.name = name;
-		this.code = code;
-	}
+        this.code = code;
+    }
 
-	public static BizNoType getBizNoType(String code) {
-		for (BizNoType status : BizNoType.values()) {
-			if (status.getCode().equalsIgnoreCase(code)) {
-				return status;
-			}
-		}
-		return null;
-	}
+    public static BizNoType getBizNoType(String code) {
+        for (BizNoType status : BizNoType.values()) {
+            if (status.getCode().equalsIgnoreCase(code)) {
+                return status;
+            }
+        }
+        return null;
+    }
 
-	public static String getName(String code) {
-		for (BizNoType status : BizNoType.values()) {
-			if (status.getCode().equalsIgnoreCase(code)) {
-				return status.name;
-			}
-		}
-		return null;
-	}
+    public static String getName(String code) {
+        for (BizNoType status : BizNoType.values()) {
+            if (status.getCode().equalsIgnoreCase(code)) {
+                return status.name;
+            }
+        }
+        return null;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getCode() {
-		return code;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 }

@@ -24,15 +24,6 @@
         focusCleanup: true
     });
 
-    function limitNum(obj) {
-        //只能输入两个小数
-        obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');
-        //只能输入大于0
-        if (obj.value && obj.value < 0) {
-            obj.value = 0;
-        }
-    }
-
 
     //提交冻结资金操作
     function submitFrozen() {

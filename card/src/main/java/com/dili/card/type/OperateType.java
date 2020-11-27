@@ -33,6 +33,7 @@ public enum OperateType
 	UNFROZEN_FUND("解冻资金",28),
 	FROZEN_ACCOUNT("冻结账户",29),
 	UNFROZEN_ACCOUNT("解冻账户",30),
+	FUND_REVERSE("冲正",31),
 	;
 
 	private String name;
@@ -97,7 +98,7 @@ public enum OperateType
 	{
 		this.code = code;
 	}
-	
+
 	public static List<OperateType> getAll() {
 		return new ArrayList<>(Arrays.asList(OperateType.values()));
 	}

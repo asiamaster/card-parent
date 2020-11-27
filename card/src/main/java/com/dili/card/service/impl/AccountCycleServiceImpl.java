@@ -1,19 +1,5 @@
 package com.dili.card.service.impl;
 
-import java.lang.reflect.Field;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
 import com.dili.card.dao.IAccountCycleDao;
 import com.dili.card.dao.IAccountCycleDetailDao;
 import com.dili.card.dto.AccountCycleDetailDto;
@@ -37,6 +23,19 @@ import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service("accountCycleService")
 public class AccountCycleServiceImpl implements IAccountCycleService {
@@ -83,7 +82,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		AccountCycleDetailDo accountCycleDetail = this.buildAccountCycleDetailDo(this.buildCycleDetail(cycle));
 		accountCycleDetail.setFirmId(cycle.getFirmId());
 		accountCycleDetail.setFirmName(cycle.getFirmName());
-		
+
 		// 更新账务周期状态
 		this.updateStateById(id, CycleState.FLATED.getCode(), cycle.getVersion(), auditorId, auditorName);
 
@@ -117,7 +116,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}
 		return accountCycle;
 	}
-	
+
 	@Override
 	public PageOutput<List<AccountCyclePageListDto>> page(AccountCycleDto accountCycleDto) {
 		Page<?> page = PageHelper.startPage(accountCycleDto.getPage(), accountCycleDto.getRows());
@@ -189,7 +188,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			throw new CardAppBizException("结账失败");
 		}
 	}
-	
+
 	/**
 	 * 更新账务周期状态
 	 */
@@ -222,6 +221,15 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Override
 	public AccountCycleDo findActiveCycleByUserId(Long userId) {
 		return accountCycleDao.findByUserIdAndState(userId, CycleState.ACTIVE.getCode());
+	}
+
+	@Override
+	public Boolean isActiveByCycleNo(Long cycleNo) {
+		AccountCycleDto queryDto = new AccountCycleDto();
+		queryDto.setCycleNo(cycleNo);
+		queryDto.setState(CycleState.ACTIVE.getCode());
+		Long count = accountCycleDao.findCountByCondition(queryDto);
+		return count != null && count > 0;
 	}
 
 	@Override

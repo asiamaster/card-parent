@@ -1,6 +1,8 @@
 package com.dili.card.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.dili.card.common.annotation.TextDisplay;
+import com.dili.card.common.provider.FundItemProvider;
 import com.dili.card.type.ActionType;
 import com.dili.card.util.CurrencyUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -14,60 +16,60 @@ import java.time.LocalDateTime;
  * @author bob
  */
 public class SerialRecordDo implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	/**  */
-	private Long id; 
+	private Long id;
 	/** 流水号 */
 	private String serialNo;
 	/** 操作类型*/
 	private Integer type;
 	/** 账户ID */
-	private Long accountId; 
+	private Long accountId;
 	/** 关联卡号 */
-	private String cardNo; 
+	private String cardNo;
 	/** 客户ID */
-	private Long customerId; 
+	private Long customerId;
 	/** 客户编号 */
-	private String customerNo; 
+	private String customerNo;
 	/** 客户姓名 */
 	private String customerName;
 	/** 客户身份类型*/
 	private String customerType;
 	/** 资金动作-收入,支出 */
-	private Integer action; 
+	private Integer action;
 	/** 期初余额-分 */
-	private Long startBalance; 
+	private Long startBalance;
 	/** 操作金额-分 */
-	private Long amount; 
+	private Long amount;
 	/** 期末余额-分 */
-	private Long endBalance; 
+	private Long endBalance;
 	/** 交易类型-充值、提现、消费、转账、其他 */
-	private Integer tradeType; 
+	private Integer tradeType;
 	/** 交易渠道-现金、POS、网银 */
-	private Integer tradeChannel; 
+	private Integer tradeChannel;
 	/** 交易流水号 */
-	private String tradeNo; 
+	private String tradeNo;
 	/** 资金项目 */
-	private Integer fundItem; 
+	private Integer fundItem;
 	/** 资金项目名称 */
-	private String fundItemName; 
+	private String fundItemName;
 	/** 操作员ID */
-	private Long operatorId; 
+	private Long operatorId;
 	/** 操作员工号 */
-	private String operatorNo; 
+	private String operatorNo;
 	/** 操作员名称 */
-	private String operatorName; 
+	private String operatorName;
 	/** 操作时间-与支付系统保持一致 */
 	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime operateTime; 
+	private LocalDateTime operateTime;
 	/** 备注 */
-	private String notes; 
+	private String notes;
 	/** 商户ID */
-	private Long firmId; 
+	private Long firmId;
     /**
      * SerialRecordEntity constructor
      */
@@ -76,14 +78,14 @@ public class SerialRecordDo implements Serializable {
 	}
 
     /**
-     * setter for 
+     * setter for
      */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
     /**
-     * getter for 
+     * getter for
      */
 	public Long getId() {
 		return id;

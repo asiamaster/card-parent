@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.card.dao.IReverseRecordDao">
+
+    <resultMap type="com.dili.card.entity.ReverseRecord" id="CardReverseRecordMap">
+        <result property="id" column="id" />
+        <result property="reverseId" column="reverse_id" />
+        <result property="serialNo" column="serial_no" />
+        <result property="bizSerialNo" column="biz_serial_no" />
+        <result property="bizTradeType" column="biz_trade_type" />
+        <result property="amount" column="amount" />
+        <result property="operatorId" column="operator_id" />
+        <result property="operatorNo" column="operator_no" />
+        <result property="operatorName" column="operator_name" />
+        <result property="firmId" column="firm_id" />
+        <result property="firmName" column="firm_name" />
+        <result property="createTime" column="create_time" />
+        <result property="modifyTime" column="modify_time" />
+        <result property="isDel" column="is_del" />
+    </resultMap>
+
+    <sql id="Base_Column">
+        id,
+        reverse_id,
+        serial_no,
+        biz_serial_no,
+        biz_trade_type,
+        amount,
+        operator_id,
+        operator_no,
+        operator_name,
+        firm_id,
+        firm_name,
+        create_time,
+        modify_time
+    </sql>
+    <!--查询单个-->
+    <select id="findById" resultMap="CardReverseRecordMap">
+        select
+          <include refid="Base_Column"/>
+        from card_reverse_record
+        where
+          reverse_id = #{reverseId}
+          and firm_id=#{firmId}
+          and is_del=0
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="findByCondition" resultMap="CardReverseRecordMap">
+        select
+        <include refid="Base_Column"/>
+        from card_reverse_record
+        <where>
+            firm_id=#{firmId}
+            and is_del = 0
+            <if test="bizSerialNo != null and bizSerialNo != ''">
+                and biz_serial_no = #{bizSerialNo}
+            </if>
+            <if test="bizTradeType != null">
+                and biz_trade_type = #{bizTradeType}
+            </if>
+            <if test="startDate !=null">
+                AND create_time &gt;= #{startDate}
+            </if>
+            <if test="endDate !=null">
+                AND create_time &lt;= #{endDate}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+    <select id="findByBizSerialNo" resultMap="CardReverseRecordMap">
+        select
+        <include refid="Base_Column"/>
+        from card_reverse_record
+        WHERE
+        biz_serial_no = #{bizSerialNo}
+        AND firm_id=#{firmId}
+        ORDER BY create_time DESC
+        LIMIT 1
+    </select>
+
+    <!--新增所有列-->
+    <insert id="save" keyProperty="id" useGeneratedKeys="true">
+        insert into card_reverse_record(reverse_id, serial_no, biz_serial_no, biz_trade_type, amount, operator_id, operator_no,
+                                        operator_name, firm_id, firm_name, create_time, modify_time)
+        values (#{reverseId}, #{serialNo}, #{bizSerialNo}, #{bizTradeType}, #{amount}, #{operatorId}, #{operatorNo},
+                #{operatorName}, #{firmId}, #{firmName}, NOW(), NOW())
+    </insert>
+
+
+    <!--通过主键删除-->
+    <update id="deleteById">
+        UPDATE card_reverse_record
+        set is_del=1,
+            modify_time=now()
+        where reverse_id = #{reverseId}
+          and firm_id = #{firmId}
+    </update>
+
+</mapper>

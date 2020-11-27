@@ -73,7 +73,8 @@ public class BusinessLogServiceImpl implements IBusinessLogService {
                     log.setContent(String.join(",", content));
                 }
                 log.setSystemCode(LOG_SYSTEM_CODE);
-                rabbitMQMessageService.send(LoggerConstant.MQ_LOGGER_TOPIC_EXCHANGE, LoggerConstant.MQ_LOGGER_ADD_BUSINESS_KEY, JSON.toJSONString(log));
+                rabbitMQMessageService.send(LoggerConstant.MQ_LOGGER_TOPIC_EXCHANGE,
+                        LoggerConstant.MQ_LOGGER_ADD_BUSINESS_KEY, JSON.toJSONString(log));
             } catch (Exception e) {
                 LOGGER.error("{}保存操作日志失败,内容【{}】!", operateType.getName(), content);
                 LOGGER.error("save log error!", e);
@@ -89,4 +90,5 @@ public class BusinessLogServiceImpl implements IBusinessLogService {
         //多个代理转发后只要第一个
         return remoteIp.split(",")[0];
     }
+
 }

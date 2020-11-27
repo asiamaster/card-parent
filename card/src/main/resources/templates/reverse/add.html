@@ -1,0 +1,69 @@
+<#bs4Body>
+<div class="container-fluid " style="height: 100%;">
+   <div >
+       <form id="queryForm">
+           <div class="row row-cols-6" >
+               <div class="form-group col">
+                   <input id="serialNo"  name="serialNo" type="text" class="form-control" placeholder="对应原业务流水号"/>
+               </div>
+               <div class="form-group col">
+                   <button type="button" class="btn btn-primary" onclick="loadDetailView()">
+                       <i class="fa fa-search"></i> 查询
+                   </button>
+               </div>
+           </div>
+       </form>
+   </div>
+    <iframe id="content" width="100%" height="100%" frameBorder="0" src="" >
+    </iframe>
+</div>
+
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
+<script>
+    function autoHeight(){
+        let nowHeight;
+        if (window.innerHeight){//FF
+            nowHeight = window.innerHeight;
+        }else{
+            nowHeight = document.documentElement.clientHeight;
+        }
+        var jianHeight = 0; //随padding值改变
+        if(nowHeight > jianHeight){
+            document.getElementById('content').style.height = nowHeight - jianHeight-100 + 'px';
+        }else{
+            document.getElementById('content').style.height = jianHeight + 'px';
+        }
+    }
+    autoHeight();
+    window.onresize = autoHeight;
+    function changeFrameHeight(that){
+        //电脑屏幕高度-iframe上面其他组件的高度
+        //例:我这里iframe上面还有其他一些div组件，一共的高度是120，则减去120
+        $(that).height(document.documentElement.clientHeight - 120);
+
+    }
+    $("#queryForm").validate({
+        onkeyup : false,
+        rules : {
+            serialNo : {
+                required : true,
+            }
+        },
+        messages : {
+            serialNo : {
+                required : "请输入业务号",
+            }
+        },
+        focusCleanup : true
+    });
+    function loadDetailView() {
+        if (!$.validate.form("queryForm")) {
+            return;
+        }
+        let serialNo = $("#serialNo").val();
+        let url = '${contextPath}/reverse/detail.html?serialNo='+serialNo;
+        $('#content').attr('src', url);
+    }
+</script>
