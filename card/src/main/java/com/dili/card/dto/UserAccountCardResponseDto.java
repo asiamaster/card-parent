@@ -52,6 +52,12 @@ public class UserAccountCardResponseDto implements Serializable {
     private String customerCertificateNumber;
     /** 客户电话 */
     private String customerContactsPhone;
+    /** 持卡人姓名 */
+    private String holdName;
+    /** 持卡人证件号 */
+    private String holdCertificateNumber;
+    /** 持卡人联系电话 */
+    private String holdContactsPhone;
     /** 使用权限(充值、提现、交费等) {@link com.dili.account.type.UsePermissionType} */
     private List<String> permissionList;
     /** 卡ID */
@@ -293,4 +299,27 @@ public class UserAccountCardResponseDto implements Serializable {
 		this.master = master;
 	}
 
+    public String getHoldName() {
+        return holdName;
+    }
+
+    public void setHoldName(String holdName) {
+        this.holdName = holdName;
+    }
+
+    public String getHoldCertificateNumber() {
+        return holdCertificateNumber;
+    }
+
+    public void setHoldCertificateNumber(String holdCertificateNumber) {
+        this.holdCertificateNumber = holdCertificateNumber;
+    }
+
+    public String getHoldContactsPhone() {
+        return holdContactsPhone;
+    }
+
+    public void setHoldContactsPhone(String holdContactsPhone) {
+        this.holdContactsPhone = holdContactsPhone;
+    }
 }
