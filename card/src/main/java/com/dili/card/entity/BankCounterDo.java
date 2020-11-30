@@ -18,25 +18,27 @@ public class BankCounterDo implements Serializable {
 	/** 操作金额-分 */
 	private Long amount; 
 	/** 状态-新建 封存 */
-	private Integer state; 
+	private Integer status; 
 	/** 银行操作流水号 */
 	private Long serialNo; 
 	/** 实际存取款时间 */
 	private LocalDateTime applyTime; 
 	/** 操作人员ID */
-	private Long creatorId; 
+	private Long operatorId; 
 	/** 操作人员名称 */
-	private String creator; 
-	/** 商户编码 */
-	private Long firmId; 
-	/** 商户名称 */
-	private String firmName; 
+	private String operatorName; 
+	/** 园区组织机构编码 */
+	private String institutionCode; 
 	/** 备注 */
-	private String notes; 
+	private String description; 
+	/** 创建人ID */
+	private LocalDateTime createdUserId; 
+	/** 创建人姓名 */
+	private LocalDateTime createdUserName; 
 	/** 创建时间 */
-	private LocalDateTime createTime; 
+	private LocalDateTime createdTime; 
 	/** 修改时间 */
-	private LocalDateTime modifyTime; 
+	private LocalDateTime modifiedTime; 
     /**
      * BankCounterEntity constructor
      */
@@ -89,15 +91,15 @@ public class BankCounterDo implements Serializable {
     /**
      * setter for 状态-新建 封存
      */
-	public void setState(Integer state) {
-		this.state = state;
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
     /**
      * getter for 状态-新建 封存
      */
-	public Integer getState() {
-		return state;
+	public Integer getStatus() {
+		return status;
 	}
 
     /**
@@ -131,99 +133,113 @@ public class BankCounterDo implements Serializable {
     /**
      * setter for 操作人员ID
      */
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
+	public void setOperatorId(Long operatorId) {
+		this.operatorId = operatorId;
 	}
 
     /**
      * getter for 操作人员ID
      */
-	public Long getCreatorId() {
-		return creatorId;
+	public Long getOperatorId() {
+		return operatorId;
 	}
 
     /**
      * setter for 操作人员名称
      */
-	public void setCreator(String creator) {
-		this.creator = creator;
+	public void setOperatorName(String operatorName) {
+		this.operatorName = operatorName;
 	}
 
     /**
      * getter for 操作人员名称
      */
-	public String getCreator() {
-		return creator;
+	public String getOperatorName() {
+		return operatorName;
 	}
 
     /**
-     * setter for 商户编码
+     * setter for 园区组织机构编码
      */
-	public void setFirmId(Long firmId) {
-		this.firmId = firmId;
+	public void setInstitutionCode(String institutionCode) {
+		this.institutionCode = institutionCode;
 	}
 
     /**
-     * getter for 商户编码
+     * getter for 园区组织机构编码
      */
-	public Long getFirmId() {
-		return firmId;
-	}
-
-    /**
-     * setter for 商户名称
-     */
-	public void setFirmName(String firmName) {
-		this.firmName = firmName;
-	}
-
-    /**
-     * getter for 商户名称
-     */
-	public String getFirmName() {
-		return firmName;
+	public String getInstitutionCode() {
+		return institutionCode;
 	}
 
     /**
      * setter for 备注
      */
-	public void setNotes(String notes) {
-		this.notes = notes;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
     /**
      * getter for 备注
      */
-	public String getNotes() {
-		return notes;
+	public String getDescription() {
+		return description;
+	}
+
+    /**
+     * setter for 创建人ID
+     */
+	public void setCreatedUserId(LocalDateTime createdUserId) {
+		this.createdUserId = createdUserId;
+	}
+
+    /**
+     * getter for 创建人ID
+     */
+	public LocalDateTime getCreatedUserId() {
+		return createdUserId;
+	}
+
+    /**
+     * setter for 创建人姓名
+     */
+	public void setCreatedUserName(LocalDateTime createdUserName) {
+		this.createdUserName = createdUserName;
+	}
+
+    /**
+     * getter for 创建人姓名
+     */
+	public LocalDateTime getCreatedUserName() {
+		return createdUserName;
 	}
 
     /**
      * setter for 创建时间
      */
-	public void setCreateTime(LocalDateTime createTime) {
-		this.createTime = createTime;
+	public void setCreatedTime(LocalDateTime createdTime) {
+		this.createdTime = createdTime;
 	}
 
     /**
      * getter for 创建时间
      */
-	public LocalDateTime getCreateTime() {
-		return createTime;
+	public LocalDateTime getCreatedTime() {
+		return createdTime;
 	}
 
     /**
      * setter for 修改时间
      */
-	public void setModifyTime(LocalDateTime modifyTime) {
-		this.modifyTime = modifyTime;
+	public void setModifiedTime(LocalDateTime modifiedTime) {
+		this.modifiedTime = modifiedTime;
 	}
 
     /**
      * getter for 修改时间
      */
-	public LocalDateTime getModifyTime() {
-		return modifyTime;
+	public LocalDateTime getModifiedTime() {
+		return modifiedTime;
 	}
 
     /**
@@ -235,16 +251,17 @@ public class BankCounterDo implements Serializable {
                "id='" + id + '\'' +
                ", action='" + action + '\'' +
                ", amount='" + amount + '\'' +
-               ", state='" + state + '\'' +
+               ", status='" + status + '\'' +
                ", serialNo='" + serialNo + '\'' +
                ", applyTime='" + applyTime + '\'' +
-               ", creatorId='" + creatorId + '\'' +
-               ", creator='" + creator + '\'' +
-               ", firmId='" + firmId + '\'' +
-               ", firmName='" + firmName + '\'' +
-               ", notes='" + notes + '\'' +
-               ", createTime='" + createTime + '\'' +
-               ", modifyTime='" + modifyTime + '\'' +
+               ", operatorId='" + operatorId + '\'' +
+               ", operatorName='" + operatorName + '\'' +
+               ", institutionCode='" + institutionCode + '\'' +
+               ", description='" + description + '\'' +
+               ", createdUserId='" + createdUserId + '\'' +
+               ", createdUserName='" + createdUserName + '\'' +
+               ", createdTime='" + createdTime + '\'' +
+               ", modifiedTime='" + modifiedTime + '\'' +
                '}';
     }
 

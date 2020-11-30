@@ -2,42 +2,42 @@ package com.dili.card.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
-import com.dili.card.entity.BankCounterDo;
+import com.dili.card.entity.BankBindingDo;
 
 /**
- * 银行存取款
+ * 园区账户绑定银行卡
  * @author bob<>
  */
 @Mapper
-public interface IBankCounterDao {
+public interface IBankBindingDao {
 	/**
      * 列表查询
      * @param page
      * @param search
      * @return
      */
-	List<BankCounterDo> selectList(BankCounterDo bankCounter);
+	List<BankBindingDo> selectList(BankBindingDo bankBinding);
 
     /**
      * 新增
-     * @param bankCounter
+     * @param bankBinding
      * @return
      */
-	int save(BankCounterDo bankCounter);
+	int save(BankBindingDo bankBinding);
 
     /**
      * 根据id查询
      * @param id
      * @return
      */
-	BankCounterDo getById(Long id);
+	BankBindingDo getById(Long id);
 
     /**
      * 修改
-     * @param bankCounter
+     * @param bankBinding
      * @return
      */
-	int update(BankCounterDo bankCounter);
+	int update(BankBindingDo bankBinding);
 
     /**
      * 删除
