@@ -1,6 +1,7 @@
 package com.dili.card.service.impl;
 
 import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.AccountSimpleResponseDto;
@@ -273,7 +274,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     private Map<String, CardStorageDto> getCardFaceMap(List<String> cardNos) {
         CardRepoQueryParam queryParam = new CardRepoQueryParam();
         queryParam.setCardNos(cardNos);
-        List<CardStorageDto> cardStorageDtos = cardStorageRpc.listByCardNo(queryParam);
+        List<CardStorageDto> cardStorageDtos = GenericRpcResolver.resolver(cardStorageRpc.listByCardNo(queryParam), ServiceName.ACCOUNT);
         return cardStorageDtos.stream().collect(Collectors.toMap(CardStorageDto::getCardNo,
                 Function.identity(), (key1, key2) -> key2));
     }

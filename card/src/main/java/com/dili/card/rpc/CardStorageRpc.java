@@ -37,7 +37,7 @@ public interface CardStorageRpc {
 	* @date 2020/12/3
 	*/
 	@PostMapping("/batchQueryByCardNo")
-	List<CardStorageDto> listByCardNo(CardRepoQueryParam queryParam);
+	BaseOutput<List<CardStorageDto>> listByCardNo(CardRepoQueryParam queryParam);
 
 	/**
 	 * 入库
