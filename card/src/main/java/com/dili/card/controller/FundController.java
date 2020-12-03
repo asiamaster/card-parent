@@ -15,6 +15,7 @@ import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.UnfreezeFundDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
+import com.dili.card.dto.pay.FreezeFundRecordDto;
 import com.dili.card.dto.pay.FreezeFundRecordParam;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.service.IAccountQueryService;
@@ -31,6 +32,7 @@ import com.dili.card.util.AssertUtils;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.FundValidator;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.PageOutput;
 import com.dili.ss.util.MoneyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +49,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -212,7 +215,7 @@ public class FundController implements IControllerHandler {
      */
     @PostMapping("allRecord.action")
     @ResponseBody
-    public Map<String, Object> allRecord(FundFrozenRecordParamDto queryParam) {
+    public PageOutput<List<FreezeFundRecordDto>> allRecord(FundFrozenRecordParamDto queryParam) {
         LOGGER.info("查询冻结和未冻结记录列表*****{}", JSONObject.toJSONString(queryParam));
         AssertUtils.notNull(queryParam.getFundAccountId(), "参数校验失败：缺少资金账户ID!");
         FreezeFundRecordParam payServiceParam = new FreezeFundRecordParam();
@@ -223,7 +226,7 @@ public class FundController implements IControllerHandler {
         DateTime startDate = DateUtil.offset(new Date(), DateField.YEAR, -1);
         payServiceParam.setStartTime(DateUtil.beginOfDay(startDate).toString());
         payServiceParam.setEndTime(DateUtil.endOfDay(new Date()).toString());
-        return successPage(fundService.frozenRecord(payServiceParam));
+        return fundService.frozenRecord(payServiceParam);
     }
 
     /**
