@@ -2,6 +2,7 @@ package com.dili.card.rpc;
 
 import java.util.List;
 
+import com.dili.card.dto.CardRepoQueryParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -18,18 +19,25 @@ import com.dili.ss.domain.PageOutput;
  * @author ：WangBo
  * @time ：2020年7月17日上午10:22:18
  */
-@FeignClient(name = "account-service", contextId = "cardStorgeRpc", path = "/api/account/cardStorage" 
+@FeignClient(name = "account-service", contextId = "cardStorgeRpc", path = "/api/account/cardStorage"
 /* , url = "http://127.0.0.1:8186" */ )
 public interface CardStorageRpc {
 
 	/**
 	 * 仓库中卡片列表，包括状态及入库信息
 	 *
-	 * @param cardParam
 	 * @return
 	 */
 	@PostMapping("/pageList")
 	PageOutput<List<CardStorageDto>> pageList(CardStorageDto queryParam);
+
+	/**
+	*  根据卡号批量查询列表
+	* @author miaoguoxin
+	* @date 2020/12/3
+	*/
+	@PostMapping("/batchQueryByCardNo")
+	List<CardStorageDto> listByCardNo(CardRepoQueryParam queryParam);
 
 	/**
 	 * 入库
@@ -57,7 +65,7 @@ public interface CardStorageRpc {
 
 	/**
 	 * 批量激活,卡片库存状态从未使用到激活
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/29
 	 */
@@ -66,12 +74,12 @@ public interface CardStorageRpc {
 
 	/**
 	 * 激活，卡片库存状态从在用到激活
-	 * 
+	 *
 	 * @param dto 提供卡号即可
 	 */
 	@PostMapping("/activateCardByInUse")
 	BaseOutput<?> activateCardByInUse(CardStorageActivateDto dto);
-	
+
 	/**
 	 * 卡片库存数据删除，根据号段入库ID，如果有非激活状态的卡片则删除失败
 	 */
