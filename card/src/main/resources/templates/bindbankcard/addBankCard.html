@@ -1,0 +1,50 @@
+<#bs4Body>
+<div class="container-fluid">
+	<div class="row row-cols-2" id="baseContent">
+		<div class="form-group col">
+			<label for="accountType" class="div_label">账户类型</label>
+			<input type="radio" name="accountType"
+						checked="checked" value="${accountType.code}"
+						onclick='BankCard.accountTypeChange();'>
+		</div>
+		<div class="form-group col">
+			<label for="bankNo" class="div_label">银行卡号</label>
+			<input type="text" id="bankNo" class="form-control"/>
+		</div>
+		<div class="form-group col">
+			<label for="holderName" class="div_label">账户名</label>
+			<input type="text" id="holderName" class="form-control"/>
+		</div>
+		<div class="form-group col">
+			<label for="bankType" class="div_label">银行卡类型</label>
+			<input type="text" id="bankType" class="form-control"/>
+		</div>
+		
+		<!-- 对公户 开户行 -->
+		<div class="form-group col">
+			<label for="openingBank" class="div_label">开户行</label>
+			<input type="text" id="openingBank" class="form-control"/>
+		</div>
+		<div class="form-group col">
+			<label for="description" class="div_label">备注</label>
+			<input type="text" id="description" class="form-control"/>
+		</div>
+		<div
+				style="display: table-cell; text-align: center; margin-top: 15px; margin-bottom: 20px;">
+				<div style="width: 49%; float: left;">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal" style="width: 100px;">取消</button>
+				</div>
+				<div style="width: 49%; float: left;">
+					<button type="button" class="btn btn-primary"
+							style="width: 100px;" onclick="doSettle()">保存</button>
+				</div>
+			</div>
+	</div>
+</div>
+
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<#common_cardBaseJs/>
+<#bindbankcard_bindBankCardJs/>
+

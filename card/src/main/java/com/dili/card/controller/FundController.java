@@ -167,6 +167,7 @@ public class FundController implements IControllerHandler {
      */
     @PostMapping("frozen.action")
     @ResponseBody
+    @ForbidDuplicateCommit
     public BaseOutput<?> frozen(@RequestBody @Validated(FundValidator.FrozenFund.class) FundRequestDto requestDto) {
         LOGGER.info("冻结资金*****{}", JSONObject.toJSONString(requestDto));
         AssertUtils.notNull(requestDto.getAmount(), "冻结金额不能为空");
@@ -230,6 +231,7 @@ public class FundController implements IControllerHandler {
      */
     @PostMapping("unfrozen.action")
     @ResponseBody
+    @ForbidDuplicateCommit
     public BaseOutput<?> unfrozen(@RequestBody UnfreezeFundDto unfreezeFundDto) {
         LOGGER.info("解冻资金*****{}", JSONObject.toJSONString(unfreezeFundDto));
         AssertUtils.notNull(unfreezeFundDto.getAccountId(), "参数校验失败：缺少账户ID!");
