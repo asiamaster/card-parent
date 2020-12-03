@@ -9,6 +9,11 @@
                 <#bcomboProvider _id="cardType" _provider="cardTypeProvider" _queryParams='{emptyText:"-- 全部 --"}'/>
             </div>
             <div class="form-group col">
+                <label for="cardFace">卡面信息</label>
+                <select id="cardFace" name="cardFace" class="form-control"></select>
+                <#bcomboProvider _id="cardFace" _provider="cardFaceProvider" _queryParams='{emptyText:"-- 全部 --"}'/>
+            </div>
+            <div class="form-group col">
                 <label for="cardState">卡片状态</label>
                 <select name="cardState" id="cardState" class="form-control"></select>
                 <#bcomboProvider _id="cardState" _provider="cardStateProvider" _queryParams='{emptyText:"-- 全部 --"}'/>
@@ -81,6 +86,9 @@
                 </th>
                 <th data-field="cardTypeText"  data-align="center" >
                     卡类别
+                </th>
+                <th data-field="cardFaceText"  data-align="center" >
+                    卡面信息
                 </th>
                 <th data-field="customerCode" data-align="center">
                     客户编号
