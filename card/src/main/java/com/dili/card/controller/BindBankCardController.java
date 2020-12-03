@@ -30,6 +30,12 @@ import com.dili.ss.domain.PageOutput;
 import com.dili.ss.util.SpringUtil;
 import com.esotericsoftware.minlog.Log;
 
+/**
+ * @description： 
+ *          银行卡绑定功能操作
+ * @author ：WangBo
+ * @time ：2020年12月3日上午9:42:16
+ */
 @Controller
 @RequestMapping(value = "/bindBankCard")
 public class BindBankCardController implements IControllerHandler {
