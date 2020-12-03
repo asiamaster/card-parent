@@ -35,6 +35,7 @@ public class CardRepoQueryParam extends BaseDomain {
 	private Integer excludeState;
 	/** 入库记录ID */
 	private Long storageInId;
+	/***/
 	private List<String> cardNos;
 	/** 卡片起始号 */
 	private Long startCardNo;
