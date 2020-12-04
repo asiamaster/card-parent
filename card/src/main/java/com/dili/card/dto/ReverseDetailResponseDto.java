@@ -1,7 +1,5 @@
 package com.dili.card.dto;
 
-import com.dili.card.entity.SerialRecordDo;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,7 +14,7 @@ public class ReverseDetailResponseDto implements Serializable {
     /**操作业务记录*/
     private BusinessRecordResponseDto bizSerial;
     /**费用项记录*/
-    private List<SerialRecordDo> feeSerials;
+    private List<SerialRecordResponseDto> feeSerials;
 
     public UserAccountCardResponseDto getAccountInfo() {
         return accountInfo;
@@ -34,11 +32,11 @@ public class ReverseDetailResponseDto implements Serializable {
         this.bizSerial = bizSerial;
     }
 
-    public List<SerialRecordDo> getFeeSerials() {
+    public List<SerialRecordResponseDto> getFeeSerials() {
         return feeSerials;
     }
 
-    public void setFeeSerials(List<SerialRecordDo> feeSerials) {
+    public void setFeeSerials(List<SerialRecordResponseDto> feeSerials) {
         this.feeSerials = feeSerials;
     }
 }

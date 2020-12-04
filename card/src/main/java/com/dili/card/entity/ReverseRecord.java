@@ -22,12 +22,18 @@ public class ReverseRecord implements Serializable {
     private Long reverseId;
     /**关联的流水号*/
     private String serialNo;
+    /**关联的账务周期号(冗余)*/
+    private Long cycleNo;
+    /**对应的原业务交易渠道(冗余),{@link com.dili.card.type.TradeChannel}*/
+    private Integer bizTradeChannel;
     /**对应的业务流水号*/
     private String bizSerialNo;
     /**对应的业务类型，见枚举TradeType*/
     private Integer bizTradeType;
     /**冲正金额（区分正负），单位：分*/
     private Long amount;
+    /**园区收益变动金额（区分正负），单位：分*/
+    private Long inAccChangeAmount;
     /**操作员id*/
     private Long operatorId;
     /**操作员工号*/
@@ -45,12 +51,15 @@ public class ReverseRecord implements Serializable {
     /**标记，1：删除 0：正常*/
     private Integer isDel;
 
-    public static ReverseRecord create(String serialNo, Long reverseAmount) {
+    public static ReverseRecord create(BusinessRecordDo businessRecord, Long amount, Long inAccChangeAmount) {
         ReverseRecord reverseRecord = new ReverseRecord();
         UidRpcResovler uidRpcResovler = SpringUtil.getBean(UidRpcResovler.class);
         String idStr = uidRpcResovler.bizNumber(BizNoType.REVERS_ID.getCode());
-        reverseRecord.setSerialNo(serialNo);
-        reverseRecord.setAmount(reverseAmount);
+        reverseRecord.setAmount(amount);
+        reverseRecord.setInAccChangeAmount(inAccChangeAmount);
+        reverseRecord.setSerialNo(businessRecord.getSerialNo());
+        reverseRecord.setCycleNo(businessRecord.getCycleNo());
+        reverseRecord.setBizTradeChannel(businessRecord.getTradeChannel());
         reverseRecord.setReverseId(NumberUtils.toLong(idStr));
         reverseRecord.setCreateTime(LocalDateTime.now());
         reverseRecord.setModifyTime(LocalDateTime.now());
@@ -170,4 +179,27 @@ public class ReverseRecord implements Serializable {
         this.isDel = isDel;
     }
 
+    public Long getCycleNo() {
+        return cycleNo;
+    }
+
+    public void setCycleNo(Long cycleNo) {
+        this.cycleNo = cycleNo;
+    }
+
+    public Integer getBizTradeChannel() {
+        return bizTradeChannel;
+    }
+
+    public void setBizTradeChannel(Integer bizTradeChannel) {
+        this.bizTradeChannel = bizTradeChannel;
+    }
+
+    public Long getInAccChangeAmount() {
+        return inAccChangeAmount;
+    }
+
+    public void setInAccChangeAmount(Long inAccChangeAmount) {
+        this.inAccChangeAmount = inAccChangeAmount;
+    }
 }

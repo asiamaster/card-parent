@@ -119,7 +119,7 @@ public class GenericGlobalExceptionResolver {
     private String writeErrorResp(String errorCode, String errorMsg, Throwable e) throws IOException {
         if (request.getRequestURI().contains(".html")) {
             request.setAttribute("exception", e);
-            request.setAttribute("exMsg",e.getMessage());
+            request.setAttribute("exMsg",errorMsg);
             //return SpringUtil.getProperty("error.page.default", "error/default");
             return "common/error";
         }
