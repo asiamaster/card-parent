@@ -53,6 +53,8 @@ public class OpenCardDto extends BaseSerialLogDto {
 	private String firmName;
 	/** 工本费 */
 	private Long costFee;
+	/** 持卡人 */
+	private String holdName;
 
 	public Long getCustomerId() {
 		return customerId;
@@ -220,6 +222,14 @@ public class OpenCardDto extends BaseSerialLogDto {
 
 	public void setParentFundAccountId(Long parentFundAccountId) {
 		this.parentFundAccountId = parentFundAccountId;
+	}
+
+	public String getHoldName() {
+		return holdName;
+	}
+
+	public void setHoldName(String holdName) {
+		this.holdName = holdName;
 	}
 
 }

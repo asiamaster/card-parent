@@ -47,7 +47,7 @@ CREATE TABLE `dili_card`.`card_reverse_record`  (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='银行存取款';
 
 -- 园区卡账户绑定银行卡
-CREATE TABLE `card_bank_binding` (
+CREATE TABLE `card_bind_bank_card` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `account_type` tinyint(3) unsigned NOT NULL COMMENT '账户类型-个人账户 对公账户',
   `account_id` bigint(20) NOT NULL COMMENT '园区卡账号',
