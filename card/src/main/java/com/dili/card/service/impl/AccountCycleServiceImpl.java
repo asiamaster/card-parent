@@ -1,5 +1,22 @@
 package com.dili.card.service.impl;
 
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.dili.card.dao.IAccountCycleDao;
 import com.dili.card.dao.IAccountCycleDetailDao;
 import com.dili.card.dto.AccountCycleDetailDto;
@@ -23,19 +40,6 @@ import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import java.lang.reflect.Field;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service("accountCycleService")
 public class AccountCycleServiceImpl implements IAccountCycleService {
@@ -79,7 +83,9 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		this.validateCycleFlatedState(cycle);
 
 		// 账务周期详情统计信息
-		AccountCycleDetailDo accountCycleDetail = this.buildAccountCycleDetailDo(this.buildCycleDetail(cycle));
+		AccountCycleDetailDto  acd = this.buildCycleDetail(cycle.getCycleNo(), accountCycleDetailDao.statisticCycleBussinessRecord(Arrays.asList(cycle.getCycleNo())), accountCycleDetailDao.statisticCycleBussinessRecord(Arrays.asList(cycle.getCycleNo())));
+		AccountCycleDetailDo accountCycleDetail = this.buildAccountCycleDetailDo(acd);
+		
 		accountCycleDetail.setFirmId(cycle.getFirmId());
 		accountCycleDetail.setFirmName(cycle.getFirmName());
 
@@ -97,7 +103,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	public List<AccountCycleDto> list(AccountCycleDto accountCycleDto) {
 
 		// 封装返回数据
-		return this.buildAccountCycleList(accountCycleDao.findByCondition(accountCycleDto));
+		return this.buildAccountCycleWrapperDetailList(accountCycleDao.findByCondition(accountCycleDto));
 	}
 
 	@Override
@@ -245,55 +251,154 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	public AccountCycleDto buildAccountCycleWrapper(AccountCycleDo cycle) {
 		return buildAccountCycleWrapperDetail(cycle, false);
 	}
-
+	
 	@Override
 	public AccountCycleDto buildAccountCycleWrapperDetail(AccountCycleDo cycle, boolean detail) {
-		// 构建账务周期实体
-		AccountCycleDto accountCycleDto = this.buildAccountCycleDto(cycle);
-		// 构建账务周期详情
-		AccountCycleDetailDto accountCycleDetail = this.buildCycleDetail(cycle);
-		// 计算网银存取款
-		accountCycleDetail
-				.setInOutBankAmount(accountCycleDetail.getBankInAmount() - accountCycleDetail.getBankOutAmount());
-		// 计算未交现金金额 领款金额 + 现金收支收益金额 - 现金交款金额
-		Long unDeliverAmount = accountCycleDetail.getReceiveAmount() + accountCycleDetail.getRevenueAmount()
-				- accountCycleDetail.getDeliverAmount();
-		if (cycle != null) {
-			if (CycleState.ACTIVE.getCode() == cycle.getState()) {// 活跃期
-				accountCycleDetail.setUnDeliverAmount(unDeliverAmount);
-			} else {// 非活跃期 最近一次交现金金额就是最终交款金额
-				UserCashDo userCashDo = userCashService.getLastestUesrCash(cycle.getUserId(), cycle.getCycleNo(),
-						CashAction.PAYER.getCode());
-				accountCycleDetail.setLastDeliverAmount(userCashDo.getAmount());
-				// 结账后此字段为0
-				accountCycleDetail.setUnDeliverAmount(0L);
-				// 详情 平账 和 结账申请 后不统计结账申请交款记录    对账管理列表  交款金额 不统计最后一次交款金额
-				if ((detail && CycleState.ACTIVE.getCode() != cycle.getState()) || !detail) {
-					accountCycleDetail.setDeliverAmount(accountCycleDetail.getDeliverAmount() - userCashDo.getAmount());
-					accountCycleDetail.setDeliverTimes(accountCycleDetail.getDeliverTimes() - 1);
-				}
-			}
-		}
-		// 现金收款包括充值和工本费
-		accountCycleDetail.setDepoCashAmount(accountCycleDetail.getDepoCashAmount()
-				+ accountCycleDetail.getOpenCostAmount() + accountCycleDetail.getChangeCostAmount());
-		accountCycleDetail.setDepoCashTimes(accountCycleDetail.getDepoCashTimes()
-				+ accountCycleDetail.getOpenCostFeetimes() + accountCycleDetail.getChangeCostFeetimes());
-
-		accountCycleDto.setAccountCycleDetailDto(accountCycleDetail);
-		return accountCycleDto;
+		return buildAccountCycleWrapperDetailList(Arrays.asList(cycle), detail).get(0);
 	}
+	
+	@Override
+	public List<AccountCycleDto> buildAccountCycleWrapperDetailList(List<AccountCycleDo> cycles) {
+		return buildAccountCycleWrapperDetailList(cycles, false);
+	}
+	
+	private List<AccountCycleDto> buildAccountCycleWrapperDetailList(List<AccountCycleDo> cycles, boolean detail) {
+		// 构建账务周期实体
+		List<AccountCycleDto> accountCycleDtos = buildAccountCycleDtoList(cycles);
+		List<Long> cycleNos = accountCycleDtos.stream().map( o -> o.getCycleNo()).collect(Collectors.toList());
+		
+		Map<Long, List<CycleStatistcDto>> cycleStatistcs = findCycleStatistcDtoMapByCycleNos(accountCycleDetailDao.statisticCycleBussinessRecord(cycleNos));
+		Map<Long, List<CycleStatistcDto>> cycleReversedStatistcs = findCycleStatistcDtoMapByCycleNos(accountCycleDetailDao.statisticCycleBussinessRecord(cycleNos));
+		
+		for (AccountCycleDto accountCycleDto : accountCycleDtos) {
+			
+			//账务周期详情构建
+			AccountCycleDetailDto accountCycleBussinessDetail = buildCycleDetail(accountCycleDto.getCycleNo(), cycleStatistcs.get(accountCycleDto.getCycleNo()), cycleReversedStatistcs.get(accountCycleDto.getCycleNo()));
+			
+			//最后账务周期数据的计算用于展示
+			calculateLastCycleDetail(accountCycleBussinessDetail, accountCycleDto, detail);
 
-	/**
-	 * 构造页面响应实体列表
-	 */
-	private List<AccountCycleDto> buildAccountCycleList(List<AccountCycleDo> accountCycles) {
-		List<AccountCycleDto> accountCycleDtos = new ArrayList<AccountCycleDto>();
-		for (AccountCycleDo accountCycle : accountCycles) {
-			accountCycleDtos.add(this.buildAccountCycleWrapper(accountCycle));
+			accountCycleDto.setAccountCycleDetailDto(accountCycleBussinessDetail);
 		}
 		return accountCycleDtos;
 	}
+	
+	/**
+	 * 账务周期详情构建
+	 * @return
+	 */
+	private AccountCycleDetailDto buildCycleDetail(Long cycleNo, List<CycleStatistcDto> cycleStatistcs, List<CycleStatistcDto> cycleReversedStatistcs) {
+		// 构建业务产生的金额 账务周期详情 不包括冲正数据
+		AccountCycleDetailDto accountCycleBussinessDetail = this.transferStatisticToCycleDetail(cycleNo, cycleStatistcs);
+
+		// 统计详情只包括冲正数据
+		AccountCycleDetailDto accountCycleReverseDetail = this.transferStatisticToCycleDetail(cycleNo, cycleReversedStatistcs);
+
+		// 合并账务周期详情统计信息
+		mergeAccountCycleDetail(accountCycleBussinessDetail, accountCycleReverseDetail);
+
+		return calculateBussinessCashBalanceAmount(accountCycleBussinessDetail);
+	}
+	
+	/**
+	 * 分组
+	 */
+	public Map<Long, List<CycleStatistcDto>> findCycleStatistcDtoMapByCycleNos(List<CycleStatistcDto> cycleStatistcs) {
+        return cycleStatistcs.stream()
+                .collect(Collectors.groupingBy(CycleStatistcDto::getCycleNo));
+	}
+
+	/**
+	 * 最后账务周期数据的计算用于展示
+	 */
+	private void calculateLastCycleDetail(AccountCycleDetailDto accountCycleBussinessDetail, AccountCycleDto accountCycleDto, boolean detail) {
+		// 计算网银存取款
+		accountCycleBussinessDetail
+				.setInOutBankAmount(accountCycleBussinessDetail.getBankInAmount() - accountCycleBussinessDetail.getBankOutAmount());
+		
+		// 计算未交现金金额 领款金额 + 现金收支收益金额 - 现金交款金额
+		Long unDeliverAmount = accountCycleBussinessDetail.getReceiveAmount() + accountCycleBussinessDetail.getRevenueAmount()
+				- accountCycleBussinessDetail.getDeliverAmount();
+		
+		if (accountCycleDto.getCycleNo() != null || accountCycleDto.getCycleNo() != -1L ) {
+			if (CycleState.ACTIVE.getCode() == accountCycleDto.getState()) {// 活跃期
+				accountCycleBussinessDetail.setUnDeliverAmount(unDeliverAmount);
+			} else {// 非活跃期 最近一次交现金金额就是最终交款金额
+				UserCashDo userCashDo = userCashService.getLastestUesrCash(accountCycleDto.getUserId(), accountCycleDto.getCycleNo(),
+						CashAction.PAYER.getCode());
+				accountCycleBussinessDetail.setLastDeliverAmount(userCashDo.getAmount());
+				// 结账后此字段为0
+				accountCycleBussinessDetail.setUnDeliverAmount(0L);
+				// 详情 平账 和 结账申请 后不统计结账申请交款记录    对账管理列表  交款金额 不统计最后一次交款金额
+				if ((detail && CycleState.ACTIVE.getCode() != accountCycleDto.getState()) || !detail) {
+					accountCycleBussinessDetail.setDeliverAmount(accountCycleBussinessDetail.getDeliverAmount() - userCashDo.getAmount());
+					accountCycleBussinessDetail.setDeliverTimes(accountCycleBussinessDetail.getDeliverTimes() - 1);
+				}
+			}
+		}
+		
+		// 现金收款包括充值和工本费
+		accountCycleBussinessDetail.setDepoCashAmount(accountCycleBussinessDetail.getDepoCashAmount()
+				+ accountCycleBussinessDetail.getOpenCostAmount() + accountCycleBussinessDetail.getChangeCostAmount());
+		accountCycleBussinessDetail.setDepoCashTimes(accountCycleBussinessDetail.getDepoCashTimes()
+				+ accountCycleBussinessDetail.getOpenCostFeetimes() + accountCycleBussinessDetail.getChangeCostFeetimes());
+		
+	}
+	
+	/**
+	 *计算业务现金收支余额 开卡/换卡工本费+ 现金充值 -现金取款
+	 */
+	private AccountCycleDetailDto calculateBussinessCashBalanceAmount(AccountCycleDetailDto accountCycleDetail) {
+		accountCycleDetail
+		.setRevenueAmount(accountCycleDetail.getOpenCostAmount() + accountCycleDetail.getChangeCostAmount()
+				+ accountCycleDetail.getDepoCashAmount() - accountCycleDetail.getDrawCashAmount());
+		return accountCycleDetail;
+	}
+	
+	
+	/**
+	 * 业务操作统计金额转化为具体账务详情
+	 */
+	private AccountCycleDetailDto transferStatisticToCycleDetail(Long cycleNo, List<CycleStatistcDto> cycleStatistcs) {
+		AccountCycleDetailDto accountCycleDetail = new AccountCycleDetailDto();
+		accountCycleDetail.setCycleNo(cycleNo);
+		if (!CollectionUtils.isEmpty(cycleStatistcs)) {
+			for (CycleStatistcDto cycleStatistc : cycleStatistcs) {
+				CycleStatisticType cycleStatisticType = CycleStatisticType.getCycleStatisticType(cycleStatistc.getType(),
+						cycleStatistc.getTradeChannel());
+				Field times;
+				Field amount;
+				try {
+					times = accountCycleDetail.getClass().getDeclaredField(cycleStatisticType.getTimes());
+					times.setAccessible(true);
+					times.set(accountCycleDetail, cycleStatistc.getTimes());
+					amount = accountCycleDetail.getClass().getDeclaredField(cycleStatisticType.getAmount());
+					amount.setAccessible(true);
+					amount.set(accountCycleDetail, cycleStatistc.getAmount() == null ? 0 : cycleStatistc.getAmount());
+				} catch (Exception e) {
+					log.error("账务周期详情统计出错", e);
+				}
+			}
+		}
+		return accountCycleDetail;
+	}
+
+	/**
+	 * 正向操作数据和冲正数据进行合并
+	 */
+	private void mergeAccountCycleDetail(AccountCycleDetailDto masterCycleDetail, AccountCycleDetailDto accountCycleReverseDetail) {
+		masterCycleDetail.setBeforeReverseBankInAmount(masterCycleDetail.getBankInAmount());
+		masterCycleDetail.setBeforeReverseBankOutAmount(masterCycleDetail.getBankOutAmount());
+		masterCycleDetail.setBeforeReverseDepoCashAmount(masterCycleDetail.getDepoCashAmount());
+		masterCycleDetail.setBeforeReverseDepoPosAmount(masterCycleDetail.getDepoPosAmount());
+		masterCycleDetail.setBeforeReverseDrawCashAmount(masterCycleDetail.getDrawCashAmount());
+		masterCycleDetail.setBankInAmount(masterCycleDetail.getBankInAmount() + accountCycleReverseDetail.getBankInAmount());
+		masterCycleDetail.setBankOutAmount(masterCycleDetail.getBankOutAmount() + accountCycleReverseDetail.getBankOutAmount());
+		masterCycleDetail.setDepoCashAmount(masterCycleDetail.getDepoCashAmount() + accountCycleReverseDetail.getDepoCashAmount());
+		masterCycleDetail.setDepoPosAmount(masterCycleDetail.getDepoPosAmount() + accountCycleReverseDetail.getDepoPosAmount());
+		masterCycleDetail.setDrawCashAmount(masterCycleDetail.getDrawCashAmount() + accountCycleReverseDetail.getDrawCashAmount());
+	}
+
 
 	/**
 	 * 对账前状态校验
@@ -330,38 +435,6 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	}
 
 	/**
-	 * 账务周期详情统计信息
-	 */
-	private AccountCycleDetailDto buildCycleDetail(AccountCycleDo cycle) {
-		Long cycleNo = cycle == null ? -1L : cycle.getCycleNo();
-		Long userId = cycle == null ? -1L : cycle.getUserId();
-		AccountCycleDetailDto accountCycleDetail = new AccountCycleDetailDto();
-		accountCycleDetail.setCycleNo(cycleNo);
-		List<CycleStatistcDto> cycleStatistcs = accountCycleDetailDao.statisticCycleRecord(cycleNo, userId);
-		for (CycleStatistcDto cycleStatistc : cycleStatistcs) {
-			CycleStatisticType cycleStatisticType = CycleStatisticType.getCycleStatisticType(cycleStatistc.getType(),
-					cycleStatistc.getTradeChannel());
-			Field times;
-			Field amount;
-			try {
-				times = accountCycleDetail.getClass().getDeclaredField(cycleStatisticType.getTimes());
-				times.setAccessible(true);
-				times.set(accountCycleDetail, cycleStatistc.getTimes());
-				amount = accountCycleDetail.getClass().getDeclaredField(cycleStatisticType.getAmount());
-				amount.setAccessible(true);
-				amount.set(accountCycleDetail, cycleStatistc.getAmount() == null ? 0 : cycleStatistc.getAmount());
-			} catch (Exception e) {
-				log.error("账务周期详情统计出错", e);
-			}
-		}
-		// 计算现金收支余额 开卡/换卡工本费+ 现金充值 -现金取款
-		accountCycleDetail
-				.setRevenueAmount(accountCycleDetail.getOpenCostAmount() + accountCycleDetail.getChangeCostAmount()
-						+ accountCycleDetail.getDepoCashAmount() - accountCycleDetail.getDrawCashAmount());
-		return accountCycleDetail;
-	}
-
-	/**
 	 * 构建账务周期相应实体
 	 */
 	private AccountCycleDto buildAccountCycleDto(AccountCycleDo cycle) {
@@ -371,18 +444,30 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			accountCycleDto.setUserCode(userTicket.getSerialNumber());
 			accountCycleDto.setUserId(userTicket.getId());
 			accountCycleDto.setUserName(userTicket.getRealName());
+			accountCycleDto.setCycleNo(-1L);
 			return accountCycleDto;
 		}
 		accountCycleDto.setId(cycle.getId());
 		accountCycleDto.setUserCode(cycle.getUserCode());
 		accountCycleDto.setUserId(cycle.getUserId());
 		accountCycleDto.setUserName(cycle.getUserName());
-		accountCycleDto.setCycleNo(cycle.getCycleNo());
+		accountCycleDto.setCycleNo(cycle.getCycleNo() == null ? -1L : cycle.getCycleNo());
 		accountCycleDto.setCashBox(cycle.getCashBox());
 		accountCycleDto.setStartTime(cycle.getStartTime());
 		accountCycleDto.setEndTime(cycle.getEndTime());
 		accountCycleDto.setState(cycle.getState());
 		return accountCycleDto;
+	}
+	
+	/**
+	 * 构建账务周期相应实体
+	 */
+	private List<AccountCycleDto> buildAccountCycleDtoList(List<AccountCycleDo> cycles) {
+		List<AccountCycleDto> accountCycleDtos = new ArrayList<AccountCycleDto>();
+		for (AccountCycleDo cycle : cycles) {
+			accountCycleDtos.add(buildAccountCycleDto(cycle));
+		}
+		return accountCycleDtos;
 	}
 
 	/**
