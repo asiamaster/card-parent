@@ -10,9 +10,9 @@
             </div>
             <div class="col-auto align-self-center mt-3">
             	<#resource code="bindBankCard_query_cardInfo">
-                <button id="query" type="button" class="btn btn-primary"  onclick="readCard()">
-                <i class="fa fa-search">刷园区主卡</i>
-                </button>
+	                <button id="query" type="button" class="btn btn-primary"  onclick="readCard()">
+	                <i class="fa fa-search">刷园区主卡</i>
+	                </button>
                 </#resource>
                 <% if(cardInfo != null) { %>
 	                <button id="authBindBtn" type="button" class="btn btn-primary">授权绑定
@@ -80,9 +80,11 @@
             <button id="refreshBtn" type="button" class="btn btn-primary" >
 				<i class="fa fa-plus">刷新</i>
             </button>
-            <button id="openAddHtmlBtn" type="button" class="btn btn-primary">
-				添加银行卡
-            </button>
+            <#resource code="add_bindBankCard">
+	            <button id="openAddHtmlBtn" type="button" class="btn btn-primary">
+					添加银行卡
+	            </button>
+            </#resource>
         </div>
 		<table id="bankCardTable" data-title="银行卡列表" data-show-fullscreen="true"
 			data-buttons-class="primary" data-icons="bui.variable.icons">
@@ -102,9 +104,19 @@
 		</table>
 	</div>
 </div>
-
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <#common_cardBaseJs/>
 <#bindbankcard_bindBankCardJs/>
-
+<#comment>
+    页面层弹框
+</#comment>
+<script id="checkPassword" type="text/html">
+    <div class="form-group col">
+		<label for="accountType" class="div_label">园区卡密码</label> 
+			<input type="password" id="password" name="password">
+			<button id="pwdBtn" type="button" class="btn btn-primary">
+				请输入密码  
+		</button>
+	</div>
+</script>

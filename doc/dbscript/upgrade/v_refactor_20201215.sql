@@ -68,3 +68,7 @@ CREATE TABLE `card_bind_bank_card` (
   KEY `idx_bank_card_fundAccountId` (`fund_account_id`,`account_type`) USING BTREE,
   KEY `idx_bank_card_bankNo` (`bank_no`,`bank_type`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='园区账户绑定银行卡';
+
+
+ALTER TABLE `dili_account`.`account_user_account` 
+MODIFY COLUMN `usage_type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '账户用途-交易/缴费/理财/水电费预存,多个以逗号分隔' AFTER `types`;
