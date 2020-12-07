@@ -16,36 +16,28 @@
     <!--基本信息-->
     <div>
         <div class="breadcrumb">
-            基本信息
+            原业务单据
         </div>
         <div id="base-info" class="panel-heading" >
-            <div class="row row-cols-6" >
+            <div class="row row-cols-12" >
+                <div class="form-group col">
+                    <label class="info-column">客户编号</label>
+                    <input  type="text" class="form-control" value="${detail.accountInfo.customerCode!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">客户名称</label>
+                    <input  type="text" class="form-control" value="${detail.accountInfo.customerName!}" readonly/>
+                </div>
                 <div class="form-group col">
                     <label class="info-column">卡号</label>
                     <input  type="text" class="form-control" value="${detail.accountInfo.cardNo!}" readonly/>
                 </div>
                 <div class="form-group col">
-                    <label class="info-column">卡类别</label>
+                    <label class="info-column">卡片类型</label>
                     <input  type="text" class="form-control" value="${detail.accountInfo.cardTypeText!}" readonly/>
                 </div>
-                <div class="form-group col">
-                    <label class="info-column">卡片状态</label>
-                    <input  type="text" class="form-control" value="${detail.accountInfo.cardStateText!}" readonly/>
-                </div>
-                <div class="form-group col">
-                    <label class="info-column">账户状态</label>
-                    <input  type="text" class="form-control" value="${detail.accountInfo.disabledStateText!}" readonly/>
-                </div>
             </div>
-        </div>
-    </div>
-    <!--操作业务-->
-    <div>
-        <div class="breadcrumb">
-            操作业务
-        </div>
-        <div  id="op_biz" class="panel-heading">
-            <div class="row row-cols-6">
+            <div class="row row-cols-12">
                 <div class="form-group col">
                     <label class="info-column">业务类型</label>
                     <input  type="text" class="form-control" value="${detail.bizSerial.typeText!}" readonly/>
@@ -63,30 +55,30 @@
                     <input  type="text" class="form-control" value="${detail.bizSerial.operatorName!}" readonly/>
                 </div>
             </div>
-            <div class="row row-cols-6">
+            <div class="row row-cols-12">
                 <div class="form-group col">
                     <label class="info-column">操作方式</label>
                     <input  type="text" class="form-control" value="${detail.bizSerial.tradeChannelText!}" readonly/>
                 </div>
                 <div class="form-group col">
                     <label class="info-column">操作金额</label>
-                    <input  type="text" class="form-control" value="${detail.bizSerial.amount!}" readonly/>
+                    <input  type="text" class="form-control" value="${detail.bizSerial.amountText!}" readonly/>
                 </div>
                 <div class="form-group col">
                     <label class="info-column">期初金额</label>
-                    <input  type="text" class="form-control" value="${detail.bizSerial.startBalance!}" readonly/>
+                    <input  type="text" class="form-control" value="${detail.bizSerial.startBalanceText!}" readonly/>
                 </div>
                 <div class="form-group col">
                     <label class="info-column">期末金额</label>
-                    <input  type="text" class="form-control" value="${detail.bizSerial.endBalance!}" readonly/>
+                    <input  type="text" class="form-control" value="${detail.bizSerial.endBalanceText!}" readonly/>
                 </div>
             </div>
         </div>
     </div>
-    <!--费用明细-->
+    <!--手续费-->
     <div>
         <div class="breadcrumb">
-            费用明细
+            手续费
         </div>
         <div   class="panel-heading">
             <div class="row row-cols-12">
@@ -101,7 +93,7 @@
                         <% for(item in detail.feeSerials) { %>
                         <tr>
                             <td class="info-cell">${item.fundItemName!}</td>
-                            <td class="info-cell">${item.amount!}</td>
+                            <td class="info-cell">${item.amountText!}</td>
                             <td class="info-cell">${item.notes!}</td>
                         </tr>
                         <% } %>
@@ -115,22 +107,17 @@
         <form id="addForm">
             <div class="row row-cols-6">
                 <div class="form-group col">
-                    <label class="info-column">冲正金额<i class="red">*</i></label>
+                    <label class="info-column">客户实际操作金额<i class="red">*</i></label>
                     <input id="amount" name="amount" type="number"
                            class="form-control"
-                           oninput="limitNumWithSigned(this)"
                            val-formatter="yuanToFen"/>
                 </div>
                 <div class="form-group col">
-                    <label class="info-column">园区收益账户变动</label>
-                     <input id="fee" name="fee" type="text"
+                    <label class="info-column">实际手续费</label>
+                     <input id="fee" name="fee" type="number"
                             class="form-control"
-                            oninput="limitNumWithSigned(this)"
                             val-formatter="yuanToFen"/>
                 </div>
-            </div>
-            <div class="row row-cols-6">
-
             </div>
         </form>
     </div>
@@ -146,6 +133,7 @@
 
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
 <script>
     let reverseAddForm = "addForm";
@@ -154,11 +142,13 @@
         rules: {
             amount: {
                 required: true,
+                notEqual:0,
             },
         },
         messages: {
             amount: {
-                required: "请输入冲正金额",
+                required: "请输入金额",
+                notEqual:"请输入正确的金额",
             }
         },
         focusCleanup: true

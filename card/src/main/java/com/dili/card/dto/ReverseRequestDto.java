@@ -14,10 +14,10 @@ public class ReverseRequestDto extends CardRequestDto {
     /**对应业务号*/
     @NotBlank(groups = ConstantValidator.Insert.class, message = "业务号不能为空")
     private String bizSerialNo;
-    /**冲正金额（分），区分正负*/
+    /**实际操作金额（分），区分正负*/
     @NotNull(groups = ConstantValidator.Insert.class, message = "冲正金额不能为空")
     private Long amount;
-    /**需要补正的手续费，区分正负*/
+    /**实际手续费*/
     private Long fee;
 
     public String getBizSerialNo() {

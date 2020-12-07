@@ -1,6 +1,7 @@
 package com.dili.card.service.print;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
@@ -37,15 +38,8 @@ public class RechargePrintServiceImpl extends PrintServiceImpl {
 
     @Override
     public void createSpecial(PrintDto printDto, BusinessRecordDo recordDo, boolean reprint) {
-        long totalAmount = 0;
-        if (recordDo.getServiceCost() != null) {
-            //网银相当于退款，所以是加钱
-            totalAmount = (TradeChannel.E_BANK.getCode() == recordDo.getTradeChannel()) ?
-                    recordDo.getAmount() + recordDo.getServiceCost() :
-                    recordDo.getAmount() - recordDo.getServiceCost();
-        } else {
-            totalAmount = recordDo.getAmount();
-        }
+        long totalAmount = NumberUtil.sub(recordDo.getAmount(),recordDo.getServiceCost()).longValue();
+
         printDto.setTotalAmount(CurrencyUtils.cent2TenNoSymbol(totalAmount));
         String s = Convert.digitToChinese(Double.valueOf(printDto.getTotalAmount()));
         printDto.setTotalAmountWords(s);
@@ -73,4 +67,13 @@ public class RechargePrintServiceImpl extends PrintServiceImpl {
     public Integer support() {
         return OperateType.ACCOUNT_CHARGE.getCode();
     }
+
+    /* if (recordDo.getServiceCost() != null) {
+            //网银相当于退款，所以是加钱
+            totalAmount = (TradeChannel.E_BANK.getCode() == recordDo.getTradeChannel()) ?
+                    recordDo.getAmount() + recordDo.getServiceCost() :
+                    recordDo.getAmount() - recordDo.getServiceCost();
+        } else {
+            totalAmount = recordDo.getAmount();
+        }*/
 }

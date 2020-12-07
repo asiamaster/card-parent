@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 园区账户绑定银行卡
  * @author bob
  */
-public class BankBindingDo implements Serializable {
+public class BindBankCardDo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -44,7 +44,7 @@ public class BankBindingDo implements Serializable {
     /**
      * BankBindingEntity constructor
      */
-	public BankBindingDo() {
+	public BindBankCardDo() {
 		super();
 	}
 

@@ -18,12 +18,16 @@ public class ReverseRecordResponseDto extends BaseDto{
     private String serialNo;
     /**对应的业务流水号*/
     private String bizSerialNo;
+
     /**对应的业务类型，见枚举TradeType*/
     @TextDisplay(TradeTypeProvider.class)
     private Integer bizTradeType;
     /**冲正金额（区分正负），单位：分*/
     @TextDisplay(FenToYuanProvider.class)
     private Long amount;
+    /**园区收益变动金额（区分正负），单位：分*/
+    @TextDisplay(FenToYuanProvider.class)
+    private Long inAccChangeAmount;
     /**创建时间*/
     private LocalDateTime createTime;
 
@@ -33,6 +37,14 @@ public class ReverseRecordResponseDto extends BaseDto{
 
     public void setReverseId(Long reverseId) {
         this.reverseId = reverseId;
+    }
+
+    public Long getInAccChangeAmount() {
+        return inAccChangeAmount;
+    }
+
+    public void setInAccChangeAmount(Long inAccChangeAmount) {
+        this.inAccChangeAmount = inAccChangeAmount;
     }
 
     public String getSerialNo() {

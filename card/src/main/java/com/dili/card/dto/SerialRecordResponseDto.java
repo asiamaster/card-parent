@@ -1,8 +1,8 @@
-package com.dili.card.entity;
+package com.dili.card.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.dili.card.type.ActionType;
-import com.dili.card.util.CurrencyUtils;
+import com.dili.card.common.annotation.TextDisplay;
+import com.dili.card.common.provider.FenToYuanProvider;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * 业务端账户流水
  * @author bob
  */
-public class SerialRecordDo implements Serializable {
+public class SerialRecordResponseDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,10 +38,13 @@ public class SerialRecordDo implements Serializable {
     /** 资金动作-收入,支出 */
     private Integer action;
     /** 期初余额-分 */
+    @TextDisplay(FenToYuanProvider.class)
     private Long startBalance;
     /** 操作金额-分 */
+    @TextDisplay(FenToYuanProvider.class)
     private Long amount;
     /** 期末余额-分 */
+    @TextDisplay(FenToYuanProvider.class)
     private Long endBalance;
     /** 交易类型-充值、提现、消费、转账、其他 */
     private Integer tradeType;
@@ -69,406 +72,200 @@ public class SerialRecordDo implements Serializable {
     /** 商户ID */
     private Long firmId;
 
-    /**
-     * SerialRecordEntity constructor
-     */
-    public SerialRecordDo() {
+    public SerialRecordResponseDto() {
         super();
     }
 
-    /**
-     * setter for
-     */
     public void setId(Long id) {
         this.id = id;
     }
 
-    /**
-     * getter for
-     */
     public Long getId() {
         return id;
     }
 
-    /**
-     * setter for 流水号
-     */
     public void setSerialNo(String serialNo) {
         this.serialNo = serialNo;
     }
 
-    /**
-     * getter for 流水号
-     */
     public String getSerialNo() {
         return serialNo;
     }
 
-    /**
-     *
-     * @return
-     */
     public Integer getType() {
         return type;
     }
 
-    /**
-     *
-     * @param type
-     */
     public void setType(Integer type) {
         this.type = type;
     }
 
-    /**
-     * setter for 账户ID
-     */
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
 
-    /**
-     * getter for 账户ID
-     */
     public Long getAccountId() {
         return accountId;
     }
 
-    /**
-     * setter for 关联卡号
-     */
     public void setCardNo(String cardNo) {
         this.cardNo = cardNo;
     }
 
-    /**
-     * getter for 关联卡号
-     */
     public String getCardNo() {
         return cardNo;
     }
 
-    /**
-     * setter for 客户ID
-     */
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 
-    /**
-     * getter for 客户ID
-     */
     public Long getCustomerId() {
         return customerId;
     }
 
-    /**
-     * setter for 客户编号
-     */
     public void setCustomerNo(String customerNo) {
         this.customerNo = customerNo;
     }
 
-    /**
-     * getter for 客户编号
-     */
     public String getCustomerNo() {
         return customerNo;
     }
 
-    /**
-     * setter for 客户姓名
-     */
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
 
-    /**
-     * getter for 客户姓名
-     */
     public String getCustomerName() {
         return customerName;
     }
 
-    /**
-     * getter for 客户身份
-     * @return
-     */
     public String getCustomerType() {
         return customerType;
     }
 
-    /**
-     * setter for 客户身份
-     * @param customerType
-     */
     public void setCustomerType(String customerType) {
         this.customerType = customerType;
     }
 
-    /**
-     * setter for 资金动作-收入,支出
-     */
     public void setAction(Integer action) {
         this.action = action;
     }
 
-    /**
-     * getter for 资金动作-收入,支出
-     */
     public Integer getAction() {
         return action;
     }
 
-    /**
-     * setter for 期初余额-分
-     */
     public void setStartBalance(Long startBalance) {
         this.startBalance = startBalance;
     }
 
-    /**
-     * getter for 期初余额-分
-     */
     public Long getStartBalance() {
         return startBalance;
     }
 
-    /**
-     * setter for 操作金额-分
-     */
     public void setAmount(Long amount) {
         this.amount = amount;
     }
 
-    /**
-     * getter for 操作金额-分
-     */
     public Long getAmount() {
         return amount;
     }
 
-    /**
-     * setter for 期末余额-分
-     */
     public void setEndBalance(Long endBalance) {
         this.endBalance = endBalance;
     }
 
-    /**
-     * getter for 期末余额-分
-     */
     public Long getEndBalance() {
         return endBalance;
     }
 
-    /**
-     * setter for 交易类型-充值、提现、消费、转账、其他
-     */
     public void setTradeType(Integer tradeType) {
         this.tradeType = tradeType;
     }
 
-    /**
-     * getter for 交易类型-充值、提现、消费、转账、其他
-     */
     public Integer getTradeType() {
         return tradeType;
     }
 
-    /**
-     * setter for 交易渠道-现金、POS、网银
-     */
     public void setTradeChannel(Integer tradeChannel) {
         this.tradeChannel = tradeChannel;
     }
 
-    /**
-     * getter for 交易渠道-现金、POS、网银
-     */
     public Integer getTradeChannel() {
         return tradeChannel;
     }
 
-    /**
-     * setter for 交易流水号
-     */
     public void setTradeNo(String tradeNo) {
         this.tradeNo = tradeNo;
     }
 
-    /**
-     * getter for 交易流水号
-     */
     public String getTradeNo() {
         return tradeNo;
     }
 
-    /**
-     * setter for 资金项目
-     */
     public void setFundItem(Integer fundItem) {
         this.fundItem = fundItem;
     }
 
-    /**
-     * getter for 资金项目
-     */
     public Integer getFundItem() {
         return fundItem;
     }
 
-    /**
-     * setter for 资金项目名称
-     */
     public void setFundItemName(String fundItemName) {
         this.fundItemName = fundItemName;
     }
 
-    /**
-     * getter for 资金项目名称
-     */
     public String getFundItemName() {
         return fundItemName;
     }
 
-    /**
-     * setter for 操作员ID
-     */
     public void setOperatorId(Long operatorId) {
         this.operatorId = operatorId;
     }
 
-    /**
-     * getter for 操作员ID
-     */
     public Long getOperatorId() {
         return operatorId;
     }
 
-    /**
-     * setter for 操作员工号
-     */
     public void setOperatorNo(String operatorNo) {
         this.operatorNo = operatorNo;
     }
 
-    /**
-     * getter for 操作员工号
-     */
     public String getOperatorNo() {
         return operatorNo;
     }
 
-    /**
-     * setter for 操作员名称
-     */
     public void setOperatorName(String operatorName) {
         this.operatorName = operatorName;
     }
 
-    /**
-     * getter for 操作员名称
-     */
     public String getOperatorName() {
         return operatorName;
     }
 
-    /**
-     * setter for 操作时间-与支付系统保持一致
-     */
     public void setOperateTime(LocalDateTime operateTime) {
         this.operateTime = operateTime;
     }
 
-    /**
-     * getter for 操作时间-与支付系统保持一致
-     */
     public LocalDateTime getOperateTime() {
         return operateTime;
     }
 
-    /**
-     * setter for 备注
-     */
     public void setNotes(String notes) {
         this.notes = notes;
     }
 
-    /**
-     * getter for 备注
-     */
     public String getNotes() {
         return notes;
     }
 
-    /**
-     * setter for 商户ID
-     */
     public void setFirmId(Long firmId) {
         this.firmId = firmId;
     }
 
-    /**
-     * getter for 商户ID
-     */
     public Long getFirmId() {
         return firmId;
     }
 
-    /**
-     * SerialRecordEntity.toString()
-     */
-    @Override
-    public String toString() {
-        return "SerialRecordEntity{" +
-                "id='" + id + '\'' +
-                ", serialNo='" + serialNo + '\'' +
-                ", accountId='" + accountId + '\'' +
-                ", cardNo='" + cardNo + '\'' +
-                ", customerId='" + customerId + '\'' +
-                ", customerNo='" + customerNo + '\'' +
-                ", customerName='" + customerName + '\'' +
-                ", action='" + action + '\'' +
-                ", startBalance='" + startBalance + '\'' +
-                ", amount='" + amount + '\'' +
-                ", endBalance='" + endBalance + '\'' +
-                ", tradeType='" + tradeType + '\'' +
-                ", tradeChannel='" + tradeChannel + '\'' +
-                ", tradeNo='" + tradeNo + '\'' +
-                ", fundItem='" + fundItem + '\'' +
-                ", fundItemName='" + fundItemName + '\'' +
-                ", operatorId='" + operatorId + '\'' +
-                ", operatorNo='" + operatorNo + '\'' +
-                ", operatorName='" + operatorName + '\'' +
-                ", operateTime='" + operateTime + '\'' +
-                ", notes='" + notes + '\'' +
-                ", firmId='" + firmId + '\'' +
-                '}';
-    }
-
-    /**
-     * 获取期初金额展示
-     * @return
-     */
-    public String getStartBalanceView() {
-        return this.startBalance != null ? CurrencyUtils.toYuanWithStripTrailingZeros(this.startBalance) : null;
-    }
-
-    /**
-     * 获取发生金额展示
-     * @return
-     */
-    public String getAmountView() {
-        String symbol = Integer.valueOf(ActionType.INCOME.getCode()).equals(this.action) ? "+" : "-";
-        return this.amount != null ? symbol + CurrencyUtils.toYuanWithStripTrailingZeros(this.amount) : null;
-    }
-
-    /**
-     * 获取期末金额展示
-     * @return
-     */
-    public String getEndBalanceView() {
-        return this.endBalance != null ? CurrencyUtils.toYuanWithStripTrailingZeros(this.endBalance) : null;
-    }
 }

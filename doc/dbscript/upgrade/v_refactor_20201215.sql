@@ -3,9 +3,12 @@ CREATE TABLE `dili_card`.`card_reverse_record`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `reverse_id` bigint(20) NOT NULL COMMENT '冲正业务id',
     `serial_no` varchar(32) NOT NULL COMMENT '关联的冲正流水号',
+    `cycle_no` bigint(20) NOT NULL COMMENT '关联的冲正账务周期号(冗余)' ,
+    `biz_trade_channel` tinyint(1) NOT NULL COMMENT '对应的原业务交易渠道(冗余)' ,
     `biz_serial_no` varchar(32) NOT NULL COMMENT '对应的业务流水号',
     `biz_trade_type` tinyint(1) NOT NULL COMMENT '对应的业务类型，见枚举TradeType',
     `amount` bigint(20) NOT NULL COMMENT '冲正金额（区分正负），单位：分',
+    `in_acc_change_amount` bigint(20) NULL COMMENT '园区收益账户变动金额（区分正负），单位：分',
     `operator_id` bigint(20) NOT NULL COMMENT '操作员id',
     `operator_no` varchar(50) NOT NULL COMMENT '操作员工号',
     `operator_name` varchar(20) NOT NULL COMMENT '操作员名字',
@@ -20,7 +23,7 @@ CREATE TABLE `dili_card`.`card_reverse_record`  (
     INDEX `inx_serial_no`(`serial_no`) USING BTREE COMMENT '关联业务号'
 ) COMMENT = '冲正记录表';
 
- -- 银行存取款   
+ -- 银行存取款
  CREATE TABLE `card_bank_counter` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `action` tinyint(3) unsigned NOT NULL COMMENT '动作-存款 取款',
@@ -44,7 +47,7 @@ CREATE TABLE `dili_card`.`card_reverse_record`  (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='银行存取款';
 
 -- 园区卡账户绑定银行卡
-CREATE TABLE `card_bank_binding` (
+CREATE TABLE `card_bind_bank_card` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `account_type` tinyint(3) unsigned NOT NULL COMMENT '账户类型-个人账户 对公账户',
   `account_id` bigint(20) NOT NULL COMMENT '园区卡账号',

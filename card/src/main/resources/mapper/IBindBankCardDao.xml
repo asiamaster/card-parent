@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.dili.card.dao.IBankBindingDao">
+<mapper namespace="com.dili.card.dao.IBindBankCardDao">
 	
-	<select id="selectList" resultType="com.dili.card.entity.BankBindingDo">
+	<select id="selectList" resultType="com.dili.card.dto.BindBankCardDto">
 		SELECT
 			`id`, 
 			`account_type`, 
@@ -21,13 +21,15 @@
 			`modified_time`, 
 			`description`
 		FROM
-			card_bank_binding
+			card_bind_bank_card
+		WHERE
+			account_id = ${accountId}
 		ORDER BY
-			id DESC
+			created_time DESC
 	</select>
 	
 	<insert id="save">
-		INSERT INTO card_bank_binding (
+		INSERT INTO card_bind_bank_card (
 			`account_type`, 
 			`account_id`, 
 			`fund_account_id`, 
@@ -61,7 +63,7 @@
 		)
 	</insert>
 	
-	<select id="getById" resultType="com.dili.card.entity.BankBindingDo">
+	<select id="getById" resultType="com.dili.card.entity.BindBankCardDo">
 		SELECT
 			`id`, 
 			`account_type`, 
@@ -79,13 +81,13 @@
 			`modified_time`, 
 			`description`
 		FROM
-			card_bank_binding
+			card_bind_bank_card
 		WHERE
 			id = #{id}
 	</select>
 	
 	<update id="update">
-		UPDATE card_bank_binding
+		UPDATE card_bind_bank_card
 	 	<set>
 			<if test="accountType != null">`account_type` = #{accountType}, </if>
 			<if test="accountId != null">`account_id` = #{accountId}, </if>
@@ -109,7 +111,7 @@
 	<delete id="batchRemove">
 		DELETE
 		FROM
-			card_bank_binding
+			card_bind_bank_card
 		WHERE
 			id IN
 		<foreach item="id" collection="array" open="(" separator="," close=")">

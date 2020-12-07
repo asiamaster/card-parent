@@ -118,7 +118,6 @@ public class AccountQueryManagementController implements IControllerHandler {
      */
     @GetMapping("/simpleInfo.action")
     @ResponseBody
-    @Deprecated
     public BaseOutput<AccountSimpleResponseDto> getInfoByCardNo(String cardNo) {
         LOGGER.info("simpleInfo.action请求参数:{}",cardNo);
         AssertUtils.notEmpty(cardNo, "卡号不能为空");
