@@ -66,7 +66,7 @@ public class CardManageController implements IControllerHandler {
 	@PostMapping("/returnCard.action")
 	public BaseOutput<String> returnCard(
 			@RequestBody @Validated(value = { CardValidator.Generic.class }) CardRequestDto cardRequest) {
-		LOGGER.info("退卡*****{}", JSONObject.toJSONString(cardRequest,JsonExcludeFilter.FILTER));
+		LOGGER.info("退卡*****{}", JSONObject.toJSONString(cardRequest,JsonExcludeFilter.PWD_FILTER));
 		// 操作日志
 		businessLogService.saveLog(OperateType.REFUND_CARD, getUserTicket(), "业务卡号:" + cardRequest.getCardNo());
 		buildOperatorInfo(cardRequest);
@@ -95,7 +95,7 @@ public class CardManageController implements IControllerHandler {
 	 */
 	@PostMapping("/unLockCard.action")
 	public BaseOutput<?> unLockCard(@RequestBody CardRequestDto cardParam) {
-		LOGGER.info("解锁卡片*****{}", JSONObject.toJSONString(cardParam,JsonExcludeFilter.FILTER));
+		LOGGER.info("解锁卡片*****{}", JSONObject.toJSONString(cardParam,JsonExcludeFilter.PWD_FILTER));
 		validateCommonParam(cardParam);
 		if (StrUtil.isBlank(cardParam.getLoginPwd())) {
 			return BaseOutput.failure("密码为空");
@@ -113,7 +113,7 @@ public class CardManageController implements IControllerHandler {
 	 */
 	@PostMapping("/changeCard.action")
 	public BaseOutput<String> changeCard(@RequestBody CardRequestDto cardParam) {
-		LOGGER.info("换卡*****{}", JSONObject.toJSONString(cardParam,JsonExcludeFilter.FILTER));
+		LOGGER.info("换卡*****{}", JSONObject.toJSONString(cardParam,JsonExcludeFilter.PWD_FILTER));
 		// AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
 		AssertUtils.notEmpty(cardParam.getNewCardNo(), "新开卡号不能为空");
 		AssertUtils.notNull(cardParam.getServiceFee(), "工本费不能为空");
@@ -143,7 +143,7 @@ public class CardManageController implements IControllerHandler {
 	 */
 	@PostMapping("/reportLossCard.action")
 	public BaseOutput<String> reportLoss(@RequestBody CardRequestDto cardParam) {
-		LOGGER.info("挂失请求参数:{}", JSON.toJSONString(cardParam,JsonExcludeFilter.FILTER));
+		LOGGER.info("挂失请求参数:{}", JSON.toJSONString(cardParam,JsonExcludeFilter.PWD_FILTER));
 		AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
 		businessLogService.saveLog(OperateType.LOSS_CARD, getUserTicket(), "业务卡号:" + cardParam.getCardNo());
 		this.validateCommonParam(cardParam);
