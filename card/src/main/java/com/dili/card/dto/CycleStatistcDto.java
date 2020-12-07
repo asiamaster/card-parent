@@ -9,6 +9,7 @@ public class CycleStatistcDto {
 	private Long amount;
 	private Integer type;
 	private Integer tradeChannel;
+	private Long cycleNo;
 
 	public Integer getTimes() {
 		return times;
@@ -40,6 +41,14 @@ public class CycleStatistcDto {
 
 	public void setTradeChannel(Integer tradeChannel) {
 		this.tradeChannel = tradeChannel;
+	}
+
+	public Long getCycleNo() {
+		return cycleNo;
+	}
+
+	public void setCycleNo(Long cycleNo) {
+		this.cycleNo = cycleNo;
 	}
 
 }

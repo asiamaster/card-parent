@@ -132,7 +132,7 @@ public class FundController implements IControllerHandler {
     @ResponseBody
     @ForbidDuplicateCommit
     public BaseOutput<String> withdraw(@RequestBody FundRequestDto fundRequestDto) {
-        LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto, JsonExcludeFilter.FILTER));
+        LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto, JsonExcludeFilter.PWD_FILTER));
         validateCommonParam(fundRequestDto);
         // 操作日志
         businessLogService.saveLog(OperateType.ACCOUNT_WITHDRAW, getUserTicket(),
@@ -257,7 +257,7 @@ public class FundController implements IControllerHandler {
     @ForbidDuplicateCommit
     public BaseOutput<String> recharge(
             @RequestBody @Validated({FundValidator.Trade.class}) FundRequestDto requestDto) {
-        LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto, JsonExcludeFilter.FILTER));
+        LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto, JsonExcludeFilter.PWD_FILTER));
         this.validateCommonParam(requestDto);
         businessLogService.saveLog(OperateType.ACCOUNT_CHARGE, getUserTicket(),
                 "业务卡号:" + requestDto.getCardNo(),
@@ -285,6 +285,5 @@ public class FundController implements IControllerHandler {
                 SystemSubjectType.CARD_RECHARGE_POS_FEE);
         return BaseOutput.successData(CurrencyUtils.yuan2Cent(ruleFee));
     }
-
 
 }

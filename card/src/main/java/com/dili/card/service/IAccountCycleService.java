@@ -117,6 +117,11 @@ public interface IAccountCycleService {
 	 * 构建账务周期包装实体实体
 	 */
 	AccountCycleDto buildAccountCycleWrapperDetail(AccountCycleDo cycle, boolean detail);
+	
+	/**
+	 * 构建账务周期包装实体实体
+	 */
+	List<AccountCycleDto> buildAccountCycleWrapperDetailList(List<AccountCycleDo> cycles);
 
 	/**
 	 * 构建账务周期包装实体实体
