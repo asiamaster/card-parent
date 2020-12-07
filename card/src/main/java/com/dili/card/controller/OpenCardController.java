@@ -149,7 +149,7 @@ public class OpenCardController implements IControllerHandler {
 	@PostMapping("openMasterCard.action")
 	@ResponseBody
 	public BaseOutput<?> openMasterCard(@RequestBody OpenCardDto openCardInfo) {
-		log.info("开卡主卡信息*****{}", JSONObject.toJSONString(openCardInfo), JsonExcludeFilter.PWD_FILTER);
+		log.info("开卡主卡信息*****{}", JSONObject.toJSONString(openCardInfo, JsonExcludeFilter.PWD_FILTER));
 		// 主要参数校验
 		checkMasterParam(openCardInfo);
 		// 设置操作人信息
