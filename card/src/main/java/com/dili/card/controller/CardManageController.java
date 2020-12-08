@@ -30,7 +30,7 @@ import javax.annotation.Resource;
 
 /**
  * 卡片管理
- * 
+ *
  * @author ：WangBo
  * @time ：2020年4月28日下午4:04:46
  */
@@ -66,7 +66,7 @@ public class CardManageController implements IControllerHandler {
 	@PostMapping("/returnCard.action")
 	public BaseOutput<String> returnCard(
 			@RequestBody @Validated(value = { CardValidator.Generic.class }) CardRequestDto cardRequest) {
-		LOGGER.info("退卡*****{}", JSONObject.toJSONString(cardRequest,JsonExcludeFilter.FILTER));
+		LOGGER.info("退卡*****{}", JSONObject.toJSONString(cardRequest,JsonExcludeFilter.PWD_FILTER));
 		// 操作日志
 		businessLogService.saveLog(OperateType.REFUND_CARD, getUserTicket(), "业务卡号:" + cardRequest.getCardNo());
 		buildOperatorInfo(cardRequest);
@@ -95,7 +95,7 @@ public class CardManageController implements IControllerHandler {
 	 */
 	@PostMapping("/unLockCard.action")
 	public BaseOutput<?> unLockCard(@RequestBody CardRequestDto cardParam) {
-		LOGGER.info("解锁卡片*****{}", JSONObject.toJSONString(cardParam,JsonExcludeFilter.FILTER));
+		LOGGER.info("解锁卡片*****{}", JSONObject.toJSONString(cardParam,JsonExcludeFilter.PWD_FILTER));
 		validateCommonParam(cardParam);
 		if (StrUtil.isBlank(cardParam.getLoginPwd())) {
 			return BaseOutput.failure("密码为空");
@@ -107,13 +107,13 @@ public class CardManageController implements IControllerHandler {
 
 	/**
 	 * 换卡(C)
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/14
 	 */
 	@PostMapping("/changeCard.action")
 	public BaseOutput<String> changeCard(@RequestBody CardRequestDto cardParam) {
-		LOGGER.info("换卡*****{}", JSONObject.toJSONString(cardParam,JsonExcludeFilter.FILTER));
+		LOGGER.info("换卡*****{}", JSONObject.toJSONString(cardParam,JsonExcludeFilter.PWD_FILTER));
 		// AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
 		AssertUtils.notEmpty(cardParam.getNewCardNo(), "新开卡号不能为空");
 		AssertUtils.notNull(cardParam.getServiceFee(), "工本费不能为空");
@@ -137,13 +137,13 @@ public class CardManageController implements IControllerHandler {
 
 	/**
 	 * 挂失(C)
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/14
 	 */
 	@PostMapping("/reportLossCard.action")
 	public BaseOutput<String> reportLoss(@RequestBody CardRequestDto cardParam) {
-		LOGGER.info("挂失请求参数:{}", JSON.toJSONString(cardParam,JsonExcludeFilter.FILTER));
+		LOGGER.info("挂失请求参数:{}", JSON.toJSONString(cardParam,JsonExcludeFilter.PWD_FILTER));
 		AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
 		businessLogService.saveLog(OperateType.LOSS_CARD, getUserTicket(), "业务卡号:" + cardParam.getCardNo());
 		this.validateCommonParam(cardParam);
@@ -153,7 +153,6 @@ public class CardManageController implements IControllerHandler {
 
 	/**
 	 * 解挂操作的时候查询(C端)
-	 * 
 	 * @author miaoguoxin
 	 * @date 2020/8/6
 	 */
@@ -164,5 +163,19 @@ public class CardManageController implements IControllerHandler {
 		UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
 		query.setCardNo(cardNo);
 		return BaseOutput.successData(accountQueryService.getForUnLostCard(query));
+	}
+
+	/**
+	 * 解锁操作的时候查询(C端)
+	 * @author miaoguoxin
+	 * @date 2020/8/6
+	 */
+	@GetMapping("getByCardForUnLock.action")
+	public BaseOutput<UserAccountCardResponseDto> getByCardNoForUnLock(String cardNo) {
+		LOGGER.info("解锁查询*****{}", cardNo);
+		AssertUtils.notEmpty(cardNo, "卡号不能为空");
+		UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+		query.setCardNo(cardNo);
+		return BaseOutput.successData(accountQueryService.getForUnLockCard(query));
 	}
 }

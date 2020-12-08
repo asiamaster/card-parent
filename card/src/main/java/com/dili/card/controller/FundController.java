@@ -132,7 +132,7 @@ public class FundController implements IControllerHandler {
     @ResponseBody
     @ForbidDuplicateCommit
     public BaseOutput<String> withdraw(@RequestBody FundRequestDto fundRequestDto) {
-        LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto, JsonExcludeFilter.FILTER));
+        LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto, JsonExcludeFilter.PWD_FILTER));
         validateCommonParam(fundRequestDto);
         // 操作日志
         businessLogService.saveLog(OperateType.ACCOUNT_WITHDRAW, getUserTicket(),
@@ -191,7 +191,7 @@ public class FundController implements IControllerHandler {
      */
     @PostMapping("unfrozenRecord.action")
     @ResponseBody
-    public Map<String, Object> unfrozenRecord(FundFrozenRecordParamDto queryParam) {
+    public PageOutput<List<FreezeFundRecordDto>> unfrozenRecord(FundFrozenRecordParamDto queryParam) {
         LOGGER.info("查询未解冻记录*****{}", JSONObject.toJSONString(queryParam));
         AssertUtils.notNull(queryParam.getFundAccountId(), "参数校验失败：缺少资金账户ID!");
         FreezeFundRecordParam payServiceParam = new FreezeFundRecordParam();
@@ -204,7 +204,7 @@ public class FundController implements IControllerHandler {
         DateTime startDate = DateUtil.offset(new Date(), DateField.YEAR, -1);
         payServiceParam.setStartTime(DateUtil.beginOfDay(startDate).toString());
         payServiceParam.setEndTime(DateUtil.endOfDay(new Date()).toString());
-        return successPage(fundService.frozenRecord(payServiceParam));
+        return fundService.frozenRecord(payServiceParam);
     }
 
     /**
@@ -257,7 +257,7 @@ public class FundController implements IControllerHandler {
     @ForbidDuplicateCommit
     public BaseOutput<String> recharge(
             @RequestBody @Validated({FundValidator.Trade.class}) FundRequestDto requestDto) {
-        LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto, JsonExcludeFilter.FILTER));
+        LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto, JsonExcludeFilter.PWD_FILTER));
         this.validateCommonParam(requestDto);
         businessLogService.saveLog(OperateType.ACCOUNT_CHARGE, getUserTicket(),
                 "业务卡号:" + requestDto.getCardNo(),
@@ -285,6 +285,5 @@ public class FundController implements IControllerHandler {
                 SystemSubjectType.CARD_RECHARGE_POS_FEE);
         return BaseOutput.successData(CurrencyUtils.yuan2Cent(ruleFee));
     }
-
 
 }

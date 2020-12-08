@@ -204,6 +204,18 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     }
 
     @Override
+    public UserAccountCardResponseDto getForUnLockCard(UserAccountSingleQueryDto query) {
+        UserAccountCardResponseDto single = accountQueryRpcResolver.findSingleWithoutValidate(query);
+        if (CardStatus.LOCKED.getCode() != single.getCardState()) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡不是锁定状态，不能进行此操作");
+        }
+        if (DisableState.DISABLED.getCode().equals(single.getDisabledState())) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, String.format("该账户为%s状态，不能进行此操作", DisableState.DISABLED.getName()));
+        }
+        return single;
+    }
+
+    @Override
     public List<AccountWithAssociationResponseDto> getMasterAssociationList(Long customerId) {
         UserAccountCardQuery masterParams = new UserAccountCardQuery();
         masterParams.setCardType(CardType.MASTER.getCode());

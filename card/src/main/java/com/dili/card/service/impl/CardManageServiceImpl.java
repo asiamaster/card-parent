@@ -134,10 +134,10 @@ public class CardManageServiceImpl implements ICardManageService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void unLockCard(CardRequestDto cardParam) {
-        UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam);
-        if (!Integer.valueOf(CardStatus.LOCKED.getCode()).equals(accountCard.getCardState())) {
-            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行解锁", CardStatus.getName(accountCard.getCardState())));
-        }
+        UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+        query.setCardNo(cardParam.getCardNo());
+        query.setAccountId(cardParam.getAccountId());
+        UserAccountCardResponseDto accountCard = accountQueryService.getForUnLockCard(query);
         BusinessRecordDo businessRecordDo = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
             temp.setType(OperateType.LIFT_LOCKED.getCode());
         });

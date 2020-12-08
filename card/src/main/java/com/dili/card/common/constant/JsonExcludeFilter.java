@@ -9,9 +9,14 @@ import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
  * @time ：2020年11月10日上午11:22:00
  */
 public class JsonExcludeFilter {
-	/** json时需要排除的字段 */
-	private static String[] FIELDS= {"tradePwd","loginPwd","parentLoginPwd","secondLoginPwd"};
 	
 	/** 排除密码类型字段 */
-	public static final SimplePropertyPreFilter FILTER = new SimplePropertyPreFilter(FIELDS);
+	public static final SimplePropertyPreFilter PWD_FILTER = new SimplePropertyPreFilter();
+	static {
+		/** 排除密码类型字段 */
+		PWD_FILTER.getExcludes().add("tradePwd");
+		PWD_FILTER.getExcludes().add("loginPwd");
+		PWD_FILTER.getExcludes().add("parentLoginPwd");
+		PWD_FILTER.getExcludes().add("secondLoginPwd");
+	}
 }
