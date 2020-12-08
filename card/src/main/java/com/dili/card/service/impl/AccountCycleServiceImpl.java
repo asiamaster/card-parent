@@ -521,6 +521,8 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			accountCyclePageListDto.setInOutBankAmount(accountCycleDto.getAccountCycleDetailDto().getInOutBankAmount());
 			accountCyclePageListDto.setDeliverAmount(accountCycleDto.getAccountCycleDetailDto().getDeliverAmount());
 			accountCyclePageListDto.setUnDeliverAmount(accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount());
+			accountCyclePageListDto.setBankInAmount(accountCycleDto.getAccountCycleDetailDto().getBankInAmount());
+			accountCyclePageListDto.setBankOutAmount(accountCycleDto.getAccountCycleDetailDto().getBankOutAmount());
 			accountCyclePageListDto
 					.setLastDeliverAmount(accountCycleDto.getAccountCycleDetailDto().getLastDeliverAmount());
 			accountCyclePageListDtos.add(accountCyclePageListDto);

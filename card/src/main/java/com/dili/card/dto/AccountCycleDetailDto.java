@@ -26,7 +26,7 @@ public class AccountCycleDetailDto {
 	/** 现金充值金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long depoCashAmount = 0L;
-	/** 现金充值冲正后金额-分 */
+	/** 现金充值冲正前金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long beforeReverseDepoCashAmount = 0L;
 	/** POS充值次数 */
@@ -34,7 +34,7 @@ public class AccountCycleDetailDto {
 	/** POS充值金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long depoPosAmount = 0L;
-	/** POS充值冲正后金额-分 */
+	/** POS充值冲正前金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long beforeReverseDepoPosAmount = 0L;
 	/** 网银充值次数 */
@@ -42,7 +42,7 @@ public class AccountCycleDetailDto {
 	/** 网银充值金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long bankInAmount = 0L;
-	/** 网银充值冲正后金额-分 */
+	/** 网银充值冲正前金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long beforeReverseBankInAmount = 0L;
 	/** 现金提现次数 */
@@ -50,7 +50,7 @@ public class AccountCycleDetailDto {
 	/** 现金提现金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long drawCashAmount = 0L;
-	/** 现金提现冲正后金额-分 */
+	/** 现金提现冲正前金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long beforeReverseDrawCashAmount = 0L;
 	/** 网银提现次数 */
@@ -58,7 +58,7 @@ public class AccountCycleDetailDto {
 	/** 网银提现金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long bankOutAmount = 0L;
-	/** 网银提现冲正后金额-分 */
+	/** 网银提现冲正前金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long beforeReverseBankOutAmount = 0L;
 	/** 现金收益金额-分 */
