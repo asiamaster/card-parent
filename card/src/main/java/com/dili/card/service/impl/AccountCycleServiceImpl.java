@@ -83,7 +83,9 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		this.validateCycleFlatedState(cycle);
 
 		// 账务周期详情统计信息
-		AccountCycleDetailDto  acd = this.buildCycleDetail(cycle.getCycleNo(), accountCycleDetailDao.statisticCycleBussinessRecord(Arrays.asList(cycle.getCycleNo())), accountCycleDetailDao.statisticCycleBussinessRecord(Arrays.asList(cycle.getCycleNo())));
+		AccountCycleDetailDto acd = this.buildCycleDetail(cycle.getCycleNo(),
+				accountCycleDetailDao.statisticCycleBussinessRecord(Arrays.asList(cycle.getCycleNo())),
+				accountCycleDetailDao.statisticReverseByCycleNo(Arrays.asList(cycle.getCycleNo())));
 		AccountCycleDetailDo accountCycleDetail = this.buildAccountCycleDetailDo(acd);
 		
 		accountCycleDetail.setFirmId(cycle.getFirmId());
@@ -268,7 +270,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		List<Long> cycleNos = accountCycleDtos.stream().map( o -> o.getCycleNo()).collect(Collectors.toList());
 		
 		Map<Long, List<CycleStatistcDto>> cycleStatistcs = findCycleStatistcDtoMapByCycleNos(accountCycleDetailDao.statisticCycleBussinessRecord(cycleNos));
-		Map<Long, List<CycleStatistcDto>> cycleReversedStatistcs = findCycleStatistcDtoMapByCycleNos(accountCycleDetailDao.statisticCycleBussinessRecord(cycleNos));
+		Map<Long, List<CycleStatistcDto>> cycleReversedStatistcs = findCycleStatistcDtoMapByCycleNos(accountCycleDetailDao.statisticReverseByCycleNo(cycleNos));
 		
 		for (AccountCycleDto accountCycleDto : accountCycleDtos) {
 			
