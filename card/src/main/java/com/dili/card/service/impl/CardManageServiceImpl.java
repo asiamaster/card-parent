@@ -142,7 +142,7 @@ public class CardManageServiceImpl implements ICardManageService {
             temp.setType(OperateType.LIFT_LOCKED.getCode());
         });
         serialService.saveBusinessRecord(businessRecordDo);
-        BaseOutput<?> baseOutput = cardManageRpc.unLostCard(cardParam);
+        BaseOutput<?> baseOutput = cardManageRpc.unLockCard(cardParam);
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         }
