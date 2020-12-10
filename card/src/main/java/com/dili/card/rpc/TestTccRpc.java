@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 
 @FeignClient(name = "account-service", contextId = "testRpc",
-        path = "api/tcc", url = "http://127.0.0.1:8186")
+        path = "api/tcc", url = "${accountService.url:}")
 public interface TestTccRpc {
 
     /**
@@ -21,7 +21,6 @@ public interface TestTccRpc {
     * @author miaoguoxin
     * @date 2020/7/15
     */
-    @Tcc
     @PostMapping("testTry")
     BaseOutput<Long> testTry(UserCardDo userCardDo);
 
@@ -30,7 +29,6 @@ public interface TestTccRpc {
     * @author miaoguoxin
     * @date 2020/7/15
     */
-    @Tcc
     @PostMapping("testConfirm")
     BaseOutput<Long> testConfirm(UserCardDo userCardDo);
 
@@ -39,7 +37,6 @@ public interface TestTccRpc {
     * @author miaoguoxin
     * @date 2020/7/15
     */
-    @Tcc
     @PostMapping("testCancel")
     BaseOutput<String> testCancel(UserCardDo userCardDo);
 }
