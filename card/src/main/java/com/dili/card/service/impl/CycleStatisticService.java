@@ -38,7 +38,7 @@ public class CycleStatisticService implements ICycleStatisticService {
 	private IUserCashService userCashService;
 
 	@Override
-	public List<AccountCycleDto> buildAccountCycleWrapperDetailList(List<AccountCycleDo> cycles, boolean detail) {
+	public List<AccountCycleDto> statisticList(List<AccountCycleDo> cycles, boolean detail) {
 		// 构建账务周期实体
 		List<AccountCycleDto> accountCycleDtos = buildAccountCycleDtoList(cycles);
 		List<Long> cycleNos = accountCycleDtos.stream().map(o -> o.getCycleNo()).collect(Collectors.toList());
