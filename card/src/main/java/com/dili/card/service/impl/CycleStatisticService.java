@@ -178,7 +178,7 @@ public class CycleStatisticService implements ICycleStatisticService {
 	/**
 	 * 正向操作数据和冲正数据进行合并
 	 */
-	private void mergeAccountCycleDetail(AccountCycleDetailDto masterCycleDetail,
+	protected void mergeAccountCycleDetail(AccountCycleDetailDto masterCycleDetail,
 			AccountCycleDetailDto accountCycleReverseDetail) {
 		masterCycleDetail.setBeforeReverseBankInAmount(masterCycleDetail.getBankInAmount());
 		masterCycleDetail.setBeforeReverseBankOutAmount(masterCycleDetail.getBankOutAmount());
