@@ -177,7 +177,7 @@ public class CardManageServiceImpl implements ICardManageService {
         AccountValidator.validateMatchAccount(requestDto, userAccount);
         //this.validateCanChange(requestDto, userAccount);
 
-        cardStorageService.checkAndGetByCardNo(requestDto.getNewCardNo(), userAccount.getCardType(), userAccount.getCustomerMarketType());
+        cardStorageService.checkAndGetByCardNo(requestDto.getNewCardNo(), userAccount.getCardType(),  userAccount.getCustomerId());
 
         Long serviceFee = requestDto.getServiceFee();
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {

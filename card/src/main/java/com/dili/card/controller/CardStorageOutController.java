@@ -20,6 +20,7 @@ import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.CardStorageOutQueryDto;
 import com.dili.card.dto.CardStorageOutRequestDto;
+import com.dili.card.dto.CheckCardDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.ICardStorageService;
 import com.dili.card.type.CardStorageState;
@@ -118,10 +119,10 @@ public class CardStorageOutController implements IControllerHandler {
      */
     @GetMapping("checkCard.action")
     @ResponseBody
-	public BaseOutput<CardStorageDto> checkCard(String cardNo, String customerType, Integer cardType) {
-        log.info("校验卡状态 *****{}={}={}", cardNo, customerType, cardType);
-        AssertUtils.notEmpty(cardNo, "卡号不能为空");
-		CardStorageDto cardStorage = cardStorageService.checkAndGetByCardNo(cardNo, cardType, customerType);
+	public BaseOutput<CardStorageDto> checkCard(CheckCardDto param) {
+        log.info("校验卡状态 *****{}={}={}", JSONObject.toJSONString(param));
+        AssertUtils.notEmpty(param.getCardNo(), "卡号不能为空");
+		CardStorageDto cardStorage = cardStorageService.checkAndGetByCardNo(param.getCardNo(), param.getCardType(), param.getCustomerId());
         return BaseOutput.successData(cardStorage);
     }
 

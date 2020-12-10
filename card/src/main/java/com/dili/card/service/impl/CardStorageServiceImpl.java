@@ -24,12 +24,16 @@ import com.dili.card.entity.CardStorageOut;
 import com.dili.card.entity.StorageOutDetailDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardStorageRpc;
+import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.ICardStorageService;
+import com.dili.card.service.ICustomerService;
 import com.dili.card.type.CardStorageState;
 import com.dili.card.type.CardType;
 import com.dili.card.type.CustomerType;
 import com.dili.card.util.PageUtils;
+import com.dili.customer.sdk.domain.CharacterType;
+import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -53,6 +57,10 @@ public class CardStorageServiceImpl implements ICardStorageService {
 	private IStorageOutDetailDao storageOutDetailDao;
 	@Autowired
 	private CardStorageRpc cardStorageRpc;
+	@Autowired
+	private CustomerRpcResolver customerRpcResolver;
+	@Autowired
+	private ICustomerService customerService;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -132,9 +140,9 @@ public class CardStorageServiceImpl implements ICardStorageService {
 	}
 
 	@Override
-	public CardStorageDto checkAndGetByCardNo(String cardNo, Integer cardType, String customerType) {
+	public CardStorageDto checkAndGetByCardNo(String cardNo, Integer cardType, Long customerId) {
 		CardStorageDto cardStorage = getCardStorageByCardNo(cardNo);
-		if(cardStorage == null) {
+		if (cardStorage == null) {
 			log.warn("未找到对应的卡数据cardNo[{}]", cardNo);
 			throw new CardAppBizException("未找到对应的卡数据");
 		}
@@ -144,11 +152,13 @@ public class CardStorageServiceImpl implements ICardStorageService {
 		if (cardStorage.getType().intValue() != cardType) {
 			throw new CardAppBizException("请使用" + CardType.getName(cardType) + "办理当前业务!");
 		}
-		// 副卡入库时没有卡面信息,不校验
-		if (cardFaceIsMust() && null != cardStorage.getCardFace() && !CardType.isSlave(cardStorage.getType())) {
-			if (!CustomerType.checkCardFace(customerType, cardStorage.getCardFace())) {
-				log.warn("卡面信息和客户身份类型不符cardNo[{}]customerType[{}]cardFace[{}]", cardNo, customerType,
-						cardStorage.getCardFace());
+		// 没有卡面信息,不校验客户身份类型与卡面是否匹配
+		if (null != cardStorage.getCardFace() && !CardType.isSlave(cardStorage.getType())) {
+			CustomerExtendDto customer = customerRpcResolver.findCustomerById(customerId, cardStorage.getFirmId());
+			List<CharacterType> characterTypeList = customer.getCharacterTypeList();
+			if (!CustomerType.checkCardFace(characterTypeList, cardStorage.getCardFace())) {
+				log.warn("卡面信息和客户身份类型不符cardNo[{}]customerType[{}]cardFace[{}]", cardNo,
+						customerService.getSubTypes(characterTypeList), cardStorage.getCardFace());
 				throw new CardAppBizException("卡面信息和客户身份类型不符");
 			}
 		}
@@ -158,13 +168,14 @@ public class CardStorageServiceImpl implements ICardStorageService {
 	@Override
 	public boolean cardFaceIsMust() {
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-        if(userTicket == null) {
-        	log.warn("卡面判断,无法获取登录用户信息,默认为非必须!");
-        	return false;
-        }
-		if(MarketCode.SG.equalsIgnoreCase(userTicket.getFirmCode())) {
+		if (userTicket == null) {
+			log.warn("卡面判断,无法获取登录用户信息,默认为非必须!");
+			return false;
+		}
+		if (MarketCode.SG.equalsIgnoreCase(userTicket.getFirmCode())) {
 			return true;
 		}
 		return false;
 	}
+
 }

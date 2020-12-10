@@ -1,7 +1,9 @@
 package com.dili.card.dto;
 
+import java.util.List;
+
 import com.dili.card.type.CardType;
-import com.dili.card.type.CustomerType;
+import com.dili.customer.sdk.domain.CharacterType;
 
 /**
  * @description： 开卡所需要的用户信息
@@ -16,8 +18,12 @@ public class OpenCardDto extends BaseSerialLogDto {
 	private Long customerId;
 	/** 客户编号 */
 	private String customerCode;
-	/** 客户类型买卖司机等 {@link CustomerType} */
-	private String customerType;
+//	/** 客户类型买卖司机等 {@link CustomerType} */
+//	private String customerType;
+	/** 客户角色 */
+	private List<CharacterType> customerCharacterTypeList;
+	/** 客户角色 */
+	private String customerCharacterType;
 	/** 个人、对公 */
 	private String customerOrganizationType;
 	/** 证件类型 */
@@ -160,14 +166,6 @@ public class OpenCardDto extends BaseSerialLogDto {
 		this.customerCode = customerCode;
 	}
 
-	public String getCustomerType() {
-		return customerType;
-	}
-
-	public void setCustomerType(String customerType) {
-		this.customerType = customerType;
-	}
-
 	public String getCustomerOrganizationType() {
 		return customerOrganizationType;
 	}
@@ -230,6 +228,22 @@ public class OpenCardDto extends BaseSerialLogDto {
 
 	public void setHoldName(String holdName) {
 		this.holdName = holdName;
+	}
+
+	public String getCustomerCharacterType() {
+		return customerCharacterType;
+	}
+
+	public void setCustomerCharacterType(String customerCharacterType) {
+		this.customerCharacterType = customerCharacterType;
+	}
+
+	public List<CharacterType> getCustomerCharacterTypeList() {
+		return customerCharacterTypeList;
+	}
+
+	public void setCustomerCharacterTypeList(List<CharacterType> customerCharacterTypeList) {
+		this.customerCharacterTypeList = customerCharacterTypeList;
 	}
 
 }

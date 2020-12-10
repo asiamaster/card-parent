@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.dili.customer.sdk.domain.CharacterType;
+
 /**
  * @description： 客户类型 <br>
  * （与客户系统保持一致，在客户系统中可通过字典表进行配置）
@@ -47,12 +49,17 @@ public enum CustomerType {
 	/**
 	 * 校验客户类型和卡面是否一致，对应关系固定
 	 */
-	public static boolean checkCardFace(String customerTypeCode, String cardFace) {
-		CustomerType type = getType(customerTypeCode);
-		if (type == null) {
-			return false;
+	public static boolean checkCardFace(List<CharacterType> characterTypeList, String cardFace) {
+		for (CharacterType characterType : characterTypeList) {
+			CustomerType type = getType(characterType.getSubType());
+			if (type == null) {
+				continue;
+			}
+			if (cardFace.equals(type.getCardFaceType().getCode())) {
+				return true;
+			}
 		}
-		return cardFace.equals(type.getCardFaceType().getCode());
+		return false;
 	}
 
 	public static CustomerType getType(String customerTypeCode) {

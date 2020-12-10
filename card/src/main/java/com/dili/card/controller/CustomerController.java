@@ -3,6 +3,7 @@ package com.dili.card.controller;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.customer.sdk.domain.Customer;
+import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -32,13 +33,13 @@ public class CustomerController implements IControllerHandler {
      */
     @RequestMapping(value = "/listByKeyword.action")
     @ResponseBody
-    public BaseOutput<List<Customer>> listByKeyword(String keyword) {
+    public BaseOutput<List<CustomerExtendDto>> listByKeyword(String keyword) {
         LOGGER.info("查询客户列表*****{}", keyword);
         CustomerQueryInput query = new CustomerQueryInput();
         UserTicket userTicket = getUserTicket();
         query.setMarketId(userTicket.getFirmId());
         query.setKeyword(keyword);
-        List<Customer> itemList = customerRpcResolver.list(query);
+        List<CustomerExtendDto> itemList = customerRpcResolver.list(query);
         return BaseOutput.successData(itemList);
     }
 
@@ -49,13 +50,13 @@ public class CustomerController implements IControllerHandler {
      */
     @RequestMapping(value = "/listByName.action")
     @ResponseBody
-    public BaseOutput<List<Customer>> listByName(String name) {
+    public BaseOutput<List<CustomerExtendDto>> listByName(String name) {
         LOGGER.info("查询客户列表*****{}", name);
         CustomerQueryInput query = new CustomerQueryInput();
         UserTicket userTicket = getUserTicket();
         query.setMarketId(userTicket.getFirmId());
         query.setName(name);
-        List<Customer> itemList = customerRpcResolver.list(query);
+        List<CustomerExtendDto> itemList = customerRpcResolver.list(query);
         return BaseOutput.successData(itemList);
     }
 

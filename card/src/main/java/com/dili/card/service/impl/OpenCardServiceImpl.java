@@ -49,6 +49,7 @@ import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICardStorageService;
+import com.dili.card.service.ICustomerService;
 import com.dili.card.service.IOpenCardService;
 import com.dili.card.service.IRuleFeeService;
 import com.dili.card.service.ISerialService;
@@ -68,7 +69,7 @@ import com.dili.card.type.TradeType;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.commons.rabbitmq.RabbitMQMessageService;
-import com.dili.customer.sdk.domain.Customer;
+import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.rule.sdk.rpc.ChargeRuleRpc;
 import com.dili.ss.constant.ResultCode;
@@ -121,7 +122,9 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	ICardStorageService cardStorageService;
 	@Autowired
 	private DataDictionaryRpc dataDictionaryRpc;
-
+	@Autowired
+	private ICustomerService customerService;
+	
 	@Override
 	public Long getOpenCostFee() {
 		BigDecimal ruleFee = ruleFeeService.getRuleFee(RuleFeeBusinessType.CARD_OPEN_CARD,
@@ -135,7 +138,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	public OpenCardResponseDto openCard(OpenCardDto openCardInfo) {
 		// 二次校验新卡状态
 		cardStorageService.checkAndGetByCardNo(openCardInfo.getCardNo(), openCardInfo.getCardType(),
-				openCardInfo.getCustomerType());
+				openCardInfo.getCustomerId());
 
 		// 校验父账号登录密码
 		if (CardType.isSlave(openCardInfo.getCardType())) {
@@ -145,12 +148,13 @@ public class OpenCardServiceImpl implements IOpenCardService {
 			GenericRpcResolver.resolver(cardManageRpc.checkPassword(checkPwdParam), ServiceName.ACCOUNT);
 		}
 		// 校验客户信息
-		Customer customer = GenericRpcResolver.resolver(
+		CustomerExtendDto customer = GenericRpcResolver.resolver(
 				customerRpc.get(openCardInfo.getCustomerId(), openCardInfo.getFirmId()), ServiceName.CUSTOMER);
 		if (!customer.getState().equals(CustomerState.VALID.getCode())) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR,
 					"客户已" + CustomerState.getStateName(customer.getState()));
 		}
+		openCardInfo.setCustomerCharacterType(customerService.getCharacterTypes(customer.getCharacterTypeList(), customer.getId()));
 		// 获取当前账务周期
 		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(openCardInfo.getCreatorId(),
 				openCardInfo.getCreator(), openCardInfo.getCreatorCode());
@@ -272,7 +276,8 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		record.setCustomerId(openCardInfo.getCustomerId());
 		record.setCustomerName(openCardInfo.getCustomerName());
 		record.setCustomerNo(openCardInfo.getCustomerCode());
-		record.setCustomerType(openCardInfo.getCustomerType());
+		List<String> subTypes = customerService.getSubTypes(openCardInfo.getCustomerCharacterTypeList());
+		record.setCustomerType(String.join(",", subTypes));
 		record.setFirmId(openCardInfo.getFirmId());
 		record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
 		record.setNotes("开卡，工本费转为市场收入");
@@ -345,8 +350,8 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@Override
 	public CustomerResponseDto getCustomerInfoByCertificateNumber(String certificateNumber, Long firmId) {
 		AssertUtils.notEmpty(certificateNumber, "请输入证件号!");
-		Customer customer = GenericRpcResolver.resolver(customerRpc.getByCertificateNumber(certificateNumber, firmId),
-				ServiceName.CUSTOMER);
+		CustomerExtendDto customer = GenericRpcResolver
+				.resolver(customerRpc.getByCertificateNumber(certificateNumber, firmId), ServiceName.CUSTOMER);
 		CustomerResponseDto response = new CustomerResponseDto();
 		if (customer != null) {
 			// 判断客户是否已禁用或注销
@@ -356,8 +361,8 @@ public class OpenCardServiceImpl implements IOpenCardService {
 			}
 			BeanUtils.copyProperties(customer, response);
 			response.setCustomerContactsPhone(customer.getContactsPhone());
-			response.setCustomerTypeName(getCustomerTypeName(customer.getCustomerMarket().getType(), firmId));
-			response.setCustomerType(customer.getCustomerMarket().getType());
+			response.setCustomerTypeName(customerService.getSubTypeName(customer.getCharacterTypeList(), firmId));
+			response.setCustomerType(String.join(",", customerService.getSubTypes(customer.getCharacterTypeList())));
 			response.setId(customer.getId());
 			response.setFirmId(firmId);
 		} else {
@@ -410,16 +415,16 @@ public class OpenCardServiceImpl implements IOpenCardService {
 			List<DataDictionaryValue> resolver = GenericRpcResolver
 					.resolver(dataDictionaryRpc.listDataDictionaryValue(ddv), "DataDictionaryRpc");
 			Integer maxCardNum = 1;
-			
+
 			if (resolver == null || resolver.size() == 0) {
-				log.warn("FirmId{}在数据字典中没有配置开卡数量,使用默认值{}", customerResponseDto.getFirmId(),maxCardNum);
+				log.warn("FirmId{}在数据字典中没有配置开卡数量,使用默认值{}", customerResponseDto.getFirmId(), maxCardNum);
 			}
-			
+
 			if (resolver != null && resolver.size() > 1) {
 				maxCardNum = Integer.parseInt(resolver.get(0).getCode());
 				log.warn("FirmId{}在数据字典中配置了多个开卡数量,以第一行数据作为判断依据", customerResponseDto.getFirmId());
 			}
-			
+
 			if (nowCardNum >= maxCardNum) {
 				String msg = String.format("客户%s已办理过%s张主卡,不能再办理新卡", customerName, nowCardNum);
 				throw new CardAppBizException(msg);
@@ -427,4 +432,5 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		}
 		return nowCardNum;
 	}
+
 }

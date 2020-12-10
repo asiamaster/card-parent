@@ -44,8 +44,8 @@ class AccountQueryRpcResolverTest extends BaseTest {
 
     @Test
     void findCustomers() {
-        List<Customer> customerByIds = customerRpcResolver.findCustomerByIds(Lists.newArrayList(150L), 1L);
-        LOGGER.info("获取到的客户:{}", JSON.toJSONString(customerByIds));
+//        List<Customer> customerByIds = customerRpcResolver.findCustomerByIds(Lists.newArrayList(150L), 1L);
+//        LOGGER.info("获取到的客户:{}", JSON.toJSONString(customerByIds));
     }
 
     @Autowired

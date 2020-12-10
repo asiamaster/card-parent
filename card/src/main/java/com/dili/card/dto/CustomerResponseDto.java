@@ -16,6 +16,10 @@ public class CustomerResponseDto implements Serializable {
 	private String code;
 	/** 客户名称 */
 	private String name;
+	/** 客户角色 */
+	private String customerCharacterType;
+	/** 客户子身份 */
+	private String customerSubType;
 	/** 客户类型 */
 	private String customerType;
 	/** 客户类型名称 */
@@ -119,6 +123,22 @@ public class CustomerResponseDto implements Serializable {
 
 	public void setFirmId(Long firmId) {
 		this.firmId = firmId;
+	}
+
+	public String getCustomerCharacterType() {
+		return customerCharacterType;
+	}
+
+	public void setCustomerCharacterType(String customerCharacterType) {
+		this.customerCharacterType = customerCharacterType;
+	}
+
+	public String getCustomerSubType() {
+		return customerSubType;
+	}
+
+	public void setCustomerSubType(String customerSubType) {
+		this.customerSubType = customerSubType;
 	}
 
 }

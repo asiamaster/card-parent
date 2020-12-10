@@ -64,7 +64,8 @@ public class OpenCardController implements IControllerHandler {
 		log.info("开卡证件号查询客户信息*****{}", JSONObject.toJSONString(openCardInfo));
 		// 操作人信息
 		UserTicket user = getUserTicket();
-		CustomerResponseDto customerInfo = openCardService.getCustomerInfoByCertificateNumber(openCardInfo.getCustomerCertificateNumber(), user.getFirmId());
+		CustomerResponseDto customerInfo = openCardService
+				.getCustomerInfoByCertificateNumber(openCardInfo.getCustomerCertificateNumber(), user.getFirmId());
 		// 判断开卡数量
 		openCardService.checkCardNum(customerInfo);
 		log.info("开卡证件号查询客户信息完成*****{}", JSONObject.toJSONString(customerInfo));
@@ -93,7 +94,7 @@ public class OpenCardController implements IControllerHandler {
 		log.info("开卡检查新卡状态*****{}", JSONObject.toJSONString(openCardInfo));
 		AssertUtils.notNull(openCardInfo.getCardNo(), "请输入卡号!");
 		cardStorageService.checkAndGetByCardNo(openCardInfo.getCardNo(), openCardInfo.getCardType(),
-				openCardInfo.getCustomerType());
+				openCardInfo.getCustomerId());
 		return BaseOutput.success();
 	}
 
