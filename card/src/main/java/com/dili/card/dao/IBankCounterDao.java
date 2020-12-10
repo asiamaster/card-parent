@@ -1,5 +1,6 @@
 package com.dili.card.dao;
 
+import com.dili.card.dto.BankCounterQuery;
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 import com.dili.card.entity.BankCounterDo;
@@ -12,11 +13,9 @@ import com.dili.card.entity.BankCounterDo;
 public interface IBankCounterDao {
 	/**
      * 列表查询
-     * @param page
-     * @param search
      * @return
      */
-	List<BankCounterDo> selectList(BankCounterDo bankCounter);
+	List<BankCounterDo> findByCondition(BankCounterQuery query);
 
     /**
      * 新增

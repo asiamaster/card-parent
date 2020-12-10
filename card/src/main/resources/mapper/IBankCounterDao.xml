@@ -2,105 +2,105 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dili.card.dao.IBankCounterDao">
-	
-	<select id="selectList" resultType="com.dili.card.entity.BankCounterDo">
-		SELECT
-			`id`, 
-			`action`, 
-			`amount`, 
-			`status`, 
-			`serial_no`, 
-			`apply_time`, 
-			`operator_id`, 
-			`operator_name`, 
-			`institution_code`, 
-			`description`, 
-			`created_user_id`, 
-			`created_user_name`, 
-			`created_time`, 
+
+	<sql id="Base_Column">
+		    `id`,
+			`action`,
+			`amount`,
+			`status`,
+			`serial_no`,
+			`apply_time`,
+			`operator_id`,
+			`operator_name`,
+			`firm_id`,
+			`firm_name`,
+			`description`,
+			`created_user_id`,
+			`created_user_name`,
+			`created_time`,
 			`modified_time`
+	</sql>
+	<sql id="Where_Column">
+		<where>
+			<if test="action !=null">
+				AND `action` = #{action}
+			</if>
+			<if test="startDate !=null">
+				AND apply_time &gt;= #{startDate}
+			</if>
+			<if test="endDate !=null">
+				AND apply_time &lt;= #{endDate}
+			</if>
+		</where>
+	</sql>
+	<select id="findByCondition" resultType="com.dili.card.entity.BankCounterDo">
+		SELECT
+			<include refid="Base_Column"/>
 		FROM
 			card_bank_counter
+		<include refid="Where_Column"/>
 		ORDER BY
-			id DESC
+			apply_time DESC
 	</select>
-	
+
 	<insert id="save">
 		INSERT INTO card_bank_counter (
-			`action`, 
-			`amount`, 
-			`status`, 
-			`serial_no`, 
-			`apply_time`, 
-			`operator_id`, 
-			`operator_name`, 
-			`institution_code`, 
-			`description`, 
-			`created_user_id`, 
-			`created_user_name`, 
-			`created_time`, 
+			`action`,
+			`amount`,
+			`status`,
+			`serial_no`,
+			`apply_time`,
+			`operator_id`,
+			`operator_name`,
+			`firm_id`,
+		    `firm_name` ,
+			`description`,
+			`created_user_id`,
+			`created_user_name`,
+			`created_time`,
 			`modified_time`
 		)
 		VALUES (
-			#{action}, 
-			#{amount}, 
-			#{status}, 
-			#{serialNo}, 
-			#{applyTime}, 
-			#{operatorId}, 
-			#{operatorName}, 
-			#{institutionCode}, 
-			#{description}, 
-			#{createdUserId}, 
-			#{createdUserName}, 
-			#{createdTime}, 
-			#{modifiedTime}
+			#{action},
+			#{amount},
+			#{status},
+			#{serialNo},
+			#{applyTime},
+			#{operatorId},
+			#{operatorName},
+			#{firmId},
+		    #{firmName},
+			#{description},
+			#{createdUserId},
+			#{createdUserName},
+			now(),
+			now()
 		)
 	</insert>
-	
+
 	<select id="getById" resultType="com.dili.card.entity.BankCounterDo">
 		SELECT
-			`id`, 
-			`action`, 
-			`amount`, 
-			`status`, 
-			`serial_no`, 
-			`apply_time`, 
-			`operator_id`, 
-			`operator_name`, 
-			`institution_code`, 
-			`description`, 
-			`created_user_id`, 
-			`created_user_name`, 
-			`created_time`, 
-			`modified_time`
+			<include refid="Base_Column"/>
 		FROM
 			card_bank_counter
 		WHERE
 			id = #{id}
 	</select>
-	
+
 	<update id="update">
 		UPDATE card_bank_counter
 	 	<set>
 			<if test="action != null">`action` = #{action}, </if>
 			<if test="amount != null">`amount` = #{amount}, </if>
-			<if test="status != null">`status` = #{status}, </if>
 			<if test="serialNo != null">`serial_no` = #{serialNo}, </if>
-			<if test="applyTime != null">`apply_time` = #{applyTime}, </if>
 			<if test="operatorId != null">`operator_id` = #{operatorId}, </if>
 			<if test="operatorName != null">`operator_name` = #{operatorName}, </if>
-			<if test="institutionCode != null">`institution_code` = #{institutionCode}, </if>
 			<if test="description != null">`description` = #{description}, </if>
-			<if test="createdUserId != null">`created_user_id` = #{createdUserId}, </if>
-			<if test="createdUserName != null">`created_user_name` = #{createdUserName}, </if>
-			<if test="createdTime != null">`created_time` = #{createdTime}, </if>
-			<if test="modifiedTime != null">`modified_time` = #{modifiedTime}</if>
 		</set>
 		WHERE
 			id = #{id}
 	</update>
-	
+
 	<delete id="batchRemove">
 		DELETE
 		FROM

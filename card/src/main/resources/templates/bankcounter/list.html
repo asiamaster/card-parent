@@ -1,0 +1,115 @@
+<#bs4Body>
+<div class="container-fluid">
+
+    <form id="queryForm" role="form">
+        <div class="row row-cols-6">
+            <div class="form-group col">
+                <label for="action">业务类型</label>
+                <select id="action" name="action" class="form-control"></select>
+                <#bcomboProvider _id="action" _provider="bankCounterActionProvider" _queryParams='{emptyText:"-- 全部 --"}'/>
+            </div>
+            <#component_dateControls
+            _labelText="存取款时间"
+            _startDateParam="startDate"
+            _endDateParam="endDate"
+            _resetDate="false"
+            />
+            <div class="col-auto align-self-center mt-3">
+                <button id="clear" type="button" class="btn btn-outline-primary mr-2" onclick="$.form.reset()"><i
+                        class="fa fa-refresh"></i> 清空
+                </button>
+                <button id="query" type="button" class="btn btn-outline-primary" onclick="$.table.search()"><i
+                        class="fa fa-search"></i> 查询
+                </button>
+            </div>
+        </div>
+    </form>
+
+<hr>
+<div class="row">
+    <div class="col-12">
+        <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
+            <#resource code="bank-counter-deposit">
+            <button id="btn_add_deposit" type="button" class="btn btn-primary" onclick="openAddDepositModal()"><i
+                    class="fa fa-plus"></i> 新增存款
+            </button>
+        </#resource>
+        <#resource code="bank-counter-withdraw">
+        <button id="btn_add_withdraw" type="button" class="btn btn-primary" onclick="openAddWithdrawModal()"><i
+                class="fa fa-plus"></i>
+            新增取款
+        </button>
+       </#resource>
+       <#resource code="bank-counter-print">
+         <button id="btn-print" type="button" class="btn btn-primary" onclick=""><i
+            class="fa fa-file-excel-o"></i>
+          打印
+         </button>
+        </#resource>
+       <#resource code="bank-counter-export">
+        <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
+            class="fa fa-file-excel-o"></i>
+            导出
+         </button>
+       </#resource>
+    </div>
+        <table id="grid"
+               class="table"
+               data-title="银行存取款"
+               data-show-fullscreen="true"
+               data-buttons-class="primary"
+               data-icons="bui.variable.icons">
+            <thead>
+            <tr>
+                <th data-field="applyTime"  data-align="center">
+                    存取款时间
+                </th>
+                <th data-field="actionText"  data-align="center" >
+                    业务类型
+                </th>
+                <th data-field="amountText" data-align="center">
+                    金额
+                </th>
+                <th data-field="serialNo" data-align="center">
+                    流水号
+                </th>
+                <th data-field="createdTime" data-align="center">
+                    创建时间
+                </th>
+                <th data-field="operatorName" data-align="center">
+                    操作员
+                </th>
+                <th data-field="description"  data-align="center">
+                    备注
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+</div>
+
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script>
+    $(function () {
+        let options = {
+            uniqueId: "id",
+            url: "${contextPath}/bankCounter/page.action",
+            sortName: "apply_time",
+            modalName: "银行存取款查询"
+        };
+        $.table.init(options);
+    });
+
+    function openAddDepositModal() {
+        let url = "${contextPath}/bankCounter/addDeposit.html";
+        $.modal.openDefault("新增银行存款", url, "40%", "500")
+    }
+
+    function openAddWithdrawModal() {
+        let url = "${contextPath}/bankCounter/addWithdraw.html";
+        $.modal.openDefault("新增银行取款", url, "40%", "500")
+    }
+</script>
+

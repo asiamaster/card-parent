@@ -1,0 +1,87 @@
+<#bs4Body>
+<style>
+.modal-dialog {
+	max-width: 100% !important;
+	margin: 0 auto;
+}
+</style>
+<div class="container-fluid">
+	<div id="add-modal">
+		<form id="save-form">
+			<input id="action" name="action" value="1" type="hidden" class="form-control" />
+			<div class="row row-cols-1">
+				<div class="form-group col">
+					<label for="amount">存款金额<i class="red">*</i></label>
+					<input id="amount" name="amount"  type="number" class="form-control" val-formatter="yuanToFen"/>
+				</div>
+				<div class="form-group col">
+					<label for="serialNo">银行流水号<i class="red">*</i></label>
+					<input id="serialNo" name="serialNo" type="text" class="form-control" />
+				</div>
+				<div class="form-group col">
+					<label for="applyTime">存款时间<i class="red">*</i></label>
+					<div class="input-group">
+						<input type="text" name="applyTime" id="applyTime" class="form-control date laydatetime"/>
+						<div class="input-group-append">
+							<label for="applyTime" class="input-group-text fa fa-calendar"></label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group  col">
+					<label class="info-column">备注</label>
+					<textarea id="description" name="description" class="form-control" rows="3" placeholder="非必填，不超过50个字符"></textarea>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
+<script>
+	let formId = "save-form";
+	$("#" + formId).validate({
+		onkeyup: false,
+		rules: {
+			amount: {
+				required: true,
+				gt: 0
+			},
+			serialNo: {
+				required: true
+			},
+			applyTime: {
+				required: true,
+			},
+			description :{
+				lt:50
+			}
+		},
+		messages: {
+			amount: {
+				required: "存取款金额必填",
+				gt:"存取款金额必须大于{0}"
+			},
+			serialNo: {
+				required: "银行流水号必填"
+			},
+			applyTime: {
+				required: "存取款时间必填",
+			},
+			description :{
+				lt:"备注不能超过{0}字符"
+			}
+		},
+		focusCleanup: true
+	});
+
+	function submitHandler(e) {
+		if (!$.validate.form(formId)) {
+			return false;
+		}
+		let url = "${contextPath}/bankCounter/addDeposit.action";
+		let data = $.common.formToJSON(formId);
+		$.operate.post(url, data);
+	}
+</script>

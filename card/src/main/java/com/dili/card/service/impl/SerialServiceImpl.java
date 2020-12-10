@@ -80,6 +80,7 @@ public class SerialServiceImpl implements ISerialService {
         serialRecord.setCustomerId(businessRecord.getCustomerId());
         serialRecord.setCustomerNo(businessRecord.getCustomerNo());
         serialRecord.setCustomerName(businessRecord.getCustomerName());
+        serialRecord.setHoldName(businessRecord.getHoldName());
         serialRecord.setCustomerType(businessRecord.getCustomerType());
         serialRecord.setOperatorId(businessRecord.getOperatorId());
         serialRecord.setOperatorNo(businessRecord.getOperatorNo());
@@ -212,6 +213,7 @@ public class SerialServiceImpl implements ISerialService {
         businessRecord.setCustomerNo(accountCard.getCustomerCode());
         businessRecord.setCustomerName(accountCard.getCustomerName());
         businessRecord.setCustomerType(accountCard.getCustomerMarketType());
+        businessRecord.setHoldName(accountCard.getHoldName());
         businessRecord.setNotes(cardRequestDto.getNotes());
         //账务周期
         AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(cardRequestDto.getOpId(), cardRequestDto.getOpName(), cardRequestDto.getOpNo());
