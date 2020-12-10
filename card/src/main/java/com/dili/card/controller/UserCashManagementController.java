@@ -68,7 +68,7 @@ public class UserCashManagementController implements IControllerHandler {
 	 * 领款列表tab
 	 */
 	@GetMapping("/payeeListTab.html")
-	public String payeeListTab() {
+	public String payeeListTab(Long cycleNo) {
 		return "usercash/payeeListTab";
 	}
 
@@ -76,7 +76,7 @@ public class UserCashManagementController implements IControllerHandler {
 	 * 交款列表页面tab
 	 */
 	@GetMapping("/payerListTab.html")
-	public String payerListTab() {
+	public String payerListTab(Long cycleNo) {
 		return "usercash/payerListTab";
 	}
 
