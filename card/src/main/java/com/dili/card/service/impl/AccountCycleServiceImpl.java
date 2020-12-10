@@ -245,12 +245,12 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	
 	@Override
 	public AccountCycleDto buildAccountCycleWrapperDetail(AccountCycleDo cycle, boolean detail) {
-		return cycleStatisticService.buildAccountCycleWrapperDetailList(Arrays.asList(cycle), detail).get(0);
+		return cycleStatisticService.statisticList(Arrays.asList(cycle), detail).get(0);
 	}
 	
 	@Override
 	public List<AccountCycleDto> buildAccountCycleWrapperDetailList(List<AccountCycleDo> cycles) {
-		return cycleStatisticService.buildAccountCycleWrapperDetailList(cycles, false);
+		return cycleStatisticService.statisticList(cycles, false);
 	}
 	
 	/**

@@ -38,7 +38,7 @@ public class CycleStatisticService implements ICycleStatisticService {
 	private IUserCashService userCashService;
 
 	@Override
-	public List<AccountCycleDto> buildAccountCycleWrapperDetailList(List<AccountCycleDo> cycles, boolean detail) {
+	public List<AccountCycleDto> statisticList(List<AccountCycleDo> cycles, boolean detail) {
 		// 构建账务周期实体
 		List<AccountCycleDto> accountCycleDtos = buildAccountCycleDtoList(cycles);
 		List<Long> cycleNos = accountCycleDtos.stream().map(o -> o.getCycleNo()).collect(Collectors.toList());
@@ -178,7 +178,7 @@ public class CycleStatisticService implements ICycleStatisticService {
 	/**
 	 * 正向操作数据和冲正数据进行合并
 	 */
-	private void mergeAccountCycleDetail(AccountCycleDetailDto masterCycleDetail,
+	protected void mergeAccountCycleDetail(AccountCycleDetailDto masterCycleDetail,
 			AccountCycleDetailDto accountCycleReverseDetail) {
 		masterCycleDetail.setBeforeReverseBankInAmount(masterCycleDetail.getBankInAmount());
 		masterCycleDetail.setBeforeReverseBankOutAmount(masterCycleDetail.getBankOutAmount());

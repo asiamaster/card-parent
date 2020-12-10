@@ -11,7 +11,7 @@ public interface ICycleStatisticService {
 	/**
 	 * 账务周期列表构建
 	 */
-	List<AccountCycleDto> buildAccountCycleWrapperDetailList(List<AccountCycleDo> cycles, boolean detail);
+	List<AccountCycleDto> statisticList(List<AccountCycleDo> cycles, boolean detail);
 	
 	/**
 	 * 账务周期详情构建
