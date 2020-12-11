@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.MarketCode;
 import com.dili.card.dao.IStorageOutDao;
 import com.dili.card.dao.IStorageOutDetailDao;
@@ -159,6 +160,7 @@ public class CardStorageServiceImpl implements ICardStorageService {
 			if (!CustomerType.checkCardFace(characterTypeList, cardStorage.getCardFace())) {
 				log.warn("卡面信息和客户身份类型不符cardNo[{}]customerType[{}]cardFace[{}]", cardNo,
 						customerService.getSubTypes(characterTypeList), cardStorage.getCardFace());
+				log.warn("客户信息>{}",JSONObject.toJSON(customer));
 				throw new CardAppBizException("卡面信息和客户身份类型不符");
 			}
 		}

@@ -37,6 +37,7 @@ public class CustomerRpcResolver {
     public CustomerExtendDto findCustomerById(Long id,Long firmId) {
         CustomerQueryInput customer = new CustomerQueryInput();
         customer.setId(id);
+        customer.setMarketId(firmId);
         BaseOutput<List<CustomerExtendDto>> baseOutput = customerRpc.list(customer);
         List<CustomerExtendDto> customers = GenericRpcResolver.resolver(baseOutput,"customerRpc");
         if (CollectionUtils.isEmpty(customers)) {
@@ -100,9 +101,10 @@ public class CustomerRpcResolver {
     /**
      * 根据客户姓名查询客户信息
      */
-    public List<CustomerExtendDto> findCustomerByName(String name) {
+    public List<CustomerExtendDto> findCustomerByName(String name,Long firmId) {
         CustomerQueryInput customer = new CustomerQueryInput();
         customer.setName(name);
+        customer.setMarketId(firmId);
         BaseOutput<List<CustomerExtendDto>> baseOutput = customerRpc.list(customer);
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, baseOutput.getMessage());

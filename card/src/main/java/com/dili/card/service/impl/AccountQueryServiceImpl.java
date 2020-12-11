@@ -60,6 +60,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         if (CollectionUtils.isEmpty(data)) {
             return PageUtils.convert2PageOutput(page, new ArrayList<>());
         }
+//        customerRpcResolver.findCustomerByIds(ids, firmId);
         List<AccountListResponseDto> result = this.addCustomer2AccountList(data);
         return PageUtils.convert2PageOutput(page, result);
     }

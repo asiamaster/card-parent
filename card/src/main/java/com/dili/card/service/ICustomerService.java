@@ -21,6 +21,8 @@ import com.google.common.collect.Lists;
  * @time ：2020年12月9日下午6:00:05
  */
 public interface ICustomerService {
+	
+	
 
 	/**
 	 * 将从客户系统中获取的角色集合转为以逗号分割的字符串
