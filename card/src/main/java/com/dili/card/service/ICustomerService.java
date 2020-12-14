@@ -1,18 +1,9 @@
 package com.dili.card.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import com.dili.card.dto.UserCashDto;
-import com.dili.card.entity.UserCashDo;
-import com.dili.card.exception.CardAppBizException;
-import com.dili.card.rpc.resolver.GenericRpcResolver;
-import com.dili.card.type.CashAction;
 import com.dili.customer.sdk.domain.CharacterType;
-import com.dili.ss.domain.PageOutput;
-import com.dili.ss.dto.DTOUtils;
-import com.dili.uap.sdk.domain.DataDictionaryValue;
-import com.google.common.collect.Lists;
 
 /**
  * @description： 客户系统相关操作
@@ -22,7 +13,13 @@ import com.google.common.collect.Lists;
  */
 public interface ICustomerService {
 	
-	
+	/**
+	 * 批量获取客户子类型，以逗号分割
+	 * @param cidList
+	 * @param firmId
+	 * @return key=cId,value=subTypeName
+	 */
+	public Map<Long, String> getSubTypeNames(List<Long> cidList, Long firmId);
 
 	/**
 	 * 将从客户系统中获取的角色集合转为以逗号分割的字符串

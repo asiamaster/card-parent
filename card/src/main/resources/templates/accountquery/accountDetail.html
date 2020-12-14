@@ -53,9 +53,22 @@
                     <label class="info-column">创建人</label>
                     <input  type="text" class="form-control" value="${detail.cardAssociation.primary.creator!}" readonly/>
                 </div>
+                
+            </div>
+            <div class="row row-cols-6" >
                 <div class="form-group col">
                     <label class="info-column">创建时间</label>
                     <input  type="text" class="form-control" value="${detail.cardAssociation.primary.cardCreateTime!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">持卡人名称</label>
+                    <input  type="text" class="form-control" value="${detail.cardAssociation.primary.holdName!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">持卡人电话</label>
+                    <input  type="text" class="form-control" value="${detail.cardAssociation.primary.holdContactsPhone!}" readonly/>
+                </div>
+                <div class="form-group col">
                 </div>
             </div>
         </div>

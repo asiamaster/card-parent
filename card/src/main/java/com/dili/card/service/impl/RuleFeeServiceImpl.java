@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.assets.sdk.dto.BusinessChargeItemDto;
@@ -71,7 +72,7 @@ public class RuleFeeServiceImpl implements IRuleFeeService {
                                  SystemSubjectType systemSubjectType) {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         List<BusinessChargeItemDto> chargeItemList = getChargeItem(userTicket.getFirmId(), ruleFeeBusinessType);
-        if ( chargeItemList == null || chargeItemList.size() == 0) {
+        if ( CollectionUtils.isEmpty(chargeItemList)) {
             log.info("业务类型[{}]未查询到收费项!", ruleFeeBusinessType.getCode());
             return BigDecimal.valueOf(0);
         }

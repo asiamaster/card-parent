@@ -1,19 +1,27 @@
 package com.dili.card.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.cache.CharacterTypeCache;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.ICustomerService;
 import com.dili.customer.sdk.domain.CharacterType;
+import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
@@ -29,9 +37,13 @@ public class CustomerServiceImpl implements ICustomerService {
 	private CustomerRpc customerRpc;
 	@Autowired
 	private DataDictionaryRpc dataDictionaryRpc;
+	@Autowired
+	private CharacterTypeCache characterTypeCache;
+	@Autowired
+	private CustomerRpcResolver customerRpcResolver;
 
 	public String getCharacterTypes(List<CharacterType> typeList, Long customerId) {
-		if (typeList == null || typeList.size() == 0) {
+		if (CollectionUtils.isEmpty(typeList)) {
 			throw new CardAppBizException("客户ID{}角色信息为空", customerId);
 		}
 		List<String> typesList = new ArrayList<String>();
@@ -42,7 +54,7 @@ public class CustomerServiceImpl implements ICustomerService {
 	}
 
 	public List<String> getSubTypes(List<CharacterType> typeList) {
-		if (typeList == null || typeList.size() == 0) {
+		if (CollectionUtils.isEmpty(typeList)) {
 			return Lists.newArrayList();
 		}
 		List<String> typesList = new ArrayList<String>();
@@ -53,7 +65,7 @@ public class CustomerServiceImpl implements ICustomerService {
 	}
 
 	public String getSubTypeName(List<CharacterType> typeList, Long firmId) {
-		if (typeList == null || typeList.size() == 0) {
+		if (CollectionUtils.isEmpty(typeList)) {
 			return "";
 		}
 		List<String> subTypeNameList = Lists.newArrayList();
@@ -78,4 +90,28 @@ public class CustomerServiceImpl implements ICustomerService {
 		return String.join(",", subTypeNameList);
 	}
 
+	@Override
+	public Map<Long, String> getSubTypeNames(List<Long> cidList, Long firmId) {
+		Map<Long, String> subTypeMap = new HashMap<Long, String>();
+		List<CustomerExtendDto> clist = customerRpcResolver.findCustomerByIds(cidList, firmId);
+		List<DataDictionaryValue> subTypeDD = characterTypeCache.getSubTypeList(firmId);
+		clist.forEach(c -> {
+			List<String> subTypeList = new ArrayList<String>();
+			for (CharacterType ctype : c.getCharacterTypeList()) {
+				if (StringUtils.isBlank(ctype.getSubType())) {
+					// 客户子类型允许为空
+					continue;
+				}
+				log.info(">>>>>>>>>>>>>>>{}",JSONObject.toJSONString(ctype));
+				for (DataDictionaryValue dd : subTypeDD) {
+					if (ctype.getCharacterType().equals(dd.getDdCode()) && ctype.getSubType().equals(dd.getCode())) {
+						subTypeList.add(dd.getName());
+						break;
+					}
+				}
+			}
+			subTypeMap.put(c.getId(), String.join(",", subTypeList));
+		});
+		return subTypeMap;
+	}
 }

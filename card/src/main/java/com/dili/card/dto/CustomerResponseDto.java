@@ -16,6 +16,12 @@ public class CustomerResponseDto implements Serializable {
 	private String code;
 	/** 客户名称 */
 	private String name;
+	/** 持卡人姓名 */
+	private String holdName;
+	/** 持卡人证件号 */
+	private String holdCertificateNumber;
+	/** 持卡人联系电话 */
+	private String holdContactsPhone;
 	/** 客户角色 */
 	private String customerCharacterType;
 	/** 客户子身份 */
@@ -139,6 +145,30 @@ public class CustomerResponseDto implements Serializable {
 
 	public void setCustomerSubType(String customerSubType) {
 		this.customerSubType = customerSubType;
+	}
+
+	public String getHoldName() {
+		return holdName;
+	}
+
+	public void setHoldName(String holdName) {
+		this.holdName = holdName;
+	}
+
+	public String getHoldCertificateNumber() {
+		return holdCertificateNumber;
+	}
+
+	public void setHoldCertificateNumber(String holdCertificateNumber) {
+		this.holdCertificateNumber = holdCertificateNumber;
+	}
+
+	public String getHoldContactsPhone() {
+		return holdContactsPhone;
+	}
+
+	public void setHoldContactsPhone(String holdContactsPhone) {
+		this.holdContactsPhone = holdContactsPhone;
 	}
 
 }

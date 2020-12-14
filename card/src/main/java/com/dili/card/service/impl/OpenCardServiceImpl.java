@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
@@ -381,7 +382,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		ddv.setFirmId(firmId);
 		List<DataDictionaryValue> resolver = GenericRpcResolver.resolver(dataDictionaryRpc.listDataDictionaryValue(ddv),
 				"DataDictionaryRpc");
-		if (resolver == null || resolver.size() == 0) {
+		if (CollectionUtils.isEmpty(resolver)) {
 			throw new CardAppBizException("数据字典中没找到该客户类型" + code + "，是否已经删除!");
 		}
 
@@ -416,7 +417,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 					.resolver(dataDictionaryRpc.listDataDictionaryValue(ddv), "DataDictionaryRpc");
 			Integer maxCardNum = 1;
 
-			if (resolver == null || resolver.size() == 0) {
+			if (CollectionUtils.isEmpty(resolver)) {
 				log.warn("FirmId{}在数据字典中没有配置开卡数量,使用默认值{}", customerResponseDto.getFirmId(), maxCardNum);
 			}
 

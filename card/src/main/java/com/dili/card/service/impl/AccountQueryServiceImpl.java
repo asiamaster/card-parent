@@ -18,6 +18,7 @@ import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.ICustomerService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
 import com.dili.card.type.DisableState;
@@ -26,6 +27,9 @@ import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
 import com.google.common.collect.Lists;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +37,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -42,8 +47,13 @@ import java.util.stream.Collectors;
  */
 @Service("accountQueryService")
 public class AccountQueryServiceImpl implements IAccountQueryService {
+	
+	private static final Logger log = LoggerFactory.getLogger(AccountQueryServiceImpl.class);
+
     @Autowired
     private CustomerRpcResolver customerRpcResolver;
+    @Autowired
+    private ICustomerService customerService;
     @Autowired
     private PayRpcResolver payRpcResolver;
     @Autowired
@@ -60,8 +70,15 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         if (CollectionUtils.isEmpty(data)) {
             return PageUtils.convert2PageOutput(page, new ArrayList<>());
         }
-//        customerRpcResolver.findCustomerByIds(ids, firmId);
         List<AccountListResponseDto> result = this.addCustomer2AccountList(data);
+        // 设置客户子类型  TODO 待优化，开发环境耗时0.3秒左右
+        log.info("耗时测试a");
+        List<Long> cidList = result.stream().map(account -> account.getCustomerId()).collect(Collectors.toList());
+        Map<Long, String> subTypeNames = customerService.getSubTypeNames(cidList, param.getFirmId());
+        result.forEach(account -> {
+        	account.setCustomerSubTypeName(subTypeNames.get(account.getCustomerId()));
+        });
+        log.info("耗时测试b");
         return PageUtils.convert2PageOutput(page, result);
     }
 
