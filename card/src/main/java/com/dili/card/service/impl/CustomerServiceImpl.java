@@ -114,4 +114,10 @@ public class CustomerServiceImpl implements ICustomerService {
 		});
 		return subTypeMap;
 	}
+
+	@Override
+	public String getSubTypeNames(Long cid, Long firmId) {
+		Map<Long, String> dataMap = getSubTypeNames(Lists.newArrayList(cid), firmId);
+		return dataMap.get(cid);
+	}
 }

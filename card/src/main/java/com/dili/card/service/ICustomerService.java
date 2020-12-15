@@ -14,6 +14,14 @@ import com.dili.customer.sdk.domain.CharacterType;
 public interface ICustomerService {
 	
 	/**
+	 * 获取客户子类型，以逗号分割
+	 * @param cid
+	 * @param firmId
+	 * @return
+	 */
+	public String getSubTypeNames(Long cid, Long firmId);
+	
+	/**
 	 * 批量获取客户子类型，以逗号分割
 	 * @param cidList
 	 * @param firmId

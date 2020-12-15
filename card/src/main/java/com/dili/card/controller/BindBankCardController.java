@@ -28,8 +28,10 @@ import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IBindBankCardService;
+import com.dili.card.service.ICustomerService;
 import com.dili.card.type.CardType;
 import com.dili.card.util.AssertUtils;
+import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 
@@ -51,6 +53,10 @@ public class BindBankCardController implements IControllerHandler {
 	private IBindBankCardService bindBankCardService;
 	@Resource
 	private CardManageRpc cardManageRpc;
+	@Resource
+	private CustomerRpc customerRpc;
+	@Resource
+	private ICustomerService customerService;
 
 	/**
 	 * 进入绑定首页
@@ -70,17 +76,18 @@ public class BindBankCardController implements IControllerHandler {
 		LOG.info("绑定银行卡查询账户信息*****" + cardNo);
 		AssertUtils.notEmpty(cardNo, "卡号不能为空");
 
-		UserAccountCardResponseDto cardAccountDto = accountQueryService.getByCardNo(cardNo);
-		if (cardAccountDto == null) {
+		UserAccountCardResponseDto account = accountQueryService.getByCardNo(cardNo);
+		if (account == null) {
 			throw new CardAppBizException("未找到账户或者账户状态异常");
 		}
-		if (!CardType.isMaster(cardAccountDto.getCardType())) {
+		if (!CardType.isMaster(account.getCardType())) {
 			throw new CardAppBizException("请使用主卡绑定银行卡");
 		}
 		pageView.addObject("cardInfo",
-				JSON.parseObject(JSONObject.toJSONString(cardAccountDto, new EnumTextDisplayAfterFilter())));
+				JSON.parseObject(JSONObject.toJSONString(account, new EnumTextDisplayAfterFilter())));
 		pageView.addObject("cardNo", cardNo);
-
+		String subTypeNames = customerService.getSubTypeNames(account.getCustomerId(), account.getFirmId());
+		pageView.addObject("subTypeName", subTypeNames);
 		pageView.setViewName("bindBankCard/accountInfo");
 		return pageView;
 	}

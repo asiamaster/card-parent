@@ -72,10 +72,10 @@ public class CustomerController implements IControllerHandler {
      */
     @RequestMapping(value = "/getSubTypeName.action")
     @ResponseBody
-    public BaseOutput<Map<Long, String>> getSubTypeName(Long customerId) {
+    public BaseOutput<String> getSubTypeName(Long customerId) {
         LOGGER.info("获取客户子类型*****{}", customerId);
         UserTicket userTicket = getUserTicket();
-        Map<Long, String> subTypeNames = customerService.getSubTypeNames(Lists.newArrayList(customerId), userTicket.getFirmId());
+        String subTypeNames = customerService.getSubTypeNames(customerId, userTicket.getFirmId());
         return BaseOutput.successData(subTypeNames);
     }
     

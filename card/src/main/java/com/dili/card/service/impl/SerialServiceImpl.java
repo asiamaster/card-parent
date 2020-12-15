@@ -212,7 +212,7 @@ public class SerialServiceImpl implements ISerialService {
         businessRecord.setCustomerId(accountCard.getCustomerId());
         businessRecord.setCustomerNo(accountCard.getCustomerCode());
         businessRecord.setCustomerName(accountCard.getCustomerName());
-        businessRecord.setCustomerType(accountCard.getCustomerMarketType());
+        businessRecord.setCustomerType(accountCard.getCustomerCharacterType());
         businessRecord.setHoldName(accountCard.getHoldName());
         businessRecord.setNotes(cardRequestDto.getNotes());
         //账务周期
