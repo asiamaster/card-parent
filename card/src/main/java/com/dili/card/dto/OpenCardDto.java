@@ -61,6 +61,12 @@ public class OpenCardDto extends BaseSerialLogDto {
 	private Long costFee;
 	/** 持卡人 */
 	private String holdName;
+	/** 持卡人证件号 */
+	private String holdCertificateNumber;
+	/** 持卡人联系电话 */
+	private String holdContactsPhone;
+	/** 客户信息修改时是否同步修改持卡人信息1-是，2-否 */
+	private Integer customerSyncModifyHoldinfo;
 
 	public Long getCustomerId() {
 		return customerId;
@@ -244,6 +250,30 @@ public class OpenCardDto extends BaseSerialLogDto {
 
 	public void setCustomerCharacterTypeList(List<CharacterType> customerCharacterTypeList) {
 		this.customerCharacterTypeList = customerCharacterTypeList;
+	}
+
+	public String getHoldCertificateNumber() {
+		return holdCertificateNumber;
+	}
+
+	public void setHoldCertificateNumber(String holdCertificateNumber) {
+		this.holdCertificateNumber = holdCertificateNumber;
+	}
+
+	public String getHoldContactsPhone() {
+		return holdContactsPhone;
+	}
+
+	public void setHoldContactsPhone(String holdContactsPhone) {
+		this.holdContactsPhone = holdContactsPhone;
+	}
+
+	public Integer getCustomerSyncModifyHoldinfo() {
+		return customerSyncModifyHoldinfo;
+	}
+
+	public void setCustomerSyncModifyHoldinfo(Integer customerSyncModifyHoldinfo) {
+		this.customerSyncModifyHoldinfo = customerSyncModifyHoldinfo;
 	}
 
 }
