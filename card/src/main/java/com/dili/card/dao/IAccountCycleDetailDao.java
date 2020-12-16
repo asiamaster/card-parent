@@ -37,5 +37,10 @@ public interface IAccountCycleDetailDao {
 	/**
 	 * 根据账务周期号统计账务周期详情
 	 */
-	List<CycleStatistcDto> statisticCycleRecord(@Param("cycleNo") Long cycleNo, @Param("operatorId") Long operatorId);
+	List<CycleStatistcDto> statisticCycleBussinessRecord(List<Long> cycleNos);
+	
+	/**
+	 * 根据账务周期号统计统计冲正记录
+	 */
+	List<CycleStatistcDto> statisticReverseByCycleNo(List<Long> cycleNos);
 }

@@ -1,7 +1,10 @@
 package com.dili.card.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -23,13 +26,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.AccountCycleDto;
+import com.dili.card.dto.BusinessRecordResponseDto;
+import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountCycleService;
+import com.dili.card.service.ISerialService;
 import com.dili.card.type.CashAction;
 import com.dili.card.type.CycleState;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 
@@ -45,6 +52,8 @@ public class AccountCycleManagementController implements IControllerHandler {
 	
 	@Autowired
 	private IAccountCycleService iAccountCycleService;
+	@Resource
+    private ISerialService serialService;
 
 	/**
 	 * 列表页面
@@ -183,6 +192,18 @@ public class AccountCycleManagementController implements IControllerHandler {
 	public BaseOutput<Boolean> checkExistActiveCycle(@RequestBody AccountCycleDto accountCycleDto) {
 		log.info("校验是否存在活跃的账务周期*****{}", JSONObject.toJSONString(accountCycleDto));
 		return BaseOutput.successData(iAccountCycleService.checkExistActiveCycle(accountCycleDto.getUserId()));
+	}
+	
+	/**
+	 * 冲正记录
+	 */
+	@PostMapping("/reverse/page.action")
+	@ResponseBody
+	public Map<String, Object> businessPage(SerialQueryDto queryDto) {
+		log.info("冲正记录分页*****{}", JSONObject.toJSONString(queryDto));
+		queryDto.setOperateTypeList(Arrays.asList(31));
+		PageOutput<List<BusinessRecordResponseDto>> lists = serialService.queryPage(queryDto);
+		return successPage(lists);
 	}
 
 }

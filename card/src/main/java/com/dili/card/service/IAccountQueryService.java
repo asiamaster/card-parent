@@ -107,6 +107,13 @@ public interface IAccountQueryService {
     UserAccountCardResponseDto getForUnLostCard(UserAccountSingleQueryDto query);
 
     /**
+     * 解锁操作查询
+     * @author miaoguoxin
+     * @date 2020/8/6
+     */
+    UserAccountCardResponseDto getForUnLockCard(UserAccountSingleQueryDto query);
+
+    /**
      * 查询主卡的关联卡列表
      * @author miaoguoxin
      * @date 2020/10/14

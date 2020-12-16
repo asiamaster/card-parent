@@ -1,0 +1,69 @@
+<#bs4Body>
+<div class="container-fluid">
+    <hr>
+    <div class="row">
+        <div class="col-12">
+            <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
+                <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
+                        class="fa fa-file-excel-o"></i>
+                    导出
+                </button>
+            </div>
+            <table id="grid"
+                   class="table"
+                   data-title="银行圈提"
+                   data-show-fullscreen="true"
+                   data-buttons-class="primary"
+                   data-icons="bui.variable.icons">
+                <thead>
+                <tr>
+                    <th data-field="bankNo" data-align="center">
+                        银行卡号
+                    </th>
+                    <th data-field="bankName"  data-align="center" >
+                        银行名称
+                    </th>
+                    <th data-field="cardHolder" data-align="center">
+                        持卡人名称
+                    </th>
+                    <th data-field="amountText" data-align="center">
+                        圈提金额
+                    </th>
+                    <th data-field="feeText" data-align="center">
+                        手续费
+                    </th>
+                    <th data-field="operatorName" data-align="center">
+                        操作员
+                    </th>
+                    <th data-field="transTime" data-align="center">
+                        交易时间
+                    </th>
+                    <th data-field="serialNo" data-align="center">
+                        业务流水号
+                    </th>
+                    <th data-field="stateText" data-align="center">
+                        处理状态
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script>
+    $(function () {
+        let options = {
+            uniqueId: "id",
+            url: "${contextPath}/bank_withdraw/page.action",
+            sortName: "create_time",
+            modalName: "圈提记录"
+        };
+        $.table.init(options);
+    });
+</script>
+

@@ -9,7 +9,8 @@
         $.table.init(options);
     });
 
-    function redirectToDetail() {
+    //打开详情页
+    function redirectToDetail(_width, _height) {
         let selectedCardNo = $.table.selectColumns("cardNo");
         if ($.common.isEmpty(selectedCardNo)) {
             $.modal.alertWarning("请至少选中一行");
@@ -22,7 +23,20 @@
             cardPkId: $.table.selectColumns("cardPkId")
         };
         let urlParams = $.common.jsonObj2UrlParams(params);
-        window.location.href = "${contextPath}/accountQuery/detailTab.html?" + urlParams
+        let _url = "${contextPath}/accountQuery/accountDetail.html?" + urlParams;
+        let options = {
+            title: table.options.modalName,
+            width: _width,
+            height: _height,
+            content: _url,
+            btns: [{
+                label: '关闭', className: 'btn-secondary', onClick(e) {
+
+                }
+            }]
+        };
+        $.modal.openOptions(options);
+        //window.location.href = "${contextPath}/accountQuery/accountDetail.html?" + urlParams
     }
 
     function cardNoFormatter(value, row, index, field) {

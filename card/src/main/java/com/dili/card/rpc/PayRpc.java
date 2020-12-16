@@ -1,11 +1,5 @@
 package com.dili.card.rpc;
 
-import java.util.List;
-
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import com.dili.card.config.PayServiceFeignConfig;
 import com.dili.card.dto.FundAccountDto;
 import com.dili.card.dto.PayCreateFundReponseDto;
@@ -20,6 +14,11 @@ import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.List;
 
 /**
  * @description： 支付服务调用
@@ -37,9 +36,16 @@ public interface PayRpc {
      * @author miaoguoxin
      * @date 2020/7/1
      */
-    //@Tcc
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.trade.service:commit", method = RequestMethod.POST)
     BaseOutput<TradeResponseDto> commitTrade(TradeRequestDto requestDto);
+
+    /**
+     * 冲正
+     * @author miaoguoxin
+     * @date 2020/12/4
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.trade.service:correct", method = RequestMethod.POST)
+    BaseOutput<TradeResponseDto> reverse(TradeRequestDto requestDto);
 
     /**
      * 创建交易（预支付）
@@ -122,5 +128,6 @@ public interface PayRpc {
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.account.service:register", method = RequestMethod.POST)
     BaseOutput<PayCreateFundReponseDto> createFundAccount(FundAccountDto type);
+
 
 }

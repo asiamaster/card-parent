@@ -36,6 +36,7 @@ public class TradeRequestDto {
         return tradeRequestDto;
     }
 
+
     /**
      * 添加手续费
      * @author miaoguoxin

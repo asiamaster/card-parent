@@ -1,0 +1,173 @@
+<style>
+    .info-column {
+        font-weight: bold ;
+        text-align: center;
+    }
+
+    .info-cell {
+        width: 15%;
+    }
+    .panel-heading{
+        margin-top:.5rem
+    }
+</style>
+<#bs4Body>
+<div class="container-fluid ">
+    <!--基本信息-->
+    <div>
+        <div class="breadcrumb">
+            原业务单据
+        </div>
+        <div id="base-info" class="panel-heading" >
+            <div class="row row-cols-12" >
+                <div class="form-group col">
+                    <label class="info-column">客户编号</label>
+                    <input  type="text" class="form-control" value="${detail.accountInfo.customerCode!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">客户名称</label>
+                    <input  type="text" class="form-control" value="${detail.accountInfo.customerName!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">卡号</label>
+                    <input  type="text" class="form-control" value="${detail.accountInfo.cardNo!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">卡片类型</label>
+                    <input  type="text" class="form-control" value="${detail.accountInfo.cardTypeText!}" readonly/>
+                </div>
+            </div>
+            <div class="row row-cols-12">
+                <div class="form-group col">
+                    <label class="info-column">业务类型</label>
+                    <input  type="text" class="form-control" value="${detail.bizSerial.typeText!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">业务流水号</label>
+                    <input  type="text" class="form-control" value="${detail.bizSerial.serialNo!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">操作时间</label>
+                    <input  type="text" class="form-control" value="${detail.bizSerial.operateTime!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">操作人</label>
+                    <input  type="text" class="form-control" value="${detail.bizSerial.operatorName!}" readonly/>
+                </div>
+            </div>
+            <div class="row row-cols-12">
+                <div class="form-group col">
+                    <label class="info-column">操作方式</label>
+                    <input  type="text" class="form-control" value="${detail.bizSerial.tradeChannelText!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">操作金额</label>
+                    <input  type="text" class="form-control" value="${detail.bizSerial.amountText!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">期初金额</label>
+                    <input  type="text" class="form-control" value="${detail.bizSerial.startBalanceText!}" readonly/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">期末金额</label>
+                    <input  type="text" class="form-control" value="${detail.bizSerial.endBalanceText!}" readonly/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--手续费-->
+    <div>
+        <div class="breadcrumb">
+            手续费
+        </div>
+        <div   class="panel-heading">
+            <div class="row row-cols-12">
+                <div class="form-group col">
+                    <table  class="table table-bordered">
+                        <tbody style="text-align: center">
+                        <tr>
+                            <td class="info-column">费用类型</td>
+                            <td class="info-column">金额</td>
+                            <td class="info-column">备注</td>
+                        </tr>
+                        <% for(item in detail.feeSerials) { %>
+                        <tr>
+                            <td class="info-cell">${item.fundItemName!}</td>
+                            <td class="info-cell">${item.amountText!}</td>
+                            <td class="info-cell">${item.notes!}</td>
+                        </tr>
+                        <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div >
+        <form id="addForm">
+            <div class="row row-cols-6">
+                <div class="form-group col">
+                    <label class="info-column">客户实际操作金额<i class="red">*</i></label>
+                    <input id="amount" name="amount" type="number"
+                           class="form-control"
+                           val-formatter="yuanToFen"/>
+                </div>
+                <div class="form-group col">
+                    <label class="info-column">实际手续费</label>
+                     <input id="fee" name="fee" type="number"
+                            class="form-control"
+                            val-formatter="yuanToFen"/>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="footerButton" style="text-align: center">
+        <button  type="button" class="btn btn-primary pl-5 pr-5" onclick="submitReverse()">
+            冲正
+        </button>
+    </div>
+</div>
+
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
+<script>
+    let reverseAddForm = "addForm";
+    $("#" + reverseAddForm).validate({
+        onkeyup: false,
+        rules: {
+            amount: {
+                required: true,
+                notEqual:0,
+            },
+        },
+        messages: {
+            amount: {
+                required: "请输入金额",
+                notEqual:"请输入正确的金额",
+            }
+        },
+        focusCleanup: true
+    });
+
+    function submitReverse() {
+        if (!$.validate.form(reverseAddForm)) {
+            return;
+        }
+        let requestData = {
+            cardNo:${detail.accountInfo.cardNo!},
+            accountId:${detail.accountInfo.accountId!},
+            customerId:${detail.accountInfo.customerId!},
+            bizSerialNo:${detail.bizSerial.serialNo!}
+        };
+        let url = "${contextPath}/reverse/add.action";
+        $.modal.confirm("确认对业务号【" + ${detail.bizSerial.serialNo!} +"】冲正吗?", function (sure) {
+            if (!sure) {
+                return;
+            }
+            let data = $.common.formToJSON(reverseAddForm);
+            bui.util.debounce($.operate.post(url, $.extend(requestData, data)), 1000, true)
+        });
+    }
+</script>

@@ -134,15 +134,15 @@ public class CardManageServiceImpl implements ICardManageService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void unLockCard(CardRequestDto cardParam) {
-        UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam);
-        if (!Integer.valueOf(CardStatus.LOCKED.getCode()).equals(accountCard.getCardState())) {
-            throw new CardAppBizException("", String.format("该卡为%s状态,不能进行解锁", CardStatus.getName(accountCard.getCardState())));
-        }
+        UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+        query.setCardNo(cardParam.getCardNo());
+        query.setAccountId(cardParam.getAccountId());
+        UserAccountCardResponseDto accountCard = accountQueryService.getForUnLockCard(query);
         BusinessRecordDo businessRecordDo = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
             temp.setType(OperateType.LIFT_LOCKED.getCode());
         });
         serialService.saveBusinessRecord(businessRecordDo);
-        BaseOutput<?> baseOutput = cardManageRpc.unLostCard(cardParam);
+        BaseOutput<?> baseOutput = cardManageRpc.unLockCard(cardParam);
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         }
@@ -177,7 +177,7 @@ public class CardManageServiceImpl implements ICardManageService {
         AccountValidator.validateMatchAccount(requestDto, userAccount);
         //this.validateCanChange(requestDto, userAccount);
 
-        cardStorageService.checkAndGetByCardNo(requestDto.getNewCardNo(), userAccount.getCardType(), userAccount.getCustomerMarketType());
+        cardStorageService.checkAndGetByCardNo(requestDto.getNewCardNo(), userAccount.getCardType(),  userAccount.getCustomerId());
 
         Long serviceFee = requestDto.getServiceFee();
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {

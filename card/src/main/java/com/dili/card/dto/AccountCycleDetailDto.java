@@ -26,26 +26,41 @@ public class AccountCycleDetailDto {
 	/** 现金充值金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long depoCashAmount = 0L;
+	/** 现金充值冲正前金额-分 */
+	@TextDisplay(FenToYuanProvider.class)
+	private Long beforeReverseDepoCashAmount = 0L;
 	/** POS充值次数 */
 	private Integer depoPosTimes = 0;
 	/** POS充值金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long depoPosAmount = 0L;
+	/** POS充值冲正前金额-分 */
+	@TextDisplay(FenToYuanProvider.class)
+	private Long beforeReverseDepoPosAmount = 0L;
 	/** 网银充值次数 */
 	private Integer bankInTimes = 0;
 	/** 网银充值金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long bankInAmount = 0L;
+	/** 网银充值冲正前金额-分 */
+	@TextDisplay(FenToYuanProvider.class)
+	private Long beforeReverseBankInAmount = 0L;
 	/** 现金提现次数 */
 	private Integer drawCashTimes = 0;
 	/** 现金提现金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long drawCashAmount = 0L;
+	/** 现金提现冲正前金额-分 */
+	@TextDisplay(FenToYuanProvider.class)
+	private Long beforeReverseDrawCashAmount = 0L;
 	/** 网银提现次数 */
 	private Integer bankOutTimes = 0;
 	/** 网银提现金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long bankOutAmount = 0L;
+	/** 网银提现冲正前金额-分 */
+	@TextDisplay(FenToYuanProvider.class)
+	private Long beforeReverseBankOutAmount = 0L;
 	/** 现金收益金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long revenueAmount = 0L;
@@ -123,6 +138,14 @@ public class AccountCycleDetailDto {
 		this.depoCashAmount = depoCashAmount;
 	}
 
+	public Long getBeforeReverseDepoCashAmount() {
+		return beforeReverseDepoCashAmount;
+	}
+
+	public void setBeforeReverseDepoCashAmount(Long beforeReverseDepoCashAmount) {
+		this.beforeReverseDepoCashAmount = beforeReverseDepoCashAmount;
+	}
+
 	public Integer getDepoPosTimes() {
 		return depoPosTimes;
 	}
@@ -137,6 +160,14 @@ public class AccountCycleDetailDto {
 
 	public void setDepoPosAmount(Long depoPosAmount) {
 		this.depoPosAmount = depoPosAmount;
+	}
+
+	public Long getBeforeReverseDepoPosAmount() {
+		return beforeReverseDepoPosAmount;
+	}
+
+	public void setBeforeReverseDepoPosAmount(Long beforeReverseDepoPosAmount) {
+		this.beforeReverseDepoPosAmount = beforeReverseDepoPosAmount;
 	}
 
 	public Integer getBankInTimes() {
@@ -155,6 +186,14 @@ public class AccountCycleDetailDto {
 		this.bankInAmount = bankInAmount;
 	}
 
+	public Long getBeforeReverseBankInAmount() {
+		return beforeReverseBankInAmount;
+	}
+
+	public void setBeforeReverseBankInAmount(Long beforeReverseBankInAmount) {
+		this.beforeReverseBankInAmount = beforeReverseBankInAmount;
+	}
+
 	public Integer getDrawCashTimes() {
 		return drawCashTimes;
 	}
@@ -171,6 +210,14 @@ public class AccountCycleDetailDto {
 		this.drawCashAmount = drawCashAmount;
 	}
 
+	public Long getBeforeReverseDrawCashAmount() {
+		return beforeReverseDrawCashAmount;
+	}
+
+	public void setBeforeReverseDrawCashAmount(Long beforeReverseDrawCashAmount) {
+		this.beforeReverseDrawCashAmount = beforeReverseDrawCashAmount;
+	}
+
 	public Integer getBankOutTimes() {
 		return bankOutTimes;
 	}
@@ -185,6 +232,14 @@ public class AccountCycleDetailDto {
 
 	public void setBankOutAmount(Long bankOutAmount) {
 		this.bankOutAmount = bankOutAmount;
+	}
+
+	public Long getBeforeReverseBankOutAmount() {
+		return beforeReverseBankOutAmount;
+	}
+
+	public void setBeforeReverseBankOutAmount(Long beforeReverseBankOutAmount) {
+		this.beforeReverseBankOutAmount = beforeReverseBankOutAmount;
 	}
 
 	public Long getRevenueAmount() {

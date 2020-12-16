@@ -1,26 +1,25 @@
 package com.dili.card.rpc.resolver;
 
 
-import com.dili.card.dto.CustomerResponseDto;
-import com.dili.card.exception.CardAppBizException;
-import com.dili.card.type.CustomerType;
-import com.dili.customer.sdk.domain.Customer;
-import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
-import com.dili.customer.sdk.rpc.CustomerRpc;
-import com.dili.ss.constant.ResultCode;
-import com.dili.ss.domain.BaseOutput;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import com.dili.card.dto.CustomerResponseDto;
+import com.dili.card.exception.CardAppBizException;
+import com.dili.customer.sdk.domain.Customer;
+import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
+import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
+import com.dili.customer.sdk.rpc.CustomerRpc;
+import com.dili.ss.constant.ResultCode;
+import com.dili.ss.domain.BaseOutput;
 
 /**
  * 客户查询解析器
@@ -35,11 +34,12 @@ public class CustomerRpcResolver {
     /**
      * 根据客户id查询客户信息
      */
-    public Customer findCustomerById(Long id) {
+    public CustomerExtendDto findCustomerById(Long id,Long firmId) {
         CustomerQueryInput customer = new CustomerQueryInput();
         customer.setId(id);
-        BaseOutput<List<Customer>> baseOutput = customerRpc.list(customer);
-        List<Customer> customers = GenericRpcResolver.resolver(baseOutput);
+        customer.setMarketId(firmId);
+        BaseOutput<List<CustomerExtendDto>> baseOutput = customerRpc.list(customer);
+        List<CustomerExtendDto> customers = GenericRpcResolver.resolver(baseOutput,"customerRpc");
         if (CollectionUtils.isEmpty(customers)) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "客户信息不存在");
         }
@@ -49,10 +49,10 @@ public class CustomerRpcResolver {
     /**
      * 通过账号批量查询客户map结构数据
      */
-    public Map<Long, Customer> findCustomerMapByCustomerIds(List<Long> customerIds, Long firmId) {
-        List<Customer> customers = findCustomerByIds(customerIds, firmId);
+    public Map<Long, CustomerExtendDto> findCustomerMapByCustomerIds(List<Long> customerIds, Long firmId) {
+        List<CustomerExtendDto> customers = findCustomerByIds(customerIds, firmId);
         return customers.stream()
-                .collect(Collectors.toMap(Customer::getId,
+                .collect(Collectors.toMap(CustomerExtendDto::getId,
                         a -> a,
                         (k1, k2) -> k1));
     }
@@ -62,12 +62,12 @@ public class CustomerRpcResolver {
      * @author miaoguoxin
      * @date 2020/6/22
      */
-    public List<Customer> findCustomerByIds(List<Long> ids, Long firmId) {
+    public List<CustomerExtendDto> findCustomerByIds(List<Long> ids, Long firmId) {
         CustomerQueryInput customer = new CustomerQueryInput();
         customer.setIdSet(new HashSet<>(ids));
         customer.setMarketId(firmId);
-        BaseOutput<List<Customer>> baseOutput = customerRpc.list(customer);
-        List<Customer> customers = GenericRpcResolver.resolver(baseOutput,"customer-service");
+        BaseOutput<List<CustomerExtendDto>> baseOutput = customerRpc.list(customer);
+        List<CustomerExtendDto> customers = GenericRpcResolver.resolver(baseOutput,"customer-service");
         if (CollectionUtils.isEmpty(customers)) {
             return new ArrayList<>();
         }
@@ -92,7 +92,7 @@ public class CustomerRpcResolver {
      * @date 2020/6/22
      */
     public List<CustomerResponseDto> findCustomerByIdsWithConvert(List<Long> ids, Long firmId) {
-        List<Customer> customers = this.findCustomerByIds(ids, firmId);
+        List<CustomerExtendDto> customers = this.findCustomerByIds(ids, firmId);
         return customers.stream()
                 .map(this::convertFromCustomer)
                 .collect(Collectors.toList());
@@ -101,10 +101,11 @@ public class CustomerRpcResolver {
     /**
      * 根据客户姓名查询客户信息
      */
-    public List<Customer> findCustomerByName(String name) {
+    public List<CustomerExtendDto> findCustomerByName(String name,Long firmId) {
         CustomerQueryInput customer = new CustomerQueryInput();
         customer.setName(name);
-        BaseOutput<List<Customer>> baseOutput = customerRpc.list(customer);
+        customer.setMarketId(firmId);
+        BaseOutput<List<CustomerExtendDto>> baseOutput = customerRpc.list(customer);
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, baseOutput.getMessage());
         }
@@ -118,12 +119,12 @@ public class CustomerRpcResolver {
      * @param firmId
      * @return
      */
-    public Customer getWithNotNull(Long customerId, Long firmId) {
-        BaseOutput<Customer> baseOutput = customerRpc.get(customerId, firmId);
+    public CustomerExtendDto getWithNotNull(Long customerId, Long firmId) {
+        BaseOutput<CustomerExtendDto> baseOutput = customerRpc.get(customerId, firmId);
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "远程调用客户服务失败");
         }
-        Customer customer = baseOutput.getData();
+        CustomerExtendDto customer = baseOutput.getData();
         Optional.ofNullable(customer)
                 .orElseThrow(() -> new CardAppBizException(ResultCode.DATA_ERROR, "客户不存在"));
         return customer;
@@ -139,8 +140,8 @@ public class CustomerRpcResolver {
         customerResponseDto.setCode(customer.getCode());
         customerResponseDto.setId(customer.getId());
         customerResponseDto.setName(customer.getName());
-        customerResponseDto.setCustomerType(customer.getCustomerMarket().getType());
-        customerResponseDto.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
+//        customerResponseDto.setCustomerType(customer.getc);
+//        customerResponseDto.setCustomerTypeName(CustomerType.getTypeName(customer.getCustomerMarket().getType()));
         customerResponseDto.setCertificateAddr(customer.getCertificateAddr());
         customerResponseDto.setCertificateNumber(customer.getCertificateNumber());
         customerResponseDto.setCertificateType(customer.getCertificateType());
@@ -154,8 +155,8 @@ public class CustomerRpcResolver {
      * @param query
      * @return
      */
-    public List<Customer> list(CustomerQueryInput query) {
-        BaseOutput<List<Customer>> baseOutput = customerRpc.list(query);
+    public List<CustomerExtendDto> list(CustomerQueryInput query) {
+        BaseOutput<List<CustomerExtendDto>> baseOutput = customerRpc.list(query);
         if (!baseOutput.isSuccess()) {
             throw new CardAppBizException("远程调用客户服务失败");
         }

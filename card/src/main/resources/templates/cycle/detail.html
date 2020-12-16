@@ -71,19 +71,19 @@
 					</div>
 	            	<div class="form-group col">
 	            			<label for="cycleNo" class="div_label">网银收款|${detail.accountCycleDetailDto.bankInTimes!}笔</label>
-	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.bankInAmountText!}" readonly/>
+	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.bankInAmountText!} &emsp;&emsp;&emsp;&emsp;修正后金额：${detail.accountCycleDetailDto.beforeReverseBankInAmountText!}" readonly/>
 	            	</div>
 	            	<div class="form-group col">
 							<label for="cycleNo" class="div_label">网银支出|${detail.accountCycleDetailDto.bankOutTimes!}笔</label>
-							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.bankOutAmountText!}" readonly/>
+							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.bankOutAmountText!} &emsp;&emsp;&emsp;&emsp;修正后金额：${detail.accountCycleDetailDto.beforeReverseBankOutAmountText!}" readonly/>
 	            	</div>
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">现金收款|${detail.accountCycleDetailDto.depoCashTimes!}笔</label>
-							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoCashAmountText!}" readonly/>
+							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoCashAmountText!} &emsp;&emsp;&emsp;&emsp;修正后金额：${detail.accountCycleDetailDto.beforeReverseDepoCashAmountText!}" readonly/>
 	            	</div>
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">现金支出|${detail.accountCycleDetailDto.drawCashTimes!}笔</label>
-							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.drawCashAmountText!}" readonly/>
+							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.drawCashAmountText!} &emsp;&emsp;&emsp;&emsp;修正后金额：${detail.accountCycleDetailDto.beforeReverseDrawCashAmountText!}" readonly/>
 	            	</div>
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">未交现金余额</label>
@@ -91,7 +91,7 @@
 	            	</div>
 	            	<div class="form-group col">
 						<label for="cycleNo" class="div_label">POS收款|${detail.accountCycleDetailDto.depoPosTimes!}笔</label>
-						<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoPosAmountText!}" readonly/>
+						<input type="text" class="form-control" value="${detail.accountCycleDetailDto.depoPosAmountText!}&emsp;&emsp;&emsp;&emsp;修正后金额：${detail.accountCycleDetailDto.beforeReverseDepoPosAmountText!}" readonly/>
 					</div>
 	            	<% if(detail.state != 1){ %>
 		            	<div class="form-group col">
@@ -110,6 +110,8 @@
 			<% else if(settled == 2){ %>
 			<button id="back"
 				type="button" class="btn btn-secondary px-5" onclick="backList()">返回</button>
+			<button id="back"
+				type="button" class="btn btn-secondary px-5" onclick="backList()">打印</button>
 			<% }%>
 			<input id="cycleState" type="hidden" value="${detail.state!}">
 		</div>
@@ -139,6 +141,11 @@
 				<h6 class="nav-title">操作记录</h6>
 		</a></li>
 		</#resource>
+		<li class="nav-item"><a class="nav-link" id="reverse-tab"
+			onclick="reverseActive()" uri="/cycle/reverseTab.html"
+			data-toggle="tab" href="#reverse-record" role="tab">
+				<h6 class="nav-title">冲正记录</h6>
+		</a></li>
 	</ul>
 </div>
 <div id="detailTabContent" class="tab-content border-top-0">
@@ -185,9 +192,34 @@
 						<thead>
 							<tr>
 								<th data-field="serialNo" data-align="center">业务流水号</th>
-								<th data-field="customerNo" data-align="center">客户编号</th>
 								<th data-field="customerName" data-align="center">客户名称</th>
-								<th data-field="cardNo" data-align="center">园区卡号</th>
+								<th data-field="cardNo" data-align="center">卡号</th>
+								<th data-field="typeText" data-align="center">操作业务</th>
+								<th data-field="startBalanceText" data-align="center">期初金额
+								</th>
+								<th data-field="amountText" data-align="center">操作金额</th>
+								<th data-field="endBalanceText" data-align="center">账户余额</th>
+								<th data-field="operateTime" data-align="center">操作时间</th>
+								<th data-field="notes" data-align="center" data-sortable="false">
+									备注</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tab-pane tab-info" id="reverse-record" role="tabpanel">
+		<div class="container-fluid" id="table-reverse">
+			<div class="row">
+				<div class="col-12">
+					<table id="reverse-table" data-toggle="table"
+						data-icons="bui.variable.icons" data-buttons-class="primary">
+						<thead>
+							<tr>
+								<th data-field="serialNo" data-align="center">业务流水号</th>
+								<th data-field="customerName" data-align="center">客户名称</th>
+								<th data-field="cardNo" data-align="center">卡号</th>
 								<th data-field="typeText" data-align="center">操作业务</th>
 								<th data-field="startBalanceText" data-align="center">期初金额
 								</th>
@@ -252,9 +284,11 @@
 	let teter = $("#table-payer").prop("outerHTML");
 	let tetee = $("#table-payee").prop("outerHTML");
 	let tetoperation = $("#table-operation").prop("outerHTML");
+	let tetreverse = $("#table-reverse").prop("outerHTML");
 	let isteter = false;
 	let istetee = false;
 	let istetoperation = false;
+	let istetreverse = false;
 	$(function() {
 		$('#settleCycle').on('show.bs.modal', centerModals);
 		if($("#cycleState").val() == 2){
@@ -360,8 +394,10 @@
 		istetee = true;
 		isteter = false;
 		istetoperation = false;
+		$("#table-payee").remove();
 		$("#table-payer").remove();
 		$("#table-operation").remove();
+		$("#table-reverse").remove();
 		$("#payee-record").addClass('show active');
 		$(this).addClass('active');
 		$("#payee-record").append(tetee);
@@ -379,8 +415,11 @@
 		isteter = true;
 		istetee = false;
 		istetoperation = false;
+		istetreverse = false;
 		$("#table-payee").remove();
+		$("#table-payer").remove();
 		$("#table-operation").remove();
+		$("#table-reverse").remove();
 		$("#payer-record").addClass('show active');
 		$(this).addClass('active');
 		$("#payer-record").append(teter);
@@ -398,8 +437,11 @@
 		istetoperation = true;
 		isteter = false;
 		istetee = false;
+		istetreverse = false;
 		$("#table-payer").remove();
 		$("#table-payee").remove();
+		$("#table-operation").remove();
+		$("#table-reverse").remove();
 		$("#operationr-record").addClass('show active');
 		$(this).addClass('active');
 		$("#operation-record").append(tetoperation);
@@ -411,14 +453,38 @@
 		$.table.init(options);
 	}
 	
-	function centerModals() {   
+	function reverseActive() {
+		if (istetreverse) {
+			return;
+		}
+		istetreverse = true;
+		isteter = false;
+		istetee = false;
+		istetoperation = false;
+		$("#table-payer").remove();
+		$("#table-payee").remove();
+		$("#table-operation").remove();
+		$("#table-reverse").remove();
+		$("#reverse-record").addClass('show active');
+		$(this).addClass('active');
+		$("#reverse-record").append(tetreverse);
+		var options = {
+			id : "reverse-table",
+			url : "${contextPath}/cycle/reverse/page.action",
+			sortName: "operate_time"
+		};
+		$.table.init(options);
+	}
+	
+	
+	function centerModals() { 
 		　　$('#settleCycle').each(function(i) {   
 		　　　　var $clone = $(this).clone().css('display','block').appendTo('body');
 		　　　　var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 2);
 		　　　　top = top > 0 ? top : 0;   
 		　　　　$clone.remove();   
 		　　　　$(this).find('.modal-content').css("margin-top", top);   
-		　　});   
+		　　});
 		};
 	
 </script>

@@ -56,7 +56,7 @@
     <div class="col-12">
         <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
             <#resource code="account-detail-tab">
-            <button id="btn_query" type="button" class="btn btn-primary" onclick="redirectToDetail()"><i
+            <button id="btn_query" type="button" class="btn btn-primary" onclick="redirectToDetail('100%','90%')"><i
                     class="fa fa-eye"></i> 查看
             </button>
         </#resource>
@@ -79,6 +79,9 @@
                 <th data-field="cardNo" data-formatter="cardNoFormatter" data-align="center">
                     卡号
                 </th>
+                <th data-field="holdName" data-align="center">
+                    持卡人
+                </th>
                 <th data-field="cardTypeText"  data-align="center" >
                     卡类别
                 </th>
@@ -91,11 +94,11 @@
                 <th data-field="customerName" data-align="center">
                     客户名称
                 </th>
-                <th data-field="customerMarketTypeText" data-align="center">
+                <th data-field="customerSubTypeName" data-align="center">
                     身份类型
                 </th>
                 <th data-field="customerContactsPhone" data-align="center">
-                    联系方式
+                   客户电话
                 </th>
                 <th data-field="cardCreateTime"  data-align="center">
                     开卡时间

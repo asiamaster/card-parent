@@ -30,7 +30,7 @@ import javax.annotation.Resource;
 
 /**
  * 卡片管理
- * 
+ *
  * @author ：WangBo
  * @time ：2020年4月28日下午4:04:46
  */
@@ -107,7 +107,7 @@ public class CardManageController implements IControllerHandler {
 
 	/**
 	 * 换卡(C)
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/14
 	 */
@@ -137,7 +137,7 @@ public class CardManageController implements IControllerHandler {
 
 	/**
 	 * 挂失(C)
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/7/14
 	 */
@@ -153,7 +153,6 @@ public class CardManageController implements IControllerHandler {
 
 	/**
 	 * 解挂操作的时候查询(C端)
-	 * 
 	 * @author miaoguoxin
 	 * @date 2020/8/6
 	 */
@@ -164,5 +163,19 @@ public class CardManageController implements IControllerHandler {
 		UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
 		query.setCardNo(cardNo);
 		return BaseOutput.successData(accountQueryService.getForUnLostCard(query));
+	}
+
+	/**
+	 * 解锁操作的时候查询(C端)
+	 * @author miaoguoxin
+	 * @date 2020/8/6
+	 */
+	@GetMapping("getByCardForUnLock.action")
+	public BaseOutput<UserAccountCardResponseDto> getByCardNoForUnLock(String cardNo) {
+		LOGGER.info("解锁查询*****{}", cardNo);
+		AssertUtils.notEmpty(cardNo, "卡号不能为空");
+		UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
+		query.setCardNo(cardNo);
+		return BaseOutput.successData(accountQueryService.getForUnLockCard(query));
 	}
 }

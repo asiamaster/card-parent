@@ -163,7 +163,7 @@ public class FundServiceImpl implements IFundService {
         record.setCustomerId(accountInfo.getCustomerId());
         record.setCustomerName(accountInfo.getCustomerName());
         record.setCustomerNo(accountInfo.getCustomerCode());
-        record.setCustomerType(accountInfo.getCustomerMarketType());
+        record.setCustomerType(accountInfo.getCustomerCharacterType());
         record.setFirmId(unfreezeFundDto.getFirmId());
         record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
         record.setNotes(unfreezeFundDto.getRemark());

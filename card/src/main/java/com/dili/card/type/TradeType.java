@@ -5,21 +5,21 @@ package com.dili.card.type;
  */
 public enum TradeType {
 
-    DEPOSIT(10,"账户充值"),
-    WITHDRAW(11,"账户提现"),
-    FEE(12,"缴费"),
-    AUTH_FEE(13,"预授权缴费"),
-    PRE_DEPOSIT(14,"预存款"),
-    EBANK_RECHARGE(15,"网银充值(充值失败后的补偿，是个特殊操作)"),
-    DIRECT_TRADE(20,"即时交易"),
-    AUTH_TRADE(21,"预授权交易"),
-    VOUCH_TRADE(22,"担保交易"),
-    TRANSFER(23,"账户转账"),
-    BANK_DEPOSIT(30,"银行圈存"),
-    BANK_WITHDRAW(31,"银行圈提"),
-    CANCEL(40,"交易撤销"),
-    REFUND(41,"交易退款"),
-    CORRECT(42,"交易冲正");
+    DEPOSIT(10, "账户充值"),
+    WITHDRAW(11, "账户提现"),
+    FEE(12, "缴费"),
+    AUTH_FEE(13, "预授权缴费"),
+    PRE_DEPOSIT(14, "预存款"),
+    EBANK_RECHARGE(15, "网银充值(充值失败后的补偿，是个特殊操作)"),
+    DIRECT_TRADE(20, "即时交易"),
+    AUTH_TRADE(21, "预授权交易"),
+    VOUCH_TRADE(22, "担保交易"),
+    TRANSFER(23, "账户转账"),
+    BANK_DEPOSIT(30, "银行圈存"),
+    BANK_WITHDRAW(31, "银行圈提"),
+    CANCEL(40, "交易撤销"),
+    REFUND(41, "交易退款"),
+    CORRECT(42, "交易冲正");
     private int code;
     private String name;
 
@@ -34,6 +34,18 @@ public enum TradeType {
 
     public String getName() {
         return name;
+    }
+
+    /**
+     * 是否是可以冲正的业务(只有充值和提款)
+     * @author miaoguoxin
+     * @date 2020/11/25
+     */
+    public static boolean canReverseType(Integer code) {
+        if (code == null) {
+            return false;
+        }
+        return TradeType.DEPOSIT.getCode() == code || TradeType.WITHDRAW.getCode() == code;
     }
 
     public static TradeType getByCode(int code) {

@@ -1,41 +1,41 @@
 <#bs4Body>
 <style>
-	.modal-dialog {
-		max-width: 100% !important;
-		margin:0 auto;
-	}
+.modal-dialog {
+	max-width: 100% !important;
+	margin: 0 auto;
+}
 </style>
 <div class="container-fluid">
 	<div id="add-modal">
 		<form id="save-form">
 			<div class="row row-cols-1">
 				<div class="form-group col">
-					<label for="cardType">入库类型</label>
-					<select name="cardType" id="cardType" class="form-control"></select>
+					<label for="cardType">入库类型</label> <select name="cardType"
+						id="cardType" class="form-control"></select>
 					<#bcomboProvider _id="cardType" _provider="cardTypeProvider"
-					_queryParams='{emptyText:"-- 请选择 --"}' />
+						_queryParams='{emptyText:"-- 无 --"}' />
 				</div>
 				<div class="form-group col" id="cardFaceTr" style="display: none">
-					<label for="cardFace">卡面信息</label>
-					<select name="cardFace" id="cardFace" class="form-control"></select>
+					<label for="cardFace">卡面信息</label> <select name="cardFace"
+						id="cardFace" class="form-control"></select>
 					<#bcomboProvider _id="cardFace" _provider="cardFaceProvider"
-					_queryParams='{emptyText:"-- 请选择 --"}' />
+						_queryParams='{emptyText:"-- 无 --"}' />
 				</div>
 				<div class="form-group col">
-					<label for="startCardNo">起始卡号</label>
-					<input id="startCardNo" name="startCardNo"
-						   type="text" class="form-control calculateAmount isInt"
-						   minlength="12" maxlength="12" required />
+					<label for="startCardNo">起始卡号</label> <input id="startCardNo"
+						name="startCardNo" type="text"
+						class="form-control calculateAmount isInt" minlength="12"
+						maxlength="12" required />
 				</div>
 				<div class="form-group col">
-					<label for="endCardNo">结束卡号</label>
-					<input id="endCardNo" name="endCardNo"
-						   type="text" class="form-control calculateAmount isInt"
-						   minlength="12" maxlength="12" required />
+					<label for="endCardNo">结束卡号</label> <input id="endCardNo"
+						name="endCardNo" type="text"
+						class="form-control calculateAmount isInt" minlength="12"
+						maxlength="12" required />
 				</div>
 				<div class="form-group col">
-					<label for="amount">入库张数</label>
-					<input id="amount" name="amount" type="text" class="form-control" readonly="readonly" />
+					<label for="amount">入库张数</label> <input id="amount" name="amount"
+						type="text" class="form-control" readonly="readonly" />
 				</div>
 			</div>
 		</form>
@@ -48,6 +48,19 @@
 	src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <#common_autoCompleteUser />
 <script>
+	var cardFaceIsMust = false;
+	$(() => {
+	    // 根据当前账号所属市场判断卡面信息是否为必须
+	    let url = "${contextPath}/cardStorageIn/cardFaceIsMust.action";
+	    $.ajax({
+            type:'GET',
+            url: url,
+            dataType:'json',
+            success:function(result) {
+            	cardFaceIsMust = result.data;
+            }
+        });
+	})
 	let formId = "save-form";
 	$("#" + formId).validate({
 		onkeyup : false,
@@ -80,7 +93,6 @@
 
 	// 提交入库
 	function submitHandler(e) {
-
 		let startCardNo = parseInt($("#startCardNo").val());
 		let endCardNo = parseInt($("#endCardNo").val());
 		if (startCardNo > endCardNo) {
@@ -102,7 +114,7 @@
 		let url = "${contextPath}/cardStorageIn/save.action";
 		let cardFace = $("#cardFace").val();
 		let cardType = $("#cardType").val();
-		if (cardType == 10 && cardFace == "") {
+		if (cardFaceIsMust && cardType == 10 && cardFace == "") {
 			bs4pop.alert("主卡入库时请选择卡面！", {
 				type : "warning"
 			});
@@ -137,7 +149,7 @@
 	// 根据卡类型隐藏卡面信息选择框
 	$('#cardType').change(function() {
 		let cardType = $(this).val();
-		if (10 == cardType) {
+		if (cardFaceIsMust && 10 == cardType) {
 			$('#cardFaceTr').show();
 		} else {
 			$('#cardFaceTr').hide();

@@ -20,7 +20,7 @@ import com.dili.ss.domain.PageOutput;
  * @time ：2020年7月17日上午10:22:18
  */
 @FeignClient(name = "account-service", contextId = "cardStorgeRpc", path = "/api/account/cardStorage"
-/* , url = "http://127.0.0.1:8186" */ )
+		, url = "${accountService.url:}" )
 public interface CardStorageRpc {
 
 	/**

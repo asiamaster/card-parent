@@ -36,6 +36,8 @@ public class BusinessRecordDo implements Serializable {
 	private String customerNo;
 	/** 客户姓名 */
 	private String customerName;
+	/** 持卡人姓名 */
+	private String holdName;
 	/** 期初余额-分 */
 	private Long startBalance;
 	/** 操作金额-分 */
@@ -100,21 +102,23 @@ public class BusinessRecordDo implements Serializable {
 		super();
 	}
 
-    /**
-     * setter for
-     */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-    /**
-     * getter for
-     */
 	public Long getId() {
 		return id;
 	}
 
-    /**
+	public String getHoldName() {
+		return holdName;
+	}
+
+	public void setHoldName(String holdName) {
+		this.holdName = holdName;
+	}
+
+	/**
      * setter for 流水号
      */
 	public void setSerialNo(String serialNo) {

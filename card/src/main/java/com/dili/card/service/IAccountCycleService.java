@@ -17,7 +17,7 @@ public interface IAccountCycleService {
 	 * 结账
 	 */
 	AccountCycleDto settle(AccountCycleDto accountCycleDto);
-	
+
 	/**
 	 * 平账
 	 */
@@ -27,7 +27,7 @@ public interface IAccountCycleService {
 	 * 账务周期列表
 	 */
 	List<AccountCycleDto> list(AccountCycleDto accountCycleDto);
-	
+
 	/**
 	 * 账务周期分页查询
 	 */
@@ -57,14 +57,21 @@ public interface IAccountCycleService {
 	 * 获取当前活跃的账务周期号  非创建
 	 */
 	AccountCycleDo findActiveCycleByUserId(Long userId);
-	
+
+	/**
+	* 账务周期是否活跃
+	* @author miaoguoxin
+	* @date 2020/11/25
+	*/
+	Boolean isActiveByCycleNo(Long cycleNo);
+
 	/**
 	 * 增加现金池金额
 	 * @param cycleNo z账务周期号
 	 * @param amount 金额
 	 */
 	void increaseCashBox(Long cycleNo, Long amount);
-	
+
 	/**
 	 * 减少现金池金额
 	 * @param cycleNo z账务周期号
@@ -76,12 +83,12 @@ public interface IAccountCycleService {
 	 * 账务周期结账申请详情
 	 */
 	AccountCycleDto applyDetail(Long userId);
-	
+
 	/**
 	 * 更新现金柜
 	 */
 	void updateCashBox(Long cycleNo, Long amount);
-	
+
 	/**
 	 * 获取最新账务周期
 	 */
@@ -91,21 +98,21 @@ public interface IAccountCycleService {
 	 * 校验是否存在合适的分支事务
 	 */
 	Boolean checkExistActiveCycle(Long userId);
-	
+
 	/**
-	 * 更新状态 
+	 * 更新状态
 	 * @param id 账务周期主键id
 	 * @param state 状态
 	 */
 	void updateStateById(Long id, Integer state, Integer version, Long auditorId, String auditorName);
-	
+
 	/**
-	 * 更新状态 
+	 * 更新状态
 	 * @param id 账务周期主键id
 	 * @param state 状态
 	 */
 	void updateStateById(Long id, Integer state, Integer version);
-	
+
 	/**
 	 * 构建账务周期包装实体实体
 	 */
@@ -114,6 +121,13 @@ public interface IAccountCycleService {
 	/**
 	 * 构建账务周期包装实体实体
 	 */
+	List<AccountCycleDto> buildAccountCycleWrapperDetailList(List<AccountCycleDo> cycles);
+
+	/**
+	 * 构建账务周期包装实体实体
+	 */
 	AccountCycleDto buildAccountCycleWrapper(AccountCycleDo cycle);
-	
+
+
+
 }

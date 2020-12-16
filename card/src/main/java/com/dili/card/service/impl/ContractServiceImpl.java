@@ -46,6 +46,7 @@ import com.dili.card.type.CustomerState;
 import com.dili.card.type.DisableState;
 import com.dili.card.util.PageUtils;
 import com.dili.customer.sdk.domain.Customer;
+import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.constant.ResultCode;
@@ -302,7 +303,7 @@ public class ContractServiceImpl implements IContractService {
 		// 客户信息构建
 		List<Long> customerIds = fundContracts.stream().map(c -> c.getConsignorCustomerId())
 				.collect(Collectors.toList());
-		Map<Long, Customer> customerMap = customerRpcResolver.findCustomerMapByCustomerIds(customerIds,
+		Map<Long, CustomerExtendDto> customerMap = customerRpcResolver.findCustomerMapByCustomerIds(customerIds,
 				fundContracts.get(0).getFirmId());
 		// 合同信息构建
 		for (FundContractDo fundContractDo : fundContracts) {

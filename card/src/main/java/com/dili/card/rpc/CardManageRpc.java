@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * 卡相关rpc
  */
 @FeignClient(name = "account-service", contextId = "cardManageRpc",
-        path = "/api/card"  /*, url = "http://127.0.0.1:8186"*/)
+        path = "/api/card"  , url = "${accountService.url:}")
 public interface CardManageRpc {
 
     /**
@@ -32,7 +32,7 @@ public interface CardManageRpc {
      */
     @PostMapping("/resetLoginPwd")
     BaseOutput<?> resetLoginPwd(CardRequestDto cardParam);
-    
+
     /**
      * 密码校验
      */

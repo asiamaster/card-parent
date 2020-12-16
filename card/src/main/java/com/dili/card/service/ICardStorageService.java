@@ -68,11 +68,18 @@ public interface ICardStorageService {
 	void voidCard(String cardNo, String remark);
 
 	/**
-	 * 检查库中卡片状态，卡类型是否一致，客户类型与库存中卡面信息是否合适,
+	 * 检查库中卡片状态，卡类型是否一致，如果卡面信息不为空则校验客户类型与库存中卡面信息是否合适,
 	 * @param cardNo
 	 * @param cardType
-	 * @param customerType
-	 * @return 
+	 * @param customerId
+	 * @return
 	 */
-	public CardStorageDto checkAndGetByCardNo(String cardNo, Integer cardType, String customerType);
+	public CardStorageDto checkAndGetByCardNo(String cardNo, Integer cardType, Long customerId);
+	
+	/**
+	 * 根据当前登录用户所属市场，判断卡面信息是否必须
+	 * <br>目前只有寿光入库时必须要求选择卡面
+	 * @return
+	 */
+	public boolean cardFaceIsMust();
 }

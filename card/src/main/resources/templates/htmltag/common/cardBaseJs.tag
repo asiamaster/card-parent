@@ -34,4 +34,13 @@
         if (typeof (callbackObj) == "undefined") return;
         return  callbackObj.checkCardStatus();
     }
+    /**
+     * 读取密码
+     * @returns
+     */
+    function readPasswordKeyboardAsync() {
+        if (typeof (callbackObj) == "undefined") return;
+        callbackObj.readPasswordKeyboardAsync();
+    }
+    
 </script>
