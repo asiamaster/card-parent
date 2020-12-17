@@ -1,6 +1,22 @@
 package com.dili.card.controller;
 
-import cn.hutool.core.util.StrUtil;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.BusinessRecordResponseDto;
@@ -17,17 +33,8 @@ import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 业务记录  以及 操作流水  相关controller
@@ -93,7 +100,7 @@ public class SerialController implements IControllerHandler {
         UserTicket userTicket = getUserTicket();
         serialQueryDto.setFirmId(userTicket.getFirmId());
         Long operateAmount = serialRecordRpcResolver.countOperateAmount(serialQueryDto);
-        return BaseOutput.success().setData(CurrencyUtils.toYuanWithStripTrailingZeros(operateAmount != null ? operateAmount : 0L));
+        return BaseOutput.successData(CurrencyUtils.toYuanWithStripTrailingZeros(operateAmount != null ? operateAmount : 0L));
     }
 
     /**

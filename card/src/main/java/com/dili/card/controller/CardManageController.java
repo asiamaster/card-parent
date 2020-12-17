@@ -52,11 +52,25 @@ public class CardManageController implements IControllerHandler {
 	@RequestMapping(value = "/resetLoginPwd.action", method = RequestMethod.POST)
 	public BaseOutput<Boolean> resetLoginPassword(@RequestBody @Validated(value = { CardValidator.Generic.class,
 			CardValidator.ResetPassword.class }) CardRequestDto cardRequest) throws Exception {
-		LOGGER.info("重置登陆密码*****{}", JSONObject.toJSONString(cardRequest));
+		LOGGER.info("重置密码*****{}", JSONObject.toJSONString(cardRequest, JsonExcludeFilter.PWD_FILTER));
 		// 操作日志
 		businessLogService.saveLog(OperateType.RESET_PWD, getUserTicket(), "业务卡号:" + cardRequest.getCardNo());
 		buildOperatorInfo(cardRequest);
 		cardManageService.resetLoginPwd(cardRequest);
+		return BaseOutput.success();
+	}
+
+	/**
+	 * 修改密码
+	 */
+	@RequestMapping(value = "/modifyLoginPwd.action", method = RequestMethod.POST)
+	public BaseOutput<Boolean> modifyLoginPwd(@RequestBody @Validated(value = { CardValidator.Generic.class,
+			CardValidator.ResetPassword.class }) CardRequestDto cardRequest) throws Exception {
+		LOGGER.info("修改密码*****{}", JSONObject.toJSONString(cardRequest, JsonExcludeFilter.PWD_FILTER));
+		// 操作日志
+		businessLogService.saveLog(OperateType.PWD_CHANGE, getUserTicket(), "业务卡号:" + cardRequest.getCardNo());
+		buildOperatorInfo(cardRequest);
+		cardManageService.modifyLoginPwd(cardRequest);
 		return BaseOutput.success();
 	}
 
@@ -66,7 +80,7 @@ public class CardManageController implements IControllerHandler {
 	@PostMapping("/returnCard.action")
 	public BaseOutput<String> returnCard(
 			@RequestBody @Validated(value = { CardValidator.Generic.class }) CardRequestDto cardRequest) {
-		LOGGER.info("退卡*****{}", JSONObject.toJSONString(cardRequest,JsonExcludeFilter.PWD_FILTER));
+		LOGGER.info("退卡*****{}", JSONObject.toJSONString(cardRequest, JsonExcludeFilter.PWD_FILTER));
 		// 操作日志
 		businessLogService.saveLog(OperateType.REFUND_CARD, getUserTicket(), "业务卡号:" + cardRequest.getCardNo());
 		buildOperatorInfo(cardRequest);
@@ -95,7 +109,7 @@ public class CardManageController implements IControllerHandler {
 	 */
 	@PostMapping("/unLockCard.action")
 	public BaseOutput<?> unLockCard(@RequestBody CardRequestDto cardParam) {
-		LOGGER.info("解锁卡片*****{}", JSONObject.toJSONString(cardParam,JsonExcludeFilter.PWD_FILTER));
+		LOGGER.info("解锁卡片*****{}", JSONObject.toJSONString(cardParam, JsonExcludeFilter.PWD_FILTER));
 		validateCommonParam(cardParam);
 		if (StrUtil.isBlank(cardParam.getLoginPwd())) {
 			return BaseOutput.failure("密码为空");
@@ -113,7 +127,7 @@ public class CardManageController implements IControllerHandler {
 	 */
 	@PostMapping("/changeCard.action")
 	public BaseOutput<String> changeCard(@RequestBody CardRequestDto cardParam) {
-		LOGGER.info("换卡*****{}", JSONObject.toJSONString(cardParam,JsonExcludeFilter.PWD_FILTER));
+		LOGGER.info("换卡*****{}", JSONObject.toJSONString(cardParam, JsonExcludeFilter.PWD_FILTER));
 		// AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
 		AssertUtils.notEmpty(cardParam.getNewCardNo(), "新开卡号不能为空");
 		AssertUtils.notNull(cardParam.getServiceFee(), "工本费不能为空");
@@ -143,7 +157,7 @@ public class CardManageController implements IControllerHandler {
 	 */
 	@PostMapping("/reportLossCard.action")
 	public BaseOutput<String> reportLoss(@RequestBody CardRequestDto cardParam) {
-		LOGGER.info("挂失请求参数:{}", JSON.toJSONString(cardParam,JsonExcludeFilter.PWD_FILTER));
+		LOGGER.info("挂失请求参数:{}", JSON.toJSONString(cardParam, JsonExcludeFilter.PWD_FILTER));
 		AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
 		businessLogService.saveLog(OperateType.LOSS_CARD, getUserTicket(), "业务卡号:" + cardParam.getCardNo());
 		this.validateCommonParam(cardParam);
@@ -153,6 +167,7 @@ public class CardManageController implements IControllerHandler {
 
 	/**
 	 * 解挂操作的时候查询(C端)
+	 * 
 	 * @author miaoguoxin
 	 * @date 2020/8/6
 	 */
@@ -167,6 +182,7 @@ public class CardManageController implements IControllerHandler {
 
 	/**
 	 * 解锁操作的时候查询(C端)
+	 * 
 	 * @author miaoguoxin
 	 * @date 2020/8/6
 	 */

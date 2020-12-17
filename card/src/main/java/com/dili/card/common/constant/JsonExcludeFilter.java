@@ -18,5 +18,6 @@ public class JsonExcludeFilter {
 		PWD_FILTER.getExcludes().add("loginPwd");
 		PWD_FILTER.getExcludes().add("parentLoginPwd");
 		PWD_FILTER.getExcludes().add("secondLoginPwd");
+		PWD_FILTER.getExcludes().add("oldLoginPwd");
 	}
 }
