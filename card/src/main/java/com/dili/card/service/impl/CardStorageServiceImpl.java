@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -154,7 +155,7 @@ public class CardStorageServiceImpl implements ICardStorageService {
 			throw new CardAppBizException("请使用" + CardType.getName(cardType) + "办理当前业务!");
 		}
 		// 没有卡面信息,不校验客户身份类型与卡面是否匹配
-		if (null != cardStorage.getCardFace() && !CardType.isSlave(cardStorage.getType())) {
+		if (StringUtils.isNoneBlank(cardStorage.getCardFace()) && !CardType.isSlave(cardStorage.getType())) {
 			CustomerExtendDto customer = customerRpcResolver.findCustomerById(customerId, cardStorage.getFirmId());
 			List<CharacterType> characterTypeList = customer.getCharacterTypeList();
 			if (!CustomerType.checkCardFace(characterTypeList, cardStorage.getCardFace())) {
