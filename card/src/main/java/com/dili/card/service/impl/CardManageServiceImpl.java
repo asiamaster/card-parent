@@ -138,7 +138,7 @@ public class CardManageServiceImpl implements ICardManageService {
         //保存本地操作记录
         BusinessRecordDo businessRecordDo = saveLocalSerialRecordNoFundSerial(cardParam, accountCard, OperateType.PWD_CHANGE);
 
-        //远程账户重置密码操作
+        //远程账户修改密码操作
         GenericRpcResolver.resolver(cardManageRpc.modifyLoginPwd(cardParam),ServiceName.ACCOUNT);
 
         //远程支付重置密码操作
