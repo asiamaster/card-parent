@@ -48,10 +48,10 @@
 	src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <#common_autoCompleteUser />
 <script>
-	var cardFaceIsMust = false;
+	var cardFaceIsMust = true;
 	$(() => {
 	    // 根据当前账号所属市场判断卡面信息是否为必须
-	    let url = "${contextPath}/cardStorageIn/cardFaceIsMust.action";
+	    /* let url = "${contextPath}/cardStorageIn/cardFaceIsMust.action";
 	    $.ajax({
             type:'GET',
             url: url,
@@ -59,7 +59,7 @@
             success:function(result) {
             	cardFaceIsMust = result.data;
             }
-        });
+        }); */
 	})
 	let formId = "save-form";
 	$("#" + formId).validate({
@@ -112,14 +112,14 @@
 			return false;
 		}
 		let url = "${contextPath}/cardStorageIn/save.action";
-		let cardFace = $("#cardFace").val();
+		/* let cardFace = $("#cardFace").val();
 		let cardType = $("#cardType").val();
-		if (cardFaceIsMust && cardType == 10 && cardFace == "") {
+		if (cardType == 10 && cardFace == "") {
 			bs4pop.alert("主卡入库时请选择卡面！", {
 				type : "warning"
 			});
 			return;
-		}
+		} */
 		let data = $.common.formToJSON(formId);
 		let content="将根据输入的卡号段解析卡号，完成批量入库。请确保入库卡号的连续性和信息正确性。<br>确定入库？";
 		let option = {
