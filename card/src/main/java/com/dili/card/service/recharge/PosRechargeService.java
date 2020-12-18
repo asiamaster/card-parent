@@ -1,17 +1,17 @@
 package com.dili.card.service.recharge;
 
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.stereotype.Component;
+
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.annotation.TradeChannelMark;
-import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.ReqParamExtra;
 import com.dili.card.dto.FundRequestDto;
-import com.dili.card.exception.CardAppBizException;
 import com.dili.card.type.BankCardType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.stereotype.Component;
 
 /**
  * pos鸡充值
@@ -31,7 +31,7 @@ public class PosRechargeService extends AbstractRechargeManager {
         if (extra == null) {
             extra = new JSONObject();
         }
-        return String.format("pos存款, 手续费%s元，凭证号：%s", yuan, extra.getString(Constant.POS_CERT_NUM));
+        return String.format("pos存款, 手续费%s元，凭证号：%s", yuan, extra.getString(ReqParamExtra.POS_CERT_NUM));
     }
 
     @Override
@@ -40,8 +40,9 @@ public class PosRechargeService extends AbstractRechargeManager {
         if (extra == null) {
             extra = new JSONObject();
         }
-        String bankTypeName = BankCardType.getNameByCode(extra.getInteger(Constant.BANK_TYPE));
-        return String.format("pos存款:%s,凭证号:%s", bankTypeName, extra.getString(Constant.POS_CERT_NUM));
+        String bankTypeName = BankCardType.getNameByCode(extra.getInteger(ReqParamExtra.BANK_TYPE));
+        String posTypeName = extra.getString(ReqParamExtra.POS_TYPE_NAME);
+        return String.format("%s,%s,凭证号:%s", bankTypeName, posTypeName, extra.getString(ReqParamExtra.POS_CERT_NUM));
     }
 
     @Override

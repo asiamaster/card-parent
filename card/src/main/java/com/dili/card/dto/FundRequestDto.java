@@ -26,7 +26,6 @@ public class FundRequestDto extends CardRequestDto {
     @Max(value = 999999999L, message = "最多9999999.99元", groups = {FundValidator.Trade.class})
     private Long amount;
     /** 交易密码*/
-    @NotBlank(message = "交易密码不能为空", groups = FundValidator.Trade.class)
     private String tradePwd;
     /** 手续费*/
     //@Min(value = 1, message = "手续费最少0.01元", groups = FundValidator.Trade.class)

@@ -5,6 +5,7 @@ import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.ReqParamExtra;
 import com.dili.card.dto.PrintDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
@@ -58,9 +59,9 @@ public class RechargePrintServiceImpl extends PrintServiceImpl {
             return;
         }
         JSONObject extra = JSON.parseObject(json);
-        printDto.setBankType(extra.getInteger(Constant.BANK_TYPE));
-        printDto.setPosCertNum(extra.getString(Constant.POS_CERT_NUM));
-        printDto.setPosType(extra.getInteger(Constant.POS_TYPE));
+        printDto.setBankType(extra.getInteger(ReqParamExtra.BANK_TYPE));
+        printDto.setPosCertNum(extra.getString(ReqParamExtra.POS_CERT_NUM));
+        printDto.setPosType(extra.getInteger(ReqParamExtra.POS_TYPE));
     }
 
     @Override

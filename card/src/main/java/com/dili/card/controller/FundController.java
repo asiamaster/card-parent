@@ -261,6 +261,10 @@ public class FundController implements IControllerHandler {
             @RequestBody @Validated({FundValidator.Trade.class}) FundRequestDto requestDto) {
         LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto, JsonExcludeFilter.PWD_FILTER));
         this.validateCommonParam(requestDto);
+        // TODO 以会使用统一配置获取当前市场是否需要校验密码
+        if(requestDto.getFirmId() == 8) {
+        	AssertUtils.notEmpty(requestDto.getTradePwd(), "交易密码不能为空");
+        }
         businessLogService.saveLog(OperateType.ACCOUNT_CHARGE, getUserTicket(),
                 "业务卡号:" + requestDto.getCardNo(),
                 "金额:" + MoneyUtils.centToYuan(requestDto.getAmount()),

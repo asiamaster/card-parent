@@ -6,6 +6,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.dili.card.BaseTest;
 import com.dili.card.common.constant.CacheKey;
 import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.ReqParamExtra;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.entity.AccountCycleDo;
@@ -60,9 +61,9 @@ class FundControllerTest extends BaseTest {
         fundRequestDto.setServiceCost(1L);
         fundRequestDto.setTradeChannel(TradeChannel.POS.getCode());
         JSONObject extra = new JSONObject();
-        extra.put(Constant.BANK_TYPE, BankCardType.DEBIT_CARD.getCode());
-        extra.put(Constant.POS_TYPE,1);
-        extra.put(Constant.POS_CERT_NUM,"12345678");
+        extra.put(ReqParamExtra.BANK_TYPE, BankCardType.DEBIT_CARD.getCode());
+        extra.put(ReqParamExtra.POS_TYPE,1);
+        extra.put(ReqParamExtra.POS_CERT_NUM,"12345678");
         fundRequestDto.setExtra(extra);
 
         AccountCycleDo accountCycle = this.createAccountCycle();
