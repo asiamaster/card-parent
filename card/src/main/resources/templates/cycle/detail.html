@@ -71,19 +71,31 @@
 					</div>
 	            	<div class="form-group col">
 	            			<label for="cycleNo" class="div_label">网银收款|${detail.accountCycleDetailDto.bankInTimes!}笔</label>
-	            			<input type="text" class="form-control" value="${detail.accountCycleDetailDto.beforeReverseBankInAmountText!} &emsp;&emsp;&emsp;&emsp;修正后金额：${detail.accountCycleDetailDto.bankInAmountText!}" readonly/>
+							<div class="input-group">
+								<input type="text" class="form-control" value="${detail.accountCycleDetailDto.beforeReverseBankInAmountText!}" readonly/>
+								<input type="text" class="form-control" value="修正后金额：${detail.accountCycleDetailDto.bankInAmountText!}" readonly/>
+							</div>
 	            	</div>
 	            	<div class="form-group col">
 							<label for="cycleNo" class="div_label">网银支出|${detail.accountCycleDetailDto.bankOutTimes!}笔</label>
-							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.beforeReverseBankOutAmountText!} &emsp;&emsp;&emsp;&emsp;修正后金额：${detail.accountCycleDetailDto.bankOutAmountText!}" readonly/>
+							<div class="input-group">
+								<input type="text" class="form-control" value="${detail.accountCycleDetailDto.beforeReverseBankOutAmountText!}" readonly/>
+								<input type="text" class="form-control" value="修正后金额：${detail.accountCycleDetailDto.bankOutAmountText!}" readonly/>
+							</div>
 	            	</div>
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">现金收款|${detail.accountCycleDetailDto.depoCashTimes!}笔</label>
-							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.beforeReverseDepoCashAmountText!} &emsp;&emsp;&emsp;&emsp;修正后金额：${detail.accountCycleDetailDto.depoCashAmountText!}" readonly/>
+							<div class="input-group">
+								<input type="text" class="form-control" value="${detail.accountCycleDetailDto.beforeReverseDepoCashAmountText!}" readonly/>
+								<input type="text" class="form-control" value="修正后金额：${detail.accountCycleDetailDto.depoCashAmountText!}" readonly/>
+							</div>
 	            	</div>
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">现金支出|${detail.accountCycleDetailDto.drawCashTimes!}笔</label>
-							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.beforeReverseDrawCashAmountText!} &emsp;&emsp;&emsp;&emsp;修正后金额：${detail.accountCycleDetailDto.drawCashAmountText!}" readonly/>
+						<div class="input-group">
+							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.beforeReverseDrawCashAmountText!}" readonly/>
+							<input type="text" class="form-control" value="修正后金额：${detail.accountCycleDetailDto.drawCashAmountText!}" readonly/>
+						</div>
 	            	</div>
 					<div class="form-group col">
 							<label for="cycleNo" class="div_label">未交现金余额</label>
@@ -91,7 +103,10 @@
 	            	</div>
 	            	<div class="form-group col">
 						<label for="cycleNo" class="div_label">POS收款|${detail.accountCycleDetailDto.depoPosTimes!}笔</label>
-						<input type="text" class="form-control" value="${detail.accountCycleDetailDto.beforeReverseDepoPosAmountText!}&emsp;&emsp;&emsp;&emsp;修正后金额：${detail.accountCycleDetailDto.depoPosAmountText!}" readonly/>
+						<div class="input-group">
+							<input type="text" class="form-control" value="${detail.accountCycleDetailDto.beforeReverseDepoPosAmountText!}" readonly/>
+							<input type="text" class="form-control" value="修正后金额：${detail.accountCycleDetailDto.depoPosAmountText!}" readonly/>
+						</div>
 					</div>
 	            	<% if(detail.state != 1){ %>
 		            	<div class="form-group col">
