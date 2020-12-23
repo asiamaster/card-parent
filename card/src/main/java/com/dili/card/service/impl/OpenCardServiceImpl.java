@@ -230,6 +230,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		mqDto.setCustomerName(openCardInfo.getCustomerName());
 		mqDto.setCardNo(openCardInfo.getCardNo());
 		mqDto.setFirmId(openCardInfo.getFirmId());
+		mqDto.setHoldName(openCardInfo.getHoldName());
 		log.info("开卡MQ通知>>>>>EXCHANGE[{}]ROUTING[{}]{}", OpenCardMQConfig.EXCHANGE, OpenCardMQConfig.ROUTING,
 				JSONObject.toJSONString(mqDto));
 		rabbitMQMessageService.send(OpenCardMQConfig.EXCHANGE, OpenCardMQConfig.ROUTING,
@@ -295,7 +296,9 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		record.setAmount(openCardInfo.getCostFee());
 		record.setTradeChannel(TradeChannel.CASH.getCode());
 		record.setOperateTime(LocalDateTime.now());
-
+		record.setHoldName(openCardInfo.getHoldName());
+		record.setHoldContactsPhone(openCardInfo.getHoldContactsPhone());
+		record.setHoldCertificateNumber(openCardInfo.getHoldCertificateNumber());
 		SerialDto serialDto = new SerialDto();
 		serialDto.setSerialRecordList(Lists.newArrayList(record));
 		serialService.saveSerialRecord(serialDto);

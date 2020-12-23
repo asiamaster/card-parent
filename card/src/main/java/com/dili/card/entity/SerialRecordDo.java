@@ -2,6 +2,7 @@ package com.dili.card.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.type.ActionType;
+import com.dili.card.type.PublicBizType;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -12,327 +13,345 @@ import java.time.LocalDateTime;
 
 /**
  * 业务端账户流水
+ * 
  * @author bob
  */
 public class SerialRecordDo implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    /**  */
-    private Long id;
-    /** 流水号 */
-    private String serialNo;
-    /** 操作类型*/
-    private Integer type;
-    /** 账户ID */
-    private Long accountId;
-    /** 关联卡号 */
-    private String cardNo;
-    /** 客户ID */
-    private Long customerId;
-    /** 客户编号 */
-    private String customerNo;
-    /** 客户姓名 */
-    private String customerName;
-    /** 客户身份类型*/
-    private String customerType;
-    /** 持卡人姓名 */
-    private String holdName;
-    /** 资金动作-收入,支出 */
-    private Integer action;
-    /** 期初余额-分 */
-    private Long startBalance;
-    /** 操作金额-分 */
-    private Long amount;
-    /** 期末余额-分 */
-    private Long endBalance;
-    /** 交易类型-充值、提现、消费、转账、其他 */
-    private Integer tradeType;
-    /** 交易渠道-现金、POS、网银 */
-    private Integer tradeChannel;
-    /** 交易流水号 */
-    private String tradeNo;
-    /** 资金项目 */
-    private Integer fundItem;
-    /** 资金项目名称 */
-    private String fundItemName;
-    /** 操作员ID */
-    private Long operatorId;
-    /** 操作员工号 */
-    private String operatorNo;
-    /** 操作员名称 */
-    private String operatorName;
-    /** 操作时间-与支付系统保持一致 */
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime operateTime;
-    /** 备注 */
-    private String notes;
-    /** 商户ID */
-    private Long firmId;
+	/**  */
+	private Long id;
+	/** 流水号 */
+	private String serialNo;
+	/** 操作类型 */
+	private Integer type;
+	/** 账户ID */
+	private Long accountId;
+	/** 关联卡号 */
+	private String cardNo;
+	/** 客户ID */
+	private Long customerId;
+	/** 客户编号 */
+	private String customerNo;
+	/** 客户姓名 */
+	private String customerName;
+	/** 客户身份类型 */
+	private String customerType;
+	/** 持卡人 */
+	private String holdName;
+	/** 持卡人证件号 */
+	private String holdCertificateNumber;
+	/** 持卡人联系电话 */
+	private String holdContactsPhone;
+	/** 资金动作-收入,支出 */
+	private Integer action;
+	/** 期初余额-分 */
+	private Long startBalance;
+	/** 操作金额-分 */
+	private Long amount;
+	/** 期末余额-分 */
+	private Long endBalance;
+	/** 交易类型-充值、提现、消费、转账、其他 */
+	private Integer tradeType;
+	/** 交易渠道-现金、POS、网银 */
+	private Integer tradeChannel;
+	/** 交易流水号 */
+	private String tradeNo;
+	/** 资金项目 */
+	private Integer fundItem;
+	/** 资金项目名称 */
+	private String fundItemName;
+	/** 操作员ID */
+	private Long operatorId;
+	/** 操作员工号 */
+	private String operatorNo;
+	/** 操作员名称 */
+	private String operatorName;
+	/** 操作时间-与支付系统保持一致 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime operateTime;
+	/** 备注 */
+	private String notes;
+	/** 商户ID */
+	private Long firmId;
 
-    public SerialRecordDo() {
-        super();
-    }
+	public SerialRecordDo() {
+		super();
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setSerialNo(String serialNo) {
-        this.serialNo = serialNo;
-    }
+	public void setSerialNo(String serialNo) {
+		this.serialNo = serialNo;
+	}
 
-    public String getSerialNo() {
-        return serialNo;
-    }
+	public String getSerialNo() {
+		return serialNo;
+	}
 
-    public Integer getType() {
-        return type;
-    }
+	public Integer getType() {
+		return type;
+	}
 
-    public void setType(Integer type) {
-        this.type = type;
-    }
+	public void setType(Integer type) {
+		this.type = type;
+	}
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
-    }
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
+	}
 
-    public Long getAccountId() {
-        return accountId;
-    }
+	public Long getAccountId() {
+		return accountId;
+	}
 
-    public void setCardNo(String cardNo) {
-        this.cardNo = cardNo;
-    }
+	public void setCardNo(String cardNo) {
+		this.cardNo = cardNo;
+	}
 
-    public String getCardNo() {
-        return cardNo;
-    }
+	public String getCardNo() {
+		return cardNo;
+	}
 
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
-    }
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
 
-    public Long getCustomerId() {
-        return customerId;
-    }
+	public Long getCustomerId() {
+		return customerId;
+	}
 
-    public void setCustomerNo(String customerNo) {
-        this.customerNo = customerNo;
-    }
+	public void setCustomerNo(String customerNo) {
+		this.customerNo = customerNo;
+	}
 
-    public String getCustomerNo() {
-        return customerNo;
-    }
+	public String getCustomerNo() {
+		return customerNo;
+	}
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
 
-    public String getCustomerName() {
-        return customerName;
-    }
+	public String getCustomerName() {
+		return customerName;
+	}
 
-    public String getCustomerType() {
-        return customerType;
-    }
+	public String getCustomerType() {
+		return customerType;
+	}
 
-    public void setCustomerType(String customerType) {
-        this.customerType = customerType;
-    }
+	public void setCustomerType(String customerType) {
+		this.customerType = customerType;
+	}
 
-    public void setAction(Integer action) {
-        this.action = action;
-    }
+	public void setAction(Integer action) {
+		this.action = action;
+	}
 
-    public Integer getAction() {
-        return action;
-    }
+	public Integer getAction() {
+		return action;
+	}
 
-    public void setStartBalance(Long startBalance) {
-        this.startBalance = startBalance;
-    }
+	public void setStartBalance(Long startBalance) {
+		this.startBalance = startBalance;
+	}
 
-    public Long getStartBalance() {
-        return startBalance;
-    }
+	public Long getStartBalance() {
+		return startBalance;
+	}
 
-    public void setAmount(Long amount) {
-        this.amount = amount;
-    }
+	public void setAmount(Long amount) {
+		this.amount = amount;
+	}
 
-    public Long getAmount() {
-        return amount;
-    }
-    public void setEndBalance(Long endBalance) {
-        this.endBalance = endBalance;
-    }
+	public Long getAmount() {
+		return amount;
+	}
 
-    public Long getEndBalance() {
-        return endBalance;
-    }
+	public void setEndBalance(Long endBalance) {
+		this.endBalance = endBalance;
+	}
 
-    public void setTradeType(Integer tradeType) {
-        this.tradeType = tradeType;
-    }
+	public Long getEndBalance() {
+		return endBalance;
+	}
 
-    public Integer getTradeType() {
-        return tradeType;
-    }
+	public void setTradeType(Integer tradeType) {
+		this.tradeType = tradeType;
+	}
 
-    public void setTradeChannel(Integer tradeChannel) {
-        this.tradeChannel = tradeChannel;
-    }
+	public Integer getTradeType() {
+		return tradeType;
+	}
 
-    public Integer getTradeChannel() {
-        return tradeChannel;
-    }
+	public void setTradeChannel(Integer tradeChannel) {
+		this.tradeChannel = tradeChannel;
+	}
 
-    public void setTradeNo(String tradeNo) {
-        this.tradeNo = tradeNo;
-    }
+	public Integer getTradeChannel() {
+		return tradeChannel;
+	}
 
-    public String getTradeNo() {
-        return tradeNo;
-    }
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
+	}
 
-    public void setFundItem(Integer fundItem) {
-        this.fundItem = fundItem;
-    }
+	public String getTradeNo() {
+		return tradeNo;
+	}
 
-    public Integer getFundItem() {
-        return fundItem;
-    }
+	public void setFundItem(Integer fundItem) {
+		this.fundItem = fundItem;
+	}
 
-    public void setFundItemName(String fundItemName) {
-        this.fundItemName = fundItemName;
-    }
+	public Integer getFundItem() {
+		return fundItem;
+	}
 
-    public String getFundItemName() {
-        return fundItemName;
-    }
+	public void setFundItemName(String fundItemName) {
+		this.fundItemName = fundItemName;
+	}
 
-    public void setOperatorId(Long operatorId) {
-        this.operatorId = operatorId;
-    }
+	public String getFundItemName() {
+		return fundItemName;
+	}
 
-    public Long getOperatorId() {
-        return operatorId;
-    }
+	public void setOperatorId(Long operatorId) {
+		this.operatorId = operatorId;
+	}
 
-    public void setOperatorNo(String operatorNo) {
-        this.operatorNo = operatorNo;
-    }
+	public Long getOperatorId() {
+		return operatorId;
+	}
 
-    public String getOperatorNo() {
-        return operatorNo;
-    }
+	public void setOperatorNo(String operatorNo) {
+		this.operatorNo = operatorNo;
+	}
 
-    public void setOperatorName(String operatorName) {
-        this.operatorName = operatorName;
-    }
+	public String getOperatorNo() {
+		return operatorNo;
+	}
 
-    public String getOperatorName() {
-        return operatorName;
-    }
+	public void setOperatorName(String operatorName) {
+		this.operatorName = operatorName;
+	}
 
-    public void setOperateTime(LocalDateTime operateTime) {
-        this.operateTime = operateTime;
-    }
+	public String getOperatorName() {
+		return operatorName;
+	}
 
-    public LocalDateTime getOperateTime() {
-        return operateTime;
-    }
+	public void setOperateTime(LocalDateTime operateTime) {
+		this.operateTime = operateTime;
+	}
 
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
+	public LocalDateTime getOperateTime() {
+		return operateTime;
+	}
 
-    public String getNotes() {
-        return notes;
-    }
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
 
-    public void setFirmId(Long firmId) {
-        this.firmId = firmId;
-    }
+	public String getNotes() {
+		return notes;
+	}
 
-    public Long getFirmId() {
-        return firmId;
-    }
+	public void setFirmId(Long firmId) {
+		this.firmId = firmId;
+	}
 
-    public String getHoldName() {
-        return holdName;
-    }
+	public Long getFirmId() {
+		return firmId;
+	}
 
-    public void setHoldName(String holdName) {
-        this.holdName = holdName;
-    }
+	public String getHoldName() {
+		return holdName;
+	}
 
-    @Override
-    public String toString() {
-        return "SerialRecordEntity{" +
-                "id='" + id + '\'' +
-                ", serialNo='" + serialNo + '\'' +
-                ", accountId='" + accountId + '\'' +
-                ", cardNo='" + cardNo + '\'' +
-                ", customerId='" + customerId + '\'' +
-                ", customerNo='" + customerNo + '\'' +
-                ", customerName='" + customerName + '\'' +
-                ", action='" + action + '\'' +
-                ", startBalance='" + startBalance + '\'' +
-                ", amount='" + amount + '\'' +
-                ", endBalance='" + endBalance + '\'' +
-                ", tradeType='" + tradeType + '\'' +
-                ", tradeChannel='" + tradeChannel + '\'' +
-                ", tradeNo='" + tradeNo + '\'' +
-                ", fundItem='" + fundItem + '\'' +
-                ", fundItemName='" + fundItemName + '\'' +
-                ", operatorId='" + operatorId + '\'' +
-                ", operatorNo='" + operatorNo + '\'' +
-                ", operatorName='" + operatorName + '\'' +
-                ", operateTime='" + operateTime + '\'' +
-                ", notes='" + notes + '\'' +
-                ", firmId='" + firmId + '\'' +
-                '}';
-    }
+	public void setHoldName(String holdName) {
+		this.holdName = holdName;
+	}
 
-    /**
-     * 获取期初金额展示
-     * @return
-     */
-    public String getStartBalanceView() {
-        return this.startBalance != null ? CurrencyUtils.toYuanWithStripTrailingZeros(this.startBalance) : null;
-    }
+	@Override
+	public String toString() {
+		return "SerialRecordEntity{" + "id='" + id + '\'' + ", serialNo='" + serialNo + '\'' + ", accountId='"
+				+ accountId + '\'' + ", cardNo='" + cardNo + '\'' + ", customerId='" + customerId + '\''
+				+ ", customerNo='" + customerNo + '\'' + ", customerName='" + customerName + '\'' + ", action='"
+				+ action + '\'' + ", startBalance='" + startBalance + '\'' + ", amount='" + amount + '\''
+				+ ", endBalance='" + endBalance + '\'' + ", tradeType='" + tradeType + '\'' + ", tradeChannel='"
+				+ tradeChannel + '\'' + ", tradeNo='" + tradeNo + '\'' + ", fundItem='" + fundItem + '\''
+				+ ", fundItemName='" + fundItemName + '\'' + ", operatorId='" + operatorId + '\'' + ", operatorNo='"
+				+ operatorNo + '\'' + ", operatorName='" + operatorName + '\'' + ", operateTime='" + operateTime + '\''
+				+ ", notes='" + notes + '\'' + ", firmId='" + firmId + '\'' + '}';
+	}
 
-    public String getTradeTypeView() {
-        if (this.tradeType == null) {
-            return "";
-        }
-        TradeType tradeType = TradeType.getByCode(this.tradeType);
-        return tradeType == null ? "" : tradeType.getName();
-    }
+	/**
+	 * 获取期初金额展示
+	 * 
+	 * @return
+	 */
+	public String getStartBalanceView() {
+		return this.startBalance != null ? CurrencyUtils.toYuanWithStripTrailingZeros(this.startBalance) : null;
+	}
 
-    /**
-     * 获取发生金额展示
-     * @return
-     */
-    public String getAmountView() {
-        String symbol = Integer.valueOf(ActionType.INCOME.getCode()).equals(this.action) ? "+" : "-";
-        return this.amount != null ? symbol + CurrencyUtils.toYuanWithStripTrailingZeros(this.amount) : null;
-    }
+	public String getTradeTypeView() {
+		if (this.tradeType == null) {
+			return "";
+		}
+		TradeType tradeType = TradeType.getByCode(this.tradeType);
+		return tradeType == null ? "" : tradeType.getName();
+	}
 
-    /**
-     * 获取期末金额展示
-     * @return
-     */
-    public String getEndBalanceView() {
-        return this.endBalance != null ? CurrencyUtils.toYuanWithStripTrailingZeros(this.endBalance) : null;
-    }
+	public String getTypeView() {
+		if (this.type == null) {
+			return "";
+		}
+		String name = PublicBizType.getName(this.type);
+		return name;
+	}
+	/**
+	 * 获取发生金额展示
+	 * 
+	 * @return
+	 */
+	public String getAmountView() {
+		String symbol = Integer.valueOf(ActionType.INCOME.getCode()).equals(this.action) ? "+" : "-";
+		return this.amount != null ? symbol + CurrencyUtils.toYuanWithStripTrailingZeros(this.amount) : null;
+	}
+
+	/**
+	 * 获取期末金额展示
+	 * 
+	 * @return
+	 */
+	public String getEndBalanceView() {
+		return this.endBalance != null ? CurrencyUtils.toYuanWithStripTrailingZeros(this.endBalance) : null;
+	}
+
+	public String getHoldCertificateNumber() {
+		return holdCertificateNumber;
+	}
+
+	public void setHoldCertificateNumber(String holdCertificateNumber) {
+		this.holdCertificateNumber = holdCertificateNumber;
+	}
+
+	public String getHoldContactsPhone() {
+		return holdContactsPhone;
+	}
+
+	public void setHoldContactsPhone(String holdContactsPhone) {
+		this.holdContactsPhone = holdContactsPhone;
+	}
+
 }

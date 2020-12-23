@@ -1,10 +1,10 @@
 package com.dili.card.service.print;
 
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.NumberUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ReqParamExtra;
 import com.dili.card.dto.PrintDto;
 import com.dili.card.entity.BusinessRecordDo;
@@ -13,8 +13,9 @@ import com.dili.card.type.OperateType;
 import com.dili.card.type.PrintTemplate;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.util.CurrencyUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
+
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.NumberUtil;
 
 /**
  * @Auther: miaoguoxin
@@ -61,7 +62,7 @@ public class RechargePrintServiceImpl extends PrintServiceImpl {
         JSONObject extra = JSON.parseObject(json);
         printDto.setBankType(extra.getInteger(ReqParamExtra.BANK_TYPE));
         printDto.setPosCertNum(extra.getString(ReqParamExtra.POS_CERT_NUM));
-        printDto.setPosType(extra.getInteger(ReqParamExtra.POS_TYPE));
+        printDto.setPosType(extra.getString(ReqParamExtra.POS_TYPE));
     }
 
     @Override
