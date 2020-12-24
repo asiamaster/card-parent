@@ -4,10 +4,12 @@
     <div class="row">
         <div class="col-12">
             <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
+                <#resource code="bank-withdraw-export">
                 <button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
                         class="fa fa-file-excel-o"></i>
                     导出
                 </button>
+                </#resource>
             </div>
             <table id="grid"
                    class="table"
@@ -17,14 +19,14 @@
                    data-icons="bui.variable.icons">
                 <thead>
                 <tr>
-                    <th data-field="bankNo" data-align="center">
+                    <th data-field="toAccount" data-align="center">
                         银行卡号
                     </th>
-                    <th data-field="bankName"  data-align="center" >
+                    <th data-field="pipeline"  data-align="center" >
                         银行名称
                     </th>
-                    <th data-field="cardHolder" data-align="center">
-                        持卡人名称
+                    <th data-field="toName" data-align="center">
+                        账户名称
                     </th>
                     <th data-field="amountText" data-align="center">
                         圈提金额
@@ -35,7 +37,7 @@
                     <th data-field="operatorName" data-align="center">
                         操作员
                     </th>
-                    <th data-field="transTime" data-align="center">
+                    <th data-field="createdTime" data-align="center">
                         交易时间
                     </th>
                     <th data-field="serialNo" data-align="center">

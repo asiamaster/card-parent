@@ -10,6 +10,8 @@ import com.dili.card.dto.pay.CreateTradeResponseDto;
 import com.dili.card.dto.pay.FreezeFundRecordDto;
 import com.dili.card.dto.pay.FreezeFundRecordParam;
 import com.dili.card.dto.pay.FundOpResponseDto;
+import com.dili.card.dto.pay.PipelineRecordParam;
+import com.dili.card.dto.pay.PipelineRecordResponseDto;
 import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.ss.domain.BaseOutput;
@@ -130,4 +132,10 @@ public interface PayRpc {
     BaseOutput<PayCreateFundReponseDto> createFundAccount(FundAccountDto type);
 
 
+    /**
+     * 查询通道流水
+     * @return
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.pipeline.service:list", method = RequestMethod.POST)
+    PageOutput<List<PipelineRecordResponseDto>> pipelineList(PipelineRecordParam param);
 }
