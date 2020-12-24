@@ -88,6 +88,8 @@ public class UserAccountCardResponseDto implements Serializable {
 	private Long creatorId;
 
 	private Boolean master;
+	/** 实体卡是否存在 */
+	private Integer cardExist;
 
 	public Long getAccountPkId() {
 		return accountPkId;
@@ -320,4 +322,13 @@ public class UserAccountCardResponseDto implements Serializable {
 	public void setHoldContactsPhone(String holdContactsPhone) {
 		this.holdContactsPhone = holdContactsPhone;
 	}
+
+	public Integer getCardExist() {
+		return cardExist;
+	}
+
+	public void setCardExist(Integer cardExist) {
+		this.cardExist = cardExist;
+	}
+
 }

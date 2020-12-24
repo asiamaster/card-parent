@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardStorageDto;
+import com.dili.card.dto.pay.CustomerBalanceResponseDto;
+import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICardStorageService;
+import com.dili.card.util.AssertUtils;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 
@@ -31,15 +34,18 @@ public class CardStorageController implements IControllerHandler {
 
 	private static final Logger log = LoggerFactory.getLogger(CardStorageController.class);
 
-
 	@Autowired
 	private ICardStorageService cardStorageService;
+	@Autowired
+	private IAccountQueryService accountQueryService;
 
 	/**
 	 * 卡库存页面
 	 */
 	@GetMapping("cardStorageList.html")
 	public String cardStorageListView() {
+		CustomerBalanceResponseDto customerBalance = accountQueryService.getAccountFundByCustomerId(237L);
+		log.info("**************{}", JSONObject.toJSONString(customerBalance));
 		return "cardstorage/cardStorageList";
 	}
 

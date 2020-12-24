@@ -1,18 +1,16 @@
 package com.dili.card.dto.pay;
 
+import java.util.List;
+
 /**
- * 余额查询返回dto
- * @author xuliang
- */
-/**
- * @description： 客户总资金明细资金情况
+ * @description： 客户总资产信息
  * 
  * @author ：WangBo
- * @time ：2020年12月24日上午11:29:09
+ * @time ：2020年12月24日上午11:12:48
  */
-public class BalanceResponseDto {
+public class CustomerBalanceResponseDto {
 	/** 账户ID */
-	private Long accountId;
+	private Long customerId;
 	/** 余额 */
 	private Long balance;
 	/** 冻结余额 */
@@ -23,10 +21,8 @@ public class BalanceResponseDto {
 	private Long tradeFrozen;
 	/** 人工冻结金额 */
 	private Long manFrozen;
-
-	private String cardNo;
-	/** 实体卡是否存在 */
-	private Integer cardExist;
+	/** 资产明细 */
+	private List<BalanceResponseDto> fundAccounts;
 
 	public Long getTradeFrozen() {
 		return tradeFrozen;
@@ -44,20 +40,12 @@ public class BalanceResponseDto {
 		this.manFrozen = manFrozen;
 	}
 
-	/**
-	 *
-	 * @return
-	 */
-	public Long getAccountId() {
-		return accountId;
+	public Long getCustomerId() {
+		return customerId;
 	}
 
-	/**
-	 *
-	 * @param accountId
-	 */
-	public void setAccountId(Long accountId) {
-		this.accountId = accountId;
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
 
 	/**
@@ -108,20 +96,12 @@ public class BalanceResponseDto {
 		this.availableAmount = availableAmount;
 	}
 
-	public String getCardNo() {
-		return cardNo;
+	public List<BalanceResponseDto> getFundAccounts() {
+		return fundAccounts;
 	}
 
-	public void setCardNo(String cardNo) {
-		this.cardNo = cardNo;
-	}
-
-	public Integer getCardExist() {
-		return cardExist;
-	}
-
-	public void setCardExist(Integer cardExist) {
-		this.cardExist = cardExist;
+	public void setFundAccounts(List<BalanceResponseDto> fundAccounts) {
+		this.fundAccounts = fundAccounts;
 	}
 
 }

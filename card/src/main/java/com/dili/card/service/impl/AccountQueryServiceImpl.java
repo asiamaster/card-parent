@@ -1,18 +1,22 @@
 package com.dili.card.service.impl;
 
 import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.AccountSimpleResponseDto;
 import com.dili.card.dto.AccountWithAssociationResponseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.CustomerResponseDto;
+import com.dili.card.dto.FundAccountDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
+import com.dili.card.dto.pay.CustomerBalanceResponseDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.AccountQueryRpc;
+import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
@@ -25,6 +29,7 @@ import com.dili.card.type.DisableState;
 import com.dili.card.util.PageUtils;
 import com.dili.card.validator.AccountValidator;
 import com.dili.ss.constant.ResultCode;
+import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.google.common.collect.Lists;
 
@@ -54,6 +59,8 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     private CustomerRpcResolver customerRpcResolver;
     @Autowired
     private ICustomerService customerService;
+    @Autowired
+    private PayRpc payRpc;
     @Autowired
     private PayRpcResolver payRpcResolver;
     @Autowired
@@ -283,5 +290,38 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         List<UserAccountCardResponseDto> association = accountQueryRpcResolver.findByQueryCondition(param);
         return new AccountWithAssociationResponseDto(primary, association);
     }
+
+	@Override
+	public CustomerBalanceResponseDto getAccountFundByCustomerId(Long customerId) {
+		UserAccountCardQuery masterParams = new UserAccountCardQuery();
+        masterParams.setCardType(CardType.MASTER.getCode());
+        masterParams.setCustomerIds(Lists.newArrayList(customerId));
+        //按照现在需求，一个customerId只有一张主卡，但是为了需求有变，这里设计成list
+        //以防customerId对应多个主卡的情况
+        List<UserAccountCardResponseDto> masterList = GenericRpcResolver.resolver(accountQueryRpc.findListV2(masterParams), ServiceName.ACCOUNT);
+        if(CollectionUtils.isEmpty(masterList)) {
+        	throw new CardAppBizException("您没有开通过账户");
+        }
+        
+        // 查询客户资产情况
+        FundAccountDto fundAccountDto = new FundAccountDto();
+        fundAccountDto.setCustomerId(customerId);
+        CustomerBalanceResponseDto customerBalance = GenericRpcResolver.resolver(payRpc.getAccountFundByCustomerId(fundAccountDto),ServiceName.PAY);
+        if(CollectionUtils.isEmpty(masterList)) {
+        	log.warn("未获取到支付接口明细数据");
+        }else {
+	        customerBalance.getFundAccounts().forEach(accountItem -> {
+	        	for(UserAccountCardResponseDto userAccount: masterList) {
+	        		if(accountItem.getAccountId().longValue() == userAccount.getFundAccountId()) {
+	        			accountItem.setCardNo(userAccount.getCardNo());
+	        			accountItem.setCardExist(userAccount.getCardExist());
+	        			break;
+	        		}
+	        	}
+	        });
+        }
+        
+		return customerBalance;
+	}
 
 }
