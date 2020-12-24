@@ -1,5 +1,7 @@
 package com.dili.card.service;
 
+import java.util.List;
+
 import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.AccountSimpleResponseDto;
@@ -8,9 +10,8 @@ import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
+import com.dili.card.dto.pay.CustomerBalanceResponseDto;
 import com.dili.ss.domain.PageOutput;
-
-import java.util.List;
 
 /**
  * @Auther: miaoguoxin
@@ -119,5 +120,11 @@ public interface IAccountQueryService {
      * @date 2020/10/14
      */
     List<AccountWithAssociationResponseDto> getMasterAssociationList(Long customerId);
+    
+    
+    /**
+     * 根据客户ID获取客户下所有账户，及资金情况(包括可用资金、冻结资金)
+     */
+    CustomerBalanceResponseDto getAccountFundByCustomerId(Long customerId);
 }
 

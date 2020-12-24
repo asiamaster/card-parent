@@ -7,6 +7,7 @@ import com.dili.card.dto.UnfreezeFundDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.CreateTradeResponseDto;
+import com.dili.card.dto.pay.CustomerBalanceResponseDto;
 import com.dili.card.dto.pay.FreezeFundRecordDto;
 import com.dili.card.dto.pay.FreezeFundRecordParam;
 import com.dili.card.dto.pay.FundOpResponseDto;
@@ -138,4 +139,10 @@ public interface PayRpc {
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.pipeline.service:list", method = RequestMethod.POST)
     PageOutput<List<PipelineRecordResponseDto>> pipelineList(PipelineRecordParam param);
+    
+    /**
+     * 查询客户总资产及明细
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.fund.service:customer", method = RequestMethod.POST)
+    BaseOutput<CustomerBalanceResponseDto> getAccountFundByCustomerId(FundAccountDto type);
 }
