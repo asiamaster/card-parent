@@ -52,11 +52,25 @@ public class CardManageController implements IControllerHandler {
 	@RequestMapping(value = "/resetLoginPwd.action", method = RequestMethod.POST)
 	public BaseOutput<Boolean> resetLoginPassword(@RequestBody @Validated(value = { CardValidator.Generic.class,
 			CardValidator.ResetPassword.class }) CardRequestDto cardRequest) throws Exception {
-		LOGGER.info("重置登陆密码*****{}", JSONObject.toJSONString(cardRequest, JsonExcludeFilter.PWD_FILTER));
+		LOGGER.info("重置密码*****{}", JSONObject.toJSONString(cardRequest, JsonExcludeFilter.PWD_FILTER));
 		// 操作日志
 		businessLogService.saveLog(OperateType.RESET_PWD, getUserTicket(), "业务卡号:" + cardRequest.getCardNo());
 		buildOperatorInfo(cardRequest);
 		cardManageService.resetLoginPwd(cardRequest);
+		return BaseOutput.success();
+	}
+
+	/**
+	 * 修改密码
+	 */
+	@RequestMapping(value = "/modifyLoginPwd.action", method = RequestMethod.POST)
+	public BaseOutput<Boolean> modifyLoginPwd(@RequestBody @Validated(value = { CardValidator.Generic.class,
+			CardValidator.ResetPassword.class }) CardRequestDto cardRequest) throws Exception {
+		LOGGER.info("修改密码*****{}", JSONObject.toJSONString(cardRequest, JsonExcludeFilter.PWD_FILTER));
+		// 操作日志
+		businessLogService.saveLog(OperateType.PWD_CHANGE, getUserTicket(), "业务卡号:" + cardRequest.getCardNo());
+		buildOperatorInfo(cardRequest);
+		cardManageService.modifyLoginPwd(cardRequest);
 		return BaseOutput.success();
 	}
 
@@ -153,6 +167,7 @@ public class CardManageController implements IControllerHandler {
 
 	/**
 	 * 解挂操作的时候查询(C端)
+	 * 
 	 * @author miaoguoxin
 	 * @date 2020/8/6
 	 */
@@ -167,6 +182,7 @@ public class CardManageController implements IControllerHandler {
 
 	/**
 	 * 解锁操作的时候查询(C端)
+	 * 
 	 * @author miaoguoxin
 	 * @date 2020/8/6
 	 */

@@ -1,8 +1,23 @@
 package com.dili.card.controller;
 
-import cn.hutool.core.date.DateField;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.annotation.ForbidDuplicateCommit;
@@ -34,23 +49,10 @@ import com.dili.card.validator.FundValidator;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.ss.util.MoneyUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 
 /**
  * 资金操作相关controller
@@ -246,29 +248,33 @@ public class FundController implements IControllerHandler {
         return BaseOutput.success();
     }
 
-	/**
-	 * 充值
-	 *
-	 * @author miaoguoxin
-	 * @date 2020/7/6
-	 */
-	@PostMapping("recharge.action")
-	@ResponseBody
-	@ForbidDuplicateCommit
-	public BaseOutput<String> recharge(
-			@RequestBody @Validated({ FundValidator.Trade.class }) FundRequestDto requestDto) {
-		LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto, JsonExcludeFilter.PWD_FILTER));
-		this.validateCommonParam(requestDto);
-		businessLogService.saveLog(OperateType.ACCOUNT_CHARGE, getUserTicket(),
-				"业务卡号:" + requestDto.getCardNo(),
-				"金额:" + MoneyUtils.centToYuan(requestDto.getAmount()),
-				"渠道:" + TradeChannel.getNameByCode(requestDto.getTradeChannel()));
-		this.buildOperatorInfo(requestDto);
-		long beginTime = System.currentTimeMillis();
-		String serialNo = fundService.recharge(requestDto);
-		LOGGER.info("充值耗费时间：{}ms", System.currentTimeMillis() - beginTime);
-		return BaseOutput.successData(serialNo);
-	}
+    /**
+     * 充值
+     *
+     * @author miaoguoxin
+     * @date 2020/7/6
+     */
+    @PostMapping("recharge.action")
+    @ResponseBody
+    @ForbidDuplicateCommit
+    public BaseOutput<String> recharge(
+            @RequestBody @Validated({FundValidator.Trade.class}) FundRequestDto requestDto) {
+        LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto, JsonExcludeFilter.PWD_FILTER));
+        this.validateCommonParam(requestDto);
+        // TODO 以会使用统一配置获取当前市场是否需要校验密码
+        if(requestDto.getFirmId() == 8) {
+        	AssertUtils.notEmpty(requestDto.getTradePwd(), "交易密码不能为空");
+        }
+        businessLogService.saveLog(OperateType.ACCOUNT_CHARGE, getUserTicket(),
+                "业务卡号:" + requestDto.getCardNo(),
+                "金额:" + MoneyUtils.centToYuan(requestDto.getAmount()),
+                "渠道:" + TradeChannel.getNameByCode(requestDto.getTradeChannel()));
+        this.buildOperatorInfo(requestDto);
+        long beginTime = System.currentTimeMillis();
+        String serialNo = fundService.recharge(requestDto);
+        LOGGER.info("充值耗费时间：{}ms", System.currentTimeMillis() - beginTime);
+        return BaseOutput.successData(serialNo);
+    }
 
     /**
      * 获取充值手续费(目前只支持pos)

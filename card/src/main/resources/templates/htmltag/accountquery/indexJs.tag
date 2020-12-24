@@ -23,7 +23,7 @@
             cardPkId: $.table.selectColumns("cardPkId")
         };
         let urlParams = $.common.jsonObj2UrlParams(params);
-        let _url = "${contextPath}/accountQuery/accountDetail.html?" + urlParams;
+        let _url = "${contextPath}/accountQuery/detailTab.html?" + urlParams;
         let options = {
             title: table.options.modalName,
             width: _width,

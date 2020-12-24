@@ -44,7 +44,7 @@ public class PrintDto {
     /**银行卡类型(充值需要) {@link com.dili.card.type.BankCardType}*/
     private Integer bankType;
     /**pos类型(充值需要),从字典获取*/
-    private Integer posType;
+    private String posType;
 
     public String getPosCertNum() {
         return posCertNum;
@@ -62,11 +62,11 @@ public class PrintDto {
         this.bankType = bankType;
     }
 
-    public Integer getPosType() {
+    public String getPosType() {
         return posType;
     }
 
-    public void setPosType(Integer posType) {
+    public void setPosType(String posType) {
         this.posType = posType;
     }
 

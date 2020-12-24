@@ -1,9 +1,11 @@
 package com.dili.card.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dto.FundRequestDto;
+import com.dili.card.dto.PipelineRecordQueryDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UnfreezeFundDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -12,6 +14,8 @@ import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.FreezeFundRecordDto;
 import com.dili.card.dto.pay.FreezeFundRecordParam;
 import com.dili.card.dto.pay.FundOpResponseDto;
+import com.dili.card.dto.pay.PipelineRecordParam;
+import com.dili.card.dto.pay.PipelineRecordResponseDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
@@ -31,6 +35,8 @@ import com.dili.card.type.CardType;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
+import com.dili.card.type.PayPipelineType;
+import com.dili.feign.support.UapCookieUtils;
 import com.dili.ss.domain.PageOutput;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -131,6 +138,24 @@ public class FundServiceImpl implements IFundService {
     public String recharge(FundRequestDto requestDto) {
         AbstractRechargeManager rechargeManager = rechargeFactory.getRechargeManager(requestDto.getTradeChannel());
         return rechargeManager.doRecharge(requestDto);
+    }
+
+    @Override
+    public PageOutput<List<PipelineRecordResponseDto>> bankWithdrawPage(PipelineRecordQueryDto param) {
+        PipelineRecordParam query = new PipelineRecordParam();
+        query.setType(PayPipelineType.BANK_WITHDRAW.getCode());
+        Date now = new Date();
+        query.setStartDate(DateUtil.beginOfDay(now).toString());
+        query.setEndDate(DateUtil.endOfDay(now).toString());
+        query.setPageNo(param.getRows());
+        query.setPageSize(param.getPage());
+        PageOutput<List<PipelineRecordResponseDto>> result = GenericRpcResolver.resolver(payRpc.pipelineList(query), ServiceName.PAY);
+        List<PipelineRecordResponseDto> data = result.getData();
+        for (PipelineRecordResponseDto dto : data) {
+            dto.setOperatorId(param.getOpId());
+            dto.setOperatorName(param.getOpName());
+        }
+        return result;
     }
 
     @Override

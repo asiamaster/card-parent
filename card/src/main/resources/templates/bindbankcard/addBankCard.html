@@ -1,11 +1,23 @@
 <#bs4Body>
-<div class="container-fluid">
+<#vueElm/>
+<div class="container-fluid" id="v">
 	<div class="row row-cols-1" id="baseContent">
 		<div class="form-group col">
 			<label for="accountType" class="div_label">账户类型</label>
-			<input type="radio" name="accountType"
-						checked="checked"
-						onclick='BankCard.accountTypeChange();'>
+			<div class="form-check">
+				<span>
+					<input class="form-check-input" type="radio" name="accountType" id="personType" value="1" checked>
+					<label class="form-check-label" for="personType">
+						个人账户
+					</label>
+				</span>
+				<span style="margin-left: 20px">
+					<input class="form-check-input" type="radio" name="accountType" id="pbType" value="2">
+					<label class="form-check-label" for="pbType">
+						对公账户
+					</label>
+				</span>
+			</div>
 		</div>
 		<div class="form-group col">
 			<label for="bankNo" class="div_label">银行卡号</label>
@@ -19,7 +31,7 @@
 			<label for="bankType" class="div_label">银行卡类型</label>
 			<input type="text" id="bankType" class="form-control"/>
 		</div>
-		
+
 		<!-- 对公户 开户行 -->
 		<div class="form-group col">
 			<label for="openingBank" class="div_label">开户行</label>
@@ -29,17 +41,6 @@
 			<label for="description" class="div_label">备注</label>
 			<input type="text" id="description" class="form-control"/>
 		</div>
-		<div
-				style="display: table-cell; text-align: center; margin-top: 15px; margin-bottom: 20px;">
-				<div style="width: 49%; float: left;">
-					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal" style="width: 100px;">取消</button>
-				</div>
-				<div style="width: 49%; float: left;">
-					<button type="button" class="btn btn-primary"
-							style="width: 100px;" onclick="doSettle()">保存</button>
-				</div>
-			</div>
 	</div>
 </div>
 
@@ -47,4 +48,76 @@
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <#common_cardBaseJs/>
 <#bindbankcard_bindBankCardJs/>
+<script>
+	//提交回调
+	function submitHandler(){
+		console.log("ssss")
+
+	}
+
+	let vue = new Vue({
+		el: '#v',
+		data() {
+			return {
+				categoryList:[],
+				cityList:[],
+				cityVal :[],
+				categoryVal:[],
+				selectCities:[],
+				selectCategories:[],
+				optionProps: {
+					value: 'id',
+					label: 'name',
+					children: []
+				},
+			}
+		},
+		mounted:function(){
+			this.getCity();
+			this.getCategory();
+		},
+		methods: {
+			handleCityChange(value) {
+				this.selectCities = value;
+				$("#place").val(this.selectCities.toString());
+			},
+			handleCategoryChange(value){
+				this.selectCategories = value;
+			},
+			getCategory(){
+				let that = this;
+				let categories = sessionStorage.getItem("categories");
+				if ($.common.isNotEmpty(categories)){
+					that.categoryList = JSON.parse(categories);
+					return;
+				}
+				$.ajax({
+					type: "GET",
+					url: '${contextPath}/misc/categoryTree.action',
+					success: function (ret) {
+						that.categoryList = ret.data;
+						sessionStorage.setItem("categories",JSON.stringify(that.categoryList));
+					}
+				});
+			},
+			getCity(){
+				let that = this;
+				let cities = sessionStorage.getItem("cities");
+				if ($.common.isNotEmpty(cities)){
+					that.cityList = JSON.parse(cities);
+					return;
+				}
+				$.ajax({
+					type: "GET",
+					url: '${contextPath}/misc/cityTree.action',
+					success: function (ret) {
+						that.cityList = ret.data;
+						sessionStorage.setItem("cities",JSON.stringify(that.cityList));
+					}
+				});
+			}
+		},
+
+	})
+</script>
 

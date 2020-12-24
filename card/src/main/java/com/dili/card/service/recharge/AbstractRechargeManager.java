@@ -1,7 +1,12 @@
 package com.dili.card.service.recharge;
 
+import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.alibaba.fastjson.JSONObject;
-import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.ReqParamExtra;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -18,10 +23,6 @@ import com.dili.card.type.OperateType;
 import com.dili.card.type.PaySubject;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @Auther: miaoguoxin
@@ -124,7 +125,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
             if (extra == null) {
                 extra = new JSONObject();
             }
-            return extra.getInteger(Constant.BANK_TYPE);
+            return extra.getInteger(ReqParamExtra.BANK_TYPE);
         }
         return null;
     }
@@ -135,7 +136,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
             if (extra == null) {
                 extra = new JSONObject();
             }
-            return extra.getString(Constant.POS_TYPE);
+            return extra.getString(ReqParamExtra.POS_TYPE);
         }
         return null;
     }

@@ -19,6 +19,12 @@ public class OpenCardMqDto {
 	private String cardNo;
 	/** 卡类别 {@link CardType} */
 	private Integer cardType;
+	/** 持卡人 */
+	private String holdName;
+	/** 持卡人证件号 */
+	private String holdCertificateNumber;
+	/** 持卡人联系电话 */
+	private String holdContactsPhone;
 	/** 商户ID */
 	private Long firmId;
 	/** 商户名称 */
@@ -78,6 +84,30 @@ public class OpenCardMqDto {
 
 	public void setFirmName(String firmName) {
 		this.firmName = firmName;
+	}
+
+	public String getHoldName() {
+		return holdName;
+	}
+
+	public void setHoldName(String holdName) {
+		this.holdName = holdName;
+	}
+
+	public String getHoldCertificateNumber() {
+		return holdCertificateNumber;
+	}
+
+	public void setHoldCertificateNumber(String holdCertificateNumber) {
+		this.holdCertificateNumber = holdCertificateNumber;
+	}
+
+	public String getHoldContactsPhone() {
+		return holdContactsPhone;
+	}
+
+	public void setHoldContactsPhone(String holdContactsPhone) {
+		this.holdContactsPhone = holdContactsPhone;
 	}
 
 }

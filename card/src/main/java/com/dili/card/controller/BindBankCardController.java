@@ -1,6 +1,7 @@
 package com.dili.card.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
@@ -37,7 +39,7 @@ import com.dili.ss.domain.PageOutput;
 
 /**
  * @description： 银行卡绑定功能操作
- * 
+ *
  * @author ：WangBo
  * @time ：2020年12月3日上午9:42:16
  */
@@ -96,10 +98,11 @@ public class BindBankCardController implements IControllerHandler {
 	 * 查询已绑定的银行卡列表
 	 */
 	@RequestMapping("/queryList.action")
-	public PageOutput<List<BindBankCardDto>> bindBankCardList(BindBankCardDto bankCardDto) {
+	@ResponseBody
+	public Map<String, Object> bindBankCardList(BindBankCardDto bankCardDto) {
 		LOG.info("绑定银行卡查询银行卡列表*****" + JSONObject.toJSONString(bankCardDto));
 		PageOutput<List<BindBankCardDto>> list = bindBankCardService.list(bankCardDto);
-		return list;
+		return successPage(list);
 	}
 
 	/**
@@ -114,6 +117,7 @@ public class BindBankCardController implements IControllerHandler {
 	 * 校验账户密码
 	 */
 	@PostMapping("/checkPwd.action")
+	@ResponseBody
 	public BaseOutput<?> checkPwd(@RequestBody CardRequestDto cardParam) {
 		LOG.info("绑定新银行卡校验密码*****" + JSONObject.toJSONString(cardParam, JsonExcludeFilter.PWD_FILTER));
 		AssertUtils.notNull(cardParam, "没有任何参数");

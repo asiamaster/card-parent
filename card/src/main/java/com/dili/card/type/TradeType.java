@@ -1,7 +1,7 @@
 package com.dili.card.type;
 
 /**
- * 交易类型枚举
+ * 支付系统业务类型枚举
  */
 public enum TradeType {
 
