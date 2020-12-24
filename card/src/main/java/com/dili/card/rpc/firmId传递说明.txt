@@ -1,0 +1,5 @@
+项目中的市场id(firmId或者marketId)都是通过请求header传输，然后自动设置到请求参数中；
+即前端需要通过header（UAP_firmId）传递，接口接收到之后都会将此header转换到请求参数中，
+并且当使用feign传输时，会自动传输UAP_firmId，feign的使用者不必关心此参数。
+详细逻辑参见jar:feign-session-spring-boot-starter;
+获取firmId:com.dili.feign.support.UapCookieUtils
