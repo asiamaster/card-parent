@@ -23,7 +23,7 @@
     </form>
     <!-- 账户基本信息 -->
      <% if(cardInfo != null) { %>
-     <input type="hidden" id="accountId" value="${cardInfo.accountId!}"> 
+     <input type="hidden" id="accountId" value="${cardInfo.accountId!}">
 	<div id="cardInfoDiv">
 		<div class="breadcrumb">
             基本信息
@@ -76,14 +76,16 @@
 	 <!-- 已绑定银行卡列表 -->
 	<div id="bankCardTableDiv" style="display: none" >
 		<div class="breadcrumb">
-                                    银行卡绑定列表 
+             银行卡绑定列表
+        </div>
+        <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
             <button id="refreshBtn" type="button" class="btn btn-primary" >
-				<i class="fa fa-plus">刷新</i>
+                <i class="fa fa-refresh">刷新</i>
             </button>
             <#resource code="add_bindBankCard">
-	            <button id="openAddHtmlBtn" type="button" class="btn btn-primary">
-					添加银行卡
-	            </button>
+            <button id="openAddHtmlBtn" type="button" class="btn btn-primary">
+                <i class="fa fa-plus">添加银行卡</i>
+            </button>
             </#resource>
         </div>
 		<table id="bankCardTable" data-title="银行卡列表" data-show-fullscreen="true"
@@ -113,10 +115,10 @@
 </#comment>
 <script id="checkPassword" type="text/html">
     <div class="form-group col">
-		<label for="accountType" class="div_label">园区卡密码</label> 
+		<label for="accountType" class="div_label">园区卡密码</label>
 			<input type="password" id="password" name="password">
 			<button id="pwdBtn" type="button" class="btn btn-primary">
-				请输入密码  
+				请输入密码
 		</button>
 	</div>
 </script>
