@@ -23,7 +23,7 @@ public class BalanceResponseDto {
 	private Long tradeFrozen;
 	/** 人工冻结金额 */
 	private Long manFrozen;
-
+	/** 卡号 */
 	private String cardNo;
 	/** 实体卡是否存在 */
 	private Integer cardExist;
