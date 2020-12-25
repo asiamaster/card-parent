@@ -42,17 +42,4 @@ public class AccountQueryController {
 		return BaseOutput.successData(accountQueryService.getMasterAssociationList(customerId));
 	}
 
-	/**
-	 * @param cardNo
-	 * @param firmId
-	 * @return
-	 */
-	@GetMapping("/getAccountFundByCustomerId.action")
-	public BaseOutput<CustomerBalanceResponseDto> getAccountFundByCustomerId(Long customerId, Long firmId) {
-		log.info("getAccountFundByCustomerId请求参数:{}->>>>{},{}", customerId, firmId);
-		AssertUtils.notNull(customerId, "卡号不能为空");
-		AssertUtils.notNull(firmId, "市场ID不能为空");
-		CustomerBalanceResponseDto customerBalance = accountQueryService.getAccountFundByCustomerId(customerId);
-		return BaseOutput.successData(customerBalance);
-	}
 }
