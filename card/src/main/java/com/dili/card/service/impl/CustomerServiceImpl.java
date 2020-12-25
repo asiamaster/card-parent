@@ -103,6 +103,9 @@ public class CustomerServiceImpl implements ICustomerService {
 					continue;
 				}
 				log.info(">>>>>>>>>>>>>>>{}",JSONObject.toJSONString(ctype));
+				if(CollectionUtils.isEmpty(subTypeDD)) {
+					continue;
+				}
 				for (DataDictionaryValue dd : subTypeDD) {
 					if (ctype.getCharacterType().equals(dd.getDdCode()) && ctype.getSubType().equals(dd.getCode())) {
 						subTypeList.add(dd.getName());
