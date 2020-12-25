@@ -44,8 +44,6 @@ public class CardStorageController implements IControllerHandler {
 	 */
 	@GetMapping("cardStorageList.html")
 	public String cardStorageListView() {
-		CustomerBalanceResponseDto customerBalance = accountQueryService.getAccountFundByCustomerId(237L);
-		log.info("**************{}", JSONObject.toJSONString(customerBalance));
 		return "cardstorage/cardStorageList";
 	}
 
