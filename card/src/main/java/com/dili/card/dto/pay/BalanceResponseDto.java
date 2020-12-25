@@ -1,27 +1,29 @@
 package com.dili.card.dto.pay;
 
+import com.dili.card.common.annotation.TextDisplay;
+import com.dili.card.common.provider.FenToYuanProvider;
+
 /**
  * 余额查询返回dto
  * @author xuliang
- */
-/**
- * @description： 客户总资金明细资金情况
- * 
- * @author ：WangBo
- * @time ：2020年12月24日上午11:29:09
  */
 public class BalanceResponseDto {
 	/** 账户ID */
 	private Long accountId;
 	/** 余额 */
+	@TextDisplay(FenToYuanProvider.class)
 	private Long balance;
 	/** 冻结余额 */
+	@TextDisplay(FenToYuanProvider.class)
 	private Long frozenAmount;
 	/** 可用余额 */
+	@TextDisplay(FenToYuanProvider.class)
 	private Long availableAmount;
 	/** 交易冻结金额 */
+	@TextDisplay(FenToYuanProvider.class)
 	private Long tradeFrozen;
 	/** 人工冻结金额 */
+	@TextDisplay(FenToYuanProvider.class)
 	private Long manFrozen;
 	/** 卡号 */
 	private String cardNo;
