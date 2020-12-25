@@ -137,7 +137,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@GlobalTransactional(rollbackFor = Exception.class)
 	@Transactional(rollbackFor = Exception.class)
 	public OpenCardResponseDto openCard(OpenCardDto openCardInfo) {
-		if(openCardInfo.getCostFee() > 999) {
+		if(openCardInfo.getCostFee() > 99900) {
 			throw new CardAppBizException("工本费超过最大值999元，无法开卡");
 		}
 		// 二次校验新卡状态
