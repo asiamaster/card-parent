@@ -16,6 +16,11 @@ public enum PrintTemplate implements Serializable {
 	CASH_RECHARGE("CashRechargeDocument","现金存款"),
 	E_BANK_RECHARGE("BankRechargeDocument","网银存款"),
 	POS_RECHARGE("POSRechargeDocument","pos存款"),
+	LOSS_CARD("lossCardDocument","挂失"),
+	LOSS_REMOVE("lossRemoveDocument","解挂"),
+	PWD_CHANGE("pwdChangeDocument","修改密码"),
+	RESET_PWD("resetPwdDocument","密码重置"),
+	LIFT_LOCKED("liftLockedDocument","解锁"),
 	;
 
 	private String type;

@@ -85,6 +85,8 @@ public class BusinessRecordDo implements Serializable {
 	private Integer state;
 	/** 商户ID */
 	private Long firmId;
+	/** 商户名称 */
+	private String firmName;
 	/** 修改时间 */
 	private LocalDateTime modifyTime;
 	/** 数据版本号 */
@@ -704,5 +706,13 @@ public class BusinessRecordDo implements Serializable {
 
 	public void setPosType(String posType) {
 		this.posType = posType;
+	}
+
+	public String getFirmName() {
+		return firmName;
+	}
+
+	public void setFirmName(String firmName) {
+		this.firmName = firmName;
 	}
 }
