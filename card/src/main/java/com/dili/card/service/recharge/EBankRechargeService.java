@@ -28,7 +28,7 @@ public class EBankRechargeService extends AbstractRechargeManager {
         if (extra == null) {
             extra = new JSONObject();
         }
-        String bankSerialNo = extra.getString(ReqParamExtra.BANK_SERIAL_NO);    	
+        String bankSerialNo = extra.getString(ReqParamExtra.BANK_SERIAL_NO);
         Long serviceCost = requestDto.getServiceCost();
         String yuan = CurrencyUtils.toYuanWithStripTrailingZeros(serviceCost == null ? 0L : serviceCost);
         return String.format("银行流水号：%s,手续费：%s元", bankSerialNo, yuan);
@@ -41,7 +41,7 @@ public class EBankRechargeService extends AbstractRechargeManager {
             extra = new JSONObject();
         }
         String bankSerialNo = extra.getString(ReqParamExtra.BANK_SERIAL_NO);
-        return String.format("银行流水号：", bankSerialNo);
+        return String.format("银行流水号：%s", bankSerialNo);
     }
 
     @Override
