@@ -92,7 +92,7 @@ public class CardManageController implements IControllerHandler {
 	 */
 	@PostMapping("/unLostCard.action")
 	public BaseOutput<?> unLostCard(@RequestBody CardRequestDto cardParam) {
-		LOGGER.info("解挂卡片*****{}", JSONObject.toJSONString(cardParam));
+		LOGGER.info("解挂卡片*****{}", JSONObject.toJSONString(cardParam, JsonExcludeFilter.PWD_FILTER));
 		validateCommonParam(cardParam);
 		if (StrUtil.isBlank(cardParam.getLoginPwd())) {
 			return BaseOutput.failure("密码为空");

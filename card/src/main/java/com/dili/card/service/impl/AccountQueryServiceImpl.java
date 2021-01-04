@@ -6,7 +6,9 @@ import com.dili.card.dto.AccountDetailResponseDto;
 import com.dili.card.dto.AccountListResponseDto;
 import com.dili.card.dto.AccountSimpleResponseDto;
 import com.dili.card.dto.AccountWithAssociationResponseDto;
+import com.dili.card.dto.CardRepoQueryParam;
 import com.dili.card.dto.CardRequestDto;
+import com.dili.card.dto.CardStorageDto;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.FundAccountDto;
 import com.dili.card.dto.UserAccountCardQuery;
@@ -16,6 +18,7 @@ import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.dto.pay.CustomerBalanceResponseDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.AccountQueryRpc;
+import com.dili.card.rpc.CardStorageRpc;
 import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
@@ -43,6 +46,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -67,6 +71,8 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
     private AccountQueryRpcResolver accountQueryRpcResolver;
     @Autowired
     private AccountQueryRpc accountQueryRpc;
+    @Autowired
+    private CardStorageRpc cardStorageRpc;
 
     @Override
     public PageOutput<List<AccountListResponseDto>> getPage(UserAccountCardQuery param) {
@@ -77,7 +83,16 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         if (CollectionUtils.isEmpty(data)) {
             return PageUtils.convert2PageOutput(page, new ArrayList<>());
         }
+        List<String> cardNos = data.stream().map(UserAccountCardResponseDto::getCardNo)
+                .collect(Collectors.toList());
+        //查询卡面信息
+        Map<String, CardStorageDto> stockReduceDtoMap = this.getCardFaceMap(cardNos);
+
         List<AccountListResponseDto> result = this.addCustomer2AccountList(data);
+        for (AccountListResponseDto responseDto : result) {
+            CardStorageDto dto = stockReduceDtoMap.getOrDefault(responseDto.getCardNo(), new CardStorageDto());
+            responseDto.setCardFace(dto.getCardFace());
+        }
         // 设置客户子类型  TODO 待优化，开发环境耗时0.3秒左右
         log.info("耗时测试a");
         List<Long> cidList = result.stream().map(account -> account.getCustomerId()).collect(Collectors.toList());
@@ -291,6 +306,13 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         return new AccountWithAssociationResponseDto(primary, association);
     }
 
+    private Map<String, CardStorageDto> getCardFaceMap(List<String> cardNos) {
+        CardRepoQueryParam queryParam = new CardRepoQueryParam();
+        queryParam.setCardNos(cardNos);
+        List<CardStorageDto> cardStorageDtos = GenericRpcResolver.resolver(cardStorageRpc.listByCardNo(queryParam), ServiceName.ACCOUNT);
+        return cardStorageDtos.stream().collect(Collectors.toMap(CardStorageDto::getCardNo,
+                Function.identity(), (key1, key2) -> key2));
+    }
 	@Override
 	public CustomerBalanceResponseDto getAccountFundByCustomerId(Long customerId) {
 		UserAccountCardQuery masterParams = new UserAccountCardQuery();
@@ -323,5 +345,4 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         
 		return customerBalance;
 	}
-
 }

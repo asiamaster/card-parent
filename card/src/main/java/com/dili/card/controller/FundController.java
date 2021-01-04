@@ -124,27 +124,27 @@ public class FundController implements IControllerHandler {
         return "fund/unfrozenModal";
     }
 
-    /**
-     * 提现
-     *
-     * @param fundRequestDto
-     * @return
-     */
-    @RequestMapping(value = "/withdraw.action")
-    @ResponseBody
-    @ForbidDuplicateCommit
-    public BaseOutput<String> withdraw(@RequestBody FundRequestDto fundRequestDto) {
-        LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto, JsonExcludeFilter.PWD_FILTER));
-        validateCommonParam(fundRequestDto);
-        // 操作日志
-        businessLogService.saveLog(OperateType.ACCOUNT_WITHDRAW, getUserTicket(),
-                "业务卡号:" + fundRequestDto.getCardNo(),
-                "金额:" + MoneyUtils.centToYuan(fundRequestDto.getAmount()),
-                "渠道:" + TradeChannel.getNameByCode(fundRequestDto.getTradeChannel()));
-        buildOperatorInfo(fundRequestDto);
-        String serialNo = withdrawDispatcher.dispatch(fundRequestDto);
-        return BaseOutput.successData(serialNo);
-    }
+	/**
+	 * 提现
+	 *
+	 * @param fundRequestDto
+	 * @return
+	 */
+	@RequestMapping(value = "/withdraw.action")
+	@ResponseBody
+	@ForbidDuplicateCommit
+	public BaseOutput<String> withdraw(@RequestBody FundRequestDto fundRequestDto) {
+		LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto,JsonExcludeFilter.PWD_FILTER));
+		validateCommonParam(fundRequestDto);
+		// 操作日志
+		businessLogService.saveLog(OperateType.ACCOUNT_WITHDRAW, getUserTicket(),
+				"业务卡号:" + fundRequestDto.getCardNo(),
+				"金额:" + MoneyUtils.centToYuan(fundRequestDto.getAmount()),
+				"渠道:" + TradeChannel.getNameByCode(fundRequestDto.getTradeChannel()));
+		buildOperatorInfo(fundRequestDto);
+		String serialNo = withdrawDispatcher.dispatch(fundRequestDto);
+		return BaseOutput.successData(serialNo);
+	}
 
     /**
      * 提现手续费

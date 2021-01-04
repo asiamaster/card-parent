@@ -2,6 +2,7 @@ package com.dili.card.rpc;
 
 import java.util.List;
 
+import com.dili.card.dto.CardRepoQueryParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -25,11 +26,18 @@ public interface CardStorageRpc {
 	/**
 	 * 仓库中卡片列表，包括状态及入库信息
 	 *
-	 * @param cardParam
 	 * @return
 	 */
 	@PostMapping("/pageList")
 	PageOutput<List<CardStorageDto>> pageList(CardStorageDto queryParam);
+
+	/**
+	*  根据卡号批量查询列表
+	* @author miaoguoxin
+	* @date 2020/12/3
+	*/
+	@PostMapping("/batchQueryByCardNo")
+	BaseOutput<List<CardStorageDto>> listByCardNo(CardRepoQueryParam queryParam);
 
 	/**
 	 * 入库

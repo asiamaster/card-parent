@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
+import com.dili.card.common.provider.CardFaceProvider;
 import com.dili.card.common.provider.CardStateProvider;
 import com.dili.card.common.provider.CardTypeProvider;
 import com.dili.card.common.provider.DisableStateProvider;
@@ -42,6 +43,9 @@ public class AccountListResponseDto extends BaseDto implements Serializable {
 	private String customerSubTypeName;
 	/** 客户电话 */
 	private String customerContactsPhone;
+	 /**卡面信息*/
+    @TextDisplay(CardFaceProvider.class)
+    private String cardFace;
 	/** 卡状态 {@link com.dili.card.type.CardStatus} */
 	@TextDisplay(CardStateProvider.class)
 	private Integer cardState;
@@ -52,9 +56,17 @@ public class AccountListResponseDto extends BaseDto implements Serializable {
 	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime cardCreateTime;
 
-	public Integer getDisabledState() {
-		return disabledState;
-	}
+    public String getCardFace() {
+        return cardFace;
+    }
+
+    public void setCardFace(String cardFace) {
+        this.cardFace = cardFace;
+    }
+
+    public Integer getDisabledState() {
+        return disabledState;
+    }
 
 	public void setDisabledState(Integer disabledState) {
 		this.disabledState = disabledState;
