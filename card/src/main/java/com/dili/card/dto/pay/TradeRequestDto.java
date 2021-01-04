@@ -25,6 +25,8 @@ public class TradeRequestDto {
     private List<FeeItemDto> fees;
     /** 业务账号ID*/
     private Long businessId;
+    /**金额*/
+    private Long amount;
 
     public static TradeRequestDto createTrade(UserAccountCardResponseDto userAccount, String tradeNo, Integer channelId, String password) {
         TradeRequestDto tradeRequestDto = new TradeRequestDto();
@@ -33,6 +35,15 @@ public class TradeRequestDto {
         tradeRequestDto.setAccountId(userAccount.getFundAccountId());
         tradeRequestDto.setChannelId(channelId);
         tradeRequestDto.setPassword(password);
+        return tradeRequestDto;
+    }
+
+    public static TradeRequestDto createReverse(UserAccountCardResponseDto userAccount, String tradeNo, Long amount) {
+        TradeRequestDto tradeRequestDto = new TradeRequestDto();
+        tradeRequestDto.setTradeId(tradeNo);
+        tradeRequestDto.setBusinessId(userAccount.getAccountId());
+        tradeRequestDto.setAccountId(userAccount.getFundAccountId());
+        tradeRequestDto.setAmount(amount);
         return tradeRequestDto;
     }
 
@@ -51,6 +62,14 @@ public class TradeRequestDto {
         feeItem.setType(fundItem.getCode());
         feeItem.setTypeName(fundItem.getName());
         this.fees.add(feeItem);
+    }
+
+    public Long getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Long amount) {
+        this.amount = amount;
     }
 
     public String getTradeId() {

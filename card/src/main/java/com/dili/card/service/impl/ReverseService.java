@@ -135,9 +135,9 @@ public class ReverseService implements IReverseService {
         Long reverseAmount = reverseAmountBo.calcReverseFee();
         Long inAccChangeAmount = reverseAmountBo.calcInAccChangeAmount();
         //发起冲正
-        TradeRequestDto tradeRequest = TradeRequestDto.createTrade(
-                userAccount, bizSerial.getTradeNo(),
-                null, null);
+        TradeRequestDto tradeRequest = TradeRequestDto.createReverse(
+                userAccount, bizSerial.getTradeNo(), requestDto.getAmount()
+        );
         if (inAccChangeAmount != 0) {
             tradeRequest.addServiceFeeItem(inAccChangeAmount, FundItem.REVERSE_FEE);
         }
