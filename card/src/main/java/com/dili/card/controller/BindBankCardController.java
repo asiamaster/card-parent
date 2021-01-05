@@ -37,6 +37,7 @@ import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 
+
 /**
  * @description： 银行卡绑定功能操作
  *
@@ -76,20 +77,29 @@ public class BindBankCardController implements IControllerHandler {
 	@GetMapping("/queryCard.html")
 	public ModelAndView queryCard(String cardNo, ModelAndView pageView) {
 		LOG.info("绑定银行卡查询账户信息*****" + cardNo);
-		AssertUtils.notEmpty(cardNo, "卡号不能为空");
-
-		UserAccountCardResponseDto account = accountQueryService.getByCardNo(cardNo);
-		if (account == null) {
-			throw new CardAppBizException("未找到账户或者账户状态异常");
+			try {
+				
+			AssertUtils.notEmpty(cardNo, "卡号不能为空");
+	
+			UserAccountCardResponseDto account = accountQueryService.getByCardNo(cardNo);
+			if (account == null) {
+				throw new CardAppBizException("未找到账户或者账户状态异常");
+			}
+			if (!CardType.isMaster(account.getCardType())) {
+				throw new CardAppBizException("请使用主卡绑定银行卡");
+			}
+			pageView.addObject("cardInfo",
+					JSON.parseObject(JSONObject.toJSONString(account, new EnumTextDisplayAfterFilter())));
+			pageView.addObject("cardNo", cardNo);
+			String subTypeNames = customerService.getSubTypeNames(account.getCustomerId(), account.getFirmId());
+			pageView.addObject("subTypeName", subTypeNames);
+		} catch (CardAppBizException e) {
+			LOG.error("绑定银行卡号查询账户信息出错,", e);
+			pageView.addObject("errorMsg", e.getMessage());
+		} catch (Exception e) {
+			LOG.error("绑定银行卡号查询账户信息出错,", e);
+			pageView.addObject("errorMsg", "未知错误");
 		}
-		if (!CardType.isMaster(account.getCardType())) {
-			throw new CardAppBizException("请使用主卡绑定银行卡");
-		}
-		pageView.addObject("cardInfo",
-				JSON.parseObject(JSONObject.toJSONString(account, new EnumTextDisplayAfterFilter())));
-		pageView.addObject("cardNo", cardNo);
-		String subTypeNames = customerService.getSubTypeNames(account.getCustomerId(), account.getFirmId());
-		pageView.addObject("subTypeName", subTypeNames);
 		pageView.setViewName("bindBankCard/accountInfo");
 		return pageView;
 	}
