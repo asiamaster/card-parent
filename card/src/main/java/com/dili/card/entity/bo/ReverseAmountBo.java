@@ -1,6 +1,7 @@
 package com.dili.card.entity.bo;
 
 import cn.hutool.core.util.NumberUtil;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.type.TradeType;
 
 /**
@@ -11,9 +12,9 @@ import com.dili.card.type.TradeType;
  *                                        = -（100-1000）+（50-5）= 945
  *        园区收益账户变动金额=实际手续费-原业务手续费 = 5-50= - 45
  * 存款业务：
-   冲正后，客户账户变动金额=（客户实际操作金额-原业务中操作金额） +（ 原业务手续费-  实际手续费）
-                         =（1000-10000）+（60-6）= - 8946
-          园区收益账户变动金额=实际手续费-原业务手续费 = 6-60= - 54
+冲正后，客户账户变动金额=（客户实际操作金额-原业务中操作金额） +（ 原业务手续费-  实际手续费）
+=（1000-10000）+（60-6）= - 8946
+园区收益账户变动金额=实际手续费-原业务手续费 = 6-60= - 54
  */
 public class ReverseAmountBo {
     /**实际操作金额*/
@@ -43,7 +44,13 @@ public class ReverseAmountBo {
     public Long calcReverseAmount() {
         long amount = NumberUtil.sub(this.actualAmount, this.originalAmount).longValue();
         if (TradeType.DEPOSIT.getCode() == this.tradeType) {
+            if (amount >= 0) {
+                throw new CardAppBizException("存款冲正金额非法（需为负数）");
+            }
             return amount;
+        }
+        if (amount <= 0) {
+            throw new CardAppBizException("取款冲正金额非法（需为整数）");
         }
         return -amount;
     }
