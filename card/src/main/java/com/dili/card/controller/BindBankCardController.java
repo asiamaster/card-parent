@@ -37,7 +37,6 @@ import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 
-
 /**
  * @description： 银行卡绑定功能操作
  *
@@ -77,10 +76,9 @@ public class BindBankCardController implements IControllerHandler {
 	@GetMapping("/queryCard.html")
 	public ModelAndView queryCard(String cardNo, ModelAndView pageView) {
 		LOG.info("绑定银行卡查询账户信息*****" + cardNo);
-			try {
-				
+		try {
 			AssertUtils.notEmpty(cardNo, "卡号不能为空");
-	
+
 			UserAccountCardResponseDto account = accountQueryService.getByCardNo(cardNo);
 			if (account == null) {
 				throw new CardAppBizException("未找到账户或者账户状态异常");
@@ -138,6 +136,24 @@ public class BindBankCardController implements IControllerHandler {
 	}
 
 	/**
+	 * 个人根据卡号获取银行名称
+	 */
+	@PostMapping("/getBankInfo.action")
+	public BaseOutput<?> getBankInfo(@RequestBody BindBankCardDto bankCardDto) {
+		LOG.info("根据卡号获取银行信息*****" + JSONObject.toJSONString(bankCardDto));
+		return BaseOutput.success();
+	}
+
+	/**
+	 * 根据关键字搜索完整的开户行名称
+	 */
+	@PostMapping("/getOpeningBankName.action")
+	public BaseOutput<?> getOpeningBankName(@RequestBody BindBankCardDto bankCardDto) {
+		LOG.info("关键字搜索开户行*****" + JSONObject.toJSONString(bankCardDto));
+		return BaseOutput.success();
+	}
+
+	/**
 	 * 添加绑定的银行卡
 	 */
 	@PostMapping("/addBind.action")
@@ -151,7 +167,7 @@ public class BindBankCardController implements IControllerHandler {
 	 */
 	@PostMapping("/unBind.action")
 	public BaseOutput<?> unBind(@RequestBody BindBankCardDto bankCardDto) {
-		LOG.info("绑定新银行卡*****" + JSONObject.toJSONString(bankCardDto));
+		LOG.info("解绑银行卡*****" + JSONObject.toJSONString(bankCardDto));
 		return BaseOutput.success();
 	}
 }
