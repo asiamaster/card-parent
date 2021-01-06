@@ -39,7 +39,7 @@ public class BankCounterController implements IControllerHandler {
      */
     @GetMapping("/list.html")
     public String listView() {
-        return "bankCounter/list";
+        return "bankcounter/list";
     }
 
     /**
