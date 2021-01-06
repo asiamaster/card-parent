@@ -66,8 +66,6 @@ public class OpenCardPrintServiceImpl extends PrintServiceImpl {
 		}else {
 			throw new CardAppBizException("开卡操作记录中未找到打印需要的卡类型");
 		}
-		printDto.setSerialNo(recordDo.getSerialNo());
-		printDto.setFirmName(recordDo.getFirmName());
 		printDto.setHoldName(recordDo.getHoldName());
 		printDto.setTradeChannel(recordDo.getTradeChannelName());
 	}

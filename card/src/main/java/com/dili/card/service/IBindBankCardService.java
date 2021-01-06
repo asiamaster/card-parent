@@ -31,5 +31,7 @@ public interface IBindBankCardService {
 	 * @return
 	 */
 	boolean unBind(BindBankCardDto data);
+	
+	
 
 }

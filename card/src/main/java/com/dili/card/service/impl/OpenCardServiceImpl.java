@@ -409,9 +409,10 @@ public class OpenCardServiceImpl implements IOpenCardService {
 			// 判断已办主卡数量
 			for (UserAccountCardResponseDto accountDto : accountList) {
 				if (CardType.isMaster(accountDto.getCardType())
-						&& accountDto.getCardState() != CardStatus.RETURNED.getCode())
+						&& accountDto.getCardState() != CardStatus.RETURNED.getCode()) {
 					customerName = accountDto.getCustomerName();
-				++nowCardNum;
+					++nowCardNum;
+				}
 			}
 			if (nowCardNum == 0) {
 				return nowCardNum;
