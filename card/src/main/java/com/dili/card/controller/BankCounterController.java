@@ -64,7 +64,7 @@ public class BankCounterController implements IControllerHandler {
      */
     @GetMapping("/addDeposit.html")
     public String addDepositView() {
-        return "bankCounter/addDeposit";
+        return "bankcounter/addDeposit";
     }
 
     /**
@@ -88,7 +88,7 @@ public class BankCounterController implements IControllerHandler {
      */
     @GetMapping("/addWithdraw.html")
     public String addWithdrawView() {
-        return "bankCounter/addWithdraw";
+        return "bankcounter/addWithdraw";
     }
 
     /**
