@@ -219,6 +219,7 @@ public class SerialController implements IControllerHandler {
         if (recordDo == null) {
             return BaseOutput.failure("业务办理记录不存在");
         }
+        recordDo.setFirmName(getUserTicket().getFirmName());
         return BaseOutput.successData(printDispatcher.create(recordDo, reprint));
     }
 }

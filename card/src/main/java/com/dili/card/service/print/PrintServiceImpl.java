@@ -49,6 +49,8 @@ public abstract class PrintServiceImpl implements IPrintService {
 		printDto.setOperatorNo(recordDo.getOperatorNo());
 		printDto.setOperatorName(recordDo.getOperatorName());
 		printDto.setNotes(recordDo.getNotes());
+		printDto.setSerialNo(recordDo.getSerialNo());
+		printDto.setFirmName(recordDo.getFirmName());
 		createSpecial(printDto, recordDo, reprint);
 		result.put("data", printDto);
 		return result;

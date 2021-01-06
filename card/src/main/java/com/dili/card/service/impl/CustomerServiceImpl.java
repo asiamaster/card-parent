@@ -76,6 +76,7 @@ public class CustomerServiceImpl implements ICustomerService {
 			ddv.setFirmId(firmId);
 			List<DataDictionaryValue> ddList = GenericRpcResolver
 					.resolver(dataDictionaryRpc.listDataDictionaryValue(ddv), "DataDictionaryRpc");
+			log.info("市场{}客户角色身份信息{}",firmId,JSONObject.toJSONString(ddList));
 			if (ddList == null || ddList.size() == 0) {
 				log.warn("数据字典中没找到该客户身份类型CharacterType[{}]SubType[{}]", characterType.getCharacterType(),
 						characterType.getSubType());
@@ -95,6 +96,7 @@ public class CustomerServiceImpl implements ICustomerService {
 		Map<Long, String> subTypeMap = new HashMap<Long, String>();
 		List<CustomerExtendDto> clist = customerRpcResolver.findCustomerByIds(cidList, firmId);
 		List<DataDictionaryValue> subTypeDD = characterTypeCache.getSubTypeList(firmId);
+		log.info("市场{}客户角色身份信息{}",firmId,JSONObject.toJSONString(subTypeDD));
 		clist.forEach(c -> {
 			List<String> subTypeList = new ArrayList<String>();
 			for (CharacterType ctype : c.getCharacterTypeList()) {
@@ -102,7 +104,6 @@ public class CustomerServiceImpl implements ICustomerService {
 					// 客户子类型允许为空
 					continue;
 				}
-				log.info(">>>>>>>>>>>>>>>{}",JSONObject.toJSONString(ctype));
 				if(CollectionUtils.isEmpty(subTypeDD)) {
 					continue;
 				}

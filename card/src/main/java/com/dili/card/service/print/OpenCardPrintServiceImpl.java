@@ -59,5 +59,14 @@ public class OpenCardPrintServiceImpl extends PrintServiceImpl {
 		}
 		printDto.setTotalAmount(CurrencyUtils.cent2TenNoSymbol(recordDo.getAmount()));
 		printDto.setTotalAmountWords(Convert.digitToChinese(Double.valueOf(recordDo.getAmount())));
+		
+		if(StringUtils.isNotBlank(recordDo.getAttach())) {
+			Integer cardType = JSONObject.parseObject(recordDo.getAttach()).getInteger(Constant.BUSINESS_RECORD_ATTACH_CARDTYPE);
+			printDto.setCardType(CardType.getName(cardType));
+		}else {
+			throw new CardAppBizException("开卡操作记录中未找到打印需要的卡类型");
+		}
+		printDto.setHoldName(recordDo.getHoldName());
+		printDto.setTradeChannel(recordDo.getTradeChannelName());
 	}
 }

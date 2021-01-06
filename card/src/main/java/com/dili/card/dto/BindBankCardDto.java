@@ -3,10 +3,6 @@ package com.dili.card.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.NotNull;
-
-import com.dili.card.validator.ConstantValidator;
-
 /**
  * 园区账户绑定银行卡
  * 
