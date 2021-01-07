@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: miaoguoxin
@@ -78,10 +79,10 @@ public class ReverseController implements IControllerHandler {
      */
     @PostMapping("/page.action")
     @ResponseBody
-    public PageOutput<List<ReverseRecordResponseDto>> getReversePage(@Validated(ConstantValidator.Page.class)
+    public Map<String, Object> getReversePage(@Validated(ConstantValidator.Page.class)
                                                                              ReverseRecordQueryDto queryDto) {
         AssertUtils.notNull(queryDto.getFirmId(), "市场id不能为空");
-        return reverseService.getPage(queryDto);
+        return successPage(reverseService.getPage(queryDto));
     }
 
     /**

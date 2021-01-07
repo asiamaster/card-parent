@@ -49,7 +49,7 @@
                     <th data-field="inAccChangeAmountText" data-align="center">
                         园区收益账户变动
                     </th>
-                    <th data-field="operatorName" data-align="center">
+                    <th data-field="opName" data-align="center">
                         操作员姓名
                     </th>
                     <th data-field="createTime" data-align="center">
@@ -69,7 +69,7 @@
 <script>
     $(function () {
         let options = {
-            uniqueId: "id",
+            uniqueId: "reverseId",
             url: "${contextPath}/reverse/page.action",
             sortName: "create_time",
             modalName: "冲正记录"

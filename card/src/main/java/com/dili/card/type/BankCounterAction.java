@@ -12,14 +12,11 @@ public enum BankCounterAction {
 
 	/** 卖家卡 */
 	WITHDRAW("取款", 2),
-
-	/** 缴费卡 */
-	PAY_FEES("缴费卡", 3);
-
+	;
 	private String name;
 	private Integer code;
 
-	private BankCounterAction(String name, Integer code) {
+	BankCounterAction(String name, Integer code) {
 		this.name = name;
 		this.code = code;
 	}

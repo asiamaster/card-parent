@@ -116,8 +116,6 @@ public class ReverseService implements IReverseService {
         BusinessRecordResponseDto bizSerial = detail.getBizSerial();
         List<SerialRecordResponseDto> feeSerials = detail.getFeeSerials();
         UserAccountCardResponseDto userAccount = detail.getAccountInfo();
-        //校验金额
-        this.validateAmount(requestDto.getAmount(), requestDto.getFee(), bizSerial, feeSerials);
         ReverseRecord reverseRecord = reverseRecordDao.findByBizSerialNo(requestDto.getBizSerialNo(), requestDto.getFirmId());
         if (reverseRecord != null) {
             throw new CardAppBizException("只允许做一次冲正操作");
@@ -178,6 +176,7 @@ public class ReverseService implements IReverseService {
     private List<ReverseRecordResponseDto> convert2ListDto(List<ReverseRecord> list) {
         return list.stream().map(reverseRecord -> {
             ReverseRecordResponseDto dto = new ReverseRecordResponseDto();
+            dto.setSerialNo(reverseRecord.getSerialNo());
             dto.setAmount(reverseRecord.getAmount());
             dto.setInAccChangeAmount(reverseRecord.getInAccChangeAmount());
             dto.setBizSerialNo(reverseRecord.getBizSerialNo());
@@ -193,20 +192,6 @@ public class ReverseService implements IReverseService {
         }).collect(Collectors.toList());
     }
 
-    /**
-     * 校验输入金额
-     * @author miaoguoxin
-     * @date 2020/11/25
-     */
-    private void validateAmount(Long amount, Long fee, BusinessRecordResponseDto bizRecord, List<SerialRecordResponseDto> feeRecords) {
-        if (Math.abs(amount) > bizRecord.getAmount()) {
-            throw new CardAppBizException("操作金额不能超过原业务操作金额");
-        }
-
-        if (Math.abs(fee) > this.getTotalFee(feeRecords)) {
-            throw new CardAppBizException("实际手续费不能超过原业务手续费");
-        }
-    }
 
     private void setOperator(ReverseRecord newReverseRecord, ReverseRequestDto requestDto) {
         newReverseRecord.setFirmId(requestDto.getFirmId());

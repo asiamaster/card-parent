@@ -1,8 +1,11 @@
 package com.dili.card.dto;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.FenToYuanProvider;
 import com.dili.card.common.provider.TradeTypeProvider;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -29,6 +32,9 @@ public class ReverseRecordResponseDto extends BaseDto{
     @TextDisplay(FenToYuanProvider.class)
     private Long inAccChangeAmount;
     /**创建时间*/
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     public Long getReverseId() {

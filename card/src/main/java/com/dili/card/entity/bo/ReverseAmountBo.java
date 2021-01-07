@@ -34,7 +34,18 @@ public class ReverseAmountBo {
         this.actualFee = actualFee;
         this.originalFee = originalFee;
         this.tradeType = tradeType;
+        this.validateAmount();
     }
+
+    private void validateAmount() {
+        if (Math.abs(this.actualAmount) > this.originalAmount) {
+            throw new CardAppBizException("操作金额不能超过原业务操作金额");
+        }
+        if (this.actualFee > this.originalFee) {
+            throw new CardAppBizException("实际手续费不能超过原业务手续费");
+        }
+    }
+
 
     /**
      * 计算冲正金额(不含手续费)
@@ -44,13 +55,7 @@ public class ReverseAmountBo {
     public Long calcReverseAmount() {
         long amount = NumberUtil.sub(this.actualAmount, this.originalAmount).longValue();
         if (TradeType.DEPOSIT.getCode() == this.tradeType) {
-            if (amount >= 0) {
-                throw new CardAppBizException("存款冲正金额非法（需为负数）");
-            }
             return amount;
-        }
-        if (amount <= 0) {
-            throw new CardAppBizException("取款冲正金额非法（需为整数）");
         }
         return -amount;
     }

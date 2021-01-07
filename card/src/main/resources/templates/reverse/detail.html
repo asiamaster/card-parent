@@ -167,7 +167,13 @@
                 return;
             }
             let data = $.common.formToJSON(reverseAddForm);
-            bui.util.debounce($.operate.post(url, $.extend(requestData, data)), 1000, true)
+            bui.util.debounce($.operate.post(url, $.extend(requestData, data), function(result){
+                if (result.success){
+                    $.modal.alertSuccess("冲正成功");
+                }else {
+                    $.modal.alertWarning(result.message);
+                }
+            }), 1000, true)
         });
     }
 </script>
