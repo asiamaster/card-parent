@@ -79,7 +79,7 @@
                 <th data-field="operatorName" data-align="center">
                     操作员
                 </th>
-                <th data-field="description"  data-align="center">
+                <th data-field="description"  data-align="center" data-formatter="noteFormatter">
                     备注
                 </th>
             </tr>
@@ -110,6 +110,13 @@
     function openAddWithdrawModal() {
         let url = "${contextPath}/bankCounter/addWithdraw.html";
         $.modal.openDefault("新增银行取款", url, "40%", "500")
+    }
+
+    function noteFormatter(value, row, index, field) {
+        if ($.common.isEmpty(value)){
+            return value;
+        }
+        return '<span data-toggle="tooltip" data-placement="top" title="" data-original-title="'+value+'">'+value+'</span>'
     }
 </script>
 
