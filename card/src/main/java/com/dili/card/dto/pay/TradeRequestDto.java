@@ -38,14 +38,7 @@ public class TradeRequestDto {
         return tradeRequestDto;
     }
 
-    public static TradeRequestDto createReverse(UserAccountCardResponseDto userAccount, String tradeNo, Long amount) {
-        TradeRequestDto tradeRequestDto = new TradeRequestDto();
-        tradeRequestDto.setTradeId(tradeNo);
-        tradeRequestDto.setBusinessId(userAccount.getAccountId());
-        tradeRequestDto.setAccountId(userAccount.getFundAccountId());
-        tradeRequestDto.setAmount(amount);
-        return tradeRequestDto;
-    }
+
 
 
     /**

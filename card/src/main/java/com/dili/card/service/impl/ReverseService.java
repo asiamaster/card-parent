@@ -12,6 +12,7 @@ import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.dto.SerialRecordResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
+import com.dili.card.dto.pay.PayReverseRequestDto;
 import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
@@ -133,11 +134,11 @@ public class ReverseService implements IReverseService {
         Long reverseAmount = reverseAmountBo.calcReverseAmount();
         Long inAccChangeAmount = reverseAmountBo.calcInAccChangeAmount();
         //发起冲正
-        TradeRequestDto tradeRequest = TradeRequestDto.createReverse(
+        PayReverseRequestDto tradeRequest = PayReverseRequestDto.createReverse(
                 userAccount, bizSerial.getTradeNo(), reverseAmount
         );
         if (inAccChangeAmount != 0) {
-            tradeRequest.addServiceFeeItem(inAccChangeAmount, FundItem.REVERSE_FEE);
+            tradeRequest.addFee(inAccChangeAmount, FundItem.REVERSE_FEE);
         }
         TradeResponseDto tradeResponse = GenericRpcResolver.resolver(payRpc.reverse(tradeRequest), ServiceName.PAY);
         //保存业务办理记录

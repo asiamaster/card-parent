@@ -11,6 +11,7 @@ import com.dili.card.dto.pay.CustomerBalanceResponseDto;
 import com.dili.card.dto.pay.FreezeFundRecordDto;
 import com.dili.card.dto.pay.FreezeFundRecordParam;
 import com.dili.card.dto.pay.FundOpResponseDto;
+import com.dili.card.dto.pay.PayReverseRequestDto;
 import com.dili.card.dto.pay.PipelineRecordParam;
 import com.dili.card.dto.pay.PipelineRecordResponseDto;
 import com.dili.card.dto.pay.TradeRequestDto;
@@ -48,7 +49,7 @@ public interface PayRpc {
      * @date 2020/12/4
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.trade.service:correct", method = RequestMethod.POST)
-    BaseOutput<TradeResponseDto> reverse(TradeRequestDto requestDto);
+    BaseOutput<TradeResponseDto> reverse(PayReverseRequestDto requestDto);
 
     /**
      * 创建交易（预支付）
@@ -137,9 +138,9 @@ public interface PayRpc {
      * 查询通道流水
      * @return
      */
-    @RequestMapping(value = "/payment/api/gateway.do?service=payment.pipeline.service:list", method = RequestMethod.POST)
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.channel.service:listTrades", method = RequestMethod.POST)
     PageOutput<List<PipelineRecordResponseDto>> pipelineList(PipelineRecordParam param);
-    
+
     /**
      * 查询客户总资产及明细
      */
