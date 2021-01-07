@@ -68,6 +68,11 @@ $(document).ready(function () {
             return true;
         }
     });
+    jQuery.validator.addMethod("decimalsValue",function(value, element) {
+        var decimalsValue =/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/ ;
+        return this.optional(element) || (decimalsValue.test(value));
+    }, "金额必须大于0并且只能精确到分");
+
     //校验新密码和确认密码是否相同
     jQuery.validator.addMethod("issame", function () {
         var p3 = $("#confirm_password").val();
