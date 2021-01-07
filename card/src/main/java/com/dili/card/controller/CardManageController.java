@@ -50,28 +50,28 @@ public class CardManageController implements IControllerHandler {
 	 * 重置登陆密码
 	 */
 	@RequestMapping(value = "/resetLoginPwd.action", method = RequestMethod.POST)
-	public BaseOutput<Boolean> resetLoginPassword(@RequestBody @Validated(value = { CardValidator.Generic.class,
+	public BaseOutput<String> resetLoginPassword(@RequestBody @Validated(value = { CardValidator.Generic.class,
 			CardValidator.ResetPassword.class }) CardRequestDto cardRequest) throws Exception {
 		LOGGER.info("重置密码*****{}", JSONObject.toJSONString(cardRequest, JsonExcludeFilter.PWD_FILTER));
 		// 操作日志
 		businessLogService.saveLog(OperateType.RESET_PWD, getUserTicket(), "业务卡号:" + cardRequest.getCardNo());
 		buildOperatorInfo(cardRequest);
-		cardManageService.resetLoginPwd(cardRequest);
-		return BaseOutput.success();
+		String serialNo = cardManageService.resetLoginPwd(cardRequest);
+		return BaseOutput.successData(serialNo);
 	}
 
 	/**
 	 * 修改密码
 	 */
 	@RequestMapping(value = "/modifyLoginPwd.action", method = RequestMethod.POST)
-	public BaseOutput<Boolean> modifyLoginPwd(@RequestBody @Validated(value = { CardValidator.Generic.class,
+	public BaseOutput<String> modifyLoginPwd(@RequestBody @Validated(value = { CardValidator.Generic.class,
 			CardValidator.ResetPassword.class }) CardRequestDto cardRequest) throws Exception {
 		LOGGER.info("修改密码*****{}", JSONObject.toJSONString(cardRequest, JsonExcludeFilter.PWD_FILTER));
 		// 操作日志
 		businessLogService.saveLog(OperateType.PWD_CHANGE, getUserTicket(), "业务卡号:" + cardRequest.getCardNo());
 		buildOperatorInfo(cardRequest);
-		cardManageService.modifyLoginPwd(cardRequest);
-		return BaseOutput.success();
+		String serialNo = cardManageService.modifyLoginPwd(cardRequest);
+		return BaseOutput.successData(serialNo);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class CardManageController implements IControllerHandler {
 	 * 解挂卡片
 	 */
 	@PostMapping("/unLostCard.action")
-	public BaseOutput<?> unLostCard(@RequestBody CardRequestDto cardParam) {
+	public BaseOutput<String> unLostCard(@RequestBody CardRequestDto cardParam) {
 		LOGGER.info("解挂卡片*****{}", JSONObject.toJSONString(cardParam, JsonExcludeFilter.PWD_FILTER));
 		validateCommonParam(cardParam);
 		if (StrUtil.isBlank(cardParam.getLoginPwd())) {
@@ -100,23 +100,23 @@ public class CardManageController implements IControllerHandler {
 		// 操作日志
 		businessLogService.saveLog(OperateType.LOSS_REMOVE, getUserTicket(), "业务卡号:" + cardParam.getCardNo());
 		buildOperatorInfo(cardParam);
-		cardManageService.unLostCard(cardParam);
-		return BaseOutput.success();
+		String serialNo = cardManageService.unLostCard(cardParam);
+		return BaseOutput.successData(serialNo);
 	}
 
 	/**
 	 * 解锁卡片
 	 */
 	@PostMapping("/unLockCard.action")
-	public BaseOutput<?> unLockCard(@RequestBody CardRequestDto cardParam) {
+	public BaseOutput<String> unLockCard(@RequestBody CardRequestDto cardParam) {
 		LOGGER.info("解锁卡片*****{}", JSONObject.toJSONString(cardParam, JsonExcludeFilter.PWD_FILTER));
 		validateCommonParam(cardParam);
 		if (StrUtil.isBlank(cardParam.getLoginPwd())) {
 			return BaseOutput.failure("密码为空");
 		}
 		buildOperatorInfo(cardParam);
-		cardManageService.unLockCard(cardParam);
-		return BaseOutput.success();
+		String serialNo = cardManageService.unLockCard(cardParam);
+		return BaseOutput.successData(serialNo);
 	}
 
 	/**

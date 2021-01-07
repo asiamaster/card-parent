@@ -13,7 +13,7 @@ public interface ICardManageService {
 	/**
 	 * 解挂卡片
 	 */
-	void unLostCard(CardRequestDto cardParam);
+	String unLostCard(CardRequestDto cardParam);
 
 	/**
 	 * 退卡
@@ -23,19 +23,19 @@ public interface ICardManageService {
 	/**
 	 * @description：重置登陆密码
 	 */
-	void resetLoginPwd(CardRequestDto cardParam);
+	String resetLoginPwd(CardRequestDto cardParam);
 	
 	
 	/**
 	 * @description：修改密码
 	 */
-	void modifyLoginPwd(CardRequestDto cardParam);
+	String modifyLoginPwd(CardRequestDto cardParam);
 
 	/**
 	 * 解锁卡片
 	 * @param cardParam
 	 */
-    void unLockCard(CardRequestDto cardParam);
+	String unLockCard(CardRequestDto cardParam);
 	/**
 	* 挂失
 	* @author miaoguoxin

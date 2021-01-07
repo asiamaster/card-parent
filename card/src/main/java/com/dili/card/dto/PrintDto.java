@@ -15,6 +15,8 @@ public class PrintDto {
 	private String customerName;
 	/** 客户卡号 */
 	private String cardNo;
+	/** 客户卡号 */
+	private String cardNoCipher;
 	/** 操作金额 */
 	private String amount;
 	/** 合计金额 */
@@ -244,6 +246,14 @@ public class PrintDto {
 
 	public void setCardType(String cardType) {
 		this.cardType = cardType;
+	}
+
+	public String getCardNoCipher() {
+		return cardNoCipher;
+	}
+
+	public void setCardNoCipher(String cardNoCipher) {
+		this.cardNoCipher = cardNoCipher;
 	}
 
 }
