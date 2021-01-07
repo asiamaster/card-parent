@@ -62,6 +62,7 @@ import com.dili.card.type.CustomerState;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateState;
 import com.dili.card.type.OperateType;
+import com.dili.card.type.PublicBizType;
 import com.dili.card.type.RuleFeeBusinessType;
 import com.dili.card.type.ServiceType;
 import com.dili.card.type.SystemSubjectType;
@@ -290,7 +291,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		record.setOperatorName(openCardInfo.getCreator());
 		record.setOperatorNo(openCardInfo.getCreatorCode());
 		record.setTradeType(OperateType.ACCOUNT_TRANSACT.getCode());
-		record.setType(OperateType.ACCOUNT_TRANSACT.getCode());
+		record.setType(PublicBizType.ACCOUNT_TRANSACT.getCode());
 		record.setFundItem(FundItem.IC_CARD_COST.getCode());
 		record.setFundItemName(FundItem.IC_CARD_COST.getName());
 		record.setAmount(openCardInfo.getCostFee());
@@ -422,13 +423,14 @@ public class OpenCardServiceImpl implements IOpenCardService {
 			ddv.setFirmId(customerResponseDto.getFirmId());
 			List<DataDictionaryValue> resolver = GenericRpcResolver
 					.resolver(dataDictionaryRpc.listDataDictionaryValue(ddv), "DataDictionaryRpc");
+			log.info("{}开卡数量配置>{}", customerResponseDto.getFirmId(), JSONObject.toJSONString(resolver));
 			Integer maxCardNum = 1;
 
 			if (CollectionUtils.isEmpty(resolver)) {
 				log.warn("FirmId{}在数据字典中没有配置开卡数量,使用默认值{}", customerResponseDto.getFirmId(), maxCardNum);
 			}
 
-			if (resolver != null && resolver.size() > 1) {
+			if (resolver != null && resolver.size() > 0) {
 				maxCardNum = Integer.parseInt(resolver.get(0).getCode());
 				log.warn("FirmId{}在数据字典中配置了多个开卡数量,以第一行数据作为判断依据", customerResponseDto.getFirmId());
 			}

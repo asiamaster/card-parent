@@ -18,7 +18,7 @@ public class CashWithdrawServiceImpl extends WithdrawServiceImpl {
     @Override
     public BusinessRecordDo createBusinessRecord(FundRequestDto fundRequestDto, UserAccountCardResponseDto accountCard) {
         return serialService.createBusinessRecord(fundRequestDto, accountCard, temp -> {
-            temp.setType(OperateType.ACCOUNT_WITHDRAW.getCode());
+            temp.setType(PublicBizType.ACCOUNT_WITHDRAW.getCode());
             temp.setAmount(fundRequestDto.getAmount());
             temp.setTradeType(TradeType.WITHDRAW.getCode());
             temp.setTradeChannel(fundRequestDto.getTradeChannel());
