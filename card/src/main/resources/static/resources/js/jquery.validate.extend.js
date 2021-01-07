@@ -71,7 +71,7 @@ $(document).ready(function () {
     jQuery.validator.addMethod("decimalsValue",function(value, element) {
         var decimalsValue =/^([1-9]{1}[0-9]{0,3}(\,[0-9]{3,4})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/ ;
         return this.optional(element) || (decimalsValue.test(value));
-    }, "金额必须大于0并且只能精确到分");
+    }, "金额不能小于0并且只能精确到分");
 
     //校验新密码和确认密码是否相同
     jQuery.validator.addMethod("issame", function () {
