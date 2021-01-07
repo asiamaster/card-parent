@@ -69,7 +69,7 @@ $(document).ready(function () {
         }
     });
     jQuery.validator.addMethod("decimalsValue",function(value, element) {
-        var decimalsValue =/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/ ;
+        var decimalsValue =/^([1-9]{1}[0-9]{0,3}(\,[0-9]{3,4})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/ ;
         return this.optional(element) || (decimalsValue.test(value));
     }, "金额必须大于0并且只能精确到分");
 

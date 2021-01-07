@@ -139,13 +139,19 @@
         rules: {
             amount: {
                 required: true,
-                notEqual:0,
+                decimalsValue: true,
             },
+            fee: {
+                required: true,
+                decimalsValue: true,
+            }
         },
         messages: {
             amount: {
-                required: "请输入金额",
-                notEqual:"请输入正确的金额",
+                required: "请输入金额"
+            },
+            fee: {
+                required: "请输入手续费",
             }
         },
         focusCleanup: true
