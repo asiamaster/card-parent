@@ -1,5 +1,6 @@
 package com.dili.card.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.BankCounterQuery;
 import com.dili.card.dto.BankCounterRequestDto;
@@ -10,6 +11,7 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,7 +65,8 @@ public class BankCounterController implements IControllerHandler {
      * @date 2020/12/10
      */
     @GetMapping("/addDeposit.html")
-    public String addDepositView() {
+    public String addDepositView(ModelMap modelMap) {
+        modelMap.addAttribute("date", DateUtil.now());
         return "bankcounter/addDeposit";
     }
 
@@ -87,7 +90,8 @@ public class BankCounterController implements IControllerHandler {
      * @date 2020/12/10
      */
     @GetMapping("/addWithdraw.html")
-    public String addWithdrawView() {
+    public String addWithdrawView(ModelMap modelMap) {
+        modelMap.addAttribute("date", DateUtil.now());
         return "bankcounter/addWithdraw";
     }
 
