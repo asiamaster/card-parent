@@ -29,7 +29,7 @@ CREATE TABLE `dili_card`.`card_reverse_record`  (
   `action` tinyint(3) unsigned NOT NULL COMMENT '动作-存款 取款',
   `amount` bigint(20) NOT NULL COMMENT '操作金额-分',
   `status` tinyint(3) unsigned NOT NULL COMMENT '状态-新建 封存',
-  `serial_no` varchar(20) NOT NULL COMMENT '银行操作流水号',
+  `serial_no` varchar(30) NOT NULL COMMENT '银行操作流水号',
   `apply_time` datetime DEFAULT NULL COMMENT '实际存取款时间',
   `operator_id` bigint(20) NOT NULL COMMENT '操作人员ID',
   `operator_name` varchar(20) DEFAULT NULL COMMENT '操作人员名称',
