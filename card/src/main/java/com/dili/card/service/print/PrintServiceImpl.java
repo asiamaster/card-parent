@@ -13,6 +13,9 @@ import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.util.DateUtil;
+
+import cn.hutool.core.util.StrUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
@@ -35,9 +38,12 @@ public abstract class PrintServiceImpl implements IPrintService {
 		PrintDto printDto = new PrintDto();
 		printDto.setName(OperateType.getName(recordDo.getType()));
 		printDto.setOperateTime(DateUtil.formatDateTime(recordDo.getOperateTime(), "yyyy-MM-dd HH:mm:ss"));
-		printDto.setReprint(reprint ? "补打" : "");
+		printDto.setReprint(reprint ? "(补打)" : "");
 		printDto.setCustomerName(recordDo.getCustomerName());
-		printDto.setCardNo(recordDo.getCardNo());
+		String cardNo = recordDo.getCardNo();
+		printDto.setCardNo(cardNo);
+		String endNo = StrUtil.sub(cardNo, cardNo.length()-4, cardNo.length());
+		printDto.setCardNoCipher(StrUtil.sub(cardNo, 1, 4) + "****" + endNo);
 		printDto.setAmount(CurrencyUtils.cent2TenNoSymbol(recordDo.getAmount()));
 		// 根据需求实时获取最新余额 2020-10-19
 		printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(queryTotalBalance(recordDo.getAccountId())));

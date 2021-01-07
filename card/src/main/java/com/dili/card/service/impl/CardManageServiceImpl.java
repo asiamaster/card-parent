@@ -79,7 +79,7 @@ public class CardManageServiceImpl implements ICardManageService {
     @Override
     @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
-    public void unLostCard(CardRequestDto cardParam) {
+    public String unLostCard(CardRequestDto cardParam) {
         UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
         query.setCardNo(cardParam.getCardNo());
         UserAccountCardResponseDto accountCard = accountQueryService.getForUnLostCard(query);
@@ -94,6 +94,7 @@ public class CardManageServiceImpl implements ICardManageService {
         //远程解冻资金账户 必須是主副卡
         payRpcResolver.unfreezeFundAccount(CreateTradeRequestDto.createCommon(accountCard.getFundAccountId(), accountCard.getAccountId()));
         this.saveRemoteSerialRecord(businessRecordDo);
+        return businessRecordDo.getSerialNo();
     }
 
     @Override
@@ -106,7 +107,7 @@ public class CardManageServiceImpl implements ICardManageService {
     @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void resetLoginPwd(CardRequestDto cardParam) {
+    public String resetLoginPwd(CardRequestDto cardParam) {
 
         //获取卡信息
         UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam.getAccountId());
@@ -125,10 +126,11 @@ public class CardManageServiceImpl implements ICardManageService {
 
         //记录远程操作记录
         this.saveRemoteSerialRecord(businessRecordDo);
+        return businessRecordDo.getSerialNo();
     }
 
     @Override
-	public void modifyLoginPwd(CardRequestDto cardParam) {
+	public String modifyLoginPwd(CardRequestDto cardParam) {
     	 //获取卡信息
         UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam.getAccountId());
 
@@ -146,13 +148,14 @@ public class CardManageServiceImpl implements ICardManageService {
 
         //记录远程操作记录
         this.saveRemoteSerialRecord(businessRecordDo);
+        return businessRecordDo.getSerialNo();
 	}
     
     
     @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void unLockCard(CardRequestDto cardParam) {
+    public String unLockCard(CardRequestDto cardParam) {
         UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
         query.setCardNo(cardParam.getCardNo());
         query.setAccountId(cardParam.getAccountId());
@@ -166,6 +169,7 @@ public class CardManageServiceImpl implements ICardManageService {
             throw new CardAppBizException(baseOutput.getCode(), baseOutput.getMessage());
         }
         this.saveRemoteSerialRecord(businessRecordDo);
+        return businessRecordDo.getSerialNo();
     }
 
     @Override
