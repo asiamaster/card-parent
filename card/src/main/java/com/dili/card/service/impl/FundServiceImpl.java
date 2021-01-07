@@ -36,6 +36,7 @@ import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.PayPipelineType;
+import com.dili.card.type.PublicBizType;
 import com.dili.feign.support.UapCookieUtils;
 import com.dili.ss.domain.PageOutput;
 import io.seata.spring.annotation.GlobalTransactional;
@@ -85,7 +86,7 @@ public class FundServiceImpl implements IFundService {
         }
 
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, accountCard, record -> {
-            record.setType(OperateType.FROZEN_FUND.getCode());
+            record.setType(PublicBizType.FROZEN_FUND.getCode());
             record.setAmount(requestDto.getAmount());
             record.setNotes(requestDto.getMark());
         });
@@ -195,7 +196,7 @@ public class FundServiceImpl implements IFundService {
         record.setOperatorId(unfreezeFundDto.getOpId());
         record.setOperatorName(unfreezeFundDto.getOpName());
         record.setOperatorNo(unfreezeFundDto.getOpNo());
-        record.setType(OperateType.UNFROZEN_FUND.getCode());
+        record.setType(PublicBizType.UNFROZEN_FUND.getCode());
         record.setFundItem(FundItem.MANDATORY_UNFREEZE_FUND.getCode());
         record.setFundItemName(FundItem.MANDATORY_UNFREEZE_FUND.getName());
         record.setOperateTime(LocalDateTime.now());

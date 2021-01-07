@@ -62,6 +62,7 @@ import com.dili.card.type.CustomerState;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateState;
 import com.dili.card.type.OperateType;
+import com.dili.card.type.PublicBizType;
 import com.dili.card.type.RuleFeeBusinessType;
 import com.dili.card.type.ServiceType;
 import com.dili.card.type.SystemSubjectType;
@@ -290,7 +291,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		record.setOperatorName(openCardInfo.getCreator());
 		record.setOperatorNo(openCardInfo.getCreatorCode());
 		record.setTradeType(OperateType.ACCOUNT_TRANSACT.getCode());
-		record.setType(OperateType.ACCOUNT_TRANSACT.getCode());
+		record.setType(PublicBizType.ACCOUNT_TRANSACT.getCode());
 		record.setFundItem(FundItem.IC_CARD_COST.getCode());
 		record.setFundItemName(FundItem.IC_CARD_COST.getName());
 		record.setAmount(openCardInfo.getCostFee());
