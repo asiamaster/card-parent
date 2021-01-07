@@ -110,7 +110,9 @@ public class CardManageServiceImpl implements ICardManageService {
     public String resetLoginPwd(CardRequestDto cardParam) {
 
         //获取卡信息
-        UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam.getAccountId());
+    	UserAccountSingleQueryDto queryDto = new UserAccountSingleQueryDto();
+    	queryDto.setAccountId(cardParam.getAccountId());
+        UserAccountCardResponseDto accountCard = accountQueryService.getForUnLockCard(queryDto);
 
         //校验卡信息与客户信息
         AccountValidator.validateMatchAccount(cardParam, accountCard);
