@@ -1,5 +1,6 @@
 package com.dili.card.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,33 +74,32 @@ public class BindBankCardController implements IControllerHandler {
 	/**
 	 * 查询卡信息
 	 */
-	@GetMapping("/queryCard.html")
-	public ModelAndView queryCard(String cardNo, ModelAndView pageView) {
+	@GetMapping("/queryCard.action")
+	public BaseOutput<Map<String, Object>> queryCard(String cardNo, ModelAndView pageView) {
 		LOG.info("绑定银行卡查询账户信息*****" + cardNo);
+		Map<String, Object> returnData = new HashMap<String, Object>();
 		try {
 			AssertUtils.notEmpty(cardNo, "卡号不能为空");
-
 			UserAccountCardResponseDto account = accountQueryService.getByCardNo(cardNo);
-			if (account == null) {
-				throw new CardAppBizException("未找到账户或者账户状态异常");
-			}
+			AssertUtils.notNull(account, "未找到账户或者账户状态异常");
+			
 			if (!CardType.isMaster(account.getCardType())) {
 				throw new CardAppBizException("请使用主卡绑定银行卡");
 			}
-			pageView.addObject("cardInfo",
-					JSON.parseObject(JSONObject.toJSONString(account, new EnumTextDisplayAfterFilter())));
-			pageView.addObject("cardNo", cardNo);
+			// 为了使用TextDisplay注解将类型转为显示文字
+			String jsonString = JSONObject.toJSONString(account, new EnumTextDisplayAfterFilter());
+			returnData.put("cardInfo", JSON.parseObject(jsonString));
+			
 			String subTypeNames = customerService.getSubTypeNames(account.getCustomerId(), account.getFirmId());
-			pageView.addObject("subTypeName", subTypeNames);
+			returnData.put("subTypeName", subTypeNames);
 		} catch (CardAppBizException e) {
 			LOG.error("绑定银行卡号查询账户信息出错,", e);
-			pageView.addObject("errorMsg", e.getMessage());
+			return BaseOutput.failure(e.getMessage());
 		} catch (Exception e) {
 			LOG.error("绑定银行卡号查询账户信息出错,", e);
-			pageView.addObject("errorMsg", "未知错误");
+			return BaseOutput.failure("绑定银行卡号查询账户信息出错");
 		}
-		pageView.setViewName("bindBankCard/accountInfo");
-		return pageView;
+		return BaseOutput.successData(returnData);
 	}
 
 	/**
