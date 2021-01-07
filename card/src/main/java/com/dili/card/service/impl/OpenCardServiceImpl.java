@@ -159,7 +159,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR,
 					"客户已" + CustomerState.getStateName(customer.getState()));
 		}
-		openCardInfo.setCustomerCharacterType(customerService.getCharacterTypes(customer.getCharacterTypeList(), customer.getId()));
+		openCardInfo.setCustomerCharacterType(customerService.convertCharacterTypes(customer.getCharacterTypeList(), customer.getId()));
 		// 获取当前账务周期
 		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(openCardInfo.getCreatorId(),
 				openCardInfo.getCreator(), openCardInfo.getCreatorCode());

@@ -16,11 +16,13 @@ import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
+import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountManageRpcResolver;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
+import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountManageService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ISerialService;
@@ -49,6 +51,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
     protected IAccountQueryService accountQueryService;
     @Autowired
     private CustomerRpcResolver customerRpcResolver;
+    @Resource
+    private IAccountCycleService accountCycleService;
 
 	@Override
 	@GlobalTransactional(rollbackFor = Exception.class)
@@ -131,9 +135,12 @@ public class AccountManageServiceImpl implements IAccountManageService {
      * 保存本地操作记录
      */
 	private BusinessRecordDo saveLocalSerialRecord(CardRequestDto cardParam, UserAccountCardResponseDto accountCard, OperateType operateType) {
+		 //账务周期
+        AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(cardParam.getOpId());
 		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
             temp.setType(operateType.getCode());
-        });
+        }, accountCycle.getCycleNo());
+		
 		serialService.saveBusinessRecord(businessRecord);
 		return businessRecord;
 	}

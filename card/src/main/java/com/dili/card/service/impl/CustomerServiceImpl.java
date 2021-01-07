@@ -18,14 +18,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.cache.CharacterTypeCache;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
-import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.ICustomerService;
 import com.dili.customer.sdk.domain.CharacterType;
 import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.customer.sdk.rpc.CustomerRpc;
-import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
-import com.dili.uap.sdk.rpc.DataDictionaryRpc;
 import com.google.common.collect.Lists;
 
 @Service("customerService")
@@ -36,13 +33,11 @@ public class CustomerServiceImpl implements ICustomerService {
 	@Resource
 	private CustomerRpc customerRpc;
 	@Autowired
-	private DataDictionaryRpc dataDictionaryRpc;
-	@Autowired
 	private CharacterTypeCache characterTypeCache;
 	@Autowired
 	private CustomerRpcResolver customerRpcResolver;
 
-	public String getCharacterTypes(List<CharacterType> typeList, Long customerId) {
+	public String convertCharacterTypes(List<CharacterType> typeList, Long customerId) {
 		if (CollectionUtils.isEmpty(typeList)) {
 			throw new CardAppBizException("客户ID{}角色信息为空", customerId);
 		}
@@ -53,6 +48,7 @@ public class CustomerServiceImpl implements ICustomerService {
 		return String.join(",", typesList);
 	}
 
+	
 	public List<String> getSubTypes(List<CharacterType> typeList) {
 		if (CollectionUtils.isEmpty(typeList)) {
 			return Lists.newArrayList();
@@ -64,28 +60,27 @@ public class CustomerServiceImpl implements ICustomerService {
 		return typesList;
 	}
 
+	@Override
+	public String getSubTypeCodes(Long cid, Long firmId) {
+		CustomerExtendDto customer = customerRpcResolver.findCustomerById(cid, firmId);
+		List<String> subTypes = getSubTypes(customer.getCharacterTypeList());
+		return String.join(",", subTypes);
+	}
+	
 	public String getSubTypeName(List<CharacterType> typeList, Long firmId) {
 		if (CollectionUtils.isEmpty(typeList)) {
 			return "";
 		}
+		// 获取缓存中的数据字典角色及身份信息
+		List<DataDictionaryValue> ddList = characterTypeCache.getSubTypeList(firmId);
+		log.info("市场{}客户角色身份信息{}", firmId, JSONObject.toJSONString(ddList));
+		
 		List<String> subTypeNameList = Lists.newArrayList();
 		typeList.forEach(characterType -> {
-			DataDictionaryValue ddv = DTOUtils.newInstance(DataDictionaryValue.class);
-			ddv.setDdCode(characterType.getCharacterType());
-			ddv.setCode(characterType.getSubType());
-			ddv.setFirmId(firmId);
-			List<DataDictionaryValue> ddList = GenericRpcResolver
-					.resolver(dataDictionaryRpc.listDataDictionaryValue(ddv), "DataDictionaryRpc");
-			log.info("市场{}客户角色身份信息{}",firmId,JSONObject.toJSONString(ddList));
-			if (ddList == null || ddList.size() == 0) {
-				log.warn("数据字典中没找到该客户身份类型CharacterType[{}]SubType[{}]", characterType.getCharacterType(),
-						characterType.getSubType());
-			} else {
-				if (ddList.size() > 1) {
-					log.warn("数据字典中配置了多个身份类型CharacterType[{}]SubType[{}]，只取第一个", characterType.getCharacterType(),
-							characterType.getSubType());
+			for (DataDictionaryValue dd : ddList) {
+				if (characterType.getCharacterType().equals(dd.getDdCode())) {
+					subTypeNameList.add(dd.getName());
 				}
-				subTypeNameList.add(ddList.get(0).getName());
 			}
 		});
 		return String.join(",", subTypeNameList);
@@ -124,4 +119,5 @@ public class CustomerServiceImpl implements ICustomerService {
 		Map<Long, String> dataMap = getSubTypeNames(Lists.newArrayList(cid), firmId);
 		return dataMap.get(cid);
 	}
+
 }

@@ -96,6 +96,15 @@ public interface ISerialService {
     BusinessRecordDo createBusinessRecord(CardRequestDto cardRequestDto, UserAccountCardResponseDto accountCard, IBusinessRecordFilter filter);
 
     /**
+     * 构建业务记录数据并提供回调处理
+     * @param cardRequestDto
+     * @param accountCard
+     * @param filter
+     * @return
+     */
+    BusinessRecordDo createBusinessRecord(CardRequestDto cardRequestDto, UserAccountCardResponseDto accountCard, IBusinessRecordFilter filter, Long cycleNo);
+    
+    /**
      * 构建流水记录并提供回调处理 没有资金操作的
      * @param businessRecord
      * @param filter
