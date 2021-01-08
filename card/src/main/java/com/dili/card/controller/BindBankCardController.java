@@ -27,8 +27,10 @@ import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.BindBankCardDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.pay.PayBankDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
+import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IBindBankCardService;
@@ -59,6 +61,8 @@ public class BindBankCardController implements IControllerHandler {
 	private CardManageRpc cardManageRpc;
 	@Resource
 	private CustomerRpc customerRpc;
+	@Resource
+	private PayRpc payRpc;
 	@Resource
 	private ICustomerService customerService;
 
@@ -143,24 +147,41 @@ public class BindBankCardController implements IControllerHandler {
 	/**
 	 * 个人根据卡号获取银行名称
 	 */
-	@PostMapping("/getBankInfo.action")
+	@RequestMapping("/getBankInfo.action")
 	@ResponseBody
-	public BaseOutput<?> getBankInfo(@RequestBody BindBankCardDto bankCardDto) {
-		LOG.info("根据卡号获取银行信息*****" + JSONObject.toJSONString(bankCardDto));
-		
-		return BaseOutput.success();
+	public BaseOutput<PayBankDto> getBankInfo(@RequestBody PayBankDto payBankDto) {
+		LOG.info("根据卡号获取银行信息*****" + JSONObject.toJSONString(payBankDto));
+		PayBankDto data = GenericRpcResolver.resolver(payRpc.getBankInfo(payBankDto), ServiceName.PAY);
+		LOG.info("支付返回*****" + JSONObject.toJSONString(data));
+		return BaseOutput.successData(data);
 	}
 
 	/**
 	 * 根据关键字搜索完整的开户行名称
 	 */
-	@PostMapping("/getOpeningBankName.action")
+	@RequestMapping("/getOpeningBankName.action")
 	@ResponseBody
-	public BaseOutput<?> getOpeningBankName(@RequestBody BindBankCardDto bankCardDto) {
-		LOG.info("关键字搜索开户行*****" + JSONObject.toJSONString(bankCardDto));
-		return BaseOutput.success();
+	public BaseOutput<List<PayBankDto>> getOpeningBankName(@RequestBody PayBankDto payBankDto) {
+		LOG.info("关键字搜索开户行*****" + JSONObject.toJSONString(payBankDto));
+		payBankDto.setBankName(payBankDto.getKeyword());
+		List<PayBankDto> data = GenericRpcResolver.resolver(payRpc.searchOpeningBank(payBankDto), ServiceName.PAY);
+		LOG.info("支付返回*****" + JSONObject.toJSONString(data));
+		return BaseOutput.successData(data);
 	}
 
+	/**
+	 * 查询市场支持的银行渠道
+	 */
+	@RequestMapping("/getBankChannels.action")
+	@ResponseBody
+	public BaseOutput<List<PayBankDto>> getBankChannels( PayBankDto payBankDto) {
+		LOG.info("查询市场支持的银行渠道*****" + JSONObject.toJSONString(payBankDto));
+		payBankDto.setMchId(this.getUserTicket().getFirmId());
+		List<PayBankDto> data = GenericRpcResolver.resolver(payRpc.getBankChannels(payBankDto), ServiceName.PAY);
+		LOG.info("支付返回*****" + JSONObject.toJSONString(data));
+		return BaseOutput.successData(data);
+	}
+	
 	/**
 	 * 添加绑定的银行卡
 	 */

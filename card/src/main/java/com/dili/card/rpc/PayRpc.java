@@ -11,6 +11,7 @@ import com.dili.card.dto.pay.CustomerBalanceResponseDto;
 import com.dili.card.dto.pay.FreezeFundRecordDto;
 import com.dili.card.dto.pay.FreezeFundRecordParam;
 import com.dili.card.dto.pay.FundOpResponseDto;
+import com.dili.card.dto.pay.PayBankDto;
 import com.dili.card.dto.pay.PayReverseRequestDto;
 import com.dili.card.dto.pay.PipelineRecordParam;
 import com.dili.card.dto.pay.PipelineRecordResponseDto;
@@ -151,5 +152,23 @@ public interface PayRpc {
     ///支付与银行接口相关
     ///
     
+    /**
+     * 根据银行卡号查询银行信息
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.channel.service:bankCard", method = RequestMethod.POST)
+    BaseOutput<PayBankDto> getBankInfo(PayBankDto payBankDto);
+    
+    
+    /**
+     * 查询市场支持的银行渠道
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.channel.service:listChannels", method = RequestMethod.POST)
+    BaseOutput<List<PayBankDto>> getBankChannels(PayBankDto payBankDto);
+    
+    /**
+     * 根据关键字搜索开户行
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.channel.service:listBanks", method = RequestMethod.POST)
+    BaseOutput<List<PayBankDto>> searchOpeningBank(PayBankDto payBankDto);
     
 }

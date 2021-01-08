@@ -16,7 +16,15 @@ public class PayBankDto {
 	private Integer channelId;
 
 	/** 银行名称 */
-	private Integer channelName;
+	private String channelName;
+
+	/** 开户行名称 */
+	private String bankName;
+
+	private Long mchId;
+
+	/** 关键字搜索 */
+	private String keyword;
 
 	public String getCardNo() {
 		return cardNo;
@@ -34,12 +42,36 @@ public class PayBankDto {
 		this.channelId = channelId;
 	}
 
-	public Integer getChannelName() {
+	public String getChannelName() {
 		return channelName;
 	}
 
-	public void setChannelName(Integer channelName) {
+	public void setChannelName(String channelName) {
 		this.channelName = channelName;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+
+	public Long getMchId() {
+		return mchId;
+	}
+
+	public void setMchId(Long mchId) {
+		this.mchId = mchId;
 	}
 
 }
