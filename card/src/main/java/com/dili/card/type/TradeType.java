@@ -36,17 +36,7 @@ public enum TradeType {
         return name;
     }
 
-    /**
-     * 是否是可以冲正的业务(只有充值和提款)
-     * @author miaoguoxin
-     * @date 2020/11/25
-     */
-    public static boolean canReverseType(Integer code) {
-        if (code == null) {
-            return false;
-        }
-        return TradeType.DEPOSIT.getCode() == code || TradeType.WITHDRAW.getCode() == code;
-    }
+
 
     public static TradeType getByCode(int code) {
         for (TradeType tradeType : TradeType.values()) {

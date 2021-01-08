@@ -68,6 +68,7 @@ $(document).ready(function () {
             return true;
         }
     });
+    //校验金额
     jQuery.validator.addMethod("decimalsValue",function(value, element) {
         var decimalsValue =/^([1-9]{1}[0-9]{0,3}(\,[0-9]{3,4})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/ ;
         return this.optional(element) || (decimalsValue.test(value));

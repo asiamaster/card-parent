@@ -81,10 +81,13 @@ public class ReverseService implements IReverseService {
         if (businessRecord == null) {
             throw new CardAppBizException("操作记录不存在");
         }
-        if (!TradeType.canReverseType(businessRecord.getTradeType())) {
+        if (!OperateType.canReverseType(businessRecord.getType())) {
             throw new CardAppBizException("只允许充值和提款业务 冲正");
         }
-
+        ReverseRecord reverseRecord = reverseRecordDao.findByBizSerialNo(serialNo, firmId);
+        if (reverseRecord != null) {
+            throw new CardAppBizException("只允许做一次冲正操作");
+        }
         BusinessRecordResponseDto bizSerial = new BusinessRecordResponseDto();
         BeanUtils.copyProperties(businessRecord, bizSerial);
 

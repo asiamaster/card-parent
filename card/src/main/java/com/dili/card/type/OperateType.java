@@ -45,6 +45,18 @@ public enum OperateType
 		this.code = code;
 	}
 
+	/**
+	 * 是否是可以冲正的业务(只有充值和提款)
+	 * @author miaoguoxin
+	 * @date 2020/11/25
+	 */
+	public static boolean canReverseType(Integer code) {
+		if (code == null) {
+			return false;
+		}
+		return OperateType.ACCOUNT_CHARGE.getCode() == code || OperateType.ACCOUNT_WITHDRAW.getCode() == code;
+	}
+
 	public static OperateType getOperateType(int code)
 	{
 		for (OperateType type : OperateType.values()) {
