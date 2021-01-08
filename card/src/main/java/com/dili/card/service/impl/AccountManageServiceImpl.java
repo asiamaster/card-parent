@@ -2,9 +2,6 @@ package com.dili.card.service.impl;
 
 import javax.annotation.Resource;
 
-import com.dili.card.rpc.resolver.CustomerRpcResolver;
-import com.dili.card.type.CustomerState;
-import com.dili.customer.sdk.domain.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,18 +13,23 @@ import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
+import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.AccountManageRpcResolver;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
+import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
+import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountManageService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
+import com.dili.card.type.CustomerState;
 import com.dili.card.type.DisableState;
 import com.dili.card.type.FundItem;
-import com.dili.card.type.OperateType;
+import com.dili.card.type.PublicBizType;
+import com.dili.customer.sdk.domain.Customer;
 import com.dili.ss.constant.ResultCode;
 
 import io.seata.spring.annotation.GlobalTransactional;
@@ -49,6 +51,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
     protected IAccountQueryService accountQueryService;
     @Autowired
     private CustomerRpcResolver customerRpcResolver;
+    @Resource
+    private IAccountCycleService accountCycleService;
 
 	@Override
 	@GlobalTransactional(rollbackFor = Exception.class)
@@ -59,7 +63,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), false, DisableState.ENABLED);
 
 		//保存本地记录
-		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.FROZEN_ACCOUNT);
+		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, PublicBizType.FROZEN_ACCOUNT.getCode());
 
 		//远程冻结卡账户操作
     	accountManageRpcResolver.frozen(cardRequestDto);
@@ -89,7 +93,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
 			throw new CardAppBizException("客户已被禁用");
 		}
 		//保存本地记录
-		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.UNFROZEN_ACCOUNT);
+		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, PublicBizType.UNFROZEN_ACCOUNT.getCode());
 
 		//远程解冻账户操作
 		accountManageRpcResolver.unfrozen(cardRequestDto);
@@ -130,10 +134,13 @@ public class AccountManageServiceImpl implements IAccountManageService {
 	/**
      * 保存本地操作记录
      */
-	private BusinessRecordDo saveLocalSerialRecord(CardRequestDto cardParam, UserAccountCardResponseDto accountCard, OperateType operateType) {
+	private BusinessRecordDo saveLocalSerialRecord(CardRequestDto cardParam, UserAccountCardResponseDto accountCard, int operateType) {
+		 //账务周期
+        AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(cardParam.getOpId());
 		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
-            temp.setType(operateType.getCode());
-        });
+            temp.setType(operateType);
+        }, accountCycle.getCycleNo());
+		
 		serialService.saveBusinessRecord(businessRecord);
 		return businessRecord;
 	}

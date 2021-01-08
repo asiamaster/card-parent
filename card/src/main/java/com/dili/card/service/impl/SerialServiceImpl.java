@@ -18,6 +18,7 @@ import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.ICustomerService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.serial.IAccountSerialFilter;
 import com.dili.card.service.serial.IBusinessRecordFilter;
@@ -65,6 +66,8 @@ public class SerialServiceImpl implements ISerialService {
     private RabbitMQMessageService rabbitMQMessageService;
     @Autowired
     private IAccountQueryService accountQueryService;
+    @Autowired
+    private ICustomerService customerService;
 
     @Transactional
     @Override
@@ -202,8 +205,16 @@ public class SerialServiceImpl implements ISerialService {
     }
 
     @Override
-    public BusinessRecordDo createBusinessRecord(CardRequestDto cardRequestDto, UserAccountCardResponseDto accountCard, IBusinessRecordFilter filter) {
-        BusinessRecordDo businessRecord = new BusinessRecordDo();
+	public BusinessRecordDo createBusinessRecord(CardRequestDto cardRequestDto, UserAccountCardResponseDto accountCard, IBusinessRecordFilter filter) {
+        //账务周期
+        AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(cardRequestDto.getOpId(), cardRequestDto.getOpName(), cardRequestDto.getOpNo());
+        return createBusinessRecord(cardRequestDto, accountCard, filter, accountCycle.getCycleNo());
+    }
+
+    @Override
+    public BusinessRecordDo createBusinessRecord(CardRequestDto cardRequestDto, UserAccountCardResponseDto accountCard,
+    		IBusinessRecordFilter filter, Long cycleNo) {
+    	BusinessRecordDo businessRecord = new BusinessRecordDo();
         //编号、卡号、账户id
         businessRecord.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
         businessRecord.setAccountId(cardRequestDto.getAccountId());
@@ -212,12 +223,11 @@ public class SerialServiceImpl implements ISerialService {
         businessRecord.setCustomerId(accountCard.getCustomerId());
         businessRecord.setCustomerNo(accountCard.getCustomerCode());
         businessRecord.setCustomerName(accountCard.getCustomerName());
-        businessRecord.setCustomerType(accountCard.getCustomerCharacterType());
+        businessRecord.setCustomerType(customerService.getSubTypeCodes(accountCard.getCustomerId(), accountCard.getFirmId()));
         businessRecord.setHoldName(accountCard.getHoldName());
         businessRecord.setNotes(cardRequestDto.getNotes());
         //账务周期
-        AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(cardRequestDto.getOpId(), cardRequestDto.getOpName(), cardRequestDto.getOpNo());
-        businessRecord.setCycleNo(accountCycle.getCycleNo());
+        businessRecord.setCycleNo(cycleNo);
         //操作员信息
         businessRecord.setOperatorId(cardRequestDto.getOpId());
         businessRecord.setOperatorNo(cardRequestDto.getOpNo());
@@ -234,7 +244,7 @@ public class SerialServiceImpl implements ISerialService {
         }
         return businessRecord;
     }
-
+    
     @Override
     public SerialDto createAccountSerial(BusinessRecordDo businessRecord, IAccountSerialFilter filter) {
         SerialDto serialDto = new SerialDto();

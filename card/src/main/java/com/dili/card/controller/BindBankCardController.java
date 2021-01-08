@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -72,10 +73,20 @@ public class BindBankCardController implements IControllerHandler {
 	}
 
 	/**
+	 * 跳转到绑定银行卡页面
+	 */
+	@GetMapping("/toAddBankCard.html")
+	public String addView() {
+		return "bindBankCard/addBankCard";
+	}
+
+	
+	/**
 	 * 查询卡信息
 	 */
-	@GetMapping("/queryCard.action")
-	public BaseOutput<Map<String, Object>> queryCard(String cardNo, ModelAndView pageView) {
+	@RequestMapping("/queryCard.action")
+	@ResponseBody
+	public BaseOutput<Map<String, Object>> queryCard(String cardNo) {
 		LOG.info("绑定银行卡查询账户信息*****" + cardNo);
 		Map<String, Object> returnData = new HashMap<String, Object>();
 		try {
@@ -111,14 +122,6 @@ public class BindBankCardController implements IControllerHandler {
 		LOG.info("绑定银行卡查询银行卡列表*****" + JSONObject.toJSONString(bankCardDto));
 		PageOutput<List<BindBankCardDto>> list = bindBankCardService.list(bankCardDto);
 		return successPage(list);
-	}
-
-	/**
-	 * 跳转到绑定银行卡页面
-	 */
-	@GetMapping("/toAddBankCard.html")
-	public String addView() {
-		return "bindBankCard/addBankCard";
 	}
 
 	/**

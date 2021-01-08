@@ -1,6 +1,17 @@
 package com.dili.card.service.impl;
 
-import cn.hutool.core.date.DateUtil;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
@@ -17,6 +28,7 @@ import com.dili.card.dto.pay.FundOpResponseDto;
 import com.dili.card.dto.pay.PipelineRecordParam;
 import com.dili.card.dto.pay.PipelineRecordResponseDto;
 import com.dili.card.dto.pay.TradeResponseDto;
+import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
@@ -24,7 +36,9 @@ import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
+import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.ICustomerService;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.recharge.AbstractRechargeManager;
@@ -34,22 +48,13 @@ import com.dili.card.type.BizNoType;
 import com.dili.card.type.CardType;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
-import com.dili.card.type.OperateType;
+import com.dili.card.type.OperateState;
 import com.dili.card.type.PayPipelineType;
 import com.dili.card.type.PublicBizType;
-import com.dili.feign.support.UapCookieUtils;
 import com.dili.ss.domain.PageOutput;
-import io.seata.spring.annotation.GlobalTransactional;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import cn.hutool.core.date.DateUtil;
+import io.seata.spring.annotation.GlobalTransactional;
 
 /**
  * 资金操作service实现类
@@ -59,6 +64,8 @@ import java.util.List;
 @Service
 public class FundServiceImpl implements IFundService {
 
+	@Resource
+	private ICustomerService customerService;
     @Resource
     private ISerialService serialService;
     @Autowired
@@ -71,6 +78,8 @@ public class FundServiceImpl implements IFundService {
     private PayRpc payRpc;
     @Autowired
     private RechargeFactory rechargeFactory;
+    @Autowired
+	private IAccountCycleService accountCycleService;
 
     @Override
     @GlobalTransactional(rollbackFor = Exception.class)
@@ -85,11 +94,13 @@ public class FundServiceImpl implements IFundService {
             throw new CardAppBizException("可用余额不足");
         }
 
+      //账务周期
+        AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(requestDto.getOpId());
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, accountCard, record -> {
             record.setType(PublicBizType.FROZEN_FUND.getCode());
             record.setAmount(requestDto.getAmount());
             record.setNotes(requestDto.getMark());
-        });
+        }, accountCycle.getCycleNo());
         CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto
                 .createFrozenAmount(accountCard.getFundAccountId(), accountCard.getAccountId(), requestDto.getAmount());
         createTradeRequestDto.setExtension(this.serializeFrozenExtra(requestDto));
@@ -123,10 +134,16 @@ public class FundServiceImpl implements IFundService {
             UnfreezeFundDto dto = new UnfreezeFundDto();
             dto.setFrozenId(frozenId);
             FundOpResponseDto payResponse = GenericRpcResolver.resolver(payRpc.unfrozenFund(dto), ServiceName.PAY);
+           
+            // 保存卡务操作记录
+            BusinessRecordDo businessRecord = createBusinessRecord(accountInfo, unfreezeFundDto, payResponse);
+            serialService.saveBusinessRecord(businessRecord);
+            
             // 构建全局操作记录
             SerialRecordDo serialRecord = buildSerialRecord(accountInfo, unfreezeFundDto, payResponse);
             serialList.add(serialRecord);
         }
+        
         SerialDto serialDto = new SerialDto();
         // 保存全局操作记录
         serialDto.setSerialRecordList(serialList);
@@ -211,6 +228,47 @@ public class FundServiceImpl implements IFundService {
         return record;
     }
 
+    /**
+     * 保存本地操作记录
+     * @param cardRequestDto
+     * @param accountCard
+     * @param cycleNo
+     * @return
+     */
+    private BusinessRecordDo createBusinessRecord(UserAccountCardResponseDto accountInfo,
+            UnfreezeFundDto unfreezeFundDto, FundOpResponseDto payResponse) {
+    	BusinessRecordDo businessRecord = new BusinessRecordDo();
+        //编号、卡号、账户id
+        businessRecord.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
+        businessRecord.setAccountId(accountInfo.getAccountId());
+        businessRecord.setCardNo(accountInfo.getCardNo());
+        //客户信息 由于卡账户冗余了客户相关信息，所以直接获取
+        businessRecord.setCustomerId(accountInfo.getCustomerId());
+        businessRecord.setCustomerNo(accountInfo.getCustomerCode());
+        businessRecord.setCustomerName(accountInfo.getCustomerName());
+        businessRecord.setCustomerType(customerService.getSubTypeCodes(accountInfo.getCustomerId(), accountInfo.getFirmId()));
+        businessRecord.setHoldName(accountInfo.getHoldName());
+        businessRecord.setNotes(unfreezeFundDto.getRemark());
+        //账务周期
+      //账务周期
+        AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(unfreezeFundDto.getOpId());
+        businessRecord.setCycleNo(accountCycle.getCycleNo());
+        //操作员信息
+        businessRecord.setOperatorId(unfreezeFundDto.getOpId());
+        businessRecord.setOperatorNo(unfreezeFundDto.getOpNo());
+        businessRecord.setOperatorName(unfreezeFundDto.getOpName());
+        businessRecord.setFirmId(unfreezeFundDto.getFirmId());
+        //时间、默认状态等数据
+        LocalDateTime localDateTime = LocalDateTime.now();
+        businessRecord.setState(OperateState.SUCCESS.getCode());
+        businessRecord.setOperateTime(localDateTime);
+        businessRecord.setModifyTime(localDateTime);
+        businessRecord.setVersion(1);
+        
+        return businessRecord;
+    }
+    
+    
     private String serializeFrozenExtra(FundRequestDto requestDto) {
         JSONObject extra = new JSONObject();
         extra.put(Constant.OP_NAME, requestDto.getOpName());
