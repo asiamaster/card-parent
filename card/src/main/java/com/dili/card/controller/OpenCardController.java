@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.JsonExcludeFilter;
+import com.dili.card.common.constant.ServiceName;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CustomerResponseDto;
 import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.OpenCardResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.rpc.AccountQueryRpc;
+import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IBusinessLogService;
 import com.dili.card.service.ICardStorageService;
@@ -26,6 +28,7 @@ import com.dili.card.service.IOpenCardService;
 import com.dili.card.type.CardType;
 import com.dili.card.type.OperateType;
 import com.dili.card.util.AssertUtils;
+import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -81,6 +84,11 @@ public class OpenCardController implements IControllerHandler {
 		log.info("开卡查询主卡信息*****{}", JSONObject.toJSONString(openCardInfo));
 		AssertUtils.notNull(openCardInfo.getCardNo(), "请输入主卡卡号!");
 		UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(openCardInfo.getCardNo());
+		
+		// 客户个人还是企业，用于前端限制持卡人姓名长度
+		CustomerExtendDto customer = GenericRpcResolver.resolver(customerRpc.getByCertificateNumber(userAccount.getCustomerCertificateNumber(), userAccount.getFirmId()),ServiceName.CUSTOMER);
+		userAccount.setOrganizationType(customer.getOrganizationType());
+		
 		log.info("开卡查询主卡信息完成*****{}", JSONObject.toJSONString(userAccount));
 		return BaseOutput.successData(userAccount);
 	}
