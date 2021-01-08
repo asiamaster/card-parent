@@ -10,7 +10,7 @@
                    <button type="button" class="btn btn-primary" onclick="loadDetailView()">
                        <i class="fa fa-search"></i> 查询
                    </button>
-                   <button  type="button" class="btn btn-primary pl-4 pr-4" onclick="history.go(-1)">
+                   <button  type="button" class="btn btn-primary pl-4 pr-4" onclick="backToList()">
                        返回
                    </button>
                </div>
@@ -68,5 +68,9 @@
         let serialNo = $("#serialNo").val();
         let url = '${contextPath}/reverse/detail.html?serialNo='+serialNo;
         $('#content').attr('src', url);
+    }
+
+    function backToList() {
+        window.location.href='${contextPath}/reverse/list.html'
     }
 </script>
