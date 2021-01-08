@@ -26,6 +26,7 @@
 			card_bind_bank_card
 		WHERE
 			firm_id = ${firmId}
+		AND status = 1
 			<if test="accountId != null">AND `account_id` = #{accountId} </if>
 		ORDER BY
 			${sort} ${order}
