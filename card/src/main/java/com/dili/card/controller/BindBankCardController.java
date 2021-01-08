@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -189,6 +188,8 @@ public class BindBankCardController implements IControllerHandler {
 	@ResponseBody
 	public BaseOutput<?> addBind(@RequestBody BindBankCardDto bankCardDto) {
 		LOG.info("绑定新银行卡*****" + JSONObject.toJSONString(bankCardDto));
+		buildOperatorInfo(bankCardDto);
+		bindBankCardService.addBind(bankCardDto);
 		return BaseOutput.success();
 	}
 
@@ -199,6 +200,7 @@ public class BindBankCardController implements IControllerHandler {
 	@ResponseBody
 	public BaseOutput<?> unBind(@RequestBody BindBankCardDto bankCardDto) {
 		LOG.info("解绑银行卡*****" + JSONObject.toJSONString(bankCardDto));
+		bindBankCardService.unBind(bankCardDto);
 		return BaseOutput.success();
 	}
 }
