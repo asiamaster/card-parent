@@ -72,6 +72,15 @@ public class BindBankCardController implements IControllerHandler {
 	}
 
 	/**
+	 * 跳转到绑定银行卡页面
+	 */
+	@GetMapping("/toAddBankCard.html")
+	public String addView() {
+		return "bindBankCard/addBankCard";
+	}
+
+	
+	/**
 	 * 查询卡信息
 	 */
 	@GetMapping("/queryCard.action")
@@ -111,14 +120,6 @@ public class BindBankCardController implements IControllerHandler {
 		LOG.info("绑定银行卡查询银行卡列表*****" + JSONObject.toJSONString(bankCardDto));
 		PageOutput<List<BindBankCardDto>> list = bindBankCardService.list(bankCardDto);
 		return successPage(list);
-	}
-
-	/**
-	 * 跳转到绑定银行卡页面
-	 */
-	@GetMapping("/toAddBankCard.html")
-	public String addView() {
-		return "bindBankCard/addBankCard";
 	}
 
 	/**

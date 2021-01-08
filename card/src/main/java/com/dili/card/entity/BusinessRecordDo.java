@@ -661,11 +661,11 @@ public class BusinessRecordDo implements Serializable {
 	}
 
 	/**
-	 * 获取操作类型名称
+	 * 获取业务类型名称
 	 * @return
 	 */
 	public String getTypeName() {
-		return this.type != null ? OperateType.getName(this.type) : "";
+		return this.type != null ? PublicBizType.getName(this.type) : "";
 	}
 
 	/**
