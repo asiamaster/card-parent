@@ -2,13 +2,18 @@ package com.dili.card.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dili.card.dao.IBindBankCardDao;
 import com.dili.card.dto.BindBankCardDto;
+import com.dili.card.entity.BindBankCardDo;
 import com.dili.card.service.IBindBankCardService;
+import com.dili.card.util.PageUtils;
 import com.dili.ss.domain.PageOutput;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 
 /**
  * @description： 卡片入库相关功能实现
@@ -23,16 +28,17 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 	
 	@Override
 	public PageOutput<List<BindBankCardDto>> list(BindBankCardDto queryParam) {
+		Page<Object> startPage = PageHelper.startPage(queryParam.getPage(), queryParam.getRows());
 		List<BindBankCardDto> selectList = bankCardDao.selectList(queryParam);
-		PageOutput<List<BindBankCardDto>> pageOut=new PageOutput<List<BindBankCardDto>>();
-		pageOut.setData(selectList);
-		return pageOut;
+		return PageUtils.convert2PageOutput(startPage, selectList);
 	}
 
 	@Override
-	public boolean addBind(BindBankCardDto newData) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean addBind(BindBankCardDto newDataDto) {
+		BindBankCardDo newData = new BindBankCardDo();
+		BeanUtils.copyProperties(newDataDto, newData);
+		bankCardDao.save(newData);
+		return true;
 	}
 
 	@Override

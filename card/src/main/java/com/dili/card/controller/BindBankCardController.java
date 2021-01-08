@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -83,8 +84,9 @@ public class BindBankCardController implements IControllerHandler {
 	/**
 	 * 查询卡信息
 	 */
-	@GetMapping("/queryCard.action")
-	public BaseOutput<Map<String, Object>> queryCard(String cardNo, ModelAndView pageView) {
+	@RequestMapping("/queryCard.action")
+	@ResponseBody
+	public BaseOutput<Map<String, Object>> queryCard(String cardNo) {
 		LOG.info("绑定银行卡查询账户信息*****" + cardNo);
 		Map<String, Object> returnData = new HashMap<String, Object>();
 		try {
