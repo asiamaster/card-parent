@@ -51,18 +51,20 @@
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <#common_cardBaseJs/>
 <script>
+
+// 保存绑定的银行卡信息
 function submitHandler(e) {
 	let formId = 'bankAddForm';
 	if (!$.validate.form(formId)) {
 		return false;
 	}
 	let url = "${contextPath}/bindBankCard/addBind.action";
-
 	localStorage.getItem('fundAccountId')
 	let data = $.extend({ accountId: localStorage.getItem('accountId'), fundAccountId: localStorage.getItem('fundAccountId')}, $.common.formToJSON(formId));
 	$.operate.post(url, data);
 }
 
+// 开户行输入自动查询
 var openingBankAutocomplete = {
 	width: '100%',
 	language: 'zh-CN',
@@ -95,6 +97,18 @@ var openingBankAutocomplete = {
 	}
 }
 
+// 账户类型交互
+$('#accountType').change(function () {
+	if($(this).val() == 1) {
+		$(['data-account-type="1"']).show();
+		$(['data-account-type="2"']).hide();
+	} else {
+		$(['data-account-type="1"']).hide();
+		$(['data-account-type="2"']).show();
+	}
+})
+
+// 刷银行卡并获取银行卡名称
 $('#bankReader').on('click', function () {
 	debugger
 	let bankInfo = JSON.parse(readerBank());
@@ -107,21 +121,14 @@ $('#bankReader').on('click', function () {
 	}
 })
 
+// 输入银行卡并获取银行卡名称
 $('#bankNo').on('input', function (e) {
 	if (e.keyCode == 13) {
 		getBankInfo($(this).val());
 	}
 })
-$('#accountType').change(function () {
-	if($(this).val() == 1) {
-		$(['data-account-type="1"']).show();
-		$(['data-account-type="2"']).hide();
-	} else {
-		$(['data-account-type="1"']).hide();
-		$(['data-account-type="2"']).show();
-	}
-})
 
+// 获取银行卡名称
 function getBankInfo(cardNo) {
 	$.ajax({
 		type: 'get',
@@ -137,7 +144,6 @@ function getBankInfo(cardNo) {
 			$.modal.alertWarning(error);
 		}
 	})
-
 }
 
 
