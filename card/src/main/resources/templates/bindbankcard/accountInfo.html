@@ -1,11 +1,12 @@
 <#bs4Body>
 <div class="container-fluid">
     <form id="queryCardInfoForm"  role="form" action="${contextPath}/bindBankCard/queryCard.html" method="get">
+		<input type="text" name="" hidden data-text="placeholder">
         <div class="row row-cols-6">
             <div class="form-group col-auto">
                 <label for="cardNo">卡号</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" name="cardNo" readonly="readonly" value="${cardNo!}" id="cardNo" maxlength="12"/>
+                    <input type="text" class="form-control" name="cardNo" value="${cardNo!}" id="cardNo" maxlength="12"/>
                 </div>
             </div>
             <div class="col-auto align-self-center mt-3">
@@ -13,71 +14,14 @@
 	                <button id="query" type="button" class="btn btn-primary"  onclick="readCard()">
 	                <i class="fa fa-search">刷园区主卡</i>
 	                </button>
+					<button id="authBindBtn" type="button" class="btn btn-primary" style="display: none">授权绑定</button>
                 </#resource>
-                <% if(cardInfo != null) { %>
-	                <button id="authBindBtn" type="button" class="btn btn-primary">授权绑定
-	                </button>
-                <% } %>
+
             </div>
         </div>
     </form>
-    <!-- 账户基本信息 -->
-     <% if(cardInfo != null) { %>
-     <input type="hidden" id="accountId" value="${cardInfo.accountId!}">
 	<div id="cardInfoDiv">
-		<div class="breadcrumb">
-            基本信息
-        </div>
-        <div id="base-info" class="panel-heading" >
-            <div class="row row-cols-6" >
-                <div class="form-group col">
-                    <label class="info-column">卡号</label>
-                    <input  type="text" class="form-control" value="${cardInfo.cardNo!}" readonly/>
-                </div>
-                <div class="form-group col">
-                    <label class="info-column">卡类别</label>
-                    <input  type="text" class="form-control" value="${cardInfo.cardTypeText!}" readonly/>
-                </div>
-                <div class="form-group col">
-                    <label class="info-column">卡片状态</label>
-                    <input  type="text" class="form-control" value="${cardInfo.cardStateText!}" readonly/>
-                </div>
-                <div class="form-group col">
-                    <label class="info-column">账户状态</label>
-                    <input  type="text" class="form-control" value="${cardInfo.disabledStateText!}" readonly/>
-                </div>
-            </div>
-        </div>
-        <div class="breadcrumb">
-            客户信息
-        </div>
-        <div  id="customerInfo" class="panel-heading">
-            <div class="row row-cols-6">
-                <div class="form-group col">
-                    <label class="info-column">客户编号</label>
-                    <input  type="text" class="form-control" value="${cardInfo.customerCode!}" readonly/>
-                </div>
-                <div class="form-group col">
-                    <label class="info-column">客户名称</label>
-                    <input  type="text" class="form-control" value="${cardInfo.customerName!}" readonly/>
-                </div>
-                <div class="form-group col">
-                    <label class="info-column">身份类型</label>
-                    <input  type="text" class="form-control" value="${subTypeName!}" readonly/>
-                </div>
-                <div class="form-group col">
-                    <label class="info-column">联系方式</label>
-                    <input  type="text" class="form-control" value="${cardInfo.customerContactsPhone!}" readonly/>
-                </div>
-            </div>
-        </div>
 	</div>
-	<% } else { %>
-		<script>
-			${errorMsg!}
-		</script>
-		
-	<% } %>
 	 <!-- 已绑定银行卡列表 -->
 	<div id="bankCardTableDiv" style="display: none" >
 		<div class="breadcrumb">
@@ -115,6 +59,8 @@
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <#common_cardBaseJs/>
 <#bindbankcard_bindBankCardJs/>
+<#bindbankcard_customerInfoTmpl/>
+
 <#comment>
     页面层弹框
 </#comment>

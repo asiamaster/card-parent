@@ -1,123 +1,146 @@
 <#bs4Body>
-<#vueElm/>
-<div class="container-fluid" id="v">
-	<div class="row row-cols-1" id="baseContent">
-		<div class="form-group col">
-			<label for="accountType" class="div_label">账户类型</label>
-			<div class="form-check">
-				<span>
-					<input class="form-check-input" type="radio" name="accountType" id="personType" value="1" checked>
-					<label class="form-check-label" for="personType">
-						个人账户
-					</label>
-				</span>
-				<span style="margin-left: 20px">
-					<input class="form-check-input" type="radio" name="accountType" id="pbType" value="2">
-					<label class="form-check-label" for="pbType">
-						对公账户
-					</label>
-				</span>
+
+<div class="container-fluid">
+	<form id="bankAddForm" role="form" class="pb-5">
+		<div class="row row-cols-1" id="baseContent">
+			<div class="form-group col">
+				<label>账户类型</label>
+				<select id="accountType" name="accountType" class="form-control" required>
+					<option value="1">个人账户</option>
+					<option value="2">对公账户</option>
+				</select>
+			</div>
+			<div class="form-group col">
+				<label>银行卡号</label>
+				<div class="input-group">
+					<input type="text" id="bankNo" name="bankNo" class="form-control digits" minlength="15" maxlength="20" value="" required/>
+					<div class="input-group-append">
+						<span class="input-group-text"><a id="bankReader" href="javascript:;">请刷银行卡</a></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group col">
+				<label>账户名称</label>
+				<input type="text" name="name" class="form-control" value="" required readonly/>
+			</div>
+			<div class="form-group col" data-account-type="1">
+				<label>银行名称</label>
+				<input type="text" id="bankNamePersonal" name="bankName" class="form-control" value="" required readonly/>
+			</div>
+			<div class="form-group col" data-account-type="2" style="display: none">
+				<label>银行名称</label>
+				<select id="bankNameCompany" name="bankName" class="form-control" required></select>
+				<#bcomboProvider _id="bankNameCompany" _provider="" />
+			</div>
+			<!-- 对公户 开户行 -->
+			<div class="form-group col">
+				<label for="openingBank">开户行</label>
+				<select id="openingBank" name="openingBank" class="form-control" required ></select>
+				<#bselect2 _id="openingBank" _mode="remote" _optionVariable="openingBankAutocomplete" _value=""/>
+			</div>
+
+			<div class="form-group col">
+				<label>备注</label>
+				<input type="text" name="description" class="form-control"/>
 			</div>
 		</div>
-		<div class="form-group col">
-			<label for="bankNo" class="div_label">银行卡号</label>
-			<input type="text" id="bankNo" class="form-control"/>
-		</div>
-		<div class="form-group col">
-			<label for="holderName" class="div_label">账户名</label>
-			<input type="text" id="holderName" class="form-control"/>
-		</div>
-		<div class="form-group col">
-			<label for="bankType" class="div_label">银行卡类型</label>
-			<input type="text" id="bankType" class="form-control"/>
-		</div>
-
-		<!-- 对公户 开户行 -->
-		<div class="form-group col">
-			<label for="openingBank" class="div_label">开户行</label>
-			<input type="text" id="openingBank" class="form-control"/>
-		</div>
-		<div class="form-group col">
-			<label for="description" class="div_label">备注</label>
-			<input type="text" id="description" class="form-control"/>
-		</div>
-	</div>
+	</form>
 </div>
 
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <#common_cardBaseJs/>
-<#bindbankcard_bindBankCardJs/>
 <script>
-	//提交回调
-	function submitHandler(){
-		console.log("ssss")
-
+function submitHandler(e) {
+	let formId = 'bankAddForm';
+	if (!$.validate.form(formId)) {
+		return false;
 	}
+	let url = "${contextPath}/bindBankCard/addBind.action";
 
-	let vue = new Vue({
-		el: '#v',
-		data() {
-			return {
-				categoryList:[],
-				cityList:[],
-				cityVal :[],
-				categoryVal:[],
-				selectCities:[],
-				selectCategories:[],
-				optionProps: {
-					value: 'id',
-					label: 'name',
-					children: []
-				},
-			}
-		},
-		mounted:function(){
-			this.getCity();
-			this.getCategory();
-		},
-		methods: {
-			handleCityChange(value) {
-				this.selectCities = value;
-				$("#place").val(this.selectCities.toString());
-			},
-			handleCategoryChange(value){
-				this.selectCategories = value;
-			},
-			getCategory(){
-				let that = this;
-				let categories = sessionStorage.getItem("categories");
-				if ($.common.isNotEmpty(categories)){
-					that.categoryList = JSON.parse(categories);
-					return;
-				}
-				$.ajax({
-					type: "GET",
-					url: '${contextPath}/misc/categoryTree.action',
-					success: function (ret) {
-						that.categoryList = ret.data;
-						sessionStorage.setItem("categories",JSON.stringify(that.categoryList));
-					}
-				});
-			},
-			getCity(){
-				let that = this;
-				let cities = sessionStorage.getItem("cities");
-				if ($.common.isNotEmpty(cities)){
-					that.cityList = JSON.parse(cities);
-					return;
-				}
-				$.ajax({
-					type: "GET",
-					url: '${contextPath}/misc/cityTree.action',
-					success: function (ret) {
-						that.cityList = ret.data;
-						sessionStorage.setItem("cities",JSON.stringify(that.cityList));
-					}
-				});
-			}
-		},
+	localStorage.getItem('fundAccountId')
+	let data = $.extend({ accountId: localStorage.getItem('accountId'), fundAccountId: localStorage.getItem('fundAccountId')}, $.common.formToJSON(formId));
+	$.operate.post(url, data);
+}
 
+var openingBankAutocomplete = {
+	width: '100%',
+	language: 'zh-CN',
+	minimumInputLength: 1,
+	ajax: {
+		type:'post',
+		contentType: 'application/json',
+		url: '${contextPath}/getOpeningBankName.action',
+		delay: 500,
+		data: function (params) {
+			return JSON.stringify({
+				keyword: params.term;
+			})
+		},
+		processResults: function (result) {
+			debugger
+			if(result.success){
+				let data = result.data;
+				return {
+					results: $.map(data, function (dataItem) {
+						dataItem.text = dataItem.name;
+						return dataItem;
+					})
+				};
+			}else{
+				bs4pop.alert(result.message, {type: 'error'});
+				return false;
+			}
+		}
+	}
+}
+
+$('#bankReader').on('click', function () {
+	debugger
+	let bankInfo = JSON.parse(readerBank());
+	if(bankInfo.code == '0') {
+		$('#bankNo').val(bankInfo.data);
+		getBankInfo(bankInfo.data);
+
+	} else {
+		$.modal.alertWarning(bankInfo.message);
+	}
+})
+
+$('#bankNo').on('input', function (e) {
+	if (e.keyCode == 13) {
+		getBankInfo($(this).val());
+	}
+})
+$('#accountType').change(function () {
+	if($(this).val() == 1) {
+		$(['data-account-type="1"']).show();
+		$(['data-account-type="2"']).hide();
+	} else {
+		$(['data-account-type="1"']).hide();
+		$(['data-account-type="2"']).show();
+	}
+})
+
+function getBankInfo(cardNo) {
+	$.ajax({
+		type: 'get',
+		url: '${contextPath}/getBankInfo.action',
+		data: {cardNo},
+		async: false,
+		dataType: "json",
+		success: function (res) {
+			$('#bankNamePersonal').val(res.data.channelName);
+		},
+		error: function (error) {
+			$('#bankNamePersonal').val('');
+			$.modal.alertWarning(error);
+		}
 	})
+
+}
+
+
 </script>
+
 
