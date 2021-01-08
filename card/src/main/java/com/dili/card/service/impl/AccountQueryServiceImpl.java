@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
  */
 @Service("accountQueryService")
 public class AccountQueryServiceImpl implements IAccountQueryService {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(AccountQueryServiceImpl.class);
 
     @Autowired
@@ -95,11 +95,9 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         }
         // 设置客户子类型  TODO 待优化，开发环境耗时0.3秒左右
         log.info("耗时测试a");
-        List<Long> cidList = result.stream().map(account -> account.getCustomerId()).collect(Collectors.toList());
+        List<Long> cidList = result.stream().map(AccountListResponseDto::getCustomerId).collect(Collectors.toList());
         Map<Long, String> subTypeNames = customerService.getSubTypeNames(cidList, param.getFirmId());
-        result.forEach(account -> {
-        	account.setCustomerSubTypeName(subTypeNames.get(account.getCustomerId()));
-        });
+        result.forEach(account -> account.setCustomerSubTypeName(subTypeNames.get(account.getCustomerId())));
         log.info("耗时测试b");
         return PageUtils.convert2PageOutput(page, result);
     }
@@ -324,7 +322,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         if(CollectionUtils.isEmpty(masterList)) {
         	throw new CardAppBizException("您没有开通过账户");
         }
-        
+
         // 查询客户资产情况
         FundAccountDto fundAccountDto = new FundAccountDto();
         fundAccountDto.setCustomerId(customerId);
@@ -342,7 +340,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
 	        	}
 	        });
         }
-        
+
 		return customerBalance;
 	}
 }
