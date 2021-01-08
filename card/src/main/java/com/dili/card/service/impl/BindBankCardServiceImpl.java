@@ -2,6 +2,7 @@ package com.dili.card.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,10 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 	
 	@Override
 	public PageOutput<List<BindBankCardDto>> list(BindBankCardDto queryParam) {
+		if(StringUtils.isBlank(queryParam.getSort())) {
+			queryParam.setSort("created_time");
+			queryParam.setOrder("DESC");
+		}
 		Page<Object> startPage = PageHelper.startPage(queryParam.getPage(), queryParam.getRows());
 		List<BindBankCardDto> selectList = bankCardDao.selectList(queryParam);
 		return PageUtils.convert2PageOutput(startPage, selectList);

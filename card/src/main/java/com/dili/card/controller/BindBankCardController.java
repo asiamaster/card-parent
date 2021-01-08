@@ -120,6 +120,8 @@ public class BindBankCardController implements IControllerHandler {
 	@ResponseBody
 	public Map<String, Object> bindBankCardList(BindBankCardDto bankCardDto) {
 		LOG.info("绑定银行卡查询银行卡列表*****" + JSONObject.toJSONString(bankCardDto));
+		AssertUtils.notNull(bankCardDto.getRows(),"缺失分页参数：rows");
+		AssertUtils.notNull(bankCardDto.getPage(),"缺失分页参数：page");
 		PageOutput<List<BindBankCardDto>> list = bindBankCardService.list(bankCardDto);
 		return successPage(list);
 	}
@@ -142,8 +144,10 @@ public class BindBankCardController implements IControllerHandler {
 	 * 个人根据卡号获取银行名称
 	 */
 	@PostMapping("/getBankInfo.action")
+	@ResponseBody
 	public BaseOutput<?> getBankInfo(@RequestBody BindBankCardDto bankCardDto) {
 		LOG.info("根据卡号获取银行信息*****" + JSONObject.toJSONString(bankCardDto));
+		
 		return BaseOutput.success();
 	}
 
@@ -151,6 +155,7 @@ public class BindBankCardController implements IControllerHandler {
 	 * 根据关键字搜索完整的开户行名称
 	 */
 	@PostMapping("/getOpeningBankName.action")
+	@ResponseBody
 	public BaseOutput<?> getOpeningBankName(@RequestBody BindBankCardDto bankCardDto) {
 		LOG.info("关键字搜索开户行*****" + JSONObject.toJSONString(bankCardDto));
 		return BaseOutput.success();
@@ -160,6 +165,7 @@ public class BindBankCardController implements IControllerHandler {
 	 * 添加绑定的银行卡
 	 */
 	@PostMapping("/addBind.action")
+	@ResponseBody
 	public BaseOutput<?> addBind(@RequestBody BindBankCardDto bankCardDto) {
 		LOG.info("绑定新银行卡*****" + JSONObject.toJSONString(bankCardDto));
 		return BaseOutput.success();
@@ -169,6 +175,7 @@ public class BindBankCardController implements IControllerHandler {
 	 * 解绑银行卡
 	 */
 	@PostMapping("/unBind.action")
+	@ResponseBody
 	public BaseOutput<?> unBind(@RequestBody BindBankCardDto bankCardDto) {
 		LOG.info("解绑银行卡*****" + JSONObject.toJSONString(bankCardDto));
 		return BaseOutput.success();

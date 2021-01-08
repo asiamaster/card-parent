@@ -15,6 +15,7 @@
 			`opening_bank_num`, 
 			`name`, 
 			`status`, 
+			`firm_id`,
 			`operator_id`, 
 			`operator_name`, 
 			`created_time`, 
@@ -23,9 +24,10 @@
 		FROM
 			card_bind_bank_card
 		WHERE
-			account_id = ${accountId}
+			firm_id = ${firmId}
+			<if test="accountId != null">AND `account_id` = #{accountId} </if>
 		ORDER BY
-			created_time DESC
+			${sort} ${order}
 	</select>
 	
 	<insert id="save">
@@ -38,7 +40,8 @@
 			`opening_bank`, 
 			`opening_bank_num`, 
 			`name`, 
-			`status`, 
+			`status`,
+			`firm_id`, 
 			`operator_id`, 
 			`operator_name`, 
 			`created_time`, 
@@ -55,6 +58,7 @@
 			#{openingBankNum}, 
 			#{name}, 
 			#{status}, 
+			#{firmId},
 			#{operatorId}, 
 			#{operatorName}, 
 			#{createdTime}, 
@@ -75,6 +79,7 @@
 			`opening_bank_num`, 
 			`name`, 
 			`status`, 
+			`firm_id`,
 			`operator_id`, 
 			`operator_name`, 
 			`created_time`, 

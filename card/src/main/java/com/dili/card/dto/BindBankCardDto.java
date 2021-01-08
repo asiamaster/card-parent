@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  * 
  * @author bob
  */
-public class BindBankCardDto implements Serializable {
+public class BindBankCardDto extends BaseDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

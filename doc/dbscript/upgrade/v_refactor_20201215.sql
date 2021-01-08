@@ -59,6 +59,7 @@ CREATE TABLE `card_bind_bank_card` (
   `opening_bank_num` varchar(30) DEFAULT NULL COMMENT '开户行编码',
   `name` varchar(60) NOT NULL COMMENT '姓名',
   `status` tinyint(3) unsigned NOT NULL COMMENT '绑定状态',
+  `firm_id` bigint(20) NOT NULL COMMENT '市场id',
   `operator_id` bigint(20) DEFAULT NULL COMMENT '员工ID',
   `operator_name` varchar(20) DEFAULT NULL COMMENT '员工名称-保留字段',
   `created_time` datetime DEFAULT NULL COMMENT '创建时间',
