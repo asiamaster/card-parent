@@ -33,5 +33,7 @@ public interface IBindBankCardService {
 	boolean unBind(BindBankCardDto data);
 	
 	
+//	 getBankInfo(String bankCardNo);
+	
 
 }

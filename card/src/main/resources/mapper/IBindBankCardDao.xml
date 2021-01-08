@@ -8,7 +8,8 @@
 			`id`, 
 			`account_type`, 
 			`account_id`, 
-			`fund_account_id`, 
+			`fund_account_id`,
+			`bank_name`, 
 			`bank_type`, 
 			`bank_no`, 
 			`opening_bank`, 
@@ -34,7 +35,8 @@
 		INSERT INTO card_bind_bank_card (
 			`account_type`, 
 			`account_id`, 
-			`fund_account_id`, 
+			`fund_account_id`,
+			`bank_name`, 
 			`bank_type`, 
 			`bank_no`, 
 			`opening_bank`, 
@@ -51,7 +53,8 @@
 		VALUES (
 			#{accountType}, 
 			#{accountId}, 
-			#{fundAccountId}, 
+			#{fundAccountId},
+			#{bankName}, 
 			#{bankType}, 
 			#{bankNo}, 
 			#{openingBank}, 
@@ -73,6 +76,7 @@
 			`account_type`, 
 			`account_id`, 
 			`fund_account_id`, 
+			`bank_name`,
 			`bank_type`, 
 			`bank_no`, 
 			`opening_bank`, 
@@ -97,6 +101,7 @@
 			<if test="accountType != null">`account_type` = #{accountType}, </if>
 			<if test="accountId != null">`account_id` = #{accountId}, </if>
 			<if test="fundAccountId != null">`fund_account_id` = #{fundAccountId}, </if>
+			<if test="bankName != null">`bank_name` = #{bankName}, </if>
 			<if test="bankType != null">`bank_type` = #{bankType}, </if>
 			<if test="bankNo != null">`bank_no` = #{bankNo}, </if>
 			<if test="openingBank != null">`opening_bank` = #{openingBank}, </if>

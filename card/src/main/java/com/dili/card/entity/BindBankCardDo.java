@@ -20,6 +20,8 @@ public class BindBankCardDo implements Serializable {
 	private Long accountId;
 	/** 资金账号ID */
 	private Long fundAccountId;
+	/** 银行名称 */
+	private String bankName;
 	/** 银行类型-工商银行 */
 	private Integer bankType;
 	/** 银行卡号/对公账号 */
@@ -268,6 +270,14 @@ public class BindBankCardDo implements Serializable {
 
 	public void setFirmId(Long firmId) {
 		this.firmId = firmId;
+	}
+
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
 	}
 
 	/**

@@ -32,7 +32,6 @@ import java.util.List;
  */
 @FeignClient(value = "pay-service", configuration = PayServiceFeignConfig.class)
 public interface PayRpc {
-    static final String SERVICE_NAME = "pay-service";
 
     /**
      * 提交交易(充值、提现)
@@ -146,4 +145,11 @@ public interface PayRpc {
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.fund.service:customer", method = RequestMethod.POST)
     BaseOutput<CustomerBalanceResponseDto> getAccountFundByCustomerId(FundAccountDto type);
+    
+    
+    ///
+    ///支付与银行接口相关
+    ///
+    
+    
 }
