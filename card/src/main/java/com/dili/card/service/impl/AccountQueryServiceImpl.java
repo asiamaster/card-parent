@@ -260,14 +260,14 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         masterParams.setCustomerIds(Lists.newArrayList(customerId));
         //按照现在需求，一个customerId只有一张主卡，但是为了需求有变，这里设计成list
         //以防customerId对应多个主卡的情况
-        List<UserAccountCardResponseDto> masterList = GenericRpcResolver.resolver(accountQueryRpc.findListV2(masterParams), "account-service");
+        List<UserAccountCardResponseDto> masterList = GenericRpcResolver.resolver(accountQueryRpc.findListV2(masterParams), ServiceName.ACCOUNT);
 
         List<AccountWithAssociationResponseDto> result = new ArrayList<>();
         UserAccountCardQuery slaveParams = new UserAccountCardQuery();
         slaveParams.setCardType(CardType.SLAVE.getCode());
         for (UserAccountCardResponseDto master : masterList) {
             slaveParams.setParentAccountId(master.getAccountId());
-            List<UserAccountCardResponseDto> slaveList = GenericRpcResolver.resolver(accountQueryRpc.findListV2(slaveParams), "account-service");
+            List<UserAccountCardResponseDto> slaveList = GenericRpcResolver.resolver(accountQueryRpc.findListV2(slaveParams), ServiceName.ACCOUNT);
             BalanceResponseDto fund = payRpcResolver.findBalanceByFundAccountId(master.getFundAccountId());
             AccountWithAssociationResponseDto responseDto = new AccountWithAssociationResponseDto(master, slaveList, fund);
             result.add(responseDto);

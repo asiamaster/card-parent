@@ -7,6 +7,14 @@
         //$('#grid').bootstrapTable('refreshOptions', {url: '/serial/account/listPage.action'});
     });
 
+    function customerQueryCallback(dom, success) {
+        if (success) {
+            $("#includeSlave").removeAttr("disabled");
+        }else {
+            $("#includeSlave").attr("disabled", "disabled");
+        }
+    }
+
     /**
      * 查询处理
      */

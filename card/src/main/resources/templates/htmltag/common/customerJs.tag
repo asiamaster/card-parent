@@ -32,29 +32,38 @@
         }
     };
 
-    function queryCustomerByCardNo(cardNo, domId) {
-        $('#' + domId).val('')
+    function queryCustomerByCardNo(cardNo, domId, callback) {
+        let targetDom = $('#' + domId);
+        targetDom.val('');
         $('#hidden_account_id').val('');
         if (!cardNo || $.trim(cardNo).length !== 12) {
+            customerCallback(callback, targetDom, false);
             return;
         }
         $.ajax({
-            type:'GET',
-            url:'/accountQuery/singleWithoutValidate.action?cardNo=' + cardNo,
-            dataType:'json',
-            success:function(result) {
+            type: 'GET',
+            url: '/accountQuery/singleWithoutValidate.action?cardNo=' + cardNo,
+            dataType: 'json',
+            success: function (result) {
                 if (result.success) {
                     $('#hidden_account_id').val(result.data.accountId);
-                    $('#' + domId).val(result.data.customerName);
+                    targetDom.val(result.data.customerName);
+                    customerCallback(callback, targetDom, true)
                 } else {
                     $('#hidden_account_id').val('');
-                    $('#' + domId).val('');
+                    targetDom.val('');
+                    customerCallback(callback, targetDom, false)
                 }
             },
-            error:function(){
-
+            error: function () {
+                customerCallback(callback, targetDom, false)
             }
         });
     }
 
+    function customerCallback(callback, targetDom, success) {
+        if (typeof callback == 'function') {
+            callback(targetDom, success)
+        }
+    }
 </script>

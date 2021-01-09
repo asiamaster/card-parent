@@ -1,19 +1,25 @@
 package com.dili.card.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.config.SerialMQConfig;
 import com.dili.card.dao.IBusinessRecordDao;
-import com.dili.card.dto.*;
+import com.dili.card.dto.AccountWithAssociationResponseDto;
+import com.dili.card.dto.BusinessRecordResponseDto;
+import com.dili.card.dto.CardRequestDto;
+import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.SerialQueryDto;
+import com.dili.card.dto.UserAccountCardQuery;
+import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.FeeItemDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
-import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
-import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
@@ -22,13 +28,21 @@ import com.dili.card.service.ICustomerService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.serial.IAccountSerialFilter;
 import com.dili.card.service.serial.IBusinessRecordFilter;
-import com.dili.card.type.*;
+import com.dili.card.type.ActionType;
+import com.dili.card.type.BizNoType;
+import com.dili.card.type.CardType;
+import com.dili.card.type.FeeType;
+import com.dili.card.type.FundItem;
+import com.dili.card.type.OperateState;
+import com.dili.card.type.OperateType;
 import com.dili.card.util.DateUtil;
 import com.dili.card.util.PageUtils;
 import com.dili.commons.rabbitmq.RabbitMQMessageService;
 import com.dili.ss.domain.PageOutput;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -53,21 +67,17 @@ public class SerialServiceImpl implements ISerialService {
     @Resource
     private UidRpcResovler uidRpcResovler;
     @Resource
-    private CustomerRpcResolver customerRpcResolver;
-    @Resource
     private IBusinessRecordDao businessRecordDao;
     @Resource
     private IAccountCycleService accountCycleService;
-    @Resource
-    private SerialRecordRpcResolver serialRecordRpcResolver;
-    @Resource
-    private AccountQueryRpcResolver accountQueryRpcResolver;
     @Resource
     private RabbitMQMessageService rabbitMQMessageService;
     @Autowired
     private IAccountQueryService accountQueryService;
     @Autowired
     private ICustomerService customerService;
+    @Resource
+    private SerialRecordRpcResolver serialRecordRpcResolver;
 
     @Transactional
     @Override
@@ -205,7 +215,7 @@ public class SerialServiceImpl implements ISerialService {
     }
 
     @Override
-	public BusinessRecordDo createBusinessRecord(CardRequestDto cardRequestDto, UserAccountCardResponseDto accountCard, IBusinessRecordFilter filter) {
+    public BusinessRecordDo createBusinessRecord(CardRequestDto cardRequestDto, UserAccountCardResponseDto accountCard, IBusinessRecordFilter filter) {
         //账务周期
         AccountCycleDo accountCycle = accountCycleService.findActiveCycleByUserId(cardRequestDto.getOpId(), cardRequestDto.getOpName(), cardRequestDto.getOpNo());
         return createBusinessRecord(cardRequestDto, accountCard, filter, accountCycle.getCycleNo());
@@ -213,8 +223,8 @@ public class SerialServiceImpl implements ISerialService {
 
     @Override
     public BusinessRecordDo createBusinessRecord(CardRequestDto cardRequestDto, UserAccountCardResponseDto accountCard,
-    		IBusinessRecordFilter filter, Long cycleNo) {
-    	BusinessRecordDo businessRecord = new BusinessRecordDo();
+                                                 IBusinessRecordFilter filter, Long cycleNo) {
+        BusinessRecordDo businessRecord = new BusinessRecordDo();
         //编号、卡号、账户id
         businessRecord.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
         businessRecord.setAccountId(cardRequestDto.getAccountId());
@@ -244,7 +254,7 @@ public class SerialServiceImpl implements ISerialService {
         }
         return businessRecord;
     }
-    
+
     @Override
     public SerialDto createAccountSerial(BusinessRecordDo businessRecord, IAccountSerialFilter filter) {
         SerialDto serialDto = new SerialDto();
@@ -266,7 +276,7 @@ public class SerialServiceImpl implements ISerialService {
     }
 
     @Override
-    public SerialDto createAccountSerialWithFund(BusinessRecordDo businessRecord, TradeResponseDto tradeResponseDto, IAccountSerialFilter filter,boolean isFrozen) {
+    public SerialDto createAccountSerialWithFund(BusinessRecordDo businessRecord, TradeResponseDto tradeResponseDto, IAccountSerialFilter filter, boolean isFrozen) {
         SerialDto serialDto = new SerialDto();
         serialDto.setSerialNo(businessRecord.getSerialNo());
         tradeResponseDto = tradeResponseDto == null ? new TradeResponseDto() : tradeResponseDto;
@@ -301,6 +311,49 @@ public class SerialServiceImpl implements ISerialService {
     @Override
     public BusinessRecordDo findBusinessRecordBySerialNo(String serialNo) {
         return businessRecordDao.getBySerialNo(serialNo);
+    }
+
+    @Override
+    public PageOutput<List<SerialRecordDo>> getPage(SerialQueryDto serialQueryDto) {
+        //若查询包含副卡，要先把该卡名下的所有副卡查出来
+        this.setCardNosWhenIncludeSlave(serialQueryDto);
+        return serialRecordRpcResolver.listPage(serialQueryDto);
+    }
+
+    @Override
+    public Long countOperateAmount(SerialQueryDto serialQueryDto) {
+        //若查询包含副卡，要先把该卡名下的所有副卡查出来
+        this.setCardNosWhenIncludeSlave(serialQueryDto);
+        return serialRecordRpcResolver.countOperateAmount(serialQueryDto);
+    }
+
+    private void setCardNosWhenIncludeSlave(SerialQueryDto serialQueryDto) {
+        Integer includeSlave = serialQueryDto.getIncludeSlave();
+        String cardNo = serialQueryDto.getCardNo();
+        if (NumberUtils.toInt(includeSlave + "") == 1 && StrUtil.isNotBlank(cardNo)) {
+            //设置为Null防止sql错乱
+            serialQueryDto.setCardNo(null);
+            serialQueryDto.setCardNos(Lists.newArrayList(cardNo));
+
+            UserAccountCardQuery masterParam = new UserAccountCardQuery();
+            masterParam.setExcludeUnusualState(0);
+            masterParam.setCardNos(Lists.newArrayList(cardNo));
+            List<UserAccountCardResponseDto> masterCards = accountQueryService.getList(masterParam);
+            if (CollectionUtil.isEmpty(masterCards)){
+                return;
+            }
+            UserAccountCardResponseDto masterCard = masterCards.get(0);
+            //组装名下所有副卡
+            if (CardType.isMaster(masterCard.getCardType())) {
+                UserAccountCardQuery slaveParam = new UserAccountCardQuery();
+                slaveParam.setParentAccountId(masterCard.getAccountId());
+                slaveParam.setExcludeUnusualState(0);
+                List<UserAccountCardResponseDto> slaveCards = accountQueryService.getList(slaveParam);
+                serialQueryDto.getCardNos().addAll(slaveCards.stream()
+                        .map(UserAccountCardResponseDto::getCardNo)
+                        .collect(Collectors.toList()));
+            }
+        }
     }
 
     private static Long getOpAmount(TradeResponseDto tradeResponseDto, boolean isFrozen) {

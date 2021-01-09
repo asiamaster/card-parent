@@ -103,7 +103,7 @@ public interface ISerialService {
      * @return
      */
     BusinessRecordDo createBusinessRecord(CardRequestDto cardRequestDto, UserAccountCardResponseDto accountCard, IBusinessRecordFilter filter, Long cycleNo);
-    
+
     /**
      * 构建流水记录并提供回调处理 没有资金操作的
      * @param businessRecord
@@ -137,4 +137,18 @@ public interface ISerialService {
      * @return
      */
     BusinessRecordDo findBusinessRecordBySerialNo(String serialNo);
+
+    /**
+    * 分页查询
+    * @author miaoguoxin
+    * @date 2021/1/9
+    */
+    PageOutput<List<SerialRecordDo>> getPage(SerialQueryDto serialQueryDto);
+
+    /**
+    * 统计操作金额
+    * @author miaoguoxin
+    * @date 2021/1/9
+    */
+    Long countOperateAmount(SerialQueryDto serialQueryDto);
 }
