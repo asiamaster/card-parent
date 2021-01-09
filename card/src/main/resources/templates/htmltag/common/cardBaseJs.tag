@@ -42,5 +42,11 @@
         if (typeof (callbackObj) == "undefined") return;
         callbackObj.readPasswordKeyboardAsync();
     }
+
+    //读取银行卡
+    function readerBank() {
+        if (typeof (callbackObj) == "undefined") return false;
+        return callbackObj.readBankCardNumber();
+    }
     
 </script>

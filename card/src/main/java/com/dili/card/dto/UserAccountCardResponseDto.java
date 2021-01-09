@@ -88,6 +88,10 @@ public class UserAccountCardResponseDto implements Serializable {
 	private Long creatorId;
 
 	private Boolean master;
+	/**
+	 * 组织类型,个人/企业 {@link com.dili.customer.sdk.enums.CustomerEnum.OrganizationType}
+	 */
+	private String organizationType;
 	/** 实体卡是否存在 */
 	private Integer cardExist;
 
@@ -329,6 +333,14 @@ public class UserAccountCardResponseDto implements Serializable {
 
 	public void setCardExist(Integer cardExist) {
 		this.cardExist = cardExist;
+	}
+
+	public String getOrganizationType() {
+		return organizationType;
+	}
+
+	public void setOrganizationType(String organizationType) {
+		this.organizationType = organizationType;
 	}
 
 }

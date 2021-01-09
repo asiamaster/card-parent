@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,8 +26,10 @@ import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.BindBankCardDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.pay.PayBankDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
+import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IBindBankCardService;
@@ -59,6 +60,8 @@ public class BindBankCardController implements IControllerHandler {
 	private CardManageRpc cardManageRpc;
 	@Resource
 	private CustomerRpc customerRpc;
+	@Resource
+	private PayRpc payRpc;
 	@Resource
 	private ICustomerService customerService;
 
@@ -120,6 +123,8 @@ public class BindBankCardController implements IControllerHandler {
 	@ResponseBody
 	public Map<String, Object> bindBankCardList(BindBankCardDto bankCardDto) {
 		LOG.info("绑定银行卡查询银行卡列表*****" + JSONObject.toJSONString(bankCardDto));
+		AssertUtils.notNull(bankCardDto.getRows(),"缺失分页参数：rows");
+		AssertUtils.notNull(bankCardDto.getPage(),"缺失分页参数：page");
 		PageOutput<List<BindBankCardDto>> list = bindBankCardService.list(bankCardDto);
 		return successPage(list);
 	}
@@ -141,27 +146,50 @@ public class BindBankCardController implements IControllerHandler {
 	/**
 	 * 个人根据卡号获取银行名称
 	 */
-	@PostMapping("/getBankInfo.action")
-	public BaseOutput<?> getBankInfo(@RequestBody BindBankCardDto bankCardDto) {
-		LOG.info("根据卡号获取银行信息*****" + JSONObject.toJSONString(bankCardDto));
-		return BaseOutput.success();
+	@RequestMapping("/getBankInfo.action")
+	@ResponseBody
+	public BaseOutput<PayBankDto> getBankInfo(@RequestBody PayBankDto payBankDto) {
+		LOG.info("根据卡号获取银行信息*****" + JSONObject.toJSONString(payBankDto));
+		PayBankDto data = GenericRpcResolver.resolver(payRpc.getBankInfo(payBankDto), ServiceName.PAY);
+		LOG.info("支付返回*****" + JSONObject.toJSONString(data));
+		return BaseOutput.successData(data);
 	}
 
 	/**
 	 * 根据关键字搜索完整的开户行名称
 	 */
-	@PostMapping("/getOpeningBankName.action")
-	public BaseOutput<?> getOpeningBankName(@RequestBody BindBankCardDto bankCardDto) {
-		LOG.info("关键字搜索开户行*****" + JSONObject.toJSONString(bankCardDto));
-		return BaseOutput.success();
+	@RequestMapping("/getOpeningBankName.action")
+	@ResponseBody
+	public BaseOutput<List<PayBankDto>> getOpeningBankName(@RequestBody PayBankDto payBankDto) {
+		LOG.info("关键字搜索开户行*****" + JSONObject.toJSONString(payBankDto));
+		payBankDto.setBankName(payBankDto.getKeyword());
+		List<PayBankDto> data = GenericRpcResolver.resolver(payRpc.searchOpeningBank(payBankDto), ServiceName.PAY);
+		LOG.info("支付返回*****" + JSONObject.toJSONString(data));
+		return BaseOutput.successData(data);
 	}
 
+	/**
+	 * 查询市场支持的银行渠道
+	 */
+	@RequestMapping("/getBankChannels.action")
+	@ResponseBody
+	public BaseOutput<List<PayBankDto>> getBankChannels( PayBankDto payBankDto) {
+		LOG.info("查询市场支持的银行渠道*****" + JSONObject.toJSONString(payBankDto));
+		payBankDto.setMchId(this.getUserTicket().getFirmId());
+		List<PayBankDto> data = GenericRpcResolver.resolver(payRpc.getBankChannels(payBankDto), ServiceName.PAY);
+		LOG.info("支付返回*****" + JSONObject.toJSONString(data));
+		return BaseOutput.successData(data);
+	}
+	
 	/**
 	 * 添加绑定的银行卡
 	 */
 	@PostMapping("/addBind.action")
+	@ResponseBody
 	public BaseOutput<?> addBind(@RequestBody BindBankCardDto bankCardDto) {
 		LOG.info("绑定新银行卡*****" + JSONObject.toJSONString(bankCardDto));
+		buildOperatorInfo(bankCardDto);
+		bindBankCardService.addBind(bankCardDto);
 		return BaseOutput.success();
 	}
 
@@ -169,8 +197,10 @@ public class BindBankCardController implements IControllerHandler {
 	 * 解绑银行卡
 	 */
 	@PostMapping("/unBind.action")
+	@ResponseBody
 	public BaseOutput<?> unBind(@RequestBody BindBankCardDto bankCardDto) {
 		LOG.info("解绑银行卡*****" + JSONObject.toJSONString(bankCardDto));
+		bindBankCardService.unBind(bankCardDto);
 		return BaseOutput.success();
 	}
 }

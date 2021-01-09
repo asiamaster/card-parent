@@ -6,10 +6,10 @@
 
 	});
 
-	/**
+    /**
 	 * 授权绑定,密码验证
 	 */
-	$("#authBindBtn").click(function(){
+	$(document).on('click', '#authBindBtn', function () {
 // let a = bui.util.debounce(saveOrUpdateHandler,1000,true);
         let dia = bs4pop.dialog({
             title: '授权绑定',// 对话框title
@@ -62,7 +62,7 @@
 	 * 打开添加银行卡页面
 	 */
 	$("#openAddHtmlBtn").click(function(){
-	    $.modal.openDefault("新增银行卡绑定",'${contextPath}/bindBankCard/toAddBankCard.html','60%','600px');
+	    $.modal.openDefault("新增银行卡绑定",'${contextPath}/bindBankCard/toAddBankCard.html','600px','80%');
     });
 
 	/**
@@ -92,36 +92,65 @@
 	 */
 	function bindBankCardTable(){
 		let accountId = $("#accountId").val();
-		alert(accountId);
 		let options = {
 		    	id: "bankCardTable",
 		    	uniqueId: "id",
 		        url: "${contextPath}/bindBankCard/queryList.action",
 		        sortName: "create_time",
 		        modalName: "绑定卡列表",
-		        method: "get",
-		        queryParams: {accountId:accountId}
+		        method: "get"
 		};
 		$.table.init(options);
 	}
+
+
+    /**
+     * 卡号查询
+     */
+     $('[name="cardNo"]').keydown(function(e){
+         $('#authBindBtn').hide();
+         if (e.keyCode == 13) {
+             let cardNo = $(this).val();
+             getCardCustomerInfo(cardNo);
+         }
+     });
+
 
 	/**
 	 * 读卡号
 	 */
     function readCard() {
-// let result = readerCardNumber();
-// if (!result.success) {
-// $.modal.alertWarning(result.message);
-// return;
-// }
-// let cardNo = result.data;
-// if ($.common.isEmpty(cardNo)) {
-// parent.$.modal.alertWarning("请将卡片放置在读卡器上");
-// return;
-// }
-    	let cardNo = '888810032992';
-        alert(cardNo);
+        let result = readerCardNumber();
+        if (!result.success) {
+            $.modal.alertWarning(result.message);
+            return false;
+        }
+        let cardNo = result.data;
+        if ($.common.isEmpty(cardNo)) {
+            parent.$.modal.alertWarning("请将卡片放置在读卡器上");
+            return false;
+        }
         $("#cardNo").val(cardNo);
-        $("#queryCardInfoForm").submit();
+        getCardCustomerInfo(cardNo)
+    }
+
+    // 获取园区卡号的用户信息
+    function getCardCustomerInfo(cardNo){
+        $.ajax({
+            type: 'get',
+            url: '/bindBankCard/queryCard.action',
+            data: {cardNo},
+            async: false,
+            dataType: "json",
+            success: function (res) {
+                localStorage.setItem('accountId', res.data.cardInfo.accountId)
+                localStorage.setItem('fundAccountId', res.data.cardInfo.fundAccountId)
+                $('#authBindBtn').show();
+                $('#cardInfoDiv').html(bui.util.HTMLDecode(template('customerInfoTmpl', res.data.cardInfo)))
+            },
+            error: function (error) {
+                $('#cardInfoDiv').html(error);
+            }
+        })
     }
 </script>

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  * 
  * @author bob
  */
-public class BindBankCardDto implements Serializable {
+public class BindBankCardDto extends BaseDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -22,6 +22,8 @@ public class BindBankCardDto implements Serializable {
 	private Long fundAccountId;
 	/** 银行类型-工商银行 */
 	private Integer bankType;
+	/** 银行名称 */
+	private String bankName;
 	/** 银行卡号/对公账号 */
 	private String bankNo;
 	/** 开户行如:成都XX银行XX支行 */
@@ -279,6 +281,14 @@ public class BindBankCardDto implements Serializable {
 
 	public void setRows(Integer rows) {
 		this.rows = rows;
+	}
+
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
 	}
 
 	/**

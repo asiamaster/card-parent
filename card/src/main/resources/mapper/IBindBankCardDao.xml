@@ -8,13 +8,15 @@
 			`id`, 
 			`account_type`, 
 			`account_id`, 
-			`fund_account_id`, 
+			`fund_account_id`,
+			`bank_name`, 
 			`bank_type`, 
 			`bank_no`, 
 			`opening_bank`, 
 			`opening_bank_num`, 
 			`name`, 
 			`status`, 
+			`firm_id`,
 			`operator_id`, 
 			`operator_name`, 
 			`created_time`, 
@@ -23,22 +25,26 @@
 		FROM
 			card_bind_bank_card
 		WHERE
-			account_id = ${accountId}
+			firm_id = ${firmId}
+		AND status = 1
+			<if test="accountId != null">AND `account_id` = #{accountId} </if>
 		ORDER BY
-			created_time DESC
+			${sort} ${order}
 	</select>
 	
 	<insert id="save">
 		INSERT INTO card_bind_bank_card (
 			`account_type`, 
 			`account_id`, 
-			`fund_account_id`, 
+			`fund_account_id`,
+			`bank_name`, 
 			`bank_type`, 
 			`bank_no`, 
 			`opening_bank`, 
 			`opening_bank_num`, 
 			`name`, 
-			`status`, 
+			`status`,
+			`firm_id`, 
 			`operator_id`, 
 			`operator_name`, 
 			`created_time`, 
@@ -48,13 +54,15 @@
 		VALUES (
 			#{accountType}, 
 			#{accountId}, 
-			#{fundAccountId}, 
+			#{fundAccountId},
+			#{bankName}, 
 			#{bankType}, 
 			#{bankNo}, 
 			#{openingBank}, 
 			#{openingBankNum}, 
 			#{name}, 
 			#{status}, 
+			#{firmId},
 			#{operatorId}, 
 			#{operatorName}, 
 			#{createdTime}, 
@@ -69,12 +77,14 @@
 			`account_type`, 
 			`account_id`, 
 			`fund_account_id`, 
+			`bank_name`,
 			`bank_type`, 
 			`bank_no`, 
 			`opening_bank`, 
 			`opening_bank_num`, 
 			`name`, 
 			`status`, 
+			`firm_id`,
 			`operator_id`, 
 			`operator_name`, 
 			`created_time`, 
@@ -92,6 +102,7 @@
 			<if test="accountType != null">`account_type` = #{accountType}, </if>
 			<if test="accountId != null">`account_id` = #{accountId}, </if>
 			<if test="fundAccountId != null">`fund_account_id` = #{fundAccountId}, </if>
+			<if test="bankName != null">`bank_name` = #{bankName}, </if>
 			<if test="bankType != null">`bank_type` = #{bankType}, </if>
 			<if test="bankNo != null">`bank_no` = #{bankNo}, </if>
 			<if test="openingBank != null">`opening_bank` = #{openingBank}, </if>

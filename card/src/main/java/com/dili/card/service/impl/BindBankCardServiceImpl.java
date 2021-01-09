@@ -1,7 +1,9 @@
 package com.dili.card.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import com.dili.card.dao.IBindBankCardDao;
 import com.dili.card.dto.BindBankCardDto;
 import com.dili.card.entity.BindBankCardDo;
 import com.dili.card.service.IBindBankCardService;
+import com.dili.card.type.BindBankStatus;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.domain.PageOutput;
 import com.github.pagehelper.Page;
@@ -28,6 +31,10 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 	
 	@Override
 	public PageOutput<List<BindBankCardDto>> list(BindBankCardDto queryParam) {
+		if(StringUtils.isBlank(queryParam.getSort())) {
+			queryParam.setSort("created_time");
+			queryParam.setOrder("DESC");
+		}
 		Page<Object> startPage = PageHelper.startPage(queryParam.getPage(), queryParam.getRows());
 		List<BindBankCardDto> selectList = bankCardDao.selectList(queryParam);
 		return PageUtils.convert2PageOutput(startPage, selectList);
@@ -37,14 +44,19 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 	public boolean addBind(BindBankCardDto newDataDto) {
 		BindBankCardDo newData = new BindBankCardDo();
 		BeanUtils.copyProperties(newDataDto, newData);
+		newDataDto.setCreatedTime(LocalDateTime.now());
 		bankCardDao.save(newData);
 		return true;
 	}
 
 	@Override
 	public boolean unBind(BindBankCardDto data) {
-		// TODO Auto-generated method stub
-		return false;
+		BindBankCardDo unBind = new BindBankCardDo();
+		unBind.setId(data.getId());
+		unBind.setStatus(BindBankStatus.INVALID.getCode());
+		unBind.setModifiedTime(LocalDateTime.now());
+		bankCardDao.update(unBind);
+		return true;
 	}
 
 }

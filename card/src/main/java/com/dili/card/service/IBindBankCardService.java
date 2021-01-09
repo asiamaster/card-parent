@@ -20,18 +20,18 @@ public interface IBindBankCardService {
 
 	/**
 	 * 绑定新的银行卡
+	 * 
 	 * @param newData
 	 * @return
 	 */
 	boolean addBind(BindBankCardDto newData);
-	
+
 	/**
 	 * 解绑银行卡
+	 * 
 	 * @param newData
 	 * @return
 	 */
 	boolean unBind(BindBankCardDto data);
-	
-	
 
 }
