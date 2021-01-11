@@ -266,6 +266,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		serial.setTradeNo(tradeResponseDto.getTradeId());
 		serial.setType(OperateType.ACCOUNT_TRANSACT.getCode());
 		serial.setTradeChannel(TradeChannel.CASH.getCode());
+		serial.setHoldName(openCardInfo.getHoldName());
 		Map<String, Object> attach = new HashMap<String, Object>();
 		attach.put(Constant.BUSINESS_RECORD_ATTACH_CARDTYPE, openCardInfo.getCardType());
 		serial.setAttach(JSONObject.toJSONString(attach));
