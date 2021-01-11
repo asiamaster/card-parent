@@ -33,12 +33,15 @@ import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IBindBankCardService;
+import com.dili.card.service.IBusinessLogService;
 import com.dili.card.service.ICustomerService;
 import com.dili.card.type.CardType;
+import com.dili.card.type.OperateType;
 import com.dili.card.util.AssertUtils;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
+import com.dili.uap.sdk.domain.UserTicket;
 
 /**
  * @description： 银行卡绑定功能操作
@@ -64,7 +67,8 @@ public class BindBankCardController implements IControllerHandler {
 	private PayRpc payRpc;
 	@Resource
 	private ICustomerService customerService;
-
+	@Resource
+	IBusinessLogService businessLogService;
 	/**
 	 * 进入绑定首页
 	 */
@@ -148,7 +152,7 @@ public class BindBankCardController implements IControllerHandler {
 	 */
 	@RequestMapping("/getBankInfo.action")
 	@ResponseBody
-	public BaseOutput<PayBankDto> getBankInfo(@RequestBody PayBankDto payBankDto) {
+	public BaseOutput<PayBankDto> getBankInfo(PayBankDto payBankDto) {
 		LOG.info("根据卡号获取银行信息*****" + JSONObject.toJSONString(payBankDto));
 		PayBankDto data = GenericRpcResolver.resolver(payRpc.getBankInfo(payBankDto), ServiceName.PAY);
 		LOG.info("支付返回*****" + JSONObject.toJSONString(data));
@@ -173,7 +177,7 @@ public class BindBankCardController implements IControllerHandler {
 	 */
 	@RequestMapping("/getBankChannels.action")
 	@ResponseBody
-	public BaseOutput<List<PayBankDto>> getBankChannels( PayBankDto payBankDto) {
+	public BaseOutput<List<PayBankDto>> getBankChannels(@RequestBody PayBankDto payBankDto) {
 		LOG.info("查询市场支持的银行渠道*****" + JSONObject.toJSONString(payBankDto));
 		payBankDto.setMchId(this.getUserTicket().getFirmId());
 		List<PayBankDto> data = GenericRpcResolver.resolver(payRpc.getBankChannels(payBankDto), ServiceName.PAY);
@@ -188,6 +192,11 @@ public class BindBankCardController implements IControllerHandler {
 	@ResponseBody
 	public BaseOutput<?> addBind(@RequestBody BindBankCardDto bankCardDto) {
 		LOG.info("绑定新银行卡*****" + JSONObject.toJSONString(bankCardDto));
+		// 设置操作人信息
+		UserTicket user = getUserTicket();
+		// 操作日志
+//		businessLogService.saveLog(OperateType.ACCOUNT_TRANSACT, user, "客户姓名:" + bankCardDto.getCustomerName(),
+//				"客户ID:" + openCardInfo.getCustomerCode(), "卡号:" + openCardInfo.getCardNo());
 		buildOperatorInfo(bankCardDto);
 		bindBankCardService.addBind(bankCardDto);
 		return BaseOutput.success();
