@@ -152,7 +152,7 @@ public class BindBankCardController implements IControllerHandler {
 	 */
 	@RequestMapping("/getBankInfo.action")
 	@ResponseBody
-	public BaseOutput<PayBankDto> getBankInfo(PayBankDto payBankDto) {
+	public BaseOutput<PayBankDto> getBankInfo(@RequestBody PayBankDto payBankDto) {
 		LOG.info("根据卡号获取银行信息*****" + JSONObject.toJSONString(payBankDto));
 		PayBankDto data = GenericRpcResolver.resolver(payRpc.getBankInfo(payBankDto), ServiceName.PAY);
 		LOG.info("支付返回*****" + JSONObject.toJSONString(data));
