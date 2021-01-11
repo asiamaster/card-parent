@@ -76,7 +76,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		// 账务周期详情统计信息
 		AccountCycleDetailDto acd = cycleStatisticService.statisticCycleDetail(cycle.getCycleNo());
 		AccountCycleDetailDo accountCycleDetail = this.buildAccountCycleDetailDo(acd);
-		
+
 		accountCycleDetail.setFirmId(cycle.getFirmId());
 		accountCycleDetail.setFirmName(cycle.getFirmName());
 
@@ -221,7 +221,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	}
 
 	@Override
-	public Boolean isActiveByCycleNo(Long cycleNo) {
+	public Boolean isActiveByCycleNo(Long cycleNo, Long firmId) {
 		AccountCycleDto queryDto = new AccountCycleDto();
 		queryDto.setCycleNo(cycleNo);
 		queryDto.setState(CycleState.ACTIVE.getCode());
@@ -242,17 +242,17 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	public AccountCycleDto buildAccountCycleWrapper(AccountCycleDo cycle) {
 		return buildAccountCycleWrapperDetail(cycle, false);
 	}
-	
+
 	@Override
 	public AccountCycleDto buildAccountCycleWrapperDetail(AccountCycleDo cycle, boolean detail) {
 		return cycleStatisticService.statisticList(Arrays.asList(cycle), detail).get(0);
 	}
-	
+
 	@Override
 	public List<AccountCycleDto> buildAccountCycleWrapperDetailList(List<AccountCycleDo> cycles) {
 		return cycleStatisticService.statisticList(cycles, false);
 	}
-	
+
 	/**
 	 * 对账前状态校验
 	 */

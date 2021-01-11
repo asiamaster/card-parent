@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * @Auther: miaoguoxin
  * @Date: 2020/11/27 16:57
- * @Description:
+ * @Description: 银行圈提
  */
 @Controller
 @RequestMapping("/bankWithdraw")
@@ -55,6 +55,5 @@ public class BankWithdrawController implements IControllerHandler {
         buildOperatorInfo(param);
         PageOutput<List<PipelineRecordResponseDto>> result = fundService.bankWithdrawPage(param);
         return successPage(result);
-
     }
 }

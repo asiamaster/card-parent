@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * @Auther: miaoguoxin
  * @Date: 2020/12/9 15:28
- * @Description:
+ * @Description: 银行存取款
  */
 @Controller
 @RequestMapping("/bankCounter")
@@ -61,7 +61,6 @@ public class BankCounterController implements IControllerHandler {
         this.validateTime(param);
         PageOutput<List<BankCounterResponseDto>> page = bankCounterService.getPage(param);
         return successPage(page);
-
     }
 
 
