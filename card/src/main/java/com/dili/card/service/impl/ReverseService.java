@@ -13,7 +13,6 @@ import com.dili.card.dto.SerialRecordResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
 import com.dili.card.dto.pay.PayReverseRequestDto;
-import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.ReverseRecord;
@@ -31,7 +30,6 @@ import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.ReverseFundItemMap;
-import com.dili.card.type.TradeType;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.domain.PageOutput;
 import com.github.pagehelper.Page;
@@ -124,7 +122,7 @@ public class ReverseService implements IReverseService {
         if (reverseRecord != null) {
             throw new CardAppBizException("只允许做一次冲正操作");
         }
-        if (!accountCycleService.isActiveByCycleNo(bizSerial.getCycleNo())) {
+        if (!accountCycleService.isActiveByCycleNo(bizSerial.getCycleNo(), requestDto.getFirmId())) {
             throw new CardAppBizException("该业务单已平账，不能进行冲正操作");
         }
         //计算冲正金额
