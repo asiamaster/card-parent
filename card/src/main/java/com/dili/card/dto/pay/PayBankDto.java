@@ -20,6 +20,8 @@ public class PayBankDto {
 
 	/** 开户行名称 */
 	private String bankName;
+	/** 开户行行号 */
+	private String bankNo;
 
 	private Long mchId;
 
@@ -72,6 +74,14 @@ public class PayBankDto {
 
 	public void setMchId(Long mchId) {
 		this.mchId = mchId;
+	}
+
+	public String getBankNo() {
+		return bankNo;
+	}
+
+	public void setBankNo(String bankNo) {
+		this.bankNo = bankNo;
 	}
 
 }
