@@ -174,10 +174,15 @@
             }
             let data = $.common.formToJSON(reverseAddForm);
             bui.util.debounce($.operate.post(url, $.extend(requestData, data), function(result){
-                if (result.success){
-                    $.modal.alertSuccess("冲正成功");
+                if (result.success) {
+                    $.modal.alertSuccess("冲正成功", reverseSuccessCallback);
                 }
             }), 1000, true)
         });
+    }
+
+    function reverseSuccessCallback() {
+        //跳转列表页
+        parent.location.href='${contextPath}/reverse/list.html'
     }
 </script>
