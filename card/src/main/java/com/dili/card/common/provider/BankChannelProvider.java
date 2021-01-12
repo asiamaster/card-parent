@@ -25,7 +25,7 @@ import com.dili.uap.sdk.session.SessionContext;
 
 /**
  * @description： 
- *          卡面提供者
+ *          市场支持的银行渠道
  * @author ：WangBo
  * @time ：2020年9月9日下午4:55:39
  */
@@ -38,10 +38,6 @@ public class BankChannelProvider implements ValueProvider {
 	@Resource
 	private PayRpc payRpc;
 	
-    static {
-        CardFaceType.getAll()
-                .forEach(c -> BUFFER.add(new ValuePairImpl(c.getName(), c.getCode())));
-    }
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
     	UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
@@ -51,7 +47,9 @@ public class BankChannelProvider implements ValueProvider {
     		PayBankDto payBankDto = new PayBankDto();
     		payBankDto.setMchId(SessionContext.getSessionContext().getUserTicket().getFirmId());
         	List<PayBankDto> data = GenericRpcResolver.resolver(payRpc.getBankChannels(payBankDto), ServiceName.PAY);
-        	data.forEach(c -> BUFFER.add(new ValuePairImpl(c.getChannelName(), c.getChannelId())));
+        	data.forEach(
+        			c -> BUFFER.add(new ValuePairImpl(c.getChannelName(), c.getChannelId()))
+        	);
     	}
     	return BUFFER;
     }

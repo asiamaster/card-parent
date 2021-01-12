@@ -18,6 +18,12 @@ public class BindBankCardDto extends BaseDto implements Serializable {
 	private Integer accountType;
 	/** 园区卡账号 */
 	private Long accountId;
+	/** 客户名称 */
+	private String customerName;
+	/** 客户编号 */
+	private String customerCode;
+	/** 卡号 */
+	private String cardNo;
 	/** 资金账号ID */
 	private Long fundAccountId;
 	/** 银行类型-工商银行 */
@@ -289,6 +295,30 @@ public class BindBankCardDto extends BaseDto implements Serializable {
 
 	public void setBankName(String bankName) {
 		this.bankName = bankName;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getCustomerCode() {
+		return customerCode;
+	}
+
+	public void setCustomerCode(String customerCode) {
+		this.customerCode = customerCode;
+	}
+
+	public String getCardNo() {
+		return cardNo;
+	}
+
+	public void setCardNo(String cardNo) {
+		this.cardNo = cardNo;
 	}
 
 	/**
