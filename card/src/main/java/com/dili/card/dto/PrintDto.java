@@ -41,6 +41,8 @@ public class PrintDto {
 	private String notes;
 	/** 新卡卡号(换卡时需要) */
 	private String newCardNo;
+	/** 新卡卡号 */
+	private String newCardNoCipher;
 	/** 凭证号(充值需要) */
 	private String posCertNum;
 	/** 银行卡类型(充值需要) {@link com.dili.card.type.BankCardType} */
@@ -254,6 +256,14 @@ public class PrintDto {
 
 	public void setCardNoCipher(String cardNoCipher) {
 		this.cardNoCipher = cardNoCipher;
+	}
+
+	public String getNewCardNoCipher() {
+		return newCardNoCipher;
+	}
+
+	public void setNewCardNoCipher(String newCardNoCipher) {
+		this.newCardNoCipher = newCardNoCipher;
 	}
 
 }

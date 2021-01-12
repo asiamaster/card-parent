@@ -39,8 +39,13 @@ public class CycleStatisticService implements ICycleStatisticService {
 
 	@Override
 	public List<AccountCycleDto> statisticList(List<AccountCycleDo> cycles, boolean detail) {
+		if(CollectionUtils.isEmpty(cycles)) {
+			return new ArrayList<AccountCycleDto>();
+		}
+		
 		// 构建账务周期实体
 		List<AccountCycleDto> accountCycleDtos = buildAccountCycleDtoList(cycles);
+		
 		List<Long> cycleNos = accountCycleDtos.stream().map(o -> o.getCycleNo()).collect(Collectors.toList());
 
 		Map<Long, List<CycleStatistcDto>> cycleStatistcs = findCycleStatistcDtoMapByCycleNos(

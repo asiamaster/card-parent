@@ -218,6 +218,7 @@ public class FundServiceImpl implements IFundService {
         record.setFundItemName(FundItem.MANDATORY_UNFREEZE_FUND.getName());
         record.setOperateTime(LocalDateTime.now());
         record.setAction(ActionType.INCOME.getCode());
+        record.setHoldName(accountInfo.getHoldName());
         // 计算期初期末
         Long balance = payResponse.getTransaction().getBalance();
         Long frozenBalance = payResponse.getTransaction().getFrozenBalance();

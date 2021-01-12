@@ -8,6 +8,7 @@ import com.dili.card.dto.PrintDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.PrintTemplate;
+import com.dili.card.util.CardNoUtil;
 import com.dili.card.util.CurrencyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class ChangeCardPrintServiceImpl extends PrintServiceImpl{
         JSONObject attachObj = JSON.parseObject(attach);
         String newCardNo = attachObj.getString(Constant.NEW_CARD_NO_PARAM);
         printDto.setNewCardNo(newCardNo);
+        printDto.setNewCardNoCipher(CardNoUtil.cipherCardNo(newCardNo));
     }
 
     @Override

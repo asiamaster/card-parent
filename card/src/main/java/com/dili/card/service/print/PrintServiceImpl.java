@@ -11,6 +11,7 @@ import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
+import com.dili.card.util.CardNoUtil;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.util.DateUtil;
 
@@ -42,8 +43,7 @@ public abstract class PrintServiceImpl implements IPrintService {
 		printDto.setCustomerName(recordDo.getCustomerName());
 		String cardNo = recordDo.getCardNo();
 		printDto.setCardNo(cardNo);
-		String endNo = StrUtil.sub(cardNo, cardNo.length()-4, cardNo.length());
-		printDto.setCardNoCipher(StrUtil.sub(cardNo, 1, 4) + "****" + endNo);
+		printDto.setCardNoCipher(CardNoUtil.cipherCardNo(cardNo));
 		printDto.setAmount(CurrencyUtils.cent2TenNoSymbol(recordDo.getAmount()));
 		// 根据需求实时获取最新余额 2020-10-19
 		printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(queryTotalBalance(recordDo.getAccountId())));
