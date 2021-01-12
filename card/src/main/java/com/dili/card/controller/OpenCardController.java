@@ -57,6 +57,7 @@ public class OpenCardController implements IControllerHandler {
 	ICardStorageService cardStorageService;
 	@Resource
 	IBusinessLogService businessLogService;
+	
 
 	/**
 	 * 根据证件号查询客户信息（C）
@@ -136,7 +137,6 @@ public class OpenCardController implements IControllerHandler {
 				"客户ID:" + openCardInfo.getCustomerCode(), "卡号:" + openCardInfo.getCardNo());
 		setOpUser(openCardInfo, user);
 		openCardInfo.setCardType(CardType.MASTER.getCode());
-		openCardInfo.setHoldName(openCardInfo.getCustomerName());
 		// 开卡
 		OpenCardResponseDto response = openCardService.openCard(openCardInfo);
 		log.info("开卡主完成*****{}", JSONObject.toJSONString(response));
