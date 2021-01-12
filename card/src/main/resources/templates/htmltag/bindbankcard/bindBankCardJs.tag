@@ -143,8 +143,11 @@
             async: false,
             dataType: "json",
             success: function (res) {
-                localStorage.setItem('accountId', res.data.cardInfo.accountId)
-                localStorage.setItem('fundAccountId', res.data.cardInfo.fundAccountId)
+                localStorage.accountId = res.data.cardInfo.accountId;
+                localStorage.fundAccountId = res.data.cardInfo.accountId;
+                localStorage.customerCode = res.data.cardInfo.customerCode;
+                localStorage.customerName = res.data.cardInfo.customerName;
+                localStorage.cardNo = res.data.cardInfo.cardNo;
                 $('#authBindBtn').show();
                 $('#cardInfoDiv').html(bui.util.HTMLDecode(template('customerInfoTmpl', res.data.cardInfo)))
             },
