@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
  * @Date: 2020/11/24 11:25
  */
 public class ReverseRecordQueryDto extends BaseDto{
+    /**账务周期号*/
+    private Long cycleNo;
     /**对应业务号*/
     private String bizSerialNo;
     /**对应业务类型 {@link com.dili.card.type.TradeType}*/
@@ -16,6 +18,14 @@ public class ReverseRecordQueryDto extends BaseDto{
     private LocalDateTime startDate;
     /**结束时间*/
     private LocalDateTime endDate;
+
+    public Long getCycleNo() {
+        return cycleNo;
+    }
+
+    public void setCycleNo(Long cycleNo) {
+        this.cycleNo = cycleNo;
+    }
 
     public String getBizSerialNo() {
         return bizSerialNo;

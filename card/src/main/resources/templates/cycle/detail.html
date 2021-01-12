@@ -231,19 +231,29 @@
 					<table id="reverse-table" data-toggle="table"
 						data-icons="bui.variable.icons" data-buttons-class="primary">
 						<thead>
-							<tr>
-								<th data-field="serialNo" data-align="center">业务流水号</th>
-								<th data-field="customerName" data-align="center">客户名称</th>
-								<th data-field="cardNo" data-align="center">卡号</th>
-								<th data-field="holdName" data-align="center">持卡人</th>
-								<th data-field="typeText" data-align="center">操作业务</th>
-								<th data-field="startBalanceText" data-align="center">期初金额</th>
-								<th data-field="amountText" data-align="center">操作金额</th>
-								<th data-field="endBalanceText" data-align="center">账户余额</th>
-								<th data-field="operateTime" data-align="center">操作时间</th>
-								<th data-field="notes" data-align="center" data-sortable="false">
-									备注</th>
-							</tr>
+						  <tr>
+							<th data-field="serialNo" data-align="center">
+								业务流水号
+							</th>
+							<th data-field="bizSerialNo"  data-align="center" >
+								对应原业务流水号
+							</th>
+							<th data-field="bizTradeTypeText"  data-align="center" >
+								对应原业务
+							</th>
+							<th data-field="amountText" data-align="center">
+								冲正金额
+							</th>
+							<th data-field="inAccChangeAmountText" data-align="center">
+								园区收益账户变动
+							</th>
+							<th data-field="opName" data-align="center">
+								操作员姓名
+							</th>
+							<th data-field="createTime" data-align="center">
+								操作时间
+							</th>
+						</tr>
 						</thead>
 					</table>
 				</div>
@@ -485,8 +495,8 @@
 		$("#reverse-record").append(tetreverse);
 		var options = {
 			id : "reverse-table",
-			url : "${contextPath}/cycle/reverse/page.action",
-			sortName: "operate_time"
+			url : "${contextPath}/reverse/page.action",
+			sortName: "create_time"
 		};
 		$.table.init(options);
 	}
