@@ -29,6 +29,8 @@ import com.dili.card.type.CycleState;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
@@ -134,6 +136,14 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 	@Override
 	public AccountCycleDto applyDetail(Long userId) {
 		AccountCycleDo accountCycleDo = accountCycleDao.findLatestCycleByUserId(userId);
+		if(accountCycleDo == null) {
+			// 一般新创建的帐号,没有任何对帐信息，使用已对账的流程
+			accountCycleDo = new AccountCycleDo();
+			accountCycleDo.setState(CycleState.FLATED.getCode());
+			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+			accountCycleDo.setUserCode(userTicket.getUserName());
+			accountCycleDo.setUserName(userTicket.getRealName());
+		}
 		if (accountCycleDo.getState().equals(CycleState.FLATED.getCode())) {
 			AccountCycleDto accountCycleDto = new AccountCycleDto();
 			accountCycleDto.setUserCode(accountCycleDo.getUserCode());
