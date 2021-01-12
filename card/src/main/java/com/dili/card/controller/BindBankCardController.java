@@ -152,7 +152,7 @@ public class BindBankCardController implements IControllerHandler {
 	 */
 	@RequestMapping("/getBankInfo.action")
 	@ResponseBody
-	public BaseOutput<PayBankDto> getBankInfo(@RequestBody PayBankDto payBankDto) {
+	public BaseOutput<PayBankDto> getBankInfo(PayBankDto payBankDto) {
 		LOG.info("根据卡号获取银行信息*****" + JSONObject.toJSONString(payBankDto));
 		PayBankDto data = GenericRpcResolver.resolver(payRpc.getBankInfo(payBankDto), ServiceName.PAY);
 		LOG.info("支付返回*****" + JSONObject.toJSONString(data));
@@ -164,7 +164,7 @@ public class BindBankCardController implements IControllerHandler {
 	 */
 	@RequestMapping("/getOpeningBankName.action")
 	@ResponseBody
-	public BaseOutput<List<PayBankDto>> getOpeningBankName(@RequestBody PayBankDto payBankDto) {
+	public BaseOutput<List<PayBankDto>> getOpeningBankName(PayBankDto payBankDto) {
 		LOG.info("关键字搜索开户行*****" + JSONObject.toJSONString(payBankDto));
 		payBankDto.setBankName(payBankDto.getKeyword());
 		List<PayBankDto> data = GenericRpcResolver.resolver(payRpc.searchOpeningBank(payBankDto), ServiceName.PAY);
@@ -177,7 +177,7 @@ public class BindBankCardController implements IControllerHandler {
 	 */
 	@RequestMapping("/getBankChannels.action")
 	@ResponseBody
-	public BaseOutput<List<PayBankDto>> getBankChannels(@RequestBody PayBankDto payBankDto) {
+	public BaseOutput<List<PayBankDto>> getBankChannels(PayBankDto payBankDto) {
 		LOG.info("查询市场支持的银行渠道*****" + JSONObject.toJSONString(payBankDto));
 		payBankDto.setMchId(this.getUserTicket().getFirmId());
 		List<PayBankDto> data = GenericRpcResolver.resolver(payRpc.getBankChannels(payBankDto), ServiceName.PAY);
@@ -195,8 +195,8 @@ public class BindBankCardController implements IControllerHandler {
 		// 设置操作人信息
 		UserTicket user = getUserTicket();
 		// 操作日志
-//		businessLogService.saveLog(OperateType.ACCOUNT_TRANSACT, user, "客户姓名:" + bankCardDto.getCustomerName(),
-//				"客户ID:" + openCardInfo.getCustomerCode(), "卡号:" + openCardInfo.getCardNo());
+		businessLogService.saveLog(OperateType.BANKCARD_BIND, user, "客户姓名:" + bankCardDto.getCustomerName(),
+				"客户ID:" + bankCardDto.getCustomerCode(), "卡号:" + bankCardDto.getCardNo());
 		buildOperatorInfo(bankCardDto);
 		bindBankCardService.addBind(bankCardDto);
 		return BaseOutput.success();
@@ -209,6 +209,11 @@ public class BindBankCardController implements IControllerHandler {
 	@ResponseBody
 	public BaseOutput<?> unBind(@RequestBody BindBankCardDto bankCardDto) {
 		LOG.info("解绑银行卡*****" + JSONObject.toJSONString(bankCardDto));
+		// 设置操作人信息
+		UserTicket user = getUserTicket();
+		// 操作日志
+		businessLogService.saveLog(OperateType.BANKCARD_REMOVE, user, "客户姓名:" + bankCardDto.getCustomerName(),
+				"客户ID:" + bankCardDto.getCustomerCode(), "卡号:" + bankCardDto.getCardNo());
 		bindBankCardService.unBind(bankCardDto);
 		return BaseOutput.success();
 	}
