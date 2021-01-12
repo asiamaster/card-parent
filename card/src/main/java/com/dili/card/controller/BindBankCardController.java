@@ -164,7 +164,7 @@ public class BindBankCardController implements IControllerHandler {
 	 */
 	@RequestMapping("/getOpeningBankName.action")
 	@ResponseBody
-	public BaseOutput<List<PayBankDto>> getOpeningBankName(PayBankDto payBankDto) {
+	public BaseOutput<List<PayBankDto>> getOpeningBankName(@RequestBody PayBankDto payBankDto) {
 		LOG.info("关键字搜索开户行*****" + JSONObject.toJSONString(payBankDto));
 		payBankDto.setBankName(payBankDto.getKeyword());
 		List<PayBankDto> data = GenericRpcResolver.resolver(payRpc.searchOpeningBank(payBankDto), ServiceName.PAY);
