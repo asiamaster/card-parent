@@ -207,6 +207,8 @@ public class SerialController implements IControllerHandler {
             return BaseOutput.failure("业务办理记录不存在");
         }
         recordDo.setFirmName(getUserTicket().getFirmName());
-        return BaseOutput.successData(printDispatcher.create(recordDo, reprint));
+        Map<String, Object> create = printDispatcher.create(recordDo, reprint);
+        LOGGER.info("打印数据返回*****->>>>>{}", create);
+        return BaseOutput.successData(create);
     }
 }
