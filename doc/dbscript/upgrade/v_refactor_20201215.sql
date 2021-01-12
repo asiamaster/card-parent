@@ -71,8 +71,9 @@ CREATE TABLE `card_bind_bank_card` (
   KEY `idx_bank_card_bankNo` (`bank_no`,`bank_type`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='园区账户绑定银行卡';
 
-
-
 ALTER TABLE `dili_card`.`card_business_record`
 ADD COLUMN `hold_name` varchar(30) NULL COMMENT '持卡人姓名' AFTER `customer_name`;
+
+ALTER TABLE `dili_account`.`account_serial_record` 
+MODIFY COLUMN `customer_type` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '客户角色' AFTER `customer_name`;
 
