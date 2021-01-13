@@ -193,8 +193,6 @@ public class CardManageController implements IControllerHandler {
 	public BaseOutput<UserAccountCardResponseDto> getByCardNoForUnLock(String cardNo) {
 		LOGGER.info("解锁查询*****{}", cardNo);
 		AssertUtils.notEmpty(cardNo, "卡号不能为空");
-		UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
-		query.setCardNo(cardNo);
 		UserAccountCardResponseDto card = accountQueryService.getByCardNoWithoutValidate(cardNo);
 		if (DisableState.DISABLED.getCode().equals(card.getDisabledState())) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, String.format("该账户为%s状态，不能进行此操作", DisableState.DISABLED.getName()));

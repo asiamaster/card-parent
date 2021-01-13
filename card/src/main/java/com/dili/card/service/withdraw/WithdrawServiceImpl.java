@@ -20,6 +20,7 @@ import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
 import com.dili.card.type.PaySubject;
+import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.type.UsePermissionType;
 import com.dili.ss.constant.ResultCode;
@@ -55,11 +56,11 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         BusinessRecordDo businessRecord = createBusinessRecord(fundRequestDto, accountCard);
         //构建创建交易参数
         CreateTradeRequestDto createTradeRequest = CreateTradeRequestDto.createTrade(TradeType.WITHDRAW.getCode(), accountCard.getAccountId(), accountCard.getFundAccountId(), fundRequestDto.getAmount(), businessRecord.getSerialNo(), String.valueOf(businessRecord.getCycleNo()));
-        //有这个参数说明是圈提
-        if (fundRequestDto.getChannelAccount() != null) {
+        createTradeRequest.setDescription(PaySubject.WITHDRAW.getName());
+        //银行圈提有点特殊
+        if (TradeChannel.BANK.getCode() == fundRequestDto.getTradeChannel()) {
             createTradeRequest.setType(TradeType.BANK_WITHDRAW.getCode());
         }
-        createTradeRequest.setDescription(PaySubject.WITHDRAW.getName());
         //创建交易
         String tradeNo = payService.createTrade(createTradeRequest);
         businessRecord.setTradeNo(tradeNo);
@@ -77,6 +78,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         serialService.handleSuccess(serialDto);
         return businessRecord.getSerialNo();
     }
+
 
     /**
      * 构建账户流水

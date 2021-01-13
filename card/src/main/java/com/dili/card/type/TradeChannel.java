@@ -8,7 +8,9 @@ public enum TradeChannel {
     BALANCE(1, "账户余额"),
     CASH(2, "现金"),
     POS(3, "POS"),
-    E_BANK(4, "网银");
+    E_BANK(4, "网银"),
+    BANK(5,"银行圈提")
+    ;
     private int code;
     private String name;
 
