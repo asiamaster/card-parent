@@ -87,7 +87,7 @@ public class BindBankCardController implements IControllerHandler {
 		return "bindBankCard/addBankCard";
 	}
 
-	
+
 	/**
 	 * 查询卡信息
 	 */
@@ -100,14 +100,14 @@ public class BindBankCardController implements IControllerHandler {
 			AssertUtils.notEmpty(cardNo, "卡号不能为空");
 			UserAccountCardResponseDto account = accountQueryService.getByCardNo(cardNo);
 			AssertUtils.notNull(account, "未找到账户或者账户状态异常");
-			
+
 			if (!CardType.isMaster(account.getCardType())) {
 				throw new CardAppBizException("请使用主卡绑定银行卡");
 			}
 			// 为了使用TextDisplay注解将类型转为显示文字
 			String jsonString = JSONObject.toJSONString(account, new EnumTextDisplayAfterFilter());
 			returnData.put("cardInfo", JSON.parseObject(jsonString));
-			
+
 			String subTypeNames = customerService.getSubTypeNames(account.getCustomerId(), account.getFirmId());
 			returnData.put("subTypeName", subTypeNames);
 		} catch (CardAppBizException e) {
@@ -126,11 +126,23 @@ public class BindBankCardController implements IControllerHandler {
 	@RequestMapping("/queryList.action")
 	@ResponseBody
 	public Map<String, Object> bindBankCardList(BindBankCardDto bankCardDto) {
-		LOG.info("绑定银行卡查询银行卡列表*****" + JSONObject.toJSONString(bankCardDto));
+		LOG.info("绑定银行卡查询银行卡分页列表*****" + JSONObject.toJSONString(bankCardDto));
 		AssertUtils.notNull(bankCardDto.getRows(),"缺失分页参数：rows");
 		AssertUtils.notNull(bankCardDto.getPage(),"缺失分页参数：page");
-		PageOutput<List<BindBankCardDto>> list = bindBankCardService.list(bankCardDto);
+		PageOutput<List<BindBankCardDto>> list = bindBankCardService.page(bankCardDto);
 		return successPage(list);
+	}
+
+	/**
+	* 列表接口
+	* @author miaoguoxin
+	* @date 2021/1/13
+	*/
+	@GetMapping("/list.action")
+	@ResponseBody
+	public BaseOutput<List<BindBankCardDto>> list(BindBankCardDto bankCardDto) {
+		LOG.info("绑定银行卡查询银行卡列表*****" + JSONObject.toJSONString(bankCardDto));
+		return BaseOutput.successData(bindBankCardService.getList(bankCardDto));
 	}
 
 	/**
@@ -184,7 +196,7 @@ public class BindBankCardController implements IControllerHandler {
 		LOG.info("支付返回*****" + JSONObject.toJSONString(data));
 		return BaseOutput.successData(data);
 	}
-	
+
 	/**
 	 * 添加绑定的银行卡
 	 */

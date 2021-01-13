@@ -3,6 +3,7 @@ package com.dili.card.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.dili.ss.domain.BaseOutput;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,9 @@ import com.github.pagehelper.PageHelper;
 public class BindBankCardServiceImpl implements IBindBankCardService {
 	@Autowired
 	private IBindBankCardDao bankCardDao;
-	
+
 	@Override
-	public PageOutput<List<BindBankCardDto>> list(BindBankCardDto queryParam) {
+	public PageOutput<List<BindBankCardDto>> page(BindBankCardDto queryParam) {
 		if(StringUtils.isBlank(queryParam.getSort())) {
 			queryParam.setSort("created_time");
 			queryParam.setOrder("DESC");
@@ -38,6 +39,12 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 		Page<Object> startPage = PageHelper.startPage(queryParam.getPage(), queryParam.getRows());
 		List<BindBankCardDto> selectList = bankCardDao.selectList(queryParam);
 		return PageUtils.convert2PageOutput(startPage, selectList);
+	}
+
+	@Override
+	public List<BindBankCardDto> getList(BindBankCardDto queryParam) {
+		PageHelper.startPage(1, 100,false);
+		return bankCardDao.selectList(queryParam);
 	}
 
 	@Override
