@@ -60,7 +60,8 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         decreaseCashBox(businessRecord.getCycleNo(), fundRequestDto.getAmount());
         //提现提交
         TradeRequestDto withdrawRequest = TradeRequestDto.createTrade(accountCard, tradeNo, fundRequestDto.getTradeChannel(), fundRequestDto.getTradePwd());
-        withdrawRequest.setFees(createFees(fundRequestDto));
+        withdrawRequest.setFees(this.createFees(fundRequestDto));
+        withdrawRequest.setChannelAccount(fundRequestDto.getChannelAccount());
         TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
         //取款成功后修改业务单状态、存储流水
         SerialDto serialDto = createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
@@ -99,7 +100,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
      * @param amount
      */
     protected void decreaseCashBox(Long cycleNo, Long amount) {
-        return;
+
     }
 
     /**
@@ -121,7 +122,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
      * @param fundRequestDto
      */
     protected void validateSpecial(FundRequestDto fundRequestDto) {
-        return;
+
     }
 
     /**
