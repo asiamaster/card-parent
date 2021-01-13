@@ -1,0 +1,49 @@
+<#bs4Body>
+
+<div class="container-fluid">
+	<form id="bankAddForm" role="form" class="pb-5">
+		<div class="row row-cols-1" id="baseContent">
+			<div class="form-group col">
+				<label>账户类型</label>
+				<input type="text" name="accountType" class="form-control" value="对公账户" required readonly/>
+			</div>
+			<div class="form-group col">
+				<label>银行卡号</label>
+				<div class="input-group">
+					<input type="number" id="bankNo" name="bankNo" class="form-control digits" minlength="15" maxlength="20" value="" required/>
+					<div class="input-group-append">
+						<span class="input-group-text"><a id="bankReader" href="javascript:;">请刷银行卡</a></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group col">
+				<label>账户名称</label>
+				<input type="text" name="name" class="form-control" value="" required readonly/>
+			</div>
+			<div class="form-group col" data-account-type="2" style="display: none">
+				<label>银行名称</label>
+				<select id="bankNameCompany" name="bankName" class="form-control" required></select>
+				<#bcomboProvider _id="bankNameCompany" _provider="BankChannelProvider" />
+			</div>
+			<!-- 对公户 开户行 -->
+			<div class="form-group col">
+				<label for="openingBank">开户行</label>
+				<select id="openingBank" name="openingBank" class="form-control" required ></select>
+				<#bselect2 _id="openingBank" _mode="remote" _optionVariable="openingBankAutocompleteOption" />
+			</div>
+			<div class="form-group col">
+				<label>备注</label>
+				<input type="text" name="description" class="form-control"/>
+			</div>
+		</div>
+	</form>
+</div>
+
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<#common_cardBaseJs/>
+<#firmwithdraw_addBankCardJs/>
+
+
+
+

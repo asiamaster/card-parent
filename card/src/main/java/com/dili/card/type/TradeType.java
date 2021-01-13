@@ -15,8 +15,7 @@ public enum TradeType {
     AUTH_TRADE(21, "预授权交易"),
     VOUCH_TRADE(22, "担保交易"),
     TRANSFER(23, "账户转账"),
-    BANK_DEPOSIT(30, "银行圈存"),
-    BANK_WITHDRAW(31, "银行圈提"),
+    BANK_WITHDRAW(30, "银行圈提"),
     CANCEL(40, "交易撤销"),
     REFUND(41, "交易退款"),
     CORRECT(42, "交易冲正");

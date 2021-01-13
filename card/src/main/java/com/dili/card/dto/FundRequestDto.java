@@ -2,6 +2,7 @@ package com.dili.card.dto;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
+import com.dili.card.dto.pay.ChannelAccountRequestDto;
 import com.dili.card.validator.FundValidator;
 
 import javax.validation.constraints.Max;
@@ -40,6 +41,16 @@ public class FundRequestDto extends CardRequestDto {
     private Long consignorId;
     /** 委托人姓名*/
     private String consignorName;
+    /**渠道账号,网银需要*/
+    private ChannelAccountRequestDto channelAccount;
+
+    public ChannelAccountRequestDto getChannelAccount() {
+        return channelAccount;
+    }
+
+    public void setChannelAccount(ChannelAccountRequestDto channelAccount) {
+        this.channelAccount = channelAccount;
+    }
 
     public Integer getTradeChannel() {
         return tradeChannel;

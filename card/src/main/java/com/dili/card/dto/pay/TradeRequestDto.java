@@ -27,6 +27,8 @@ public class TradeRequestDto {
     private Long businessId;
     /**金额*/
     private Long amount;
+    /**渠道账号,网银需要*/
+    private ChannelAccountRequestDto channelAccount;
 
     public static TradeRequestDto createTrade(UserAccountCardResponseDto userAccount, String tradeNo, Integer channelId, String password) {
         TradeRequestDto tradeRequestDto = new TradeRequestDto();
@@ -37,8 +39,6 @@ public class TradeRequestDto {
         tradeRequestDto.setPassword(password);
         return tradeRequestDto;
     }
-
-
 
 
     /**
@@ -111,5 +111,13 @@ public class TradeRequestDto {
 
     public void setBusinessId(Long businessId) {
         this.businessId = businessId;
+    }
+
+    public ChannelAccountRequestDto getChannelAccount() {
+        return channelAccount;
+    }
+
+    public void setChannelAccount(ChannelAccountRequestDto channelAccount) {
+        this.channelAccount = channelAccount;
     }
 }

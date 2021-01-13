@@ -5,7 +5,12 @@ import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
-import com.dili.card.dto.pay.*;
+import com.dili.card.dto.pay.BalanceRequestDto;
+import com.dili.card.dto.pay.BalanceResponseDto;
+import com.dili.card.dto.pay.CreateTradeRequestDto;
+import com.dili.card.dto.pay.FeeItemDto;
+import com.dili.card.dto.pay.TradeRequestDto;
+import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountCycleService;
@@ -15,6 +20,7 @@ import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
 import com.dili.card.type.PaySubject;
+import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.type.UsePermissionType;
 import com.dili.ss.constant.ResultCode;
@@ -51,6 +57,10 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         //构建创建交易参数
         CreateTradeRequestDto createTradeRequest = CreateTradeRequestDto.createTrade(TradeType.WITHDRAW.getCode(), accountCard.getAccountId(), accountCard.getFundAccountId(), fundRequestDto.getAmount(), businessRecord.getSerialNo(), String.valueOf(businessRecord.getCycleNo()));
         createTradeRequest.setDescription(PaySubject.WITHDRAW.getName());
+        //银行圈提有点特殊
+        if (TradeChannel.BANK.getCode() == fundRequestDto.getTradeChannel()) {
+            createTradeRequest.setType(TradeType.BANK_WITHDRAW.getCode());
+        }
         //创建交易
         String tradeNo = payService.createTrade(createTradeRequest);
         businessRecord.setTradeNo(tradeNo);
@@ -60,13 +70,15 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         decreaseCashBox(businessRecord.getCycleNo(), fundRequestDto.getAmount());
         //提现提交
         TradeRequestDto withdrawRequest = TradeRequestDto.createTrade(accountCard, tradeNo, fundRequestDto.getTradeChannel(), fundRequestDto.getTradePwd());
-        withdrawRequest.setFees(createFees(fundRequestDto));
+        withdrawRequest.setFees(this.createFees(fundRequestDto));
+        withdrawRequest.setChannelAccount(fundRequestDto.getChannelAccount());
         TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
         //取款成功后修改业务单状态、存储流水
         SerialDto serialDto = createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
         serialService.handleSuccess(serialDto);
         return businessRecord.getSerialNo();
     }
+
 
     /**
      * 构建账户流水
@@ -99,7 +111,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
      * @param amount
      */
     protected void decreaseCashBox(Long cycleNo, Long amount) {
-        return;
+
     }
 
     /**
@@ -121,7 +133,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
      * @param fundRequestDto
      */
     protected void validateSpecial(FundRequestDto fundRequestDto) {
-        return;
+
     }
 
     /**

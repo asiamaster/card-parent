@@ -29,9 +29,9 @@ import com.github.pagehelper.PageHelper;
 public class BindBankCardServiceImpl implements IBindBankCardService {
 	@Autowired
 	private IBindBankCardDao bankCardDao;
-	
+
 	@Override
-	public PageOutput<List<BindBankCardDto>> list(BindBankCardDto queryParam) {
+	public PageOutput<List<BindBankCardDto>> page(BindBankCardDto queryParam) {
 		if(StringUtils.isBlank(queryParam.getSort())) {
 			queryParam.setSort("create_time");
 			queryParam.setOrder("DESC");

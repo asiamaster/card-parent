@@ -53,7 +53,7 @@
     </button>
     </#resource>
 </div>
-        <table id="grid" 
+        <table id="grid"
         	   data-title="对账管理列表"
                data-show-fullscreen="true"
                data-buttons-class="primary"
@@ -112,7 +112,7 @@
     $(function () {
     	initCycle();
     });
-    
+
     function initCycle(){
     	let options = {
                 //必须加这个唯一标识
@@ -128,7 +128,7 @@
             };
             $.table.init(options);
     }
-    
+
  // 查询条件
     function queryParamToJson(params) {
         let currentId = $.common.isEmpty(table.options.formId) ? 'queryForm' : table.options.formId;
@@ -146,14 +146,14 @@
         }
         return $.extend(curParams, data);
     }
-    
+
     function clearParams(){
-    	$("#stateStr").find("option").each(function(i){
+    	$("#states").find("option").each(function(i){
 			$(this).remove();
 		});
     	$.form.reset();
     }
-    
+
     function flated(){
     	var row=$("#grid").bootstrapTable('getSelections');
     	if (row.length == 0) {
@@ -170,7 +170,7 @@
     	}
     	$.operate.editWithTitle(null,'360px','auto','信息确认');
     }
-    
+
     function addPayer(){
     	var row=$("#grid").bootstrapTable('getSelections');
     	if (row.length == 0) {
