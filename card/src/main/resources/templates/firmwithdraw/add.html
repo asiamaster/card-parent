@@ -29,7 +29,7 @@
 					<select id="departmentId" name="" class="form-control" required></select>
 					<#bcomboProvider _id="" _provider="bindBankProvider" />
 					<div class="input-group-append">
-						<button class="btn btn-outline-secondary" type="button" onclick=" window.open()">绑定新的银行卡</button>
+						<button class="btn btn-outline-secondary" type="button" id="authBindBtn">绑定新的银行卡</button>
 					</div>
 				</div>
 			</div>
@@ -90,8 +90,15 @@
 		src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <#firmwithdraw_addJs/>
 
-
-<script>
-
-
+<#comment>
+页面层弹框
+</#comment>
+<script id="checkPassword" type="text/html">
+	<div class="form-group col">
+		<label for="accountType" class="div_label">园区卡密码</label>
+		<input type="password" id="password" maxlength=6 name="password">
+		<button id="pwdBtn" type="button" class="btn btn-primary">
+			请输入密码
+		</button>
+	</div>
 </script>
