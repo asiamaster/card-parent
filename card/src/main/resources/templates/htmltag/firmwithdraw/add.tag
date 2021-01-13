@@ -57,5 +57,17 @@
             }]
         });
     });
+    $(document).on('click', '#pswBtn', function () {
+        readPasswordKeyboardAsync();
+    })
+   function pswClientHandler(data){
+       var json = JSON.parse(data);
+       if (json.code == 0) {
+           $('#pswBtn').val(json.data);
+       } else {
+           bs4pop.alert(json.message, {width:'350px',type: "error"});
+           return false;
+       }
+   }*/
 
 </script>
