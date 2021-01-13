@@ -2,18 +2,20 @@
 
 <div class="container-fluid">
 	<form id="bankAddForm" role="form" class="pb-5">
+		<input type="hidden" id="bankType" name="bankType">
+		<input type="hidden" id="openingBank" name="openingBank">
 		<div class="row row-cols-1" id="baseContent">
 			<div class="form-group col">
 				<label>账户类型</label>
-				<select id="accountType" name="accountType" class="form-control" required>
-					<option value="1">个人账户</option>
-					<option value="2">对公账户</option>
+				<select id="bankAccountType" name="bankAccountType" class="form-control" required>
+					<option value="10">个人账户</option>
+					<option value="20">对公账户</option>
 				</select>
 			</div>
 			<div class="form-group col">
 				<label>银行卡号</label>
 				<div class="input-group">
-					<input type="number" id="bankNo" name="bankNo" class="form-control digits" minlength="15" maxlength="20" value="" required/>
+					<input id="bankNo" name="bankNo" class="form-control" minlength="15" maxlength="20" value="" required/>
 					<div class="input-group-append">
 						<span class="input-group-text"><a id="bankReader" href="javascript:;">请刷银行卡</a></span>
 					</div>
@@ -35,8 +37,8 @@
 			<!-- 对公户 开户行 -->
 			<div class="form-group col">
 				<label for="openingBank">开户行</label>
-				<select id="openingBank" name="openingBank" class="form-control" required ></select>
-				<#bselect2 _id="openingBank" _mode="remote" _optionVariable="openingBankAutocompleteOption" />
+				<select id="openingBankNum" name="openingBankNum" class="form-control" required ></select>
+				<#bselect2 _id="openingBankNum" _mode="remote" _optionVariable="openingBankAutocompleteOption" />
 			</div>
 			<div class="form-group col">
 				<label>备注</label>

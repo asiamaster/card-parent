@@ -62,7 +62,7 @@
 	 * 打开添加银行卡页面
 	 */
 	$("#openAddHtmlBtn").click(function(){
-	    $.modal.openDefault("新增银行卡绑定",'${contextPath}/bindBankCard/toAddBankCard.html','600px','80%');
+	    $.modal.openDefault("新增银行卡绑定",'${contextPath}/bindBankCard/toAddBankCard.html','600px','100%');
     });
 
 	/**
@@ -74,7 +74,7 @@
             content: '${contextPath}/customer/preSave.html?', // 对话框内容，可以是
 																// string、element，$object
             width: '80%',// 宽度
-            height: '700px',// 高度
+            height: '900px',// 高度
             isIframe: true,// 默认是页面层，非iframe
             // 按钮放在父页面用此处的 btns 选项。也可以放在页面里直接在页面写div。
             /*
@@ -143,13 +143,17 @@
             async: false,
             dataType: "json",
             success: function (res) {
-                localStorage.accountId = res.data.cardInfo.accountId;
-                localStorage.fundAccountId = res.data.cardInfo.accountId;
-                localStorage.customerCode = res.data.cardInfo.customerCode;
-                localStorage.customerName = res.data.cardInfo.customerName;
-                localStorage.cardNo = res.data.cardInfo.cardNo;
-                $('#authBindBtn').show();
-                $('#cardInfoDiv').html(bui.util.HTMLDecode(template('customerInfoTmpl', res.data.cardInfo)))
+            	if(res.success){
+            		localStorage.accountId = res.data.cardInfo.accountId;
+	                localStorage.fundAccountId = res.data.cardInfo.accountId;
+	                localStorage.customerCode = res.data.cardInfo.customerCode;
+	                localStorage.customerName = res.data.cardInfo.customerName;
+	                localStorage.cardNo = res.data.cardInfo.cardNo;
+	                $('#authBindBtn').show();
+	                $('#cardInfoDiv').html(bui.util.HTMLDecode(template('customerInfoTmpl', res.data.cardInfo)));
+            	}else{
+            		$('#cardInfoDiv').html(res.message);
+            	}
             },
             error: function (error) {
                 $('#cardInfoDiv').html(error);

@@ -15,7 +15,7 @@ public class BindBankCardDo implements Serializable {
 	/**  */
 	private Long id;
 	/** 账户类型-个人账户 对公账户 */
-	private Integer accountType;
+	private Integer bankAccountType;
 	/** 园区卡账号 */
 	private Long accountId;
 	/** 资金账号ID */
@@ -41,9 +41,9 @@ public class BindBankCardDo implements Serializable {
 	/** 员工名称-保留字段 */
 	private String operatorName;
 	/** 创建时间 */
-	private LocalDateTime createdTime;
+	private LocalDateTime createTime;
 	/** 修改时间 */
-	private LocalDateTime modifiedTime;
+	private LocalDateTime modifyTime;
 	/** 备注 */
 	private String description;
 
@@ -68,18 +68,12 @@ public class BindBankCardDo implements Serializable {
 		return id;
 	}
 
-	/**
-	 * setter for 账户类型-个人账户 对公账户
-	 */
-	public void setAccountType(Integer accountType) {
-		this.accountType = accountType;
+	public Integer getBankAccountType() {
+		return bankAccountType;
 	}
 
-	/**
-	 * getter for 账户类型-个人账户 对公账户
-	 */
-	public Integer getAccountType() {
-		return accountType;
+	public void setBankAccountType(Integer bankAccountType) {
+		this.bankAccountType = bankAccountType;
 	}
 
 	/**
@@ -222,32 +216,20 @@ public class BindBankCardDo implements Serializable {
 		return operatorName;
 	}
 
-	/**
-	 * setter for 创建时间
-	 */
-	public void setCreatedTime(LocalDateTime createdTime) {
-		this.createdTime = createdTime;
+	public LocalDateTime getCreateTime() {
+		return createTime;
 	}
 
-	/**
-	 * getter for 创建时间
-	 */
-	public LocalDateTime getCreatedTime() {
-		return createdTime;
+	public void setCreateTime(LocalDateTime createTime) {
+		this.createTime = createTime;
 	}
 
-	/**
-	 * setter for 修改时间
-	 */
-	public void setModifiedTime(LocalDateTime modifiedTime) {
-		this.modifiedTime = modifiedTime;
+	public LocalDateTime getModifyTime() {
+		return modifyTime;
 	}
 
-	/**
-	 * getter for 修改时间
-	 */
-	public LocalDateTime getModifiedTime() {
-		return modifiedTime;
+	public void setModifyTime(LocalDateTime modifyTime) {
+		this.modifyTime = modifyTime;
 	}
 
 	/**
@@ -278,19 +260,6 @@ public class BindBankCardDo implements Serializable {
 
 	public void setBankName(String bankName) {
 		this.bankName = bankName;
-	}
-
-	/**
-	 * BankBindingEntity.toString()
-	 */
-	@Override
-	public String toString() {
-		return "BankBindingEntity{" + "id='" + id + '\'' + ", accountType='" + accountType + '\'' + ", accountId='"
-				+ accountId + '\'' + ", fundAccountId='" + fundAccountId + '\'' + ", bankType='" + bankType + '\''
-				+ ", bankNo='" + bankNo + '\'' + ", openingBank='" + openingBank + '\'' + ", openingBankNum='"
-				+ openingBankNum + '\'' + ", name='" + name + '\'' + ", status='" + status + '\'' + ", operatorId='"
-				+ operatorId + '\'' + ", operatorName='" + operatorName + '\'' + ", createdTime='" + createdTime + '\''
-				+ ", modifiedTime='" + modifiedTime + '\'' + ", description='" + description + '\'' + '}';
 	}
 
 }

@@ -3,6 +3,9 @@ package com.dili.card.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.dili.card.type.BankAccountType;
+import com.dili.card.type.BindBankStatus;
+
 /**
  * 园区账户绑定银行卡
  * 
@@ -15,7 +18,9 @@ public class BindBankCardDto extends BaseDto implements Serializable {
 	/**  */
 	private Long id;
 	/** 账户类型-个人账户 对公账户 */
-	private Integer accountType;
+	private Integer bankAccountType;
+	/** 账户类型-个人账户 对公账户 */
+	private String bankAccountTypeText;
 	/** 园区卡账号 */
 	private Long accountId;
 	/** 客户名称 */
@@ -40,14 +45,13 @@ public class BindBankCardDto extends BaseDto implements Serializable {
 	private String name;
 	/** 绑定状态 */
 	private Integer status;
-	/** 员工ID */
-	private Long operatorId;
-	/** 员工名称-保留字段 */
+	private String statusText;
+	/** 创建人 */
 	private String operatorName;
 	/** 创建时间 */
-	private LocalDateTime createdTime;
+	private LocalDateTime createTime;
 	/** 修改时间 */
-	private LocalDateTime modifiedTime;
+	private LocalDateTime modifyTime;
 	/** 备注 */
 	private String description;
 
@@ -77,18 +81,12 @@ public class BindBankCardDto extends BaseDto implements Serializable {
 		return id;
 	}
 
-	/**
-	 * setter for 账户类型-个人账户 对公账户
-	 */
-	public void setAccountType(Integer accountType) {
-		this.accountType = accountType;
+	public Integer getBankAccountType() {
+		return bankAccountType;
 	}
 
-	/**
-	 * getter for 账户类型-个人账户 对公账户
-	 */
-	public Integer getAccountType() {
-		return accountType;
+	public void setBankAccountType(Integer bankAccountType) {
+		this.bankAccountType = bankAccountType;
 	}
 
 	/**
@@ -203,60 +201,20 @@ public class BindBankCardDto extends BaseDto implements Serializable {
 		return status;
 	}
 
-	/**
-	 * setter for 员工ID
-	 */
-	public void setOperatorId(Long operatorId) {
-		this.operatorId = operatorId;
+	public LocalDateTime getCreateTime() {
+		return createTime;
 	}
 
-	/**
-	 * getter for 员工ID
-	 */
-	public Long getOperatorId() {
-		return operatorId;
+	public void setCreateTime(LocalDateTime createTime) {
+		this.createTime = createTime;
 	}
 
-	/**
-	 * setter for 员工名称-保留字段
-	 */
-	public void setOperatorName(String operatorName) {
-		this.operatorName = operatorName;
+	public LocalDateTime getModifyTime() {
+		return modifyTime;
 	}
 
-	/**
-	 * getter for 员工名称-保留字段
-	 */
-	public String getOperatorName() {
-		return operatorName;
-	}
-
-	/**
-	 * setter for 创建时间
-	 */
-	public void setCreatedTime(LocalDateTime createdTime) {
-		this.createdTime = createdTime;
-	}
-
-	/**
-	 * getter for 创建时间
-	 */
-	public LocalDateTime getCreatedTime() {
-		return createdTime;
-	}
-
-	/**
-	 * setter for 修改时间
-	 */
-	public void setModifiedTime(LocalDateTime modifiedTime) {
-		this.modifiedTime = modifiedTime;
-	}
-
-	/**
-	 * getter for 修改时间
-	 */
-	public LocalDateTime getModifiedTime() {
-		return modifiedTime;
+	public void setModifyTime(LocalDateTime modifyTime) {
+		this.modifyTime = modifyTime;
 	}
 
 	/**
@@ -321,17 +279,30 @@ public class BindBankCardDto extends BaseDto implements Serializable {
 		this.cardNo = cardNo;
 	}
 
-	/**
-	 * BankBindingEntity.toString()
-	 */
-	@Override
-	public String toString() {
-		return "BankBindingEntity{" + "id='" + id + '\'' + ", accountType='" + accountType + '\'' + ", accountId='"
-				+ accountId + '\'' + ", fundAccountId='" + fundAccountId + '\'' + ", bankType='" + bankType + '\''
-				+ ", bankNo='" + bankNo + '\'' + ", openingBank='" + openingBank + '\'' + ", openingBankNum='"
-				+ openingBankNum + '\'' + ", name='" + name + '\'' + ", status='" + status + '\'' + ", operatorId='"
-				+ operatorId + '\'' + ", operatorName='" + operatorName + '\'' + ", createdTime='" + createdTime + '\''
-				+ ", modifiedTime='" + modifiedTime + '\'' + ", description='" + description + '\'' + '}';
+	public String getOperatorName() {
+		return operatorName;
+	}
+
+	public void setOperatorName(String operatorName) {
+		this.operatorName = operatorName;
+	}
+
+	public String getBankAccountTypeText() {
+		if (bankAccountType == null) {
+			bankAccountTypeText = "";
+		} else {
+			bankAccountTypeText = BankAccountType.getAccountType(bankAccountType).getName();
+		}
+		return bankAccountTypeText;
+	}
+
+	public String getStatusText() {
+		if (status == null) {
+			statusText = "";
+		} else {
+			statusText = BindBankStatus.getName(status);
+		}
+		return statusText;
 	}
 
 }
