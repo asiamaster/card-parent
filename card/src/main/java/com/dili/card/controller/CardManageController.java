@@ -8,12 +8,15 @@ import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IBusinessLogService;
 import com.dili.card.service.ICardManageService;
+import com.dili.card.type.DisableState;
 import com.dili.card.type.OperateType;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.validator.CardValidator;
+import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,7 +170,7 @@ public class CardManageController implements IControllerHandler {
 
 	/**
 	 * 解挂操作的时候查询(C端)
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/8/6
 	 */
@@ -182,7 +185,7 @@ public class CardManageController implements IControllerHandler {
 
 	/**
 	 * 解锁操作的时候查询(C端)
-	 * 
+	 *
 	 * @author miaoguoxin
 	 * @date 2020/8/6
 	 */
@@ -192,6 +195,10 @@ public class CardManageController implements IControllerHandler {
 		AssertUtils.notEmpty(cardNo, "卡号不能为空");
 		UserAccountSingleQueryDto query = new UserAccountSingleQueryDto();
 		query.setCardNo(cardNo);
-		return BaseOutput.successData(accountQueryService.getForUnLockCard(query));
+		UserAccountCardResponseDto card = accountQueryService.getByCardNoWithoutValidate(cardNo);
+		if (DisableState.DISABLED.getCode().equals(card.getDisabledState())) {
+			throw new CardAppBizException(ResultCode.DATA_ERROR, String.format("该账户为%s状态，不能进行此操作", DisableState.DISABLED.getName()));
+		}
+		return BaseOutput.successData(card);
 	}
 }
