@@ -160,4 +160,37 @@
             }
         })
     }
+    
+    function operFormatter(value, row, index, field) {
+        return '<a href="javascript:unBind('+row["id"]+');">解绑</a> ';
+    }
+    
+    // 解绑银行卡
+    function unBind(id) {
+    	 alert(id);
+    	 var url = "${contextPath}/bindBankCard/unBind.action";
+    	 var data={id:id};
+	   	 $.operate.post(url, data, function (){
+	 	   $.table.refresh();
+	   	 });
+//        $.ajax({
+//            type: 'post',
+//            url: '${contextPath}/bindBankCard/unBind.action',
+//            data: {id:id},
+//            async: false,
+//            dataType: "json",
+//            success: function (res) {
+//               if(res.success){
+//            	   bs4pop.alert("操作成功", {type: 'info'});
+//            	   $.table.refresh();
+//               }else{
+//            	   bs4pop.alert(res.message, {type: 'error'});
+//               }
+//            },
+//            error: function (error) {
+//                $('#bankNamePersonal').val('');
+//                $.modal.alertWarning(error);
+//            }
+//        })
+    }
 </script>

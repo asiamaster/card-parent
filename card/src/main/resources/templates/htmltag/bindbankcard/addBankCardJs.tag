@@ -11,8 +11,10 @@
             return false;
         }
         var  text=$('#openingBankNum option:selected').text();
+        var  bankType=$('#bankName option:selected').val();
         $("#openingBank").val(text);
-//        alert(JSON.stringify($("#openingBankNum")));
+        $("#bankType").val(bankType);
+        $("#bankName").val($('#openingBankNum option:selected').text());
         let url = "${contextPath}/bindBankCard/addBind.action";
         let customerInfo = {
             accountId: localStorage.accountId,
@@ -64,6 +66,7 @@
             $('[data-account-type="1"]').show();
             $('[data-account-type="2"]').hide();
         } else {
+        	// 对公
             $('[data-account-type="1"]').hide();
             $('[data-account-type="2"]').show();
         }

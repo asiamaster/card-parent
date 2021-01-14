@@ -49,6 +49,8 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 
 	@Override
 	public boolean addBind(BindBankCardDto newDataDto) {
+		// TODO 保存本地操作记录
+		
 		BindBankCardDo newData = new BindBankCardDo();
 		BeanUtils.copyProperties(newDataDto, newData);
 		newData.setStatus(BindBankStatus.NORMAL.getCode());

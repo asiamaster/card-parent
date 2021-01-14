@@ -3,8 +3,12 @@ package com.dili.card.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.type.BankAccountType;
 import com.dili.card.type.BindBankStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * 园区账户绑定银行卡
@@ -49,8 +53,14 @@ public class BindBankCardDto extends BaseDto implements Serializable {
 	/** 创建人 */
 	private String operatorName;
 	/** 创建时间 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createTime;
 	/** 修改时间 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime modifyTime;
 	/** 备注 */
 	private String description;
