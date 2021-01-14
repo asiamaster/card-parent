@@ -10,4 +10,6 @@ public class CacheKey {
     public static final String CUSTOMER_INFO_PREFIX = "customer_info:";
     /**防重提交token前缀key*/
     public static final String FORBID_DUPLICATE_TOKEN_PREFIX = "forbid_duplicate_token:";
+    /**处理中的银行圈提流水记录*/
+    public static final String BANK_WITHDRAW_PROCESSING_SERIAL_PREFIX = "bank_withdraw_processing_serial:";
 }

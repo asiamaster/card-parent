@@ -126,6 +126,19 @@ public class SerialServiceImpl implements ISerialService {
     }
 
     @Override
+    public void handleProcessing(SerialDto serialDto) {
+        //修改状态
+        BusinessRecordDo businessRecord = new BusinessRecordDo();
+        businessRecord.setSerialNo(serialDto.getSerialNo());
+        businessRecord.setState(OperateState.PROCESSING.getCode());
+        businessRecord.setStartBalance(serialDto.getStartBalance());
+        businessRecord.setEndBalance(serialDto.getEndBalance());
+        //用于意外情况时恢复数据
+        businessRecord.setAttach(JSON.toJSONString(serialDto));
+        businessRecordDao.doSuccessUpdate(businessRecord);
+    }
+
+    @Override
     public void handleSuccess(SerialDto serialDto, boolean saveSerial) {
         try {
             //修改状态

@@ -29,6 +29,11 @@ public class CashWithdrawServiceImpl extends WithdrawServiceImpl {
     }
 
     @Override
+    protected Integer getChannelId(FundRequestDto fundRequestDto) {
+        return fundRequestDto.getTradeChannel();
+    }
+
+    @Override
     public void decreaseCashBox(Long cycleNo, Long amount) {
         accountCycleService.decreaseeCashBox(cycleNo, amount);
     }

@@ -88,6 +88,7 @@ public class ReverseService implements IReverseService {
         }
         BusinessRecordResponseDto bizSerial = new BusinessRecordResponseDto();
         BeanUtils.copyProperties(businessRecord, bizSerial);
+        //TODO 计算手续费
 
         //查询操作记录
         SerialQueryDto queryDto = new SerialQueryDto();

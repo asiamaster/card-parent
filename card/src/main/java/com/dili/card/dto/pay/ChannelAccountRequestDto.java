@@ -14,10 +14,20 @@ public class ChannelAccountRequestDto implements Serializable {
     private String toName;
     /**账户类型*/
     private Integer toType;
+    /**银行卡类型*/
+    private Integer toBankType;
     /**银行联行行号-非必填*/
     private String bankNo;
     /**开户行名称-非必填*/
     private String bankName;
+
+    public Integer getToBankType() {
+        return toBankType;
+    }
+
+    public void setToBankType(Integer toBankType) {
+        this.toBankType = toBankType;
+    }
 
     public String getToAccount() {
         return toAccount;

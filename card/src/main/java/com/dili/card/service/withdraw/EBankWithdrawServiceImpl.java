@@ -54,6 +54,11 @@ public class EBankWithdrawServiceImpl extends WithdrawServiceImpl {
     }
 
     @Override
+    protected Integer getChannelId(FundRequestDto fundRequestDto) {
+        return fundRequestDto.getTradeChannel();
+    }
+
+    @Override
     protected List<FeeItemDto> createFees(FundRequestDto fundRequestDto) {
         if (fundRequestDto.getServiceCost() == 0L) {
             return null;
