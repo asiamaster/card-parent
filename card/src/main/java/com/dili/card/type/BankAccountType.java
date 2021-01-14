@@ -2,14 +2,14 @@ package com.dili.card.type;
 
 /**
  * @description：银行卡账户类型
- * 
+ *
  * @author ：WangBo
  * @time ：2021年1月13日下午12:44:42
  */
 public enum BankAccountType {
-	PERSONAL("个人账户", 10),
+	PERSONAL("个人账户", 1),
 
-	PUBLIC("对公账户", 20);
+	PUBLIC("对公账户", 2);
 
 	private String name;
 	private int code;

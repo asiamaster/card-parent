@@ -1,8 +1,11 @@
 package com.dili.card.service.withdraw;
 
+import com.alibaba.fastjson.JSON;
+import com.dili.card.common.constant.CacheKey;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.pay.ChannelAccountRequestDto;
 import com.dili.card.dto.pay.FeeItemDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
@@ -12,18 +15,21 @@ import com.dili.card.type.FundItem;
 import com.dili.card.type.PublicBizType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
+import com.dili.card.util.AssertUtils;
 import com.dili.card.util.CurrencyUtils;
+import com.dili.ss.redis.service.RedisUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 银行圈提
  */
 @Service
 public class BankWithdrawServiceImpl extends WithdrawServiceImpl {
-
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Override
     public void validateSpecial(FundRequestDto fundRequestDto) {
@@ -31,9 +37,14 @@ public class BankWithdrawServiceImpl extends WithdrawServiceImpl {
         if (fundRequestDto.getServiceCost() < 0L) {
             throw new CardAppBizException("", "请正确输入手续费");
         }
-        if (fundRequestDto.getChannelAccount() == null) {
-            throw new CardAppBizException("缺少圈提银行卡相关参数");
+        ChannelAccountRequestDto channelAccount = fundRequestDto.getChannelAccount();
+        if (channelAccount == null) {
+            throw new CardAppBizException("缺少提款银行卡相关参数");
         }
+        AssertUtils.notNull(channelAccount.getToType(), "提款银行卡账户类型缺失");
+        AssertUtils.notNull(channelAccount.getToBankType(), "提款银行卡类型缺失");
+        AssertUtils.notEmpty(channelAccount.getToName(), "提款银行卡所属人缺失");
+        AssertUtils.notEmpty(channelAccount.getToAccount(), "提款银行卡所属人id缺失");
     }
 
 
@@ -50,18 +61,23 @@ public class BankWithdrawServiceImpl extends WithdrawServiceImpl {
     }
 
     @Override
-    protected List<FeeItemDto> createFees(FundRequestDto fundRequestDto) {
-        if (fundRequestDto.getServiceCost() == 0L) {
-            return null;
-        }
-        List<FeeItemDto> fees = new ArrayList<>();
-        FeeItemDto feeItem = new FeeItemDto();
-        feeItem.setAmount(fundRequestDto.getServiceCost());
-        feeItem.setType(FeeType.SERVICE.getCode());
-        feeItem.setTypeName(FeeType.SERVICE.getName());
-        fees.add(feeItem);
-        return fees;
+    protected Integer getChannelId(FundRequestDto fundRequestDto) {
+        return fundRequestDto.getChannelAccount().getToBankType();
     }
+
+//    @Override
+//    protected List<FeeItemDto> createFees(FundRequestDto fundRequestDto) {
+//        if (fundRequestDto.getServiceCost() == 0L) {
+//            return null;
+//        }
+//        List<FeeItemDto> fees = new ArrayList<>();
+//        FeeItemDto feeItem = new FeeItemDto();
+//        feeItem.setAmount(fundRequestDto.getServiceCost());
+//        feeItem.setType(FeeType.SERVICE.getCode());
+//        feeItem.setTypeName(FeeType.SERVICE.getName());
+//        fees.add(feeItem);
+//        return fees;
+//    }
 
     @Override
     protected SerialDto createAccountSerial(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
@@ -80,6 +96,14 @@ public class BankWithdrawServiceImpl extends WithdrawServiceImpl {
                 serialRecord.setFundItemName(FundItem.EBANK_SERVICE.getName());
             }
         });
+    }
+
+    @Override
+    protected void handleSerialAfterCommitWithdraw(SerialDto serialDto, TradeResponseDto withdrawResponse) {
+        serialService.handleProcessing(serialDto);
+        //缓存处理中的圈提，用于后续回调
+        redisUtil.set(CacheKey.BANK_WITHDRAW_PROCESSING_SERIAL_PREFIX + serialDto.getSerialNo(),
+                JSON.toJSONString(serialDto), 30L, TimeUnit.DAYS);
     }
 
     @Override

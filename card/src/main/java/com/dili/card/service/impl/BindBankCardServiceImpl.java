@@ -45,7 +45,7 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 	public List<BindBankCardDto> getList(BindBankCardDto queryParam) {
 		PageHelper.startPage(1, 100,false);
 		if(StringUtils.isBlank(queryParam.getSort())) {
-			queryParam.setSort("created_time");
+			queryParam.setSort("create_time");
 			queryParam.setOrder("DESC");
 		}
 		return bankCardDao.selectList(queryParam);
@@ -54,7 +54,7 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 	@Override
 	public boolean addBind(BindBankCardDto newDataDto) {
 		// TODO 保存本地操作记录
-		
+
 		BindBankCardDo newData = new BindBankCardDo();
 		BeanUtils.copyProperties(newDataDto, newData);
 		newData.setStatus(BindBankStatus.NORMAL.getCode());

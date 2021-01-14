@@ -1,0 +1,115 @@
+//package com.dili.card.listener;
+//
+//import com.alibaba.fastjson.JSON;
+//import com.dili.account.entity.SerialRecordDo;
+//import com.dili.account.service.ISerialRecordService;
+//import com.rabbitmq.client.Channel;
+//import org.apache.commons.lang3.StringUtils;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+//import org.springframework.amqp.core.ExchangeTypes;
+//import org.springframework.amqp.core.Message;
+//import org.springframework.amqp.rabbit.annotation.Exchange;
+//import org.springframework.amqp.rabbit.annotation.Queue;
+//import org.springframework.amqp.rabbit.annotation.QueueBinding;
+//import org.springframework.amqp.rabbit.annotation.RabbitListener;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Component;
+//
+//import java.io.IOException;
+//import java.nio.charset.StandardCharsets;
+//
+///**
+// * rabbit mq 消息监听器
+// */
+//@Component
+//public class BankWithdrawCallbackListener {
+//
+//    public static final String EXCHANGE_REFERENCE_PRICE_CHANGE = "11";
+//    public static final String QUEUE_REFERENCE_PRICE_CHANGE = "WeighingBillMQConfig.QUEUE_REFERENCE_PRICE_CHANGE";
+//
+//    private static final Logger LOGGER = LoggerFactory.getLogger(BankWithdrawCallbackListener.class);
+//
+//    @Autowired
+//    private ReferencePriceService referencePriceService;
+//
+//
+//    /**
+//     * 客户信息修改后，更新账户冗余信息
+//     */
+//    @RabbitListener(bindings = @QueueBinding(
+//            value = @Queue(value = QUEUE_REFERENCE_PRICE_CHANGE, autoDelete = "false"),
+//            exchange = @Exchange(value = EXCHANGE_REFERENCE_PRICE_CHANGE, type = ExchangeTypes.DIRECT)
+//    ), ackMode = "MANUAL")
+//    public void processCustomerInfo(Channel channel, Message message) {
+//        String data = new String(message.getBody(), StandardCharsets.UTF_8);
+//        if (StringUtils.isBlank(data)) {
+//            rejectMsg(channel, message.getMessageProperties().getDeliveryTag());
+//            return;
+//        }
+//        LOGGER.info("接收MQ消息，开始计算参考价：{}", data);
+//
+//        WeighingSettlementDto weighingSettlementBill;
+//        try {
+//            weighingSettlementBill = JSON.parseObject(data, WeighingSettlementDto.class);
+//        } catch (Exception e) {
+//            LOGGER.error("deserialize json failed", e);
+//            rejectMsg(channel, message.getMessageProperties().getDeliveryTag());
+//            return;
+//        }
+//
+//        try {
+//            //开始计算参考价
+//            referencePriceService.calculateReferencePrice(weighingSettlementBill);
+//            ackMsg(channel, message.getMessageProperties().getDeliveryTag());
+//        } catch (Exception e) {
+//            LOGGER.error("业务处理失败，开始重新投递", e);
+//            Boolean redelivered = message.getMessageProperties().getRedelivered();
+//            if (redelivered) {
+//                // 消息已重复处理失败, 扔掉消息
+//                rejectMsg(channel, message.getMessageProperties().getDeliveryTag());
+//            } else {
+//                nackMsg(channel, message.getMessageProperties().getDeliveryTag());
+//            }
+//        }
+//    }
+//
+//    /**
+//     *
+//     * @author miaoguoxin
+//     * @date 2020/9/16
+//     */
+//    private static void rejectMsg(Channel channel, long deliveryTag) {
+//        try {
+//            channel.basicReject(deliveryTag, false);
+//        } catch (IOException e) {
+//            LOGGER.error("reject message failed", e);
+//        }
+//    }
+//
+//    /**
+//     *
+//     * @author miaoguoxin
+//     * @date 2020/9/16
+//     */
+//    private static void nackMsg(Channel channel, long deliveryTag) {
+//        try {
+//            channel.basicNack(deliveryTag, false, true);
+//        } catch (IOException e) {
+//            LOGGER.error("nack message failed", e);
+//        }
+//    }
+//
+//    /**
+//     *
+//     * @author miaoguoxin
+//     * @date 2020/9/16
+//     */
+//    private static void ackMsg(Channel channel, long deliveryTag) {
+//        try {
+//            channel.basicAck(deliveryTag, false);
+//        } catch (IOException e) {
+//            LOGGER.error("ack message failed", e);
+//        }
+//    }
+//}

@@ -52,7 +52,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
     @Override
     public String withdraw(FundRequestDto fundRequestDto) {
         validate(fundRequestDto);//参数验证
-        UserAccountCardResponseDto accountCard = check(fundRequestDto);//验证卡状态、余额等
+        UserAccountCardResponseDto accountCard = this.check(fundRequestDto);//验证卡状态、余额等
         BusinessRecordDo businessRecord = createBusinessRecord(fundRequestDto, accountCard);
         //构建创建交易参数
         CreateTradeRequestDto createTradeRequest = CreateTradeRequestDto.createTrade(TradeType.WITHDRAW.getCode(), accountCard.getAccountId(), accountCard.getFundAccountId(), fundRequestDto.getAmount(), businessRecord.getSerialNo(), String.valueOf(businessRecord.getCycleNo()));
@@ -69,14 +69,23 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         //扣减现金池
         decreaseCashBox(businessRecord.getCycleNo(), fundRequestDto.getAmount());
         //提现提交
-        TradeRequestDto withdrawRequest = TradeRequestDto.createTrade(accountCard, tradeNo, fundRequestDto.getTradeChannel(), fundRequestDto.getTradePwd());
+        TradeRequestDto withdrawRequest = TradeRequestDto.createTrade(accountCard, tradeNo, this.getChannelId(fundRequestDto), fundRequestDto.getTradePwd());
         withdrawRequest.setFees(this.createFees(fundRequestDto));
         withdrawRequest.setChannelAccount(fundRequestDto.getChannelAccount());
         TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
         //取款成功后修改业务单状态、存储流水
-        SerialDto serialDto = createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
-        serialService.handleSuccess(serialDto);
+        SerialDto serialDto = this.createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
+        this.handleSerialAfterCommitWithdraw(serialDto, withdrawResponse);
         return businessRecord.getSerialNo();
+    }
+
+    /**
+     * 提交支付以后操作流水
+     * @author miaoguoxin
+     * @date 2021/1/14
+     */
+    protected void handleSerialAfterCommitWithdraw(SerialDto serialDto, TradeResponseDto withdrawResponse) {
+        serialService.handleSuccess(serialDto);
     }
 
 
@@ -104,6 +113,13 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
      * @return
      */
     protected abstract BusinessRecordDo createBusinessRecord(FundRequestDto fundRequestDto, UserAccountCardResponseDto accountCard);
+
+    /**
+     * 交易渠道（和支付系统有偏差）
+     * @author miaoguoxin
+     * @date 2021/1/14
+     */
+    protected abstract Integer getChannelId(FundRequestDto fundRequestDto);
 
     /**
      * 扣减现金池

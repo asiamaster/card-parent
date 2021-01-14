@@ -46,6 +46,13 @@ public interface ISerialService {
     void handleSuccess(SerialDto serialDto);
 
     /**
+    *  处理中状态（不记录远程流水，用于一些需要回调的情况：如圈提）
+    * @author miaoguoxin
+    * @date 2021/1/14
+    */
+    void handleProcessing(SerialDto serialDto);
+
+    /**
      * 成功处理 改状态、记操作流水
      * @param serialDto
      * * @param saveSerial 是否保存账户流水标记
