@@ -44,6 +44,10 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 	@Override
 	public List<BindBankCardDto> getList(BindBankCardDto queryParam) {
 		PageHelper.startPage(1, 100,false);
+		if(StringUtils.isBlank(queryParam.getSort())) {
+			queryParam.setSort("created_time");
+			queryParam.setOrder("DESC");
+		}
 		return bankCardDao.selectList(queryParam);
 	}
 
