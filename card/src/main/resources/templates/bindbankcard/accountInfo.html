@@ -10,10 +10,10 @@
                 </div>
             </div>
             <div class="col-auto align-self-center mt-3">
-            	<#resource code="bindBankCard_query_cardInfo">
 	                <button id="query" type="button" class="btn btn-primary"  onclick="readCard()">
 	                <i class="fa fa-search">刷园区主卡</i>
 	                </button>
+	            <#resource code="add_bindBankCard">
 					<button id="authBindBtn" type="button" class="btn btn-primary" style="display: none">授权绑定</button>
                 </#resource>
 
@@ -43,13 +43,14 @@
 				<tr>
 					<th data-radio="true"></th>
 					<th data-field="bankNo" data-align="center">银行卡号</th>
-					<th data-field="openingBank" data-align="center">银行名称</th>
+					<th data-field="bankName" data-align="center">银行名称</th>
 					<th data-field="name" data-align="center">账户名称</th>
-					<th data-field="accountType" data-align="center">账户类型</th>
-					<th data-field="status" data-align="center">状态</th>
+					<th data-field="bankAccountTypeText" data-align="center">账户类型</th>
+					<th data-field="statusText" data-align="center">状态</th>
 					<th data-field="operatorName" data-align="center">创建人</th>
-					<th data-field="createdTime" data-align="center">创建时间 </th>
+					<th data-field="createTime" data-align="center">创建时间 </th>
 					<th data-field="description" data-align="center">备注 </th>
+					<th data-align="center" data-formatter="operFormatter">操作 </th>
 				</tr>
 			</thead>
 		</table>
@@ -67,7 +68,7 @@
 <script id="checkPassword" type="text/html">
     <div class="form-group col">
 		<label for="accountType" class="div_label">园区卡密码</label>
-			<input type="password" id="password" name="password">
+			<input type="password" id="password" maxlength=6 name="password">
 			<button id="pwdBtn" type="button" class="btn btn-primary">
 				请输入密码
 		</button>

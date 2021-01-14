@@ -10,6 +10,11 @@
         if (!$.validate.form(formId)) {
             return false;
         }
+        var  text=$('#openingBankNum option:selected').text();
+        var  bankType=$('#bankName option:selected').val();
+        $("#openingBank").val(text);
+        $("#bankType").val(bankType);
+        $("#bankName").val($('#openingBankNum option:selected').text());
         let url = "${contextPath}/bindBankCard/addBind.action";
         let customerInfo = {
             accountId: localStorage.accountId,
@@ -56,11 +61,12 @@
     }
 
     // 账户类型交互
-    $('#accountType').change(function () {
+    $('#bankAccountType').change(function () {
         if($(this).val() == 1) {
             $('[data-account-type="1"]').show();
             $('[data-account-type="2"]').hide();
         } else {
+        	// 对公
             $('[data-account-type="1"]').hide();
             $('[data-account-type="2"]').show();
         }
@@ -95,6 +101,7 @@
             dataType: "json",
             success: function (res) {
                 $('#bankNamePersonal').val(res.data.channelName);
+                $('#bankType').val(res.data.channelId);
             },
             error: function (error) {
                 $('#bankNamePersonal').val('');

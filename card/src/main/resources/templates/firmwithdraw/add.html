@@ -1,7 +1,7 @@
 <#bs4Body>
 
 <div class="container-fluid">
-	<form >
+	<form id="withdrawalForm">
 		<div class="breadcrumb">
 			提款信息
 		</div>
@@ -29,7 +29,7 @@
 					<select id="departmentId" name="" class="form-control" required></select>
 					<#bcomboProvider _id="" _provider="bindBankProvider" />
 					<div class="input-group-append">
-						<button class="btn btn-outline-secondary" type="button" id="">绑定新的银行卡</button>
+						<button class="btn btn-outline-secondary" type="button" id="authBindBtn">绑定新的银行卡</button>
 					</div>
 				</div>
 			</div>
@@ -38,14 +38,13 @@
 				<div class="input-group">
 					<input type="number" class="form-control" maxlength="6" required>
 					<div class="input-group-append">
-						<button class="btn btn-outline-secondary" type="button" id="">输入密码</button>
-						<button class="btn btn-outline-secondary" type="button" id="">忘记密码？</button>
+						<button class="btn btn-outline-secondary" type="button" id="pswBtn">输入密码</button>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="text-center">
-			<button type="button" class="btn btn-secondary px-5" onclick="">确认提现</button>
+			<button type="button" class="btn btn-secondary px-5" id="withdrawalBtn">确认提现</button>
 		</div>
 	</form>
 	<div>
@@ -89,10 +88,18 @@
 		src="${contextPath}/resources/js/sword.js"></script>
 <script type="text/javascript"
 		src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
+<#common_cardBaseJs/>
 <#firmwithdraw_addJs/>
 
-
-<script>
-
-
+<#comment>
+页面层弹框
+</#comment>
+<script id="checkPassword" type="text/html">
+	<div class="form-group col">
+		<label for="accountType" class="div_label">园区卡密码</label>
+		<input type="password" id="password" maxlength=6 name="password">
+		<button id="pwdBtn" type="button" class="btn btn-primary">
+			请输入密码
+		</button>
+	</div>
 </script>
