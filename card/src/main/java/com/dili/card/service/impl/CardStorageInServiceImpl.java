@@ -51,6 +51,7 @@ public class CardStorageInServiceImpl implements ICardStorageInService {
 		batchInfo.setCreator(storageIn.getCreator());
 		batchInfo.setCreatorId(storageIn.getCreatorId());
 		batchInfo.setStartCardNo(storageIn.getStartCardNo());
+		batchInfo.setStartCardNoStr(storageIn.getStartCardNo()); // 原始卡号长度，避免转换长度后丢失前面的0
 		batchInfo.setEndCardNo(storageIn.getEndCardNo());
 		batchInfo.setFirmId(storageIn.getFirmId());
 		batchInfo.setFirmName(storageIn.getFirmName());
