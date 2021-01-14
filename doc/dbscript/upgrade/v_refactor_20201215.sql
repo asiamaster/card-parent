@@ -50,26 +50,27 @@ CREATE TABLE `dili_card`.`card_reverse_record`  (
 -- 园区卡账户绑定银行卡
 CREATE TABLE `card_bind_bank_card` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `account_type` tinyint(3) unsigned NOT NULL COMMENT '账户类型-个人账户 对公账户',
+  `bank_account_type` tinyint(3) unsigned NOT NULL COMMENT '账户类型-个人账户 对公账户',
   `account_id` bigint(20) NOT NULL COMMENT '园区卡账号',
   `fund_account_id` bigint(20) NOT NULL COMMENT '资金账号ID',
+  `bank_name` varchar(50) DEFAULT NULL COMMENT '银行名称',
   `bank_type` int(20) NOT NULL COMMENT '银行类型-工商银行',
   `bank_no` varchar(30) NOT NULL COMMENT '银行卡号/对公账号',
   `opening_bank` varchar(50) DEFAULT NULL COMMENT '开户行如:成都XX银行XX支行',
   `opening_bank_num` varchar(30) DEFAULT NULL COMMENT '开户行编码',
   `name` varchar(60) NOT NULL COMMENT '姓名',
   `status` tinyint(3) unsigned NOT NULL COMMENT '绑定状态',
-  `firm_id` bigint(20) NOT NULL COMMENT '市场id',
+  `firm_id` bigint(20) DEFAULT NULL COMMENT '市场ID',
   `operator_id` bigint(20) DEFAULT NULL COMMENT '员工ID',
   `operator_name` varchar(20) DEFAULT NULL COMMENT '员工名称-保留字段',
-  `created_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `modified_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
   `description` varchar(250) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`),
-  KEY `idx_bank_card_accountId` (`account_id`,`account_type`) USING BTREE,
-  KEY `idx_bank_card_fundAccountId` (`fund_account_id`,`account_type`) USING BTREE,
+  KEY `idx_bank_card_accountId` (`account_id`,`bank_account_type`) USING BTREE,
+  KEY `idx_bank_card_fundAccountId` (`fund_account_id`,`bank_account_type`) USING BTREE,
   KEY `idx_bank_card_bankNo` (`bank_no`,`bank_type`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='园区账户绑定银行卡';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='园区账户绑定银行卡';
 
 ALTER TABLE `dili_card`.`card_business_record`
 ADD COLUMN `hold_name` varchar(30) NULL COMMENT '持卡人姓名' AFTER `customer_name`;
