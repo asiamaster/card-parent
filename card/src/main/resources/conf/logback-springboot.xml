@@ -13,7 +13,7 @@
 	<appender name="CONSOLE"
 		class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%d %-5level [${LOG_NAME}-${build.profile.id}]1 [%t] [%c:%L] -| %msg%n</pattern>
+			<pattern>%d %-5level [${LOG_NAME}-${build.profile.id}]17 [%t] [%c:%L] -| %msg%n</pattern>
 		</encoder>
 	</appender>
 	<!-- 日志文件输出 -->
@@ -32,7 +32,7 @@
 		</rollingPolicy>
 		<encoder
 			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>%d %-5level [${LOG_NAME}-1${build.profile.id}] [%t] [%c:%L] -| %msg%n</pattern>
+			<pattern>%d %-5level [${LOG_NAME}-${build.profile.id}]17 [%t] [%c:%L] -| %msg%n</pattern>
 		</encoder>
 	</appender>
 
@@ -46,6 +46,7 @@
 	<!-- 测试环境 -->
 	<springProfile name="test">
 		<root level="INFO">
+			<appender-ref ref="CONSOLE" />
 			<appender-ref ref="FILE" />
 		</root>
 	</springProfile>

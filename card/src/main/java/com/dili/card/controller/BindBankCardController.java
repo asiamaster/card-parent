@@ -74,8 +74,9 @@ public class BindBankCardController implements IControllerHandler {
 	 */
 	@GetMapping("/toQueryCard.html")
 	public ModelAndView toQueryCard(ModelAndView pageView) {
+		LOG.info("绑定银行卡查询");
 		pageView.addObject("cardInfo", null);
-		pageView.setViewName("bindBankCard/accountInfo");
+		pageView.setViewName("bindbankcard/accountInfo");
 		return pageView;
 	}
 
@@ -84,7 +85,8 @@ public class BindBankCardController implements IControllerHandler {
 	 */
 	@GetMapping("/toAddBankCard.html")
 	public String addView() {
-		return "bindBankCard/addBankCard";
+		LOG.info("绑定页面");
+		return "bindbankcard/addBankCard";
 	}
 
 
