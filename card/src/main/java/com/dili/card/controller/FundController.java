@@ -3,9 +3,9 @@ package com.dili.card.controller;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.annotation.ForbidDuplicateCommit;
 import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.FirmIdConstant;
 import com.dili.card.common.constant.JsonExcludeFilter;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
@@ -38,6 +39,7 @@ import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IBusinessLogService;
 import com.dili.card.service.IFundService;
 import com.dili.card.service.IRuleFeeService;
+import com.dili.card.service.ITypeMarketService;
 import com.dili.card.service.withdraw.WithdrawDispatcher;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.PayFreezeFundType;
@@ -50,6 +52,7 @@ import com.dili.card.validator.FundValidator;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.ss.util.MoneyUtils;
+import com.dili.uap.sdk.domain.UserTicket;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
@@ -77,6 +80,8 @@ public class FundController implements IControllerHandler {
     private AccountQueryRpcResolver accountQueryRpcResolver;
     @Resource
     IBusinessLogService businessLogService;
+    @Resource
+	private ITypeMarketService typeMarketService;
 
     /**
      * 跳转冻结资金页面
@@ -134,14 +139,21 @@ public class FundController implements IControllerHandler {
 	@RequestMapping(value = "/withdraw.action")
 	@ResponseBody
 	//@ForbidDuplicateCommit
-	public BaseOutput<String> withdraw(@RequestBody FundRequestDto fundRequestDto) {
+	public BaseOutput<String> withdraw(@RequestBody FundRequestDto fundRequestDto, HttpServletRequest request) {
 		LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto,JsonExcludeFilter.PWD_FILTER));
 		validateCommonParam(fundRequestDto);
+		UserTicket userTicket = getUserTicket();
+        // 设置有主子商户的市场的收益帐户,feign调用支付接口时通过PayServiceFeignConfig将该值替换原mchId
+ 		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
+ 		if(userTicket.getFirmId() == FirmIdConstant.SY) {
+			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
+			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
+		}
 		// 操作日志
-//		businessLogService.saveLog(OperateType.ACCOUNT_WITHDRAW, getUserTicket(),
-//				"业务卡号:" + fundRequestDto.getCardNo(),
-//				"金额:" + MoneyUtils.centToYuan(fundRequestDto.getAmount()),
-//				"渠道:" + TradeChannel.getNameByCode(fundRequestDto.getTradeChannel()));
+		businessLogService.saveLog(OperateType.ACCOUNT_WITHDRAW, getUserTicket(),
+				"业务卡号:" + fundRequestDto.getCardNo(),
+				"金额:" + MoneyUtils.centToYuan(fundRequestDto.getAmount()),
+				"渠道:" + TradeChannel.getNameByCode(fundRequestDto.getTradeChannel()));
 		buildOperatorInfo(fundRequestDto);
 		String serialNo = withdrawDispatcher.dispatch(fundRequestDto);
 		return BaseOutput.successData(serialNo);
@@ -155,8 +167,16 @@ public class FundController implements IControllerHandler {
      */
     @RequestMapping(value = "/withdrawServiceFee.action")
     @ResponseBody
-    public BaseOutput<Long> withdrawServiceFee(Long amount) {
+    public BaseOutput<Long> withdrawServiceFee(Long amount, HttpServletRequest request) {
         LOGGER.info("获取提现手续费*****{}", amount);
+        // 设置有主子商户的市场的收益帐户,feign调用支付接口时通过PayServiceFeignConfig将该值替换原mchId
+        UserTicket userTicket = getUserTicket();
+  		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
+  		if(userTicket.getFirmId() == FirmIdConstant.SY) {
+ 			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
+ 			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
+ 		}
+      		
         if (amount == null || amount < Constant.MIN_AMOUNT || amount > Constant.MAX_AMOUNT) {
             return BaseOutput.failure("请正确输入提现金额");
         }
@@ -259,13 +279,22 @@ public class FundController implements IControllerHandler {
     @ResponseBody
     @ForbidDuplicateCommit
     public BaseOutput<String> recharge(
-            @RequestBody @Validated({FundValidator.Trade.class}) FundRequestDto requestDto) {
+            @RequestBody @Validated({FundValidator.Trade.class}) FundRequestDto requestDto, HttpServletRequest request) {
         LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto, JsonExcludeFilter.PWD_FILTER));
         this.validateCommonParam(requestDto);
+        UserTicket userTicket = getUserTicket();
+        // 设置有主子商户的市场的收益帐户,feign调用支付接口时通过PayServiceFeignConfig将该值替换原mchId
+ 		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
+ 		if(userTicket.getFirmId() == FirmIdConstant.SY) {
+			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
+			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
+		}
+        
         // TODO 以会使用统一配置获取当前市场是否需要校验密码
-        if(requestDto.getFirmId() == 8) {
+        if(requestDto.getFirmId() == FirmIdConstant.SG) {
         	AssertUtils.notEmpty(requestDto.getTradePwd(), "交易密码不能为空");
         }
+        
         businessLogService.saveLog(OperateType.ACCOUNT_CHARGE, getUserTicket(),
                 "业务卡号:" + requestDto.getCardNo(),
                 "金额:" + MoneyUtils.centToYuan(requestDto.getAmount()),
@@ -285,9 +314,18 @@ public class FundController implements IControllerHandler {
      */
     @GetMapping("rechargeFee.action")
     @ResponseBody
-    public BaseOutput<Long> getRechargeFee(Long amount) {
+    public BaseOutput<Long> getRechargeFee(Long amount, HttpServletRequest request) {
         LOGGER.info("获取充值手续费*****{}", amount);
         AssertUtils.notNull(amount, "金额不能为空");
+        
+        // 设置有主子商户的市场的收益帐户,feign调用支付接口时通过PayServiceFeignConfig将该值替换原mchId
+        UserTicket userTicket = getUserTicket();
+  		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
+  		if(userTicket.getFirmId() == FirmIdConstant.SY) {
+ 			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
+ 			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
+ 		}
+        
         BigDecimal ruleFee = ruleFeeService.getRuleFee(amount, RuleFeeBusinessType.CARD_RECHARGE_POS,
                 SystemSubjectType.CARD_RECHARGE_POS_FEE);
         return BaseOutput.successData(CurrencyUtils.yuan2Cent(ruleFee));

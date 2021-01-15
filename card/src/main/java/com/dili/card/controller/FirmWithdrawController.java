@@ -7,7 +7,12 @@ import com.dili.card.dto.PipelineRecordQueryDto;
 import com.dili.card.dto.pay.PipelineRecordResponseDto;
 import com.dili.card.service.IFundService;
 import com.dili.card.validator.ConstantValidator;
+import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
+import com.dili.uap.sdk.domain.Firm;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.rpc.FirmRpc;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +40,20 @@ public class FirmWithdrawController implements IControllerHandler {
 
     @Autowired
     private IFundService fundService;
-
-    @Autowired
-    private CityRpc cityRpc;
     
+    FirmRpc firmRpc;
     /**
      * 初始化圈提页面数据
      */
     @GetMapping("/init.html")
     public String listView() {
+    	UserTicket userTicket = getUserTicket();
+    	// 查询市场信息
+    	BaseOutput<Firm> byId = firmRpc.getById(userTicket.getFirmId());
+    	// 查询余额
+    	
+    	// 查询绑定列表
+    	
         return "firmwithdraw/accountInfo";
     }
 

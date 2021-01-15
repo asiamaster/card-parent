@@ -1,6 +1,7 @@
 package com.dili.card.controller;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.FirmIdConstant;
 import com.dili.card.common.constant.JsonExcludeFilter;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.common.handler.IControllerHandler;
@@ -25,6 +28,7 @@ import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IBusinessLogService;
 import com.dili.card.service.ICardStorageService;
 import com.dili.card.service.IOpenCardService;
+import com.dili.card.service.ITypeMarketService;
 import com.dili.card.type.CardType;
 import com.dili.card.type.OperateType;
 import com.dili.card.util.AssertUtils;
@@ -48,15 +52,17 @@ public class OpenCardController implements IControllerHandler {
 	@Resource
 	private IOpenCardService openCardService;
 	@Resource
-	CustomerRpc customerRpc;
+	private CustomerRpc customerRpc;
 	@Resource
-	AccountQueryRpc accountQueryRpc;
+	private AccountQueryRpc accountQueryRpc;
 	@Resource
-	IAccountQueryService accountQueryService;
+	private IAccountQueryService accountQueryService;
 	@Resource
-	ICardStorageService cardStorageService;
+	private ICardStorageService cardStorageService;
 	@Resource
-	IBusinessLogService businessLogService;
+	private IBusinessLogService businessLogService;
+	@Resource
+	private ITypeMarketService typeMarketService;
 	
 
 	/**
@@ -112,10 +118,19 @@ public class OpenCardController implements IControllerHandler {
 	 */
 	@RequestMapping(value = "getOpenCardFee.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public BaseOutput<Long> getOpenCardFee() {
+	public BaseOutput<Long> getOpenCardFee(HttpServletRequest request) {
 		log.info("查询开卡费用项");
 		Long openCostFee = openCardService.getOpenCostFee();
 		log.info("查询开卡费用项*****{}", openCostFee);
+		
+		// 设置有主子商户的市场的收益帐户,feign调用支付接口时通过PayServiceFeignConfig将该值替换原mchId
+        UserTicket userTicket = getUserTicket();
+  		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
+  		if(userTicket.getFirmId() == FirmIdConstant.SY) {
+ 			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
+ 			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
+ 		}
+		
 		return BaseOutput.successData(openCostFee);
 	}
 
@@ -126,12 +141,17 @@ public class OpenCardController implements IControllerHandler {
 	 */
 	@PostMapping("openMasterCard.action")
 	@ResponseBody
-	public BaseOutput<?> openMasterCard(@RequestBody OpenCardDto openCardInfo) {
+	public BaseOutput<?> openMasterCard(@RequestBody OpenCardDto openCardInfo, HttpServletRequest request) {
 		log.info("开卡主卡信息*****{}", JSONObject.toJSONString(openCardInfo, JsonExcludeFilter.PWD_FILTER));
+		UserTicket user = getUserTicket();
 		// 主要参数校验
 		checkMasterParam(openCardInfo);
-		// 设置操作人信息
-		UserTicket user = getUserTicket();
+		// 设置有主子商户的市场的收益帐户,feign调用支付接口时通过PayServiceFeignConfig将该值替换原mchId
+		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
+		if(user.getFirmId() == FirmIdConstant.SY) {
+			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
+			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
+		}
 		// 操作日志
 		businessLogService.saveLog(OperateType.ACCOUNT_TRANSACT, user, "客户姓名:" + openCardInfo.getCustomerName(),
 				"客户ID:" + openCardInfo.getCustomerCode(), "卡号:" + openCardInfo.getCardNo());
@@ -148,13 +168,19 @@ public class OpenCardController implements IControllerHandler {
 	 */
 	@PostMapping("openSlaveCard.action")
 	@ResponseBody
-	public BaseOutput<?> openSlaveCard(@RequestBody OpenCardDto openCardInfo) throws Exception {
+	public BaseOutput<?> openSlaveCard(@RequestBody OpenCardDto openCardInfo, HttpServletRequest request) throws Exception {
 		log.info("开副卡信息*****{}", JSONObject.toJSONString(openCardInfo, JsonExcludeFilter.PWD_FILTER));
+		UserTicket user = getUserTicket();
 		// 主要参数校验
 		AssertUtils.notNull(openCardInfo.getParentAccountId(), "主卡信息不能为空!");
 		AssertUtils.notEmpty(openCardInfo.getParentLoginPwd(), "主卡密码不能为空!");
-		// 设置操作人信息
-		UserTicket user = getUserTicket();
+		// 设置有主子商户的市场的收益帐户,feign调用支付接口时通过PayServiceFeignConfig将该值替换原mchId
+		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
+		if(user.getFirmId() == FirmIdConstant.SY) {
+			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
+			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
+		}
+		
 		// 操作日志
 		businessLogService.saveLog(OperateType.ACCOUNT_TRANSACT, user, "客户姓名:" + openCardInfo.getCustomerName(),
 				"客户ID:" + openCardInfo.getCustomerCode(), "卡号:" + openCardInfo.getCardNo());

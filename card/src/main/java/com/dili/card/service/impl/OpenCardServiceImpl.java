@@ -54,6 +54,7 @@ import com.dili.card.service.ICustomerService;
 import com.dili.card.service.IOpenCardService;
 import com.dili.card.service.IRuleFeeService;
 import com.dili.card.service.ISerialService;
+import com.dili.card.service.ITypeMarketService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
@@ -79,6 +80,7 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
 import com.dili.uap.sdk.rpc.DataDictionaryRpc;
+import com.dili.uap.sdk.session.SessionContext;
 import com.google.common.collect.Lists;
 
 import io.seata.spring.annotation.GlobalTransactional;
@@ -126,6 +128,8 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	private DataDictionaryRpc dataDictionaryRpc;
 	@Autowired
 	private ICustomerService customerService;
+	@Autowired
+	private ITypeMarketService typeMarketService;
 	
 	@Override
 	public Long getOpenCostFee() {

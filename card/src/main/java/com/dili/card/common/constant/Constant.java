@@ -14,15 +14,9 @@ public class Constant {
 	/** 账户信息，临时threadLocal 字段 */
 	public static final String USER_ACCOUNT = "userAccount";
 
-//	/** 充值extra 网银类型字段 */
-//	public static final String BANK_TYPE = "bankType";
-//	/** 充值extra pos类型字段 */
-//	public static final String POS_TYPE = "posType";
-//	/** 充值extra pos类型显示名称  */
-//	public static final String POS_TYPE_NAME = "posTypeName";
-//	/** 充值extra pos凭证号字段 */
-//	public static final String POS_CERT_NUM = "posCertNum";
-
+	/** 市场收益账户（对于有子商户需求的市场） */
+	public  static final String CARD_INCOME_ACCOUNT = "card_income_account";
+	
 	/** 操作员字段（用于冻结资金额外字段） */
 	public static final String OP_NO = "opNo";
 	public static final String OP_NAME = "opName";
