@@ -26,10 +26,10 @@
 			card_bind_bank_card
 		WHERE
 			firm_id = ${firmId}
-		AND status = 1
+			AND status = 1
 			<if test="accountId != null">AND `account_id` = #{accountId} </if>
-		ORDER BY
-			${sort} ${order}
+			<if test="bankNo != null">AND `bank_no` = #{bankNo} </if>
+			<if test="sort != null">ORDER BY ${sort} ${order} </if>
 	</select>
 	
 	<insert id="save">

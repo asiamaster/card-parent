@@ -170,6 +170,7 @@ public class BindBankCardController implements IControllerHandler {
 		LOG.info("根据卡号获取银行信息*****" + JSONObject.toJSONString(payBankDto));
 		PayBankDto data = GenericRpcResolver.resolver(payRpc.getBankInfo(payBankDto), ServiceName.PAY);
 		LOG.info("支付返回*****" + JSONObject.toJSONString(data));
+//		bindBankCardService.existsBankNo(payBankDto.getCardNo(), payBankDto.get)
 		return BaseOutput.successData(data);
 	}
 

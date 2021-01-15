@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.dili.card.dao.IBindBankCardDao;
 import com.dili.card.dto.BindBankCardDto;
 import com.dili.card.entity.BindBankCardDo;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IBindBankCardService;
 import com.dili.card.type.BindBankStatus;
 import com.dili.card.util.PageUtils;
@@ -54,7 +55,11 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 	@Override
 	public boolean addBind(BindBankCardDto newDataDto) {
 		// TODO 保存本地操作记录
+		
+		// 校验是否重复
+		existsBankNo(newDataDto.getBankNo(), newDataDto.getAccountId(), newDataDto.getFirmId());
 
+		// 保存数据
 		BindBankCardDo newData = new BindBankCardDo();
 		BeanUtils.copyProperties(newDataDto, newData);
 		newData.setStatus(BindBankStatus.NORMAL.getCode());
@@ -72,6 +77,20 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 		unBind.setStatus(BindBankStatus.INVALID.getCode());
 		unBind.setModifyTime(LocalDateTime.now());
 		bankCardDao.update(unBind);
+		return true;
+	}
+
+	@Override
+	public boolean existsBankNo(String bankNo, Long accountId, Long firmId) {
+		// 校验是否重复
+		BindBankCardDto queryParam =new BindBankCardDto();
+		queryParam.setAccountId(accountId);
+		queryParam.setBankNo(bankNo);
+		queryParam.setFirmId(firmId);
+		List<BindBankCardDto> list = bankCardDao.selectList(queryParam);
+		if (list != null && list.size() > 1) {
+			throw new CardAppBizException("该用户已绑定了相同的卡号");
+		}
 		return true;
 	}
 

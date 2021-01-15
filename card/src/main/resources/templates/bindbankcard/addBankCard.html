@@ -2,7 +2,7 @@
 
 <div class="container-fluid">
 	<form id="bankAddForm" role="form" class="pb-5">
-		<input type="hidden" id="bankType" name="bankType">
+		<!-- <input type="hidden" id="bankType" name="bankType"> -->
 		<input type="hidden" id="openingBank" name="openingBank">
 		<div class="row row-cols-1" id="baseContent">
 			<div class="form-group col">
@@ -31,8 +31,8 @@
 			</div>
 			<div class="form-group col" data-account-type="2" style="display: none">
 				<label>银行名称</label>
-				<select id="bankName" name="bankName" class="form-control" required></select>
-				<#bcomboProvider _id="bankName" _provider="bankChannelProvider" />
+				<select id="bankType" name="bankType" class="form-control" required></select>
+				<#bcomboProvider _id="bankType" _provider="bankChannelProvider" />
 			</div>
 			<!-- 对公户 开户行 -->
 			<div class="form-group col">

@@ -11,10 +11,8 @@
             return false;
         }
         var  text=$('#openingBankNum option:selected').text();
-        var  bankType=$('#bankName option:selected').val();
         $("#openingBank").val(text);
-        $("#bankType").val(bankType);
-        $("#bankName").val($('#openingBankNum option:selected').text());
+        $("#bankNamePersonal").val($('#bankType option:selected').text());
         let url = "${contextPath}/bindBankCard/addBind.action";
         let customerInfo = {
             accountId: localStorage.accountId,

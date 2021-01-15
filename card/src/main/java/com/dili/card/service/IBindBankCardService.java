@@ -13,32 +13,41 @@ import java.util.List;
  */
 public interface IBindBankCardService {
 
-    /**
-     * 查询入库记录
-     */
-    PageOutput<List<BindBankCardDto>> page(BindBankCardDto queryParam);
+	/**
+	 * 查询入库记录
+	 */
+	PageOutput<List<BindBankCardDto>> page(BindBankCardDto queryParam);
 
-    /**
-     * 列表查询
-     * @author miaoguoxin
-     * @date 2021/1/13
-     */
-    List<BindBankCardDto> getList(BindBankCardDto queryParam);
+	/**
+	 * 列表查询
+	 * 
+	 * @author miaoguoxin
+	 * @date 2021/1/13
+	 */
+	List<BindBankCardDto> getList(BindBankCardDto queryParam);
 
-    /**
-     * 绑定新的银行卡
-     *
-     * @param newData
-     * @return
-     */
-    boolean addBind(BindBankCardDto newData);
+	/**
+	 * 绑定新的银行卡
+	 *
+	 * @param newData
+	 * @return
+	 */
+	boolean addBind(BindBankCardDto newData);
 
-    /**
-     * 解绑银行卡
-     *
-     * @param newData
-     * @return
-     */
-    boolean unBind(BindBankCardDto data);
+	/**
+	 * 解绑银行卡
+	 *
+	 * @param newData
+	 * @return
+	 */
+	boolean unBind(BindBankCardDto data);
+
+	/**
+	 * 绑定的卡号是否重复
+	 * @param bankNo 银行卡号 
+	 * @param accountId
+	 * @return
+	 */
+	boolean existsBankNo(String bankNo, Long accountId, Long firmId);
 
 }
