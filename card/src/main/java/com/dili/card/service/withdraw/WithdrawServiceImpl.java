@@ -73,9 +73,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         withdrawRequest.setFees(this.createFees(fundRequestDto));
         withdrawRequest.setChannelAccount(fundRequestDto.getChannelAccount());
         TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
-        //取款成功后修改业务单状态、存储流水
-        SerialDto serialDto = this.createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
-        this.handleSerialAfterCommitWithdraw(serialDto, withdrawResponse);
+        this.handleSerialAfterCommitWithdraw(fundRequestDto,businessRecord, withdrawResponse);
         return businessRecord.getSerialNo();
     }
 
@@ -84,7 +82,9 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
      * @author miaoguoxin
      * @date 2021/1/14
      */
-    protected void handleSerialAfterCommitWithdraw(SerialDto serialDto, TradeResponseDto withdrawResponse) {
+    protected void handleSerialAfterCommitWithdraw(FundRequestDto fundRequestDto,BusinessRecordDo businessRecord,TradeResponseDto withdrawResponse) {
+        //取款成功后修改业务单状态、存储流水
+        SerialDto serialDto = this.createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
         serialService.handleSuccess(serialDto);
     }
 

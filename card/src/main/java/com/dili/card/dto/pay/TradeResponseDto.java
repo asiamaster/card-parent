@@ -38,6 +38,9 @@ public class TradeResponseDto {
 	/** 交易号 */
 	private String tradeId;
 
+	/**圈提状态 {@link com.dili.card.type.BankWithdrawState}*/
+	private Integer state;
+
 	/**
 	 * 添加一个空资金项（有些地方没有手续费的时候需要加）
 	 *
@@ -76,6 +79,14 @@ public class TradeResponseDto {
 			feeItemDto.setAmount(amount);
 			this.streams.add(feeItemDto);
 		}
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
 	}
 
 	public Long getAccountId() {

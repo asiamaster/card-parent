@@ -1,5 +1,6 @@
 package com.dili.card.service.withdraw;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import com.dili.card.common.constant.CacheKey;
 import com.dili.card.dto.FundRequestDto;
@@ -10,6 +11,7 @@ import com.dili.card.dto.pay.FeeItemDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.type.BankWithdrawState;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.PublicBizType;
@@ -18,9 +20,12 @@ import com.dili.card.type.TradeType;
 import com.dili.card.util.AssertUtils;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.ss.redis.service.RedisUtil;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -84,6 +89,10 @@ public class BankWithdrawServiceImpl extends WithdrawServiceImpl {
         if (fundRequestDto.getServiceCost() == 0L) {//特殊处理为0时记录
             FeeItemDto feeItem = new FeeItemDto();
             feeItem.setType(FeeType.SERVICE.getCode());
+            List<FeeItemDto> streams = withdrawResponse.getStreams();
+            if (CollectionUtil.isEmpty(streams)) {
+                withdrawResponse.setStreams(new ArrayList<>());
+            }
             withdrawResponse.getStreams().add(feeItem);
         }
         return serialService.createAccountSerialWithFund(businessRecord, withdrawResponse, (serialRecord, feeType) -> {
@@ -99,11 +108,21 @@ public class BankWithdrawServiceImpl extends WithdrawServiceImpl {
     }
 
     @Override
-    protected void handleSerialAfterCommitWithdraw(SerialDto serialDto, TradeResponseDto withdrawResponse) {
-        serialService.handleProcessing(serialDto);
-        //缓存处理中的圈提，用于后续回调
-        redisUtil.set(CacheKey.BANK_WITHDRAW_PROCESSING_SERIAL_PREFIX + serialDto.getSerialNo(),
-                JSON.toJSONString(serialDto), 30L, TimeUnit.DAYS);
+    protected void handleSerialAfterCommitWithdraw(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
+        //以防空异常，默认成功
+        int payState = NumberUtils.toInt(withdrawResponse.getState() + "", BankWithdrawState.SUCCESS.getCode());
+        if (payState == BankWithdrawState.SUCCESS.getCode()) {
+            super.handleSerialAfterCommitWithdraw(fundRequestDto, businessRecord, withdrawResponse);
+        } else if (payState == BankWithdrawState.HANDING.getCode()) {
+            SerialDto serialDto = this.createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
+            serialService.handleProcessing(serialDto);
+            //缓存处理中的圈提，用于后续回调
+            redisUtil.set(CacheKey.BANK_WITHDRAW_PROCESSING_SERIAL_PREFIX + serialDto.getSerialNo(),
+                    JSON.toJSONString(serialDto), 30L, TimeUnit.DAYS);
+        } else {
+            throw new CardAppBizException("圈提处理失败！");
+        }
+
     }
 
     @Override
