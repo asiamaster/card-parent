@@ -95,14 +95,16 @@ public class CustomerServiceImpl implements ICustomerService {
 		clist.forEach(c -> {
 			List<String> subTypeList = new ArrayList<String>();
 			for (CharacterType ctype : c.getCharacterTypeList()) {
-				if (StringUtils.isBlank(ctype.getSubType())) {
-					// 客户子类型允许为空
+				if (StringUtils.isBlank(ctype.getCharacterType()) || StringUtils.isBlank(ctype.getSubType())) {
+					// 客户子类型允许为空,  部分数据没有角色
+					subTypeMap.put(c.getId(), "");
 					continue;
 				}
 				if(CollectionUtils.isEmpty(subTypeDD)) {
 					continue;
 				}
 				for (DataDictionaryValue dd : subTypeDD) {
+//					System.out.println(c.getId()+"="+ctype.getCharacterType()+"="+ctype.getSubType()+"="+dd.getDdCode()+"="+dd.getCode());
 					if (ctype.getCharacterType().equals(dd.getDdCode()) && ctype.getSubType().equals(dd.getCode())) {
 						subTypeList.add(dd.getName());
 						break;
