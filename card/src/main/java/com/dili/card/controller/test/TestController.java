@@ -15,6 +15,12 @@ import com.dili.card.service.ITypeMarketService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 
+/**
+ * @description： 测试代码
+ *          
+ * @author     ：WangBo
+ * @time       ：2021年1月18日上午10:12:06
+ */
 @Controller
 @RequestMapping(value = "/test")
 public class TestController implements IControllerHandler  {
@@ -27,6 +33,8 @@ public class TestController implements IControllerHandler  {
 	
 	/**
 	 * http://card.diligrp.com:8386/test/getMarket.action CARD_INCOME ACCOUNT
+	 * 测试代码 
+	 * @return
 	 */
 	@RequestMapping(value = "/getMarket.action")
 	@ResponseBody
