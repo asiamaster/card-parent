@@ -127,8 +127,8 @@ public class OpenCardController implements IControllerHandler {
         UserTicket userTicket = getUserTicket();
   		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
   		if(userTicket.getFirmId() == FirmIdConstant.SY) {
- 			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
- 			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
+// 			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
+// 			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
  		}
 		
 		return BaseOutput.successData(openCostFee);
