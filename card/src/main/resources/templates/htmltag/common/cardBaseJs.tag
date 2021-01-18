@@ -39,6 +39,7 @@
      * @returns
      */
     function readPasswordKeyboardAsync() {
+    	alert(callbackObj);
         if (typeof (callbackObj) == "undefined") return;
         callbackObj.readPasswordKeyboardAsync();
     }

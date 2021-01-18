@@ -2,10 +2,35 @@
 	/**
 	 * 初始化
 	 */
-	$(() => {
-
+	$(function () {
+		let options = {
+		    	id: "bankCardTable",
+		    	uniqueId: "id",
+		        url: "${contextPath}/bindBankCard/queryList.action",
+		        sortName: "create_time",
+		        modalName: "绑定卡列表",
+		        method: "get"
+		};
+		$.table.init(options);
 	});
 
+	// 连接密码键盘调整密码
+    function readPwd(){
+    	CefSharp.BindObjectAsync("callbackObj");
+        callbackObj.readPasswordKeyboardAsync();
+    }
+    
+    // 该方法名为固定，C端回调
+    function pswClientHandler(data){
+        var json = JSON.parse(data);
+        if (json.code == 0) {
+             $('#password').val(json.data);
+        } else {
+            bs4pop.alert(json.message, {width:'350px',type: "error"});
+            return false;
+        }
+    }
+    
     /**
 	 * 授权绑定,密码验证
 	 */
@@ -34,7 +59,7 @@
                         success: function (result) {
                             if (result.success) {
                                 // 已绑定银行卡列表数据
-                                bindBankCardTable();
+                            	refreshTable();
                                 $("#bankCardTableDiv").show();
                                 return true;
                             } else {
@@ -90,17 +115,8 @@
 	/**
 	 * 已绑定的银行卡列表
 	 */
-	function bindBankCardTable(){
-		let accountId = $("#accountId").val();
-		let options = {
-		    	id: "bankCardTable",
-		    	uniqueId: "id",
-		        url: "${contextPath}/bindBankCard/queryList.action",
-		        sortName: "create_time",
-		        modalName: "绑定卡列表",
-		        method: "get"
-		};
-		$.table.init(options);
+	function refreshTable(){
+		$.table.refresh();
 	}
 
 
@@ -114,7 +130,6 @@
              getCardCustomerInfo(cardNo);
          }
      });
-
 
 	/**
 	 * 读卡号
@@ -131,11 +146,12 @@
             return false;
         }
         $("#cardNo").val(cardNo);
-        getCardCustomerInfo(cardNo)
+        getCardCustomerInfo(cardNo);
     }
 
     // 获取园区卡号的用户信息
     function getCardCustomerInfo(cardNo){
+    	$("#bankCardTableDiv").hide();
         $.ajax({
             type: 'get',
             url: '/bindBankCard/queryCard.action',
@@ -149,6 +165,7 @@
 	                localStorage.customerCode = res.data.cardInfo.customerCode;
 	                localStorage.customerName = res.data.cardInfo.customerName;
 	                localStorage.cardNo = res.data.cardInfo.cardNo;
+	                $('#accountId').val(res.data.cardInfo.accountId);
 	                $('#authBindBtn').show();
 	                $('#cardInfoDiv').html(bui.util.HTMLDecode(template('customerInfoTmpl', res.data.cardInfo)));
             	}else{
@@ -167,30 +184,10 @@
     
     // 解绑银行卡
     function unBind(id) {
-    	 alert(id);
     	 var url = "${contextPath}/bindBankCard/unBind.action";
     	 var data={id:id};
 	   	 $.operate.post(url, data, function (){
 	 	   $.table.refresh();
 	   	 });
-//        $.ajax({
-//            type: 'post',
-//            url: '${contextPath}/bindBankCard/unBind.action',
-//            data: {id:id},
-//            async: false,
-//            dataType: "json",
-//            success: function (res) {
-//               if(res.success){
-//            	   bs4pop.alert("操作成功", {type: 'info'});
-//            	   $.table.refresh();
-//               }else{
-//            	   bs4pop.alert(res.message, {type: 'error'});
-//               }
-//            },
-//            error: function (error) {
-//                $('#bankNamePersonal').val('');
-//                $.modal.alertWarning(error);
-//            }
-//        })
     }
 </script>

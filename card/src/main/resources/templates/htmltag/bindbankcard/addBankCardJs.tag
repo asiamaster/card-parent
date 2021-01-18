@@ -98,6 +98,11 @@
 
     // 获取银行卡名称
     function getBankInfo(cardNo) {
+    	let bankAccountType = $('#bankAccountType').val();
+    	if(bankAccountType == 2){
+    		// 对公不需要根据卡号查询银行
+    		return;
+    	}
         $.ajax({
             type: 'get',
             url: '${contextPath}/bindBankCard/getBankInfo.action?cardNo='+ cardNo,
