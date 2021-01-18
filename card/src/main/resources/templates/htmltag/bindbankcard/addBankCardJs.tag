@@ -84,7 +84,7 @@
 
     // 输入银行卡并获取银行卡名称
     $('#bankNo').on('keydown', function (event) {
-        if ( $(this).val().length > 14 &&  event.keyCode  == 13) {
+        if ($(this).val().length > 14 &&  event.keyCode  == 13) {
             getBankInfo($(this).val());
         }
     })
@@ -98,8 +98,14 @@
             async: false,
             dataType: "json",
             success: function (res) {
-                $('#bankNamePersonal').val(res.data.channelName);
-                $('#bankType').val(res.data.channelId);
+            	if(res.success){
+            		$('#bankNamePersonal').val(res.data.channelName);
+                    $('#bankType').val(res.data.channelId);
+                }else{
+                    bs4pop.alert(res.message, {type: 'error'});
+                    return;
+                }
+                
             },
             error: function (error) {
                 $('#bankNamePersonal').val('');
