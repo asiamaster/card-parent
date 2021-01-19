@@ -203,5 +203,15 @@ public class AccountCycleManagementController implements IControllerHandler {
 		PageOutput<List<BusinessRecordResponseDto>> lists = serialService.queryPage(queryDto);
 		return successPage(lists);
 	}
-
+	
+	/**
+	 * 打印
+	 */
+	@PostMapping("/reverse/page.action")
+	@ResponseBody
+	public BaseOutput<AccountCycleDto> print(@RequestBody AccountCycleDto accountCycleDto) {
+		log.info("结帐申请打印*****{}", JSONObject.toJSONString(accountCycleDto));
+		return BaseOutput.successData(iAccountCycleService.detail(accountCycleDto.getId()));
+	}
+	
 }

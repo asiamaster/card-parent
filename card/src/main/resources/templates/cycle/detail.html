@@ -43,6 +43,7 @@
 						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="25">
 						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="26">
 						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="20">
+						<input type="hidden" class="form-control" id="show_print_data" />
 		<div id="baseInfo" >
 				<div class="row row-cols-2" id="baseContent">
 					<div class="form-group col">
@@ -123,10 +124,11 @@
 					class="btn btn-primary px-5" onclick="applySettlement()">申请结账</button>
 			<% } %>
 			<% else if(settled == 2){ %>
-			<button id="back"
-				type="button" class="btn btn-secondary px-5" onclick="backList()">返回</button>
-			<button id="back"
-				type="button" class="btn btn-secondary px-5" onclick="backList()">打印</button>
+				<button id="back" type="button" class="btn btn-secondary px-5" onclick="backList()">返回</button>
+				
+				<#resource code="cycle_print_btn">
+					<button id="printBtn" type="button" class="btn btn-secondary px-5" onclick="printCycleData()">打印</button>
+				<#resource code="cycle_print_btn">
 			<% }%>
 			<input id="cycleState" type="hidden" value="${detail.state!}">
 		</div>
@@ -503,13 +505,40 @@
 
 
 	function centerModals() {
-		　　$('#settleCycle').each(function(i) {
-		　　　　var $clone = $(this).clone().css('display','block').appendTo('body');
-		　　　　var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 2);
-		　　　　top = top > 0 ? top : 0;
-		　　　　$clone.remove();
-		　　　　$(this).find('.modal-content').css("margin-top", top);
-		　　});
-		};
+	　　$('#settleCycle').each(function(i) {
+	　　　　var $clone = $(this).clone().css('display','block').appendTo('body');
+	　　　　var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 2);
+	　　　　top = top > 0 ? top : 0;
+	　　　　$clone.remove();
+	　　　　$(this).find('.modal-content').css("margin-top", top);
+	　　});
+	};
 
+	// 结帐申请打印
+	function printCycleData(){
+		var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+   	 	if (id.length == 0) {
+            $.modal.alertWarning("请至少选择一条记录");
+            return;
+        }
+   	 	var url = '${contextPath}/contract/print.action?id=' + id;
+    	setTimeout('printData($("#show_print_data").val(), "MoneyContractsDocument")',500);
+    	$("#show_print_data").val("");
+		$.ajax({
+    	    type: "GET",
+    	    url:url,
+    	    contentType: "application/x-www-form-urlencoded",
+    	    error: function(result) {
+    	    	$.modal.alertError(result.message);
+    	    },
+    	    success: function(result) {
+    	    	if(result.code=="200"){
+    	    		$("#show_print_data").val(JSON.stringify(result.data));
+    	    	}else{
+    	    		$.modal.alertError(result.message);
+    	    	}
+    	    }
+    	});
+	}
+	
 </script>
