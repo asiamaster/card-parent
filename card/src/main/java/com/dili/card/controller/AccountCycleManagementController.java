@@ -207,7 +207,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	/**
 	 * 打印
 	 */
-	@PostMapping("/reverse/page.action")
+	@PostMapping("/print.action")
 	@ResponseBody
 	public BaseOutput<AccountCycleDto> print(@RequestBody AccountCycleDto accountCycleDto) {
 		log.info("结帐申请打印*****{}", JSONObject.toJSONString(accountCycleDto));
