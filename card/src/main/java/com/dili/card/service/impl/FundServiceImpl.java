@@ -42,8 +42,8 @@ import com.dili.card.type.CardType;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateState;
+import com.dili.card.type.OperateType;
 import com.dili.card.type.PayPipelineType;
-import com.dili.card.type.PublicBizType;
 import com.dili.ss.domain.PageOutput;
 import com.dili.ss.redis.service.RedisUtil;
 import io.seata.spring.annotation.GlobalTransactional;
@@ -103,7 +103,7 @@ public class FundServiceImpl implements IFundService {
         //账务周期
         AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(requestDto.getOpId());
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, accountCard, record -> {
-            record.setType(PublicBizType.FROZEN_FUND.getCode());
+            record.setType(OperateType.FROZEN_FUND.getCode());
             record.setAmount(requestDto.getAmount());
             record.setNotes(requestDto.getMark());
         }, accountCycle.getCycleNo());
@@ -253,7 +253,7 @@ public class FundServiceImpl implements IFundService {
         record.setOperatorId(unfreezeFundDto.getOpId());
         record.setOperatorName(unfreezeFundDto.getOpName());
         record.setOperatorNo(unfreezeFundDto.getOpNo());
-        record.setType(PublicBizType.UNFROZEN_FUND.getCode());
+        record.setType(OperateType.UNFROZEN_FUND.getCode());
         record.setFundItem(FundItem.MANDATORY_UNFREEZE_FUND.getCode());
         record.setFundItemName(FundItem.MANDATORY_UNFREEZE_FUND.getName());
         record.setOperateTime(LocalDateTime.now());

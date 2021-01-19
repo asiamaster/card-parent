@@ -665,7 +665,7 @@ public class BusinessRecordDo implements Serializable {
 	 * @return
 	 */
 	public String getTypeName() {
-		return this.type != null ? PublicBizType.getName(this.type) : "";
+		return this.type != null ? OperateType.getName(this.type) : "";
 	}
 
 	/**

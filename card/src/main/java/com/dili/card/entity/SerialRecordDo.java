@@ -1,15 +1,16 @@
 package com.dili.card.entity;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.type.ActionType;
-import com.dili.card.type.PublicBizType;
+import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * 业务端账户流水
@@ -316,7 +317,7 @@ public class SerialRecordDo implements Serializable {
 		if (this.type == null) {
 			return "";
 		}
-		String name = PublicBizType.getName(this.type);
+		String name = OperateType.getName(this.type);
 		return name;
 	}
 	/**

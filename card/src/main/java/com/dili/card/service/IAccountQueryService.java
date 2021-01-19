@@ -113,6 +113,13 @@ public interface IAccountQueryService {
      * @date 2020/8/6
      */
     UserAccountCardResponseDto getForUnLockCard(UserAccountSingleQueryDto query);
+    
+    /**
+     * 重置密码查询操作,允许锁定状态，排除退卡、挂失、账户禁用
+     * @author miaoguoxin
+     * @date 2020/8/6
+     */
+    UserAccountCardResponseDto getForResetLoginPassword(UserAccountSingleQueryDto query);
 
     /**
      * 查询主卡的关联卡列表
