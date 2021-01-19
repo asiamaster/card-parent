@@ -149,8 +149,8 @@ public class OpenCardController implements IControllerHandler {
 		// 设置有主子商户的市场的收益帐户,feign调用支付接口时通过PayServiceFeignConfig将该值替换原mchId
 		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
 		if(user.getFirmId() == FirmIdConstant.SY) {
-			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
-			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
+//			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
+//			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
 		}
 		// 操作日志
 		businessLogService.saveLog(OperateType.ACCOUNT_TRANSACT, user, "客户姓名:" + openCardInfo.getCustomerName(),
