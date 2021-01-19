@@ -66,4 +66,12 @@
         }
         bui.util.doExport("grid", "queryForm");
     }
+    
+
+    function noteFormatter(value, row, index, field) {
+        if (value == null || value == ""){
+            return value;
+        }
+        return '<span data-toggle="tooltip" data-placement="top" title="'+value+'">'+value+'</span>'
+    }
 </script>

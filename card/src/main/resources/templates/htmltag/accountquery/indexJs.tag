@@ -68,4 +68,11 @@
         }
         $("#cardNo").val(cardNo)
     }
+    
+    function noteFormatter(value, row, index, field) {
+        if ($.common.isEmpty(value)){
+            return value;
+        }
+        return '<span data-toggle="tooltip" data-placement="top" title="" data-original-title="'+value+'">'+value+'</span>'
+    }
 </script>
