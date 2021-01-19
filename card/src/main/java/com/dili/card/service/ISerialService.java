@@ -158,4 +158,11 @@ public interface ISerialService {
     * @date 2021/1/9
     */
     Long countOperateAmount(SerialQueryDto serialQueryDto);
+
+    /**
+    * 根据流水号查询
+    * @author miaoguoxin
+    * @date 2021/1/18
+    */
+    BusinessRecordDo getBySerialNo(String serialNo);
 }

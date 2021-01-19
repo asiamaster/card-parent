@@ -6,6 +6,7 @@ import com.dili.card.dto.UnfreezeFundDto;
 import com.dili.card.dto.pay.FreezeFundRecordDto;
 import com.dili.card.dto.pay.FreezeFundRecordParam;
 import com.dili.card.dto.pay.PipelineRecordResponseDto;
+import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.ss.domain.PageOutput;
 
 import java.util.List;
@@ -48,4 +49,11 @@ public interface IFundService {
      * @date 2020/12/24
      */
     PageOutput<List<PipelineRecordResponseDto>> bankWithdrawPage(PipelineRecordQueryDto param);
+
+    /**
+    * 银行圈提回调
+    * @author miaoguoxin
+    * @date 2021/1/18
+    */
+    void handleBankWithdrawCallback(TradeResponseDto tradeResponseDto);
 }

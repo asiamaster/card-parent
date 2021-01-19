@@ -10,7 +10,9 @@ import com.dili.card.dto.pay.ChannelAccountRequestDto;
 import com.dili.card.dto.pay.FeeItemDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
+import com.dili.card.entity.bo.MessageBo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.exception.ErrorCode;
 import com.dili.card.type.BankWithdrawState;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
@@ -108,21 +110,24 @@ public class BankWithdrawServiceImpl extends WithdrawServiceImpl {
     }
 
     @Override
-    protected void handleSerialAfterCommitWithdraw(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
+    protected MessageBo<String> handleSerialAfterCommitWithdraw(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
         //以防空异常，默认成功
         int payState = NumberUtils.toInt(withdrawResponse.getState() + "", BankWithdrawState.SUCCESS.getCode());
         if (payState == BankWithdrawState.SUCCESS.getCode()) {
-            super.handleSerialAfterCommitWithdraw(fundRequestDto, businessRecord, withdrawResponse);
-        } else if (payState == BankWithdrawState.HANDING.getCode()) {
+            return super.handleSerialAfterCommitWithdraw(fundRequestDto, businessRecord, withdrawResponse);
+        }
+        if (payState == BankWithdrawState.HANDING.getCode()) {
             SerialDto serialDto = this.createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
             serialService.handleProcessing(serialDto);
             //缓存处理中的圈提，用于后续回调
             redisUtil.set(CacheKey.BANK_WITHDRAW_PROCESSING_SERIAL_PREFIX + serialDto.getSerialNo(),
                     JSON.toJSONString(serialDto), 30L, TimeUnit.DAYS);
-        } else {
-            throw new CardAppBizException("圈提处理失败！");
         }
-
+        if (payState == BankWithdrawState.FAILED.getCode()) {
+            SerialDto serialDto = this.createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
+            serialService.handleFailure(serialDto);
+        }
+        return MessageBo.fail(ErrorCode.GENERAL_CODE, withdrawResponse.getMessage(), businessRecord.getSerialNo());
     }
 
     @Override

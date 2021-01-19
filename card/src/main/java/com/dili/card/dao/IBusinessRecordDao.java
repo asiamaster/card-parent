@@ -71,4 +71,11 @@ public interface IBusinessRecordDao {
 	 * @return
 	 */
 	BusinessRecordDo getBySerialNo(String serialNo);
+
+	/**
+	* 锁定查询
+	* @author miaoguoxin
+	* @date 2021/1/18
+	*/
+	BusinessRecordDo getBySerialNoLock(String serialNo);
 }

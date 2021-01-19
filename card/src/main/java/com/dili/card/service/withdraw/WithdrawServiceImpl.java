@@ -12,6 +12,7 @@ import com.dili.card.dto.pay.FeeItemDto;
 import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
+import com.dili.card.entity.bo.MessageBo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
@@ -50,8 +51,8 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
     @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public String withdraw(FundRequestDto fundRequestDto) {
-        validate(fundRequestDto);//参数验证
+    public MessageBo<String> withdraw(FundRequestDto fundRequestDto) {
+        this.validate(fundRequestDto);//参数验证
         UserAccountCardResponseDto accountCard = this.check(fundRequestDto);//验证卡状态、余额等
         BusinessRecordDo businessRecord = createBusinessRecord(fundRequestDto, accountCard);
         //构建创建交易参数
@@ -73,8 +74,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         withdrawRequest.setFees(this.createFees(fundRequestDto));
         withdrawRequest.setChannelAccount(fundRequestDto.getChannelAccount());
         TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
-        this.handleSerialAfterCommitWithdraw(fundRequestDto,businessRecord, withdrawResponse);
-        return businessRecord.getSerialNo();
+        return this.handleSerialAfterCommitWithdraw(fundRequestDto, businessRecord, withdrawResponse);
     }
 
     /**
@@ -82,10 +82,11 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
      * @author miaoguoxin
      * @date 2021/1/14
      */
-    protected void handleSerialAfterCommitWithdraw(FundRequestDto fundRequestDto,BusinessRecordDo businessRecord,TradeResponseDto withdrawResponse) {
+    protected MessageBo<String> handleSerialAfterCommitWithdraw(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
         //取款成功后修改业务单状态、存储流水
         SerialDto serialDto = this.createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
         serialService.handleSuccess(serialDto);
+        return MessageBo.success(businessRecord.getSerialNo());
     }
 
 

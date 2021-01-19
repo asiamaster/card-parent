@@ -2,6 +2,7 @@ package com.dili.card.service.withdraw;
 
 import cn.hutool.core.collection.CollUtil;
 import com.dili.card.dto.FundRequestDto;
+import com.dili.card.entity.bo.MessageBo;
 import com.dili.card.exception.CardAppBizException;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +39,7 @@ public class WithdrawDispatcher {
      * 提现分发 返回 操作流水号
      * @param fundRequestDto
      */
-    public String dispatch(FundRequestDto fundRequestDto) {
+    public MessageBo<String> dispatch(FundRequestDto fundRequestDto) {
         if (fundRequestDto.getTradeChannel() == null) {
             throw new CardAppBizException("", "请选择提款方式");
         }

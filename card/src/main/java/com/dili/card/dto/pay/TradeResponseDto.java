@@ -37,9 +37,21 @@ public class TradeResponseDto {
 	private List<FeeItemDto> streams;
 	/** 交易号 */
 	private String tradeId;
+	/**外部流水号*/
+	private String serialNo;
+	/**提示消息*/
+	private String message;
 
 	/**圈提状态 {@link com.dili.card.type.BankWithdrawState}*/
 	private Integer state;
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 	/**
 	 * 添加一个空资金项（有些地方没有手续费的时候需要加）
@@ -79,6 +91,14 @@ public class TradeResponseDto {
 			feeItemDto.setAmount(amount);
 			this.streams.add(feeItemDto);
 		}
+	}
+
+	public String getSerialNo() {
+		return serialNo;
+	}
+
+	public void setSerialNo(String serialNo) {
+		this.serialNo = serialNo;
 	}
 
 	public Integer getState() {

@@ -340,6 +340,11 @@ public class SerialServiceImpl implements ISerialService {
         return serialRecordRpcResolver.countOperateAmount(serialQueryDto);
     }
 
+    @Override
+    public BusinessRecordDo getBySerialNo(String serialNo) {
+        return businessRecordDao.getBySerialNo(serialNo);
+    }
+
     private void setCardNosWhenIncludeSlave(SerialQueryDto serialQueryDto) {
         Integer includeSlave = serialQueryDto.getIncludeSlave();
         String cardNo = serialQueryDto.getCardNo();

@@ -31,7 +31,7 @@ import java.util.List;
  * @author ：WangBo
  * @time ：2020年6月22日下午5:52:52
  */
-@FeignClient(value = "pay-service", configuration = PayServiceFeignConfig.class)
+@FeignClient(value = "pay-service", configuration = PayServiceFeignConfig.class, url = "${payService.url:}")
 public interface PayRpc {
 
     /**
@@ -146,29 +146,29 @@ public interface PayRpc {
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.fund.service:customer", method = RequestMethod.POST)
     BaseOutput<CustomerBalanceResponseDto> getAccountFundByCustomerId(FundAccountDto type);
-    
-    
+
+
     ///
     ///支付与银行接口相关
     ///
-    
+
     /**
      * 根据银行卡号查询银行信息
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.channel.service:bankCard", method = RequestMethod.POST)
     BaseOutput<PayBankDto> getBankInfo(PayBankDto payBankDto);
-    
-    
+
+
     /**
      * 查询市场支持的银行渠道
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.channel.service:listChannels", method = RequestMethod.POST)
     BaseOutput<List<PayBankDto>> getBankChannels(PayBankDto payBankDto);
-    
+
     /**
      * 根据关键字搜索开户行
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.channel.service:listBanks", method = RequestMethod.POST)
     BaseOutput<List<PayBankDto>> searchOpeningBank(PayBankDto payBankDto);
-    
+
 }

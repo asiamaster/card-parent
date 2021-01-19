@@ -1,18 +1,10 @@
 package com.dili.card.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.constant.CacheKey;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dto.FundRequestDto;
@@ -44,6 +36,7 @@ import com.dili.card.service.ISerialService;
 import com.dili.card.service.recharge.AbstractRechargeManager;
 import com.dili.card.service.recharge.RechargeFactory;
 import com.dili.card.type.ActionType;
+import com.dili.card.type.BankWithdrawState;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CardType;
 import com.dili.card.type.FeeType;
@@ -52,9 +45,20 @@ import com.dili.card.type.OperateState;
 import com.dili.card.type.PayPipelineType;
 import com.dili.card.type.PublicBizType;
 import com.dili.ss.domain.PageOutput;
-
-import cn.hutool.core.date.DateUtil;
+import com.dili.ss.redis.service.RedisUtil;
 import io.seata.spring.annotation.GlobalTransactional;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 资金操作service实现类
@@ -63,9 +67,11 @@ import io.seata.spring.annotation.GlobalTransactional;
  */
 @Service
 public class FundServiceImpl implements IFundService {
-
-	@Resource
-	private ICustomerService customerService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(FundServiceImpl.class);
+    @Autowired
+    private RedisUtil redisUtil;
+    @Resource
+    private ICustomerService customerService;
     @Resource
     private ISerialService serialService;
     @Autowired
@@ -79,7 +85,7 @@ public class FundServiceImpl implements IFundService {
     @Autowired
     private RechargeFactory rechargeFactory;
     @Autowired
-	private IAccountCycleService accountCycleService;
+    private IAccountCycleService accountCycleService;
 
     @Override
     @GlobalTransactional(rollbackFor = Exception.class)
@@ -94,7 +100,7 @@ public class FundServiceImpl implements IFundService {
             throw new CardAppBizException("可用余额不足");
         }
 
-      //账务周期
+        //账务周期
         AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(requestDto.getOpId());
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, accountCard, record -> {
             record.setType(PublicBizType.FROZEN_FUND.getCode());
@@ -134,16 +140,16 @@ public class FundServiceImpl implements IFundService {
             UnfreezeFundDto dto = new UnfreezeFundDto();
             dto.setFrozenId(frozenId);
             FundOpResponseDto payResponse = GenericRpcResolver.resolver(payRpc.unfrozenFund(dto), ServiceName.PAY);
-           
+
             // 保存卡务操作记录
             BusinessRecordDo businessRecord = createBusinessRecord(accountInfo, unfreezeFundDto, payResponse);
             serialService.saveBusinessRecord(businessRecord);
-            
+
             // 构建全局操作记录
             SerialRecordDo serialRecord = buildSerialRecord(accountInfo, unfreezeFundDto, payResponse);
             serialList.add(serialRecord);
         }
-        
+
         SerialDto serialDto = new SerialDto();
         // 保存全局操作记录
         serialDto.setSerialRecordList(serialList);
@@ -174,6 +180,40 @@ public class FundServiceImpl implements IFundService {
             dto.setOperatorName(param.getOpName());
         }
         return result;
+    }
+
+    /**
+    *  由于支付那边回调都是相同结果，并且本地库只涉及更新操作，
+     *  因此不需要考虑幂等性问题
+    * @author miaoguoxin
+    * @date 2021/1/18
+    */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void handleBankWithdrawCallback(TradeResponseDto tradeResponseDto) {
+        //支付系统存储的流水号有前缀，这里需要截掉
+        String realSerialNo = StrUtil.removePrefix(tradeResponseDto.getSerialNo(), Constant.PAY_SERIAL_NO_PREFIX);
+        String key = CacheKey.BANK_WITHDRAW_PROCESSING_SERIAL_PREFIX + realSerialNo;
+        try {
+            SerialDto serialDto = redisUtil.get(key, SerialDto.class);
+            if (serialDto == null) {
+                LOGGER.info("圈提回调redis找不到对应流水号:{}，可能已经过期，从数据库读取", realSerialNo);
+                BusinessRecordDo businessRecordDo = serialService.getBySerialNo(realSerialNo);
+                if (businessRecordDo == null) {
+                    LOGGER.info("圈提回调数据库找不到对应流水号:{}，可能是非法请求", realSerialNo);
+                    return;
+                }
+                serialDto = JSON.parseObject(businessRecordDo.getAttach(), SerialDto.class);
+            }
+            if (BankWithdrawState.FAILED.getCode() == tradeResponseDto.getState()){
+                LOGGER.info("圈提回调处理失败，对应流水号:{}", realSerialNo);
+                serialService.handleFailure(serialDto);
+            } else {
+                serialService.handleSuccess(serialDto);
+            }
+        } finally {
+            redisUtil.remove(key);
+        }
     }
 
     @Override
@@ -237,8 +277,8 @@ public class FundServiceImpl implements IFundService {
      * @return
      */
     private BusinessRecordDo createBusinessRecord(UserAccountCardResponseDto accountInfo,
-            UnfreezeFundDto unfreezeFundDto, FundOpResponseDto payResponse) {
-    	BusinessRecordDo businessRecord = new BusinessRecordDo();
+                                                  UnfreezeFundDto unfreezeFundDto, FundOpResponseDto payResponse) {
+        BusinessRecordDo businessRecord = new BusinessRecordDo();
         //编号、卡号、账户id
         businessRecord.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
         businessRecord.setAccountId(accountInfo.getAccountId());
@@ -251,7 +291,7 @@ public class FundServiceImpl implements IFundService {
         businessRecord.setHoldName(accountInfo.getHoldName());
         businessRecord.setNotes(unfreezeFundDto.getRemark());
         //账务周期
-      //账务周期
+        //账务周期
         AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(unfreezeFundDto.getOpId());
         businessRecord.setCycleNo(accountCycle.getCycleNo());
         //操作员信息
@@ -265,11 +305,11 @@ public class FundServiceImpl implements IFundService {
         businessRecord.setOperateTime(localDateTime);
         businessRecord.setModifyTime(localDateTime);
         businessRecord.setVersion(1);
-        
+
         return businessRecord;
     }
-    
-    
+
+
     private String serializeFrozenExtra(FundRequestDto requestDto) {
         JSONObject extra = new JSONObject();
         extra.put(Constant.OP_NAME, requestDto.getOpName());
