@@ -58,6 +58,7 @@
                         data: param,
                         success: function (result) {
                             if (result.success) {
+                            	$('#authBindBtn').hide();
                                 // 已绑定银行卡列表数据
                             	refreshTable();
                                 $("#bankCardTableDiv").show();

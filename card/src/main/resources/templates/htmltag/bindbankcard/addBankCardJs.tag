@@ -24,9 +24,8 @@
         let data = $.extend(customerInfo, $.common.formToJSON(formId));
         $.operate.post(url, data, function(result){
         	if(result.success){
-        		bs4pop.alert("操作成功", {type: 'info'});
+        		parent.bs4pop.alert("操作成功", {type: 'info'});
             }else{
-                bs4pop.alert(result.message, {type: 'error'});
                 return;
             }
         });

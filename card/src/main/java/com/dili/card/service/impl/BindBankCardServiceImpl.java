@@ -88,7 +88,7 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 		queryParam.setBankNo(bankNo);
 		queryParam.setFirmId(firmId);
 		List<BindBankCardDto> list = bankCardDao.selectList(queryParam);
-		if (list != null && list.size() > 1) {
+		if (list != null && list.size() >= 1) {
 			throw new CardAppBizException("该用户已绑定了相同的卡号");
 		}
 		return true;

@@ -77,6 +77,10 @@ public class CustomerServiceImpl implements ICustomerService {
 		
 		List<String> subTypeNameList = Lists.newArrayList();
 		typeList.forEach(characterType -> {
+			if(StringUtils.isBlank(characterType.getCharacterType())) {
+				subTypeNameList.add("");
+				return;
+			}
 			for (DataDictionaryValue dd : ddList) {
 				if (characterType.getCharacterType().equals(dd.getDdCode())) {
 					subTypeNameList.add(dd.getName());
