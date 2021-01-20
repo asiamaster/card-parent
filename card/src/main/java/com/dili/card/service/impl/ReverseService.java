@@ -1,5 +1,6 @@
 package com.dili.card.service.impl;
 
+import cn.hutool.core.util.NumberUtil;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dao.IReverseRecordDao;
 import com.dili.card.dto.BusinessRecordResponseDto;
@@ -92,7 +93,6 @@ public class ReverseService implements IReverseService {
         }
         BusinessRecordResponseDto bizSerial = new BusinessRecordResponseDto();
         BeanUtils.copyProperties(businessRecord, bizSerial);
-        //TODO 计算手续费
 
         //查询操作记录
         SerialQueryDto queryDto = new SerialQueryDto();
@@ -100,7 +100,9 @@ public class ReverseService implements IReverseService {
         List<SerialRecordDo> serialRecordDos = serialRecordRpcResolver.getList(queryDto);
         //手续费
         List<SerialRecordResponseDto> feeSerials = this.getFeeSerialRecords(serialRecordDos);
-
+        Long totalFee = this.getTotalFee(feeSerials);
+        //期末要求计算手续费
+        bizSerial.setEndBalance(NumberUtil.sub(bizSerial.getEndBalance(), totalFee).longValue());
         //查询卡账户
         UserAccountSingleQueryDto accountQueryDto = new UserAccountSingleQueryDto();
         accountQueryDto.setAccountId(bizSerial.getAccountId());
