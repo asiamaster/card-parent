@@ -1,18 +1,5 @@
 package com.dili.card.service.impl;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.dili.card.dao.IAccountCycleDetailDao;
 import com.dili.card.dto.AccountCycleDetailDto;
 import com.dili.card.dto.AccountCycleDto;
@@ -26,6 +13,18 @@ import com.dili.card.type.CycleState;
 import com.dili.card.type.CycleStatisticType;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CycleStatisticService implements ICycleStatisticService {
@@ -40,13 +39,13 @@ public class CycleStatisticService implements ICycleStatisticService {
 	@Override
 	public List<AccountCycleDto> statisticList(List<AccountCycleDo> cycles, boolean detail) {
 		if(CollectionUtils.isEmpty(cycles)) {
-			return new ArrayList<AccountCycleDto>();
+			return new ArrayList<>();
 		}
-		
+
 		// 构建账务周期实体
 		List<AccountCycleDto> accountCycleDtos = buildAccountCycleDtoList(cycles);
-		
-		List<Long> cycleNos = accountCycleDtos.stream().map(o -> o.getCycleNo()).collect(Collectors.toList());
+
+		List<Long> cycleNos = accountCycleDtos.stream().map(AccountCycleDto::getCycleNo).collect(Collectors.toList());
 
 		Map<Long, List<CycleStatistcDto>> cycleStatistcs = findCycleStatistcDtoMapByCycleNos(
 				accountCycleDetailDao.statisticCycleBussinessRecord(cycleNos));
@@ -77,7 +76,7 @@ public class CycleStatisticService implements ICycleStatisticService {
 
 	/**
 	 * 账务周期详情构建
-	 * 
+	 *
 	 * @return
 	 */
 	private AccountCycleDetailDto buildCycleDetail(Long cycleNo, List<CycleStatistcDto> cycleStatistcs,

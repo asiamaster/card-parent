@@ -4,80 +4,80 @@
 <mapper namespace="com.dili.card.dao.IAccountCycleDetailDao">
 	<insert id="save">
 		INSERT INTO card_account_cycle_detail (
-			`cycle_no`, 
-			`receive_times`, 
-			`receive_amount`, 
-			`deliver_times`, 
-			`deliver_amount`, 
-			`depo_cash_times`, 
-			`depo_cash_amount`, 
-			`depo_pos_times`, 
-			`depo_pos_amount`, 
+			`cycle_no`,
+			`receive_times`,
+			`receive_amount`,
+			`deliver_times`,
+			`deliver_amount`,
+			`depo_cash_times`,
+			`depo_cash_amount`,
+			`depo_pos_times`,
+			`depo_pos_amount`,
 			 bank_in_times,
 			 bank_in_amount,
 			 bank_out_times,
 			 bank_out_amount,
-			`draw_cash_times`, 
-			`draw_cash_amount`, 
-			`revenue_amount`, 
-			`firm_id`, 
-			`firm_name`, 
-			`create_time`, 
+			`draw_cash_times`,
+			`draw_cash_amount`,
+			`revenue_amount`,
+			`firm_id`,
+			`firm_name`,
+			`create_time`,
 			`modify_time`
 		)
 		VALUES (
-			#{cycleNo}, 
-			#{receiveTimes}, 
-			#{receiveAmount}, 
-			#{deliverTimes}, 
-			#{deliverAmount}, 
-			#{depoCashTimes}, 
-			#{depoCashAmount}, 
-			#{depoPosTimes}, 
+			#{cycleNo},
+			#{receiveTimes},
+			#{receiveAmount},
+			#{deliverTimes},
+			#{deliverAmount},
+			#{depoCashTimes},
+			#{depoCashAmount},
+			#{depoPosTimes},
 			#{depoPosAmount},
-			#{bankInTimes},  
-			#{bankInAmount}, 
-			#{bankOutTimes}, 
+			#{bankInTimes},
+			#{bankInAmount},
+			#{bankOutTimes},
 			#{bankOutAmount},
-			#{drawCashTimes}, 
-			#{drawCashAmount}, 
-			#{revenueAmount}, 
-			#{firmId}, 
-			#{firmName}, 
-			NOW(), 
+			#{drawCashTimes},
+			#{drawCashAmount},
+			#{revenueAmount},
+			#{firmId},
+			#{firmName},
+			NOW(),
 			NOW()
 		)
 	</insert>
-	
+
 	<select id="getById" resultType="com.dili.card.entity.AccountCycleDetailDo">
 		SELECT
-			`id`, 
-			`cycle_no`, 
-			`receive_times`, 
-			`receive_amount`, 
-			`deliver_times`, 
-			`deliver_amount`, 
-			`depo_cash_times`, 
-			`depo_cash_amount`, 
-			`depo_pos_times`, 
-			`depo_pos_amount`, 
+			`id`,
+			`cycle_no`,
+			`receive_times`,
+			`receive_amount`,
+			`deliver_times`,
+			`deliver_amount`,
+			`depo_cash_times`,
+			`depo_cash_amount`,
+			`depo_pos_times`,
+			`depo_pos_amount`,
 			 bank_in_times,
 			 bank_in_amount,
 			 bank_out_times,
 			 bank_out_amount,
-			`draw_cash_times`, 
-			`draw_cash_amount`, 
-			`revenue_amount`, 
-			`firm_id`, 
-			`firm_name`, 
-			`create_time`, 
+			`draw_cash_times`,
+			`draw_cash_amount`,
+			`revenue_amount`,
+			`firm_id`,
+			`firm_name`,
+			`create_time`,
 			`modify_time`
 		FROM
 			card_account_cycle_detail
 		WHERE
 			id = #{id}
 	</select>
-	
+
 	<update id="update">
 		UPDATE card_account_cycle_detail
 	 	<set>
@@ -100,7 +100,7 @@
 		WHERE
 			id = #{id}
 	</update>
-	
+
 
 	<!-- 统计账务周期信息 -->
 	<select id="statisticCycleBussinessRecord" resultType="com.dili.card.dto.CycleStatistcDto">
@@ -109,32 +109,32 @@
  		FROM
  			card_business_record
  		WHERE
- 			`cycle_no` IN 
+ 			`cycle_no` IN
  			<foreach collection ="list" item="cycleNo" separator ="," open="(" close=")">
          		#{cycleNo}
-   	 		</foreach> 
+   	 		</foreach>
    	 	AND type IN (10,11,12,13)
  		GROUP BY type,tradeChannel
- 			
+
  		UNION ALL
- 		
+
  		SELECT
  			cycle_no cycleNo, action AS type,2  AS tradeChannel, COUNT(*) AS times, SUM(amount) AS amount
  		FROM
  			card_user_cash
  		WHERE
- 			`cycle_no` IN 
+ 			`cycle_no` IN
  			<foreach collection ="list" item="cycleNo" separator ="," open="(" close=")">
          		#{cycleNo}
    	 		</foreach>
    	 	AND state != 10
  		GROUP BY type, tradeChannel
 	</select>
-	
+
 	<!-- 统计账务周期信息 -->
 	<select id="statisticReverseByCycleNo" resultType="com.dili.card.dto.CycleStatistcDto">
 		SELECT
-			cycle_no cycleNo, biz_trade_type type,biz_trade_channel AS tradeChannel, COUNT(*) AS times, SUM(amount) AS amount
+			cycle_no cycleNo, biz_type type,biz_trade_channel AS tradeChannel, COUNT(*) AS times, SUM(amount) AS amount
  		FROM
  			card_reverse_record
  		WHERE

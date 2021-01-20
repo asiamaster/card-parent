@@ -28,8 +28,8 @@ public class ReverseRecord implements Serializable {
     private Integer bizTradeChannel;
     /**对应的业务流水号*/
     private String bizSerialNo;
-    /**对应的业务类型，见枚举TradeType*/
-    private Integer bizTradeType;
+    /**对应的业务类型，{@link com.dili.card.type.OperateType}*/
+    private Integer bizType;
     /**冲正金额（区分正负），单位：分*/
     private Long amount;
     /**园区收益变动金额（区分正负），单位：分*/
@@ -115,12 +115,12 @@ public class ReverseRecord implements Serializable {
         this.bizSerialNo = bizSerialNo;
     }
 
-    public Integer getBizTradeType() {
-        return bizTradeType;
+    public Integer getBizType() {
+        return bizType;
     }
 
-    public void setBizTradeType(Integer bizTradeType) {
-        this.bizTradeType = bizTradeType;
+    public void setBizType(Integer bizType) {
+        this.bizType = bizType;
     }
 
     public Long getAmount() {

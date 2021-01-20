@@ -12,8 +12,8 @@ public class ReverseRecordQueryDto extends BaseDto{
     private Long cycleNo;
     /**对应业务号*/
     private String bizSerialNo;
-    /**对应业务类型 {@link com.dili.card.type.TradeType}*/
-    private Integer bizTradeType;
+    /**对应业务类型 {@link com.dili.card.type.OperateType}*/
+    private Integer bizType;
     /**开始时间*/
     private LocalDateTime startDate;
     /**结束时间*/
@@ -35,12 +35,12 @@ public class ReverseRecordQueryDto extends BaseDto{
         this.bizSerialNo = bizSerialNo;
     }
 
-    public Integer getBizTradeType() {
-        return bizTradeType;
+    public Integer getBizType() {
+        return bizType;
     }
 
-    public void setBizTradeType(Integer bizTradeType) {
-        this.bizTradeType = bizTradeType;
+    public void setBizType(Integer bizType) {
+        this.bizType = bizType;
     }
 
     public LocalDateTime getStartDate() {

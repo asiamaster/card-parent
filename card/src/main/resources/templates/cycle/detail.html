@@ -125,10 +125,10 @@
 			<% } %>
 			<% else if(settled == 2){ %>
 				<button id="back" type="button" class="btn btn-secondary px-5" onclick="backList()">返回</button>
-				
+
 				<#resource code="cycle_print_btn">
 					<button id="printBtn" type="button" class="btn btn-secondary px-5" onclick="printCycleData()">打印</button>
-				<#resource code="cycle_print_btn">
+		        </#resource>
 			<% }%>
 			<input id="cycleState" type="hidden" value="${detail.state!}">
 		</div>
@@ -145,24 +145,30 @@
 		</a></li>
 		</#resource>
 		<#resource code="payerList">
-		<li class="nav-item"><a class="nav-link" id="payer-tab"
+		<li class="nav-item">
+			<a class="nav-link" id="payer-tab"
 			onclick="payerActive()" uri="/cash/payerListTab.html"
 			data-toggle="tab" href="#payer-record" role="tab">
 				<h6 class="nav-title">交款明细</h6>
-		</a></li>
+		    </a>
+		</li>
 		</#resource>
 		<#resource code="serialList">
-		<li class="nav-item"><a class="nav-link" id="operation-tab"
+		<li class="nav-item">
+			<a class="nav-link" id="operation-tab"
 			onclick="operationActive()" uri="/cycle/serialTab.html"
 			data-toggle="tab" href="#operation-record" role="tab">
 				<h6 class="nav-title">操作记录</h6>
-		</a></li>
+		    </a>
+		</li>
 		</#resource>
-		<li class="nav-item"><a class="nav-link" id="reverse-tab"
+		<li class="nav-item">
+			<a class="nav-link" id="reverse-tab"
 			onclick="reverseActive()" uri="/cycle/reverseTab.html"
 			data-toggle="tab" href="#reverse-record" role="tab">
 				<h6 class="nav-title">冲正记录</h6>
-		</a></li>
+		    </a>
+		</li>
 	</ul>
 </div>
 <div id="detailTabContent" class="tab-content border-top-0">
@@ -298,12 +304,9 @@
 	</div>
 </div>
 </#bs4Body>
-<script type="text/javascript"
-	src="${contextPath}/resources/js/sword.js"></script>
-<script type="text/javascript"
-	src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
-<script type="text/javascript"
-	src="${contextPath}/resources/js/form.formatter.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
 <link rel="stylesheet" href="${contextPath}/resources/css/sword.css">
 <script>
 	let cycleNo = $.trim($("#cycle").text());
@@ -540,5 +543,4 @@
     	    }
     	});
 	}
-	
 </script>

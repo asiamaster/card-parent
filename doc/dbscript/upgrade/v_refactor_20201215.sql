@@ -6,7 +6,7 @@ CREATE TABLE `dili_card`.`card_reverse_record`  (
     `cycle_no` bigint(20) NOT NULL COMMENT '关联的冲正账务周期号(冗余)' ,
     `biz_trade_channel` tinyint(1) NOT NULL COMMENT '对应的原业务交易渠道(冗余)' ,
     `biz_serial_no` varchar(32) NOT NULL COMMENT '对应的业务流水号',
-    `biz_trade_type` tinyint(1) NOT NULL COMMENT '对应的业务类型，见枚举TradeType',
+    `biz_type` tinyint(1) NOT NULL COMMENT '对应的业务类型，见枚举OperateType',
     `amount` bigint(20) NOT NULL COMMENT '冲正金额（区分正负），单位：分',
     `in_acc_change_amount` bigint(20) NULL COMMENT '园区收益账户变动金额（区分正负），单位：分',
     `operator_id` bigint(20) NOT NULL COMMENT '操作员id',

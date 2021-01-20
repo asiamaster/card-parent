@@ -3,6 +3,7 @@ package com.dili.card.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -255,7 +256,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 
 	@Override
 	public AccountCycleDto buildAccountCycleWrapperDetail(AccountCycleDo cycle, boolean detail) {
-		return cycleStatisticService.statisticList(Arrays.asList(cycle), detail).get(0);
+		return cycleStatisticService.statisticList(Collections.singletonList(cycle), detail).get(0);
 	}
 
 	@Override

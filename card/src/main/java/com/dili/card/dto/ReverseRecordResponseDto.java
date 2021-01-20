@@ -3,6 +3,7 @@ package com.dili.card.dto;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.FenToYuanProvider;
+import com.dili.card.common.provider.OperationTypeProvider;
 import com.dili.card.common.provider.TradeTypeProvider;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,9 +23,9 @@ public class ReverseRecordResponseDto extends BaseDto{
     /**对应的业务流水号*/
     private String bizSerialNo;
 
-    /**对应的业务类型，见枚举TradeType*/
-    @TextDisplay(TradeTypeProvider.class)
-    private Integer bizTradeType;
+    /**对应的业务类型,{@link com.dili.card.type.OperateType}*/
+    @TextDisplay(OperationTypeProvider.class)
+    private Integer bizType;
     /**冲正金额（区分正负），单位：分*/
     @TextDisplay(FenToYuanProvider.class)
     private Long amount;
@@ -69,12 +70,12 @@ public class ReverseRecordResponseDto extends BaseDto{
         this.bizSerialNo = bizSerialNo;
     }
 
-    public Integer getBizTradeType() {
-        return bizTradeType;
+    public Integer getBizType() {
+        return bizType;
     }
 
-    public void setBizTradeType(Integer bizTradeType) {
-        this.bizTradeType = bizTradeType;
+    public void setBizType(Integer bizType) {
+        this.bizType = bizType;
     }
 
     public Long getAmount() {

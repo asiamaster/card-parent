@@ -168,9 +168,9 @@ public class FundServiceImpl implements IFundService {
     public PageOutput<List<PipelineRecordResponseDto>> bankWithdrawPage(PipelineRecordQueryDto param) {
         PipelineRecordParam query = new PipelineRecordParam();
         query.setType(PayPipelineType.BANK_WITHDRAW.getCode());
-        Date now = new Date();
-        query.setStartDate(DateUtil.beginOfDay(now).toString());
-        query.setEndDate(DateUtil.endOfDay(now).toString());
+        String today = DateUtil.format(new Date(), "yyyy-MM-dd");
+        query.setStartDate(today);
+        query.setEndDate(today);
         query.setPageNo(param.getRows());
         query.setPageSize(param.getPage());
         PageOutput<List<PipelineRecordResponseDto>> result = GenericRpcResolver.resolver(payRpc.pipelineList(query), ServiceName.PAY);

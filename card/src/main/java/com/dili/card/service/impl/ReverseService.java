@@ -183,7 +183,7 @@ public class ReverseService implements IReverseService {
             dto.setAmount(reverseRecord.getAmount());
             dto.setInAccChangeAmount(reverseRecord.getInAccChangeAmount());
             dto.setBizSerialNo(reverseRecord.getBizSerialNo());
-            dto.setBizTradeType(reverseRecord.getBizTradeType());
+            dto.setBizType(reverseRecord.getBizType());
             dto.setCreateTime(reverseRecord.getCreateTime());
             dto.setReverseId(reverseRecord.getReverseId());
             dto.setOpId(reverseRecord.getOperatorId());
@@ -206,7 +206,7 @@ public class ReverseService implements IReverseService {
 
     private void copyFromOriginalSerial(ReverseRecord newReverseRecord, BusinessRecordResponseDto bizSerial) {
         newReverseRecord.setBizSerialNo(bizSerial.getSerialNo());
-        newReverseRecord.setBizTradeType(bizSerial.getTradeType());
+        newReverseRecord.setBizType(bizSerial.getType());
     }
 
     private Long getTotalFee(List<SerialRecordResponseDto> feeRecords) {
