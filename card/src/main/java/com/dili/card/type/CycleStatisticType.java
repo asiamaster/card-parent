@@ -5,32 +5,37 @@ package com.dili.card.type;
  * @author apache
  */
 public enum CycleStatisticType {
-	
+
 	/** 现金充值 */
-	ACCOUNT_CHARGE_CASH(11, 2, "depoCashTimes", "depoCashAmount"),
+	ACCOUNT_CHARGE_CASH(OperateType.ACCOUNT_CHARGE.getCode(), TradeChannel.CASH.getCode(), "depoCashTimes", "depoCashAmount"),
 	/** POS充值 */
-	ACCOUNT_CHARGE_POS(11, 3, "depoPosTimes", "depoPosAmount"),
+	ACCOUNT_CHARGE_POS(OperateType.ACCOUNT_CHARGE.getCode(), TradeChannel.POS.getCode(), "depoPosTimes", "depoPosAmount"),
 	/** 网银充值 */
-	ACCOUNT_CHARGE_BANK(11, 4, "bankInTimes", "bankInAmount"),
+	ACCOUNT_CHARGE_BANK(OperateType.ACCOUNT_CHARGE.getCode(), TradeChannel.E_BANK.getCode(), "bankInTimes", "bankInAmount"),
 	/** 现金提现 */
-	ACCOUNT_WITHDRAW_CASH(12, 2, "drawCashTimes", "drawCashAmount"),
+	ACCOUNT_WITHDRAW_CASH(OperateType.ACCOUNT_WITHDRAW.getCode(), TradeChannel.CASH.getCode(), "drawCashTimes", "drawCashAmount"),
 	/** 网银提现 */
-	ACCOUNT_WITHDRAW_BANK(12, 4, "bankOutTimes", "bankOutAmount"),
+	ACCOUNT_WITHDRAW_EBANK(OperateType.ACCOUNT_WITHDRAW.getCode(), TradeChannel.E_BANK.getCode(), "bankOutTimes", "bankOutAmount"),
+	/** 银行提现 （圈提）*/
+	ACCOUNT_WITHDRAW_BANK(OperateType.ACCOUNT_WITHDRAW.getCode(), TradeChannel.BANK.getCode(), "bankCircleOutTimes", "bankCircleOutAmount"),
 	/** 领款 */
 	RECIEVE_CASH(1, 2, "receiveTimes", "receiveAmount"),
 	/** 交款 */
 	DELIVER_CASH(2, 2, "deliverTimes", "deliverAmount"),
 	/** 办卡工本费 */
-	COST_FEE_CASH_OPEN(10, 2, "openCostFeetimes", "openCostAmount"),
+	COST_FEE_CASH_OPEN(OperateType.ACCOUNT_TRANSACT.getCode(), TradeChannel.CASH.getCode(), "openCostFeetimes", "openCostAmount"),
 	/** 换卡工本费 */
-	COST_FEE_CASH_CHANGE(13, 2, "changeCostFeetimes", "changeCostAmount");
-	
+	COST_FEE_CASH_CHANGE(OperateType.CHANGE.getCode(), TradeChannel.CASH.getCode(), "changeCostFeetimes", "changeCostAmount");
+
+	/**业务类型*/
 	private int type;
+	/**交易渠道*/
 	private int tradeChannel;
+	/**对应次数字段名称 {@link com.dili.card.dto.AccountCycleDetailDto}*/
 	private String times;
+	/**对应金额字段名称 {@link com.dili.card.dto.AccountCycleDetailDto}*/
 	private String amount;
-	
-	
+
 
 	CycleStatisticType(int type, int tradeChannel, String times, String amount) {
 		this.type = type;
@@ -38,7 +43,7 @@ public enum CycleStatisticType {
 		this.times = times;
 		this.amount = amount;
 	}
-	
+
 	public static CycleStatisticType getCycleStatisticType(int type, int tradeChannel)
 	{
 		for (CycleStatisticType statisticType : CycleStatisticType.values()) {

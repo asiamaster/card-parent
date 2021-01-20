@@ -1,5 +1,6 @@
 package com.dili.card.service.impl;
 
+import cn.hutool.core.util.NumberUtil;
 import com.dili.card.dao.IAccountCycleDetailDao;
 import com.dili.card.dto.AccountCycleDetailDto;
 import com.dili.card.dto.AccountCycleDto;
@@ -43,24 +44,23 @@ public class CycleStatisticService implements ICycleStatisticService {
 		}
 
 		// 构建账务周期实体
-		List<AccountCycleDto> accountCycleDtos = buildAccountCycleDtoList(cycles);
+		List<AccountCycleDto> accountCycleDtos = this.buildAccountCycleDtoList(cycles);
 
 		List<Long> cycleNos = accountCycleDtos.stream().map(AccountCycleDto::getCycleNo).collect(Collectors.toList());
 
-		Map<Long, List<CycleStatistcDto>> cycleStatistcs = findCycleStatistcDtoMapByCycleNos(
+		Map<Long, List<CycleStatistcDto>> cycleStatistcs = this.findCycleStatistcDtoMapByCycleNos(
 				accountCycleDetailDao.statisticCycleBussinessRecord(cycleNos));
-		Map<Long, List<CycleStatistcDto>> cycleReversedStatistcs = findCycleStatistcDtoMapByCycleNos(
+		Map<Long, List<CycleStatistcDto>> cycleReversedStatistcs = this.findCycleStatistcDtoMapByCycleNos(
 				accountCycleDetailDao.statisticReverseByCycleNo(cycleNos));
 
 		for (AccountCycleDto accountCycleDto : accountCycleDtos) {
-
 			// 账务周期详情构建
-			AccountCycleDetailDto accountCycleBussinessDetail = buildCycleDetail(accountCycleDto.getCycleNo(),
+			AccountCycleDetailDto accountCycleBussinessDetail = this.buildCycleDetail(accountCycleDto.getCycleNo(),
 					cycleStatistcs.get(accountCycleDto.getCycleNo()),
 					cycleReversedStatistcs.get(accountCycleDto.getCycleNo()));
 
 			// 最后账务周期数据的计算用于展示
-			calculateLastCycleDetail(accountCycleBussinessDetail, accountCycleDto, detail);
+			this.calculateLastCycleDetail(accountCycleBussinessDetail, accountCycleDto, detail);
 
 			accountCycleDto.setAccountCycleDetailDto(accountCycleBussinessDetail);
 		}
@@ -90,7 +90,7 @@ public class CycleStatisticService implements ICycleStatisticService {
 				cycleReversedStatistcs);
 
 		// 合并账务周期详情统计信息
-		mergeAccountCycleDetail(accountCycleBussinessDetail, accountCycleReverseDetail);
+		this.mergeAccountCycleDetail(accountCycleBussinessDetail, accountCycleReverseDetail);
 
 		return calculateBussinessCashBalanceAmount(accountCycleBussinessDetail);
 	}
@@ -140,6 +140,11 @@ public class CycleStatisticService implements ICycleStatisticService {
 				accountCycleBussinessDetail.getDepoCashTimes() + accountCycleBussinessDetail.getOpenCostFeetimes()
 						+ accountCycleBussinessDetail.getChangeCostFeetimes());
 
+		//圈提的需要特殊处理，合并到网银提现中(圈提没有冲正)
+		accountCycleBussinessDetail.setBankOutTimes(NumberUtil.add(accountCycleBussinessDetail.getBankOutTimes(),
+				accountCycleBussinessDetail.getBankCircleOutTimes()).intValue());
+		accountCycleBussinessDetail.setBeforeReverseBankOutAmount(NumberUtil.add(accountCycleBussinessDetail.getBankOutAmount(),
+				accountCycleBussinessDetail.getBankCircleOutAmount()).longValue());
 	}
 
 	/**
@@ -184,8 +189,8 @@ public class CycleStatisticService implements ICycleStatisticService {
 	 */
 	protected void mergeAccountCycleDetail(AccountCycleDetailDto masterCycleDetail,
 			AccountCycleDetailDto accountCycleReverseDetail) {
+
 		masterCycleDetail.setBeforeReverseBankInAmount(masterCycleDetail.getBankInAmount());
-		masterCycleDetail.setBeforeReverseBankOutAmount(masterCycleDetail.getBankOutAmount());
 		masterCycleDetail.setBeforeReverseDepoCashAmount(masterCycleDetail.getDepoCashAmount());
 		masterCycleDetail.setBeforeReverseDepoPosAmount(masterCycleDetail.getDepoPosAmount());
 		masterCycleDetail.setBeforeReverseDrawCashAmount(masterCycleDetail.getDrawCashAmount());

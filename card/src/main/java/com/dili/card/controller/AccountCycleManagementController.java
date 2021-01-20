@@ -1,11 +1,12 @@
 package com.dili.card.controller;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.dili.card.type.OperateType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +45,10 @@ import com.dili.uap.sdk.session.SessionContext;
 @Controller
 @RequestMapping(value = "/cycle")
 public class AccountCycleManagementController implements IControllerHandler {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(AccountCycleManagementController.class);
 
-	
+
 	@Autowired
 	private IAccountCycleService iAccountCycleService;
 	@Resource
@@ -77,7 +78,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 		map.put("settled", CycleState.SETTLED.getCode());
 		return "cycle/detail";
 	}
-	
+
     /**
      * 跳转到操作流水页面
      * @return
@@ -181,7 +182,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	public BaseOutput<AccountCycleDto> detail(@RequestBody @Validated(value = {ConstantValidator.Default.class}) AccountCycleDto accountCycleDto) {
 		return BaseOutput.successData(iAccountCycleService.detail(accountCycleDto.getId()));
 	}
-	
+
 	/**
 	 * 校验是否存在活跃的账务周期
 	 */
@@ -191,7 +192,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 		log.info("校验是否存在活跃的账务周期*****{}", JSONObject.toJSONString(accountCycleDto));
 		return BaseOutput.successData(iAccountCycleService.checkExistActiveCycle(accountCycleDto.getUserId()));
 	}
-	
+
 	/**
 	 * 冲正记录
 	 */
@@ -199,11 +200,11 @@ public class AccountCycleManagementController implements IControllerHandler {
 	@ResponseBody
 	public Map<String, Object> businessPage(SerialQueryDto queryDto) {
 		log.info("冲正记录分页*****{}", JSONObject.toJSONString(queryDto));
-		queryDto.setOperateTypeList(Arrays.asList(31));
+		queryDto.setOperateTypeList(Collections.singletonList(OperateType.FUND_REVERSE.getCode()));
 		PageOutput<List<BusinessRecordResponseDto>> lists = serialService.queryPage(queryDto);
 		return successPage(lists);
 	}
-	
+
 	/**
 	 * 打印
 	 */
@@ -213,5 +214,5 @@ public class AccountCycleManagementController implements IControllerHandler {
 		log.info("结帐申请打印*****{}", JSONObject.toJSONString(accountCycleDto));
 		return BaseOutput.successData(iAccountCycleService.detail(accountCycleDto.getId()));
 	}
-	
+
 }

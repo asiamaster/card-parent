@@ -30,6 +30,7 @@ import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.ReverseFundItemMap;
+import com.dili.card.type.TradeChannel;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.domain.PageOutput;
 import com.github.pagehelper.Page;
@@ -81,6 +82,9 @@ public class ReverseService implements IReverseService {
         }
         if (!OperateType.canReverseType(businessRecord.getType())) {
             throw new CardAppBizException("只允许充值和提款业务 冲正");
+        }
+        if (TradeChannel.BANK.getCode() == businessRecord.getTradeChannel()){
+            throw new CardAppBizException("圈提不允许 冲正");
         }
         ReverseRecord reverseRecord = reverseRecordDao.findByBizSerialNo(serialNo, firmId);
         if (reverseRecord != null) {

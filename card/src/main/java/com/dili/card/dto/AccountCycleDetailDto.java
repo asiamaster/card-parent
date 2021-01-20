@@ -5,7 +5,7 @@ import com.dili.card.common.provider.FenToYuanProvider;
 
 /**
  * 柜员账务周期详情
- * 
+ *
  * @author zx
  */
 public class AccountCycleDetailDto {
@@ -58,6 +58,10 @@ public class AccountCycleDetailDto {
 	/** 网银提现金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long bankOutAmount = 0L;
+	/**银行圈提次数（合并到网银提现中）*/
+	private transient Integer bankCircleOutTimes;
+	/**银行圈提金额 （合并到网银提现中）*/
+	private transient Long bankCircleOutAmount;
 	/** 网银提现冲正前金额-分 */
 	@TextDisplay(FenToYuanProvider.class)
 	private Long beforeReverseBankOutAmount = 0L;
@@ -81,6 +85,22 @@ public class AccountCycleDetailDto {
 	private Integer changeCostFeetimes = 0;
 	/** 换卡工本费-分 */
 	private Long changeCostAmount = 0L;
+
+	public Integer getBankCircleOutTimes() {
+		return bankCircleOutTimes;
+	}
+
+	public void setBankCircleOutTimes(Integer bankCircleOutTimes) {
+		this.bankCircleOutTimes = bankCircleOutTimes;
+	}
+
+	public Long getBankCircleOutAmount() {
+		return bankCircleOutAmount;
+	}
+
+	public void setBankCircleOutAmount(Long bankCircleOutAmount) {
+		this.bankCircleOutAmount = bankCircleOutAmount;
+	}
 
 	public Long getCycleNo() {
 		return cycleNo;

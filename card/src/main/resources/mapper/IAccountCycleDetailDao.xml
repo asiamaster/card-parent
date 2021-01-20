@@ -114,6 +114,7 @@
          		#{cycleNo}
    	 		</foreach>
    	 	AND type IN (10,11,12,13)
+		AND state = 2
  		GROUP BY type,tradeChannel
 
  		UNION ALL

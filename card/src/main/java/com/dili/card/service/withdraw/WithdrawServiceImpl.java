@@ -68,7 +68,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         //保存业务办理记录
         serialService.saveBusinessRecord(businessRecord);
         //扣减现金池
-        decreaseCashBox(businessRecord.getCycleNo(), fundRequestDto.getAmount());
+        this.decreaseCashBox(businessRecord.getCycleNo(), fundRequestDto.getAmount());
         //提现提交
         TradeRequestDto withdrawRequest = TradeRequestDto.createTrade(accountCard, tradeNo, this.getChannelId(fundRequestDto), fundRequestDto.getTradePwd());
         withdrawRequest.setFees(this.createFees(fundRequestDto));
