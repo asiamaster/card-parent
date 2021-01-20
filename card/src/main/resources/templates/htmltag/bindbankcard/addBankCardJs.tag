@@ -112,6 +112,8 @@
             		$('#bankNamePersonal').val(res.data.channelName);
                     $('#bankType').val(res.data.channelId);
                 }else{
+                	$('#bankType').empty();
+                	$('#bankNamePersonal').val("");
                     bs4pop.alert(res.message, {type: 'error'});
                     return;
                 }
