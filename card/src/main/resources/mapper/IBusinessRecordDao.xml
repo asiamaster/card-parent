@@ -233,6 +233,7 @@
 			`customer_id`,
 			`customer_no`,
 			`customer_name`,
+			`hold_name`,
 			`start_balance`,
 			`amount`,
 			`end_balance`,
