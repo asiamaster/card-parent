@@ -23,8 +23,7 @@ public class CardStateProvider implements ValueProvider {
 
     static {
         //暂时不需要锁定状态
-        CardStatus.getAll().stream().filter(c -> c != CardStatus.LOCKED)
-                .collect(Collectors.toList())
+        new ArrayList<>(CardStatus.getAll())
                 .forEach(c -> BUFFER.add(new ValuePairImpl(c.getName(), c.getCode())));
     }
 
