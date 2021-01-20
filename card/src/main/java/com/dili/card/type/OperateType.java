@@ -88,6 +88,11 @@ public enum OperateType
 		typeList.add(ACCOUNT_WITHDRAW.getCode());
 		typeList.add(CHANGE.getCode());
 		typeList.add(REFUND_CARD.getCode());
+		typeList.add(RESET_PWD.getCode());
+		typeList.add(PWD_CHANGE.getCode());
+		typeList.add(LOSS_CARD.getCode());
+		typeList.add(LOSS_REMOVE.getCode());
+		typeList.add(LIFT_LOCKED.getCode());
 		return typeList;
 	}
 

@@ -112,7 +112,7 @@ public class CardManageServiceImpl implements ICardManageService {
         //获取卡信息
     	UserAccountSingleQueryDto queryDto = new UserAccountSingleQueryDto();
     	queryDto.setAccountId(cardParam.getAccountId());
-        UserAccountCardResponseDto accountCard = accountQueryService.getForUnLockCard(queryDto);
+        UserAccountCardResponseDto accountCard = accountQueryService.getForResetLoginPassword(queryDto);
 
         //校验卡信息与客户信息
         AccountValidator.validateMatchAccount(cardParam, accountCard);

@@ -28,7 +28,7 @@ import com.dili.card.type.CardStatus;
 import com.dili.card.type.CustomerState;
 import com.dili.card.type.DisableState;
 import com.dili.card.type.FundItem;
-import com.dili.card.type.PublicBizType;
+import com.dili.card.type.OperateType;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.ss.constant.ResultCode;
 
@@ -63,7 +63,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), false, DisableState.ENABLED);
 
 		//保存本地记录
-		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, PublicBizType.FROZEN_ACCOUNT.getCode());
+		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.FROZEN_ACCOUNT.getCode());
 
 		//远程冻结卡账户操作
     	accountManageRpcResolver.frozen(cardRequestDto);
@@ -93,7 +93,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
 			throw new CardAppBizException("客户已被禁用");
 		}
 		//保存本地记录
-		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, PublicBizType.UNFROZEN_ACCOUNT.getCode());
+		BusinessRecordDo businessRecord = this.saveLocalSerialRecord(cardRequestDto, accountCard, OperateType.UNFROZEN_ACCOUNT.getCode());
 
 		//远程解冻账户操作
 		accountManageRpcResolver.unfrozen(cardRequestDto);

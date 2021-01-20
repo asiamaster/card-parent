@@ -21,7 +21,6 @@ import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.PaySubject;
-import com.dili.card.type.PublicBizType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 
@@ -53,7 +52,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         UserAccountCardResponseDto userAccount = accountQueryService.getByAccountId(requestDto);
         Long rechargeAmount = requestDto.getAmount();
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {
-            record.setType(PublicBizType.ACCOUNT_CHARGE.getCode());
+            record.setType(OperateType.ACCOUNT_CHARGE.getCode());
             record.setAmount(rechargeAmount);
             record.setTradeType(TradeType.DEPOSIT.getCode());
             record.setTradeChannel(requestDto.getTradeChannel());

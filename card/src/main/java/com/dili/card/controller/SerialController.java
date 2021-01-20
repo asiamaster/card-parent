@@ -208,7 +208,7 @@ public class SerialController implements IControllerHandler {
         }
         recordDo.setFirmName(getUserTicket().getFirmName());
         Map<String, Object> create = printDispatcher.create(recordDo, reprint);
-        LOGGER.info("打印数据返回*****->>>>>{}", create);
+        LOGGER.info("打印数据返回*****->>>>>{}", JSONObject.toJSONString(create));
         return BaseOutput.successData(create);
     }
 }

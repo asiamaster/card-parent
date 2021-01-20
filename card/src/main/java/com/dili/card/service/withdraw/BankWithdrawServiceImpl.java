@@ -16,7 +16,7 @@ import com.dili.card.exception.ErrorCode;
 import com.dili.card.type.BankWithdrawState;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
-import com.dili.card.type.PublicBizType;
+import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.AssertUtils;
@@ -58,7 +58,7 @@ public class BankWithdrawServiceImpl extends WithdrawServiceImpl {
     @Override
     public BusinessRecordDo createBusinessRecord(FundRequestDto fundRequestDto, UserAccountCardResponseDto accountCard) {
         return serialService.createBusinessRecord(fundRequestDto, accountCard, temp -> {
-            temp.setType(PublicBizType.ACCOUNT_WITHDRAW.getCode());
+            temp.setType(OperateType.ACCOUNT_WITHDRAW.getCode());
             temp.setAmount(fundRequestDto.getAmount());
             temp.setTradeType(TradeType.WITHDRAW.getCode());
             temp.setTradeChannel(fundRequestDto.getTradeChannel());
