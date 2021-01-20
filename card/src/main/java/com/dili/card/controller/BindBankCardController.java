@@ -224,6 +224,9 @@ public class BindBankCardController implements IControllerHandler {
 	@ResponseBody
 	public BaseOutput<?> unBind(@RequestBody BindBankCardDto bankCardDto) {
 		LOG.info("解绑银行卡*****" + JSONObject.toJSONString(bankCardDto));
+		AssertUtils.notNull(bankCardDto.getAccountId(), "账户ID不能为空");
+		AssertUtils.notEmpty(bankCardDto.getLoginPwd(), "密码不能为空");
+		
 		// 设置操作人信息
 		UserTicket user = getUserTicket();
 		// 操作日志

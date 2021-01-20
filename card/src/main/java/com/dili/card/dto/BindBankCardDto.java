@@ -54,16 +54,18 @@ public class BindBankCardDto extends BaseDto implements Serializable {
 	private String operatorName;
 	/** 创建时间 */
 	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createTime;
 	/** 修改时间 */
 	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime modifyTime;
 	/** 备注 */
 	private String description;
+	/** 密码 */
+	private String loginPwd;
 
 	/** 页码 */
 	private Integer page;
@@ -313,6 +315,14 @@ public class BindBankCardDto extends BaseDto implements Serializable {
 			statusText = BindBankStatus.getName(status);
 		}
 		return statusText;
+	}
+
+	public String getLoginPwd() {
+		return loginPwd;
+	}
+
+	public void setLoginPwd(String loginPwd) {
+		this.loginPwd = loginPwd;
 	}
 
 }

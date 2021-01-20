@@ -82,7 +82,6 @@
         if(bankInfo.code == '0') {
             $('#bankNo').val(bankInfo.data);
             getBankInfo(bankInfo.data);
-
         } else {
             $.modal.alertWarning(bankInfo.message);
         }
@@ -116,7 +115,6 @@
                     bs4pop.alert(res.message, {type: 'error'});
                     return;
                 }
-                
             },
             error: function (error) {
                 $('#bankNamePersonal').val('');
