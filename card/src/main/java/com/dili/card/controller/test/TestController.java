@@ -12,6 +12,7 @@ import com.dili.assets.sdk.dto.TypeMarketDto;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.service.ITypeMarketService;
+import com.dili.card.util.AssertUtils;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 
@@ -44,6 +45,7 @@ public class TestController implements IControllerHandler  {
 		UserTicket user = getUserTicket();
 		TypeMarketDto getmarket = typeMarketService.getmarket(Constant.CARD_INCOME_ACCOUNT);
 		log.info("查询配置的市场帐户信息*****{}", JSONObject.toJSONString(getmarket));
+		AssertUtils.notNull(getmarket.getMarketId(), "沈阳市场需要配置收益账户!");
 		return BaseOutput.successData(getmarket);
 	}
 }
