@@ -22,7 +22,7 @@ public class FenToYuanProvider implements ValueProvider {
     @Override
     public String getDisplayText(Object val, Map metaMap, FieldMeta fieldMeta) {
         if (val == null) {
-            return "0";
+            return "--";
         }
         Long fen = (Long) val;
         return CurrencyUtils.toYuanWithStripTrailingZeros(fen);

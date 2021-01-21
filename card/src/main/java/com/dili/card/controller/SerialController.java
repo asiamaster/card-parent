@@ -179,6 +179,7 @@ public class SerialController implements IControllerHandler {
 
     /**
      * 业务日志分页
+     * 结帐申请的操作记录的参数在cycle/detail.html中
      * @author miaoguoxin
      * @date 2020/7/1
      */
