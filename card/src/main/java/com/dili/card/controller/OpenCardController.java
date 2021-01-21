@@ -146,6 +146,13 @@ public class OpenCardController implements IControllerHandler {
 		UserTicket user = getUserTicket();
 		// 主要参数校验
 		checkMasterParam(openCardInfo);
+		
+		// 判断主卡开卡数量
+		CustomerResponseDto customerInfo = new CustomerResponseDto();
+		customerInfo.setId(openCardInfo.getCustomerId());
+		customerInfo.setFirmId(openCardInfo.getFirmId());
+		openCardService.checkCardNum(customerInfo);
+		
 		// 设置有主子商户的市场的收益帐户,feign调用支付接口时通过PayServiceFeignConfig将该值替换原mchId
 		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
 		if(user.getFirmId() == FirmIdConstant.SY) {
