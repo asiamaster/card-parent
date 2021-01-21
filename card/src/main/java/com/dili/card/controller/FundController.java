@@ -138,7 +138,7 @@ public class FundController implements IControllerHandler {
 	 */
 	@RequestMapping(value = "/withdraw.action")
 	@ResponseBody
-	@ForbidDuplicateCommit
+	//@ForbidDuplicateCommit
 	public BaseOutput<String> withdraw(@RequestBody FundRequestDto fundRequestDto, HttpServletRequest request) {
 		LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto,JsonExcludeFilter.PWD_FILTER));
 		validateCommonParam(fundRequestDto);

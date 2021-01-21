@@ -217,6 +217,7 @@ public class SerialServiceImpl implements ISerialService {
 
     @Override
     public PageOutput<List<BusinessRecordResponseDto>> queryPage(SerialQueryDto serialQueryDto) {
+        serialQueryDto.setState(OperateState.SUCCESS.getCode());
         Page<BusinessRecordDo> page = PageHelper.startPage(serialQueryDto.getPage(), serialQueryDto.getRows());
         List<BusinessRecordDo> businessRecordDos = this.queryBusinessRecord(serialQueryDto);
         List<BusinessRecordResponseDto> recordResponseDtos = businessRecordDos.stream().map(record -> {

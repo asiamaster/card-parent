@@ -10,13 +10,6 @@ import java.util.List;
  * @author bob<>
  */
 public interface IBusinessRecordDao {
-	/**
-     * 列表查询
-     * @param page
-     * @param search
-     * @return
-     */
-	List<BusinessRecordDo> selectList(BusinessRecordDo businessRecord);
 
     /**
      * 新增
@@ -72,10 +65,4 @@ public interface IBusinessRecordDao {
 	 */
 	BusinessRecordDo getBySerialNo(String serialNo);
 
-	/**
-	* 锁定查询
-	* @author miaoguoxin
-	* @date 2021/1/18
-	*/
-	BusinessRecordDo getBySerialNoLock(String serialNo);
 }

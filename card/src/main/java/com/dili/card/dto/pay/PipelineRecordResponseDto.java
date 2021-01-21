@@ -3,7 +3,7 @@ package com.dili.card.dto.pay;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.FenToYuanProvider;
-import com.dili.card.common.provider.PaySerialTypeProvider;
+import com.dili.card.common.provider.BankWithdrawStateProvider;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -29,8 +29,8 @@ public class PipelineRecordResponseDto {
     private Long fee;
     /** 业务流水号*/
     private String serialNo;
-    /**状态 {@link com.dili.card.type.PaySerialType}*/
-    @TextDisplay(PaySerialTypeProvider.class)
+    /**状态 {@link com.dili.card.type.BankWithdrawState}*/
+    @TextDisplay(BankWithdrawStateProvider.class)
     private Integer state;
     /**申请时间*/
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")

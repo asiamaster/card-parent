@@ -171,8 +171,8 @@ public class FundServiceImpl implements IFundService {
         String today = DateUtil.format(new Date(), "yyyy-MM-dd");
         query.setStartDate(today);
         query.setEndDate(today);
-        query.setPageNo(param.getRows());
-        query.setPageSize(param.getPage());
+        query.setPageNo(param.getPage());
+        query.setPageSize(param.getRows());
         PageOutput<List<PipelineRecordResponseDto>> result = GenericRpcResolver.resolver(payRpc.pipelineList(query), ServiceName.PAY);
         List<PipelineRecordResponseDto> data = result.getData();
         for (PipelineRecordResponseDto dto : data) {

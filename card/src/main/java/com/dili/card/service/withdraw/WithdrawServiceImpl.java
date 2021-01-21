@@ -1,5 +1,6 @@
 package com.dili.card.service.withdraw;
 
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
@@ -48,12 +49,14 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
     @Resource
     protected IAccountCycleService accountCycleService;
 
-    @GlobalTransactional(rollbackFor = Exception.class)
+   // @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public MessageBo<String> withdraw(FundRequestDto fundRequestDto) {
-        this.validate(fundRequestDto);//参数验证
-        UserAccountCardResponseDto accountCard = this.check(fundRequestDto);//验证卡状态、余额等
+        //参数验证
+        this.validate(fundRequestDto);
+        //验证卡状态、余额等
+        UserAccountCardResponseDto accountCard = this.check(fundRequestDto);
         BusinessRecordDo businessRecord = createBusinessRecord(fundRequestDto, accountCard);
         //构建创建交易参数
         CreateTradeRequestDto createTradeRequest = CreateTradeRequestDto.createTrade(TradeType.WITHDRAW.getCode(), accountCard.getAccountId(), accountCard.getFundAccountId(), fundRequestDto.getAmount(), businessRecord.getSerialNo(), String.valueOf(businessRecord.getCycleNo()));
@@ -65,8 +68,11 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         //创建交易
         String tradeNo = payService.createTrade(createTradeRequest);
         businessRecord.setTradeNo(tradeNo);
-        //保存业务办理记录
-        serialService.saveBusinessRecord(businessRecord);
+        //先异步保存一条记录，防止被事务回滚
+        ThreadUtil.execute(() -> {
+            //保存业务办理记录
+            serialService.saveBusinessRecord(businessRecord);
+        });
         //扣减现金池
         this.decreaseCashBox(businessRecord.getCycleNo(), fundRequestDto.getAmount());
         //提现提交

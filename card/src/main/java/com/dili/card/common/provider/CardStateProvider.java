@@ -22,7 +22,6 @@ public class CardStateProvider implements ValueProvider {
     private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
 
     static {
-        //暂时不需要锁定状态
         new ArrayList<>(CardStatus.getAll())
                 .forEach(c -> BUFFER.add(new ValuePairImpl(c.getName(), c.getCode())));
     }

@@ -193,17 +193,6 @@ public class AccountCycleManagementController implements IControllerHandler {
 		return BaseOutput.successData(iAccountCycleService.checkExistActiveCycle(accountCycleDto.getUserId()));
 	}
 
-	/**
-	 * 冲正记录
-	 */
-	@PostMapping("/reverse/page.action")
-	@ResponseBody
-	public Map<String, Object> businessPage(SerialQueryDto queryDto) {
-		log.info("冲正记录分页*****{}", JSONObject.toJSONString(queryDto));
-		queryDto.setOperateTypeList(Collections.singletonList(OperateType.FUND_REVERSE.getCode()));
-		PageOutput<List<BusinessRecordResponseDto>> lists = serialService.queryPage(queryDto);
-		return successPage(lists);
-	}
 
 	/**
 	 * 打印
