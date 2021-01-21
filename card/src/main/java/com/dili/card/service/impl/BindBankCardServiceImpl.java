@@ -17,6 +17,7 @@ import com.dili.card.entity.BindBankCardDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
+import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IBindBankCardService;
 import com.dili.card.type.BindBankStatus;
 import com.dili.card.util.PageUtils;
@@ -37,6 +38,8 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 	
 	@Autowired
 	private  CardManageRpc cardManageRpc;
+	@Autowired
+	private IAccountQueryService accountQueryService;
 
 	@Override
 	public PageOutput<List<BindBankCardDto>> page(BindBankCardDto queryParam) {
@@ -79,6 +82,10 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 
 	@Override
 	public boolean unBind(BindBankCardDto data) {
+		// 用于校验密码次数过多导致卡片锁定后，输入一次正确的还是能执行操作
+		accountQueryService.getByAccountId(data.getAccountId());
+		
+		// 校验密码
 		CardRequestDto cardParam = new CardRequestDto();
 		cardParam.setAccountId(data.getAccountId());
 		cardParam.setLoginPwd(data.getLoginPwd());
