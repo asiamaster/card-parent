@@ -9,10 +9,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dao.IBindBankCardDao;
 import com.dili.card.dto.BindBankCardDto;
+import com.dili.card.dto.CardRequestDto;
 import com.dili.card.entity.BindBankCardDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.CardManageRpc;
+import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IBindBankCardService;
 import com.dili.card.type.BindBankStatus;
 import com.dili.card.util.PageUtils;
@@ -30,6 +34,9 @@ import com.github.pagehelper.PageHelper;
 public class BindBankCardServiceImpl implements IBindBankCardService {
 	@Autowired
 	private IBindBankCardDao bankCardDao;
+	
+	@Autowired
+	private  CardManageRpc cardManageRpc;
 
 	@Override
 	public PageOutput<List<BindBankCardDto>> page(BindBankCardDto queryParam) {
@@ -72,6 +79,11 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 
 	@Override
 	public boolean unBind(BindBankCardDto data) {
+		CardRequestDto cardParam = new CardRequestDto();
+		cardParam.setAccountId(data.getAccountId());
+		cardParam.setLoginPwd(data.getLoginPwd());
+		GenericRpcResolver.resolver(cardManageRpc.checkPassword(cardParam), ServiceName.ACCOUNT);
+		
 		BindBankCardDo unBind = new BindBankCardDo();
 		unBind.setId(data.getId());
 		unBind.setStatus(BindBankStatus.INVALID.getCode());

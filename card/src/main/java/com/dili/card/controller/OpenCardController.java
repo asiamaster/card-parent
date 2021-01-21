@@ -123,14 +123,6 @@ public class OpenCardController implements IControllerHandler {
 		Long openCostFee = openCardService.getOpenCostFee();
 		log.info("查询开卡费用项*****{}", openCostFee);
 		
-		// 设置有主子商户的市场的收益帐户,feign调用支付接口时通过PayServiceFeignConfig将该值替换原mchId
-        UserTicket userTicket = getUserTicket();
-  		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
-  		if(userTicket.getFirmId() == FirmIdConstant.SY) {
-// 			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
-// 			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
- 		}
-		
 		return BaseOutput.successData(openCostFee);
 	}
 
@@ -146,12 +138,15 @@ public class OpenCardController implements IControllerHandler {
 		UserTicket user = getUserTicket();
 		// 主要参数校验
 		checkMasterParam(openCardInfo);
+		
+		// 判断主卡开卡数量
+		CustomerResponseDto customerInfo = new CustomerResponseDto();
+		customerInfo.setId(openCardInfo.getCustomerId());
+		customerInfo.setFirmId(openCardInfo.getFirmId());
+		openCardService.checkCardNum(customerInfo);
+		
 		// 设置有主子商户的市场的收益帐户,feign调用支付接口时通过PayServiceFeignConfig将该值替换原mchId
-		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
-		if(user.getFirmId() == FirmIdConstant.SY) {
-//			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
-//			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
-		}
+		setSubMarketIdToRequest(user.getFirmId(), openCardInfo.getCostFee(), request);
 		// 操作日志
 		businessLogService.saveLog(OperateType.ACCOUNT_TRANSACT, user, "客户姓名:" + openCardInfo.getCustomerName(),
 				"客户ID:" + openCardInfo.getCustomerCode(), "卡号:" + openCardInfo.getCardNo());
@@ -175,11 +170,7 @@ public class OpenCardController implements IControllerHandler {
 		AssertUtils.notNull(openCardInfo.getParentAccountId(), "主卡信息不能为空!");
 		AssertUtils.notEmpty(openCardInfo.getParentLoginPwd(), "主卡密码不能为空!");
 		// 设置有主子商户的市场的收益帐户,feign调用支付接口时通过PayServiceFeignConfig将该值替换原mchId
-		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
-//		if(user.getFirmId() == FirmIdConstant.SY) {
-//			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
-//			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
-//		}
+		setSubMarketIdToRequest(user.getFirmId(), openCardInfo.getCostFee(), request);
 		
 		// 操作日志
 		businessLogService.saveLog(OperateType.ACCOUNT_TRANSACT, user, "客户姓名:" + openCardInfo.getCustomerName(),
@@ -202,6 +193,20 @@ public class OpenCardController implements IControllerHandler {
 		openCardInfo.setFirmName(user.getFirmName());
 	}
 
+	/**
+	 *  设置子商户的市场ID到request中
+	 */
+	private void setSubMarketIdToRequest(Long firmId, Long costFee, HttpServletRequest request) {
+		if(costFee <= 0) {
+			return;
+		}
+		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
+		if(firmId == FirmIdConstant.SY ) {
+			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
+			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
+		}
+	}
+	
 	/**
 	 * 主卡参数校验
 	 * 

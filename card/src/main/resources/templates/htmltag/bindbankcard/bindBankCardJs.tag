@@ -37,6 +37,7 @@
 	$(document).on('click', '#authBindBtn', function () {
 // let a = bui.util.debounce(saveOrUpdateHandler,1000,true);
         let dia = bs4pop.dialog({
+        	id:"checkPwdModel",
             title: '授权绑定',// 对话框title
             content: bui.util.HTMLDecode(template('checkPassword', {})), // 对话框内容，可以是
             // string、element，$object
@@ -180,7 +181,42 @@
     }
     
     function operFormatter(value, row, index, field) {
-        return '<a href="javascript:unBind('+row["id"]+');">解绑</a> ';
+//    	$("#bankCardNo").val(row["bankNo"]);
+//    	$("#bankName").val(row["bankName"]);
+//    	$("#accountName").val(row["name"]);
+//    	$("#accountType").val(row["bankAccountTypeText"]);
+//    	$("#description").val(row["description"]);
+        return "<a href='javascript:openUnBindModal("+JSON.stringify(row)+");'>解绑</a>";
+    }
+    
+    
+    function openUnBindModal(row){
+    	var id = row["id"];
+    	let dia = bs4pop.dialog({
+            title: '解除绑定',// 对话框title
+            content: bui.util.HTMLDecode(template('unbindModal', row)),
+            width: '400px',// 宽度
+            height: '420px',// 高度
+            btns: [{
+                label: '确定', className: 'btn-primary', onClick(e) {
+                    var url = "${contextPath}/bindBankCard/unBind.action";
+                    var password = $("#unbindModalPassword").val();
+                    if(password == ""){
+                    	bs4pop.alert("请输入密码", {type: 'error'});
+                    	return false;
+                    }
+                    let accountId = $("#accountId").val();
+	               	var data={id:id, loginPwd:password, accountId:accountId};
+	           	   	$.operate.post(url, data, function (){
+	           	 	   $.table.refresh();
+	           	   	});
+                }
+            }, {
+                label: '取消', className: 'btn-secondary', onClick(e) {
+                    return true;
+                }
+            }]
+        });
     }
     
     // 解绑银行卡
@@ -190,5 +226,12 @@
 	   	 $.operate.post(url, data, function (){
 	 	   $.table.refresh();
 	   	 });
+    }
+    
+    function noteFormatter(value, row, index, field) {
+        if ($.common.isEmpty(value)){
+            return value;
+        }
+        return '<span data-toggle="tooltip" data-placement="top" title="" data-original-title="'+value+'">'+value+'</span>'
     }
 </script>

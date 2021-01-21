@@ -17,7 +17,6 @@
 	            <#resource code="add_bindBankCard">
 					<button id="authBindBtn" type="button" class="btn btn-primary" style="display: none">授权绑定</button>
                 </#resource>
-
             </div>
         </div>
     </form>
@@ -50,13 +49,14 @@
 					<th data-field="statusText" data-align="center">状态</th>
 					<th data-field="operatorName" data-align="center">创建人</th>
 					<th data-field="createTime" data-align="center">创建时间 </th>
-					<th data-field="description" data-align="center">备注 </th>
+					<th data-field="description" data-align="center"  data-formatter="noteFormatter">备注 </th>
 					<th data-align="center" data-formatter="operFormatter">操作 </th>
 				</tr>
 			</thead>
 		</table>
 	</div>
 </div>
+
 </#bs4Body>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <#common_cardBaseJs/>
@@ -72,6 +72,39 @@
 			<input type="password" id="password" maxlength=6 name="password">
 			<button id="pwdBtn" type="button" onclick="readPwd()" class="btn btn-primary">
 				请输入密码
-		</button>
+			</button>
+	</div>
+</script>
+
+<!-- 解绑弹出层 -->
+<script id="unbindModal" type="text/html">
+	<div class="row row-cols-1"  style="text-align: center">
+		<div class="form-group row">
+			<label class="col-md-3 col-form-label">&nbsp;&nbsp;银行卡号</label>
+        	<input type="text" id="bankCardNo" class="form-control col-md-9" value="{{bankNo}}" readonly/>
+		</div>
+		<div class="form-group row">
+			<label class="col-md-3 col-form-label">银行名称</label>
+			<input id="bankName" type="text" class="form-control col-md-9" value="{{bankName}}" readonly/>
+		</div>
+    	<div class="form-group row">
+			<label class="col-md-3 col-form-label">账户名称</label>
+			<input id="accountName" type="text" class="form-control col-md-9" value="{{name}}" readonly/>
+    	</div>
+    	<div class="form-group row">
+			<label class="col-md-3 col-form-label">账户类型</label>
+			<input id="accountType" type="text" class="form-control col-md-9" value="{{bankAccountTypeText}}" readonly/>
+  	  	</div>
+  	  	<div class="form-group row">
+			<label class="col-md-3 col-form-label">备注</label>
+			<input id="removeBind" type="text" class="form-control col-md-9" value="{{description}}" readonly/>
+    	</div>
+    	<div class="form-group row">
+			<label class="col-md-3 col-form-label">主卡密码</label>
+			<input type="password" id="unbindModalPassword" class="form-control col-md-6" maxlength="6" name="unbindModalPassword" />
+			<button id="pwdBtn" type="button" onclick="readPwd()" class="btn btn-primary col-md-3">
+				请输入密码
+			</button>
+    	</div>
 	</div>
 </script>

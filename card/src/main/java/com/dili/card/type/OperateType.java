@@ -18,7 +18,7 @@ public enum OperateType
 	CHANGE("换卡", 13),
 	LOSS_CARD("挂失", 14),
 	LOSS_REMOVE("解挂", 15),
-	PWD_CHANGE("密码更改", 16),
+	PWD_CHANGE("修改密码", 16),
 	RESET_PWD("重置密码", 17),
 	REFUND_CARD("退卡", 18),
 	LIFT_LOCKED("解锁", 19),
