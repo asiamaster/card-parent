@@ -115,7 +115,7 @@
    	 		</foreach>
    	 	AND type IN (10,11,12,13)
 		AND state = 2
- 		GROUP BY type,tradeChannel
+ 		GROUP BY `cycle_no`,type,tradeChannel
 
  		UNION ALL
 
@@ -129,7 +129,7 @@
          		#{cycleNo}
    	 		</foreach>
    	 	AND state != 10
- 		GROUP BY type, tradeChannel
+ 		GROUP BY `cycle_no`,type, tradeChannel
 	</select>
 
 	<!-- 统计账务周期信息 -->
@@ -143,6 +143,6 @@
  			<foreach collection ="list" item="cycleNo" separator ="," open="(" close=")">
          		#{cycleNo}
    	 		</foreach>
- 		GROUP BY type,tradeChannel
+ 		GROUP BY `cycle_no`,type,tradeChannel
 	</select>
 </mapper>
