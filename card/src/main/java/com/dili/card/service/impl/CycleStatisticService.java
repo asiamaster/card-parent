@@ -134,18 +134,19 @@ public class CycleStatisticService implements ICycleStatisticService {
 		}
 
 		// 现金收款包括充值和工本费
-		accountCycleBussinessDetail.setDepoCashAmount(accountCycleBussinessDetail.getDepoCashAmount()
+		accountCycleBussinessDetail.setBeforeReverseDepoCashAmount(accountCycleBussinessDetail.getDepoCashAmount()
 				+ accountCycleBussinessDetail.getOpenCostAmount() + accountCycleBussinessDetail.getChangeCostAmount());
 		accountCycleBussinessDetail.setDepoCashTimes(
 				accountCycleBussinessDetail.getDepoCashTimes() + accountCycleBussinessDetail.getOpenCostFeetimes()
 						+ accountCycleBussinessDetail.getChangeCostFeetimes());
 
-		//圈提的需要特殊处理，合并到网银提现中(圈提没有冲正)
+		//圈提的需要特殊处理，合并到网银提现中(圈提没有冲正,暂时不考虑冲正后的金额计算)
 		accountCycleBussinessDetail.setBankOutTimes(NumberUtil.add(accountCycleBussinessDetail.getBankOutTimes(),
 				accountCycleBussinessDetail.getBankCircleOutTimes()).intValue());
 		accountCycleBussinessDetail.setBeforeReverseBankOutAmount(NumberUtil.add(accountCycleBussinessDetail.getBankOutAmount(),
 				accountCycleBussinessDetail.getBankCircleOutAmount()).longValue());
 	}
+
 
 	/**
 	 * 计算业务现金收支余额 开卡/换卡工本费+ 现金充值 -现金取款
