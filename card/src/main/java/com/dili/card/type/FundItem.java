@@ -57,7 +57,11 @@ public enum FundItem {
     /** 查询费 */
     QUERY_FEE(26, "查询费"),
     REVERSE(27,"冲正"),
-    REVERSE_FEE(28,"冲正园区账户变动金额")
+    REVERSE_FEE(28,"冲正园区账户变动金额"),
+    /** 圈提取款  */
+    BANK_WITHDRAW(29, "圈提取款"),
+    /** 圈提手续费  */
+    BANK_SERVICE(30, "圈提手续费"),
     ;
     private int code;
     private String name;

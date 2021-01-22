@@ -15,4 +15,5 @@ public class ServiceName {
 	public static final String ASSETS = "assets-service";
 	public static final String LOGGER = "dili-logger";
 	public static final String DD = "DataDictionary-rpc";
+	public static final String MESSAGE = "message-rpc";
 }

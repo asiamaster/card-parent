@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.dili.card.common.constant.FirmIdConstant;
+import com.dili.card.common.provider.CardFaceProvider;
+
 /**
- * @description： 
- *          卡面
+ * @description： 卡面
+ * 
  * @author ：WangBo
  * @time ：2020年9月8日上午10:31:55
  */
 public enum CardFaceType {
+	EMPTY("-- 无--", ""),
 	/** 园外买方 */
 	BUYER("买方卡", "buyer"),
 	/** 园内买方 */
@@ -20,8 +24,7 @@ public enum CardFaceType {
 
 	/** 司机 */
 	DRIVER("司机卡", "driver"),
-	/** 副卡 */
-	SLAVE("副卡", "slave");
+	;
 
 	private String name;
 	private String code;
@@ -31,12 +34,16 @@ public enum CardFaceType {
 		this.code = code;
 	}
 
-	public static List<CardFaceType> getAll() {
-		ArrayList<CardFaceType> arrayList = new ArrayList<>(Arrays.asList(CardFaceType.values()));
-		arrayList.remove(SLAVE);
+	public static List<CardFaceType> getAll(Long firmId) {
+		ArrayList<CardFaceType> arrayList = new ArrayList<>();
+		if (firmId != FirmIdConstant.SG) {
+			arrayList.add(EMPTY);
+			return arrayList;
+		}
+		arrayList.addAll(Arrays.asList(CardFaceType.values()));
 		return arrayList;
 	}
-	
+
 	public static String getTypeName(String code) {
 		for (CardFaceType type : CardFaceType.values()) {
 			if (type.getCode().equals(code)) {
@@ -45,7 +52,7 @@ public enum CardFaceType {
 		}
 		return null;
 	}
-	
+
 	public String getName() {
 		return name;
 	}

@@ -64,7 +64,6 @@ import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateState;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.RuleFeeBusinessType;
-import com.dili.card.type.ServiceType;
 import com.dili.card.type.SystemSubjectType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
@@ -199,7 +198,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 			CreateTradeRequestDto requestDto = new CreateTradeRequestDto();
 			requestDto.setAccountId(openCardResponse.getFundAccountId());
 			BalanceResponseDto resolver = GenericRpcResolver.resolver(payRpc.getAccountBalance(requestDto),
-					ServiceType.PAY_SERVICE.getName());
+					ServiceName.PAY);
 			tradeResponseDto.setBalance(resolver.getAvailableAmount());
 			tradeResponseDto.setFrozenBalance(0L);
 		} else {

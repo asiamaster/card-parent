@@ -3,10 +3,10 @@ package com.dili.card.rpc.resolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.CardManageRpc;
-import com.dili.card.type.ServiceType;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 
@@ -33,14 +33,14 @@ public class CardManageRpcResolver {
      * 退卡
      */
     public void returnCard(CardRequestDto cardParam) {
-    	GenericRpcResolver.resolver(cardManageRpc.returnCard(cardParam), ServiceType.ACCOUNT_SERVCIE.getName());
+    	GenericRpcResolver.resolver(cardManageRpc.returnCard(cardParam), ServiceName.ACCOUNT);
     }
 
     /**
      * 重置密码
      */
     public void resetLoginPwd(CardRequestDto cardParam) {
-    	GenericRpcResolver.resolver(cardManageRpc.resetLoginPwd(cardParam), ServiceType.ACCOUNT_SERVCIE.getName());
+    	GenericRpcResolver.resolver(cardManageRpc.resetLoginPwd(cardParam), ServiceName.ACCOUNT);
     }
 
     /**
