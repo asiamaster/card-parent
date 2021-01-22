@@ -197,7 +197,7 @@ public class OpenCardController implements IControllerHandler {
 	 *  设置子商户的市场ID到request中
 	 */
 	private void setSubMarketIdToRequest(Long firmId, Long costFee, HttpServletRequest request) {
-		if(costFee <= 0) {
+		if(costFee == null || costFee <= 0) {
 			return;
 		}
 		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);

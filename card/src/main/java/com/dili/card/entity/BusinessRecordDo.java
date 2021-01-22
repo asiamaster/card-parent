@@ -633,7 +633,7 @@ public class BusinessRecordDo implements Serializable {
 	 */
 	public String getStartBalanceView() {
 		if (this.startBalance == null || this.startBalance.equals(0L)) {
-			return "0";
+			return "--";
 		}
 		return CurrencyUtils.toYuanWithStripTrailingZeros(this.startBalance);
 	}
@@ -644,7 +644,7 @@ public class BusinessRecordDo implements Serializable {
 	 */
 	public String getAmountView() {
 		if (this.amount == null || this.amount.equals(0L)) {
-			return "0";
+			return "--";
 		}
 		return CurrencyUtils.toYuanWithStripTrailingZeros(this.amount);
 	}
@@ -655,7 +655,7 @@ public class BusinessRecordDo implements Serializable {
 	 */
 	public String getEndBalanceView() {
 		if (this.endBalance == null || this.endBalance.equals(0L)) {
-			return "0";
+			return "--";
 		}
 		return CurrencyUtils.toYuanWithStripTrailingZeros(this.endBalance);
 	}

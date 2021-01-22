@@ -63,12 +63,13 @@
                                 // 已绑定银行卡列表数据
                             	refreshTable();
                                 $("#bankCardTableDiv").show();
-                                return true;
+                                dia.hide();
                             } else {
                                 bs4pop.alert(result.message, {type: 'error'});
                             }
                         }
                     });
+                    return false;
                 }
             }, {
                 label: '取消', className: 'btn-secondary', onClick(e) {
@@ -207,9 +208,12 @@
                     }
                     let accountId = $("#accountId").val();
 	               	var data={id:id, loginPwd:password, accountId:accountId};
-	           	   	$.operate.post(url, data, function (){
-	           	 	   $.table.refresh();
+	           	   	$.operate.post(url, data, function (result){
+	           	   		if(result.success){
+	           	   			dia.hide();
+	           	   		}
 	           	   	});
+	           	   	return false;
                 }
             }, {
                 label: '取消', className: 'btn-secondary', onClick(e) {
