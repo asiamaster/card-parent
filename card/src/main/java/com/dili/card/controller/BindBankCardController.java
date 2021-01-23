@@ -157,6 +157,8 @@ public class BindBankCardController implements IControllerHandler {
 		AssertUtils.notNull(cardParam, "没有任何参数");
 		AssertUtils.notNull(cardParam.getAccountId(), "账户ID不能为空");
 		AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");
+		// 用于校验密码次数过多导致卡片锁定后，输入一次正确的还是能执行操作
+		accountQueryService.getByAccountId(cardParam.getAccountId());
 		GenericRpcResolver.resolver(cardManageRpc.checkPassword(cardParam), ServiceName.ACCOUNT);
 		return BaseOutput.success();
 	}

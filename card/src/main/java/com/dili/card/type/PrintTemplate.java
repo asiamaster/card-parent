@@ -21,6 +21,7 @@ public enum PrintTemplate implements Serializable {
 	PWD_CHANGE("pwdChangeDocument","修改密码"),
 	RESET_PWD("resetPwdDocument","密码重置"),
 	LIFT_LOCKED("liftLockedDocument","解锁"),
+	CYCLE("cycleDocument","结帐申请打印"),
 	;
 
 	private String type;

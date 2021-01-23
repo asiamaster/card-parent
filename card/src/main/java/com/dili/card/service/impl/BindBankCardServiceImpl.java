@@ -65,6 +65,8 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 	@Override
 	public boolean addBind(BindBankCardDto newDataDto) {
 		// TODO 保存本地操作记录
+		// 用于校验密码次数过多导致卡片锁定后，输入一次正确的还是能执行操作
+		accountQueryService.getByAccountId(newDataDto.getAccountId());
 		
 		// 校验是否重复
 		existsBankNo(newDataDto.getBankNo(), newDataDto.getAccountId(), newDataDto.getFirmId());

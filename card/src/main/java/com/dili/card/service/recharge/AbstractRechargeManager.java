@@ -23,6 +23,8 @@ import com.dili.card.type.OperateType;
 import com.dili.card.type.PaySubject;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
+import com.diligrp.message.sdk.domain.input.MessageInfoInput;
+import com.diligrp.message.sdk.rpc.SmsMessageRpc;
 
 /**
  * @Auther: miaoguoxin
@@ -37,6 +39,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
     protected ISerialService serialService;
     @Autowired
     private IAccountQueryService accountQueryService;
+    
 
 
     /**
@@ -98,6 +101,9 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         this.afterRecharge(requestDto, businessRecord);
         //记录远程日志数据
         this.doRecordCompleteLog(requestDto, businessRecord, tradeResponseDto);
+        
+        // 发送短信
+        
         return businessRecord.getSerialNo();
     }
 

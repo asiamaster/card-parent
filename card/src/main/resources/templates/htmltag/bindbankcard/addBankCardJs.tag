@@ -66,6 +66,7 @@
 
     // 账户类型交互
     $('#bankAccountType').change(function () {
+    	$('#bankNamePersonal').val('');
         if($(this).val() == 1) {
             $('[data-account-type="1"]').show();
             $('[data-account-type="2"]').hide();

@@ -41,6 +41,7 @@ public enum CardFaceType {
 			return arrayList;
 		}
 		arrayList.addAll(Arrays.asList(CardFaceType.values()));
+		arrayList.remove(EMPTY);
 		return arrayList;
 	}
 
