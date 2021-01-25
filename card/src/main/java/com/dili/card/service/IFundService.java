@@ -48,7 +48,7 @@ public interface IFundService {
      * @author miaoguoxin
      * @date 2020/12/24
      */
-    PageOutput<List<PipelineRecordResponseDto>> bankWithdrawPage(PipelineRecordQueryDto param);
+    PageOutput<List<PipelineRecordResponseDto>> todayBankWithdrawPage(PipelineRecordQueryDto param);
 
     /**
     * 银行圈提回调

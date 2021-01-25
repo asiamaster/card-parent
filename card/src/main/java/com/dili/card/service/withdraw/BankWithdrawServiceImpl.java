@@ -87,7 +87,7 @@ public class BankWithdrawServiceImpl extends WithdrawServiceImpl {
 //    }
 
     @Override
-    protected SerialDto createAccountSerial(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
+    public SerialDto createAccountSerial(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
         if (fundRequestDto.getServiceCost() == 0L) {//特殊处理为0时记录
             FeeItemDto feeItem = new FeeItemDto();
             feeItem.setType(FeeType.SERVICE.getCode());
@@ -99,18 +99,18 @@ public class BankWithdrawServiceImpl extends WithdrawServiceImpl {
         }
         return serialService.createAccountSerialWithFund(businessRecord, withdrawResponse, (serialRecord, feeType) -> {
             if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
-                serialRecord.setFundItem(FundItem.EBANK_WITHDRAW.getCode());
-                serialRecord.setFundItemName(FundItem.EBANK_WITHDRAW.getName());
+                serialRecord.setFundItem(FundItem.BANK_WITHDRAW.getCode());
+                serialRecord.setFundItemName(FundItem.BANK_WITHDRAW.getName());
             }
             if (Integer.valueOf(FeeType.SERVICE.getCode()).equals(feeType)) {
-                serialRecord.setFundItem(FundItem.EBANK_SERVICE.getCode());
-                serialRecord.setFundItemName(FundItem.EBANK_SERVICE.getName());
+                serialRecord.setFundItem(FundItem.BANK_SERVICE.getCode());
+                serialRecord.setFundItemName(FundItem.BANK_SERVICE.getName());
             }
         });
     }
 
     @Override
-    protected MessageBo<String> handleSerialAfterCommitWithdraw(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
+    public MessageBo<String> handleSerialAfterCommitWithdraw(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
         //以防空异常，默认成功
         int payState = NumberUtils.toInt(withdrawResponse.getState() + "", BankWithdrawState.SUCCESS.getCode());
         if (payState == BankWithdrawState.SUCCESS.getCode()) {

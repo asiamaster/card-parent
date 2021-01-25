@@ -1,19 +1,5 @@
 package com.dili.card.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.cache.CharacterTypeCache;
 import com.dili.card.exception.CardAppBizException;
@@ -24,6 +10,18 @@ import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service("customerService")
 public class CustomerServiceImpl implements ICustomerService {
@@ -48,7 +46,7 @@ public class CustomerServiceImpl implements ICustomerService {
 		return String.join(",", typesList);
 	}
 
-	
+
 	public List<String> getSubTypes(List<CharacterType> typeList) {
 		if (CollectionUtils.isEmpty(typeList)) {
 			return Lists.newArrayList();
@@ -62,11 +60,14 @@ public class CustomerServiceImpl implements ICustomerService {
 
 	@Override
 	public String getSubTypeCodes(Long cid, Long firmId) {
+		if (cid == null || firmId == null) {
+			return "";
+		}
 		CustomerExtendDto customer = customerRpcResolver.findCustomerById(cid, firmId);
 		List<String> subTypes = getSubTypes(customer.getCharacterTypeList());
 		return String.join(",", subTypes);
 	}
-	
+
 	public String getSubTypeName(List<CharacterType> typeList, Long firmId) {
 		if (CollectionUtils.isEmpty(typeList)) {
 			return "";
@@ -74,7 +75,7 @@ public class CustomerServiceImpl implements ICustomerService {
 		// 获取缓存中的数据字典角色及身份信息
 		List<DataDictionaryValue> ddList = characterTypeCache.getSubTypeList(firmId);
 		log.info("市场{}客户角色身份信息{}", firmId, JSONObject.toJSONString(ddList));
-		
+
 		List<String> subTypeNameList = Lists.newArrayList();
 		typeList.forEach(characterType -> {
 			if(StringUtils.isBlank(characterType.getCharacterType())) {

@@ -59,7 +59,7 @@ public class EBankWithdrawServiceImpl extends WithdrawServiceImpl {
     }
 
     @Override
-    protected List<FeeItemDto> createFees(FundRequestDto fundRequestDto) {
+    public List<FeeItemDto> createFees(FundRequestDto fundRequestDto) {
         if (fundRequestDto.getServiceCost() == 0L) {
             return null;
         }
@@ -73,7 +73,7 @@ public class EBankWithdrawServiceImpl extends WithdrawServiceImpl {
     }
 
     @Override
-    protected SerialDto createAccountSerial(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
+    public SerialDto createAccountSerial(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
         if (fundRequestDto.getServiceCost() == 0L) {//特殊处理为0时记录
             FeeItemDto feeItem = new FeeItemDto();
             feeItem.setType(FeeType.SERVICE.getCode());
