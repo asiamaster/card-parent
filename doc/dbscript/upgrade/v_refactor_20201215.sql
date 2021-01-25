@@ -54,7 +54,7 @@ CREATE TABLE `dili_card`.`card_reverse_record`  (
 CREATE TABLE `dili_card`.`card_bind_bank_card` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `bank_account_type` tinyint(3) unsigned NOT NULL COMMENT '账户类型-个人账户 对公账户',
-  `account_id` bigint(20) NOT NULL COMMENT '园区卡账号',
+  `account_id` bigint(20) DEFAULT NULL COMMENT '园区卡账号（市场帐户绑定没有园区卡帐号）',
   `fund_account_id` bigint(20) NOT NULL COMMENT '资金账号ID',
   `bank_name` varchar(50) DEFAULT NULL COMMENT '银行名称',
   `bank_type` int(20) NOT NULL COMMENT '银行类型-工商银行',
