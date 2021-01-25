@@ -2,100 +2,100 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dili.card.dao.IBindBankCardDao">
-	
+
 	<select id="selectList" resultType="com.dili.card.dto.BindBankCardDto">
 		SELECT
-			`id`, 
-			`bank_account_type`, 
-			`account_id`, 
+			`id`,
+			`bank_account_type`,
+			`account_id`,
 			`fund_account_id`,
-			`bank_name`, 
-			`bank_type`, 
-			`bank_no`, 
-			`opening_bank`, 
-			`opening_bank_num`, 
-			`name`, 
-			`status`, 
+			`bank_name`,
+			`bank_type`,
+			`bank_no`,
+			`opening_bank`,
+			`opening_bank_num`,
+			`name`,
+			`status`,
 			`firm_id`,
-			`operator_id`, 
-			`operator_name`, 
-			`create_time`, 
-			`modify_time`, 
+			`operator_id`,
+			`operator_name`,
+			`create_time`,
+			`modify_time`,
 			`description`
 		FROM
 			card_bind_bank_card
 		WHERE
-			firm_id = ${firmId}
+			firm_id = #{firmId}
 			AND status = 1
 			<if test="accountId != null">AND `account_id` = #{accountId} </if>
 			<if test="bankNo != null">AND `bank_no` = #{bankNo} </if>
 			<if test="sort != null">ORDER BY ${sort} ${order} </if>
 	</select>
-	
+
 	<insert id="save">
 		INSERT INTO card_bind_bank_card (
-			`bank_account_type`, 
-			`account_id`, 
+			`bank_account_type`,
+			`account_id`,
 			`fund_account_id`,
-			`bank_name`, 
-			`bank_type`, 
-			`bank_no`, 
-			`opening_bank`, 
-			`opening_bank_num`, 
-			`name`, 
+			`bank_name`,
+			`bank_type`,
+			`bank_no`,
+			`opening_bank`,
+			`opening_bank_num`,
+			`name`,
 			`status`,
-			`firm_id`, 
-			`operator_id`, 
-			`operator_name`, 
-			`create_time`, 
-			`modify_time`, 
+			`firm_id`,
+			`operator_id`,
+			`operator_name`,
+			`create_time`,
+			`modify_time`,
 			`description`
 		)
 		VALUES (
-			#{bankAccountType}, 
-			#{accountId}, 
+			#{bankAccountType},
+			#{accountId},
 			#{fundAccountId},
-			#{bankName}, 
-			#{bankType}, 
-			#{bankNo}, 
-			#{openingBank}, 
-			#{openingBankNum}, 
-			#{name}, 
-			#{status}, 
+			#{bankName},
+			#{bankType},
+			#{bankNo},
+			#{openingBank},
+			#{openingBankNum},
+			#{name},
+			#{status},
 			#{firmId},
-			#{operatorId}, 
-			#{operatorName}, 
-			#{createTime}, 
-			#{modifyTime}, 
+			#{operatorId},
+			#{operatorName},
+			#{createTime},
+			#{modifyTime},
 			#{description}
 		)
 	</insert>
-	
+
 	<select id="getById" resultType="com.dili.card.entity.BindBankCardDo">
 		SELECT
-			`id`, 
-			`bank_account_type`, 
-			`account_id`, 
-			`fund_account_id`, 
+			`id`,
+			`bank_account_type`,
+			`account_id`,
+			`fund_account_id`,
 			`bank_name`,
-			`bank_type`, 
-			`bank_no`, 
-			`opening_bank`, 
-			`opening_bank_num`, 
-			`name`, 
-			`status`, 
+			`bank_type`,
+			`bank_no`,
+			`opening_bank`,
+			`opening_bank_num`,
+			`name`,
+			`status`,
 			`firm_id`,
-			`operator_id`, 
-			`operator_name`, 
-			`create_time`, 
-			`modify_time`, 
+			`operator_id`,
+			`operator_name`,
+			`create_time`,
+			`modify_time`,
 			`description`
 		FROM
 			card_bind_bank_card
 		WHERE
 			id = #{id}
 	</select>
-	
+
 	<update id="update">
 		UPDATE card_bind_bank_card
 	 	<set>
@@ -118,7 +118,7 @@
 		WHERE
 			id = #{id}
 	</update>
-	
+
 	<delete id="batchRemove">
 		DELETE
 		FROM

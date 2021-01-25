@@ -1,0 +1,174 @@
+<#bs4Body>
+
+<div class="container-fluid">
+	<div>
+		<div class="breadcrumb">
+			账户信息
+		</div>
+		<form id="withdraw-form">
+			<div class="row row-cols-3">
+				<div class="form-group col">
+					<label>提款账户</label>
+					<input type="text" class="form-control" value="${result.firm.name!}" readonly>
+				</div>
+			</div>
+			<div class="row row-cols-3">
+				<div class="form-group col">
+					<label>提款金额</label>
+					<input type="text" name="amount" id = "amount" class="form-control">
+				</div>
+			</div>
+
+			<div class="row row-cols-3">
+				<div class="form-group col">
+					<label>提现方式</label>
+					<input type="text" class="form-control" value="银行卡提现" readonly>
+				</div>
+			</div>
+			<div class="row row-cols-3">
+				<div class="form-group col">
+					<label>选择银行卡</label>
+					<select class="custom-select">
+						<option selected>请选择</option>
+						<% if(result.bindBankCardList.~size>0) { %>
+						   <% for(item in result.bindBankCardList) { %>
+						       <option value="${item.id!}">${item.bankName!}</option>
+						   <% } %>
+						<% } %>
+					</select>
+				</div>
+			</div>
+			<div class="row row-cols-3">
+				<div class="form-group col">
+					<label>交易密码</label>
+					<input type="text" name="tradePwd" id="tradePwd" class="form-control" >
+				</div>
+			</div>
+		</form>
+		<div align="center" class="mt-5">
+			<button id="frozenAccount" type="button"  class="btn btn-primary px-5"   onclick="submitFrozen()">
+				确认提现
+			</button>
+		</div>
+	</div>
+	<hr>
+		<div class="breadcrumb">
+			市场信息
+		</div>
+		<div id="mer-info">
+			<div class="row row-cols-4">
+				<div class="form-group col">
+					<label>市场编号</label>
+					<input type="text" class="form-control" value="${result.merInfo.code!}" readonly>
+				</div>
+				<div class="form-group col">
+					<label>市场名称</label>
+					<input type="text" class="form-control" value="${result.merInfo.name!}" readonly>
+				</div>
+			</div>
+			<div class="row row-cols-4">
+				<div class="form-group col">
+					<label>账户余额</label>
+					<input type="text" class="form-control" value="${result.balanceInfo.balanceText!}" readonly>
+				</div>
+				<div class="form-group col">
+					<label>冻结金额</label>
+					<input type="text" class="form-control" value="${result.balanceInfo.frozenAmountText!}" readonly>
+				</div>
+				<div class="form-group col">
+					<label>可提金额</label>
+					<input type="text" class="form-control" value="${result.balanceInfo.availableAmountText!}" readonly>
+				</div>
+			</div>
+		</div>
+
+		<!-- 提现记录列表 -->
+		<div >
+			<div class="breadcrumb">
+				提现记录
+			</div>
+			<form id="queryForm" role="form">
+				<input type="hidden" class="form-control" name="accountId" id="accountId" value="${result.merInfo.vouchAccount!}" />
+				<input type="hidden" class="form-control" name="type" id="type" value="12"/>
+				<input type="hidden" class="form-control" name="tradeChannel" id="tradeChannel" value="5"/>
+			</form>
+			<table id="grid" data-title="圈提记录列表"
+				   data-buttons-class="primary" data-icons="bui.variable.icons">
+				<thead>
+				<tr>
+					<th data-field="id" data-align="center">序号</th>
+					<th data-field="serialNo" data-align="center">订单号</th>
+					<th data-field="operateTime" data-align="center">订单时间</th>
+					<th data-field="amountText" data-align="center">提现金额</th>
+					<th data-field="endBalanceText" data-align="center">期末金额</th>
+				</tr>
+				</thead>
+			</table>
+		</div>
+</div>
+</#bs4Body>
+<script type="text/javascript"
+		src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript"
+		src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
+<script id="confirmCommit" type="text/html">
+	<div style='font-size: 18px'>
+		<span>确认账户 ${result.merInfo.name!} （）提现？</span>
+	</div>
+	<div style='text-align: center;color: red'>
+		<h3>{data}</h3>
+	</div>
+</script>
+<script>
+	$(function () {
+		var options = {
+			uniqueId: "id",
+			url : "${contextPath}/serial/business/page.action",
+			sortName: "operate_time",
+			modalName: "圈提查询列表"
+		};
+		$.table.init(options);
+	});
+
+	let formId = "withdraw-form";
+	$("#" + formId).validate({
+		onkeyup: false,
+		rules: {
+			amount: {
+				decimalsValue: true,
+			},
+			tradePwd: {
+				required: true,
+			},
+		},
+		messages: {
+			tradePwd: {
+				required: "请输入交易密码",
+			}
+		},
+		focusCleanup: true
+	});
+
+	function submitFrozen() {
+		let amountVal = $("#amount").val();
+		let requestData = {
+			amount: yuanToFen(amountVal)
+		};
+		let url = '${contextPath}/fund/frozen.action';
+
+		/*if (!$.validate.form(formId)) {
+			return;
+		}*/
+		let templateData = {
+			name: ${result.merInfo.name!},
+			withdrawAmount:parseFloat(amountVal).toFixed(2)
+		};
+
+		$.modal.confirm(bui.util.HTMLDecode(template('confirmCommit', templateData)), function (sure) {
+			if (!sure) {
+				return;
+			}
+		});
+	}
+</script>

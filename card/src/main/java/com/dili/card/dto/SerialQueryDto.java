@@ -35,6 +35,8 @@ public class SerialQueryDto extends SerialDto {
     private Integer state;
     /** 操作类型*/
     private Integer type;
+    /**交易渠道 {@link com.dili.card.type.TradeChannel}*/
+    private Integer tradeChannel;
     /** 操作类型列表*/
     private List<Integer> operateTypeList;
     /** 账户id列表*/
@@ -45,6 +47,14 @@ public class SerialQueryDto extends SerialDto {
     private Boolean sortConvert;
     /**是否包含副卡 1是*/
     private Integer includeSlave;
+
+    public Integer getTradeChannel() {
+        return tradeChannel;
+    }
+
+    public void setTradeChannel(Integer tradeChannel) {
+        this.tradeChannel = tradeChannel;
+    }
 
     public List<String> getCardNos() {
         return cardNos;

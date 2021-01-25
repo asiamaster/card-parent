@@ -134,17 +134,34 @@ public class CycleStatisticService implements ICycleStatisticService {
 		}
 
 		// 现金收款包括充值和工本费
-		accountCycleBussinessDetail.setBeforeReverseDepoCashAmount(accountCycleBussinessDetail.getDepoCashAmount()
-				+ accountCycleBussinessDetail.getOpenCostAmount() + accountCycleBussinessDetail.getChangeCostAmount());
+		accountCycleBussinessDetail.setBeforeReverseDepoCashAmount(
+				NumberUtil.add(
+						accountCycleBussinessDetail.getBeforeReverseDepoCashAmount(),
+						accountCycleBussinessDetail.getOpenCostAmount(),
+						accountCycleBussinessDetail.getChangeCostAmount()
+				).longValue()
+		);
 		accountCycleBussinessDetail.setDepoCashTimes(
-				accountCycleBussinessDetail.getDepoCashTimes() + accountCycleBussinessDetail.getOpenCostFeetimes()
-						+ accountCycleBussinessDetail.getChangeCostFeetimes());
+				NumberUtil.add(
+						accountCycleBussinessDetail.getDepoCashTimes(),
+						accountCycleBussinessDetail.getOpenCostFeetimes(),
+						accountCycleBussinessDetail.getChangeCostFeetimes()
+				).intValue()
+		);
 
 		//圈提的需要特殊处理，合并到网银提现中(圈提没有冲正,暂时不考虑冲正后的金额计算)
-		accountCycleBussinessDetail.setBankOutTimes(NumberUtil.add(accountCycleBussinessDetail.getBankOutTimes(),
-				accountCycleBussinessDetail.getBankCircleOutTimes()).intValue());
-		accountCycleBussinessDetail.setBeforeReverseBankOutAmount(NumberUtil.add(accountCycleBussinessDetail.getBankOutAmount(),
-				accountCycleBussinessDetail.getBankCircleOutAmount()).longValue());
+		accountCycleBussinessDetail.setBankOutTimes(
+				NumberUtil.add(
+						accountCycleBussinessDetail.getBankOutTimes(),
+						accountCycleBussinessDetail.getBankCircleOutTimes()
+				).intValue()
+		);
+		accountCycleBussinessDetail.setBeforeReverseBankOutAmount(
+				NumberUtil.add(
+						accountCycleBussinessDetail.getBankOutAmount(),
+						accountCycleBussinessDetail.getBankCircleOutAmount()
+				).longValue()
+		);
 	}
 
 
@@ -190,11 +207,14 @@ public class CycleStatisticService implements ICycleStatisticService {
 	 */
 	protected void mergeAccountCycleDetail(AccountCycleDetailDto masterCycleDetail,
 			AccountCycleDetailDto accountCycleReverseDetail) {
-
+		//冲正前
 		masterCycleDetail.setBeforeReverseBankInAmount(masterCycleDetail.getBankInAmount());
 		masterCycleDetail.setBeforeReverseDepoCashAmount(masterCycleDetail.getDepoCashAmount());
 		masterCycleDetail.setBeforeReverseDepoPosAmount(masterCycleDetail.getDepoPosAmount());
 		masterCycleDetail.setBeforeReverseDrawCashAmount(masterCycleDetail.getDrawCashAmount());
+		masterCycleDetail.setBeforeReverseBankOutAmount(masterCycleDetail.getBankOutAmount());
+
+		//冲正后
 		masterCycleDetail
 				.setBankInAmount(masterCycleDetail.getBankInAmount() + accountCycleReverseDetail.getBankInAmount());
 		masterCycleDetail

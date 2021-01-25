@@ -1,23 +1,21 @@
 package com.dili.card.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.dili.assets.sdk.rpc.CityRpc;
 import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
+import com.dili.card.dto.FirmWithdrawInitResponseDto;
 import com.dili.card.dto.PipelineRecordQueryDto;
 import com.dili.card.dto.pay.PipelineRecordResponseDto;
+import com.dili.card.service.IFirmWithdrawService;
 import com.dili.card.service.IFundService;
-import com.dili.card.validator.ConstantValidator;
-import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
-import com.dili.uap.sdk.domain.Firm;
 import com.dili.uap.sdk.domain.UserTicket;
-import com.dili.uap.sdk.rpc.FirmRpc;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @description：市场圈提 
- *          
+ * @description：市场圈提
+ *
  * @author     ：WangBo
  * @time       ：2021年1月14日上午9:43:02
  */
@@ -40,21 +38,19 @@ public class FirmWithdrawController implements IControllerHandler {
 
     @Autowired
     private IFundService fundService;
-    
-    FirmRpc firmRpc;
+    @Autowired
+    private IFirmWithdrawService firmWithdrawService;
+
     /**
      * 初始化圈提页面数据
      */
     @GetMapping("/init.html")
-    public String listView() {
-    	UserTicket userTicket = getUserTicket();
-    	// 查询市场信息
-    	BaseOutput<Firm> byId = firmRpc.getById(userTicket.getFirmId());
-    	// 查询余额
-    	
-    	// 查询绑定列表
-    	
-        return "firmwithdraw/accountInfo";
+    public String listView(ModelMap modelMap) {
+        UserTicket userTicket = getUserTicket();
+        FirmWithdrawInitResponseDto result = firmWithdrawService.init(userTicket.getFirmId());
+        String json = JSON.toJSONString(result, new EnumTextDisplayAfterFilter());
+        modelMap.put("result", JSON.parseObject(json));
+        return "firmwithdraw/init";
     }
 
     /**
@@ -68,7 +64,7 @@ public class FirmWithdrawController implements IControllerHandler {
         PageOutput<List<PipelineRecordResponseDto>> result = fundService.bankWithdrawPage(param);
         return successPage(result);
     }
-    
+
     /**
      * 市场圈提历史记录
      */

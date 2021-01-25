@@ -1,7 +1,7 @@
 package com.dili.card.common.constant;
 
 /**
- * @description： 
+ * @description：
  *          服务名称
  * @author ：WangBo
  * @time ：2020年8月5日下午3:45:14
@@ -16,4 +16,5 @@ public class ServiceName {
 	public static final String LOGGER = "dili-logger";
 	public static final String DD = "DataDictionary-rpc";
 	public static final String MESSAGE = "message-rpc";
+    public static final String UAP = "uap-service";
 }

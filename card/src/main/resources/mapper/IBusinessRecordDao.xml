@@ -237,6 +237,9 @@
 		<if test="type != null">
 			and `type` = #{type}
 		</if>
+		<if test="tradeChannel != null">
+			and `trade_channel` = #{tradeChannel}
+		</if>
 		<if test="operatorId != null">
 			and `operator_id` = #{operatorId}
 		</if>

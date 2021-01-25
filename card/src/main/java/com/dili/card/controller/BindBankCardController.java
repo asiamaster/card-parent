@@ -68,7 +68,7 @@ public class BindBankCardController implements IControllerHandler {
 	@Resource
 	private ICustomerService customerService;
 	@Resource
-	IBusinessLogService businessLogService;
+	private IBusinessLogService businessLogService;
 	/**
 	 * 进入绑定首页
 	 */
@@ -228,7 +228,7 @@ public class BindBankCardController implements IControllerHandler {
 		LOG.info("解绑银行卡*****" + JSONObject.toJSONString(bankCardDto));
 		AssertUtils.notNull(bankCardDto.getAccountId(), "账户ID不能为空");
 		AssertUtils.notEmpty(bankCardDto.getLoginPwd(), "密码不能为空");
-		
+
 		// 设置操作人信息
 		UserTicket user = getUserTicket();
 		// 操作日志

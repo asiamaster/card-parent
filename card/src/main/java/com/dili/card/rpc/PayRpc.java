@@ -1,5 +1,6 @@
 package com.dili.card.rpc;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.config.PayServiceFeignConfig;
 import com.dili.card.dto.FundAccountDto;
 import com.dili.card.dto.PayCreateFundReponseDto;
@@ -11,6 +12,7 @@ import com.dili.card.dto.pay.CustomerBalanceResponseDto;
 import com.dili.card.dto.pay.FreezeFundRecordDto;
 import com.dili.card.dto.pay.FreezeFundRecordParam;
 import com.dili.card.dto.pay.FundOpResponseDto;
+import com.dili.card.dto.pay.MerAccountResponseDto;
 import com.dili.card.dto.pay.PayBankDto;
 import com.dili.card.dto.pay.PayReverseRequestDto;
 import com.dili.card.dto.pay.PipelineRecordParam;
@@ -171,4 +173,9 @@ public interface PayRpc {
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.channel.service:listBanks", method = RequestMethod.POST)
     BaseOutput<List<PayBankDto>> searchOpeningBank(PayBankDto payBankDto);
 
+    /**
+     * 查询商户账号
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.account.service:merchant", method = RequestMethod.POST)
+    BaseOutput<MerAccountResponseDto> getMerAccount(JSONObject params);
 }

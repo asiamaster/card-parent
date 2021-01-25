@@ -10,6 +10,7 @@ import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.print.PrintDispatcher;
+import com.dili.card.type.OperateState;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.util.DateUtil;
 import com.dili.ss.domain.BaseOutput;
