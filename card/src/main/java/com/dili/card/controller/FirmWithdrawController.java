@@ -5,10 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.FirmWithdrawInitResponseDto;
+import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.PipelineRecordQueryDto;
 import com.dili.card.dto.pay.PipelineRecordResponseDto;
 import com.dili.card.service.IFirmWithdrawService;
-import com.dili.card.service.IFundService;
+import com.dili.card.util.AssertUtils;
+import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 import org.slf4j.Logger;
@@ -37,8 +39,6 @@ public class FirmWithdrawController implements IControllerHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(FirmWithdrawController.class);
 
     @Autowired
-    private IFundService fundService;
-    @Autowired
     private IFirmWithdrawService firmWithdrawService;
 
     /**
@@ -53,27 +53,30 @@ public class FirmWithdrawController implements IControllerHandler {
         return "firmwithdraw/init";
     }
 
-    /**
-     * 市场圈提历史记录
-     */
-    @PostMapping("/withdraw.action")
-    @ResponseBody
-    public Map<String, Object> withdraw(@RequestBody PipelineRecordQueryDto param) {
-        LOGGER.info("分页查询卡账户列表*****{}", JSONObject.toJSONString(param));
-        buildOperatorInfo(param);
-        PageOutput<List<PipelineRecordResponseDto>> result = fundService.bankWithdrawPage(param);
-        return successPage(result);
-    }
 
     /**
      * 市场圈提历史记录
      */
-    @RequestMapping("/withdrawPage.action")
+    @PostMapping("/withdrawPage.action")
     @ResponseBody
     public Map<String, Object> page(PipelineRecordQueryDto param) {
-        LOGGER.info("分页查询卡账户列表*****{}", JSONObject.toJSONString(param));
+        LOGGER.info("分页查询市场圈提历史记录列表*****{}", JSONObject.toJSONString(param));
+        AssertUtils.notNull(param.getAccountId(), "市场账号不能为空");
         buildOperatorInfo(param);
-        PageOutput<List<PipelineRecordResponseDto>> result = fundService.bankWithdrawPage(param);
+        PageOutput<List<PipelineRecordResponseDto>> result = firmWithdrawService.bankWithdrawPage(param);
         return successPage(result);
+    }
+
+    /**
+     *  市场圈提
+     * @author miaoguoxin
+     * @date 2021/1/25
+     */
+    @PostMapping("/withdraw.action")
+    @ResponseBody
+    public BaseOutput<?> merWithdraw(@RequestBody FundRequestDto requestDto) {
+        buildOperatorInfo(requestDto);
+        firmWithdrawService.doMerWithdraw(requestDto);
+        return BaseOutput.success();
     }
 }

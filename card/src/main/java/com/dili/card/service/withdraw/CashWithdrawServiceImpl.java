@@ -39,7 +39,7 @@ public class CashWithdrawServiceImpl extends WithdrawServiceImpl {
     }
 
     @Override
-    protected SerialDto createAccountSerial(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
+    public SerialDto createAccountSerial(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
         return serialService.createAccountSerialWithFund(businessRecord, withdrawResponse, (serialRecord, feeType) -> {
             if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
                 serialRecord.setFundItem(FundItem.CASH_WITHDRAW.getCode());

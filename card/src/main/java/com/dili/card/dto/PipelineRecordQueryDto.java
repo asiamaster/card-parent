@@ -3,7 +3,7 @@ package com.dili.card.dto;
 /**
  *
  */
-public class PipelineRecordQueryDto extends BaseDto{
+public class PipelineRecordQueryDto extends CardRequestDto{
 	/** 交易类型*/
 	private Integer type;
 

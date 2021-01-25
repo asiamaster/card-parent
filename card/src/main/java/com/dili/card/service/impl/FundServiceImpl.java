@@ -165,7 +165,7 @@ public class FundServiceImpl implements IFundService {
     }
 
     @Override
-    public PageOutput<List<PipelineRecordResponseDto>> bankWithdrawPage(PipelineRecordQueryDto param) {
+    public PageOutput<List<PipelineRecordResponseDto>> todayBankWithdrawPage(PipelineRecordQueryDto param) {
         PipelineRecordParam query = new PipelineRecordParam();
         query.setType(PayPipelineType.BANK_WITHDRAW.getCode());
         String today = DateUtil.format(new Date(), "yyyy-MM-dd");

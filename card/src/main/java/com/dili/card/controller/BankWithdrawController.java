@@ -53,7 +53,10 @@ public class BankWithdrawController implements IControllerHandler {
     public Map<String, Object> page(@Validated(ConstantValidator.Page.class) PipelineRecordQueryDto param) {
         LOGGER.info("分页查询卡账户列表*****{}", JSONObject.toJSONString(param));
         buildOperatorInfo(param);
-        PageOutput<List<PipelineRecordResponseDto>> result = fundService.bankWithdrawPage(param);
+
+        PageOutput<List<PipelineRecordResponseDto>> result = fundService.todayBankWithdrawPage(param);
         return successPage(result);
     }
+
+
 }

@@ -34,6 +34,9 @@ public class PayReverseRequestDto implements Serializable {
      * @date 2020/7/6
      */
     public void addFee(Long serviceCost, FundItem fundItem) {
+        if (fundItem == null){
+            return;
+        }
         if (this.fee == null) {
             this.fee = new FeeItemDto();
         }

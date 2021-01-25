@@ -88,7 +88,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
      * @author miaoguoxin
      * @date 2021/1/14
      */
-    protected MessageBo<String> handleSerialAfterCommitWithdraw(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
+    public MessageBo<String> handleSerialAfterCommitWithdraw(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
         //取款成功后修改业务单状态、存储流水
         SerialDto serialDto = this.createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
         serialService.handleSuccess(serialDto);
@@ -102,14 +102,14 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
      * @param withdrawResponse
      * @return
      */
-    protected abstract SerialDto createAccountSerial(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse);
+    public abstract SerialDto createAccountSerial(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse);
 
     /**
      * 构建费用列表
      * @param fundRequestDto
      * @return
      */
-    protected List<FeeItemDto> createFees(FundRequestDto fundRequestDto) {
+    public List<FeeItemDto> createFees(FundRequestDto fundRequestDto) {
         return null;
     }
 
@@ -119,7 +119,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
      * @param accountCard
      * @return
      */
-    protected abstract BusinessRecordDo createBusinessRecord(FundRequestDto fundRequestDto, UserAccountCardResponseDto accountCard);
+    public abstract BusinessRecordDo createBusinessRecord(FundRequestDto fundRequestDto, UserAccountCardResponseDto accountCard);
 
     /**
      * 交易渠道（和支付系统有偏差）

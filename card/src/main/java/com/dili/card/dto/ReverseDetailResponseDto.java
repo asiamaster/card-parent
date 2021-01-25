@@ -15,6 +15,16 @@ public class ReverseDetailResponseDto implements Serializable {
     private BusinessRecordResponseDto bizSerial;
     /**费用项记录*/
     private List<SerialRecordResponseDto> feeSerials;
+    /**费用总记录*/
+    private List<SerialRecordResponseDto> totalSerials;
+
+    public List<SerialRecordResponseDto> getTotalSerials() {
+        return totalSerials;
+    }
+
+    public void setTotalSerials(List<SerialRecordResponseDto> totalSerials) {
+        this.totalSerials = totalSerials;
+    }
 
     public UserAccountCardResponseDto getAccountInfo() {
         return accountInfo;
