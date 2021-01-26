@@ -141,6 +141,13 @@ public class CycleStatisticService implements ICycleStatisticService {
 						accountCycleBussinessDetail.getChangeCostAmount()
 				).longValue()
 		);
+		accountCycleBussinessDetail.setDepoCashAmount(
+				NumberUtil.add(
+						accountCycleBussinessDetail.getDepoCashAmount(),
+						accountCycleBussinessDetail.getOpenCostAmount(),
+						accountCycleBussinessDetail.getChangeCostAmount()
+				).longValue()
+		);
 		accountCycleBussinessDetail.setDepoCashTimes(
 				NumberUtil.add(
 						accountCycleBussinessDetail.getDepoCashTimes(),
@@ -162,6 +169,12 @@ public class CycleStatisticService implements ICycleStatisticService {
 						accountCycleBussinessDetail.getBankCircleOutAmount()
 				).longValue()
 		);
+		accountCycleBussinessDetail.setBankOutAmount(
+				NumberUtil.add(
+						accountCycleBussinessDetail.getBankOutAmount(),
+						accountCycleBussinessDetail.getBankCircleOutAmount()
+				).longValue()
+		);
 	}
 
 
@@ -170,8 +183,7 @@ public class CycleStatisticService implements ICycleStatisticService {
 	 */
 	private AccountCycleDetailDto calculateBussinessCashBalanceAmount(AccountCycleDetailDto accountCycleDetail) {
 		accountCycleDetail
-				.setRevenueAmount(accountCycleDetail.getOpenCostAmount() + accountCycleDetail.getChangeCostAmount()
-						+ accountCycleDetail.getDepoCashAmount() - accountCycleDetail.getDrawCashAmount());
+				.setRevenueAmount(accountCycleDetail.getDepoCashAmount() - accountCycleDetail.getDrawCashAmount());
 		return accountCycleDetail;
 	}
 
