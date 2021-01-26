@@ -36,6 +36,7 @@ import com.dili.uap.sdk.domain.Firm;
 import com.dili.uap.sdk.rpc.FirmRpc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -81,6 +82,7 @@ public class FirmWithdrawService implements IFirmWithdrawService {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void doMerWithdraw(FundRequestDto requestDto) {
         //参数校验
         bankWithdrawService.validateSpecial(requestDto);
