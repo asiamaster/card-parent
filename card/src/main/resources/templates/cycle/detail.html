@@ -401,7 +401,7 @@
 		data.userId = $('#userId').val();
 		data.userCode = $('#userCode').val();
 		data.userName = $('#userName').val();
-		data.cashAmount = parseInt(parseFloat($('#settleAmount').val())*100);
+		data.cashAmount = parseInt(parseFloat($('#settleAmount').val()*100).toFixed(2));
 		bui.util.debounce($.operate.saveModal(url, JSON.stringify(data), function (result) {
 	            if (result.code == web_status.SUCCESS) {
 	            	$("#applyPayerAmount").val($("#unDeliverAmount").val());
