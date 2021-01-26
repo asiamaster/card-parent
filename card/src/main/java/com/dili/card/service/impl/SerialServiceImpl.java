@@ -352,11 +352,10 @@ public class SerialServiceImpl implements ISerialService {
         if (NumberUtils.toInt(includeSlave + "") == 1 && StrUtil.isNotBlank(cardNo)) {
             //设置为Null防止sql错乱
             serialQueryDto.setCardNo(null);
-            serialQueryDto.setCardNos(Lists.newArrayList(cardNo));
 
             UserAccountCardQuery masterParam = new UserAccountCardQuery();
             masterParam.setExcludeUnusualState(0);
-            masterParam.setCardNos(Lists.newArrayList(cardNo));
+            masterParam.setAccountIds(Lists.newArrayList(serialQueryDto.getAccountId()));
             List<UserAccountCardResponseDto> masterCards = accountQueryService.getList(masterParam);
             if (CollectionUtil.isEmpty(masterCards)){
                 return;
@@ -368,8 +367,11 @@ public class SerialServiceImpl implements ISerialService {
                 slaveParam.setParentAccountId(masterCard.getAccountId());
                 slaveParam.setExcludeUnusualState(0);
                 List<UserAccountCardResponseDto> slaveCards = accountQueryService.getList(slaveParam);
-                serialQueryDto.getCardNos().addAll(slaveCards.stream()
-                        .map(UserAccountCardResponseDto::getCardNo)
+                
+                serialQueryDto.setAccountId(null);
+                serialQueryDto.setAccountIdList(Lists.newArrayList( masterCard.getAccountId()));
+                serialQueryDto.getAccountIdList().addAll(slaveCards.stream()
+                        .map(UserAccountCardResponseDto::getAccountId)
                         .collect(Collectors.toList()));
             }
         }

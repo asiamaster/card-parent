@@ -77,7 +77,9 @@ public class CardStorageOutController implements IControllerHandler {
      * @date 2020/7/2
      */
     @GetMapping("outAdd.html")
-    public String outAddView() {
+    public String outAddView(ModelMap map) {
+    	boolean cardFaceIsMust = cardStorageService.cardFaceIsMust();
+    	map.put("cardFaceIsMust", cardFaceIsMust);
         return "cardstorage/outAdd";
     }
 

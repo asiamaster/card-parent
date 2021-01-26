@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.constant.FirmIdConstant;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.CardStorageOutQueryDto;
 import com.dili.card.entity.StorageInDo;
@@ -21,6 +23,7 @@ import com.dili.card.service.ICardStorageService;
 import com.dili.card.util.AssertUtils;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
 
 /**
  * @description： 卡片入库相关功能
@@ -51,7 +54,9 @@ public class CardStorageInController implements IControllerHandler {
 	 * 采购批量入库页面
 	 */
 	@GetMapping("/inAdd.html")
-	public String addView() {
+	public String addView(ModelMap map) {
+		boolean cardFaceIsMust = cardStorageService.cardFaceIsMust();
+		map.put("cardFaceIsMust", cardFaceIsMust);
 		return "cardstorage/inAdd";
 	}
 
