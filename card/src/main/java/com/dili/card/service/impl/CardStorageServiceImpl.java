@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dili.card.common.constant.MarketCode;
+import com.dili.card.common.constant.FirmIdConstant;
 import com.dili.card.dao.IStorageOutDao;
 import com.dili.card.dao.IStorageOutDetailDao;
 import com.dili.card.dto.BatchActivateCardDto;
@@ -175,7 +175,7 @@ public class CardStorageServiceImpl implements ICardStorageService {
 			log.warn("卡面判断,无法获取登录用户信息,默认为非必须!");
 			return false;
 		}
-		if (MarketCode.SG.equalsIgnoreCase(userTicket.getFirmCode())) {
+		if (FirmIdConstant.SG == userTicket.getFirmId()) {
 			return true;
 		}
 		return false;

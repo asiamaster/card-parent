@@ -2,6 +2,7 @@
 
 <div class="container-fluid">
     <form id="check-card-form">
+    	<input type="hidden" id="cardFaceIsMust" value="${cardFaceIsMust}">
         <div class="row row-cols-1">
             <div class="form-group col">
                 <label for="cardType">卡片类别:</label>
@@ -100,9 +101,9 @@
         }
     });
 
-
     jQuery.validator.addMethod("cardFaceRequired", function(value, element, param) {
-        if (cardType.master == $("#cardType").val()) {
+    	let cardFaceIsMust = $("#cardFaceIsMust").val(); // 该值为后台根据当前登录人市场ID设置
+        if (cardType.master == $("#cardType").val() && cardFaceIsMust == "true") {
             if ($.common.isEmpty(value)){
                 return false;
             }
@@ -116,11 +117,18 @@
         rules: {
             cardType: {
                 required: true,
+            },
+            cardFace: {
+                cardFaceRequired:true
             }
+    
         },
         messages: {
             cardType: {
                 required: "卡类型必填",
+            },
+            cardFace: {
+            	cardFaceRequired: "主卡请选择卡面",
             },
         },
         focusCleanup: true
