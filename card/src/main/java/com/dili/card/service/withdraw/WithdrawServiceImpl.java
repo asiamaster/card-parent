@@ -169,9 +169,9 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         if (!Integer.valueOf(CardType.MASTER.getCode()).equals(accountCard.getCardType())) {
             throw new CardAppBizException("", "该卡非主卡,不能进行提现");
         }
-        if (!accountCard.getPermissionList().contains(String.valueOf(UsePermissionType.WITHDRAW.getCode()))) {
-            throw new CardAppBizException("", "该卡无提现权限,不能进行提现");
-        }
+//        if (!accountCard.getPermissionList().contains(String.valueOf(UsePermissionType.WITHDRAW.getCode()))) {
+//            throw new CardAppBizException("", "该卡无提现权限,不能进行提现");
+//        }
         if (!Integer.valueOf(CardStatus.NORMAL.getCode()).equals(accountCard.getCardState())) {
             throw new CardAppBizException("", String.format("该卡为%s状态,不能进行提现", CardStatus.getName(accountCard.getCardState())));
         }
