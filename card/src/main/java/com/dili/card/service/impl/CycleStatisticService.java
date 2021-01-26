@@ -158,7 +158,7 @@ public class CycleStatisticService implements ICycleStatisticService {
 		);
 		accountCycleBussinessDetail.setBeforeReverseBankOutAmount(
 				NumberUtil.add(
-						accountCycleBussinessDetail.getBankOutAmount(),
+						accountCycleBussinessDetail.getBeforeReverseBankOutAmount(),
 						accountCycleBussinessDetail.getBankCircleOutAmount()
 				).longValue()
 		);
@@ -216,15 +216,15 @@ public class CycleStatisticService implements ICycleStatisticService {
 
 		//冲正后
 		masterCycleDetail
-				.setBankInAmount(masterCycleDetail.getBankInAmount() + accountCycleReverseDetail.getBankInAmount());
+				.setBankInAmount(masterCycleDetail.getBankInAmount() - Math.abs(accountCycleReverseDetail.getBankInAmount()));
 		masterCycleDetail
-				.setBankOutAmount(masterCycleDetail.getBankOutAmount() + accountCycleReverseDetail.getBankOutAmount());
+				.setBankOutAmount(masterCycleDetail.getBankOutAmount() - Math.abs(accountCycleReverseDetail.getBankOutAmount()));
 		masterCycleDetail.setDepoCashAmount(
-				masterCycleDetail.getDepoCashAmount() + accountCycleReverseDetail.getDepoCashAmount());
+				masterCycleDetail.getDepoCashAmount() - Math.abs(accountCycleReverseDetail.getDepoCashAmount()));
 		masterCycleDetail
-				.setDepoPosAmount(masterCycleDetail.getDepoPosAmount() + accountCycleReverseDetail.getDepoPosAmount());
+				.setDepoPosAmount(masterCycleDetail.getDepoPosAmount() - Math.abs(accountCycleReverseDetail.getDepoPosAmount()));
 		masterCycleDetail.setDrawCashAmount(
-				masterCycleDetail.getDrawCashAmount() + accountCycleReverseDetail.getDrawCashAmount());
+				masterCycleDetail.getDrawCashAmount() - Math.abs(accountCycleReverseDetail.getDrawCashAmount()));
 	}
 
 	/**

@@ -18,6 +18,8 @@ import java.util.concurrent.locks.Condition;
 public class PipelineRecordResponseDto {
     /**通道名称-建设银行*/
     private String pipeline;
+    /**支付通道（银行名称）*/
+    private String channel;
     /**通道账号-银行卡号*/
     private String toAccount;
     /**账户名*/
@@ -47,6 +49,14 @@ public class PipelineRecordResponseDto {
     private Long operatorId;
     /**操作员名字*/
     private String operatorName;
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
 
     public Long getOperatorId() {
         return operatorId;
