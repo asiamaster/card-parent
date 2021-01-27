@@ -1,7 +1,12 @@
 package com.dili.card.service.withdraw;
 
-import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.StrUtil;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
@@ -15,6 +20,7 @@ import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.bo.MessageBo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.resolver.SmsMessageRpcResolver;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IPayService;
@@ -24,13 +30,10 @@ import com.dili.card.type.CardType;
 import com.dili.card.type.PaySubject;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
-import com.dili.card.type.UsePermissionType;
 import com.dili.ss.constant.ResultCode;
-import io.seata.spring.annotation.GlobalTransactional;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import java.util.List;
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 提现操作基础实现类
@@ -45,7 +48,8 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
 
     @Resource
     protected ISerialService serialService;
-
+    @Autowired
+    private SmsMessageRpcResolver smsMessageRpcResolver;
     @Resource
     protected IAccountCycleService accountCycleService;
 
@@ -80,7 +84,14 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         withdrawRequest.setFees(this.createFees(fundRequestDto));
         withdrawRequest.setChannelAccount(fundRequestDto.getChannelAccount());
         TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
-        return this.handleSerialAfterCommitWithdraw(fundRequestDto, businessRecord, withdrawResponse);
+        MessageBo<String> handleSerialAfterCommitWithdraw = this.handleSerialAfterCommitWithdraw(fundRequestDto, businessRecord, withdrawResponse);
+        
+        // 发送短信通知
+        String phone = accountCard.getCustomerContactsPhone();
+        String cardNo = accountCard.getCardNo();
+        smsMessageRpcResolver.withdrawNotice(phone, cardNo, withdrawResponse);
+        
+        return handleSerialAfterCommitWithdraw;
     }
 
     /**

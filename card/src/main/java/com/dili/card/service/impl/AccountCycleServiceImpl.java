@@ -7,12 +7,15 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.dao.IAccountCycleDao;
 import com.dili.card.dao.IAccountCycleDetailDao;
 import com.dili.card.dto.AccountCycleDetailDto;
@@ -37,7 +40,10 @@ import com.github.pagehelper.PageHelper;
 
 @Service("accountCycleService")
 public class AccountCycleServiceImpl implements IAccountCycleService {
+	
+	private static final Logger log = LoggerFactory.getLogger(AccountCycleServiceImpl.class);
 
+	
 	@Autowired
 	private IAccountCycleDao accountCycleDao;
 	@Autowired
@@ -64,6 +70,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		this.updateStateById(accountCycle.getId(), CycleState.SETTLED.getCode(), accountCycle.getVersion());
 
 		accountCycleDto.setEndTime(LocalDateTime.now());
+		log.info("settle>",JSONObject.toJSONString(accountCycleDto));
 		return accountCycleDto;
 	}
 

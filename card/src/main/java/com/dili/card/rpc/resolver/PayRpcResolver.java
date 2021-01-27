@@ -1,17 +1,13 @@
 package com.dili.card.rpc.resolver;
 
+import com.dili.card.common.constant.ServiceName;
+import com.dili.card.dto.pay.*;
+import com.dili.card.rpc.PayRpc;
+import com.dili.ss.domain.BaseOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.dili.card.common.constant.ServiceName;
-import com.dili.card.dto.pay.BalanceResponseDto;
-import com.dili.card.dto.pay.CreateTradeRequestDto;
-import com.dili.card.dto.pay.CreateTradeResponseDto;
-import com.dili.card.dto.pay.FundOpResponseDto;
-import com.dili.card.dto.pay.TradeRequestDto;
-import com.dili.card.dto.pay.TradeResponseDto;
-import com.dili.card.rpc.PayRpc;
-import com.dili.ss.domain.BaseOutput;
+import java.util.Map;
 
 /**
  * @Auther: miaoguoxin
@@ -98,6 +94,13 @@ public class PayRpcResolver {
      */
     public void resetPwd(CreateTradeRequestDto requestDto) {
         GenericRpcResolver.resolver(payRpc.resetPwd(requestDto), ServiceName.PAY);
+    }
+
+    /**
+     *  设置卡账户权限
+     */
+    public void setPermission(Map<String,Object> params) {
+        GenericRpcResolver.resolver(payRpc.setPermission(params), ServiceName.PAY);
     }
 }
 

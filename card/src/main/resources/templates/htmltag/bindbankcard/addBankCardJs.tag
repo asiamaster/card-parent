@@ -90,6 +90,7 @@
 
     // 输入银行卡并获取银行卡名称
     $('#bankNo').on('keydown', function (event) {
+    	$('#bankNamePersonal').val('');
         if ($(this).val().length > 14 &&  event.keyCode  == 13) {
             getBankInfo($(this).val());
         }

@@ -1,17 +1,9 @@
 package com.dili.card.service.impl;
 
-import javax.annotation.Resource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.dili.card.dto.CardRequestDto;
-import com.dili.card.dto.SerialDto;
-import com.dili.card.dto.UserAccountCardResponseDto;
-import com.dili.card.dto.UserAccountSingleQueryDto;
+import cn.hutool.core.collection.CollectionUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.dili.card.dto.*;
+import com.dili.card.dto.pay.AccountAllPermission;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
@@ -24,15 +16,25 @@ import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountManageService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ISerialService;
-import com.dili.card.type.CardStatus;
-import com.dili.card.type.CustomerState;
-import com.dili.card.type.DisableState;
-import com.dili.card.type.FundItem;
-import com.dili.card.type.OperateType;
+import com.dili.card.type.*;
 import com.dili.customer.sdk.domain.Customer;
+import com.dili.logger.sdk.util.LoggerUtil;
 import com.dili.ss.constant.ResultCode;
-
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
 import io.seata.spring.annotation.GlobalTransactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service("accountManageService")
 public class AccountManageServiceImpl implements IAccountManageService {
@@ -107,6 +109,34 @@ public class AccountManageServiceImpl implements IAccountManageService {
     		//更新最終记录
         	this.saveRemoteSerialRecord(businessRecord, FundItem.MANDATORY_UNFREEZE_ACCOUNT);
 		}
+	}
+
+	@Override
+	public Optional<String> saveCardPermission(AccountPermissionRequestDto requestDto) {
+		UserAccountCardResponseDto cardInfo = accountQueryService.getByAccountId(requestDto.getAccountId());
+		if (Objects.isNull(cardInfo)) {
+			return Optional.of("卡账户数据不存在");
+		}
+		if (CardType.MASTER.getCode() != cardInfo.getCardType().intValue()) {
+			return Optional.of("此功能只对主卡账户开放");
+		}
+		if (!DisableState.ENABLED.getCode().equals(cardInfo.getDisabledState())) {
+			return Optional.of("卡账户已冻结，不支持办理此业务");
+		}
+		JSONObject params = new JSONObject();
+		params.put("accountId", requestDto.getAccountId());
+		Set<Integer> permissionSets = new HashSet<>();
+		String permissionValue = "空权限";
+		if (CollectionUtil.isNotEmpty(requestDto.getPermission())) {
+			permissionSets.addAll(requestDto.getPermission().stream().map(AccountAllPermission::getCode).collect(Collectors.toSet()));
+			permissionValue = requestDto.getPermission().stream().map(AccountAllPermission::getName).collect(Collectors.joining(","));
+		}
+		params.put("permission", permissionSets);
+		payRpcResolver.setPermission(params);
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		String content = String.format("%s 设置 客户[%s] 卡[%s]账户权限为 %s", userTicket.getRealName(), cardInfo.getCustomerName(), cardInfo.getCardNo(), permissionValue);
+		LoggerUtil.buildBusinessLoggerContext(cardInfo.getAccountId(), cardInfo.getCardNo(), userTicket.getId(), userTicket.getRealName(), userTicket.getFirmId(), content, "", LogOperationType.EDIT.getCode(), String.valueOf(OperateType.PERMISSION_SET.getCode()));
+		return Optional.empty();
 	}
 
 	/**

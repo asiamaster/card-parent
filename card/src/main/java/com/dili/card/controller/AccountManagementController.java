@@ -1,27 +1,30 @@
 package com.dili.card.controller;
 
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
+import com.dili.card.dto.AccountPermissionRequestDto;
 import com.dili.card.dto.CardRequestDto;
+import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountManageService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IBusinessLogService;
 import com.dili.card.type.OperateType;
 import com.dili.card.util.AssertUtils;
+import com.dili.logger.sdk.annotation.BusinessLogger;
 import com.dili.ss.domain.BaseOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
 /**
  * 卡账户管理操作
@@ -97,4 +100,44 @@ public class AccountManagementController implements IControllerHandler {
 		accountManageService.unfrozen(cardRequestDto);
 		return BaseOutput.success("账户解冻成功");
 	}
+
+	/**
+	 * 预设置卡账户权限
+	 */
+	@PostMapping("/presetCardPermission.action")
+	@ResponseBody
+	public BaseOutput presetPermissionByCard(@RequestParam("cardNo") String cardNo) {
+		try {
+			return accountQueryService.presetPermissionByCard(cardNo);
+		} catch (CardAppBizException e) {
+			return BaseOutput.failure(e.getMessage());
+		} catch (Exception e) {
+			log.error(String.format("卡[%s]账户权限获取异常:%s", cardNo, e.getMessage()), e);
+			return BaseOutput.failure("卡账户权限获取异常");
+		}
+	}
+	/**
+	 * 保存卡账户权限
+	 */
+	@PostMapping("/saveCardPermission.action")
+	@ResponseBody
+	@BusinessLogger(systemCode = "CARD")
+	public BaseOutput saveCardPermission(@Validated @RequestBody AccountPermissionRequestDto requestDto, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return BaseOutput.failure(bindingResult.getAllErrors().get(0).getDefaultMessage());
+		}
+		try {
+			Optional<String> s = accountManageService.saveCardPermission(requestDto);
+			if (s.isPresent()) {
+				return BaseOutput.failure(s.get());
+			}
+			return BaseOutput.success();
+		} catch (CardAppBizException e) {
+			return BaseOutput.failure(e.getMessage());
+		} catch (Exception e) {
+			log.error(String.format("卡[%s]账户权限[%s]获取异常:%s", requestDto.getAccountId(), JSONUtil.toJsonStr(requestDto.getPermission()), e.getMessage()), e);
+			return BaseOutput.failure("卡账户权限设置异常");
+		}
+	}
+
 }

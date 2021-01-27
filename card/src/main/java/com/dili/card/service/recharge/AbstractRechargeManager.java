@@ -14,6 +14,7 @@ import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
+import com.dili.card.rpc.resolver.SmsMessageRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
@@ -39,6 +40,8 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
     protected ISerialService serialService;
     @Autowired
     private IAccountQueryService accountQueryService;
+    @Autowired
+    private SmsMessageRpcResolver smsMessageRpcResolver;
     
 
 
@@ -66,7 +69,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
                 record.setAttach(requestDto.getExtra().toJSONString());
             }
         });
-
+        
         long l = System.currentTimeMillis();
         CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(
                 this.getTradeType(requestDto).getCode(),
@@ -102,8 +105,10 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         //记录远程日志数据
         this.doRecordCompleteLog(requestDto, businessRecord, tradeResponseDto);
         
-        // 发送短信
-        
+     // 发送短信通知
+        String phone = userAccount.getCustomerContactsPhone();
+        String cardNo = userAccount.getCardNo();
+        smsMessageRpcResolver.rechargeNotice(phone, cardNo, tradeResponseDto);
         return businessRecord.getSerialNo();
     }
 
