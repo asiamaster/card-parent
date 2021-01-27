@@ -26,9 +26,9 @@ import com.diligrp.message.sdk.rpc.SmsMessageRpc;
  */
 @SuppressWarnings("unchecked")
 @Component
-public class SmsMessageRpcRpcResolver {
+public class SmsMessageRpcResolver {
 
-	private static final Logger log = LoggerFactory.getLogger(SmsMessageRpcRpcResolver.class);
+	private static final Logger log = LoggerFactory.getLogger(SmsMessageRpcResolver.class);
 
 	private static final String smsDateFormat = "MM月dd日  HH:mm";
 
