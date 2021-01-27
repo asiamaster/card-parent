@@ -1,5 +1,7 @@
 package com.dili;
 
+import com.dili.ss.dto.DTOScan;
+import com.dili.ss.retrofitful.annotation.RestfulScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -11,10 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
-
-import com.dili.ss.dto.DTOScan;
-import com.dili.ss.retrofitful.annotation.RestfulScan;
-
 import tk.mybatis.spring.annotation.MapperScan;
 
 /**
@@ -22,7 +20,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  */
 @SpringBootApplication
 @MapperScan(basePackages = {"com.dili.card.dao", "com.dili.ss.dao"})
-@ComponentScan(basePackages={"com.dili.ss","com.dili.card", "com.dili.uap.sdk", "com.dili.commons"})
+@ComponentScan(basePackages={"com.dili.ss","com.dili.card", "com.dili.uap.sdk", "com.dili.commons","com.dili.logger.sdk"})
 @RestfulScan({"com.dili.uap.sdk.rpc"})
 @DTOScan(value={"com.dili.ss", "com.dili.card.domain"})
 @EnableDiscoveryClient

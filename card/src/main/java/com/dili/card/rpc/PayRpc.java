@@ -5,20 +5,7 @@ import com.dili.card.config.PayServiceFeignConfig;
 import com.dili.card.dto.FundAccountDto;
 import com.dili.card.dto.PayCreateFundReponseDto;
 import com.dili.card.dto.UnfreezeFundDto;
-import com.dili.card.dto.pay.BalanceResponseDto;
-import com.dili.card.dto.pay.CreateTradeRequestDto;
-import com.dili.card.dto.pay.CreateTradeResponseDto;
-import com.dili.card.dto.pay.CustomerBalanceResponseDto;
-import com.dili.card.dto.pay.FreezeFundRecordDto;
-import com.dili.card.dto.pay.FreezeFundRecordParam;
-import com.dili.card.dto.pay.FundOpResponseDto;
-import com.dili.card.dto.pay.MerAccountResponseDto;
-import com.dili.card.dto.pay.PayBankDto;
-import com.dili.card.dto.pay.PayReverseRequestDto;
-import com.dili.card.dto.pay.PipelineRecordParam;
-import com.dili.card.dto.pay.PipelineRecordResponseDto;
-import com.dili.card.dto.pay.TradeRequestDto;
-import com.dili.card.dto.pay.TradeResponseDto;
+import com.dili.card.dto.pay.*;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -26,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description： 支付服务调用
@@ -178,4 +166,16 @@ public interface PayRpc {
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.account.service:merchant", method = RequestMethod.POST)
     BaseOutput<MerAccountResponseDto> getMerAccount(JSONObject params);
+
+    /**
+     * 查询卡账户权限信息
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.permission.service:load", method = RequestMethod.POST)
+    BaseOutput<AccountPermissionResponseDto> loadPermission(JSONObject params);
+
+    /**
+     * 设置卡账户权限
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.permission.service:set", method = RequestMethod.POST)
+    BaseOutput setPermission(Map<String, Object> params);
 }

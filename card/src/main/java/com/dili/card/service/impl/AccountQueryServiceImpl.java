@@ -1,19 +1,11 @@
 package com.dili.card.service.impl;
 
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
-import com.dili.card.dto.AccountDetailResponseDto;
-import com.dili.card.dto.AccountListResponseDto;
-import com.dili.card.dto.AccountSimpleResponseDto;
-import com.dili.card.dto.AccountWithAssociationResponseDto;
-import com.dili.card.dto.CardRepoQueryParam;
-import com.dili.card.dto.CardRequestDto;
-import com.dili.card.dto.CardStorageDto;
-import com.dili.card.dto.CustomerResponseDto;
-import com.dili.card.dto.FundAccountDto;
-import com.dili.card.dto.UserAccountCardQuery;
-import com.dili.card.dto.UserAccountCardResponseDto;
-import com.dili.card.dto.UserAccountSingleQueryDto;
+import com.dili.card.dto.*;
+import com.dili.card.dto.pay.AccountPermissionResponseDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.dto.pay.CustomerBalanceResponseDto;
 import com.dili.card.exception.CardAppBizException;
@@ -35,7 +27,6 @@ import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.google.common.collect.Lists;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -43,9 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -350,7 +339,38 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
 		return customerBalance;
 	}
 
-	@Override
+    @Override
+    public BaseOutput presetPermissionByCard(String cardNo) {
+        if (StrUtil.isBlank(cardNo)) {
+            return BaseOutput.failure("参数丢失");
+        }
+        UserAccountCardResponseDto cardInfo = getByCardNo(cardNo);
+        if (Objects.isNull(cardInfo)) {
+            return BaseOutput.failure("卡账户数据不存在");
+        }
+        if (CardType.MASTER.getCode() != cardInfo.getCardType().intValue()) {
+            return BaseOutput.failure("此功能只对主卡账户开放");
+        }
+        if (!DisableState.ENABLED.getCode().equals(cardInfo.getDisabledState())) {
+            return BaseOutput.failure("卡账户已冻结，不支持办理此业务");
+        }
+        JSONObject params = new JSONObject();
+        params.put("accountId", cardInfo.getAccountId());
+        AccountPermissionResponseDto responseDto = GenericRpcResolver.resolver(payRpc.loadPermission(params), ServiceName.PAY);
+        Set<Integer> exitsPermission = responseDto.getPermission();
+        List<Map<String, Object>> allPermission = responseDto.getAllPermission();
+        allPermission.forEach(t -> {
+            t.put("checked", exitsPermission.contains(Integer.valueOf(Objects.toString(t.get("code"), "-1"))));
+        });
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("accountId", cardInfo.getAccountId());
+        jsonObject.put("customerName", cardInfo.getCustomerName());
+        jsonObject.put("customerCertificateNumber", cardInfo.getCustomerCertificateNumber());
+        jsonObject.put("permission", allPermission);
+        return BaseOutput.successData(jsonObject);
+    }
+
+    @Override
 	public UserAccountCardResponseDto getForResetLoginPassword(UserAccountSingleQueryDto query) {
 		UserAccountCardResponseDto single = accountQueryRpcResolver.findSingleWithoutValidate(query);
 		
