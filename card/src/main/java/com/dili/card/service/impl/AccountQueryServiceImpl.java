@@ -360,7 +360,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         Set<Integer> exitsPermission = responseDto.getPermission();
         List<Map<String, Object>> allPermission = responseDto.getAllPermission();
         allPermission.forEach(t -> {
-            t.put("checked", exitsPermission.contains(Integer.valueOf(Objects.toString(t.get("code"), "-1"))));
+            t.put("selected", exitsPermission.contains(Integer.valueOf(Objects.toString(t.get("code"), "-1"))));
         });
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("accountId", cardInfo.getAccountId());
