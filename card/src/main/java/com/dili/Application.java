@@ -11,6 +11,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 import tk.mybatis.spring.annotation.MapperScan;
@@ -24,9 +25,10 @@ import tk.mybatis.spring.annotation.MapperScan;
 @RestfulScan({"com.dili.uap.sdk.rpc"})
 @DTOScan(value={"com.dili.ss", "com.dili.card.domain"})
 @EnableDiscoveryClient
-@EnableFeignClients
+@EnableFeignClients({"com.dili","com.diligrp.message"})
 @EnableScheduling
 @RefreshScope
+@EnableAsync
 public class Application extends SpringBootServletInitializer {
 
     @Bean

@@ -70,6 +70,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 */
 	@GetMapping("/detail.html")
 	public String detailFacadeView(@RequestParam("id") Long id, ModelMap map) {
+		log.info("结帐详情detail>{}",id);
 		if (id == null || id < 0L) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期详情请求参数错误");
 		}
@@ -95,6 +96,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 */
 	@GetMapping("/applyDetail.html")
 	public String applyDetail(ModelMap map) {
+		log.info("结帐详情applyDetail>{}",map);
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		AccountCycleDto accountCycleDto = iAccountCycleService.applyDetail(userTicket.getId());
 		String json = JSON.toJSONString(accountCycleDto, new EnumTextDisplayAfterFilter());

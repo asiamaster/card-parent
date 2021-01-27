@@ -27,4 +27,22 @@ public class CardNoUtil {
 		String endNo = StrUtil.sub(cardNo, cardNo.length() - 4, cardNo.length());
 		return StrUtil.sub(cardNo, 0, 4) + "****" + endNo;
 	}
+	
+	
+	/**
+	 * 后四位
+	 * @param cardNo
+	 * @return
+	 */
+	public static String getTailNumber(String cardNo) {
+		if (StringUtils.isBlank(cardNo)) {
+			return "";
+		}
+		if (cardNo.length() <= 4) {
+			return cardNo;
+		}
+		String endNo = StrUtil.sub(cardNo, cardNo.length() - 4, cardNo.length());
+		return endNo;
+	}
+	
 }
