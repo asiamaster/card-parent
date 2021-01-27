@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dto.*;
+import com.dili.card.dto.pay.AccountAllPermission;
 import com.dili.card.dto.pay.AccountPermissionResponseDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.dto.pay.CustomerBalanceResponseDto;
@@ -358,15 +359,18 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         params.put("accountId", cardInfo.getAccountId());
         AccountPermissionResponseDto responseDto = GenericRpcResolver.resolver(payRpc.loadPermission(params), ServiceName.PAY);
         Set<Integer> exitsPermission = responseDto.getPermission();
-        List<Map<String, Object>> allPermission = responseDto.getAllPermission();
+        List<AccountAllPermission> allPermission = responseDto.getAllPermission();
+        List<JSONObject> allPermissionObject = Lists.newArrayList();
         allPermission.forEach(t -> {
-            t.put("selected", exitsPermission.contains(Integer.valueOf(Objects.toString(t.get("code"), "-1"))));
+            JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(t));
+            jsonObject.put("selected", exitsPermission.contains(Integer.valueOf(Objects.toString(t.getCode(), "-1"))));
+            allPermissionObject.add(jsonObject);
         });
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("accountId", cardInfo.getAccountId());
         jsonObject.put("customerName", cardInfo.getCustomerName());
         jsonObject.put("customerCertificateNumber", cardInfo.getCustomerCertificateNumber());
-        jsonObject.put("permission", allPermission);
+        jsonObject.put("permission", allPermissionObject);
         return BaseOutput.successData(jsonObject);
     }
 

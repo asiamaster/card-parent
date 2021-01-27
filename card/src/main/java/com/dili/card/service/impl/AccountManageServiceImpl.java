@@ -3,6 +3,7 @@ package com.dili.card.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.dto.*;
+import com.dili.card.dto.pay.AccountAllPermission;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
@@ -127,8 +128,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		Set<Integer> permissionSets = new HashSet<>();
 		String permissionValue = "空权限";
 		if (CollectionUtil.isNotEmpty(requestDto.getPermission())) {
-			permissionSets.addAll(requestDto.getPermission().keySet().stream().map(t -> Integer.valueOf(t)).collect(Collectors.toSet()));
-			permissionValue = requestDto.getPermission().values().stream().collect(Collectors.joining(","));
+			permissionSets.addAll(requestDto.getPermission().stream().map(AccountAllPermission::getCode).collect(Collectors.toSet()));
+			permissionValue = requestDto.getPermission().stream().map(AccountAllPermission::getName).collect(Collectors.joining(","));
 		}
 		params.put("permission", permissionSets);
 		payRpcResolver.setPermission(params);

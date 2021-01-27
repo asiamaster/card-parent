@@ -1,7 +1,9 @@
 package com.dili.card.dto;
 
+import com.dili.card.dto.pay.AccountAllPermission;
+
 import javax.validation.constraints.NotNull;
-import java.util.Map;
+import java.util.List;
 
 /**
  * 账户权限设置前台请求类
@@ -21,7 +23,7 @@ public class AccountPermissionRequestDto {
      * 设置的权限信息
      * key-权限编码  value-权限名称
      */
-    private Map<String,String> permission;
+    private List<AccountAllPermission> permission;
 
     public Long getAccountId() {
         return accountId;
@@ -29,10 +31,10 @@ public class AccountPermissionRequestDto {
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
-    public Map<String, String> getPermission() {
+    public List<AccountAllPermission>  getPermission() {
         return permission;
     }
-    public void setPermission(Map<String, String> permission) {
+    public void setPermission(List<AccountAllPermission> permission) {
         this.permission = permission;
     }
 }

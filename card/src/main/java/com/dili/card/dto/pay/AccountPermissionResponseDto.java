@@ -20,7 +20,7 @@ public class AccountPermissionResponseDto {
     /**
      * 全量的权限数据
      */
-    private List<Map<String, Object>> allPermission;
+    private List<AccountAllPermission> allPermission;
 
     public Set<Integer> getPermission() {
         return permission;
@@ -28,10 +28,10 @@ public class AccountPermissionResponseDto {
     public void setPermission(Set<Integer> permission) {
         this.permission = permission;
     }
-    public List<Map<String, Object>> getAllPermission() {
+    public List<AccountAllPermission> getAllPermission() {
         return allPermission;
     }
-    public void setAllPermission(List<Map<String, Object>> allPermission) {
+    public void setAllPermission(List<AccountAllPermission> allPermission) {
         this.allPermission = allPermission;
     }
 }
