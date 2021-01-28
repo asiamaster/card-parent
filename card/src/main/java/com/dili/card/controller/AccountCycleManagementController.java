@@ -1,5 +1,6 @@
 package com.dili.card.controller;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +39,12 @@ import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
+import com.dili.ss.util.MoneyUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
+
+import cn.hutool.core.math.Money;
+import cn.hutool.core.util.NumberUtil;
 
 /**
  * 账务管理
@@ -203,8 +208,8 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 */
 	@RequestMapping("/print.action")
 	@ResponseBody
-	public BaseOutput<AccountCyclePrintlDto> print(Long userId) {
-		log.info("结帐申请打印*****{}", userId);
+	public BaseOutput<AccountCyclePrintlDto> print(Long userId,Double settleAmount) {
+		log.info("结帐申请打印*****{}=={}", userId,settleAmount);
 		// 获取最新的账务周期
 		AccountCycleDo accountCycle = iAccountCycleService.findLatestCycleByUserId(userId);
 		log.info("结帐申请打印数据*****{}", JSONObject.toJSONString(accountCycle));
@@ -212,9 +217,10 @@ public class AccountCycleManagementController implements IControllerHandler {
 		printlDto.setCycleNo(accountCycle.getCycleNo());
 		printlDto.setEndTime(accountCycle.getEndTime());
 		printlDto.setFirmName(getUserTicket().getFirmName());
-		printlDto.setLastDeliverAmount(accountCycle.getCashAmount());
-		printlDto.setUserName(getUserTicket().getUserName());
+		printlDto.setLastDeliverAmountText("￥"+NumberUtil.decimalFormatMoney(settleAmount));
+		printlDto.setUserName(accountCycle.getUserName());
+		printlDto.setPrintTime(LocalDateTime.now());
+		printlDto.setPrintUserName(getUserTicket().getRealName());
 		return BaseOutput.successData(printlDto);
 	}
-
 }

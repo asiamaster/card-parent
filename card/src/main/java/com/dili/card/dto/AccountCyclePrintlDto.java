@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.dili.card.common.annotation.TextDisplay;
-import com.dili.card.common.provider.FenToYuanProvider;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -24,11 +22,19 @@ public class AccountCyclePrintlDto {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime endTime;
+
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime printTime;
 	/** 结账交现金金额-元 */
-	@TextDisplay(FenToYuanProvider.class)
 	private Long lastDeliverAmount = 0L;
+
+	private String lastDeliverAmountText = "";
 	/** 员工姓名 */
 	private String userName;
+	/** 打印人 */
+	private String printUserName;
 	/** 交款单位 */
 	private String firmName;
 
@@ -70,6 +76,30 @@ public class AccountCyclePrintlDto {
 
 	public void setFirmName(String firmName) {
 		this.firmName = firmName;
+	}
+
+	public String getLastDeliverAmountText() {
+		return lastDeliverAmountText;
+	}
+
+	public void setLastDeliverAmountText(String lastDeliverAmountText) {
+		this.lastDeliverAmountText = lastDeliverAmountText;
+	}
+
+	public LocalDateTime getPrintTime() {
+		return printTime;
+	}
+
+	public void setPrintTime(LocalDateTime printTime) {
+		this.printTime = printTime;
+	}
+
+	public String getPrintUserName() {
+		return printUserName;
+	}
+
+	public void setPrintUserName(String printUserName) {
+		this.printUserName = printUserName;
 	}
 
 }

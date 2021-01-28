@@ -12,6 +12,7 @@ import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IBusinessLogService;
 import com.dili.card.service.ICardManageService;
+import com.dili.card.type.CardStatus;
 import com.dili.card.type.DisableState;
 import com.dili.card.type.OperateType;
 import com.dili.card.util.AssertUtils;
@@ -197,6 +198,12 @@ public class CardManageController implements IControllerHandler {
 		if (DisableState.DISABLED.getCode().equals(card.getDisabledState())) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, String.format("该账户为%s状态，不能进行此操作", DisableState.DISABLED.getName()));
 		}
+		if (CardStatus.RETURNED.getCode() == card.getCardState()) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡已退卡，不能进行此操作");
+        }
+        if (CardStatus.LOSS.getCode() == card.getCardState()) {
+            throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡已挂失，不能进行此操作");
+        }
 		return BaseOutput.successData(card);
 	}
 }

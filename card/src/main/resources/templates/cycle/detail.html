@@ -527,10 +527,10 @@
 
 	// 结帐申请打印
 	function printCycleData(){
+		var applyPayerAmount = $('#applyPayerAmount').val();
 		var userId = $("#userId").val();
-   	 	var url = '${contextPath}/cycle/print.action?userId=' + userId;
+   	 	var url = '${contextPath}/cycle/print.action?userId=' + userId+'&settleAmount='+applyPayerAmount;
     	// setTimeout('printData($("#show_print_data").val(), "MoneyContractsDocument")',500);
-    	$("#show_print_data").val("");
 		$.ajax({
     	    type: "GET",
     	    url:url,
@@ -539,8 +539,9 @@
     	    	$.modal.alertError(result.message);
     	    },
     	    success: function(result) {
+    	    	var jsonData = JSON.stringify(result.data);
     	    	if(result.code=="200"){
-    	    		callbackObj.printDirect(result.data,"cycleDocument");
+    	    		callbackObj.printDirect(jsonData,"cycleDocument");
     	    	}else{
     	    		$.modal.alertError(result.message);
     	    	}
