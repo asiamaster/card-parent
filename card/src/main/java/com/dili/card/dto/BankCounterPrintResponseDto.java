@@ -35,14 +35,10 @@ public class BankCounterPrintResponseDto implements Serializable {
     private String operatorName;
     /** 备注 */
     private String description;
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy MM dd HH:mm:ss")
     private LocalDateTime applyTime;
     /** 创建时间 */
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy MM dd HH:mm:ss")
     private LocalDateTime createdTime;
     /**打印模板名称*/
     private String printTemplate;
