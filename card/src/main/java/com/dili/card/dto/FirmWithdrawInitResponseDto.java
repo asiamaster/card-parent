@@ -5,7 +5,6 @@ import com.dili.card.dto.pay.MerAccountResponseDto;
 import com.dili.uap.sdk.domain.Firm;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @Auther: miaoguoxin
@@ -19,8 +18,6 @@ public class FirmWithdrawInitResponseDto implements Serializable {
     private MerAccountResponseDto merInfo;
     /**市场账户余额信息*/
     private BalanceResponseDto balanceInfo;
-    /**市场商户绑定的银行卡列表*/
-    private List<BindBankCardDto> bindBankCardList;
 
     public BalanceResponseDto getBalanceInfo() {
         return balanceInfo;
@@ -46,13 +43,6 @@ public class FirmWithdrawInitResponseDto implements Serializable {
         this.merInfo = merInfo;
     }
 
-    public List<BindBankCardDto> getBindBankCardList() {
-        return bindBankCardList;
-    }
-
-    public void setBindBankCardList(List<BindBankCardDto> bindBankCardList) {
-        this.bindBankCardList = bindBankCardList;
-    }
 }
 
 

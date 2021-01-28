@@ -41,7 +41,7 @@
         </button>
        </#resource>
        <#resource code="bank-counter-print">
-         <button id="btn-print" type="button" class="btn btn-primary" onclick=""><i
+         <button id="btn-print" type="button" class="btn btn-primary" onclick="print()"><i
             class="fa fa-file-excel-o"></i>
           打印
          </button>
@@ -61,6 +61,7 @@
                data-icons="bui.variable.icons">
             <thead>
             <tr>
+                <th data-radio="true" ></th>
                 <th data-field="applyTime"  data-align="center">
                     存取款时间
                 </th>
@@ -117,6 +118,28 @@
             return value;
         }
         return '<span data-toggle="tooltip" data-placement="top" title="" data-original-title="'+value+'">'+value+'</span>'
+    }
+
+    function print() {
+        let id = $.table.selectColumns("id");
+        if (id.length == 0) {
+            $.modal.alertWarning("请至少选择一条记录");
+            return;
+        }
+        $.ajax({
+            type: "GET",
+            data: {
+                id : id[0]
+            },
+            url: '${contextPath}/bankCounter/printData.action',
+            success: function (ret) {
+                if (ret.success){
+                    alert(JSON.stringify(ret.data));
+                } else {
+                    $.modal.alertError(ret.message);
+                }
+            }
+        });
     }
 </script>
 
