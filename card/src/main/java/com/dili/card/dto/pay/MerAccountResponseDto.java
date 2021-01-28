@@ -10,11 +10,11 @@ import java.io.Serializable;
 public class MerAccountResponseDto implements Serializable {
     /**商户Id*/
     private Long mchId;
-    /** 商户ID*/
+    /** 商户code*/
     private String code;
-    /**商户编码*/
+    /**商户名称*/
     private String name;
-    /** 商户名称*/
+    /** 商户*/
     private Long parentId;
     /** 主商户ID（0或>0） */
     private Long profitAccount;

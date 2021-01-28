@@ -2,6 +2,7 @@ package com.dili.card.rpc;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.config.PayServiceFeignConfig;
+import com.dili.card.dto.FirmWithdrawAuthRequestDto;
 import com.dili.card.dto.FundAccountDto;
 import com.dili.card.dto.PayCreateFundReponseDto;
 import com.dili.card.dto.UnfreezeFundDto;
@@ -178,4 +179,10 @@ public interface PayRpc {
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.permission.service:set", method = RequestMethod.POST)
     BaseOutput setPermission(Map<String, Object> params);
+
+    /**
+     * 校验支付密码
+     */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.permission.service:password", method = RequestMethod.POST)
+    BaseOutput<?> checkTradePwd(FirmWithdrawAuthRequestDto params);
 }

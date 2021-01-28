@@ -4,12 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
+import com.dili.card.dto.FirmWithdrawAuthRequestDto;
 import com.dili.card.dto.FirmWithdrawInitResponseDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.PipelineRecordQueryDto;
 import com.dili.card.dto.pay.PipelineRecordResponseDto;
+import com.dili.card.entity.bo.MessageBo;
 import com.dili.card.service.IFirmWithdrawService;
 import com.dili.card.util.AssertUtils;
+import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -18,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,6 +57,19 @@ public class FirmWithdrawController implements IControllerHandler {
         return "firmwithdraw/init";
     }
 
+    /**
+    * 授权绑定银行卡校验
+    * @author miaoguoxin
+    * @date 2021/1/26
+    */
+    @PostMapping("/authCheck.action")
+    @ResponseBody
+    public BaseOutput<?> checkAuthPassword(@RequestBody @Validated(ConstantValidator.Check.class)
+                                                       FirmWithdrawAuthRequestDto requestDto){
+        firmWithdrawService.checkAuth(requestDto);
+        return BaseOutput.success();
+    }
+
 
     /**
      * 市场圈提历史记录
@@ -76,7 +93,11 @@ public class FirmWithdrawController implements IControllerHandler {
     @ResponseBody
     public BaseOutput<?> merWithdraw(@RequestBody FundRequestDto requestDto) {
         buildOperatorInfo(requestDto);
-        firmWithdrawService.doMerWithdraw(requestDto);
-        return BaseOutput.success();
+        MessageBo<String> messageBo = firmWithdrawService.doMerWithdraw(requestDto);
+        BaseOutput<String> result = new BaseOutput<>();
+        result.setCode(messageBo.getCode());
+        result.setMessage(messageBo.getMessage());
+        result.setData(messageBo.getData());
+        return result;
     }
 }

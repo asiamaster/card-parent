@@ -1,4 +1,5 @@
 -- 充正
+ DROP TABLE IF EXISTS `dili_card`.`card_reverse_record`;
 CREATE TABLE `dili_card`.`card_reverse_record`  (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `reverse_id` bigint(20) NOT NULL COMMENT '冲正业务id',
@@ -24,7 +25,8 @@ CREATE TABLE `dili_card`.`card_reverse_record`  (
 ) COMMENT = '冲正记录表';
 
  -- 银行存取款
- CREATE TABLE `card_bank_counter` (
+ DROP TABLE IF EXISTS `dili_card`.`card_bank_counter`;
+ CREATE TABLE `dili_card`.`card_bank_counter` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `action` tinyint(3) unsigned NOT NULL COMMENT '动作-存款 取款',
   `amount` bigint(20) NOT NULL COMMENT '操作金额-分',
@@ -45,10 +47,11 @@ CREATE TABLE `dili_card`.`card_reverse_record`  (
   KEY `idx_bank_counter_serialNo` (`serial_no`) USING BTREE,
   KEY `idx_bank_counter_institutionCode` (`firm_id`) USING BTREE,
   KEY `idx_bank_counter_applyTime` (`apply_time`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='银行存取款';
+) ENGINE=InnoDB AUTO_INCREMENT=1  COMMENT='银行存取款';
 
 -- 园区卡账户绑定银行卡
-CREATE TABLE `card_bind_bank_card` (
+ DROP TABLE IF EXISTS `dili_card`.`card_bind_bank_card`;
+CREATE TABLE `dili_card`.`card_bind_bank_card` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `bank_account_type` tinyint(3) unsigned NOT NULL COMMENT '账户类型-个人账户 对公账户',
   `account_id` bigint(20) DEFAULT NULL COMMENT '园区卡账号（市场帐户绑定没有园区卡帐号）',
@@ -70,15 +73,14 @@ CREATE TABLE `card_bind_bank_card` (
   KEY `idx_bank_card_accountId` (`account_id`,`bank_account_type`) USING BTREE,
   KEY `idx_bank_card_fundAccountId` (`fund_account_id`,`bank_account_type`) USING BTREE,
   KEY `idx_bank_card_bankNo` (`bank_no`,`bank_type`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='园区账户绑定银行卡';
+) ENGINE=InnoDB AUTO_INCREMENT=8  COMMENT='园区账户绑定银行卡';
 
 ALTER TABLE `dili_card`.`card_business_record`
 ADD COLUMN `hold_name` varchar(40) NULL COMMENT '持卡人姓名' AFTER `customer_name`;
 
-ALTER TABLE `dili_account`.`account_serial_record`
-MODIFY COLUMN `customer_type` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '客户角色' AFTER `customer_name`;
+
 
 ALTER TABLE `dili_card`.`card_business_record`
-    MODIFY COLUMN `attach` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '附加内容-存储不太重要的内容，否则请扩充该表字段' ;
+    MODIFY COLUMN `attach` text  NULL COMMENT '附加内容-存储不太重要的内容，否则请扩充该表字段' ;
 
 INSERT INTO `uap`.`data_dictionary_value` (`dd_code`,`order_number`, `name`, `code`, `description`, `created`, `modified`, `state`) VALUES ('log_business_type', 40, '卡账户权限设置', '24', '卡账户权限设置', now(), NOW(), 1);

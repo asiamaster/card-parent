@@ -1,25 +1,20 @@
+<script id="checkPassword" type="text/html">
+    <form id="auth-check-form">
+        <div class="form-group col">
+            <input type="hidden" name="accountId" value="${result.merInfo.vouchAccount!}">
+            <label for="password" class="div_label">密码</label>
+            <input  type="password" id="password" maxlength=6 name="password">
+            <button id="authBindPwdBtn" type="button" class="btn btn-primary">
+                请输入密码
+            </button>
+        </div>
+    </form>
+</script>
 <script>
-    $(document).on('#withdrawalBtn', 'click', function () {
-        submitHandler()
-    })
-
-    // 保存绑定的银行卡信息
-    function submitHandler(e) {
-        let formId = 'withdrawalForm';
-        if (!$.validate.form(formId)) {
-            return false;
-        }
-        let url = "${contextPath}/";
-
-        let data = $.extend($.common.formToJSON(formId));
-        $.operate.post(url, data);
-    }
-
     /**
      * 授权绑定,密码验证
      */
-    $(document).on('click', '#authBindBtn', function () {
-// let a = bui.util.debounce(saveOrUpdateHandler,1000,true);
+    function openAuthConfirmModal(){
         let dia = bs4pop.dialog({
             title: '授权绑定',// 对话框title
             content: bui.util.HTMLDecode(template('checkPassword', {})), // 对话框内容，可以是
@@ -28,27 +23,22 @@
             height: '200px',// 高度
             btns: [{
                 label: '确定', className: 'btn-primary', onClick(e) {
-                    let pwd = $("#password").val();
-                    let accountId = $("#accountId").val();
-                    let param = JSON.stringify({
-                        loginPwd: pwd,
-                        accountId: accountId
-                    });
+                    let requestData = $.common.formToJSON("auth-check-form");
                     $.ajax({
                         type: 'POST',
-                        url: '${contextPath}/firmwithdraw/checkPwd.action',
+                        url: '${contextPath}/firmWithdraw/authCheck.action',
                         dataType: 'json',
                         contentType: "application/json; charset=utf-8",
-                        data: param,
+                        data: JSON.stringify(requestData),
                         success: function (result) {
                             if (result.success) {
-
-                                return true;
+                                dia.hide();
                             } else {
                                 bs4pop.alert(result.message, {type: 'error'});
                             }
                         }
                     });
+                    return false;
                 }
             }, {
                 label: '取消', className: 'btn-secondary', onClick(e) {
@@ -56,18 +46,36 @@
                 }
             }]
         });
-    });
+    }
+
+    // 连接密码键盘输入提款交易密码
+    function readFirmWithdrawPwd(){
+        CefSharp.BindObjectAsync("callbackObj");
+        callbackObj.readPasswordKeyboardAsync();
+    }
+
     $(document).on('click', '#pswBtn', function () {
         readPasswordKeyboardAsync();
-    })
+    });
+
    function pswClientHandler(data){
-       var json = JSON.parse(data);
+       let json = JSON.parse(data);
        if (json.code == 0) {
            $('#pswBtn').val(json.data);
        } else {
            bs4pop.alert(json.message, {width:'350px',type: "error"});
            return false;
        }
-   }*/
+   }
 
+    // 该方法名为固定，C端回调
+    function pswClientHandler(data){
+        let json = JSON.parse(data);
+        if (json.code == 0) {
+            $('#tradePwd').val(json.data);
+        } else {
+            bs4pop.alert(json.message, {width:'350px',type: "error"});
+            return false;
+        }
+    }
 </script>

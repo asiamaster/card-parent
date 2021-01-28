@@ -34,13 +34,14 @@
 							{{ item.bankName }}
 						</option>
 					</select>
+					<a href="javascript:void(0)" onclick="openAuthConfirmModal()">选择其他银行卡</a>
 				</div>
 			</div>
 			<div class="row row-cols-3">
 				<div class="form-group col">
 					<label>交易密码</label>
 					<div class="input-group mb-3">
-						<input type="password" id="tradePwd" maxlength=6 name="tradePwd" class="form-control" value="abcd12" readonly>
+						<input type="password" id="tradePwd" maxlength=6 name="tradePwd" class="form-control" value="123456" readonly>
 						<div class="input-group-append">
 							<button id="pwdBtn" class="btn btn-primary" type="button" onclick="readFirmWithdrawPwd()">输入密码</button>
 						</div>
@@ -133,6 +134,7 @@
 </div>
 </#bs4Body>
 <#common_cardBaseJs/>
+<#firmwithdraw_common/>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
@@ -145,22 +147,6 @@
 	</div>
 </script>
 <script>
-	// 连接密码键盘调整密码
-	function readFirmWithdrawPwd(){
-		CefSharp.BindObjectAsync("callbackObj");
-		callbackObj.readPasswordKeyboardAsync();
-	}
-
-	// 该方法名为固定，C端回调
-	function pswClientHandler(data){
-		let json = JSON.parse(data);
-		if (json.code == 0) {
-			$('#tradePwd').val(json.data);
-		} else {
-			bs4pop.alert(json.message, {width:'350px',type: "error"});
-			return false;
-		}
-	}
 
 	let formId = "withdraw-form";
 	$(function () {
@@ -255,6 +241,7 @@
 					}
 				});
 			},
+			//提交提款请求
 			submit(){
 				let amountVal = $("#amount").val();
 				if (!$.validate.form(formId)) {
@@ -281,7 +268,4 @@
 		},
 
 	});
-
-
-
 </script>

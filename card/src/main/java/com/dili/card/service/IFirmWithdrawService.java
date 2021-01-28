@@ -1,9 +1,11 @@
 package com.dili.card.service;
 
+import com.dili.card.dto.FirmWithdrawAuthRequestDto;
 import com.dili.card.dto.FirmWithdrawInitResponseDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.PipelineRecordQueryDto;
 import com.dili.card.dto.pay.PipelineRecordResponseDto;
+import com.dili.card.entity.bo.MessageBo;
 import com.dili.ss.domain.PageOutput;
 
 import java.util.List;
@@ -27,7 +29,14 @@ public interface IFirmWithdrawService {
      * @author miaoguoxin
      * @date 2021/1/25
      */
-    void doMerWithdraw(FundRequestDto requestDto);
+    MessageBo<String> doMerWithdraw(FundRequestDto requestDto);
+
+    /**
+    * 授权校验
+    * @author miaoguoxin
+    * @date 2021/1/26
+    */
+    void checkAuth(FirmWithdrawAuthRequestDto requestDto);
 
     /**
     *

@@ -3,6 +3,7 @@ package com.dili.card.controller;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.dto.BankCounterPrintResponseDto;
 import com.dili.card.dto.BankCounterQuery;
 import com.dili.card.dto.BankCounterRequestDto;
 import com.dili.card.dto.BankCounterResponseDto;
@@ -63,6 +64,17 @@ public class BankCounterController implements IControllerHandler {
         return successPage(page);
     }
 
+    /**
+    *  获取打印数据
+    * @author miaoguoxin
+    * @date 2021/1/27
+    */
+    @GetMapping("/printData.action")
+    @ResponseBody
+    public BaseOutput<BankCounterPrintResponseDto> getPrintData(Long id){
+        BankCounterPrintResponseDto printData = bankCounterService.getPrintData(id);
+        return BaseOutput.successData(printData);
+    }
 
     /**
      * 跳转新增存款页面
@@ -113,6 +125,7 @@ public class BankCounterController implements IControllerHandler {
         bankCounterService.add(requestDto);
         return BaseOutput.success();
     }
+
 
     /**
     * 校验时间

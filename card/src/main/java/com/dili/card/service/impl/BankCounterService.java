@@ -1,8 +1,14 @@
 package com.dili.card.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import cn.hutool.core.convert.Convert;
+import com.dili.card.dto.BankCounterPrintResponseDto;
+import com.dili.card.exception.CardAppBizException;
+import com.dili.card.type.PrintTemplate;
+import com.dili.card.util.CurrencyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +44,32 @@ public class BankCounterService implements IBankCounterService {
     public void add(BankCounterRequestDto requestDto) {
         BankCounterDo bankCounterDo = BankCounterDo.create(requestDto);
         bankCounterDao.save(bankCounterDo);
+    }
+
+    @Override
+    public BankCounterPrintResponseDto getPrintData(Long id) {
+        BankCounterDo bankCounterDo = bankCounterDao.getById(id);
+        if (bankCounterDo == null){
+            throw new CardAppBizException("存取款记录不存在");
+        }
+        return copyPrintData(bankCounterDo);
+    }
+
+    private BankCounterPrintResponseDto copyPrintData(BankCounterDo bankCounterDo) {
+        BankCounterPrintResponseDto responseDto = new BankCounterPrintResponseDto();
+        responseDto.setReceiveAccountNo("123");
+        responseDto.setReceiveCompany("xxx公司");
+        responseDto.setAction(bankCounterDo.getAction());
+        responseDto.setAmountText(String.valueOf(bankCounterDo.getAmount()));
+        responseDto.setApplyTime(bankCounterDo.getApplyTime());
+        responseDto.setAmountCN(Convert.digitToChinese(new BigDecimal(responseDto.getAmountText())));
+        responseDto.setCreatedTime(bankCounterDo.getCreatedTime());
+        responseDto.setDescription(bankCounterDo.getDescription());
+        responseDto.setOperatorId(bankCounterDo.getOperatorId());
+        responseDto.setOperatorName(bankCounterDo.getOperatorName());
+        responseDto.setSerialNo(bankCounterDo.getSerialNo());
+        responseDto.setPrintTemplate(PrintTemplate.BANK_COUNTER.getType());
+        return responseDto;
     }
 
 
