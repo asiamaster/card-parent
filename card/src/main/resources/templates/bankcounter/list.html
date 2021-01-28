@@ -91,6 +91,7 @@
 </div>
 
 </#bs4Body>
+<#common_commonJs/>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <script>
     $(function () {
@@ -134,7 +135,7 @@
             url: '${contextPath}/bankCounter/printData.action',
             success: function (ret) {
                 if (ret.success){
-                    alert(JSON.stringify(ret.data));
+                    printData(JSON.stringify(ret.data), ret.printTemplate);
                 } else {
                     $.modal.alertError(ret.message);
                 }
