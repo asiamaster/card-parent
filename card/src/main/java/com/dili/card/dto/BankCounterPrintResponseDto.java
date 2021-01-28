@@ -22,7 +22,7 @@ public class BankCounterPrintResponseDto implements Serializable {
     private String receiveAccountNo;
     /** 银行操作流水号 */
     private String serialNo;
-    /** 操作金额（元） */
+    /** 操作金额（分） */
     private String amountText;
     /**大写金额*/
     private String amountCN;
