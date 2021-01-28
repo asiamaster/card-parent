@@ -28,27 +28,24 @@
 </style>
 <div id="detail-modal" class="main-container container-fluid auto-margin"  style="width: 80%">
 	<form id="queryForm" class="form-inline">
-		<input type="hidden"
-						name="userId" id="userId" value="${detail.userId!}"> <input
-						type="hidden" name="cycleNo" id="cycleNo"
-						value="${detail.cycleNo!'-1'}"> <input type="hidden"
-						id="isStatistic" name="isStatistic" value="false"> <input
-						type="hidden" name="operatorId" id="operatorId"
-						value="${detail.userId!}">
-						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="10">
-						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="11">
-						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="12">
-						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="13">
-						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="14">
-						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="15">
-						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="16">
-						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="17">
-						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="18">
-						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="19">
-						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="25">
-						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="26">
-						<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="20">
-						<input type="hidden" class="form-control" id="show_print_data" />
+		<input type="hidden" name="userId" id="userId" value="${detail.userId!}"> 
+		<input type="hidden" name="cycleNo" id="cycleNo" value="${detail.cycleNo!'-1'}"> 
+		<input type="hidden" id="isStatistic" name="isStatistic" value="false"> 
+		<input type="hidden" name="operatorId" id="operatorId" value="${detail.userId!}">
+		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="10">
+		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="11">
+		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="12">
+		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="13">
+		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="14">
+		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="15">
+		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="16">
+		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="17">
+		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="18">
+		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="19">
+		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="25">
+		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="26">
+		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="20">
+		<input type="hidden" class="form-control" id="show_print_data" />
 		<div id="baseInfo" >
 				<div class="row row-cols-2" id="baseContent">
 					<div class="form-group col">
@@ -130,11 +127,13 @@
 			<% } %>
 			<% else if(settled == 2){ %>
 				<button id="back" type="button" class="btn btn-secondary px-5" onclick="backList()">返回</button>
-
-				<#resource code="cycle_print_btn">
-					<button id="printBtn" type="button" class="btn btn-secondary px-5" onclick="printCycleData()">打印</button>
-		        </#resource>
 			<% }%>
+			
+			<div id="printBtnDiv" style="display: none">
+				<#resource code="cycle_print_btn">
+					<button id="printBtn" type="button" class="btn btn-primary" onclick="printCycleData()">打印</button>
+		        </#resource>
+			</div>
 			<input id="cycleState" type="hidden" value="${detail.state!}">
 		</div>
 	</form>
@@ -412,6 +411,9 @@
 	            	var dateCycle = $("#startAndEndTime").val();
 	            	$("#startAndEndTime").val(dateCycle.replace("--", result.data.endTime));
 	                $.table.refresh()
+	                
+	                // 显示打印按钮
+	               $("#printBtnDiv").show();
 	            }
 	    }), 1000, true)
 		$("#apply").hide();
@@ -525,13 +527,9 @@
 
 	// 结帐申请打印
 	function printCycleData(){
-		var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
-   	 	if (id.length == 0) {
-            $.modal.alertWarning("请至少选择一条记录");
-            return;
-        }
-   	 	var url = '${contextPath}/contract/print.action?id=' + id;
-    	setTimeout('printData($("#show_print_data").val(), "MoneyContractsDocument")',500);
+		var userId = $("#userId").val();
+   	 	var url = '${contextPath}/cycle/print.action?userId=' + userId;
+    	// setTimeout('printData($("#show_print_data").val(), "MoneyContractsDocument")',500);
     	$("#show_print_data").val("");
 		$.ajax({
     	    type: "GET",
@@ -542,7 +540,7 @@
     	    },
     	    success: function(result) {
     	    	if(result.code=="200"){
-    	    		$("#show_print_data").val(JSON.stringify(result.data));
+    	    		callbackObj.printDirect(result.data,"cycleDocument");
     	    	}else{
     	    		$.modal.alertError(result.message);
     	    	}

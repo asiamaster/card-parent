@@ -25,8 +25,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.AccountCycleDto;
+import com.dili.card.dto.AccountCyclePrintlDto;
 import com.dili.card.dto.BusinessRecordResponseDto;
 import com.dili.card.dto.SerialQueryDto;
+import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.ISerialService;
@@ -98,7 +100,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	public String applyDetail(ModelMap map) {
 		log.info("结帐详情applyDetail>{}",map);
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		AccountCycleDto accountCycleDto = iAccountCycleService.applyDetail(userTicket.getId());
+		AccountCycleDto accountCycleDto =iAccountCycleService.applyDetail(userTicket.getId());
 		String json = JSON.toJSONString(accountCycleDto, new EnumTextDisplayAfterFilter());
 		map.put("detail", JSON.parseObject(json));
 		map.put("settled", CycleState.ACTIVE.getCode());
@@ -199,11 +201,20 @@ public class AccountCycleManagementController implements IControllerHandler {
 	/**
 	 * 打印
 	 */
-	@PostMapping("/print.action")
+	@RequestMapping("/print.action")
 	@ResponseBody
-	public BaseOutput<AccountCycleDto> print(@RequestBody AccountCycleDto accountCycleDto) {
-		log.info("结帐申请打印*****{}", JSONObject.toJSONString(accountCycleDto));
-		return BaseOutput.successData(iAccountCycleService.detail(accountCycleDto.getId()));
+	public BaseOutput<AccountCyclePrintlDto> print(Long userId) {
+		log.info("结帐申请打印*****{}", userId);
+		// 获取最新的账务周期
+		AccountCycleDo accountCycle = iAccountCycleService.findLatestCycleByUserId(userId);
+		log.info("结帐申请打印数据*****{}", JSONObject.toJSONString(accountCycle));
+		AccountCyclePrintlDto printlDto = new AccountCyclePrintlDto();
+		printlDto.setCycleNo(accountCycle.getCycleNo());
+		printlDto.setEndTime(accountCycle.getEndTime());
+		printlDto.setFirmName(getUserTicket().getFirmName());
+		printlDto.setLastDeliverAmount(accountCycle.getCashAmount());
+		printlDto.setUserName(getUserTicket().getUserName());
+		return BaseOutput.successData(printlDto);
 	}
 
 }
