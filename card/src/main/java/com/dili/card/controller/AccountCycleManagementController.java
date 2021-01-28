@@ -220,6 +220,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 		printlDto.setLastDeliverAmountText("￥"+NumberUtil.decimalFormatMoney(settleAmount));
 		printlDto.setUserName(accountCycle.getUserName());
 		printlDto.setPrintTime(LocalDateTime.now());
+		printlDto.setPrintUserName(getUserTicket().getRealName());
 		return BaseOutput.successData(printlDto);
 	}
 }

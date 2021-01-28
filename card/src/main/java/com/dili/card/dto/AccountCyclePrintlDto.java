@@ -33,6 +33,8 @@ public class AccountCyclePrintlDto {
 	private String lastDeliverAmountText = "";
 	/** 员工姓名 */
 	private String userName;
+	/** 打印人 */
+	private String printUserName;
 	/** 交款单位 */
 	private String firmName;
 
@@ -90,6 +92,14 @@ public class AccountCyclePrintlDto {
 
 	public void setPrintTime(LocalDateTime printTime) {
 		this.printTime = printTime;
+	}
+
+	public String getPrintUserName() {
+		return printUserName;
+	}
+
+	public void setPrintUserName(String printUserName) {
+		this.printUserName = printUserName;
 	}
 
 }
