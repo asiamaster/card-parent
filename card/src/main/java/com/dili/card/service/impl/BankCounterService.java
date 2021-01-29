@@ -61,9 +61,10 @@ public class BankCounterService implements IBankCounterService {
         responseDto.setReceiveAccountNo("123");
         responseDto.setReceiveCompany("xxx公司");
         responseDto.setAction(bankCounterDo.getAction());
-        responseDto.setAmountText(formatPrintAmount(String.valueOf(bankCounterDo.getAmount())));
+        String amountText = String.valueOf(bankCounterDo.getAmount());
+        responseDto.setAmountText(formatPrintAmount(amountText));
         responseDto.setApplyTime(bankCounterDo.getApplyTime());
-        responseDto.setAmountCN(Convert.digitToChinese(new BigDecimal(responseDto.getAmountText())));
+        responseDto.setAmountCN(Convert.digitToChinese(new BigDecimal(amountText)));
         responseDto.setCreatedTime(bankCounterDo.getCreatedTime());
         responseDto.setDescription(bankCounterDo.getDescription());
         responseDto.setOperatorId(bankCounterDo.getOperatorId());
