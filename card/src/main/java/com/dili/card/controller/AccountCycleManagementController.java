@@ -1,13 +1,10 @@
 package com.dili.card.controller;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.dili.card.type.OperateType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +24,6 @@ import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.AccountCycleDto;
 import com.dili.card.dto.AccountCyclePrintlDto;
-import com.dili.card.dto.BusinessRecordResponseDto;
-import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountCycleService;
@@ -38,12 +33,9 @@ import com.dili.card.type.CycleState;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.domain.PageOutput;
-import com.dili.ss.util.MoneyUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 
-import cn.hutool.core.math.Money;
 import cn.hutool.core.util.NumberUtil;
 
 /**
@@ -119,6 +111,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 	 */
 	@GetMapping("/flated.html")
 	public String flatedHtml(Long id, ModelMap map) {
+		log.info("跳转平账页面flatedHtml{}>{}",id,map);
 		if (id == null || id < 0L) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "账务周期对账请求参数错误");
 		}
@@ -189,7 +182,9 @@ public class AccountCycleManagementController implements IControllerHandler {
 	@PostMapping("/detail.action")
 	@ResponseBody
 	public BaseOutput<AccountCycleDto> detail(@RequestBody @Validated(value = {ConstantValidator.Default.class}) AccountCycleDto accountCycleDto) {
-		return BaseOutput.successData(iAccountCycleService.detail(accountCycleDto.getId()));
+		log.info("账务详情>{}",JSONObject.toJSONString(accountCycleDto));
+		AccountCycleDto detail = iAccountCycleService.detail(accountCycleDto.getId());
+		return BaseOutput.successData(detail);
 	}
 
 	/**

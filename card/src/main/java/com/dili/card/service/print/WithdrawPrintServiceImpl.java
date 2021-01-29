@@ -25,6 +25,9 @@ public class WithdrawPrintServiceImpl extends PrintServiceImpl {
         if (Integer.valueOf(TradeChannel.E_BANK.getCode()).equals(recordDo.getTradeChannel())) {//网银模板
             return PrintTemplate.E_BANK_WITHDRAW.getType();
         }
+        if (Integer.valueOf(TradeChannel.BANK.getCode()).equals(recordDo.getTradeChannel())) {//网银模板
+            return PrintTemplate.E_BANK_WITHDRAW.getType();
+        }
         throw new CardAppBizException("未找到合适的票据模板");
     }
 

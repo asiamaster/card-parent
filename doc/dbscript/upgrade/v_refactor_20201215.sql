@@ -78,7 +78,8 @@ CREATE TABLE `dili_card`.`card_bind_bank_card` (
 ALTER TABLE `dili_card`.`card_business_record`
 ADD COLUMN `hold_name` varchar(40) NULL COMMENT '持卡人姓名' AFTER `customer_name`;
 
-
+ALTER TABLE `dili_card`.`card_account_cycle` 
+MODIFY COLUMN `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT FIRST;
 
 ALTER TABLE `dili_card`.`card_business_record`
     MODIFY COLUMN `attach` text  NULL COMMENT '附加内容-存储不太重要的内容，否则请扩充该表字段' ;
