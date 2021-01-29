@@ -216,6 +216,7 @@ public class CardManageServiceImpl implements ICardManageService {
             obj.put(Constant.NEW_CARD_NO_PARAM, requestDto.getNewCardNo());
             record.setAttach(obj.toJSONString());
             record.setNotes("换卡，工本费转为市场收入");
+            record.setNewCardNo(requestDto.getNewCardNo());
         });
 
         CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(
