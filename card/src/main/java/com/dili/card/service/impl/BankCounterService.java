@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.StrUtil;
 import com.dili.card.dto.BankCounterPrintResponseDto;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.type.PrintTemplate;
@@ -60,7 +61,7 @@ public class BankCounterService implements IBankCounterService {
         responseDto.setReceiveAccountNo("123");
         responseDto.setReceiveCompany("xxx公司");
         responseDto.setAction(bankCounterDo.getAction());
-        responseDto.setAmountText(String.valueOf(bankCounterDo.getAmount()));
+        responseDto.setAmountText(formatPrintAmount(String.valueOf(bankCounterDo.getAmount())));
         responseDto.setApplyTime(bankCounterDo.getApplyTime());
         responseDto.setAmountCN(Convert.digitToChinese(new BigDecimal(responseDto.getAmountText())));
         responseDto.setCreatedTime(bankCounterDo.getCreatedTime());
@@ -72,6 +73,18 @@ public class BankCounterService implements IBankCounterService {
         return responseDto;
     }
 
+    private static String formatPrintAmount(String amountText){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < amountText.length(); i++) {
+            char c = amountText.charAt(i);
+            if (i != amountText.length()-1){
+                sb.append(c).append(" ");
+            }else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
 
     private List<BankCounterResponseDto> convert2RespList(List<BankCounterDo> bankCounterDos) {
         return bankCounterDos.stream().map(bankCounterDo -> {
