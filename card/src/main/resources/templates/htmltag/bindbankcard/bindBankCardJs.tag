@@ -3,6 +3,11 @@
 	 * 初始化
 	 */
 	$(function () {
+		
+	});
+	
+	// 初始化绑定列表
+	function initTable(){
 		let options = {
 		    	id: "bankCardTable",
 		    	uniqueId: "id",
@@ -12,7 +17,7 @@
 		        method: "get"
 		};
 		$.table.init(options);
-	});
+	}
 
 	// 连接密码键盘调整密码
     function readPwd(){
@@ -25,6 +30,7 @@
         var json = JSON.parse(data);
         if (json.code == 0) {
              $('#password').val(json.data);
+             $('#unbindModalPassword').val(json.data);
         } else {
             bs4pop.alert(json.message, {width:'350px',type: "error"});
             return false;
@@ -61,7 +67,7 @@
                             if (result.success) {
                             	$('#authBindBtn').hide();
                                 // 已绑定银行卡列表数据
-                            	refreshTable();
+                            	initTable();
                                 $("#bankCardTableDiv").show();
                                 dia.hide();
                             } else {

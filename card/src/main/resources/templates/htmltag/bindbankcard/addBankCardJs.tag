@@ -70,10 +70,13 @@
         if($(this).val() == 1) {
             $('[data-account-type="1"]').show();
             $('[data-account-type="2"]').hide();
+            
+            $('#name').attr("readonly","readonly") 
         } else {
         	// 对公
             $('[data-account-type="1"]').hide();
             $('[data-account-type="2"]').show();
+            $('#name').removeAttr("readonly"); 
         }
     })
 
