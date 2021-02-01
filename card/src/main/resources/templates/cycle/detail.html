@@ -29,8 +29,10 @@
 <div id="detail-modal" class="main-container container-fluid auto-margin"  style="width: 80%">
 	<form id="queryForm" class="form-inline">
 		<input type="hidden" name="userId" id="userId" value="${detail.userId!}"> 
+		<input type="hidden" name="id" id="id" value="${detail.id!}"> 
 		<input type="hidden" name="cycleNo" id="cycleNo" value="${detail.cycleNo!'-1'}"> 
 		<input type="hidden" id="isStatistic" name="isStatistic" value="false"> 
+		<input type="hidden" id="detailState" name="detailState" value="${detail.state}"> 
 		<input type="hidden" name="operatorId" id="operatorId" value="${detail.userId!}">
 		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="10">
 		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="11">
@@ -127,6 +129,10 @@
 			<% } %>
 			<% else if(settled == 2){ %>
 				<button id="back" type="button" class="btn btn-secondary px-5" onclick="backList()">返回</button>
+			<% }%>
+			
+			<% if(settled == 2 && detail.state == 2){ %>
+				<button id="detailFlatedBtn" type="button" class="btn btn-primary" onclick="detailFlated()"><i class="fa fa-paypal"></i> 对账</button>
 			<% }%>
 			
 			<div id="printBtnDiv" style="display: none">
@@ -530,7 +536,6 @@
 		var applyPayerAmount = $('#applyPayerAmount').val();
 		var userId = $("#userId").val();
    	 	var url = '${contextPath}/cycle/print.action?userId=' + userId+'&settleAmount='+applyPayerAmount;
-    	// setTimeout('printData($("#show_print_data").val(), "MoneyContractsDocument")',500);
 		$.ajax({
     	    type: "GET",
     	    url:url,
@@ -548,4 +553,21 @@
     	    }
     	});
 	}
+	
+	// 详情对帐
+	function detailFlated(){
+		var id = $("#id").val();
+    	var detailState = $("#detailState").val();
+    	if(detailState == 1){
+    		$.modal.alertError("活跃账单不能对账");
+    		return false;
+    	}
+    	if(detailState == 3){
+    		$.modal.alertError("已平账账单不能重复操作");
+    		return false;
+    	}
+    	var url = "${contextPath}/cycle/flated.html?id="+id;
+    	
+    	$.modal.openDefault("对账", url,"auto","auto" );
+    }
 </script>

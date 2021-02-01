@@ -16,7 +16,12 @@
 function submitHandler(e) {
     let url = "${contextPath}/cycle/flated.action";
     let data = $.common.formToJSON("flated");
-    $.operate.post(url, data);
-    return true;
+    $.operate.post(url, data, function(ret){
+    	if(ret.success){
+    		parent.location.reload(true);
+    		return true;
+    	}
+    });
+    return false;
 }
 </script>

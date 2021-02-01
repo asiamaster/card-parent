@@ -39,7 +39,7 @@
             </div>
             <div class="form-group col">
                 <label class="info-column">身份类型</label>
-                <input  type="text" class="form-control" value="{{subTypeName}}" readonly/>
+                <input  type="text" class="form-control" value="{{subTypeNames}}" readonly/>
             </div>
             <div class="form-group col">
                 <label class="info-column">联系方式</label>

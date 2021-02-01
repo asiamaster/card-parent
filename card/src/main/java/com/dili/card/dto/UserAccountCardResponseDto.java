@@ -44,6 +44,8 @@ public class UserAccountCardResponseDto implements Serializable {
 	private String customerCode;
 	/** 客户角色 */
 	private String customerCharacterType;
+	/** 客户子身份类型 */
+	private String subTypeNames;
 	/** 客户身份类型 */
 	private String customerCertificateType;
 	/** 客户身份号 */
@@ -341,6 +343,14 @@ public class UserAccountCardResponseDto implements Serializable {
 
 	public void setOrganizationType(String organizationType) {
 		this.organizationType = organizationType;
+	}
+
+	public String getSubTypeNames() {
+		return subTypeNames;
+	}
+
+	public void setSubTypeNames(String subTypeNames) {
+		this.subTypeNames = subTypeNames;
 	}
 
 }

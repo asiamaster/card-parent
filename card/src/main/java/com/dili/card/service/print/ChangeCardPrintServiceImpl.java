@@ -31,12 +31,12 @@ public class ChangeCardPrintServiceImpl extends PrintServiceImpl{
         printDto.setTotalAmount(CurrencyUtils.cent2TenNoSymbol(totalAmount));
         printDto.setTotalAmountWords(Convert.digitToChinese(Double.valueOf(printDto.getTotalAmount())));
 
-        String attach = recordDo.getAttach();
-        if (StringUtils.isBlank(attach)) {
-            return;
-        }
-        JSONObject attachObj = JSON.parseObject(attach);
-        String newCardNo = attachObj.getString(Constant.NEW_CARD_NO_PARAM);
+//        String attach = recordDo.getAttach();
+//        if (StringUtils.isBlank(attach)) {
+//            return;
+//        }
+//        JSONObject attachObj = JSON.parseObject(attach);
+        String newCardNo = recordDo.getNewCardNo();
         printDto.setNewCardNo(newCardNo);
         printDto.setNewCardNoCipher(CardNoUtil.cipherCardNo(newCardNo));
     }
