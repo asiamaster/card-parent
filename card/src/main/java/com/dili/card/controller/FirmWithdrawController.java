@@ -58,6 +58,15 @@ public class FirmWithdrawController implements IControllerHandler {
     }
 
     /**
+     * 跳转到绑定银行卡页面
+     */
+    @GetMapping("/toAddBankCard.html")
+    public String addView() {
+    	LOGGER.info("为商户绑定新卡");
+        return "firmwithdraw/addBankCard";
+    }
+    
+    /**
     * 授权绑定银行卡校验
     * @author miaoguoxin
     * @date 2021/1/26

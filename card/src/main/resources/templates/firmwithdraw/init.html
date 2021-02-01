@@ -6,47 +6,40 @@
 			账户信息
 		</div>
 		<form id="withdraw-form">
-			<div class="row row-cols-3">
-				<div class="form-group col">
-					<label>提款账户</label>
-					<input type="text" class="form-control" value="${result.firm.name!}" readonly>
-				</div>
+			<div class="row row-cols-6">
+					<label class="col-2 text-right">提款账户</label>
+					<input type="text" class="form-control row-cols-8" value="${result.firm.name!}" readonly>
 			</div>
-			<div class="row row-cols-3">
-				<div class="form-group col">
-					<label>提款金额</label>
+			<br/>
+			<div class="row row-cols-6">
+					<label class="col-2  text-right">提款金额</label>
 					<input type="text" name="amount" id = "amount" class="form-control" >
-				</div>
 			</div>
-
-			<div class="row row-cols-3">
-				<div class="form-group col">
-					<label>提现方式</label>
+			<br/>
+			<div class="row row-cols-6">
+					<label class="col-2  text-right">提现方式</label>
 					<input type="text" class="form-control" value="银行卡提现" readonly>
-				</div>
 			</div>
-			<div class="row row-cols-3">
-				<div class="form-group col">
-					<label>选择银行卡</label>
+			<br/>
+			<div class="row row-cols-6">
+					<label class="col-2 text-right">选择银行卡</label>
 					<select class="custom-select" name="bankCardId" id="bankCardId" v-model="selectedBankCardId" @change='buildSelectedBankCard'>
 						<option value="">--请选择--</option>
 						<option v-for='item in bindBankList' :value="item.id">
 							{{ item.bankName }}
 						</option>
 					</select>
-					<a href="javascript:void(0)" onclick="openAuthConfirmModal()">选择其他银行卡</a>
-				</div>
+					<#resource code="add_firmBindBankCard">
+						<a href="javascript:void(0)" onclick="openAuthConfirmModal()">选择其他银行卡</a>
+					</#resource>
 			</div>
-			<div class="row row-cols-3">
-				<div class="form-group col">
-					<label>交易密码</label>
-					<div class="input-group mb-3">
-						<input type="password" id="tradePwd" maxlength=6 name="tradePwd" class="form-control" value="123456" readonly>
-						<div class="input-group-append">
-							<button id="pwdBtn" class="btn btn-primary" type="button" onclick="readFirmWithdrawPwd()">输入密码</button>
-						</div>
+			<br/>
+			<div class="row row-cols-6">
+					<label class="col-2 text-right">交易密码</label>
+					<input type="password" id="tradePwd" maxlength=6 name="tradePwd" class="form-control" value="123456" readonly>
+					<div class="input-group-append">
+						<button id="pwdBtn" class="btn btn-primary" type="button" onclick="readFirmWithdrawPwd()">输入密码</button>
 					</div>
-				</div>
 			</div>
 		</form>
 		<div align="center" class="mt-5">
@@ -60,28 +53,30 @@
 			市场信息
 		</div>
 		<div id="mer-info">
-			<div class="row row-cols-4">
-				<div class="form-group col">
-					<label>市场编号</label>
-					<input type="text" class="form-control" value="${result.merInfo.code!}" readonly>
+			<div class="row">
+				<div class="form-group row col-6">
+					<label class="col-3 text-right">市场编号</label>
+					<input type="text" class="form-control col-6" value="${result.merInfo.code!}" readonly>
 				</div>
-				<div class="form-group col">
-					<label>市场名称</label>
-					<input type="text" class="form-control" value="${result.merInfo.name!}" readonly>
+				<div class="form-group row col-6">
+					<label class="col-3 text-right">市场名称</label>
+					<input type="text" class="form-control col-6" value="${result.merInfo.name!}" readonly>
 				</div>
 			</div>
-			<div class="row row-cols-4">
-				<div class="form-group col">
-					<label>账户余额</label>
-					<input type="text" class="form-control" value="${result.balanceInfo.balanceText!}" readonly>
+			<div class="row">
+				<div class="form-group row col-6">
+					<label class="col-3 text-right">账户余额</label>
+					<input type="text" class="form-control col-6" value="${result.balanceInfo.balanceText!}" readonly>
 				</div>
-				<div class="form-group col">
-					<label>冻结金额</label>
-					<input type="text" class="form-control" value="${result.balanceInfo.frozenAmountText!}" readonly>
+				<div class="form-group  row col-6">
+					<label class="col-3 text-right">冻结金额</label>
+					<input type="text" class="form-control col-6" value="${result.balanceInfo.frozenAmountText!}" readonly>
 				</div>
-				<div class="form-group col">
-					<label>可提金额</label>
-					<input type="text" class="form-control" value="${result.balanceInfo.availableAmountText!}" readonly>
+			</div>
+			<div class="row">
+				<div class="form-group  row col-6">
+					<label class="col-3 text-right">可提金额</label>
+					<input type="text" class="form-control col-6" value="${result.balanceInfo.availableAmountText!}" readonly>
 				</div>
 			</div>
 		</div>
