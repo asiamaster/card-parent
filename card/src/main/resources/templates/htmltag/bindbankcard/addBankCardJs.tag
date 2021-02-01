@@ -66,6 +66,7 @@
 
     // 账户类型交互
     $('#bankAccountType').change(function () {
+    	$('[name="name"]').val(localStorage.customerName);
     	$('#bankNamePersonal').val('');
         if($(this).val() == 1) {
             $('[data-account-type="1"]').show();
