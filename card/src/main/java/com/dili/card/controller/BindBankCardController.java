@@ -102,12 +102,11 @@ public class BindBankCardController implements IControllerHandler {
             if (!CardType.isMaster(account.getCardType())) {
                 throw new CardAppBizException("请使用主卡绑定银行卡");
             }
+            String subTypeNames = customerService.getSubTypeNames(account.getCustomerId(), account.getFirmId());
+            account.setSubTypeNames(subTypeNames);
             // 为了使用TextDisplay注解将类型转为显示文字
             String jsonString = JSONObject.toJSONString(account, new EnumTextDisplayAfterFilter());
             returnData.put("cardInfo", JSON.parseObject(jsonString));
-
-            String subTypeNames = customerService.getSubTypeNames(account.getCustomerId(), account.getFirmId());
-            returnData.put("subTypeName", subTypeNames);
         } catch (CardAppBizException e) {
             LOG.error("绑定银行卡号查询账户信息出错,", e);
             return BaseOutput.failure(e.getMessage());
