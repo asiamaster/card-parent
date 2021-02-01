@@ -33,6 +33,7 @@
                         success: function (result) {
                             if (result.success) {
                                 dia.hide();
+                                $.modal.openDefault("新增银行卡绑定",'${contextPath}/firmWithdraw/toAddBankCard.html','600px','100%');
                             } else {
                                 bs4pop.alert(result.message, {type: 'error'});
                             }
@@ -58,21 +59,12 @@
         readPasswordKeyboardAsync();
     });
 
-   function pswClientHandler(data){
-       let json = JSON.parse(data);
-       if (json.code == 0) {
-           $('#pswBtn').val(json.data);
-       } else {
-           bs4pop.alert(json.message, {width:'350px',type: "error"});
-           return false;
-       }
-   }
-
     // 该方法名为固定，C端回调
     function pswClientHandler(data){
         let json = JSON.parse(data);
         if (json.code == 0) {
             $('#tradePwd').val(json.data);
+            $('#password').val(json.data);
         } else {
             bs4pop.alert(json.message, {width:'350px',type: "error"});
             return false;

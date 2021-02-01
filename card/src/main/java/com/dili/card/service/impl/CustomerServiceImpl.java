@@ -88,7 +88,9 @@ public class CustomerServiceImpl implements ICustomerService {
 				}
 			}
 		});
-		return String.join(",", subTypeNameList);
+		String typeNames = String.join(",", subTypeNameList);
+		log.info("身份类型>{}",typeNames);
+		return typeNames;
 	}
 
 	@Override
@@ -118,6 +120,7 @@ public class CustomerServiceImpl implements ICustomerService {
 			}
 			subTypeMap.put(c.getId(), String.join(",", subTypeList));
 		});
+		log.info("getSubTypeNames身份类型>{}",JSONObject.toJSON(subTypeMap));
 		return subTypeMap;
 	}
 

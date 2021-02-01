@@ -375,28 +375,29 @@ public class OpenCardServiceImpl implements IOpenCardService {
 			response.setCustomerType(String.join(",", customerService.getSubTypes(customer.getCharacterTypeList())));
 			response.setId(customer.getId());
 			response.setFirmId(firmId);
+			log.info("开卡客户信息>{}",JSONObject.toJSON(response));
 		} else {
 			throw new CardAppBizException(ErrorCode.CUSTOMER_NOT_EXIST, "未找到客户信息!");
 		}
 		return response;
 	}
 
-	/**
-	 * 从数据字典中获取客户身份类型
-	 */
-	private String getCustomerTypeName(String code, Long firmId) {
-		DataDictionaryValue ddv = DTOUtils.newInstance(DataDictionaryValue.class);
-		ddv.setDdCode(Constant.CUS_CUSTOMER_TYPE);
-		ddv.setCode(code);
-		ddv.setFirmId(firmId);
-		List<DataDictionaryValue> resolver = GenericRpcResolver.resolver(dataDictionaryRpc.listDataDictionaryValue(ddv),
-				"DataDictionaryRpc");
-		if (CollectionUtils.isEmpty(resolver)) {
-			throw new CardAppBizException("数据字典中没找到该客户类型" + code + "，是否已经删除!");
-		}
-
-		return resolver.get(0).getName();
-	}
+//	/**
+//	 * 从数据字典中获取客户身份类型
+//	 */
+//	private String getCustomerTypeName(String code, Long firmId) {
+//		DataDictionaryValue ddv = DTOUtils.newInstance(DataDictionaryValue.class);
+//		ddv.setDdCode(Constant.CUS_CUSTOMER_TYPE);
+//		ddv.setCode(code);
+//		ddv.setFirmId(firmId);
+//		List<DataDictionaryValue> resolver = GenericRpcResolver.resolver(dataDictionaryRpc.listDataDictionaryValue(ddv),
+//				"DataDictionaryRpc");
+//		if (CollectionUtils.isEmpty(resolver)) {
+//			throw new CardAppBizException("数据字典中没找到该客户类型" + code + "，是否已经删除!");
+//		}
+//
+//		return resolver.get(0).getName();
+//	}
 
 	@Override
 	public Integer checkCardNum(CustomerResponseDto customerResponseDto) {
