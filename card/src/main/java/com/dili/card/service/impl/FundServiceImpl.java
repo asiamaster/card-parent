@@ -106,7 +106,7 @@ public class FundServiceImpl implements IFundService {
             record.setType(OperateType.FROZEN_FUND.getCode());
             record.setAmount(requestDto.getAmount());
             record.setNotes(requestDto.getMark());
-        }, accountCycle.getCycleNo());
+        }, accountCycle == null? 0L:accountCycle.getCycleNo());
         CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto
                 .createFrozenAmount(accountCard.getFundAccountId(), accountCard.getAccountId(), requestDto.getAmount());
         createTradeRequestDto.setExtension(this.serializeFrozenExtra(requestDto));
@@ -291,9 +291,8 @@ public class FundServiceImpl implements IFundService {
         businessRecord.setHoldName(accountInfo.getHoldName());
         businessRecord.setNotes(unfreezeFundDto.getRemark());
         //账务周期
-        //账务周期
         AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(unfreezeFundDto.getOpId());
-        businessRecord.setCycleNo(accountCycle.getCycleNo());
+        businessRecord.setCycleNo(accountCycle == null? 0L:accountCycle.getCycleNo());
         //操作员信息
         businessRecord.setOperatorId(unfreezeFundDto.getOpId());
         businessRecord.setOperatorNo(unfreezeFundDto.getOpNo());
