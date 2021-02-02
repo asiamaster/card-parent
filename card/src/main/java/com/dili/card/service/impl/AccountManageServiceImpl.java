@@ -169,7 +169,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
         AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(cardParam.getOpId());
 		BusinessRecordDo businessRecord = serialService.createBusinessRecord(cardParam, accountCard, temp -> {
             temp.setType(operateType);
-        }, accountCycle.getCycleNo());
+        }, accountCycle == null? 0L:accountCycle.getCycleNo());
 		
 		serialService.saveBusinessRecord(businessRecord);
 		return businessRecord;

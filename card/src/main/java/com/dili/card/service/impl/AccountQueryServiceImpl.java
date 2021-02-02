@@ -158,7 +158,9 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
             fund.setBalance(0L);
             fund.setFrozenAmount(0L);
         }
-
+        
+        String subTypeNames = customerService.getSubTypeNames(customer.getId(), primary.getFirmId());
+        customer.setCustomerSubType(subTypeNames);
         detail.setAccountFund(fund);
         detail.setCustomer(customer);
         detail.setCardAssociation(cardAssociation);

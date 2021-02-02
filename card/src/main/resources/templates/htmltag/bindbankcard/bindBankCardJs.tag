@@ -3,7 +3,7 @@
 	 * 初始化
 	 */
 	$(function () {
-		
+		initTable();
 	});
 	
 	// 初始化绑定列表
@@ -65,9 +65,9 @@
                         data: param,
                         success: function (result) {
                             if (result.success) {
+                            	$.table.refresh();
                             	$('#authBindBtn').hide();
                                 // 已绑定银行卡列表数据
-                            	initTable();
                                 $("#bankCardTableDiv").show();
                                 dia.hide();
                             } else {
