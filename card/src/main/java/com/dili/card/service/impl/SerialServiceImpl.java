@@ -147,7 +147,10 @@ public class SerialServiceImpl implements ISerialService {
             businessRecord.setState(OperateState.SUCCESS.getCode());
             businessRecord.setStartBalance(serialDto.getStartBalance());
             businessRecord.setEndBalance(serialDto.getEndBalance());
-            businessRecordDao.doSuccessUpdate(businessRecord);
+            int updateRet = businessRecordDao.doSuccessUpdate(businessRecord);
+            if(updateRet == 0) {
+            	LOGGER.error("操作记录修改状态失败>{}",serialDto.getSerialNo());//记录数据方便后期处理
+            }
         } catch (Exception e) {
             LOGGER.error(JSON.toJSONString(serialDto), e);//记录数据方便后期处理
             throw new CardAppBizException("", "修改办理状态失败");
