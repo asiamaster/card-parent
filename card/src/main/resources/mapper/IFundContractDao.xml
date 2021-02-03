@@ -155,6 +155,6 @@
 	</update>
 	
 	<update	id="closeOverdueContract">
-		<![CDATA[UPDATE card_fund_contract SET `state` = 3 WHERE `state` = 2 and end_time < NOW()]]>
+		<![CDATA[UPDATE card_fund_contract SET `state` = 3 WHERE `state` = 2 and end_time < CONVERT(NOW(), date)]]>
 	</update>
 </mapper>
