@@ -39,6 +39,7 @@ public class FundItemProvider implements ValueProvider {
 //    }
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
+    	BUFFER.clear();
     	ConfigQuery query =new ConfigQuery();
     	query.setType("fundItem");
     	TableResult<ConfigDto> fundItemList = configRpc.query(query);
