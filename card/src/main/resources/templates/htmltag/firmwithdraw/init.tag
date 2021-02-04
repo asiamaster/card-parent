@@ -1,9 +1,9 @@
 <script id="checkPassword" type="text/html">
     <form id="auth-check-form">
         <div class="form-group col">
-            <input type="hidden" name="accountId" value="${result.merInfo.vouchAccount!}">
+            <input type="hidden" name="accountId" id="accountId"  value="{{fundAccountId}}">
             <label for="password" class="div_label">密码</label>
-            <input  type="password" id="password" maxlength=6 name="password">
+            <input  type="password" id="password" value="123456" maxlength=6 name="password">
             <button id="authBindPwdBtn" type="button" class="btn btn-primary">
                 请输入密码
             </button>
@@ -15,9 +15,10 @@
      * 授权绑定,密码验证
      */
     function openAuthConfirmModal(){
+    	var fundAccountId = $("#fundAccountId").val();
         let dia = bs4pop.dialog({
             title: '授权绑定',// 对话框title
-            content: bui.util.HTMLDecode(template('checkPassword', {})), // 对话框内容，可以是
+            content: bui.util.HTMLDecode(template('checkPassword', {"fundAccountId":fundAccountId})), // 对话框内容，可以是
             // string、element，$object
             width: '500px',// 宽度
             height: '200px',// 高度
@@ -33,6 +34,7 @@
                         success: function (result) {
                             if (result.success) {
                                 dia.hide();
+                                localStorage.firmFundAccountId = $('#fundAccountId').val();
                                 $.modal.openDefault("新增银行卡绑定",'${contextPath}/firmWithdraw/toAddBankCard.html','600px','100%');
                             } else {
                                 bs4pop.alert(result.message, {type: 'error'});

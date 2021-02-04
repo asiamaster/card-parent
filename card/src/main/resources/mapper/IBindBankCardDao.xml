@@ -28,6 +28,7 @@
 			firm_id = #{firmId}
 			AND status = 1
 			<if test="accountId != null">AND `account_id` = #{accountId} </if>
+			<if test="fundAccountId != null">AND `fund_account_id` = #{fundAccountId} </if>
 			<if test="bankNo != null">AND `bank_no` = #{bankNo} </if>
 			<if test="sort != null">ORDER BY ${sort} ${order} </if>
 	</select>

@@ -22,6 +22,10 @@ public class CardRequestDto extends BaseDto {
 	@NotNull(message = "账号id不能为空", groups = CardValidator.Generic.class)
 	@Min(value = 1, message = "id最小为1", groups = CardValidator.Generic.class)
 	private Long accountId;
+
+	/** 资金帐号ID */
+	private Long fundAccountId;
+
 	/** 原来登录密码 */
 	private String oldLoginPwd;
 	/** 登录密码 */
@@ -131,6 +135,14 @@ public class CardRequestDto extends BaseDto {
 
 	public void setNewCardFace(String newCardFace) {
 		this.newCardFace = newCardFace;
+	}
+
+	public Long getFundAccountId() {
+		return fundAccountId;
+	}
+
+	public void setFundAccountId(Long fundAccountId) {
+		this.fundAccountId = fundAccountId;
 	}
 
 }
