@@ -9,11 +9,13 @@
 	
 	var vue = new Vue({
 		el:'#v',
-		data: {
-			firmInfo: {
-				firm: {},
-				merInfo: {
-					profitAccount: 0
+		data() {
+			return {
+				firmInfo: {
+					firm: {},
+					merInfo: {
+						profitAccount: 0
+					}
 				}
 			}
 		},
@@ -26,7 +28,8 @@
 				var firmId = $("#firmAccount").val();
 				if(firmId == ""){
 					Object.assign(this.$data, this.$options.data());
-					$('#withdrawTableDiv').hide();
+					$("#fundAccountId").val(0); // 手动设置，VUE绑定的值没有及时更新
+					$.table.refresh();
 					return;
 				}
 				$.ajax({
@@ -38,7 +41,6 @@
 					success: function (ret) {
 						if (ret.success){
 							vue.firmInfo = ret.data;
-							alert(vue.firmInfo.merInfo.profitAccount);
 							$("#fundAccountId").val(vue.firmInfo.merInfo.profitAccount); // 手动设置，VUE绑定的值没有及时更新
                         	$.table.refresh();
                         	$('#withdrawTableDiv').show();
