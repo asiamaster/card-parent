@@ -1,10 +1,18 @@
 package com.dili.card.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.NumberUtil;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dao.IBindBankCardDao;
@@ -33,7 +41,6 @@ import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
-import com.dili.card.service.IBindBankCardService;
 import com.dili.card.service.IFirmWithdrawService;
 import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
@@ -49,25 +56,15 @@ import com.dili.card.type.PaySubject;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
-import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.Firm;
 import com.dili.uap.sdk.rpc.FirmRpc;
-import com.esotericsoftware.minlog.Log;
 
-import org.apache.commons.collections.ListUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.NumberUtil;
 
 /**
  * @Auther: miaoguoxin
@@ -75,9 +72,9 @@ import java.util.List;
  * @Description:
  */
 @Service
-public class FirmWithdrawService implements IFirmWithdrawService {
+public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
 	
-	private static final Logger log = LoggerFactory.getLogger(FirmWithdrawService.class);
+	private static final Logger log = LoggerFactory.getLogger(FirmWithdrawServiceImpl.class);
 
 	
     @Autowired
@@ -316,5 +313,23 @@ public class FirmWithdrawService implements IFirmWithdrawService {
 
         return serialDto;
     }
+
+
+	@Override
+	public boolean unBind(BindBankCardDto bankCardDto) {
+		// 校验支付 密码
+		FirmWithdrawAuthRequestDto requestDto = new FirmWithdrawAuthRequestDto();
+		requestDto.setAccountId(bankCardDto.getFundAccountId());
+		requestDto.setPassword(bankCardDto.getLoginPwd());
+		checkAuth(requestDto);
+		
+		// 解绑数据
+		BindBankCardDo unBind = new BindBankCardDo();
+		unBind.setId(bankCardDto.getId());
+		unBind.setStatus(BindBankStatus.INVALID.getCode());
+		unBind.setModifyTime(LocalDateTime.now());
+		bankCardDao.update(unBind);
+		return true;
+	}
 
 }

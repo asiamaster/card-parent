@@ -1,0 +1,115 @@
+<#bs4Body>
+<#vueElm/>
+<div class="container-fluid" id ="v">
+    <form id="queryForm"  role="form" action="${contextPath}/bindBankCard/queryCard.html" method="get">
+		<input type="hidden" class="form-control" name="fundAccountId" id="fundAccountId" v-model="firmInfo.merInfo.profitAccount" />
+	        
+	    <div class="row">
+	        <div class="form-group row col-6">
+				<label class="col-3 text-right">提款账户</label>
+				<select id="firmAccount" name="firmAccount" class="form-control col-6"  @change='getFirmAccountInfo'></select>
+				<#bcomboProvider _id="firmAccount" _provider="firmProvider" />
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group row col-6">
+				<label class="col-3 text-right">账户</label>
+				<input type="text" class="form-control col-6"   v-model="firmInfo.merInfo.profitAccount" readonly>
+			</div>
+			<div class="form-group row col-6">
+				<label class="col-3 text-right">账户状态</label>
+				<input type="text" class="form-control col-6"  v-model="firmInfo.merInfo.profitAccount" readonly>
+			</div>
+		</div>
+    </form>
+	<div id="cardInfoDiv">
+		
+	</div>
+	<!-- 已绑定银行卡列表 -->
+	<div id="bankCardTableDiv" >
+		<div class="breadcrumb">
+             银行卡绑定列表
+        </div>
+        <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
+            <button id="refreshBtn" type="button" class="btn btn-primary" >
+                <i class="fa fa-refresh">刷新</i>
+            </button>
+            <#resource code="add_bindBankCard">
+	            <button id="openAddHtmlBtn" type="button" class="btn btn-primary" @click=openAuthConfirmModal>
+	                <i class="fa fa-plus">添加银行卡</i>
+	            </button>
+            </#resource>
+        </div>
+		<table id="bankCardTable" data-title="银行卡列表" data-show-fullscreen="true"
+			data-buttons-class="primary" data-icons="bui.variable.icons">
+			<thead>
+				<tr>
+					<th data-radio="true"></th>
+					<th data-field="bankNo" data-align="center">银行卡号</th>
+					<th data-field="bankName" data-align="center">银行名称</th>
+					<th data-field="name" data-align="center"  data-formatter="noteFormatter">账户名称</th>
+					<th data-field="bankAccountTypeText" data-align="center">账户类型</th>
+					<th data-field="statusText" data-align="center">状态</th>
+					<th data-field="operatorName" data-align="center">创建人</th>
+					<th data-field="createTime" data-align="center">创建时间 </th>
+					<th data-field="description" data-align="center"  data-formatter="noteFormatter">备注 </th>
+					<th data-align="center" data-formatter="operFormatter">操作 </th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<#common_cardBaseJs/>
+<#firmwithdraw_bindBankCardJs/>
+
+<#comment>
+    页面层弹框
+</#comment>
+<!-- 添加密码校验 -->
+<script id="checkPassword" type="text/html">
+    <form id="auth-check-form">
+        <div class="form-group col">
+            <input type="hidden" name="accountId" id="accountId"  value="{{fundAccountId}}">
+            <label for="password" class="div_label">密码</label>
+            <input  type="password" id="password" value="123456" maxlength=6 name="password">
+            <button id="authBindPwdBtn" type="button" class="btn btn-primary">
+                请输入密码
+            </button>
+        </div>
+    </form>
+</script>
+<!-- 解绑弹出层 -->
+<script id="unbindModal" type="text/html">
+	<div class="row row-cols-1"  style="text-align: center">
+		<div class="form-group row">
+			<label class="col-md-3 col-form-label">&nbsp;&nbsp;银行卡号</label>
+        	<input type="text" id="bankCardNo" class="form-control col-md-9" value="{{bankNo}}" readonly/>
+		</div>
+		<div class="form-group row">
+			<label class="col-md-3 col-form-label">银行名称</label>
+			<input id="bankName" type="text" class="form-control col-md-9" value="{{bankName}}" readonly/>
+		</div>
+    	<div class="form-group row">
+			<label class="col-md-3 col-form-label">账户名称</label>
+			<input id="accountName" type="text" class="form-control col-md-9" value="{{name}}" readonly/>
+    	</div>
+    	<div class="form-group row">
+			<label class="col-md-3 col-form-label">账户类型</label>
+			<input id="accountType" type="text" class="form-control col-md-9" value="{{bankAccountTypeText}}" readonly/>
+  	  	</div>
+  	  	<div class="form-group row">
+			<label class="col-md-3 col-form-label">备注</label>
+			<input id="removeBind" type="text" class="form-control col-md-9" value="{{description}}" readonly/>
+    	</div>
+    	<div class="form-group row">
+			<label class="col-md-3 col-form-label">主卡密码</label>
+			<input type="password" id="unbindModalPassword" class="form-control col-md-6" maxlength="6" name="unbindModalPassword" />
+			<button id="pwdBtn" type="button" onclick="readPwd()" class="btn btn-primary col-md-3">
+				请输入密码
+			</button>
+    	</div>
+	</div>
+</script>
