@@ -18,6 +18,7 @@ import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.*;
 import com.dili.customer.sdk.domain.Customer;
+import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.logger.sdk.util.LoggerUtil;
 import com.dili.ss.constant.ResultCode;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -90,8 +91,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
 		//校验账户信息
 		UserAccountCardResponseDto accountCard = this.validateCardAccount(cardRequestDto.getAccountId(), false, DisableState.DISABLED);
 
-		Customer customer = customerRpcResolver.getWithNotNull(accountCard.getCustomerId(), accountCard.getFirmId());
-		if (customer.getState().equals(CustomerState.DISABLED.getCode())){
+		CustomerExtendDto customer = customerRpcResolver.getWithNotNull(accountCard.getCustomerId(), accountCard.getFirmId());
+		if (customer.getCustomerMarket().getState().equals(CustomerState.DISABLED.getCode())){
 			throw new CardAppBizException("客户已被禁用");
 		}
 		//保存本地记录

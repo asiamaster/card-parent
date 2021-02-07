@@ -16,11 +16,11 @@ public class MerAccountResponseDto implements Serializable {
     private String name;
     /** 商户*/
     private Long parentId;
-    /** 主商户ID（0或>0） */
+    /** 收益账户 */
     private Long profitAccount;
-    /**收益账户ID*/
+    /** 担保账户ID */
     private Long vouchAccount;
-    /**担保账户ID */
+    /** 押金账户 */
     private Long pledgeAccount;
 
     public Long getMchId() {

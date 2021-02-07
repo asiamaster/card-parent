@@ -1,24 +1,24 @@
 <script>
 
     $(()=>{
-        $('[name="name"]').val(localStorage.customerName);
+        
     })
 
     // 保存绑定的银行卡信息
     function submitHandler(e) {
         let formId = 'bankAddForm';
+        var  text=$('#openingBankNum option:selected').text();
+        $("#openingBank").val(text);
+        var bankName = $('#bankType option:selected').text();
         if (!$.validate.form(formId)) {
             return false;
         }
-        let url = "${contextPath}/bindBankCard/addBind.action";
-        let customerInfo = {
-            accountId: localStorage.accountId,
-            fundAccountId: localStorage.fundAccountId,
-            customerCode: localStorage.customerCode,
-            customerName: localStorage.customerName,
-            cardNo: localStorage.cardNo,
+        let url = "${contextPath}/firmWithdraw/addBind.action";
+        let otherInfo = {
+            fundAccountId: localStorage.firmFundAccountId,
+            bankName: bankName,
         }
-        let data = $.extend(customerInfo, $.common.formToJSON(formId));
+        let data = $.extend(otherInfo, $.common.formToJSON(formId));
         $.operate.post(url, data);
     }
 

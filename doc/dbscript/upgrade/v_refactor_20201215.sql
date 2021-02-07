@@ -85,3 +85,7 @@ ALTER TABLE `dili_card`.`card_business_record`
     MODIFY COLUMN `attach` text  NULL COMMENT '附加内容-存储不太重要的内容，否则请扩充该表字段' ;
 
 INSERT INTO `uap`.`data_dictionary_value` (`dd_code`,`order_number`, `name`, `code`, `description`, `created`, `modified`, `state`) VALUES ('log_business_type', 40, '卡账户权限设置', '24', '卡账户权限设置', now(), NOW(), 1);
+
+-- 刷新持卡人数据
+update card_business_record set hold_name = customer_name where hold_name is null;
+

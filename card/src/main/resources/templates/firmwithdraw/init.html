@@ -7,8 +7,9 @@
 		</div>
 		<form id="withdraw-form">
 			<div class="row row-cols-6">
-					<label class="col-2 text-right">提款账户</label>
-					<input type="text" class="form-control row-cols-8" value="${result.firm.name!}" readonly>
+				<label class="col-2 text-right">提款账户</label>
+				<select id="firmAccount" name="firmAccount" class="form-control row-cols-8"  @change='getFirmAccountInfo'></select>
+				<#bcomboProvider _id="firmAccount" _provider="firmProvider" />
 			</div>
 			<br/>
 			<div class="row row-cols-6">
@@ -23,13 +24,13 @@
 			<br/>
 			<div class="row row-cols-6">
 					<label class="col-2 text-right">选择银行卡</label>
-					<select class="custom-select" name="bankCardId" id="bankCardId" v-model="selectedBankCardId" @change='buildSelectedBankCard'>
+					<select class="custom-select" name="bankCardId" id="bankCardId" placeholder="请选择" v-model="selectedBankCardId" @change='buildSelectedBankCard'>
 						<option value="">--请选择--</option>
 						<option v-for='item in bindBankList' :value="item.id">
-							{{ item.bankName }}
+							{{ item.bankName + "   尾号：" + item.bankNoTailNumber }}
 						</option>
 					</select>
-					<#resource code="add_firmBindBankCard">
+					<#resource code="add_firmBindBankCard2">
 						<a href="javascript:void(0)" onclick="openAuthConfirmModal()">选择其他银行卡</a>
 					</#resource>
 			</div>
@@ -56,38 +57,38 @@
 			<div class="row">
 				<div class="form-group row col-6">
 					<label class="col-3 text-right">市场编号</label>
-					<input type="text" class="form-control col-6" value="${result.merInfo.code!}" readonly>
+					<input type="text" class="form-control col-6"  v-model="firmInfo.merInfo.code" readonly>
 				</div>
 				<div class="form-group row col-6">
 					<label class="col-3 text-right">市场名称</label>
-					<input type="text" class="form-control col-6" value="${result.merInfo.name!}" readonly>
+					<input type="text" class="form-control col-6" v-model="firmInfo.merInfo.name" readonly>
 				</div>
 			</div>
 			<div class="row">
 				<div class="form-group row col-6">
 					<label class="col-3 text-right">账户余额</label>
-					<input type="text" class="form-control col-6" value="${result.balanceInfo.balanceText!}" readonly>
+					<input type="text" class="form-control col-6" v-model="firmInfo.balanceInfo.balanceText" readonly>
 				</div>
 				<div class="form-group  row col-6">
 					<label class="col-3 text-right">冻结金额</label>
-					<input type="text" class="form-control col-6" value="${result.balanceInfo.frozenAmountText!}" readonly>
+					<input type="text" class="form-control col-6" v-model="firmInfo.balanceInfo.frozenAmountText" readonly>
 				</div>
 			</div>
 			<div class="row">
 				<div class="form-group  row col-6">
 					<label class="col-3 text-right">可提金额</label>
-					<input type="text" class="form-control col-6" value="${result.balanceInfo.availableAmountText!}" readonly>
+					<input type="text" class="form-control col-6" v-model="firmInfo.balanceInfo.availableAmountText" readonly>
 				</div>
 			</div>
 		</div>
 
 		<!-- 提现记录列表 -->
-		<div >
+		<div id="withdrawTableDiv" style="display: none">
 			<div class="breadcrumb">
 				提现记录
 			</div>
 			<form id="queryForm" role="form">
-				<input type="hidden" class="form-control" name="accountId" id="accountId" value="${result.merInfo.vouchAccount!}" />
+				<input type="hidden" class="form-control" name="fundAccountId" id="fundAccountId" v-model="firmInfo.merInfo.profitAccount" />
 				<input type="hidden" class="form-control" name="type" id="type" value="12"/>
 				<input type="hidden" class="form-control" name="tradeChannel" id="tradeChannel" value="5"/>
 			</form>
@@ -129,7 +130,7 @@
 </div>
 </#bs4Body>
 <#common_cardBaseJs/>
-<#firmwithdraw_common/>
+<#firmwithdraw_init/>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
@@ -145,13 +146,10 @@
 
 	let formId = "withdraw-form";
 	$(function () {
-		let options = {
-			uniqueId: "id",
-			url : "${contextPath}/firmWithdraw/withdrawPage.action",
-			sortName: "create_time",
-			modalName: "圈提查询列表"
-		};
-		$.table.init(options);
+		//var firmFundAccountId = $("#firmFundAccountId").val();
+		//buildSelectedBankCard(firmFundAccountId);
+		initTable();
+		
 		$("#" + formId).validate({
 			onkeyup: false,
 			rules: {
@@ -181,6 +179,15 @@
 		});
 	});
 
+	function initTable(){
+		let options = {
+			uniqueId: "id",
+			url : "${contextPath}/firmWithdraw/withdrawPage.action",
+			sortName: "create_time",
+			modalName: "圈提查询列表"
+		};
+		$.table.init(options);
+	}
 	let vue = new Vue({
 		el: '#v',
 		data() {
@@ -192,12 +199,44 @@
 					tradePwd: ""
 				},
 				bindBankList: [],
+				firmInfo: {
+					firm: {},
+					merInfo: {
+						profitAccount: 0
+					},
+					balanceInfo:{}
+				}
 			}
 		},
 		mounted: function(){
-			this.getBindBankList();
+			
 		},
 		methods: {
+			// 获取市场帐户详情
+			getFirmAccountInfo(){
+				var firmId = $("#firmAccount").val();
+				if(firmId == ""){
+					Object.assign(this.$data, this.$options.data());
+					$('#withdrawTableDiv').hide();
+					return;
+				}
+				$.ajax({
+					type: "GET",
+					data: {
+						firmId : firmId
+					},
+					url: '${contextPath}/firmWithdraw/getFirmInfo.action',
+					success: function (ret) {
+						if (ret.success){
+							vue.firmInfo = ret.data;
+							vue.getBindBankList();
+							$("#fundAccountId").val(vue.firmInfo.merInfo.profitAccount); // 手动设置，VUE绑定的值没有及时更新
+                        	$.table.refresh();
+                        	$('#withdrawTableDiv').show();
+						}
+					}
+				});
+			},
 			buildSelectedBankCard(){
 				let that = this;
 				console.log('您选择了', this.selectedBankCardId)
@@ -226,12 +265,13 @@
 				$.ajax({
 					type: "GET",
 					data: {
-						accountId : ${result.merInfo.vouchAccount!}
+						fundAccountId : that.firmInfo.balanceInfo.accountId
 					},
 					url: '${contextPath}/bindBankCard/list.action',
 					success: function (ret) {
 						if (ret.success){
 							that.bindBankList = ret.data;
+							that.selectedBankCardId = "";
 						}
 					}
 				});

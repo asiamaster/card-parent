@@ -3,11 +3,13 @@ package com.dili.card.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.type.BankAccountType;
 import com.dili.card.type.BindBankStatus;
+import com.dili.card.util.CardNoUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -41,6 +43,9 @@ public class BindBankCardDto extends BaseDto implements Serializable {
 	private String bankName;
 	/** 银行卡号/对公账号 */
 	private String bankNo;
+	/** 银行卡号尾号 */
+	private String bankNoTailNumber;
+
 	/** 开户行如:成都XX银行XX支行 */
 	private String openingBank;
 	/** 开户行编码 */
@@ -323,6 +328,14 @@ public class BindBankCardDto extends BaseDto implements Serializable {
 
 	public void setLoginPwd(String loginPwd) {
 		this.loginPwd = loginPwd;
+	}
+
+	public String getBankNoTailNumber() {
+		if(StringUtils.isBlank(bankNo)) {
+			return "";
+		}
+		bankNoTailNumber = CardNoUtil.getTailNumber(bankNo);
+		return bankNoTailNumber;
 	}
 
 }

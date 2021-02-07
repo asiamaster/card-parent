@@ -29,7 +29,7 @@ import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IContractService;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.customer.sdk.domain.Customer;
-import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
+import com.dili.customer.sdk.domain.query.CustomerQueryInput;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;

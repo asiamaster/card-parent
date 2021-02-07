@@ -3,7 +3,6 @@ package com.dili.card.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.dili.ss.domain.BaseOutput;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
