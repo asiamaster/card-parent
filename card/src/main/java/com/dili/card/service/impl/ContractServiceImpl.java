@@ -47,7 +47,7 @@ import com.dili.card.type.DisableState;
 import com.dili.card.util.PageUtils;
 import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
-import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
+import com.dili.customer.sdk.domain.query.CustomerQueryInput;
 import com.dili.customer.sdk.rpc.CustomerRpc;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.PageOutput;
@@ -220,15 +220,15 @@ public class ContractServiceImpl implements IContractService {
 	@Override
 	public Customer findCustomers(CustomerQueryInput query) {
 		
-		Customer customer = GenericRpcResolver.resolver(customerRpc.getByCertificateNumber(query.getKeyword(), query.getMarketId()), ServiceName.CUSTOMER);
+		CustomerExtendDto customer = GenericRpcResolver.resolver(customerRpc.getByCertificateNumber(query.getKeyword(), query.getMarketId()), ServiceName.CUSTOMER);
 		
 		if (customer == null) {
 			throw new CardAppBizException(ResultCode.DATA_ERROR, "无相应客户信息");
 		};
 		
-		if (!customer.getState().equals(CustomerState.VALID.getCode())) {
+		if (!customer.getCustomerMarket().getState().equals(CustomerState.VALID.getCode())) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR,
-					"客户已" + CustomerState.getStateName(customer.getState()));
+					"客户已" + CustomerState.getStateName(customer.getCustomerMarket().getState()));
 		}
 		
 		return customer;

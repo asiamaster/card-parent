@@ -60,4 +60,11 @@ public interface IFirmWithdrawService {
 	 * @return
 	 */
 	boolean addBind(BindBankCardDto newDataDto);
+	
+	/**
+	 * 市场解绑银行卡
+	 * @param bankCardDto
+	 * @return
+	 */
+	boolean unBind(BindBankCardDto bankCardDto);
 }

@@ -14,7 +14,7 @@ import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.service.ICustomerService;
 import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
-import com.dili.customer.sdk.domain.dto.CustomerQueryInput;
+import com.dili.customer.sdk.domain.query.CustomerQueryInput;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 

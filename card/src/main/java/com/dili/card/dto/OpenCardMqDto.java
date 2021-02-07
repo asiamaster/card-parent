@@ -29,6 +29,10 @@ public class OpenCardMqDto {
 	private Long firmId;
 	/** 商户名称 */
 	private String firmName;
+	/** 操作人员 */
+	private Long creatorId;
+	/** 操作人员姓名 */
+	private String creator;
 
 	public String getCustomerName() {
 		return customerName;
@@ -108,6 +112,22 @@ public class OpenCardMqDto {
 
 	public void setHoldContactsPhone(String holdContactsPhone) {
 		this.holdContactsPhone = holdContactsPhone;
+	}
+
+	public Long getCreatorId() {
+		return creatorId;
+	}
+
+	public void setCreatorId(Long creatorId) {
+		this.creatorId = creatorId;
+	}
+
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
 	}
 
 }

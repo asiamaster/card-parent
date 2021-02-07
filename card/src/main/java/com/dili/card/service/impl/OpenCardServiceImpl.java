@@ -156,9 +156,9 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		// 校验客户信息
 		CustomerExtendDto customer = GenericRpcResolver.resolver(
 				customerRpc.get(openCardInfo.getCustomerId(), openCardInfo.getFirmId()), ServiceName.CUSTOMER);
-		if (!customer.getState().equals(CustomerState.VALID.getCode())) {
+		if (!customer.getCustomerMarket().getState().equals(CustomerState.VALID.getCode())) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR,
-					"客户已" + CustomerState.getStateName(customer.getState()));
+					"客户已" + CustomerState.getStateName(customer.getCustomerMarket().getState()));
 		}
 		openCardInfo.setCustomerCharacterType(customerService.convertCharacterTypes(customer.getCharacterTypeList(), customer.getId()));
 		// 获取当前账务周期
@@ -367,9 +367,9 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		CustomerResponseDto response = new CustomerResponseDto();
 		if (customer != null) {
 			// 判断客户是否已禁用或注销
-			if (!customer.getState().equals(CustomerState.VALID.getCode())) {
+			if (!customer.getCustomerMarket().getState().equals(CustomerState.VALID.getCode())) {
 				throw new CardAppBizException(ResultCode.PARAMS_ERROR,
-						"客户已" + CustomerState.getStateName(customer.getState()));
+						"客户已" + CustomerState.getStateName(customer.getCustomerMarket().getState()));
 			}
 			BeanUtils.copyProperties(customer, response);
 			response.setCustomerContactsPhone(customer.getContactsPhone());

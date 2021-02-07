@@ -1,10 +1,25 @@
 package com.dili.card.controller;
 
-import com.alibaba.fastjson.JSON;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.JsonExcludeFilter;
 import com.dili.card.common.handler.IControllerHandler;
-import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.BindBankCardDto;
 import com.dili.card.dto.FirmWithdrawAuthRequestDto;
 import com.dili.card.dto.FirmWithdrawInitResponseDto;
@@ -20,22 +35,6 @@ import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
 
 /**
  * @description：市场圈提
@@ -65,8 +64,18 @@ public class FirmWithdrawController implements IControllerHandler {
         return "firmwithdraw/init";
     }
 
+    
     /**
-     * 跳转到绑定银行卡页面
+     * 跳转到绑定银行卡列表页
+     */
+    @GetMapping("/toBankCardList.html")
+    public String bankCardListView() {
+    	LOGGER.info("跳转到市场银行卡列表");
+        return "firmwithdraw/bankCardList";
+    }
+    
+    /**
+     * 跳转到添加银行卡页
      */
     @GetMapping("/toAddBankCard.html")
     public String addView() {
@@ -118,6 +127,24 @@ public class FirmWithdrawController implements IControllerHandler {
         return BaseOutput.success();
     }
     
+    /**
+     * 市场解绑银行卡
+     */
+    @PostMapping("/unBind.action")
+    @ResponseBody
+    public BaseOutput<?> unBind(@RequestBody BindBankCardDto bankCardDto) {
+    	LOGGER.info("解绑银行卡*****" + JSONObject.toJSONString(bankCardDto));
+        AssertUtils.notNull(bankCardDto.getFundAccountId(), "账户ID不能为空");
+        AssertUtils.notEmpty(bankCardDto.getLoginPwd(), "密码不能为空");
+
+        // 设置操作人信息
+        UserTicket user = getUserTicket();
+        // 操作日志
+        businessLogService.saveLog(OperateType.BANKCARD_REMOVE, user, "客户姓名:" + bankCardDto.getCustomerName(),
+                "客户ID:" + bankCardDto.getCustomerCode(), "卡号:" + bankCardDto.getCardNo());
+        firmWithdrawService.unBind(bankCardDto);
+        return BaseOutput.success();
+    }
 
     /**
      * 市场圈提历史记录
