@@ -233,6 +233,8 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		mqDto.setCardNo(openCardInfo.getCardNo());
 		mqDto.setFirmId(openCardInfo.getFirmId());
 		mqDto.setHoldName(openCardInfo.getHoldName());
+		mqDto.setCreator(openCardInfo.getCreator());
+		mqDto.setCreatorId(openCardInfo.getCreatorId());
 		log.info("开卡MQ通知>>>>>EXCHANGE[{}]ROUTING[{}]{}", OpenCardMQConfig.EXCHANGE, OpenCardMQConfig.ROUTING,
 				JSONObject.toJSONString(mqDto));
 		rabbitMQMessageService.send(OpenCardMQConfig.EXCHANGE, OpenCardMQConfig.ROUTING,
