@@ -57,7 +57,7 @@
 			<div class="row">
 				<div class="form-group row col-6">
 					<label class="col-3 text-right">市场名称</label>
-					<input type="text" class="form-control col-6" v-model="firmInfo.merInfo.name" readonly>
+					<input type="text" id="merInfoName" class="form-control col-6" v-model="firmInfo.merInfo.name" readonly>
 				</div>
 				<div class="form-group row col-6">
 					<label class="col-3 text-right">账户</label>
@@ -136,7 +136,7 @@
 <script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
 <script id="confirmCommit" type="text/html">
 	<div style='font-size: 18px'>
-		<span>确认账户 ${result.merInfo.name!} （）提现？</span>
+		<span>确认账户  （{{merInfoName}}）提现？</span>
 	</div>
 	<div style='text-align: center;color: red'>
 		<h3>{{withdrawAmount}}</h3>
@@ -284,7 +284,8 @@
 				if (!$.validate.form(formId)) {
 					return;
 				}
-				let templateData = {
+				let  templateData = {
+					merInfoName: $("#merInfoName").val(),
 					withdrawAmount: parseFloat(amountVal).toFixed(2)
 				};
 				let that = this;
