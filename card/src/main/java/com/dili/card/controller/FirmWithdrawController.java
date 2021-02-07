@@ -57,10 +57,6 @@ public class FirmWithdrawController implements IControllerHandler {
      */
     @GetMapping("/init.html")
     public String listView(ModelMap modelMap) {
-//        UserTicket userTicket = getUserTicket();
-//        FirmWithdrawInitResponseDto result = firmWithdrawService.init(userTicket.getFirmId());
-//        String json = JSON.toJSONString(result, new EnumTextDisplayAfterFilter());
-//        modelMap.put("result", JSON.parseObject(json));
         return "firmwithdraw/init";
     }
 
@@ -91,6 +87,7 @@ public class FirmWithdrawController implements IControllerHandler {
      public BaseOutput<FirmWithdrawInitResponseDto> getFirmInfo(Long firmId){
     	 LOGGER.info("获取市场详情>"+firmId);
     	 FirmWithdrawInitResponseDto firmInfo = firmWithdrawService.init(firmId);
+    	 firmInfo.getMerInfo().setStateText("正常");
          return BaseOutput.successData(firmInfo);
      }
     

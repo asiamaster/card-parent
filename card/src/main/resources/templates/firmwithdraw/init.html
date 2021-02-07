@@ -31,7 +31,7 @@
 						</option>
 					</select>
 					<#resource code="add_firmBindBankCard2">
-						<a href="javascript:void(0)" onclick="openAuthConfirmModal()">选择其他银行卡</a>
+						<a href="javascript:void(0)" id="addBindCardBtn" style="display: none" onclick="openAuthConfirmModal()">选择其他银行卡</a>
 					</#resource>
 			</div>
 			<br/>
@@ -56,12 +56,12 @@
 		<div id="mer-info">
 			<div class="row">
 				<div class="form-group row col-6">
-					<label class="col-3 text-right">市场编号</label>
-					<input type="text" class="form-control col-6"  v-model="firmInfo.merInfo.code" readonly>
-				</div>
-				<div class="form-group row col-6">
 					<label class="col-3 text-right">市场名称</label>
 					<input type="text" class="form-control col-6" v-model="firmInfo.merInfo.name" readonly>
+				</div>
+				<div class="form-group row col-6">
+					<label class="col-3 text-right">账户</label>
+					<input type="text" class="form-control col-6"  v-model="firmInfo.merInfo.profitAccount" readonly>
 				</div>
 			</div>
 			<div class="row">
@@ -218,8 +218,10 @@
 				if(firmId == ""){
 					Object.assign(this.$data, this.$options.data());
 					$('#withdrawTableDiv').hide();
+					$('#addBindCardBtn').hide();
 					return;
 				}
+				$('#addBindCardBtn').show();
 				$.ajax({
 					type: "GET",
 					data: {
