@@ -134,8 +134,8 @@
             },
             url: '${contextPath}/bankCounter/printData.action',
             success: function (ret) {
-                if (ret.success){
-                    printData(JSON.stringify(ret.data), ret.data.printTemplate);
+                if (ret.success) {
+                    printPreview(JSON.stringify(ret.data), "", ret.data.printTemplate, 0);
                 } else {
                     $.modal.alertError(ret.message);
                 }

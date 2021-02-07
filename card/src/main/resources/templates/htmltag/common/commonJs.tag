@@ -28,7 +28,12 @@
         var currentdate = year + nian + month + yue + strDate + ti;
         return currentdate;
     }
-    
+
+
+    function printPreview(invoiceData, sinvoiceVerifyID, templateName, reprint){
+        callbackObj.printPreview(invoiceData, sinvoiceVerifyID, templateName, reprint)
+    }
+
     function printData(data,templateName){
     	if(typeof callbackObj != 'undefined'){
             window.printFinish=function(){
@@ -45,7 +50,7 @@
             bs4pop.alert("请检查打印的设备是否已连接", { type: "error" });
         }
     }
-    
+
     function randomString(len) {
     	len = len || 16;
 	  　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
