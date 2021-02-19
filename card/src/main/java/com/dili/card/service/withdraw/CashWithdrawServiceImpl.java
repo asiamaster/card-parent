@@ -1,12 +1,20 @@
 package com.dili.card.service.withdraw;
 
 import cn.hutool.core.util.StrUtil;
+import com.dili.card.dao.IAccountCycleDao;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.TradeResponseDto;
+import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
-import com.dili.card.type.*;
+import com.dili.card.exception.CardAppBizException;
+import com.dili.card.type.FeeType;
+import com.dili.card.type.FundItem;
+import com.dili.card.type.OperateType;
+import com.dili.card.type.TradeChannel;
+import com.dili.card.type.TradeType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,6 +22,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CashWithdrawServiceImpl extends WithdrawServiceImpl {
+    @Autowired
+    private IAccountCycleDao accountCycleDao;
 
     @Override
     public BusinessRecordDo createBusinessRecord(FundRequestDto fundRequestDto, UserAccountCardResponseDto accountCard) {
@@ -24,7 +34,7 @@ public class CashWithdrawServiceImpl extends WithdrawServiceImpl {
             temp.setTradeChannel(fundRequestDto.getTradeChannel());
             temp.setContractNo(fundRequestDto.getContractNo());
             temp.setConsignorId(fundRequestDto.getConsignorId());
-            temp.setNotes(StrUtil.isBlank(fundRequestDto.getContractNo()) ?  "现金取款": String.format("委托现金取款，被委托人%s", fundRequestDto.getConsignorName()));
+            temp.setNotes(StrUtil.isBlank(fundRequestDto.getContractNo()) ? "现金取款" : String.format("委托现金取款，被委托人%s", fundRequestDto.getConsignorName()));
         });
     }
 
@@ -35,6 +45,11 @@ public class CashWithdrawServiceImpl extends WithdrawServiceImpl {
 
     @Override
     public void decreaseCashBox(Long cycleNo, Long amount) {
+        //TODO 不能超过现金柜金额 需要配置
+        AccountCycleDo accountCycleDo = accountCycleDao.findByCycleNo(cycleNo);
+        if (accountCycleDo.getCashBox() < amount) {
+            throw new CardAppBizException("取款金额不能超过现金柜余额");
+        }
         accountCycleService.decreaseeCashBox(cycleNo, amount);
     }
 
