@@ -215,6 +215,7 @@
 			// 获取市场帐户详情
 			getFirmAccountInfo(){
 				var firmId = $("#firmAccount").val();
+				$("#tradePwd").val("");
 				if(firmId == ""){
 					Object.assign(this.$data, this.$options.data());
 					$('#withdrawTableDiv').hide();
