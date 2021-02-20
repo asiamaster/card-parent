@@ -161,6 +161,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 					"客户已" + CustomerState.getStateName(customer.getCustomerMarket().getState()));
 		}
 		openCardInfo.setCustomerCharacterType(customerService.convertCharacterTypes(customer.getCharacterTypeList(), customer.getId()));
+		openCardInfo.setCustomerSubTypes(String.join(",", customerService.getSubTypes(customer.getCharacterTypeList())));
 		// 获取当前账务周期
 		AccountCycleDo cycleDo = accountCycleService.findActiveCycleByUserId(openCardInfo.getCreatorId(),
 				openCardInfo.getCreator(), openCardInfo.getCreatorCode());
@@ -286,8 +287,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		record.setCustomerId(openCardInfo.getCustomerId());
 		record.setCustomerName(openCardInfo.getCustomerName());
 		record.setCustomerNo(openCardInfo.getCustomerCode());
-		List<String> subTypes = customerService.getSubTypes(openCardInfo.getCustomerCharacterTypeList());
-		record.setCustomerType(String.join(",", subTypes));
+		record.setCustomerType(openCardInfo.getCustomerSubTypes());
 		record.setFirmId(openCardInfo.getFirmId());
 		record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
 		record.setNotes("开卡，工本费转为市场收入");

@@ -130,7 +130,7 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
     public MessageBo<String> doMerWithdraw(FundRequestDto requestDto) {
         //参数校验
         bankWithdrawService.validateSpecial(requestDto);
-        MerAccountResponseDto merInfo = this.getMerInfo(requestDto.getFirmId());
+        MerAccountResponseDto merInfo = this.getMerInfo(requestDto.getWithdrawFirmId());
         Long accountId = merInfo.getProfitAccount();
         BalanceResponseDto balance = payRpcResolver.findBalanceByFundAccountId(accountId);
         long totalAmount = requestDto.getAmount();

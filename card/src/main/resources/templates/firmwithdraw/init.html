@@ -215,6 +215,8 @@
 			// 获取市场帐户详情
 			getFirmAccountInfo(){
 				var firmId = $("#firmAccount").val();
+				$("#tradePwd").val("");
+				$("#amount").val();
 				if(firmId == ""){
 					Object.assign(this.$data, this.$options.data());
 					$('#withdrawTableDiv').hide();
@@ -284,6 +286,10 @@
 				if (!$.validate.form(formId)) {
 					return;
 				}
+				if (amountVal > 9999999.99) {
+					bs4pop.alert("单次圈提最高金额为9999999.99元", {type: 'error'});
+					return;
+				}
 				let  templateData = {
 					merInfoName: $("#merInfoName").val(),
 					withdrawAmount: parseFloat(amountVal).toFixed(2)
@@ -296,6 +302,7 @@
 					let requestData = {
 						amount: yuanToFen(amountVal),
 						tradePwd: $("#tradePwd").val(),
+						withdrawFirmId: $("#firmAccount").val(),
 						channelAccount : that.selectedBankCard
 					};
 					console.log(requestData);
@@ -306,4 +313,7 @@
 		},
 
 	});
+	// 供绑定银行卡保存成功后刷新[选择银行卡]下拉列表
+	window.config={};
+	window.config["vue"]=vue;
 </script>

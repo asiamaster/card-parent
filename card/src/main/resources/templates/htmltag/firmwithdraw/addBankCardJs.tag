@@ -20,6 +20,7 @@
         }
         let data = $.extend(otherInfo, $.common.formToJSON(formId));
         $.operate.post(url, data);
+        parent.config["vue"].getBindBankList();
     }
 
     // 开户行输入自动查询

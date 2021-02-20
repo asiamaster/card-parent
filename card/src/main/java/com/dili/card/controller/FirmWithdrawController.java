@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.FirmIdConstant;
 import com.dili.card.common.constant.JsonExcludeFilter;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.dto.BindBankCardDto;
@@ -163,9 +166,13 @@ public class FirmWithdrawController implements IControllerHandler {
      */
     @PostMapping("/withdraw.action")
     @ResponseBody
-    public BaseOutput<?> merWithdraw(@RequestBody FundRequestDto requestDto) {
+    public BaseOutput<?> merWithdraw(@RequestBody FundRequestDto requestDto,HttpServletRequest request) {
     	LOGGER.info("市场圈提*****{}", JSONObject.toJSONString(requestDto, JsonExcludeFilter.PWD_FILTER));
+    	AssertUtils.isTrue(1000000000L > requestDto.getAmount(), "圈提金额一次最多9999999.99元");
         buildOperatorInfo(requestDto);
+        
+        // 为支付接口设置firmId
+		request.setAttribute(Constant.CARD_INCOME_ACCOUNT, requestDto.getWithdrawFirmId());
         MessageBo<String> messageBo = firmWithdrawService.doMerWithdraw(requestDto);
         BaseOutput<String> result = new BaseOutput<>();
         result.setCode(messageBo.getCode());

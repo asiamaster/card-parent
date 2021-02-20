@@ -35,7 +35,6 @@ public class PayServiceFeignConfig {
             if (firmId == null) {
                 return;
             }
-            
             // 设置有主子商户的市场的收益帐户,各业务通过request设置
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder
                     .getRequestAttributes();
@@ -44,6 +43,7 @@ public class PayServiceFeignConfig {
             if(incomeAccountId != null) {
             	log.info("设置支付收益账户>{}", incomeAccountId);
             	template.header("mchId", incomeAccountId+"");
+//            	request.setAttribute(Constant.CARD_INCOME_ACCOUNT,null);
             }else {
             	template.header("mchId", firmId + "");
             }

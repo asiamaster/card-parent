@@ -24,6 +24,8 @@ public class OpenCardDto extends BaseSerialLogDto {
 	private List<CharacterType> customerCharacterTypeList;
 	/** 客户角色 */
 	private String customerCharacterType;
+	/** 客户子身份类型 */
+	private String customerSubTypes;
 	/** 个人、对公 */
 	private String customerOrganizationType;
 	/** 证件类型 */
@@ -274,6 +276,14 @@ public class OpenCardDto extends BaseSerialLogDto {
 
 	public void setCustomerSyncModifyHoldinfo(Integer customerSyncModifyHoldinfo) {
 		this.customerSyncModifyHoldinfo = customerSyncModifyHoldinfo;
+	}
+
+	public String getCustomerSubTypes() {
+		return customerSubTypes;
+	}
+
+	public void setCustomerSubTypes(String customerSubTypes) {
+		this.customerSubTypes = customerSubTypes;
 	}
 
 }
