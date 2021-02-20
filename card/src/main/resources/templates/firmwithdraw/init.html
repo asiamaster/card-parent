@@ -285,6 +285,10 @@
 				if (!$.validate.form(formId)) {
 					return;
 				}
+				if (amountVal > 9999999.99) {
+					bs4pop.alert("单次圈提最高金额为9999999.99元", {type: 'error'});
+					return;
+				}
 				let  templateData = {
 					merInfoName: $("#merInfoName").val(),
 					withdrawAmount: parseFloat(amountVal).toFixed(2)

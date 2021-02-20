@@ -165,6 +165,7 @@ public class FirmWithdrawController implements IControllerHandler {
     @ResponseBody
     public BaseOutput<?> merWithdraw(@RequestBody FundRequestDto requestDto) {
     	LOGGER.info("市场圈提*****{}", JSONObject.toJSONString(requestDto, JsonExcludeFilter.PWD_FILTER));
+    	AssertUtils.isTrue(requestDto.getAmount() > 999999999L, "圈提金额一次最多9999999.99元");
         buildOperatorInfo(requestDto);
         MessageBo<String> messageBo = firmWithdrawService.doMerWithdraw(requestDto);
         BaseOutput<String> result = new BaseOutput<>();
