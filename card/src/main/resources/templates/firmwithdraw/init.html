@@ -272,11 +272,12 @@
 					data: {
 						fundAccountId : vue.firmInfo.balanceInfo.accountId
 					},
+					async:true, 
 					url: '${contextPath}/bindBankCard/list.action',
 					success: function (ret) {
 						if (ret.success){
+							console.log('银行卡列表', JSON.stringify(ret.data));
 							vue.bindBankList = ret.data;
-							vue.selectedBankCardId = "";
 						}
 					}
 				});
@@ -314,4 +315,7 @@
 		},
 
 	});
+	// 供绑定银行卡保存成功后刷新[选择银行卡]下拉列表
+	window.config={};
+	window.config["vue"]=vue;
 </script>
