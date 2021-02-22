@@ -24,7 +24,7 @@
 			<br/>
 			<div class="row row-cols-6">
 					<label class="col-2 text-right">选择银行卡</label>
-					<select class="custom-select" name="bankCardId" id="bankCardId" placeholder="请选择" v-model="selectedBankCardId" @change='buildSelectedBankCard'>
+					<select class="custom-select" name="bankCardId" id="bankCardId" placeholder="请选择" v-model="selectedBankCardId" @click='getBindBankList' @change='buildSelectedBankCard'>
 						<option value="">--请选择--</option>
 						<option v-for='item in bindBankList' :value="item.id">
 							{{ item.bankName + "   尾号：" + item.bankNoTailNumber }}
@@ -267,17 +267,16 @@
 			},
 			//获取绑定银行卡列表
 			getBindBankList(){
-				let that = this;
 				$.ajax({
 					type: "GET",
 					data: {
-						fundAccountId : that.firmInfo.balanceInfo.accountId
+						fundAccountId : vue.firmInfo.balanceInfo.accountId
 					},
 					url: '${contextPath}/bindBankCard/list.action',
 					success: function (ret) {
 						if (ret.success){
-							that.bindBankList = ret.data;
-							that.selectedBankCardId = "";
+							vue.bindBankList = ret.data;
+							vue.selectedBankCardId = "";
 						}
 					}
 				});
@@ -315,7 +314,4 @@
 		},
 
 	});
-	// 供绑定银行卡保存成功后刷新[选择银行卡]下拉列表
-	window.config={};
-	window.config["vue"]=vue;
 </script>
