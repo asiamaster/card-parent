@@ -14,7 +14,7 @@
 			<br/>
 			<div class="row row-cols-6">
 					<label class="col-2  text-right">提款金额</label>
-					<input type="text" name="amount" id = "amount" class="form-control" >
+					<input type="text" name="amount" id = "amount" max="9999999.99" class="form-control" >
 			</div>
 			<br/>
 			<div class="row row-cols-6">
@@ -243,7 +243,9 @@
 			},
 			buildSelectedBankCard(){
 				let that = this;
-				console.log('您选择了', this.selectedBankCardId)
+				console.log('您选择了', this.selectedBankCardId);
+				$("#tradePwd").val("");
+				$("#amount").val();
 				this.bindBankList.forEach((val) => {
 					if ($.common.isEmpty(that.selectedBankCardId)) {
 						that.selectedBankCard = {};
