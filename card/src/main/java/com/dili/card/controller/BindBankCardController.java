@@ -18,7 +18,9 @@ import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IBindBankCardService;
 import com.dili.card.service.IBusinessLogService;
 import com.dili.card.service.ICustomerService;
+import com.dili.card.service.IMiscService;
 import com.dili.card.type.CardType;
+import com.dili.card.type.DictValue;
 import com.dili.card.type.OperateType;
 import com.dili.card.util.AssertUtils;
 import com.dili.ss.domain.BaseOutput;
@@ -64,6 +66,8 @@ public class BindBankCardController implements IControllerHandler {
     private ICustomerService customerService;
     @Resource
     private IBusinessLogService businessLogService;
+    @Autowired
+    private IMiscService miscService;
 
     /**
      * 进入绑定首页
@@ -71,6 +75,9 @@ public class BindBankCardController implements IControllerHandler {
     @GetMapping("/toQueryCard.html")
     public ModelAndView toQueryCard(ModelAndView pageView) {
         LOG.info("绑定银行卡查询");
+        UserTicket userTicket = getUserTicket();
+        String dictVal = miscService.getSingleDictVal(DictValue.PWD_BOX_ALLOW_INPUT.getCode(), userTicket.getFirmId());
+        pageView.addObject("allowInput", dictVal);
         pageView.addObject("cardInfo", null);
         pageView.setViewName("bindbankcard/accountInfo");
         return pageView;

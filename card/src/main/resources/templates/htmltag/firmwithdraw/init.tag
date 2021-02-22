@@ -3,7 +3,11 @@
         <div class="form-group col">
             <input type="hidden" name="accountId" id="accountId"  value="{{fundAccountId}}">
             <label for="password" class="div_label">密码</label>
-            <input  type="password" id="password" maxlength=6 name="password">
+            <% if(isNotEmpty(allowInput) && allowInput == "1") {%>
+                <input  type="password" id="password" maxlength=6 name="password">
+            <% } else { %>
+                <input  type="password" id="password" maxlength=6 name="password" readonly>
+            <% } %>
             <button id="authBindPwdBtn" type="button" class="btn btn-primary">
                 请输入密码
             </button>
