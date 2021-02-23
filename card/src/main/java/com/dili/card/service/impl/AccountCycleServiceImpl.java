@@ -158,9 +158,12 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			accountCycleDto.setUserId(accountCycleDo.getUserId());
 			accountCycleDto.setUserName(accountCycleDo.getUserName());
 			accountCycleDto.setAccountCycleDetailDto(new AccountCycleDetailDto());
+			accountCycleDto.setState(accountCycleDo.getState());
 			return accountCycleDto;
 		}
-		return this.buildAccountCycleWrapperDetail(accountCycleDo, true);
+		AccountCycleDto detail = this.buildAccountCycleWrapperDetail(accountCycleDo, true);
+		detail.setState(accountCycleDo.getState());
+		return detail;
 	}
 
 	@Override

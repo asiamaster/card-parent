@@ -19,9 +19,33 @@ function submitHandler(e) {
     $.operate.post(url, data, function(ret){
     	if(ret.success){
     		parent.location.reload(true);
+    		printSettleData();
     		return true;
     	}
     });
     return false;
+}
+
+//对账完成打印
+function printSettleData(){
+	var applyPayerAmount = $('#applyPayerAmount').val();
+	var userId = $("#userId").val();
+	 	var url = '${contextPath}/cycle/print.action?userId=' + userId+'&settleAmount='+applyPayerAmount;
+	$.ajax({
+	    type: "GET",
+	    url:url,
+	    contentType: "application/x-www-form-urlencoded",
+	    error: function(result) {
+	    	$.modal.alertError(result.message);
+	    },
+	    success: function(result) {
+	    	var jsonData = JSON.stringify(result.data);
+	    	if(result.code=="200"){
+	    		callbackObj.printDirect(jsonData,"cycleDocument");
+	    	}else{
+	    		$.modal.alertError(result.message);
+	    	}
+	    }
+	});
 }
 </script>
