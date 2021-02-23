@@ -69,7 +69,11 @@
 <script id="checkPassword" type="text/html">
     <div class="form-group row col">
 		<label for="accountType" class="div_label col-form-label col-md-3 ">园区卡密码</label>
-		<input type="password" class="form-control col-md-6" id="password" maxlength="6" name="password">
+		<% if(isNotEmpty(allowInput) && allowInput == "1") {%>
+		    <input type="password" class="form-control col-md-6" id="password" maxlength="6" name="password" >
+		<% } else { %>
+		    <input type="password" class="form-control col-md-6" id="password" maxlength="6" name="password" readonly>
+		<% } %>
 		<button id="pwdBtn" type="button" onclick="readPwd()" class="btn btn-primary col-md-3">
 			请输入密码
 		</button>

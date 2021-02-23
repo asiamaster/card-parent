@@ -127,7 +127,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	private ICustomerService customerService;
 	@Autowired
 	private ITypeMarketService typeMarketService;
-	
+
 	@Override
 	public Long getOpenCostFee() {
 		BigDecimal ruleFee = ruleFeeService.getRuleFee(RuleFeeBusinessType.CARD_OPEN_CARD,

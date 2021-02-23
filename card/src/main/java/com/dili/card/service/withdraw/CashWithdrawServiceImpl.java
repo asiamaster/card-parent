@@ -2,6 +2,7 @@ package com.dili.card.service.withdraw;
 
 import cn.hutool.core.util.StrUtil;
 import com.dili.card.dao.IAccountCycleDao;
+import com.dili.card.dto.AccountCycleDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -46,9 +47,11 @@ public class CashWithdrawServiceImpl extends WithdrawServiceImpl {
     @Override
     public void decreaseCashBox(Long cycleNo, Long amount) {
         //TODO 不能超过现金柜金额 需要配置
-        AccountCycleDo accountCycleDo = accountCycleDao.findByCycleNo(cycleNo);
-        if (accountCycleDo.getCashBox() < amount) {
-            throw new CardAppBizException("取款金额不能超过现金柜余额");
+        AccountCycleDo accountCycle = accountCycleDao.findByCycleNo(cycleNo);
+        AccountCycleDto accountCycleDto = accountCycleService.buildAccountCycleWrapperDetail(accountCycle, true);
+
+        if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < amount) {
+            throw new CardAppBizException("取款金额不能超过未交现金余额");
         }
         accountCycleService.decreaseeCashBox(cycleNo, amount);
     }

@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.dili.card.service.IMiscService;
+import com.dili.card.type.DictValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,16 +56,20 @@ public class FirmWithdrawController implements IControllerHandler {
     private IFirmWithdrawService firmWithdrawService;
     @Resource
     private IBusinessLogService businessLogService;
-
+    @Autowired
+    private IMiscService miscService;
     /**
      * 初始化圈提页面数据
      */
     @GetMapping("/init.html")
     public String listView(ModelMap modelMap) {
+        UserTicket userTicket = getUserTicket();
+        String dictVal = miscService.getSingleDictVal(DictValue.PWD_BOX_ALLOW_INPUT.getCode(), userTicket.getFirmId());
+        modelMap.put("allowInput", dictVal);
         return "firmwithdraw/init";
     }
 
-    
+
     /**
      * 跳转到绑定银行卡列表页
      */
@@ -72,7 +78,7 @@ public class FirmWithdrawController implements IControllerHandler {
     	LOGGER.info("跳转到市场银行卡列表");
         return "firmwithdraw/bankCardList";
     }
-    
+
     /**
      * 跳转到添加银行卡页
      */
@@ -81,7 +87,7 @@ public class FirmWithdrawController implements IControllerHandler {
     	LOGGER.info("为商户绑定新卡");
         return "firmwithdraw/addBankCard";
     }
-    
+
     /**
      * 授权绑定银行卡校验
      */
@@ -93,8 +99,8 @@ public class FirmWithdrawController implements IControllerHandler {
     	 firmInfo.getMerInfo().setStateText("正常");
          return BaseOutput.successData(firmInfo);
      }
-    
-    
+
+
     /**
     * 授权绑定银行卡校验
     * @author miaoguoxin
@@ -109,7 +115,7 @@ public class FirmWithdrawController implements IControllerHandler {
         return BaseOutput.success();
     }
 
-    
+
     /**
      * 添加新的银行卡
      */
@@ -126,7 +132,7 @@ public class FirmWithdrawController implements IControllerHandler {
         firmWithdrawService.addBind(bankCardDto);
         return BaseOutput.success();
     }
-    
+
     /**
      * 市场解绑银行卡
      */
@@ -170,7 +176,7 @@ public class FirmWithdrawController implements IControllerHandler {
     	LOGGER.info("市场圈提*****{}", JSONObject.toJSONString(requestDto, JsonExcludeFilter.PWD_FILTER));
     	AssertUtils.isTrue(1000000000L > requestDto.getAmount(), "圈提金额一次最多9999999.99元");
         buildOperatorInfo(requestDto);
-        
+
         // 为支付接口设置firmId
 		request.setAttribute(Constant.CARD_INCOME_ACCOUNT, requestDto.getWithdrawFirmId());
         MessageBo<String> messageBo = firmWithdrawService.doMerWithdraw(requestDto);
