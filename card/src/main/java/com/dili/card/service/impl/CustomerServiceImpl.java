@@ -83,7 +83,7 @@ public class CustomerServiceImpl implements ICustomerService {
 				return;
 			}
 			for (DataDictionaryValue dd : ddList) {
-				if (characterType.getCharacterType().equals(dd.getDdCode())) {
+				if (characterType.getSubType().equals(dd.getCode())) {
 					subTypeNameList.add(dd.getName());
 				}
 			}
@@ -129,5 +129,4 @@ public class CustomerServiceImpl implements ICustomerService {
 		Map<Long, String> dataMap = getSubTypeNames(Lists.newArrayList(cid), firmId);
 		return dataMap.get(cid);
 	}
-
 }
