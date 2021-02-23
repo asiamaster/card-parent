@@ -135,6 +135,12 @@
 				<button id="detailFlatedBtn" type="button" class="btn btn-primary" onclick="detailFlated()"><i class="fa fa-paypal"></i> 对账</button>
 			<% }%>
 			
+			<% if(showPrintBtn == "true"){ %>
+				<#resource code="cycle_print_btn">
+					<button id="printBtn" type="button" class="btn btn-primary" onclick="printCycleData()">打印</button>
+		        </#resource>
+			<% }%>
+			
 			<div id="printBtnDiv" style="display: none">
 				<#resource code="cycle_print_btn">
 					<button id="printBtn" type="button" class="btn btn-primary" onclick="printCycleData()">打印</button>
