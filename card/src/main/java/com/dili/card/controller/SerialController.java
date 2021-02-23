@@ -1,5 +1,6 @@
 package com.dili.card.controller;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
@@ -10,9 +11,7 @@ import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.print.PrintDispatcher;
-import com.dili.card.type.OperateState;
 import com.dili.card.util.CurrencyUtils;
-import com.dili.card.util.DateUtil;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -28,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -49,9 +49,9 @@ public class SerialController implements IControllerHandler {
      */
     @RequestMapping(value = "/account/forwardList.html")
     public String forwardList(ModelMap modelMap) {
-        String now = DateUtil.formatDate("yyyy-MM-dd");
-        modelMap.addAttribute("operateTimeStart", now + " 00:00:00");
-        modelMap.addAttribute("operateTimeEnd", now + " 23:59:59");
+        Date now = new Date();
+        modelMap.addAttribute("startDate", DateUtil.beginOfDay(now));
+        modelMap.addAttribute("endDate", DateUtil.endOfDay(now));
         return "serial/index";
     }
 

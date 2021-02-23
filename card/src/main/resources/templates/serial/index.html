@@ -34,23 +34,12 @@
                 <label for="operatorName" class="">操作员</label>
                 <#bautoCompleteProvider _hiddenDomainId="operatorId" _hiddenDomainName="operatorId" _displayDomainId="operatorName" _displayDomainName="operatorName" _placeholder="" _optionVariable="userNameQueryAutoCompleteOption"/>
             </div>
-            <div class="form-group col-auto">
-                <label class="justify-content-end">操作时间</label>
-                <div class="form-inline">
-                    <div class="input-group">
-                        <input type="text" name="operateTimeStart" id="operateTimeStart" class="form-control laydatetime" value="${operateTimeStart!}"/>
-                        <div class="input-group-append">
-                            <label for="operateTimeStart"  class="input-group-text fa fa-calendar"></label>
-                        </div>
-                    </div>&nbsp;&nbsp;至&nbsp;&nbsp;
-                    <div class="input-group">
-                        <input type="text" name="operateTimeEnd" id="operateTimeEnd" class="form-control laydatetime" value="${operateTimeEnd!}"/>
-                        <div class="input-group-append">
-                            <label for="operateTimeEnd"  class="input-group-text fa fa-calendar"></label>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <#component_dateControls
+            _labelText="操作时间"
+            _startDateParam="operateTimeStart"
+            _endDateParam="operateTimeEnd"
+            _resetDate="false"
+            />
             <div class="col-auto align-self-center mt-3">
                 <button type="button" class="btn btn-outline-primary mr-2"  onclick="resetForm()"><i class="fa fa-refresh"></i> 清空</button>
                 <button type="button" class="btn btn-outline-primary" onclick="queryDataHandler();return false;"><i class="fa fa-search"></i> 查询</button>
@@ -125,30 +114,6 @@
 <#common_userJs/>
 <#serial_indexJs/>
 <script>
-
-    //自动补全时分秒
-    function autoCompleteDate(dateId, hours, minutes, seconds) {
-        let dateInput = laydate.render({
-            elem: '#' + dateId,
-            type: 'datetime',
-            theme: '#007bff',
-            ready: function (date) {
-                lay.extend(dateInput.config.dateTime, {
-                    hours: hours,
-                    minutes: minutes,
-                    seconds: seconds,
-                });
-            }
-        });
-    }
-
-    $(() => {
-        //开始日期
-        autoCompleteDate("operateTimeStart", 0, 0, 0);
-        //结束日期
-        autoCompleteDate("operateTimeEnd", 23, 59, 59);
-    })
-
     function checkboxOnclick(checkbox){
         if (checkbox.checked == true){
             console.log("选中")
@@ -160,6 +125,10 @@
     function resetForm() {
         let form = $('#queryForm');
         form[0].reset();
+        //特别处理hidden
+        $.each(form.find('input:hidden'), (i, e) => {
+            e.value = '';
+        });
         $("#fund_item").find("option").each(function(i){
             $(this).remove();
         });
