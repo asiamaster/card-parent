@@ -1,5 +1,6 @@
 package com.dili.card.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.JsonExcludeFilter;
@@ -77,7 +78,7 @@ public class BindBankCardController implements IControllerHandler {
         LOG.info("绑定银行卡查询");
         UserTicket userTicket = getUserTicket();
         String dictVal = miscService.getSingleDictVal(DictValue.PWD_BOX_ALLOW_INPUT.getCode(), userTicket.getFirmId());
-        pageView.addObject("allowInput", dictVal);
+        pageView.addObject("allowInput", StrUtil.isBlank(dictVal) ? "1" : dictVal);
         pageView.addObject("cardInfo", null);
         pageView.setViewName("bindbankcard/accountInfo");
         return pageView;

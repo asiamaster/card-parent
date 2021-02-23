@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import cn.hutool.core.util.StrUtil;
 import com.dili.card.service.IMiscService;
 import com.dili.card.type.DictValue;
 import org.slf4j.Logger;
@@ -65,7 +66,7 @@ public class FirmWithdrawController implements IControllerHandler {
     public String listView(ModelMap modelMap) {
         UserTicket userTicket = getUserTicket();
         String dictVal = miscService.getSingleDictVal(DictValue.PWD_BOX_ALLOW_INPUT.getCode(), userTicket.getFirmId());
-        modelMap.put("allowInput", dictVal);
+        modelMap.put("allowInput", StrUtil.isBlank(dictVal) ? "1" : dictVal);
         return "firmwithdraw/init";
     }
 
