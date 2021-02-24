@@ -178,6 +178,7 @@
 	                $('#authBindBtn').show();
 	                $('#cardInfoDiv').html(bui.util.HTMLDecode(template('customerInfoTmpl', res.data.cardInfo)));
             	}else{
+            		$('#authBindBtn').hide();
             		$('#cardInfoDiv').html(res.message);
             	}
             },
