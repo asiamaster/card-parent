@@ -114,4 +114,9 @@ public class BindBankCardServiceImpl implements IBindBankCardService {
 		return true;
 	}
 
+	@Override
+	public BindBankCardDo getById(Long id) {
+		return bankCardDao.getById(id);
+	}
+
 }

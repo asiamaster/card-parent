@@ -41,6 +41,7 @@ import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
+import com.dili.card.service.IBindBankCardService;
 import com.dili.card.service.IFirmWithdrawService;
 import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
@@ -55,6 +56,7 @@ import com.dili.card.type.PayPipelineType;
 import com.dili.card.type.PaySubject;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
+import com.dili.card.util.AssertUtils;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.Firm;
@@ -93,6 +95,9 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
     private ISerialService serialService;
     @Autowired
 	private IBindBankCardDao bankCardDao;
+    @Autowired
+    private IBindBankCardService bankCardService;
+    
 
     @Override
     public FirmWithdrawInitResponseDto init(Long firmId) {
@@ -137,6 +142,9 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
         if (totalAmount > balance.getAvailableAmount()) {
             throw new CardAppBizException("可用余额不足");
         }
+        BindBankCardDo bankCardDo = bankCardService.getById(requestDto.getBindBankCardId());
+        AssertUtils.notNull(bankCardDo, "该市场未绑定该卡");
+        
         BusinessRecordDo businessRecord = this.createFirmRecord(merInfo, requestDto);
         //构建创建交易参数
         CreateTradeRequestDto createTradeRequest = CreateTradeRequestDto.createTrade(
@@ -162,6 +170,8 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
         TradeRequestDto withdrawRequest = TradeRequestDto.createTrade(accountCard,
                 tradeNo, requestDto.getChannelAccount().getToBankType(), requestDto.getTradePwd());
         withdrawRequest.setChannelAccount(requestDto.getChannelAccount());
+        withdrawRequest.getChannelAccount().setToName(bankCardDo.getName());
+        log.info("市场圈提调用支付参数：{}",JSONObject.toJSONString(createTradeRequest));
         TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
 
         int payState = NumberUtils.toInt(withdrawResponse.getState() + "", BankWithdrawState.SUCCESS.getCode());
