@@ -1,12 +1,7 @@
 package com.dili.card.service.withdraw;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.StrUtil;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
@@ -31,9 +26,11 @@ import com.dili.card.type.PaySubject;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.ss.constant.ResultCode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
-import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.StrUtil;
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 提现操作基础实现类
@@ -53,7 +50,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
     @Resource
     protected IAccountCycleService accountCycleService;
 
-   // @GlobalTransactional(rollbackFor = Exception.class)
+    // @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public MessageBo<String> withdraw(FundRequestDto fundRequestDto) {
@@ -78,19 +75,19 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
             serialService.saveBusinessRecord(businessRecord);
         });
         //扣减现金池
-        this.decreaseCashBox(businessRecord.getCycleNo(), fundRequestDto.getAmount());
+        this.decreaseCashBox(businessRecord.getCycleNo(), fundRequestDto.getAmount(), fundRequestDto.getFirmId());
         //提现提交
         TradeRequestDto withdrawRequest = TradeRequestDto.createTrade(accountCard, tradeNo, this.getChannelId(fundRequestDto), fundRequestDto.getTradePwd());
         withdrawRequest.setFees(this.createFees(fundRequestDto));
         withdrawRequest.setChannelAccount(fundRequestDto.getChannelAccount());
         TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
         MessageBo<String> handleSerialAfterCommitWithdraw = this.handleSerialAfterCommitWithdraw(fundRequestDto, businessRecord, withdrawResponse);
-        
+
         // 发送短信通知
         String phone = accountCard.getCustomerContactsPhone();
         String cardNo = accountCard.getCardNo();
         smsMessageRpcResolver.withdrawNotice(phone, cardNo, withdrawResponse);
-        
+
         return handleSerialAfterCommitWithdraw;
     }
 
@@ -144,7 +141,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
      * @param cycleNo
      * @param amount
      */
-    protected void decreaseCashBox(Long cycleNo, Long amount) {
+    protected void decreaseCashBox(Long cycleNo, Long amount, Long firmId) {
 
     }
 

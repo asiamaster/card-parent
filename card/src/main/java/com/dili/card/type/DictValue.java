@@ -8,6 +8,7 @@ package com.dili.card.type;
  */
 public enum DictValue {
 	PWD_BOX_ALLOW_INPUT("是否允许密码框手输", "pwd_box_allow_input"),
+	WITHDRAW_CASH_BOX_ALLOW_CHECK("提现允许校验现金柜余额","withdraw_cash_box_allow_check"),
 	;
 
 	private String name;

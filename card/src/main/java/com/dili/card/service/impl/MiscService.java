@@ -25,6 +25,11 @@ public class MiscService implements IMiscService {
 
     @Override
     public String getSingleDictVal(String code, Long firmId) {
+        return this.getSingleDictVal(code, firmId, null);
+    }
+
+    @Override
+    public String getSingleDictVal(String code, Long firmId, String defaultVal) {
         BaseOutput<List<DataDictionaryValue>> listBaseOutput = dataDictionaryRpc.listDataDictionaryValueByDdCode(code);
         List<DataDictionaryValue> resolver = GenericRpcResolver.resolver(listBaseOutput, ServiceName.UAP);
         List<DataDictionaryValue> collect = resolver.stream().filter(d -> {
@@ -33,7 +38,7 @@ public class MiscService implements IMiscService {
             return a && b;
         }).collect(Collectors.toList());
         if (CollectionUtil.isEmpty(collect)){
-            return null;
+            return defaultVal;
         }
         return collect.get(0).getCode();
     }
