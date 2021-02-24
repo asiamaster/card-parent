@@ -1,6 +1,7 @@
 package com.dili.card.service;
 
 import com.dili.card.dto.BindBankCardDto;
+import com.dili.card.entity.BindBankCardDo;
 import com.dili.ss.domain.PageOutput;
 
 import java.util.List;
@@ -17,6 +18,13 @@ public interface IBindBankCardService {
 	 * 查询入库记录
 	 */
 	PageOutput<List<BindBankCardDto>> page(BindBankCardDto queryParam);
+	
+	/**
+	 * 根据ID获取
+	 * @param id
+	 * @return
+	 */
+	BindBankCardDo getById(Long id);
 
 	/**
 	 * 列表查询

@@ -175,6 +175,13 @@ public class FirmWithdrawController implements IControllerHandler {
         AssertUtils.isTrue(1000000000L > requestDto.getAmount(), "圈提金额一次最多9999999.99元");
         buildOperatorInfo(requestDto);
 
+        // 设置操作人信息
+        UserTicket user = getUserTicket();
+        // 操作日志
+        businessLogService.saveLog(OperateType.FIRM_WITHDRAW, user, 
+        		"客户姓名:" + requestDto.getChannelAccount().getToName(),
+                "银行卡号:" + requestDto.getChannelAccount().getBankNo(), 
+                "银行名称:" + requestDto.getChannelAccount().getBankName());
         // 为支付接口设置firmId
         request.setAttribute(Constant.CARD_INCOME_ACCOUNT, requestDto.getWithdrawFirmId());
         MessageBo<String> messageBo = firmWithdrawService.doMerWithdraw(requestDto);

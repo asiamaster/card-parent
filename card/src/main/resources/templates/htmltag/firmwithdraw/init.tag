@@ -57,6 +57,7 @@
 
     // 连接密码键盘输入提款交易密码
     function readFirmWithdrawPwd(){
+    	$("#tradePwd").val("");
         CefSharp.BindObjectAsync("callbackObj");
         callbackObj.readPasswordKeyboardAsync();
     }
