@@ -10,6 +10,8 @@ import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.service.IMiscService;
+import com.dili.card.type.DictValue;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
@@ -25,6 +27,8 @@ import org.springframework.stereotype.Service;
 public class CashWithdrawServiceImpl extends WithdrawServiceImpl {
     @Autowired
     private IAccountCycleDao accountCycleDao;
+    @Autowired
+    private IMiscService miscService;
 
     @Override
     public BusinessRecordDo createBusinessRecord(FundRequestDto fundRequestDto, UserAccountCardResponseDto accountCard) {
@@ -45,13 +49,14 @@ public class CashWithdrawServiceImpl extends WithdrawServiceImpl {
     }
 
     @Override
-    public void decreaseCashBox(Long cycleNo, Long amount) {
-        //TODO 不能超过现金柜金额 需要配置
-        AccountCycleDo accountCycle = accountCycleDao.findByCycleNo(cycleNo);
-        AccountCycleDto accountCycleDto = accountCycleService.buildAccountCycleWrapperDetail(accountCycle, true);
-
-        if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < amount) {
-            throw new CardAppBizException("取款金额不能超过未交现金余额");
+    public void decreaseCashBox(Long cycleNo, Long amount, Long firmId) {
+        String dictVal = miscService.getSingleDictVal(DictValue.WITHDRAW_CASH_BOX_ALLOW_CHECK.getCode(), firmId, "0");
+        if ("1".equals(dictVal)){
+            AccountCycleDo accountCycle = accountCycleDao.findByCycleNo(cycleNo);
+            AccountCycleDto accountCycleDto = accountCycleService.buildAccountCycleWrapperDetail(accountCycle, true);
+            if (accountCycleDto.getAccountCycleDetailDto().getUnDeliverAmount() < amount) {
+                throw new CardAppBizException("取款金额不能超过未交现金余额");
+            }
         }
         accountCycleService.decreaseeCashBox(cycleNo, amount);
     }

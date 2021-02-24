@@ -13,4 +13,11 @@ public interface IMiscService {
      * @date 2021/2/22
      */
     String getSingleDictVal(String code, Long firmId);
+
+    /**
+     * 获取单个字典值
+     * @author miaoguoxin
+     * @date 2021/2/22
+     */
+    String getSingleDictVal(String code, Long firmId,String defaultVal);
 }
