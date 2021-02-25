@@ -44,6 +44,8 @@ public class FundRequestDto extends CardRequestDto {
 	private ChannelAccountRequestDto channelAccount;
 	/** 圈提选择的市场ID */
 	private Long withdrawFirmId;
+	/** 绑定银行卡ID */
+	private Long bindBankCardId;
 	/** 市场主帐号 */
 	private Long profitAccount;
 
@@ -141,6 +143,14 @@ public class FundRequestDto extends CardRequestDto {
 
 	public void setProfitAccount(Long profitAccount) {
 		this.profitAccount = profitAccount;
+	}
+
+	public Long getBindBankCardId() {
+		return bindBankCardId;
+	}
+
+	public void setBindBankCardId(Long bindBankCardId) {
+		this.bindBankCardId = bindBankCardId;
 	}
 
 }

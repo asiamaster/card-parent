@@ -305,7 +305,8 @@
 						amount: yuanToFen(amountVal),
 						tradePwd: $("#tradePwd").val(),
 						withdrawFirmId: $("#firmAccount").val(),
-						channelAccount : that.selectedBankCard
+						channelAccount : that.selectedBankCard,
+						bindBankCardId : $("#bankCardId").val()
 					};
 					console.log(requestData);
 					let url = '${contextPath}/firmWithdraw/withdraw.action';
