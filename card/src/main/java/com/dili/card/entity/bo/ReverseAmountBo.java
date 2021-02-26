@@ -38,7 +38,7 @@ public class ReverseAmountBo {
     }
 
     private void validateAmount() {
-        if (Math.abs(this.actualAmount) > this.originalAmount) {
+        if (Math.abs(this.actualAmount) >= this.originalAmount) {
             throw new CardAppBizException("操作金额不能超过原业务操作金额");
         }
         if (this.actualFee > this.originalFee) {
