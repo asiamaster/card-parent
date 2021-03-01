@@ -170,6 +170,10 @@
         });
     }
     
+    function tableRefresh(){
+    	$.table.refresh();
+    }
+    
     // 解绑银行卡
     function unBind(id) {
     	alert(0);
