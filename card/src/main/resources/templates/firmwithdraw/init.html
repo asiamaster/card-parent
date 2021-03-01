@@ -39,12 +39,12 @@
 					<label class="col-2 text-right">交易密码</label>
 					<input type="password" id="tradePwd" maxlength=6 name="tradePwd" class="form-control" readonly>
 					<div class="input-group-append">
-						<button id="pwdBtn" class="btn btn-primary" type="button" onclick="readFirmWithdrawPwd()">输入密码</button>
+						<button id="pwdBtn" class="btn btn-primary" type="button" onclick="readFirmWithdrawPwd('tradePwd')">输入密码</button>
 					</div>
 			</div>
 		</form>
 		<div align="center" class="mt-5">
-			<button id="frozenAccount" type="button"  class="btn btn-primary px-5"   @click="submit()">
+			<button id="frozenAccount" type="button"  class=" btn btn-primary px-5"   @click="submit()">
 				确认提现
 			</button>
 		</div>
@@ -243,13 +243,11 @@
 			},
 			buildSelectedBankCard(){
 				let that = this;
-				console.log('您选择了', this.selectedBankCardId);
 				$("#tradePwd").val("");
 				$("#amount").val();
 				this.bindBankList.forEach((val) => {
 					if ($.common.isEmpty(that.selectedBankCardId)) {
 						that.selectedBankCard = {};
-						console.log(that.selectedBankCard);
 						return;
 					}
 					if (that.selectedBankCardId == val.id) {
@@ -261,7 +259,6 @@
 							bankNo: val.openingBankNum,
 							bankName: val.openingBank
 						};
-						console.log(that.selectedBankCard)
 					}
 				})
 			},
@@ -276,7 +273,6 @@
 					url: '${contextPath}/bindBankCard/list.action',
 					success: function (ret) {
 						if (ret.success){
-							console.log('银行卡列表', JSON.stringify(ret.data));
 							vue.bindBankList = ret.data;
 						}
 					}
@@ -292,7 +288,7 @@
 					bs4pop.alert("单次圈提最高金额为9999999.99元", {type: 'error'});
 					return;
 				}
-				let  templateData = {
+				let templateData = {
 					merInfoName: $("#merInfoName").val(),
 					withdrawAmount: parseFloat(amountVal).toFixed(2)
 				};
@@ -308,7 +304,6 @@
 						channelAccount : that.selectedBankCard,
 						bindBankCardId : $("#bankCardId").val()
 					};
-					console.log(requestData);
 					let url = '${contextPath}/firmWithdraw/withdraw.action';
 					$.operate.post(url, requestData);
 				});

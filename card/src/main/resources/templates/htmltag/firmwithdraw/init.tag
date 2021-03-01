@@ -8,7 +8,7 @@
             <% } else { %>
                 <input  type="password" id="password" maxlength=6 name="password" readonly>
             <% } %>
-            <button id="authBindPwdBtn" type="button" class="btn btn-primary">
+            <button id="authBindPwdBtn" onclick="readFirmWithdrawPwd()" type="button" class="btn btn-primary">
                 请输入密码
             </button>
         </div>
@@ -55,23 +55,33 @@
         });
     }
 
-    // 连接密码键盘输入提款交易密码
-    function readFirmWithdrawPwd(){
-    	$("#tradePwd").val("");
-        CefSharp.BindObjectAsync("callbackObj");
-        callbackObj.readPasswordKeyboardAsync();
-    }
 
     $(document).on('click', '#pswBtn', function () {
         readPasswordKeyboardAsync();
     });
+    // 连接密码键盘输入提款交易密码
+    var nowPwdType = "tradePwd";
+    function readFirmWithdrawPwd(pwdType){
+    	nowPwdType = pwdType;
+    	if(nowPwdType == "tradePwd"){
+    		$("#tradePwd").val("");
+    	}else{
+    		$('#password').val("");
+    	}
+    	
+        CefSharp.BindObjectAsync("callbackObj");
+        callbackObj.readPasswordKeyboardAsync();
+    }
 
     // 该方法名为固定，C端回调
     function pswClientHandler(data){
         let json = JSON.parse(data);
         if (json.code == 0) {
-            $('#tradePwd').val(json.data);
-            $('#password').val(json.data);
+        	if(nowPwdType == "tradePwd"){
+        		$('#tradePwd').val(json.data);
+        	}else{
+        		$('#password').val(json.data);
+        	}
         } else {
             bs4pop.alert(json.message, {width:'350px',type: "error"});
             return false;

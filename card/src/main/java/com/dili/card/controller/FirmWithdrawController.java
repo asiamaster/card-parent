@@ -174,7 +174,6 @@ public class FirmWithdrawController implements IControllerHandler {
         LOGGER.info("市场圈提*****{}", JSONObject.toJSONString(requestDto, JsonExcludeFilter.PWD_FILTER));
         AssertUtils.isTrue(1000000000L > requestDto.getAmount(), "圈提金额一次最多9999999.99元");
         buildOperatorInfo(requestDto);
-
         // 设置操作人信息
         UserTicket user = getUserTicket();
         // 操作日志
