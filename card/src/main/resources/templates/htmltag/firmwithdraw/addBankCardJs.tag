@@ -19,8 +19,14 @@
             bankName: bankName,
         }
         let data = $.extend(otherInfo, $.common.formToJSON(formId));
-        $.operate.post(url, data, function(){
-        	parent.config["vue"].getBindBankList();
+        $.operate.post(url, data, function(ret){
+        	if (typeof(parent.config) != "undefined"){
+        		// 市场圈提中触发的添加操作
+        		parent.config["vue"].getBindBankList();
+        	}else{
+        		// 银行卡绑定管理列表中触发的添加操作
+        		parent.tableRefresh();
+        	}
         });
     }
 
