@@ -358,7 +358,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
             return BaseOutput.failure("卡账户已冻结，不支持办理此业务");
         }
         JSONObject params = new JSONObject();
-        params.put("accountId", cardInfo.getAccountId());
+        params.put("accountId", cardInfo.getFundAccountId());
         AccountPermissionResponseDto responseDto = GenericRpcResolver.resolver(payRpc.loadPermission(params), ServiceName.PAY);
         Set<Integer> exitsPermission = responseDto.getPermission();
         List<AccountAllPermission> allPermission = responseDto.getAllPermission();
