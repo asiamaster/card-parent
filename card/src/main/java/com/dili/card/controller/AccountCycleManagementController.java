@@ -208,11 +208,29 @@ public class AccountCycleManagementController implements IControllerHandler {
 
 
 	/**
-	 * 打印
+	 * 结帐申请打印
 	 */
 	@RequestMapping("/print.action")
 	@ResponseBody
 	public BaseOutput<AccountCyclePrintlDto> print(Long userId,Double settleAmount) {
+		log.info("结帐申请打印*****{}=={}", userId,settleAmount);
+		// 获取最新的账务周期
+		AccountCycleDo accountCycle = iAccountCycleService.findLatestCycleByUserId(userId);
+		log.info("结帐申请打印数据*****{}", JSONObject.toJSONString(accountCycle));
+		AccountCyclePrintlDto printlDto = new AccountCyclePrintlDto();
+		printlDto.setCycleNo(accountCycle.getCycleNo());
+		printlDto.setEndTime(accountCycle.getEndTime());
+		printlDto.setFirmName(getUserTicket().getFirmName());
+		printlDto.setLastDeliverAmountText("￥"+NumberUtil.decimalFormatMoney(settleAmount));
+		printlDto.setUserName(accountCycle.getUserName());
+		printlDto.setPrintTime(LocalDateTime.now());
+		printlDto.setPrintUserName(getUserTicket().getRealName());
+		return BaseOutput.successData(printlDto);
+	}
+	
+	@RequestMapping("/settlePrint.action")
+	@ResponseBody
+	public BaseOutput<AccountCyclePrintlDto> settlePrint(Long userId,Double settleAmount) {
 		log.info("结帐申请打印*****{}=={}", userId,settleAmount);
 		// 获取最新的账务周期
 		AccountCycleDo accountCycle = iAccountCycleService.findLatestCycleByUserId(userId);
