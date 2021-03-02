@@ -125,7 +125,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
 			return Optional.of("卡账户已冻结，不支持办理此业务");
 		}
 		JSONObject params = new JSONObject();
-		params.put("accountId", requestDto.getAccountId());
+		params.put("accountId", cardInfo.getFundAccountId());
 		Set<Integer> permissionSets = new HashSet<>();
 		String permissionValue = "空权限";
 		if (CollectionUtil.isNotEmpty(requestDto.getPermission())) {
