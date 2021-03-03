@@ -4,10 +4,10 @@
        <form id="queryForm">
            <div class="row row-cols-6" >
                <div class="form-group col">
-                   <input id="serialNo"  name="serialNo" type="text" class="form-control" placeholder="对应原业务流水号"/>
+                   <input id="serialNo"  name="serialNo" type="text" class="form-control" placeholder="对应原业务流水号" onkeydown="serialInputEnter()"/>
                </div>
                <div class="form-group col">
-                   <button type="button" class="btn btn-primary" onclick="loadDetailView()">
+                   <button id="search" type="button" class="btn btn-primary" onclick="loadDetailView()">
                        <i class="fa fa-search"></i> 查询
                    </button>
                    <button  type="button" class="btn btn-primary pl-4 pr-4" onclick="backToList()">
@@ -25,6 +25,13 @@
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/form.formatter.js"></script>
 <script>
+    function serialInputEnter(){
+        if(event.keyCode==13){
+            event.keyCode=0;
+            event.returnValue=false;
+            loadDetailView()
+        }
+    }
     function autoHeight(){
         let nowHeight;
         if (window.innerHeight){//FF
