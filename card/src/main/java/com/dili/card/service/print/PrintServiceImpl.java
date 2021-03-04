@@ -58,14 +58,14 @@ public abstract class PrintServiceImpl implements IPrintService {
 		printDto.setSerialNo(recordDo.getSerialNo());
 		printDto.setFirmName(recordDo.getFirmName());
 		printDto.setHoldName(recordDo.getHoldName());
-		createSpecial(printDto, recordDo, reprint);
+		this.createSpecial(printDto, recordDo, reprint);
 		result.put("data", printDto);
 		return result;
 	}
 
 	/**
 	 * 根据卡账户ID查询余额
-	 * 
+	 *
 	 * @param accountId
 	 * @return
 	 */

@@ -69,11 +69,8 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         //创建交易
         String tradeNo = payService.createTrade(createTradeRequest);
         businessRecord.setTradeNo(tradeNo);
-        //先异步保存一条记录，防止被事务回滚
-        ThreadUtil.execute(() -> {
-            //保存业务办理记录
-            serialService.saveBusinessRecord(businessRecord);
-        });
+        //保存业务办理记录
+        serialService.saveBusinessRecord(businessRecord);
         //扣减现金池
         this.decreaseCashBox(businessRecord.getCycleNo(), fundRequestDto.getAmount(), fundRequestDto.getFirmId());
         //提现提交

@@ -58,7 +58,7 @@ public class ReverseRecord implements Serializable {
         reverseRecord.setAmount(amount);
         reverseRecord.setInAccChangeAmount(inAccChangeAmount);
         reverseRecord.setSerialNo(businessRecord.getSerialNo());
-        reverseRecord.setCycleNo(businessRecord.getCycleNo());
+       // reverseRecord.setCycleNo(businessRecord.getCycleNo());
         reverseRecord.setBizTradeChannel(businessRecord.getTradeChannel());
         reverseRecord.setReverseId(NumberUtils.toLong(idStr));
         reverseRecord.setCreateTime(LocalDateTime.now());
