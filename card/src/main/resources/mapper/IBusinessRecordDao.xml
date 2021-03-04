@@ -78,6 +78,9 @@
 			#{posType}
 		)
 	</insert>
+	<update id="doProcessingUpdate">
+		update card_business_record set `start_balance` = #{startBalance}, `end_balance` = #{endBalance}, `total_balance` = #{totalBalance}, `attach`=#{attach},`state` = #{state} where `serial_no` = #{serialNo}
+	</update>
 
 	<select id="getById" resultType="com.dili.card.entity.BusinessRecordDo">
 		SELECT
@@ -179,7 +182,7 @@
 
 	<!-- 根据操作流水号重置操作记录为成功 -->
 	<update id="doSuccessUpdate" parameterType="com.dili.card.entity.BusinessRecordDo">
-		update card_business_record set `start_balance` = #{startBalance}, `end_balance` = #{endBalance}, `total_balance` = #{totalBalance}, `attach`=#{attach},`state` = #{state} where `serial_no` = #{serialNo}
+		update card_business_record set `start_balance` = #{startBalance}, `end_balance` = #{endBalance}, `total_balance` = #{totalBalance}, `state` = #{state} where `serial_no` = #{serialNo}
 	</update>
 
 	<!-- 查询业务操作记录列表 -->

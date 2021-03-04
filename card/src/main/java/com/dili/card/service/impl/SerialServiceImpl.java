@@ -135,7 +135,7 @@ public class SerialServiceImpl implements ISerialService {
         businessRecord.setEndBalance(serialDto.getEndBalance());
         //用于意外情况时恢复数据
         businessRecord.setAttach(JSON.toJSONString(serialDto));
-        businessRecordDao.doSuccessUpdate(businessRecord);
+        businessRecordDao.doProcessingUpdate(businessRecord);
     }
 
     @Override
@@ -370,7 +370,7 @@ public class SerialServiceImpl implements ISerialService {
                 slaveParam.setParentAccountId(masterCard.getAccountId());
                 slaveParam.setExcludeUnusualState(0);
                 List<UserAccountCardResponseDto> slaveCards = accountQueryService.getList(slaveParam);
-                
+
                 serialQueryDto.setAccountId(null);
                 serialQueryDto.setAccountIdList(Lists.newArrayList( masterCard.getAccountId()));
                 serialQueryDto.getAccountIdList().addAll(slaveCards.stream()

@@ -45,6 +45,12 @@ public interface IBusinessRecordDao {
 	 */
     int doFailureUpdate(BusinessRecordDo businessRecord);
 
+    /**
+    * 记录为处理中
+    * @author miaoguoxin
+    * @date 2021/3/4
+    */
+    int doProcessingUpdate(BusinessRecordDo businessRecord);
 	/**
 	 * 根据操作流水号重置操作记录为成功
 	 * @param businessRecord

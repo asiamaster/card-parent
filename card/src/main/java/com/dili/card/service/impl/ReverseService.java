@@ -13,7 +13,6 @@ import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.dto.SerialRecordResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
-import com.dili.card.dto.pay.FeeItemDto;
 import com.dili.card.dto.pay.PayReverseRequestDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
@@ -84,7 +83,7 @@ public class ReverseService implements IReverseService {
         if (!OperateType.canReverseType(businessRecord.getType())) {
             throw new CardAppBizException("只允许充值和提款业务 冲正");
         }
-        if (TradeChannel.BANK.getCode() == businessRecord.getTradeChannel()){
+        if (TradeChannel.BANK.getCode() == businessRecord.getTradeChannel()) {
             throw new CardAppBizException("圈提不允许 冲正");
         }
         ReverseRecord reverseRecord = reverseRecordDao.findByBizSerialNo(serialNo, firmId);
@@ -161,20 +160,23 @@ public class ReverseService implements IReverseService {
         return newReverseRecord.getReverseId();
     }
 
-    private BusinessRecordDo saveBizRecord(ReverseRequestDto requestDto, BusinessRecordResponseDto bizSerial, UserAccountCardResponseDto userAccount, Long reverseAmount, TradeResponseDto tradeResponse ,FundItem fundItem) {
+    private BusinessRecordDo saveBizRecord(ReverseRequestDto requestDto, BusinessRecordResponseDto bizSerial, UserAccountCardResponseDto userAccount, Long reverseAmount, TradeResponseDto tradeResponse, FundItem fundItem) {
+        String note = String.format("冲正操作，原业务流水号[%s]", bizSerial.getSerialNo());
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {
             record.setType(OperateType.FUND_REVERSE.getCode());
             record.setAmount(Math.abs(reverseAmount));
             record.setTradeType(bizSerial.getTradeType());
             record.setTradeChannel(bizSerial.getTradeChannel());
             record.setTradeNo(tradeResponse.getTradeId());
+            record.setNotes(note);
         });
         serialService.saveBusinessRecord(businessRecord);
         SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, tradeResponse, (serialRecord, feeType) -> {
-            if (fundItem != null){
+            if (fundItem != null) {
                 serialRecord.setFundItem(fundItem.getCode());
                 serialRecord.setFundItemName(fundItem.getName());
             }
+            serialRecord.setNotes(note);
         });
         serialService.handleSuccess(serialDto);
         return businessRecord;
@@ -211,6 +213,7 @@ public class ReverseService implements IReverseService {
     private void copyFromOriginalSerial(ReverseRecord newReverseRecord, BusinessRecordResponseDto bizSerial) {
         newReverseRecord.setBizSerialNo(bizSerial.getSerialNo());
         newReverseRecord.setBizType(bizSerial.getType());
+        newReverseRecord.setCycleNo(bizSerial.getCycleNo());
     }
 
     private Long getTotalFee(List<SerialRecordResponseDto> feeRecords) {
@@ -219,7 +222,7 @@ public class ReverseService implements IReverseService {
                 .sum();
     }
 
-    private FundItem getAccountFeeItem(List<SerialRecordResponseDto> recordResponseDtos){
+    private FundItem getAccountFeeItem(List<SerialRecordResponseDto> recordResponseDtos) {
         for (SerialRecordResponseDto serialRecordDo : recordResponseDtos) {
             if (!ReverseFundItemMap.isFeeFundItem(serialRecordDo.getFundItem())) {
                 return FundItem.getByCode(serialRecordDo.getFundItem());
@@ -228,8 +231,8 @@ public class ReverseService implements IReverseService {
         return null;
     }
 
-    private List<SerialRecordResponseDto> getTotalSerialRecords(List<SerialRecordDo> serialRecordDos){
-        return serialRecordDos.stream().map(s->{
+    private List<SerialRecordResponseDto> getTotalSerialRecords(List<SerialRecordDo> serialRecordDos) {
+        return serialRecordDos.stream().map(s -> {
             SerialRecordResponseDto dto = new SerialRecordResponseDto();
             BeanUtils.copyProperties(s, dto);
             return dto;
