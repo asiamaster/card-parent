@@ -27,6 +27,7 @@ import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IReverseService;
 import com.dili.card.service.ISerialService;
+import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.ReverseFundItemMap;
@@ -145,13 +146,13 @@ public class ReverseService implements IReverseService {
         PayReverseRequestDto tradeRequest = PayReverseRequestDto.createReverse(
                 userAccount, bizSerial.getTradeNo(), reverseAmount
         );
-        FundItem feeItem = this.getAccountFeeItem(totalSerials);
+        FundItem serviceFeeItem = this.getServiceFeeItem(totalSerials);
         if (inAccChangeAmount != 0) {
-            tradeRequest.addFee(inAccChangeAmount, feeItem);
+            tradeRequest.addFee(inAccChangeAmount, serviceFeeItem);
         }
         TradeResponseDto tradeResponse = GenericRpcResolver.resolver(payRpc.reverse(tradeRequest), ServiceName.PAY);
         //保存业务办理记录
-        BusinessRecordDo businessRecord = this.saveBizRecord(requestDto, bizSerial, userAccount, reverseAmount, tradeResponse, feeItem);
+        BusinessRecordDo businessRecord = this.saveBizRecord(requestDto, bizSerial, userAccount, reverseAmount, tradeResponse,feeSerials);
         //保存冲正记录
         ReverseRecord newReverseRecord = ReverseRecord.create(businessRecord, reverseAmount, inAccChangeAmount);
         this.setOperator(newReverseRecord, requestDto);
@@ -160,7 +161,7 @@ public class ReverseService implements IReverseService {
         return newReverseRecord.getReverseId();
     }
 
-    private BusinessRecordDo saveBizRecord(ReverseRequestDto requestDto, BusinessRecordResponseDto bizSerial, UserAccountCardResponseDto userAccount, Long reverseAmount, TradeResponseDto tradeResponse, FundItem fundItem) {
+    private BusinessRecordDo saveBizRecord(ReverseRequestDto requestDto, BusinessRecordResponseDto bizSerial, UserAccountCardResponseDto userAccount, Long reverseAmount, TradeResponseDto tradeResponse, List<SerialRecordResponseDto> feeSerials) {
         String note = String.format("冲正操作，原业务流水号[%s]", bizSerial.getSerialNo());
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {
             record.setType(OperateType.FUND_REVERSE.getCode());
@@ -172,6 +173,12 @@ public class ReverseService implements IReverseService {
         });
         serialService.saveBusinessRecord(businessRecord);
         SerialDto serialDto = serialService.createAccountSerialWithFund(businessRecord, tradeResponse, (serialRecord, feeType) -> {
+            FundItem fundItem;
+            if (Integer.valueOf(FeeType.ACCOUNT.getCode()).equals(feeType)) {
+                fundItem = this.getAccountFeeItem(feeSerials);
+            } else {
+                fundItem = this.getServiceFeeItem(feeSerials);
+            }
             if (fundItem != null) {
                 serialRecord.setFundItem(fundItem.getCode());
                 serialRecord.setFundItemName(fundItem.getName());
@@ -225,6 +232,15 @@ public class ReverseService implements IReverseService {
     private FundItem getAccountFeeItem(List<SerialRecordResponseDto> recordResponseDtos) {
         for (SerialRecordResponseDto serialRecordDo : recordResponseDtos) {
             if (!ReverseFundItemMap.isFeeFundItem(serialRecordDo.getFundItem())) {
+                return FundItem.getByCode(serialRecordDo.getFundItem());
+            }
+        }
+        return null;
+    }
+
+    private FundItem getServiceFeeItem(List<SerialRecordResponseDto> recordResponseDtos){
+        for (SerialRecordResponseDto serialRecordDo : recordResponseDtos) {
+            if (ReverseFundItemMap.isFeeFundItem(serialRecordDo.getFundItem())) {
                 return FundItem.getByCode(serialRecordDo.getFundItem());
             }
         }
