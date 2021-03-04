@@ -152,7 +152,7 @@ public class ReverseService implements IReverseService {
         }
         TradeResponseDto tradeResponse = GenericRpcResolver.resolver(payRpc.reverse(tradeRequest), ServiceName.PAY);
         //保存业务办理记录
-        BusinessRecordDo businessRecord = this.saveBizRecord(requestDto, bizSerial, userAccount, reverseAmount, tradeResponse,feeSerials);
+        BusinessRecordDo businessRecord = this.saveBizRecord(requestDto, bizSerial, userAccount, reverseAmount, tradeResponse, totalSerials);
         //保存冲正记录
         ReverseRecord newReverseRecord = ReverseRecord.create(businessRecord, reverseAmount, inAccChangeAmount);
         this.setOperator(newReverseRecord, requestDto);
@@ -238,7 +238,7 @@ public class ReverseService implements IReverseService {
         return null;
     }
 
-    private FundItem getServiceFeeItem(List<SerialRecordResponseDto> recordResponseDtos){
+    private FundItem getServiceFeeItem(List<SerialRecordResponseDto> recordResponseDtos) {
         for (SerialRecordResponseDto serialRecordDo : recordResponseDtos) {
             if (ReverseFundItemMap.isFeeFundItem(serialRecordDo.getFundItem())) {
                 return FundItem.getByCode(serialRecordDo.getFundItem());
