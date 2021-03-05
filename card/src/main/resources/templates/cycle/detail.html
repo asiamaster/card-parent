@@ -140,12 +140,18 @@
 					<button id="printBtn" type="button" class="btn btn-primary" onclick="printCycleData()">打印</button>
 		        </#resource>
 			<% }%>
-			
+			<% if(showSettlePrintBtn == "true"){ %>
+				<#resource code="settle_print_btn">
+					<button id="printBtn" type="button" class="btn btn-primary" onclick="printSettleData()">打印</button>
+		        </#resource>
+			<% }%>
+			<!-- 结账打印 -->
 			<div id="printBtnDiv" style="display: none">
 				<#resource code="cycle_print_btn">
-					<button id="printBtn" type="button" class="btn btn-primary" onclick="printCycleData()">打印</button>
+					<button id="printBtn" type="button" class="btn btn-primary" onclick="printCycleData()">打印2</button>
 		        </#resource>
 			</div>
+			<!-- 对帐打印 -->
 			<input id="cycleState" type="hidden" value="${detail.state!}">
 		</div>
 	</form>
@@ -573,7 +579,29 @@
     		return false;
     	}
     	var url = "${contextPath}/cycle/flated.html?id="+id;
-    	
     	$.modal.openDefault("对账", url,"auto","auto" );
     }
+	
+	//对账完成打印
+	function printSettleData(){
+		var userId = $("#userId").val();
+		var id = $("#id").val();
+		var url = '${contextPath}/cycle/settlePrint.action?id=' + id+'&userId='+userId;
+		$.ajax({
+		    type: "GET",
+		    url:url,
+		    contentType: "application/x-www-form-urlencoded",
+		    error: function(result) {
+		    	$.modal.alertError(result.message);
+		    },
+		    success: function(result) {
+		    	var jsonData = JSON.stringify(result.data);
+		    	if(result.code=="200"){
+		    		callbackObj.printDirect(jsonData,"settleDocument");
+		    	}else{
+		    		$.modal.alertError(result.message);
+		    	}
+		    }
+		});
+	}
 </script>

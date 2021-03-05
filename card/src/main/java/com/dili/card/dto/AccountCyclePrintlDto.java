@@ -23,6 +23,12 @@ public class AccountCyclePrintlDto {
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime endTime;
 
+	/** 对帐时间 */
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime settleTime;
+
 	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -100,6 +106,14 @@ public class AccountCyclePrintlDto {
 
 	public void setPrintUserName(String printUserName) {
 		this.printUserName = printUserName;
+	}
+
+	public LocalDateTime getSettleTime() {
+		return settleTime;
+	}
+
+	public void setSettleTime(LocalDateTime settleTime) {
+		this.settleTime = settleTime;
 	}
 
 }

@@ -28,9 +28,8 @@ function submitHandler(e) {
 
 //对账完成打印
 function printSettleData(){
-	var applyPayerAmount = $('#applyPayerAmount').val();
-	var userId = $("#userId").val();
-	 	var url = '${contextPath}/cycle/print.action?userId=' + userId+'&settleAmount='+applyPayerAmount;
+	var id = $("#id").val();
+	var url = '${contextPath}/cycle/settlePrint.action?id=' + id;
 	$.ajax({
 	    type: "GET",
 	    url:url,
@@ -41,7 +40,7 @@ function printSettleData(){
 	    success: function(result) {
 	    	var jsonData = JSON.stringify(result.data);
 	    	if(result.code=="200"){
-	    		callbackObj.printDirect(jsonData,"cycleDocument");
+	    		callbackObj.printDirect(jsonData,"settleDocument");
 	    	}else{
 	    		$.modal.alertError(result.message);
 	    	}
