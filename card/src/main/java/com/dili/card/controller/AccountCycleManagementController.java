@@ -22,8 +22,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
 import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
+import com.dili.card.dto.AccountCycleDetailDto;
 import com.dili.card.dto.AccountCycleDto;
 import com.dili.card.dto.AccountCyclePrintlDto;
+import com.dili.card.dto.AccountSettlePrintPrintlDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountCycleService;
@@ -75,11 +77,14 @@ public class AccountCycleManagementController implements IControllerHandler {
 		}
 		AccountCycleDto detail = iAccountCycleService.detail(id);
 		String json = JSON.toJSONString(detail, new EnumTextDisplayAfterFilter());
+		log.info("财务对帐详情detail数据>{}",json);
 		map.put("detail", JSON.parseObject(json));
 		map.put("settled", CycleState.SETTLED.getCode());
+		map.put("showSettlePrintBtn", "false");
 		map.put("showPrintBtn", "false");
 		if(detail.getState() == CycleState.FLATED.getCode()) {
-			map.put("showPrintBtn", "true");
+//			map.put("showPrintBtn", "true");
+			map.put("showSettlePrintBtn", "true");
 		}
 		return "cycle/detail";
 	}
@@ -230,19 +235,52 @@ public class AccountCycleManagementController implements IControllerHandler {
 	
 	@RequestMapping("/settlePrint.action")
 	@ResponseBody
-	public BaseOutput<AccountCyclePrintlDto> settlePrint(Long userId,Double settleAmount) {
-		log.info("结帐申请打印*****{}=={}", userId,settleAmount);
-		// 获取最新的账务周期
-		AccountCycleDo accountCycle = iAccountCycleService.findLatestCycleByUserId(userId);
-		log.info("结帐申请打印数据*****{}", JSONObject.toJSONString(accountCycle));
-		AccountCyclePrintlDto printlDto = new AccountCyclePrintlDto();
-		printlDto.setCycleNo(accountCycle.getCycleNo());
-		printlDto.setEndTime(accountCycle.getEndTime());
+	public BaseOutput<AccountSettlePrintPrintlDto> settlePrint(Long id) {
+		log.info("对帐申请打印*****{}={}", id);
+		AccountCycleDto detail = iAccountCycleService.detail(id);
+		// 获取最新的账务周期,获取对帐时间，能进到这个方法的都是已对帐了的
+		AccountCycleDo accountCycle = iAccountCycleService.findLatestCycleByUserId(detail.getUserId());
+		
+		AccountSettlePrintPrintlDto printlDto = new AccountSettlePrintPrintlDto();
+		printlDto.setCycleNo(detail.getCycleNo());
+		printlDto.setEndTime(detail.getEndTime());
 		printlDto.setFirmName(getUserTicket().getFirmName());
-		printlDto.setLastDeliverAmountText("￥"+NumberUtil.decimalFormatMoney(settleAmount));
+		Long deliverAmount = detail.getAccountCycleDetailDto().getDeliverAmount();
+		printlDto.setLastDeliverAmountText("￥"+getMoneyFormat(deliverAmount));
 		printlDto.setUserName(accountCycle.getUserName());
+		printlDto.setSettleTime(accountCycle.getCheckTime());
 		printlDto.setPrintTime(LocalDateTime.now());
 		printlDto.setPrintUserName(getUserTicket().getRealName());
+		
+		// 对帐详情数据
+		AccountCycleDetailDto cycleData = detail.getAccountCycleDetailDto();
+		printlDto.setReceiveTimes(cycleData.getReceiveTimes());
+		printlDto.setReceiveAmountText(getMoneyFormat(cycleData.getReceiveAmount()));
+		printlDto.setDeliverTimes(cycleData.getDeliverTimes());
+		printlDto.setDeliverAmountText(getMoneyFormat(cycleData.getDeliverAmount()));
+		printlDto.setDepoCashTimes(cycleData.getDepoCashTimes());
+		printlDto.setDepoCashAmountText(getMoneyFormat(cycleData.getDepoCashAmount()));
+		printlDto.setDepoPosTimes(cycleData.getDepoPosTimes());
+		printlDto.setDepoPosAmountText(getMoneyFormat(cycleData.getDepoPosAmount()));
+		printlDto.setBankInTimes(cycleData.getBankInTimes());
+		printlDto.setBankInAmountText(getMoneyFormat(cycleData.getBankInAmount()));
+		printlDto.setDrawCashTimes(cycleData.getDrawCashTimes());
+		printlDto.setDrawCashAmountText(getMoneyFormat(cycleData.getDrawCashAmount()));
+		printlDto.setLastDeliverAmountText(getMoneyFormat(cycleData.getLastDeliverAmount()));
+		
+		log.info("对帐申请打印数据*****{}", JSONObject.toJSONString(printlDto));
 		return BaseOutput.successData(printlDto);
+	}
+	
+	/**
+	 * 带￥符号前缀，千分位，保留两位小数
+	 * @param amount 分
+	 * @return
+	 */
+	private String getMoneyFormat(Long amount) {
+		if(amount == null) {
+			amount = 0L;
+		}
+		return "￥"+NumberUtil.decimalFormatMoney(amount/100);
 	}
 }
