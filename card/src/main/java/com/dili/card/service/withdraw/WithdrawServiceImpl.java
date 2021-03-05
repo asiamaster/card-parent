@@ -18,10 +18,12 @@ import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.SmsMessageRpcResolver;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.IMiscService;
 import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
+import com.dili.card.type.DictValue;
 import com.dili.card.type.PaySubject;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
@@ -31,6 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 /**
  * 提现操作基础实现类
@@ -39,12 +43,12 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
 
     @Resource
     protected IPayService payService;
-
     @Resource
     protected IAccountQueryService accountQueryService;
-
     @Resource
     protected ISerialService serialService;
+    @Autowired
+    private IMiscService miscService;
     @Autowired
     private SmsMessageRpcResolver smsMessageRpcResolver;
     @Resource
@@ -83,8 +87,11 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         // 发送短信通知
         String phone = accountCard.getCustomerContactsPhone();
         String cardNo = accountCard.getCardNo();
-        smsMessageRpcResolver.withdrawNotice(phone, cardNo, withdrawResponse);
-
+        DictValue dictValue = DictValue.WITHDRAW_SMS_ALLOW_SEND;
+        String val = miscService.getSingleDictVal(dictValue.getCode(), fundRequestDto.getFirmId(), dictValue.getDefaultVal());
+        if ("1".equals(val)){
+            smsMessageRpcResolver.withdrawNotice(phone, cardNo, withdrawResponse);
+        }
         return handleSerialAfterCommitWithdraw;
     }
 
