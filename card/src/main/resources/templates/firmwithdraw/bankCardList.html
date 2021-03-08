@@ -3,7 +3,7 @@
 <div class="container-fluid" id ="v">
     <form id="queryForm"  role="form" action="${contextPath}/bindBankCard/queryCard.html" method="get">
 		<input type="hidden" class="form-control" name="fundAccountId" id="fundAccountId" v-model="firmInfo.merInfo.profitAccount" />
-	        
+
 	    <div class="row">
 	        <div class="form-group row col-6">
 				<label class="col-3 text-right">提款账户</label>
@@ -23,7 +23,7 @@
 		</div>
     </form>
 	<div id="cardInfoDiv">
-		
+
 	</div>
 	<!-- 已绑定银行卡列表 -->
 	<div id="bankCardTableDiv" >
@@ -74,7 +74,11 @@
         <div class="form-group col">
             <input type="hidden" name="accountId" id="accountId"  value="{{fundAccountId}}">
             <label for="password" class="div_label">密码</label>
-            <input  type="password" id="password" maxlength=6 name="password">
+			<% if(isNotEmpty(allowInput) && allowInput == "1") {%>
+			    <input  type="password" id="password" maxlength=6 name="password">
+			<% } else { %>
+			<input  type="password" id="password" maxlength=6 name="password" readonly>
+			<% } %>
             <button id="authBindPwdBtn" type="button" onclick="readPwd()" class="btn btn-primary">
                 请输入密码
             </button>
@@ -106,7 +110,11 @@
     	</div>
     	<div class="form-group row">
 			<label class="col-md-3 col-form-label">主卡密码</label>
-			<input type="password" id="unbindModalPassword" class="form-control col-md-6" maxlength="6" name="unbindModalPassword" />
+			<% if(isNotEmpty(allowInput) && allowInput == "1") {%>
+			    <input type="password" id="unbindModalPassword" class="form-control col-md-6" maxlength="6" name="unbindModalPassword" />
+			<% } else { %>
+			    <input type="password" id="unbindModalPassword" class="form-control col-md-6" maxlength="6" name="unbindModalPassword" readonly>
+			<% } %>
 			<button id="pwdBtn" type="button" onclick="readPwd()" class="btn btn-primary col-md-3">
 				请输入密码
 			</button>

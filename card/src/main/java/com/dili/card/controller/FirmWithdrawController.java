@@ -72,8 +72,11 @@ public class FirmWithdrawController implements IControllerHandler {
      * 跳转到绑定银行卡列表页
      */
     @GetMapping("/toBankCardList.html")
-    public String bankCardListView() {
+    public String bankCardListView(ModelMap modelMap) {
         LOGGER.info("跳转到市场银行卡列表");
+        UserTicket userTicket = getUserTicket();
+        String dictVal = miscService.getSingleDictVal(DictValue.PWD_BOX_ALLOW_INPUT.getCode(), userTicket.getFirmId(), "1");
+        modelMap.put("allowInput", dictVal);
         return "firmwithdraw/bankCardList";
     }
 
@@ -155,10 +158,11 @@ public class FirmWithdrawController implements IControllerHandler {
      */
     @PostMapping("/withdrawPage.action")
     @ResponseBody
-    public Map<String, Object> page(PipelineRecordQueryDto param) {
+    public Map<String, Object> page(PipelineRecordQueryDto param, HttpServletRequest request) {
         LOGGER.info("分页查询市场圈提历史记录列表*****{}", JSONObject.toJSONString(param));
         AssertUtils.notNull(param.getFundAccountId(), "市场账号不能为空"); // 市场帐户没有园区卡账户，只有支付系统有帐户信息
         buildOperatorInfo(param);
+        request.setAttribute(Constant.CARD_INCOME_ACCOUNT, param.getFirmAccount());
         PageOutput<List<PipelineRecordResponseDto>> result = firmWithdrawService.bankWithdrawPage(param);
         return successPage(result);
     }
@@ -177,9 +181,9 @@ public class FirmWithdrawController implements IControllerHandler {
         // 设置操作人信息
         UserTicket user = getUserTicket();
         // 操作日志
-        businessLogService.saveLog(OperateType.FIRM_WITHDRAW, user, 
+        businessLogService.saveLog(OperateType.FIRM_WITHDRAW, user,
         		"客户姓名:" + requestDto.getChannelAccount().getToName(),
-                "银行卡号:" + requestDto.getChannelAccount().getBankNo(), 
+                "银行卡号:" + requestDto.getChannelAccount().getBankNo(),
                 "银行名称:" + requestDto.getChannelAccount().getBankName());
         // 为支付接口设置firmId
         request.setAttribute(Constant.CARD_INCOME_ACCOUNT, requestDto.getWithdrawFirmId());
