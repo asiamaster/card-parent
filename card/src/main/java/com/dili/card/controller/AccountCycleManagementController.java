@@ -232,7 +232,12 @@ public class AccountCycleManagementController implements IControllerHandler {
 		printlDto.setPrintUserName(getUserTicket().getRealName());
 		return BaseOutput.successData(printlDto);
 	}
-	
+
+	/**
+	* 获取结账打印数据
+	* @author miaoguoxin
+	* @date 2021/3/8
+	*/
 	@RequestMapping("/settlePrint.action")
 	@ResponseBody
 	public BaseOutput<AccountSettlePrintPrintlDto> settlePrint(Long id) {
@@ -240,7 +245,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 		AccountCycleDto detail = iAccountCycleService.detail(id);
 		// 获取最新的账务周期,获取对帐时间，能进到这个方法的都是已对帐了的
 		AccountCycleDo accountCycle = iAccountCycleService.findLatestCycleByUserId(detail.getUserId());
-		
+
 		AccountSettlePrintPrintlDto printlDto = new AccountSettlePrintPrintlDto();
 		printlDto.setCycleNo(detail.getCycleNo());
 		printlDto.setEndTime(detail.getEndTime());
@@ -251,7 +256,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 		printlDto.setSettleTime(accountCycle.getCheckTime());
 		printlDto.setPrintTime(LocalDateTime.now());
 		printlDto.setPrintUserName(getUserTicket().getRealName());
-		
+
 		// 对帐详情数据
 		AccountCycleDetailDto cycleData = detail.getAccountCycleDetailDto();
 		printlDto.setReceiveTimes(cycleData.getReceiveTimes());
@@ -267,11 +272,11 @@ public class AccountCycleManagementController implements IControllerHandler {
 		printlDto.setDrawCashTimes(cycleData.getDrawCashTimes());
 		printlDto.setDrawCashAmountText(getMoneyFormat(cycleData.getDrawCashAmount()));
 		printlDto.setLastDeliverAmountText(getMoneyFormat(cycleData.getLastDeliverAmount()));
-		
+
 		log.info("对帐申请打印数据*****{}", JSONObject.toJSONString(printlDto));
 		return BaseOutput.successData(printlDto);
 	}
-	
+
 	/**
 	 * 带￥符号前缀，千分位，保留两位小数
 	 * @param amount 分
