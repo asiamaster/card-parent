@@ -36,11 +36,11 @@
 			</div>
 			<br/>
 			<div class="row row-cols-6">
-					<label class="col-2 text-right">交易密码</label>
-					<input type="password" id="tradePwd" maxlength=6 name="tradePwd" class="form-control" readonly>
-					<div class="input-group-append">
-						<button id="pwdBtn" class="btn btn-primary" type="button" onclick="readFirmWithdrawPwd('tradePwd')">输入密码</button>
-					</div>
+				<label class="col-2 text-right">交易密码</label>
+				<input type="password" id="tradePwd" maxlength=6 name="tradePwd" class="form-control" >
+				<div class="input-group-append">
+					<button id="pwdBtn" class="btn btn-primary" type="button" onclick="readFirmWithdrawPwd('tradePwd')">输入密码</button>
+				</div>
 			</div>
 		</form>
 		<div align="center" class="mt-5">
@@ -142,6 +142,14 @@
 		<h3>{{withdrawAmount}}</h3>
 	</div>
 </script>
+
+<script id="postWithdraw" type="text/html">
+	<span>{{message}}</span>
+	<br/>
+	<div>
+	订单号:{{serialNo}}
+	</div>
+</script>
 <script>
 
 	let formId = "withdraw-form";
@@ -149,7 +157,7 @@
 		//var firmFundAccountId = $("#firmFundAccountId").val();
 		//buildSelectedBankCard(firmFundAccountId);
 		initTable();
-		
+
 		$("#" + formId).validate({
 			onkeyup: false,
 			rules: {
@@ -184,7 +192,12 @@
 			uniqueId: "id",
 			url : "${contextPath}/firmWithdraw/withdrawPage.action",
 			sortName: "create_time",
-			modalName: "圈提查询列表"
+			modalName: "圈提查询列表",
+			queryParams: function (params) {
+				let data = $.table.queryParams(params);
+				data.firmAccount = $("#firmAccount").val();
+				return data;
+			}
 		};
 		$.table.init(options);
 	}
@@ -204,19 +217,24 @@
 					merInfo: {
 						profitAccount: 0
 					},
-					balanceInfo:{}
+					balanceInfo:{
+						accountId: 0
+					}
 				}
 			}
 		},
 		mounted: function(){
-			
+
 		},
 		methods: {
+			resetFormInput(){
+				$("#tradePwd").val("");
+				$("#amount").val("");
+			},
 			// 获取市场帐户详情
 			getFirmAccountInfo(){
 				var firmId = $("#firmAccount").val();
-				$("#tradePwd").val("");
-				$("#amount").val();
+				this.resetFormInput();
 				if(firmId == ""){
 					Object.assign(this.$data, this.$options.data());
 					$('#withdrawTableDiv').hide();
@@ -243,8 +261,7 @@
 			},
 			buildSelectedBankCard(){
 				let that = this;
-				$("#tradePwd").val("");
-				$("#amount").val();
+				this.resetFormInput();
 				this.bindBankList.forEach((val) => {
 					if ($.common.isEmpty(that.selectedBankCardId)) {
 						that.selectedBankCard = {};
@@ -269,7 +286,7 @@
 					data: {
 						fundAccountId : vue.firmInfo.balanceInfo.accountId
 					},
-					async:true, 
+					async:true,
 					url: '${contextPath}/bindBankCard/list.action',
 					success: function (ret) {
 						if (ret.success){
@@ -305,12 +322,43 @@
 						bindBankCardId : $("#bankCardId").val()
 					};
 					let url = '${contextPath}/firmWithdraw/withdraw.action';
-					$.operate.post(url, requestData);
+					$.ajax({
+						type: "POST",
+						contentType: "application/json; charset=utf-8",
+						dataType: "json",
+						data: JSON.stringify(requestData),
+						url: url,
+						beforeSend: () => {
+							$.modal.loading("正在处理中，请稍后...");
+						},
+						success: function (ret) {
+							$.modal.closeLoading();
+							if (ret.success){
+								let templateData = {
+									message: ret.message,
+									serialNo: ret.data
+								};
+								bs4pop.alert(bui.util.HTMLDecode(template('postWithdraw', templateData)), {type: 'success'});
+								that.resetFormInput();
+								$.table.refresh();
+							}else {
+								bs4pop.alert(ret.message, {type: 'error'});
+							}
+						},
+						error: (status, result) => {
+							$.modal.closeLoading();
+						}
+					});
 				});
 			}
 		},
 
 	});
+
+	function testWithdraw(message,serialNo){
+
+
+	}
 	// 供绑定银行卡保存成功后刷新[选择银行卡]下拉列表
 	window.config={};
 	window.config["vue"]=vue;

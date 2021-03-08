@@ -1,23 +1,6 @@
 package com.dili.card.controller;
 
-import java.time.LocalDateTime;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
+import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.handler.IControllerHandler;
@@ -37,8 +20,22 @@ import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.hutool.core.util.NumberUtil;
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * 账务管理
@@ -112,7 +109,8 @@ public class AccountCycleManagementController implements IControllerHandler {
 		map.put("detail", JSON.parseObject(json));
 		map.put("settled", CycleState.ACTIVE.getCode());
 		map.put("showPrintBtn", "false");
-		if(accountCycleDto.getState() == CycleState.SETTLED.getCode()) {
+		map.put("showSettlePrintBtn", "false");
+		if (accountCycleDto.getState() == CycleState.SETTLED.getCode()) {
 			map.put("showPrintBtn", "true");
 		}
 		return "cycle/detail";

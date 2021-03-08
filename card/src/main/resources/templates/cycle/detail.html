@@ -28,11 +28,11 @@
 </style>
 <div id="detail-modal" class="main-container container-fluid auto-margin"  style="width: 80%">
 	<form id="queryForm" class="form-inline">
-		<input type="hidden" name="userId" id="userId" value="${detail.userId!}"> 
-		<input type="hidden" name="id" id="id" value="${detail.id!}"> 
-		<input type="hidden" name="cycleNo" id="cycleNo" value="${detail.cycleNo!'-1'}"> 
-		<input type="hidden" id="isStatistic" name="isStatistic" value="false"> 
-		<input type="hidden" id="detailState" name="detailState" value="${detail.state}"> 
+		<input type="hidden" name="userId" id="userId" value="${detail.userId!}">
+		<input type="hidden" name="id" id="id" value="${detail.id!}">
+		<input type="hidden" name="cycleNo" id="cycleNo" value="${detail.cycleNo!'-1'}">
+		<input type="hidden" id="isStatistic" name="isStatistic" value="false">
+		<input type="hidden" id="detailState" name="detailState" value="${detail.state}">
 		<input type="hidden" name="operatorId" id="operatorId" value="${detail.userId!}">
 		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="10">
 		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" value="11">
@@ -51,7 +51,7 @@
 		<div id="baseInfo" >
 				<div class="row row-cols-2" id="baseContent">
 					<div class="form-group col">
-							<label for="cycleNo" class="div_label">结账单号</label>
+							<label for="cycleNo" class="div_label">账期编号</label>
 	            			<input type="text" class="form-control" value="${detail.cycleNo!}" readonly/>
 	           	 	</div>
 	            	<div class="form-group col">
@@ -130,11 +130,11 @@
 			<% else if(settled == 2){ %>
 				<button id="back" type="button" class="btn btn-secondary px-5" onclick="backList()">返回</button>
 			<% }%>
-			
+
 			<% if(settled == 2 && detail.state == 2){ %>
 				<button id="detailFlatedBtn" type="button" class="btn btn-primary" onclick="detailFlated()"><i class="fa fa-paypal"></i> 对账</button>
 			<% }%>
-			
+
 			<% if(showPrintBtn == "true"){ %>
 				<#resource code="cycle_print_btn">
 					<button id="printBtn" type="button" class="btn btn-primary" onclick="printCycleData()">打印</button>
@@ -429,7 +429,7 @@
 	            	var dateCycle = $("#startAndEndTime").val();
 	            	$("#startAndEndTime").val(dateCycle.replace("--", result.data.endTime));
 	                $.table.refresh()
-	                
+
 	                // 显示打印按钮
 	               $("#printBtnDiv").show();
 	            }
@@ -565,7 +565,7 @@
     	    }
     	});
 	}
-	
+
 	// 详情对帐
 	function detailFlated(){
 		var id = $("#id").val();
@@ -581,7 +581,7 @@
     	var url = "${contextPath}/cycle/flated.html?id="+id;
     	$.modal.openDefault("对账", url,"auto","auto" );
     }
-	
+
 	//对账完成打印
 	function printSettleData(){
 		var userId = $("#userId").val();

@@ -75,10 +75,10 @@ import cn.hutool.core.util.NumberUtil;
  */
 @Service
 public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(FirmWithdrawServiceImpl.class);
 
-	
+
     @Autowired
     private PayRpcResolver payRpcResolver;
     @Autowired
@@ -97,14 +97,14 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
 	private IBindBankCardDao bankCardDao;
     @Autowired
     private IBindBankCardService bankCardService;
-    
+
 
     @Override
     public FirmWithdrawInitResponseDto init(Long firmId) {
         // 查询市场信息
         Firm firm = GenericRpcResolver.resolver(firmRpc.getById(firmId),
                 ServiceName.UAP);
-        
+
         // 查询商户信息
         MerAccountResponseDto merInfo = this.getMerInfo(firmId);
         //市场余额信息
@@ -116,7 +116,7 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
         return result;
     }
 
-    
+
     @Override
 	public List<Firm> getFirmList(Long firmId) {
     	// 查询市场信息
@@ -128,7 +128,7 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
         List<Firm> firmList = GenericRpcResolver.resolver(firmRpc.getAllChildrenByParentId(firmId), ServiceName.UAP);
 		return firmList;
 	}
-    
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -144,7 +144,7 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
         }
         BindBankCardDo bankCardDo = bankCardService.getById(requestDto.getBindBankCardId());
         AssertUtils.notNull(bankCardDo, "该市场未绑定该卡");
-        
+
         BusinessRecordDo businessRecord = this.createFirmRecord(merInfo, requestDto);
         //构建创建交易参数
         CreateTradeRequestDto createTradeRequest = CreateTradeRequestDto.createTrade(
@@ -158,11 +158,8 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
         log.info("市场圈提调用支付参数：{}",JSONObject.toJSONString(createTradeRequest));
         String tradeNo = payService.createTrade(createTradeRequest);
         businessRecord.setTradeNo(tradeNo);
-        //先异步保存一条记录，防止被事务回滚
-        ThreadUtil.execute(() -> {
-            //保存业务办理记录
-            serialService.saveBusinessRecord(businessRecord);
-        });
+        //保存业务办理记录
+        serialService.saveBusinessRecord(businessRecord);
         //提现提交
         UserAccountCardResponseDto accountCard = new UserAccountCardResponseDto();
         accountCard.setAccountId(accountId);
@@ -198,12 +195,12 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
 		newData.setCreateTime(LocalDateTime.now());
 		newData.setOperatorId(newDataDto.getOpId());
 		newData.setOperatorName(newDataDto.getOpName());
-		
+
 		newData.setAccountId(0L);  // 市场没有园区账号但有支付账号
 		bankCardDao.save(newData);
 		return true;
 	}
-    
+
 	/**
 	 * 对公校验是否重复
 	 * @param bankNo
@@ -223,7 +220,7 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
 		}
 		return true;
 	}
-    
+
     @Override
     public PageOutput<List<PipelineRecordResponseDto>> bankWithdrawPage(PipelineRecordQueryDto param) {
         PipelineRecordParam query = new PipelineRecordParam();
@@ -244,8 +241,8 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
         }
         return result;
     }
-    
-    
+
+
 
     private MerAccountResponseDto getMerInfo(Long firmId) {
         JSONObject params = new JSONObject();
@@ -332,7 +329,7 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
 		requestDto.setAccountId(bankCardDto.getFundAccountId());
 		requestDto.setPassword(bankCardDto.getLoginPwd());
 		checkAuth(requestDto);
-		
+
 		// 解绑数据
 		BindBankCardDo unBind = new BindBankCardDo();
 		unBind.setId(bankCardDto.getId());
