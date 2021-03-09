@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.dili.card.common.constant.Constant;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -265,7 +266,7 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
         //编号、卡号、账户id
         businessRecord.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
         businessRecord.setAccountId(merInfo.getVouchAccount());
-        businessRecord.setCardNo("0");
+        businessRecord.setCardNo(Constant.FIRM_WITHDRAW_CARD_NO);
         businessRecord.setCustomerId(merInfo.getMchId());
         businessRecord.setCustomerNo(merInfo.getCode());
         businessRecord.setCustomerName(merInfo.getName());

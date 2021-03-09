@@ -84,13 +84,17 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
         MessageBo<String> handleSerialAfterCommitWithdraw = this.handleSerialAfterCommitWithdraw(fundRequestDto, businessRecord, withdrawResponse);
 
-        // 发送短信通知
-        String phone = accountCard.getCustomerContactsPhone();
-        String cardNo = accountCard.getCardNo();
-        DictValue dictValue = DictValue.WITHDRAW_SMS_ALLOW_SEND;
-        String val = miscService.getSingleDictVal(dictValue.getCode(), fundRequestDto.getFirmId(), dictValue.getDefaultVal());
-        if ("1".equals(val)){
-            smsMessageRpcResolver.withdrawNotice(phone, cardNo, withdrawResponse);
+        if ("200".equals(handleSerialAfterCommitWithdraw.getCode())){
+            ThreadUtil.execute(() -> {
+                // 发送短信通知
+                String phone = accountCard.getCustomerContactsPhone();
+                String cardNo = accountCard.getCardNo();
+                DictValue dictValue = DictValue.WITHDRAW_SMS_ALLOW_SEND;
+                String val = miscService.getSingleDictVal(dictValue.getCode(), fundRequestDto.getFirmId(), dictValue.getDefaultVal());
+                if ("1".equals(val)){
+                    smsMessageRpcResolver.withdrawNotice(phone, cardNo, withdrawResponse);
+                }
+            });
         }
         return handleSerialAfterCommitWithdraw;
     }

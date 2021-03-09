@@ -50,6 +50,16 @@ public class AccountCycleDto extends BaseDto implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime endTime;
+	/**结账开始时间*/
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime flatedStartDate;
+	/**结账结束时间*/
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime flatedEndDate;
 	/** 账务状态-激活 结账 平账 */
 	@TextDisplay(CycleStateProvider.class)
 	private Integer state;
@@ -66,6 +76,22 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 	private AccountCycleDetailDto accountCycleDetailDto;
 	/** 列表查询是可以选择多个状态值*/
 	private List<Integer> states;
+
+	public LocalDateTime getFlatedStartDate() {
+		return flatedStartDate;
+	}
+
+	public void setFlatedStartDate(LocalDateTime flatedStartDate) {
+		this.flatedStartDate = flatedStartDate;
+	}
+
+	public LocalDateTime getFlatedEndDate() {
+		return flatedEndDate;
+	}
+
+	public void setFlatedEndDate(LocalDateTime flatedEndDate) {
+		this.flatedEndDate = flatedEndDate;
+	}
 
 	public LocalDateTime getSettleTime() {
 		return settleTime;
