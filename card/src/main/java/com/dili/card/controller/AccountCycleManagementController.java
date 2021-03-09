@@ -169,7 +169,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 		if (userTicket == null) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR, "登录过期,请重新登录");
 		}
-		iAccountCycleService.flated(accountCycleDto.getId(), userTicket.getFirmId(), userTicket.getFirmName());
+		iAccountCycleService.flated(accountCycleDto.getId(), userTicket.getId(), userTicket.getRealName());
 		return BaseOutput.success("平账成功！");
 	}
 
@@ -242,7 +242,7 @@ public class AccountCycleManagementController implements IControllerHandler {
 		log.info("对帐申请打印*****{}={}", id);
 		AccountCycleDto detail = iAccountCycleService.detail(id);
 		// 获取最新的账务周期,获取对帐时间，能进到这个方法的都是已对帐了的
-		AccountCycleDo accountCycle = iAccountCycleService.findLatestCycleByUserId(detail.getUserId());
+		//AccountCycleDo accountCycle = iAccountCycleService.findLatestCycleByUserId(detail.getUserId());
 
 		AccountSettlePrintPrintlDto printlDto = new AccountSettlePrintPrintlDto();
 		printlDto.setCycleNo(detail.getCycleNo());
@@ -250,10 +250,12 @@ public class AccountCycleManagementController implements IControllerHandler {
 		printlDto.setFirmName(getUserTicket().getFirmName());
 		Long deliverAmount = detail.getAccountCycleDetailDto().getDeliverAmount();
 		printlDto.setLastDeliverAmountText("￥"+getMoneyFormat(deliverAmount));
-		printlDto.setUserName(accountCycle.getUserName());
-		printlDto.setSettleTime(accountCycle.getCheckTime());
+		printlDto.setUserName(detail.getUserName());
+		printlDto.setSettleTime(detail.getSettleTime());
 		printlDto.setPrintTime(LocalDateTime.now());
 		printlDto.setPrintUserName(getUserTicket().getRealName());
+		printlDto.setAuditorId(detail.getAuditorId());
+		printlDto.setAuditorName(detail.getAuditorName());
 
 		// 对帐详情数据
 		AccountCycleDetailDto cycleData = detail.getAccountCycleDetailDto();
@@ -267,6 +269,8 @@ public class AccountCycleManagementController implements IControllerHandler {
 		printlDto.setDepoPosAmountText(getMoneyFormat(cycleData.getDepoPosAmount()));
 		printlDto.setBankInTimes(cycleData.getBankInTimes());
 		printlDto.setBankInAmountText(getMoneyFormat(cycleData.getBankInAmount()));
+		printlDto.setBankOutTimes(cycleData.getBankOutTimes());
+		printlDto.setBankOutAmountText(getMoneyFormat(cycleData.getBankOutAmount()));
 		printlDto.setDrawCashTimes(cycleData.getDrawCashTimes());
 		printlDto.setDrawCashAmountText(getMoneyFormat(cycleData.getDrawCashAmount()));
 		printlDto.setLastDeliverAmountText(getMoneyFormat(cycleData.getLastDeliverAmount()));

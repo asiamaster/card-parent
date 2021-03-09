@@ -40,10 +40,10 @@ import com.github.pagehelper.PageHelper;
 
 @Service("accountCycleService")
 public class AccountCycleServiceImpl implements IAccountCycleService {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(AccountCycleServiceImpl.class);
 
-	
+
 	@Autowired
 	private IAccountCycleDao accountCycleDao;
 	@Autowired
@@ -91,7 +91,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		accountCycleDetail.setFirmName(cycle.getFirmName());
 
 		// 更新账务周期状态
-		this.updateStateById(id, CycleState.FLATED.getCode(), cycle.getVersion(), auditorId, auditorName);
+		this.updateFlate(id, cycle.getVersion(), auditorId, auditorName);
 
 		// 保存账务周期详情信息
 		accountCycleDetailDao.save(accountCycleDetail);
@@ -190,17 +190,15 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 		}
 	}
 
-	/**
-	 * 更新账务周期状态
-	 */
-	@Override
-	public void updateStateById(Long id, Integer state, Integer version, Long auditorId, String auditorName) {
+
+	private void updateFlate(Long id, Integer version, Long auditorId, String auditorName) {
 		AccountCycleDo accountCycle = new AccountCycleDo();
 		accountCycle.setAuditorId(auditorId);
 		accountCycle.setAuditorName(auditorName);
 		accountCycle.setId(id);
 		accountCycle.setVersion(version);
-		accountCycle.setState(state);
+		accountCycle.setState(CycleState.FLATED.getCode());
+		accountCycle.setCheckTime(LocalDateTime.now());
 		int update = accountCycleDao.update(accountCycle);
 		if (update == 0) {
 			throw new CardAppBizException("结账失败");

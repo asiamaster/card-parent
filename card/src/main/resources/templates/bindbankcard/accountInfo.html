@@ -105,7 +105,11 @@
     	</div>
     	<div class="form-group row">
 			<label class="col-md-3 col-form-label">主卡密码</label>
-			<input type="password" id="unbindModalPassword" class="form-control col-md-6" maxlength="6" name="unbindModalPassword" />
+			<% if(isNotEmpty(allowInput) && allowInput == "1") {%>
+				<input type="password" id="unbindModalPassword" class="form-control col-md-6" maxlength="6" name="unbindModalPassword" />
+			<% } else { %>
+				<input type="password" id="unbindModalPassword" class="form-control col-md-6" maxlength="6" name="unbindModalPassword" readonly/>
+			<% } %>
 			<button id="pwdBtn" type="button" onclick="readPwd()" class="btn btn-primary col-md-3">
 				请输入密码
 			</button>

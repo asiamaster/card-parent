@@ -242,7 +242,10 @@ public class CycleStatisticService implements ICycleStatisticService {
 			return accountCycleDto;
 		}
 		accountCycleDto.setId(cycle.getId());
+		accountCycleDto.setAuditorId(cycle.getAuditorId());
+		accountCycleDto.setAuditorName(cycle.getAuditorName());
 		accountCycleDto.setUserCode(cycle.getUserCode());
+		accountCycleDto.setSettleTime(cycle.getCheckTime());
 		accountCycleDto.setUserId(cycle.getUserId());
 		accountCycleDto.setUserName(cycle.getUserName());
 		accountCycleDto.setCycleNo(cycle.getCycleNo() == null ? -1L : cycle.getCycleNo());
