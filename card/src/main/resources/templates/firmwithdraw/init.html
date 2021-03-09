@@ -261,7 +261,8 @@
 			},
 			buildSelectedBankCard(){
 				let that = this;
-				this.resetFormInput();
+				$("#tradePwd").val("");
+				//this.resetFormInput();
 				this.bindBankList.forEach((val) => {
 					if ($.common.isEmpty(that.selectedBankCardId)) {
 						that.selectedBankCard = {};

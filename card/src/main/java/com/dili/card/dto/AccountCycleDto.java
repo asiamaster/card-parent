@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * 柜员账务周期
- * 
+ *
  * @author bob
  */
 public class AccountCycleDto extends BaseDto implements Serializable {
@@ -38,6 +38,8 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 	private Long cycleNo;
 	/** 工位现金柜 */
 	private Long cashBox;
+	/**对账时间*/
+	private LocalDateTime settleTime;
 	/** 账务开始时间 */
 	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -59,11 +61,19 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 	/** 审核员-员工姓名 */
 	private String auditorName;
 	/** 商户编码 */
-	private Long firmId; 
+	private Long firmId;
 	/** 账务周期详情 */
 	private AccountCycleDetailDto accountCycleDetailDto;
 	/** 列表查询是可以选择多个状态值*/
 	private List<Integer> states;
+
+	public LocalDateTime getSettleTime() {
+		return settleTime;
+	}
+
+	public void setSettleTime(LocalDateTime settleTime) {
+		this.settleTime = settleTime;
+	}
 
 	public Long getId() {
 		return id;
@@ -185,7 +195,7 @@ public class AccountCycleDto extends BaseDto implements Serializable {
 		this.states = states;
 	}
 
-	
+
 	public void addStates(Integer state) {
 		if (states == null) {
 			states = new ArrayList<Integer>();
