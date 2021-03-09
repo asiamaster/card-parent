@@ -24,6 +24,12 @@
                 </select>
                 <#bselect2 _id="states" _provider="cycleStateProvider" _mode="remote" _value="[1,2]"  _queryParams='{emptyText:"--全部--"}' />
             </div>
+            <#component_dateControls
+            _labelText="结账时间"
+            _startDateParam="flatedStartDate"
+            _endDateParam="flatedEndDate"
+            _resetDate="false"
+            />
             <div class="col-auto align-self-center mt-3">
                 <button id="clear" type="button" class="btn btn-outline-primary mr-2" onclick="clearParams()"><i class="fa fa-refresh"></i> 清空</button>
                 <button id="query" type="button" class="btn btn-outline-primary" onclick="$.table.search()"><i class="fa fa-search"></i> 查询</button>
@@ -61,8 +67,11 @@
             <thead>
             <tr>
             	<th data-radio="true"></th>
-                <th data-field="cycleNo"data-align="center" >
+                <th data-field="cycleNo" data-align="center" >
                     账期编号
+                </th>
+                <th data-field="settleTime" data-align="center" >
+                    对账时间
                 </th>
                 <th data-field="userCode" data-align="center"  >
                     柜员工号

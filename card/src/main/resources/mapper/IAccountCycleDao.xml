@@ -17,6 +17,8 @@
                			#{item}
           		</foreach>
 			</if>
+			<if test="flatedStartDate != null"><![CDATA[AND check_time >= #{flatedStartDate} ]]></if>
+			<if test="flatedEndDate != null"><![CDATA[AND check_time <= #{flatedEndDate}  ]]></if>
 		</where>
 	</sql>
 

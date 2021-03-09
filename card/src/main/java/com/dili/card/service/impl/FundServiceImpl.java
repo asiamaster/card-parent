@@ -1,6 +1,8 @@
 package com.dili.card.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -25,13 +27,16 @@ import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.PayRpc;
+import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
+import com.dili.card.rpc.resolver.SmsMessageRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ICustomerService;
 import com.dili.card.service.IFundService;
+import com.dili.card.service.IMiscService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.recharge.AbstractRechargeManager;
 import com.dili.card.service.recharge.RechargeFactory;
@@ -39,11 +44,14 @@ import com.dili.card.type.ActionType;
 import com.dili.card.type.BankWithdrawState;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CardType;
+import com.dili.card.type.DictValue;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateState;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.PayPipelineType;
+import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
+import com.dili.feign.support.UapSessionThreadUtils;
 import com.dili.ss.domain.PageOutput;
 import com.dili.ss.redis.service.RedisUtil;
 import io.seata.spring.annotation.GlobalTransactional;
@@ -86,6 +94,12 @@ public class FundServiceImpl implements IFundService {
     private RechargeFactory rechargeFactory;
     @Autowired
     private IAccountCycleService accountCycleService;
+    @Autowired
+    private CustomerRpcResolver customerRpcResolver;
+    @Autowired
+    private IMiscService miscService;
+    @Autowired
+    private SmsMessageRpcResolver smsMessageRpcResolver;
 
     @Override
     @GlobalTransactional(rollbackFor = Exception.class)
@@ -106,7 +120,7 @@ public class FundServiceImpl implements IFundService {
             record.setType(OperateType.FROZEN_FUND.getCode());
             record.setAmount(requestDto.getAmount());
             record.setNotes(requestDto.getMark());
-        }, accountCycle == null? 0L:accountCycle.getCycleNo());
+        }, accountCycle == null ? 0L : accountCycle.getCycleNo());
         CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto
                 .createFrozenAmount(accountCard.getFundAccountId(), accountCard.getAccountId(), requestDto.getAmount());
         createTradeRequestDto.setExtension(this.serializeFrozenExtra(requestDto));
@@ -183,11 +197,11 @@ public class FundServiceImpl implements IFundService {
     }
 
     /**
-    *  由于支付那边回调都是相同结果，并且本地库只涉及更新操作，
+     *  由于支付那边回调都是相同结果，并且本地库只涉及更新操作，
      *  因此不需要考虑幂等性问题
-    * @author miaoguoxin
-    * @date 2021/1/18
-    */
+     * @author miaoguoxin
+     * @date 2021/1/18
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void handleBankWithdrawCallback(TradeResponseDto tradeResponseDto) {
@@ -205,16 +219,19 @@ public class FundServiceImpl implements IFundService {
                 }
                 serialDto = JSON.parseObject(businessRecordDo.getAttach(), SerialDto.class);
             }
-            if (BankWithdrawState.FAILED.getCode() == tradeResponseDto.getState()){
+            if (BankWithdrawState.FAILED.getCode() == tradeResponseDto.getState()) {
                 LOGGER.info("圈提回调处理失败，对应流水号:{}", realSerialNo);
                 serialService.handleFailure(serialDto);
             } else {
                 serialService.handleSuccess(serialDto);
+                //发送提款短信
+                //this.asyncSendSms(serialDto, tradeResponseDto);
             }
         } finally {
             redisUtil.remove(key);
         }
     }
+
 
     @Override
     public PageOutput<List<FreezeFundRecordDto>> frozenRecord(FreezeFundRecordParam queryParam) {
@@ -292,7 +309,7 @@ public class FundServiceImpl implements IFundService {
         businessRecord.setNotes(unfreezeFundDto.getRemark());
         //账务周期
         AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(unfreezeFundDto.getOpId());
-        businessRecord.setCycleNo(accountCycle == null? 0L:accountCycle.getCycleNo());
+        businessRecord.setCycleNo(accountCycle == null ? 0L : accountCycle.getCycleNo());
         //操作员信息
         businessRecord.setOperatorId(unfreezeFundDto.getOpId());
         businessRecord.setOperatorNo(unfreezeFundDto.getOpNo());
@@ -314,5 +331,31 @@ public class FundServiceImpl implements IFundService {
         extra.put(Constant.OP_NAME, requestDto.getOpName());
         extra.put(Constant.OP_NO, requestDto.getOpNo());
         return extra.toJSONString();
+    }
+
+    private void asyncSendSms(SerialDto finalSerialDto, TradeResponseDto tradeResponseDto) {
+        Runnable runnable = UapSessionThreadUtils.wrapRunnable(() -> {
+            List<SerialRecordDo> serialRecordList = finalSerialDto.getSerialRecordList();
+            if (CollectionUtil.isEmpty(serialRecordList)) {
+                return;
+            }
+            SerialRecordDo recordDo = serialRecordList.get(0);
+            String cardNo = recordDo.getCardNo();
+            //市场圈提没有卡号、客户记录等，不发送短信
+            if (Constant.FIRM_WITHDRAW_CARD_NO.equals(cardNo)) {
+                return;
+            }
+            Long customerId = recordDo.getCustomerId();
+            Long firmId = recordDo.getFirmId();
+            CustomerExtendDto customerInfo = customerRpcResolver.findCustomerById(customerId, firmId);
+            String phone = customerInfo.getContactsPhone();
+            DictValue dictValue = DictValue.WITHDRAW_SMS_ALLOW_SEND;
+            String val = miscService.getSingleDictVal(dictValue.getCode(), firmId, dictValue.getDefaultVal());
+            if ("1".equals(val)) {
+                smsMessageRpcResolver.withdrawNotice(phone, cardNo, tradeResponseDto);
+            }
+        });
+        //发送短信
+        ThreadUtil.execute(runnable);
     }
 }
