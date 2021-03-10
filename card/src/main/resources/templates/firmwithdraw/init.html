@@ -262,7 +262,7 @@
 			},
 			buildSelectedBankCard(){
 				let that = this;
-				$("#tradePwd").val("");
+				//$("#tradePwd").val("");
 				//this.resetFormInput();
 				this.bindBankList.forEach((val) => {
 					if ($.common.isEmpty(that.selectedBankCardId)) {
@@ -337,7 +337,7 @@
 							$.modal.closeLoading();
 							if (ret.success){
 								let templateData = {
-									message: ret.message,
+									message: "提现成功！",
 									serialNo: ret.data
 								};
 								bs4pop.alert(bui.util.HTMLDecode(template('postWithdraw', templateData)), {type: 'success'});
