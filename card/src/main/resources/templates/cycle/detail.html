@@ -132,17 +132,17 @@
 			<% }%>
 
 			<% if(settled == 2 && detail.state == 2){ %>
-				<button id="detailFlatedBtn" type="button" class="btn btn-primary" onclick="detailFlated()"><i class="fa fa-paypal"></i> 对账</button>
+				<button id="detailFlatedBtn" type="button" class="btn btn-primary px-5" onclick="detailFlated()"><i class="fa fa-paypal"></i> 对账</button>
 			<% }%>
 
 			<% if(showPrintBtn == "true"){ %>
 				<#resource code="cycle_print_btn">
-					<button id="printBtn" type="button" class="btn btn-primary" onclick="printCycleData()">打印</button>
+					<button id="printBtn" type="button" class="btn btn-primary px-5" onclick="printCycleData()">打印</button>
 		        </#resource>
 			<% }%>
 			<% if(showSettlePrintBtn == "true"){ %>
 				<#resource code="settle_print_btn">
-					<button id="printBtn" type="button" class="btn btn-primary" onclick="printSettleData()">打印</button>
+					<button id="printBtn" type="button" class="btn btn-primary px-5" onclick="printSettleData()">打印</button>
 		        </#resource>
 			<% }%>
 			<!-- 结账打印 -->
