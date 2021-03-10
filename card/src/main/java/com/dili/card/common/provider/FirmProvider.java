@@ -24,7 +24,7 @@ import com.dili.uap.sdk.session.SessionContext;
  */
 @Component
 public class FirmProvider implements ValueProvider {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(FirmProvider.class);
 
     private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
@@ -33,12 +33,15 @@ public class FirmProvider implements ValueProvider {
 
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
-    	BUFFER.clear();
-    	Long firmId = SessionContext.getSessionContext().getUserTicket().getFirmId();
-    	List<Firm> firmList = firmWithdrawService.getFirmList(firmId);
-    	log.info("市场及子市场返回>{}",JSONObject.toJSONString(firmList));
-    	BUFFER.addAll(firmList.stream().map(temp -> new ValuePairImpl<>(
-					temp.getName(), temp.getId())).collect(Collectors.toList()));
+        //防止少有的并发情况产生重复数据
+        synchronized (BUFFER){
+            BUFFER.clear();
+            Long firmId = SessionContext.getSessionContext().getUserTicket().getFirmId();
+            List<Firm> firmList = firmWithdrawService.getFirmList(firmId);
+            log.info("市场及子市场返回>{}",JSONObject.toJSONString(firmList));
+            BUFFER.addAll(firmList.stream().map(temp -> new ValuePairImpl<>(
+                    temp.getName(), temp.getId())).collect(Collectors.toList()));
+        }
         return BUFFER;
     }
 
