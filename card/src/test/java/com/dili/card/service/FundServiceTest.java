@@ -2,11 +2,14 @@ package com.dili.card.service;
 
 import com.alibaba.fastjson.JSON;
 import com.dili.card.BaseTest;
+import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
+import com.dili.card.type.BankWithdrawState;
 import com.dili.customer.sdk.domain.Customer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +88,14 @@ class FundServiceTest extends BaseTest {
 
     @Test
     void testRecharge() {
+    }
+
+    @Test
+    void testHandleBankWithdrawCallback(){
+        TradeResponseDto tradeResponseDto = new TradeResponseDto();
+        tradeResponseDto.setSerialNo(Constant.PAY_SERIAL_NO_PREFIX+"20210127000140");
+        tradeResponseDto.setState(BankWithdrawState.SUCCESS.getCode());
+        fundService.handleBankWithdrawCallback(tradeResponseDto);
     }
 
     private FundRequestDto createRechargeRequest() {
