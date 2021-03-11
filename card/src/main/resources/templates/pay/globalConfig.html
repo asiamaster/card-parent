@@ -1,0 +1,121 @@
+
+<#bs4Body>
+<#vueElm />
+	<div class="container-fluid el-class" >
+	<div class="breadcrumb">
+				账户限额设置
+			</div>
+			<div class="breadcrumb">
+				提现<a href="javascript:;" class="ml-auto" data-toggle="collapse" data-target="#baseInfo1" aria-expanded="true"
+				 aria-controls="baseInfo">收起 <i class="fa fa-angle-double-up" aria-hidden="true"></i></a>
+			</div>
+			<form class="row row-cols-3 collapse show" id="baseInfo1">
+				<div class="form-group col">
+					<label for="departmentId">单笔最高提现额度:<i class="red">*</i></label> 
+					<input  value="${config.withdraw.maxAmountText!}" type="number" class="form-control money" name="maxAmount" range="0 9999999999999.99" required/>
+				</div>
+				<div class="form-group col">
+					<label for="departmentId">日提现额度:<i class="red">*</i></label> 
+					<input  value="${config.withdraw.dailyAmountText!}"  type="number" class="form-control money" name="dailyAmount" range="0 9999999999999.99" required/>
+				</div>
+				<div class="form-group col">
+					<label for="departmentId">日提现次数:<i class="red">*</i></label> 
+					<input  value="${config.withdraw.dailyTimes!}"   type="number" class="form-control" name="dailyTimes"  range="0 10000" required/>
+				</div>
+				<div class="form-group col">
+					<label for="departmentId">月提现额度:<i class="red">*</i></label> 
+					<input  value="${config.withdraw.monthlyAmountText!}" type="number" class="form-control money" name="monthlyAmount" range="0 9999999999999.99" required/>
+				</div>
+			</form>
+
+			<div class="breadcrumb">
+				交易<a href="javascript:;" class="ml-auto" data-toggle="collapse" data-target="#baseInfo2" aria-expanded="true"
+				 aria-controls="baseInfo">收起 <i class="fa fa-angle-double-up" aria-hidden="true"></i></a>
+			</div>
+			<form class="row row-cols-3 collapse show" id="baseInfo2">
+				<div class="form-group col">
+					<label for="departmentId">单笔最大交易金额:<i class="red">*</i></label> 
+					<input value="${config.trade.maxAmountText!}" type="number" class="form-control money" name="maxAmount" range="0 9999999999999.99" required/>
+				</div>
+				
+				<div class="form-group col">
+					<label for="departmentId">日交易限额:<i class="red">*</i></label> 
+					<input value="${config.trade.dailyAmountText!}"  type="number" class="form-control money" name="dailyAmount" range="0 9999999999999.99" required/>
+				</div>
+				<div class="form-group col">
+					<label for="departmentId">日交易次数:<i class="red">*</i></label> 
+					<input  value="${config.trade.dailyTimes!}" type="number" class="form-control" name="dailyTimes" range="0 10000" required/>
+				</div>
+				<div class="form-group col">
+					<label for="departmentId">月交易限额:<i class="red">*</i></label> 
+					<input value="${config.trade.monthlyAmountText!}" type="number" class="form-control money" name="monthlyAmount" range="0 9999999999999.99" required/>
+				</div>
+			</form>
+			
+			<div class="breadcrumb">
+				充值<a href="javascript:;" class="ml-auto" data-toggle="collapse" data-target="#baseInfo3" aria-expanded="true"
+				 aria-controls="baseInfo">收起 <i class="fa fa-angle-double-up" aria-hidden="true"></i></a>
+			</div>
+			<form class="row row-cols-3 collapse show" id="baseInfo3">
+				<div class="form-group col">
+					<label for="departmentId">单笔充值最大金额:<i class="red">*</i></label> 
+					<input  value="${config.deposit.maxAmountText!}" type="number" class="form-control money" name="maxAmount" range="0 9999999999999.99" required/>
+				</div>
+			</form>
+	
+	</div>
+	<div class="modal-footer" >
+         <button id="query" type="button" class="btn btn-secondary pl-5 pr-5" onclick="javascript:history.go(-1)">返回</button>
+         <button id="save_data" type="button" class="btn btn-primary pl-5 pr-5" onclick="saveOrUpdateHandler()">提交</button>
+    </div>
+</#bs4Body>
+
+<script type="text/javascript">
+
+// 提交保存
+function saveOrUpdateHandler(){
+	let validator1 = $('#baseInfo1').validate({ignore:''})
+	let validator2 = $('#baseInfo2').validate({ignore:''})
+	let validator3 = $('#baseInfo3').validate({ignore:''})
+    if (!validator1.form()||!validator2.form()||!validator3.form()) {
+        return;
+    }
+	let dataInfo = {};
+	let dataInfo1 = $("#baseInfo1").serializeObject();  
+	bui.util.yuanToCentForMoneyEl(dataInfo1);
+	let dataInfo2 = $("#baseInfo2").serializeObject(); 
+	bui.util.yuanToCentForMoneyEl(dataInfo2);
+	let dataInfo3 = $("#baseInfo3").serializeObject();  
+	bui.util.yuanToCentForMoneyEl(dataInfo3);
+	dataInfo.deposit = dataInfo3;
+	dataInfo.withdraw = dataInfo1;
+	dataInfo.trade = dataInfo2;
+	dataInfo.mchId = 9;
+    bui.loading.show('努力提交中，请稍候。。。');
+    // let _formData = new FormData($('#saveForm')[0]);
+    $.ajax({
+        type: "POST",
+        url: '${contextPath}/pay/setGlobalConfig.action',
+        data: JSON.stringify(dataInfo),
+		dataType: "json",
+		contentType: "application/json",
+        success: function (ret) {
+            if(!ret.success){
+                bs4pop.alert(ret.message, {type: 'error'});
+            }else{
+            	bs4pop.alert(ret.message, {type: 'success'});
+            	/*parent.closeDialog(parent.dia);
+				parent.$('#grid').bootstrapTable('refresh');	*/
+            }
+            bui.loading.hide();
+        },
+        error: function (error) {
+            bui.loading.hide();
+            bs4pop.alert('远程访问失败', {type: 'error'});
+        }
+    });
+}
+
+
+</script>
+

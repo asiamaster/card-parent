@@ -1,0 +1,186 @@
+
+<#bs4Body>
+<#vueElm />
+<div class = "el-class">
+
+
+	<div class="container-fluid" >
+	<div class="breadcrumb">
+				账户限额设置
+			</div>
+		<form id="saveForm" role="form" novalidate>
+			
+			<div class="breadcrumb">
+				提现<a href="javascript:;" class="ml-auto" data-toggle="collapse" data-target="#baseInfo1" aria-expanded="true"
+				 aria-controls="baseInfo">收起 <i class="fa fa-angle-double-up" aria-hidden="true"></i></a>
+			</div>
+			<div class="row row-cols-3 collapse show" id="baseInfo1">
+				<div class="form-group col">
+					<label for="departmentId">单笔最高提现额度:<i class="red">*</i></label> 
+					<input  v-model="withdraw.maxAmount" :formatter="formatMoney" type="number" class="form-control money" range="0 9999999999999.99" required/>
+				</div>
+				<div class="form-group col">
+					<label for="departmentId">日提现额度:<i class="red">*</i></label> 
+					<input  v-model="withdraw.dailyAmount"  type="number" class="form-control money"  range="0 9999999999999.99" required/>
+				</div>
+				<div class="form-group col">
+					<label for="departmentId">日提现次数:<i class="red">*</i></label> 
+					<input  v-model="withdraw.dailyTimes" type="number" class="form-control"required/>
+				</div>
+				<div class="form-group col">
+					<label for="departmentId">月提现额度:<i class="red">*</i></label> 
+					<input  v-model="withdraw.monthlyAmount" type="number" class="form-control money" required/>
+				</div>
+			</div>
+
+			<div class="breadcrumb">
+				交易<a href="javascript:;" class="ml-auto" data-toggle="collapse" data-target="#baseInfo2" aria-expanded="true"
+				 aria-controls="baseInfo">收起 <i class="fa fa-angle-double-up" aria-hidden="true"></i></a>
+			</div>
+			<div class="row row-cols-3 collapse show" id="baseInfo2">
+				<div class="form-group col">
+					<label for="departmentId">单笔最大交易金额:<i class="red">*</i></label> 
+					<input v-model="trade.maxAmount" type="number" class="form-control money" name="quantity" required/>
+				</div>
+				
+				<div class="form-group col">
+					<label for="departmentId">日交易限额:<i class="red">*</i></label> 
+					<input v-model="trade.dailyAmount" type="number" class="form-control money" name="quantity" required/>
+				</div>
+				<div class="form-group col">
+					<label for="departmentId">日交易次数:<i class="red">*</i></label> 
+					<input v-model="trade.dailyTimes" type="number" class="form-control" name="quantity" required/>
+				</div>
+				<div class="form-group col">
+					<label for="departmentId">月交易限额:<i class="red">*</i></label> 
+					<input v-model="trade.monthlyAmount" type="number" class="form-control money" name="quantity" required/>
+				</div>
+			</div>
+			
+			<div class="breadcrumb">
+				充值<a href="javascript:;" class="ml-auto" data-toggle="collapse" data-target="#baseInfo3" aria-expanded="true"
+				 aria-controls="baseInfo">收起 <i class="fa fa-angle-double-up" aria-hidden="true"></i></a>
+			</div>
+			<div class="row row-cols-3 collapse show" id="baseInfo3">
+				<div class="form-group col">
+					<label for="departmentId">单笔充值最大金额:<i class="red">*</i></label> 
+					<input v-model="deposit.maxAmount" type="number" class="form-control money" name="quantity" required/>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer" >
+         <button id="query" type="button" class="btn btn-secondary pl-5 pr-5" onclick="javascript:history.go(-1)">返回</button>
+         <button id="save_data" type="button" class="btn btn-primary pl-5 pr-5" @click="saveOrUpdateHandler()">提交</button>
+    </div>
+</div>
+</#bs4Body>
+
+<script type="text/javascript">
+
+var config = new Vue({
+    el: '.el-class',
+    data() {
+        return {
+        	deposit: {
+        		maxAmount: 0
+        	},
+        	withdraw: {
+        	    maxAmount: 0,
+        	    dailyAmount: 0,
+        	    dailyTimes: 0,
+        	    monthlyAmount: 0
+        	},
+        	trade: {
+        	    maxAmount: 0,
+        	    dailyAmount: 0,
+        	    dailyTimes: 0,
+        	    monthlyAmount: 0
+        	}       	
+        }
+    },
+    mounted:function(){
+    	
+    },
+    created(){
+    	this.getInfo();
+    },
+   /*  filters: {
+    	capitalize: function (value) {
+    	    if (!value) return 0
+    	    //value = value.toString()
+    	    return parseFloat(new Number(value).mul(100)).toFixed(0);
+    	}
+    }, */
+    methods: {
+    	formatMoney(value){
+    		console.log(value);
+    		if (!value) return 0
+    	    //value = value.toString()
+    	    console.log(parseFloat(new Number(value).mul(100)).toFixed(2));
+    	    return parseFloat(new Number(value).mul(100)).toFixed(2);
+    	},
+    	getInfo(){
+    		let _this = this;
+    		$.ajax({
+    	        type: "GET",
+    	        url: '${contextPath}/pay/globalConfig.action?mchId='+${mchId!},
+    			dataType: "json",
+    			contentType: "application/json",
+    	        success: function (ret) {
+    	        	console.log(ret);
+    	            if(ret.success){
+    	            	_this.deposit = ret.data.deposit;
+    	            	_this.withdraw = ret.data.withdraw;
+    	            	_this.trade = ret.data.trade;
+    	            }else{
+    	            	bs4pop.alert(ret.message, {type: 'success'});
+    	            	/*parent.closeDialog(parent.dia);
+    					parent.$('#grid').bootstrapTable('refresh');	*/
+    	            }
+    	        },
+    	        error: function (error) {
+    	            bui.loading.hide();
+    	            bs4pop.alert('远程访问失败', {type: 'error'});
+    	        }
+    	    });
+    	},
+    	saveOrUpdateHandler(){
+    		let validator = $('#saveForm').validate({ignore:''})
+    	    if (!validator.form()) {
+    	        return;
+    	    }
+    		let data = {};
+    		data.deposit = config.deposit;
+    		data.withdraw = config.withdraw;
+    		data.trade = config.trade;
+    		data.mchId = 9;
+    	    // let _formData = new FormData($('#saveForm')[0]);
+    	    $.ajax({
+    	        type: "POST",
+    	        url: '${contextPath}/pay/setGlobalConfig.action?',
+    	        data: JSON.stringify(data),
+    			dataType: "json",
+    			contentType: "application/json",
+    	        success: function (ret) {
+    	            if(!ret.success){
+    	                bs4pop.alert(ret.message, {type: 'error'});
+    	            }else{
+    	            	bs4pop.alert(ret.message, {type: 'success'});
+    	            	/*parent.closeDialog(parent.dia);
+    					parent.$('#grid').bootstrapTable('refresh');	*/
+    	            }
+    	            bui.loading.hide();
+    	        },
+    	        error: function (error) {
+    	            bui.loading.hide();
+    	            bs4pop.alert('远程访问失败', {type: 'error'});
+    	        }
+    	    });
+    	}
+    },
+
+})
+
+</script>
+
