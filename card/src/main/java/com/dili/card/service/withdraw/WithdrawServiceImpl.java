@@ -2,6 +2,7 @@ package com.dili.card.service.withdraw;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
@@ -28,19 +29,19 @@ import com.dili.card.type.PaySubject;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.ss.constant.ResultCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 
 /**
  * 提现操作基础实现类
  */
 public abstract class WithdrawServiceImpl implements IWithdrawService {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(WithdrawServiceImpl.class);
     @Resource
     protected IPayService payService;
     @Resource
@@ -82,16 +83,17 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         withdrawRequest.setFees(this.createFees(fundRequestDto));
         withdrawRequest.setChannelAccount(fundRequestDto.getChannelAccount());
         TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
+        LOGGER.info("返回的提现支付数据:{}", JSON.toJSONString(withdrawResponse));
         MessageBo<String> handleSerialAfterCommitWithdraw = this.handleSerialAfterCommitWithdraw(fundRequestDto, businessRecord, withdrawResponse);
 
-        if ("200".equals(handleSerialAfterCommitWithdraw.getCode())){
+        if ("200".equals(handleSerialAfterCommitWithdraw.getCode())) {
             ThreadUtil.execute(() -> {
                 // 发送短信通知
                 String phone = accountCard.getCustomerContactsPhone();
                 String cardNo = accountCard.getCardNo();
                 DictValue dictValue = DictValue.WITHDRAW_SMS_ALLOW_SEND;
                 String val = miscService.getSingleDictVal(dictValue.getCode(), fundRequestDto.getFirmId(), dictValue.getDefaultVal());
-                if ("1".equals(val)){
+                if ("1".equals(val)) {
                     smsMessageRpcResolver.withdrawNotice(phone, cardNo, withdrawResponse);
                 }
             });
