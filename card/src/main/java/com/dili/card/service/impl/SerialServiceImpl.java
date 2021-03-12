@@ -134,7 +134,7 @@ public class SerialServiceImpl implements ISerialService {
         businessRecord.setStartBalance(serialDto.getStartBalance());
         businessRecord.setEndBalance(serialDto.getEndBalance());
         //用于意外情况时恢复数据
-        businessRecord.setAttach(JSON.toJSONString(serialDto));
+        businessRecord.setAttach(serialDto.getAttach());
         businessRecordDao.doProcessingUpdate(businessRecord);
     }
 

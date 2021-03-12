@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.CacheKey;
 import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.ReqParamExtra;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.PipelineRecordQueryDto;
@@ -40,6 +41,7 @@ import com.dili.card.service.IMiscService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.recharge.AbstractRechargeManager;
 import com.dili.card.service.recharge.RechargeFactory;
+import com.dili.card.service.withdraw.BankWithdrawServiceImpl;
 import com.dili.card.type.ActionType;
 import com.dili.card.type.BankWithdrawState;
 import com.dili.card.type.BizNoType;
@@ -100,6 +102,8 @@ public class FundServiceImpl implements IFundService {
     private IMiscService miscService;
     @Autowired
     private SmsMessageRpcResolver smsMessageRpcResolver;
+    @Autowired
+    private BankWithdrawServiceImpl bankWithdrawService;
 
     @Override
     @GlobalTransactional(rollbackFor = Exception.class)
@@ -209,23 +213,31 @@ public class FundServiceImpl implements IFundService {
         String realSerialNo = StrUtil.removePrefix(tradeResponseDto.getSerialNo(), Constant.PAY_SERIAL_NO_PREFIX);
         String key = CacheKey.BANK_WITHDRAW_PROCESSING_SERIAL_PREFIX + realSerialNo;
         try {
-            SerialDto serialDto = redisUtil.get(key, SerialDto.class);
-            if (serialDto == null) {
+            JSONObject jObj = redisUtil.get(key, JSONObject.class);
+            SerialDto serial;
+            if (jObj == null) {
                 LOGGER.info("圈提回调redis找不到对应流水号:{}，可能已经过期，从数据库读取", realSerialNo);
                 BusinessRecordDo businessRecordDo = serialService.getBySerialNo(realSerialNo);
                 if (businessRecordDo == null) {
                     LOGGER.info("圈提回调数据库找不到对应流水号:{}，可能是非法请求", realSerialNo);
                     return;
                 }
-                serialDto = JSON.parseObject(businessRecordDo.getAttach(), SerialDto.class);
+                jObj = JSON.parseObject(businessRecordDo.getAttach(), JSONObject.class);
+                FundRequestDto fundRequestDto = jObj.getObject(ReqParamExtra.FUND_REQUEST, FundRequestDto.class);
+                BusinessRecordDo record = jObj.getObject(ReqParamExtra.BUSINESS_RECORD, BusinessRecordDo.class);
+                serial = bankWithdrawService.createAccountSerial(fundRequestDto, record, tradeResponseDto);
+            } else {
+                FundRequestDto fundRequestDto = jObj.getObject(ReqParamExtra.FUND_REQUEST, FundRequestDto.class);
+                BusinessRecordDo record = jObj.getObject(ReqParamExtra.BUSINESS_RECORD, BusinessRecordDo.class);
+                serial = bankWithdrawService.createAccountSerial(fundRequestDto, record, tradeResponseDto);
             }
             if (BankWithdrawState.FAILED.getCode() == tradeResponseDto.getState()) {
                 LOGGER.info("圈提回调处理失败，对应流水号:{}", realSerialNo);
-                serialService.handleFailure(serialDto);
+                serialService.handleFailure(serial);
             } else {
-                serialService.handleSuccess(serialDto);
-                //发送提款短信
-                this.asyncSendSms(serialDto, tradeResponseDto);
+                serialService.handleSuccess(serial);
+                LOGGER.info("圈提回调处理成功，开始发送短信，对应流水号:{}", realSerialNo);
+                this.asyncSendSms(serial, tradeResponseDto);
             }
         } finally {
             redisUtil.remove(key);
