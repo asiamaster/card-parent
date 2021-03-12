@@ -3,6 +3,7 @@ package com.dili.card.service.withdraw;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.dili.card.common.constant.CacheKey;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
@@ -29,6 +30,7 @@ import com.dili.card.type.PaySubject;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.ss.constant.ResultCode;
+import com.dili.ss.redis.service.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 提现操作基础实现类
@@ -54,6 +57,8 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
     private SmsMessageRpcResolver smsMessageRpcResolver;
     @Resource
     protected IAccountCycleService accountCycleService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     // @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
@@ -109,6 +114,8 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
     public MessageBo<String> handleSerialAfterCommitWithdraw(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
         //取款成功后修改业务单状态、存储流水
         SerialDto serialDto = this.createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
+        redisUtil.set(CacheKey.BANK_WITHDRAW_PROCESSING_SERIAL_PREFIX + serialDto.getSerialNo(),
+                JSON.toJSONString(serialDto), 30L, TimeUnit.DAYS);
         serialService.handleSuccess(serialDto);
         return MessageBo.success(businessRecord.getSerialNo());
     }
