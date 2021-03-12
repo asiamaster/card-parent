@@ -225,7 +225,7 @@ public class FundServiceImpl implements IFundService {
             } else {
                 serialService.handleSuccess(serialDto);
                 //发送提款短信
-                //this.asyncSendSms(serialDto, tradeResponseDto);
+                this.asyncSendSms(serialDto, tradeResponseDto);
             }
         } finally {
             redisUtil.remove(key);
