@@ -171,13 +171,13 @@ public interface PayRpc {
     /**
      * 查询卡账户权限信息
      */
-    @RequestMapping(value = "/payment/api/gateway.do?service=payment.permission.service:load", method = RequestMethod.POST)
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.sentinel.service:load", method = RequestMethod.POST)
     BaseOutput<AccountPermissionResponseDto> loadPermission(JSONObject params);
 
     /**
      * 设置卡账户权限
      */
-    @RequestMapping(value = "/payment/api/gateway.do?service=payment.permission.service:set", method = RequestMethod.POST)
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.sentinel.service:set", method = RequestMethod.POST)
     BaseOutput setPermission(Map<String, Object> params);
 
     /**

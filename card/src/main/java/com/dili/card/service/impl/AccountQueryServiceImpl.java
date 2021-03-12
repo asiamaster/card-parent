@@ -1,6 +1,7 @@
 package com.dili.card.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
@@ -373,6 +374,8 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         jsonObject.put("customerName", cardInfo.getCustomerName());
         jsonObject.put("customerCertificateNumber", cardInfo.getCustomerCertificateNumber());
         jsonObject.put("permission", allPermissionObject);
+        jsonObject.put("withdraw", JSONUtil.toJsonStr(responseDto.getWithdraw()));
+        jsonObject.put("trade", JSONUtil.toJsonStr(responseDto.getTrade()));
         return BaseOutput.successData(jsonObject);
     }
 

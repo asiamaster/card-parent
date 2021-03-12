@@ -22,6 +22,16 @@ public class AccountPermissionResponseDto {
      */
     private List<AccountAllPermission> allPermission;
 
+    /**
+     * 提现权限限制明细
+     */
+    private AccountPermissionDetail withdraw;
+
+    /**
+     * 交易权限限制明细
+     */
+    private AccountPermissionDetail trade;
+
     public Set<Integer> getPermission() {
         return permission;
     }
@@ -33,5 +43,17 @@ public class AccountPermissionResponseDto {
     }
     public void setAllPermission(List<AccountAllPermission> allPermission) {
         this.allPermission = allPermission;
+    }
+    public AccountPermissionDetail getWithdraw() {
+        return withdraw;
+    }
+    public void setWithdraw(AccountPermissionDetail withdraw) {
+        this.withdraw = withdraw;
+    }
+    public AccountPermissionDetail getTrade() {
+        return trade;
+    }
+    public void setTrade(AccountPermissionDetail trade) {
+        this.trade = trade;
     }
 }

@@ -1,6 +1,7 @@
 package com.dili.card.dto;
 
 import com.dili.card.dto.pay.AccountAllPermission;
+import com.dili.card.dto.pay.AccountPermissionDetail;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -25,6 +26,16 @@ public class AccountPermissionRequestDto {
      */
     private List<AccountAllPermission> permission;
 
+    /**
+     * 提现权限限制明细
+     */
+    private AccountPermissionDetail withdraw;
+
+    /**
+     * 交易权限限制明细
+     */
+    private AccountPermissionDetail trade;
+
     public Long getAccountId() {
         return accountId;
     }
@@ -36,5 +47,17 @@ public class AccountPermissionRequestDto {
     }
     public void setPermission(List<AccountAllPermission> permission) {
         this.permission = permission;
+    }
+    public AccountPermissionDetail getWithdraw() {
+        return withdraw;
+    }
+    public void setWithdraw(AccountPermissionDetail withdraw) {
+        this.withdraw = withdraw;
+    }
+    public AccountPermissionDetail getTrade() {
+        return trade;
+    }
+    public void setTrade(AccountPermissionDetail trade) {
+        this.trade = trade;
     }
 }

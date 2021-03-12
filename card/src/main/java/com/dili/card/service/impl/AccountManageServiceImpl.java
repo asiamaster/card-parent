@@ -1,6 +1,7 @@
 package com.dili.card.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.dto.*;
 import com.dili.card.dto.pay.AccountAllPermission;
@@ -17,7 +18,6 @@ import com.dili.card.service.IAccountManageService;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.*;
-import com.dili.customer.sdk.domain.Customer;
 import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.logger.sdk.util.LoggerUtil;
 import com.dili.ss.constant.ResultCode;
@@ -133,6 +133,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
 			permissionValue = requestDto.getPermission().stream().map(AccountAllPermission::getName).collect(Collectors.joining(","));
 		}
 		params.put("permission", permissionSets);
+		params.put("trade", JSONUtil.toJsonStr(requestDto.getTrade()));
+		params.put("withdraw", JSONUtil.toJsonStr(requestDto.getWithdraw()));
 		payRpcResolver.setPermission(params);
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		String content = String.format("%s 设置 客户[%s] 卡[%s]账户权限为 %s", userTicket.getRealName(), cardInfo.getCustomerName(), cardInfo.getCardNo(), permissionValue);
