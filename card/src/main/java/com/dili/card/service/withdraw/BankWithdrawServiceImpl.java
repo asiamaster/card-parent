@@ -1,8 +1,9 @@
 package com.dili.card.service.withdraw;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.CacheKey;
+import com.dili.card.common.constant.ReqParamExtra;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
@@ -72,20 +73,6 @@ public class BankWithdrawServiceImpl extends WithdrawServiceImpl {
         return fundRequestDto.getChannelAccount().getToBankType();
     }
 
-//    @Override
-//    protected List<FeeItemDto> createFees(FundRequestDto fundRequestDto) {
-//        if (fundRequestDto.getServiceCost() == 0L) {
-//            return null;
-//        }
-//        List<FeeItemDto> fees = new ArrayList<>();
-//        FeeItemDto feeItem = new FeeItemDto();
-//        feeItem.setAmount(fundRequestDto.getServiceCost());
-//        feeItem.setType(FeeType.SERVICE.getCode());
-//        feeItem.setTypeName(FeeType.SERVICE.getName());
-//        fees.add(feeItem);
-//        return fees;
-//    }
-
     @Override
     public SerialDto createAccountSerial(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
         if (fundRequestDto.getServiceCost() == 0L) {//特殊处理为0时记录
@@ -117,11 +104,14 @@ public class BankWithdrawServiceImpl extends WithdrawServiceImpl {
             return super.handleSerialAfterCommitWithdraw(fundRequestDto, businessRecord, withdrawResponse);
         }
         if (payState == BankWithdrawState.HANDING.getCode()) {
+            //处理中的情况没有streams，无法构建流水，所以把请求参数缓存起来，等回调的时候重新构建流水数据
             SerialDto serialDto = this.createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
+            String json = this.generateExtra(fundRequestDto, businessRecord);
+            serialDto.setAttach(json);
             serialService.handleProcessing(serialDto);
             //缓存处理中的圈提，用于后续回调
             redisUtil.set(CacheKey.BANK_WITHDRAW_PROCESSING_SERIAL_PREFIX + serialDto.getSerialNo(),
-                    JSON.toJSONString(serialDto), 30L, TimeUnit.DAYS);
+                    json, 30L, TimeUnit.DAYS);
         }
         if (payState == BankWithdrawState.FAILED.getCode()) {
             SerialDto serialDto = this.createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
@@ -133,5 +123,12 @@ public class BankWithdrawServiceImpl extends WithdrawServiceImpl {
     @Override
     public Integer support() {
         return TradeChannel.BANK.getCode();
+    }
+
+    private String generateExtra(FundRequestDto requestDto, BusinessRecordDo recordDo) {
+        JSONObject jObj = new JSONObject();
+        jObj.put(ReqParamExtra.FUND_REQUEST, requestDto);
+        jObj.put(ReqParamExtra.BUSINESS_RECORD, recordDo);
+        return jObj.toJSONString();
     }
 }

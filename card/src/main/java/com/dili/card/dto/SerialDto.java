@@ -23,6 +23,16 @@ public class SerialDto extends BaseDomain {
     private Long totalBalance;
     /** 流水列表 */
     private List<SerialRecordDo> serialRecordList;
+    /**额外记录*/
+    private String attach;
+
+    public String getAttach() {
+        return attach;
+    }
+
+    public void setAttach(String attach) {
+        this.attach = attach;
+    }
 
     public String getSerialNo() {
         return serialNo;

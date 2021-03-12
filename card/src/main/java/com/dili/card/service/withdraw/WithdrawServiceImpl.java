@@ -88,7 +88,6 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
         withdrawRequest.setFees(this.createFees(fundRequestDto));
         withdrawRequest.setChannelAccount(fundRequestDto.getChannelAccount());
         TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
-        LOGGER.info("返回的提现支付数据:{}", JSON.toJSONString(withdrawResponse));
         MessageBo<String> handleSerialAfterCommitWithdraw = this.handleSerialAfterCommitWithdraw(fundRequestDto, businessRecord, withdrawResponse);
 
         if ("200".equals(handleSerialAfterCommitWithdraw.getCode())) {
@@ -114,8 +113,6 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
     public MessageBo<String> handleSerialAfterCommitWithdraw(FundRequestDto fundRequestDto, BusinessRecordDo businessRecord, TradeResponseDto withdrawResponse) {
         //取款成功后修改业务单状态、存储流水
         SerialDto serialDto = this.createAccountSerial(fundRequestDto, businessRecord, withdrawResponse);
-        redisUtil.set(CacheKey.BANK_WITHDRAW_PROCESSING_SERIAL_PREFIX + serialDto.getSerialNo(),
-                JSON.toJSONString(serialDto), 30L, TimeUnit.DAYS);
         serialService.handleSuccess(serialDto);
         return MessageBo.success(businessRecord.getSerialNo());
     }
