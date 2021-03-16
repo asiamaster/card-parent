@@ -1,5 +1,8 @@
 package com.dili.card.controller;
 
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +19,17 @@ import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.OpenCardDto;
 import com.dili.card.dto.pay.PayGlobalConfigDto;
 import com.dili.card.rpc.resolver.PayRpcResolver;
+import com.dili.card.service.IBusinessLogService;
+import com.dili.card.type.OperateType;
 import com.dili.card.util.AssertUtils;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.exception.BusinessException;
+import com.dili.ss.util.MoneyUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
+
+import bsh.StringUtil;
 
 /**
  * <B>Description</B>
@@ -35,22 +43,20 @@ import com.dili.uap.sdk.session.SessionContext;
 @Controller
 @RequestMapping("/pay")
 public class PayGlobalConfigController {
-
+	
 	private static final Logger log = LoggerFactory.getLogger(PayGlobalConfigController.class);
 
 	@Autowired
-	private PayRpcResolver payRpcResolver;
-
-	/**
-	* 跳转网页
-	* @author miaoguoxin
-	* @date 2021/3/16
-	*/
+	private PayRpcResolver payRpcResolver; 
+	
 	@RequestMapping(value="/globalConfig.html", method = RequestMethod.GET)
     public String add(ModelMap modelMap,String marketId) {
     	UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		if (userTicket == null) {
 			throw new BusinessException(ResultCode.CSRF_ERROR,"登录已过期!");
+		}
+		if (StringUtils.isEmpty(marketId)) {
+			marketId = String.valueOf(userTicket.getFirmId());
 		}
 		modelMap.addAttribute("mchId", marketId);
 		String json = JSON.toJSONString(payRpcResolver.getPayGlobal(marketId),
@@ -58,26 +64,30 @@ public class PayGlobalConfigController {
 		modelMap.addAttribute("config", JSON.parseObject(json));
 		//TODO 根据市场获取配置信息
         return "pay/globalConfig";
-    }
-
+    } 
+	
 	/**
 	 * 获取账户限额设置
 	 */
 	@RequestMapping(value = "/globalConfig.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public BaseOutput<?> globalConfig(String mchId) {
-		log.info("获取账户限额设置*****{}", JSONObject.toJSONString(mchId));
+		log.info("获取账户限额设置*****{}", JSONObject.toJSONString(mchId));	
 		return BaseOutput.successData(payRpcResolver.getPayGlobal(mchId));
 	}
-
+	
 	/**
 	 * 获取账户限额设置
 	 */
 	@RequestMapping(value = "/setGlobalConfig.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public BaseOutput<?> setGlobalConfig(@RequestBody PayGlobalConfigDto payGlobalConfigDto) {
-		log.info("账户限额设置*****{}", JSONObject.toJSONString(payGlobalConfigDto));
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		if (userTicket == null) {
+			throw new BusinessException(ResultCode.CSRF_ERROR,"登录已过期!");
+		}
+		log.info("账户限额设置,操作id{}****{}",userTicket.getId(),JSONObject.toJSONString(payGlobalConfigDto));	
 		return BaseOutput.successData(payRpcResolver.setPayGlobal(payGlobalConfigDto));
 	}
-
+	
 }
