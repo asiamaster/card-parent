@@ -35,12 +35,17 @@ import com.dili.uap.sdk.session.SessionContext;
 @Controller
 @RequestMapping("/pay")
 public class PayGlobalConfigController {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(PayGlobalConfigController.class);
 
 	@Autowired
-	private PayRpcResolver payRpcResolver; 
-	
+	private PayRpcResolver payRpcResolver;
+
+	/**
+	* 跳转网页
+	* @author miaoguoxin
+	* @date 2021/3/16
+	*/
 	@RequestMapping(value="/globalConfig.html", method = RequestMethod.GET)
     public String add(ModelMap modelMap,String marketId) {
     	UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
@@ -53,26 +58,26 @@ public class PayGlobalConfigController {
 		modelMap.addAttribute("config", JSON.parseObject(json));
 		//TODO 根据市场获取配置信息
         return "pay/globalConfig";
-    } 
-	
+    }
+
 	/**
 	 * 获取账户限额设置
 	 */
 	@RequestMapping(value = "/globalConfig.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public BaseOutput<?> globalConfig(String mchId) {
-		log.info("获取账户限额设置*****{}", JSONObject.toJSONString(mchId));	
+		log.info("获取账户限额设置*****{}", JSONObject.toJSONString(mchId));
 		return BaseOutput.successData(payRpcResolver.getPayGlobal(mchId));
 	}
-	
+
 	/**
 	 * 获取账户限额设置
 	 */
 	@RequestMapping(value = "/setGlobalConfig.action", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public BaseOutput<?> setGlobalConfig(@RequestBody PayGlobalConfigDto payGlobalConfigDto) {
-		log.info("账户限额设置*****{}", JSONObject.toJSONString(payGlobalConfigDto));	
+		log.info("账户限额设置*****{}", JSONObject.toJSONString(payGlobalConfigDto));
 		return BaseOutput.successData(payRpcResolver.setPayGlobal(payGlobalConfigDto));
 	}
-	
+
 }

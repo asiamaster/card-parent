@@ -83,8 +83,15 @@
 		if (!$.validate.form(formId)) {
 			return false;
 		}
-		let url = "${contextPath}/bankCounter/addWithdraw.action";
-		let data = $.common.formToJSON(formId);
-		$.operate.post(url, data);
+		let amount = $("#amount").val();
+		let serialNo = $("#serialNo").val();
+		$.modal.confirm("存款金额"+amount+"，银行流水号"+serialNo+"？",function(sure) {
+			if (!sure) {
+				return;
+			}
+			let url = "${contextPath}/bankCounter/addWithdraw.action";
+			let data = $.common.formToJSON(formId);
+			$.operate.post(url, data);
+		});
 	}
 </script>
