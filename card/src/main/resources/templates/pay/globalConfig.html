@@ -90,7 +90,7 @@ function saveOrUpdateHandler(){
 	dataInfo.deposit = dataInfo3;
 	dataInfo.withdraw = dataInfo1;
 	dataInfo.trade = dataInfo2;
-	dataInfo.mchId = 9;
+	dataInfo.mchId = ${mchId!};
     bui.loading.show('努力提交中，请稍候。。。');
     // let _formData = new FormData($('#saveForm')[0]);
     $.ajax({
