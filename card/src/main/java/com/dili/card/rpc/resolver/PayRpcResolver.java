@@ -7,6 +7,7 @@ import com.dili.ss.domain.BaseOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -101,6 +102,22 @@ public class PayRpcResolver {
      */
     public void setPermission(Map<String,Object> params) {
         GenericRpcResolver.resolver(payRpc.setPermission(params), ServiceName.PAY);
+    }
+    
+    /**
+     *  获取账户限额设置
+     */
+    public PayGlobalConfigDto getPayGlobal(String mchId) {
+    	Map<String, Object> params = new HashMap<String, Object>();
+    	params.put("mchId", mchId);
+        return GenericRpcResolver.resolver(payRpc.getPayGlobal(params), ServiceName.PAY);
+    }
+    
+    /**
+     *  账户限额设置
+     */
+    public PayGlobalConfigDto setPayGlobal(PayGlobalConfigDto payGlobalConfigDto) {
+        return GenericRpcResolver.resolver(payRpc.setPayGlobal(payGlobalConfigDto), ServiceName.PAY);
     }
 }
 
