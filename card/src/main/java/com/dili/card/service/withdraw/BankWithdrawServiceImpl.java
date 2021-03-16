@@ -125,6 +125,10 @@ public class BankWithdrawServiceImpl extends WithdrawServiceImpl {
         return TradeChannel.BANK.getCode();
     }
 
+    /**
+    * @author miaoguoxin
+    * @date 2021/3/16
+    */
     private String generateExtra(FundRequestDto requestDto, BusinessRecordDo recordDo) {
         JSONObject jObj = new JSONObject();
         jObj.put(ReqParamExtra.FUND_REQUEST, requestDto);
