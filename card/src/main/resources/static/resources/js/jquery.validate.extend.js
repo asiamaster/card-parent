@@ -25,7 +25,7 @@ $(document).ready(function () {
 
     //校验用户名
     jQuery.validator.addMethod("isUserName", function (value, element) {
-        var userName = /^[a-zA-Z0-9]{2,13}$/;
+        var userName = /^[a-zA-Z0-9]{1,999}$/;
         return this.optional(element) || (userName).test(value);
     }, '请输入数字或者字母,不包含特殊字符');
 
