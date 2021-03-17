@@ -133,8 +133,8 @@ public class AccountManageServiceImpl implements IAccountManageService {
 			permissionValue = requestDto.getPermission().stream().map(AccountAllPermission::getName).collect(Collectors.joining(","));
 		}
 		params.put("permission", permissionSets);
-		params.put("trade", JSONUtil.toJsonStr(requestDto.getTrade()));
-		params.put("withdraw", JSONUtil.toJsonStr(requestDto.getWithdraw()));
+		params.put("trade", requestDto.getTrade());
+		params.put("withdraw", requestDto.getWithdraw());
 		payRpcResolver.setPermission(params);
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		String content = String.format("%s 设置 客户[%s] 卡[%s]账户权限为 %s", userTicket.getRealName(), cardInfo.getCustomerName(), cardInfo.getCardNo(), permissionValue);
