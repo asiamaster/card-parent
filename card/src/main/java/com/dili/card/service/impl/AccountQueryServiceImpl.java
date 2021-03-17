@@ -374,8 +374,8 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         jsonObject.put("customerName", cardInfo.getCustomerName());
         jsonObject.put("customerCertificateNumber", cardInfo.getCustomerCertificateNumber());
         jsonObject.put("permission", allPermissionObject);
-        jsonObject.put("withdraw", JSONUtil.toJsonStr(responseDto.getWithdraw()));
-        jsonObject.put("trade", JSONUtil.toJsonStr(responseDto.getTrade()));
+        jsonObject.put("withdraw", responseDto.getWithdraw());
+        jsonObject.put("trade", responseDto.getTrade());
         return BaseOutput.successData(jsonObject);
     }
 
