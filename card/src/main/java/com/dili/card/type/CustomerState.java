@@ -4,17 +4,17 @@ package com.dili.card.type;
 /**
  * @description： 客户类型 <br>
  * （与客户系统保持一致，在客户系统中可通过字典表进行配置）
- * 
+ *
  * @author ：WangBo
  * @time ：2020年6月23日下午3:32:47
  */
 public enum CustomerState {
-	/**注销 */
 	CANCEL(0, "注销"),
-	/**有效 */
 	VALID(1, "有效"),
-	/**禁用 */
-	DISABLED(2, "禁用");
+	DISABLED(2, "禁用"),
+	USELESS(3, "未生效"),
+	;
+
 
 	private Integer code;
 	private String name;
@@ -32,7 +32,7 @@ public enum CustomerState {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @return the code
 	 */
