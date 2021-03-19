@@ -158,7 +158,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 				customerRpc.get(openCardInfo.getCustomerId(), openCardInfo.getFirmId()), ServiceName.CUSTOMER);
 		if (!customer.getCustomerMarket().getState().equals(CustomerState.VALID.getCode())) {
 			throw new CardAppBizException(ResultCode.PARAMS_ERROR,
-					"客户已" + CustomerState.getStateName(customer.getCustomerMarket().getState()));
+					"客户" + CustomerState.getStateName(customer.getCustomerMarket().getState()));
 		}
 		openCardInfo.setCustomerCharacterType(customerService.convertCharacterTypes(customer.getCharacterTypeList(), customer.getId()));
 		openCardInfo.setCustomerSubTypes(String.join(",", customerService.getSubTypes(customer.getCharacterTypeList())));
@@ -369,7 +369,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 			// 判断客户是否已禁用或注销
 			if (!customer.getCustomerMarket().getState().equals(CustomerState.VALID.getCode())) {
 				throw new CardAppBizException(ResultCode.PARAMS_ERROR,
-						"客户已" + CustomerState.getStateName(customer.getCustomerMarket().getState()));
+						"客户" + CustomerState.getStateName(customer.getCustomerMarket().getState()));
 			}
 			BeanUtils.copyProperties(customer, response);
 			response.setCustomerContactsPhone(customer.getContactsPhone());

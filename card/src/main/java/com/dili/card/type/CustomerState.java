@@ -11,7 +11,7 @@ package com.dili.card.type;
 public enum CustomerState {
 	CANCEL(0, "注销"),
 	VALID(1, "有效"),
-	DISABLED(2, "禁用"),
+	DISABLED(2, "已禁用"),
 	USELESS(3, "未生效"),
 	;
 
