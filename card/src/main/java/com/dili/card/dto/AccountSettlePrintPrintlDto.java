@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * @description：对帐打印数据
- * 
+ *
  * @author ：WangBo
  * @time ：2021年1月27日下午4:49:26
  */
@@ -46,8 +46,9 @@ public class AccountSettlePrintPrintlDto {
 	private String auditorName;
 	/** 打印人 */
 	private String printUserName;
-	/** 交款单位 */
 	private String firmName;
+	/**市场简称*/
+	private String firmSimpleName;
 
 	private Integer receiveTimes = 0;
 	/** 领款金额-分 */
@@ -84,6 +85,14 @@ public class AccountSettlePrintPrintlDto {
 	/** 网银提现金额-分 */
 	private Long bankOutAmount = 0L;
 	private String bankOutAmountText;
+
+	public String getFirmSimpleName() {
+		return firmSimpleName;
+	}
+
+	public void setFirmSimpleName(String firmSimpleName) {
+		this.firmSimpleName = firmSimpleName;
+	}
 
 	public Long getCycleNo() {
 		return cycleNo;

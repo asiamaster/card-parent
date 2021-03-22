@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * @description：结帐打印
- * 
+ *
  * @author ：WangBo
  * @time ：2021年1月27日下午4:49:26
  */
@@ -41,8 +41,17 @@ public class AccountCyclePrintlDto {
 	private String userName;
 	/** 打印人 */
 	private String printUserName;
-	/** 交款单位 */
 	private String firmName;
+	/**市场简称*/
+	private String firmSimpleName;
+
+	public String getFirmSimpleName() {
+		return firmSimpleName;
+	}
+
+	public void setFirmSimpleName(String firmSimpleName) {
+		this.firmSimpleName = firmSimpleName;
+	}
 
 	public Long getCycleNo() {
 		return cycleNo;
