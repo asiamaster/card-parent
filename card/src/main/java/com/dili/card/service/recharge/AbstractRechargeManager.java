@@ -1,10 +1,6 @@
 package com.dili.card.service.recharge;
 
-import org.apache.commons.lang3.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import cn.hutool.core.thread.ThreadUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.ReqParamExtra;
 import com.dili.card.dto.FundRequestDto;
@@ -24,8 +20,10 @@ import com.dili.card.type.OperateType;
 import com.dili.card.type.PaySubject;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
-import com.diligrp.message.sdk.domain.input.MessageInfoInput;
-import com.diligrp.message.sdk.rpc.SmsMessageRpc;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @Auther: miaoguoxin
@@ -42,7 +40,6 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
     private IAccountQueryService accountQueryService;
     @Autowired
     private SmsMessageRpcResolver smsMessageRpcResolver;
-    
 
 
     /**
@@ -69,7 +66,7 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
                 record.setAttach(requestDto.getExtra().toJSONString());
             }
         });
-        
+
         long l = System.currentTimeMillis();
         CreateTradeRequestDto tradeRequest = CreateTradeRequestDto.createTrade(
                 this.getTradeType(requestDto).getCode(),
@@ -104,11 +101,13 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         this.afterRecharge(requestDto, businessRecord);
         //记录远程日志数据
         this.doRecordCompleteLog(requestDto, businessRecord, tradeResponseDto);
-        
-     // 发送短信通知
-        String phone = userAccount.getCustomerContactsPhone();
-        String cardNo = userAccount.getCardNo();
-        smsMessageRpcResolver.rechargeNotice(phone, cardNo, tradeResponseDto);
+
+        // 发送短信通知
+        ThreadUtil.execute(() -> {
+            String phone = userAccount.getCustomerContactsPhone();
+            String cardNo = userAccount.getCardNo();
+            smsMessageRpcResolver.rechargeNotice(phone, cardNo, requestDto.getFirmCode(), tradeResponseDto);
+        });
         return businessRecord.getSerialNo();
     }
 

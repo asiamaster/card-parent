@@ -28,6 +28,7 @@ public class BaseDto implements Serializable {
     private Long firmId;
     /**市场名称*/
     private String firmName;
+    private String firmCode;
     /**页码*/
     @NotNull(message = "页码不能为空", groups = ConstantValidator.Page.class)
     @Min(value = 1, message = "页码最小为1", groups = ConstantValidator.Page.class)
@@ -54,6 +55,14 @@ public class BaseDto implements Serializable {
             this.setOrder(defColumn);
         }
         return this;
+    }
+
+    public String getFirmCode() {
+        return firmCode;
+    }
+
+    public void setFirmCode(String firmCode) {
+        this.firmCode = firmCode;
     }
 
     public Long getOpId() {

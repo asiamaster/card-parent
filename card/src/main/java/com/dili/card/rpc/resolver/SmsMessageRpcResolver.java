@@ -12,7 +12,6 @@ import com.diligrp.message.sdk.rpc.SmsMessageRpc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -37,8 +36,7 @@ public class SmsMessageRpcResolver {
     /**
      * 存款发送短信
      */
-    @Async
-    public void rechargeNotice(String cellphone, String cardNo, TradeResponseDto tradeDto) {
+    public void rechargeNotice(String cellphone, String cardNo, String firmCode, TradeResponseDto tradeDto) {
         Object resolver = null;
         MessageInfoInput message = new MessageInfoInput();
         try {
@@ -59,6 +57,7 @@ public class SmsMessageRpcResolver {
             message.setSceneCode("rechargeNotice"); // 应用场景
             message.setParameters(jsonObj.toJSONString());
             message.setSystemCode("card");
+            message.setBusinessMarketCode(firmCode);
 //        	message.setTemplateCode(templateCode); // 短信模板ID
             resolver = GenericRpcResolver.resolver(smsMessageRpc.receiveMessage(message), ServiceName.MESSAGE);
             log.info("短信发送成功************{}", cellphone);
@@ -74,7 +73,7 @@ public class SmsMessageRpcResolver {
     /**
      * 取款发送短信
      */
-    public void withdrawNotice(String cellphone, String cardNo, TradeResponseDto tradeDto) {
+    public void withdrawNotice(String cellphone, String cardNo, String firmCode, TradeResponseDto tradeDto) {
         Object resolver = null;
         MessageInfoInput message = new MessageInfoInput();
         try {
@@ -95,6 +94,7 @@ public class SmsMessageRpcResolver {
             message.setSceneCode("withdrawNotice"); // 应用场景
             message.setParameters(jsonObj.toJSONString());
             message.setSystemCode("card");
+            message.setBusinessMarketCode(firmCode);
 //        	message.setTemplateCode(templateCode); // 短信模板ID
             resolver = GenericRpcResolver.resolver(smsMessageRpc.receiveMessage(message), ServiceName.MESSAGE);
         } catch (CardAppBizException e) {

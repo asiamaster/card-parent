@@ -2,8 +2,6 @@ package com.dili.card.service.withdraw;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
-import com.dili.card.common.constant.CacheKey;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.SerialDto;
@@ -38,7 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 提现操作基础实现类
@@ -98,7 +95,7 @@ public abstract class WithdrawServiceImpl implements IWithdrawService {
                 DictValue dictValue = DictValue.WITHDRAW_SMS_ALLOW_SEND;
                 String val = miscService.getSingleDictVal(dictValue.getCode(), fundRequestDto.getFirmId(), dictValue.getDefaultVal());
                 if ("1".equals(val)) {
-                    smsMessageRpcResolver.withdrawNotice(phone, cardNo, withdrawResponse);
+                    smsMessageRpcResolver.withdrawNotice(phone, cardNo, fundRequestDto.getFirmCode(), withdrawResponse);
                 }
             });
         }

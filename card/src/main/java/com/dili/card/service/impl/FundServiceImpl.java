@@ -56,6 +56,8 @@ import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.feign.support.UapSessionThreadUtils;
 import com.dili.ss.domain.PageOutput;
 import com.dili.ss.redis.service.RedisUtil;
+import com.dili.uap.sdk.domain.Firm;
+import com.dili.uap.sdk.rpc.FirmRpc;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -104,6 +106,8 @@ public class FundServiceImpl implements IFundService {
     private SmsMessageRpcResolver smsMessageRpcResolver;
     @Autowired
     private BankWithdrawServiceImpl bankWithdrawService;
+    @Autowired
+    private FirmRpc firmRpc;
 
     @Override
     @GlobalTransactional(rollbackFor = Exception.class)
@@ -300,9 +304,6 @@ public class FundServiceImpl implements IFundService {
 
     /**
      * 保存本地操作记录
-     * @param cardRequestDto
-     * @param accountCard
-     * @param cycleNo
      * @return
      */
     private BusinessRecordDo createBusinessRecord(UserAccountCardResponseDto accountInfo,
@@ -364,7 +365,8 @@ public class FundServiceImpl implements IFundService {
             DictValue dictValue = DictValue.WITHDRAW_SMS_ALLOW_SEND;
             String val = miscService.getSingleDictVal(dictValue.getCode(), firmId, dictValue.getDefaultVal());
             if ("1".equals(val)) {
-                smsMessageRpcResolver.withdrawNotice(phone, cardNo, tradeResponseDto);
+                Firm firm = GenericRpcResolver.resolver(firmRpc.getById(firmId), ServiceName.UAP);
+                smsMessageRpcResolver.withdrawNotice(phone, cardNo, firm.getCode(), tradeResponseDto);
             }
         });
         //发送短信
