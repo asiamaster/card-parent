@@ -10,6 +10,9 @@
 				<label class="col-2 text-right">提款账户</label>
 				<select id="firmAccount" name="firmAccount" class="form-control row-cols-8"  @change='getFirmAccountInfo'></select>
 				<#bcomboProvider _id="firmAccount" _provider="firmProvider" />
+				<div class="input-group-append">
+					<button v-show="firmInfo.merInfo.profitAccount != 0" class="btn btn-primary" type="button" onclick="openUpdatePwdModal()">修改密码</button>
+				</div>
 			</div>
 			<br/>
 			<div class="row row-cols-6">
@@ -149,6 +152,53 @@
 	<div>
 	订单号:{{serialNo}}
 	</div>
+</script>
+
+<!--修改密码弹出框-->
+<script id="updatePwdModal" type="text/html">
+	<form id="update-pwd-form">
+		<div class="row row-cols-1"  style="text-align: center">
+			<div class="input-group mb-3">
+				<label class="col-md-3 col-form-label">原密码</label>
+				<% if(isNotEmpty(allowInput) && allowInput == "1") {%>
+				<input type="password" id="oldPassword" name="oldPassword" class="form-control col-md-6" maxlength="6"/>
+				<% } else { %>
+				<input type="password" id="oldPassword" name="oldPassword" class="form-control col-md-6" maxlength="6" readonly/>
+				<% } %>
+				<div class="input-group-append">
+					<button type="button" onclick="readPwd('u_oldPassword')" class="btn btn-primary">
+						输入密码
+					</button>
+				</div>
+			</div>
+			<div class="input-group mb-3">
+				<label class="col-md-3 col-form-label">新密码</label>
+				<% if(isNotEmpty(allowInput) && allowInput == "1") {%>
+				<input type="password" id="newPassword" name="newPassword" class="form-control col-md-6" maxlength="6"/>
+				<% } else { %>
+				<input type="password" id="newPassword" name="newPassword" class="form-control col-md-6" maxlength="6" readonly/>
+				<% } %>
+				<div class="input-group-append">
+					<button type="button" onclick="readPwd('u_newPassword')" class="btn btn-primary">
+						输入密码
+					</button>
+				</div>
+			</div>
+			<div class="input-group mb-3">
+				<label class="col-md-3 col-form-label">确认密码</label>
+				<% if(isNotEmpty(allowInput) && allowInput == "1") {%>
+				<input type="password" id="secondConfirmPwd" name="secondConfirmPwd" class="form-control col-md-6" maxlength="6"/>
+				<% } else { %>
+				<input type="password" id="secondConfirmPwd" name="secondConfirmPwd" class="form-control col-md-6" maxlength="6" readonly/>
+				<% } %>
+				<div class="input-group-append">
+					<button type="button" onclick="readPwd('u_confirmPwd')" class="btn btn-primary">
+						输入密码
+					</button>
+				</div>
+			</div>
+		</div>
+	</form>
 </script>
 <script>
 
@@ -357,10 +407,6 @@
 
 	});
 
-	function testWithdraw(message,serialNo){
-
-
-	}
 	// 供绑定银行卡保存成功后刷新[选择银行卡]下拉列表
 	window.config={};
 	window.config["vue"]=vue;

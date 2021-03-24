@@ -1,20 +1,11 @@
 package com.dili.card.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import com.dili.card.common.constant.Constant;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dao.IBindBankCardDao;
 import com.dili.card.dto.BindBankCardDto;
@@ -23,6 +14,7 @@ import com.dili.card.dto.FirmWithdrawInitResponseDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.PipelineRecordQueryDto;
 import com.dili.card.dto.SerialDto;
+import com.dili.card.dto.UpdateFirmAccountPwdRequestDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.BalanceResponseDto;
 import com.dili.card.dto.pay.CreateTradeRequestDto;
@@ -62,12 +54,18 @@ import com.dili.card.util.CurrencyUtils;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.Firm;
 import com.dili.uap.sdk.rpc.FirmRpc;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.NumberUtil;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Auther: miaoguoxin
@@ -77,7 +75,7 @@ import cn.hutool.core.util.NumberUtil;
 @Service
 public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
 
-	private static final Logger log = LoggerFactory.getLogger(FirmWithdrawServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(FirmWithdrawServiceImpl.class);
 
 
     @Autowired
@@ -95,7 +93,7 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
     @Autowired
     private ISerialService serialService;
     @Autowired
-	private IBindBankCardDao bankCardDao;
+    private IBindBankCardDao bankCardDao;
     @Autowired
     private IBindBankCardService bankCardService;
 
@@ -119,16 +117,16 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
 
 
     @Override
-	public List<Firm> getFirmList(Long firmId) {
-    	// 查询市场信息
+    public List<Firm> getFirmList(Long firmId) {
+        // 查询市场信息
         Firm firm = GenericRpcResolver.resolver(firmRpc.getById(firmId),
                 ServiceName.UAP);
-        if(firm == null) {
-        	return new ArrayList<Firm>();
+        if (firm == null) {
+            return new ArrayList<Firm>();
         }
         List<Firm> firmList = GenericRpcResolver.resolver(firmRpc.getAllChildrenByParentId(firmId), ServiceName.UAP);
-		return firmList;
-	}
+        return firmList;
+    }
 
 
     @Override
@@ -156,7 +154,7 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
                 String.valueOf(businessRecord.getCycleNo()));
         createTradeRequest.setDescription(PaySubject.WITHDRAW.getName());
         //创建交易
-        log.info("市场圈提调用支付参数：{}",JSONObject.toJSONString(createTradeRequest));
+        log.info("市场圈提调用支付参数：{}", JSONObject.toJSONString(createTradeRequest));
         String tradeNo = payService.createTrade(createTradeRequest);
         businessRecord.setTradeNo(tradeNo);
         //保存业务办理记录
@@ -169,7 +167,7 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
                 tradeNo, requestDto.getChannelAccount().getToBankType(), requestDto.getTradePwd());
         withdrawRequest.setChannelAccount(requestDto.getChannelAccount());
         withdrawRequest.getChannelAccount().setToName(bankCardDo.getName());
-        log.info("市场圈提调用支付参数：{}",JSONObject.toJSONString(createTradeRequest));
+        log.info("市场圈提调用支付参数：{}", JSONObject.toJSONString(createTradeRequest));
         TradeResponseDto withdrawResponse = payService.commitWithdraw(withdrawRequest);
 
         int payState = NumberUtils.toInt(withdrawResponse.getState() + "", BankWithdrawState.SUCCESS.getCode());
@@ -185,42 +183,42 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
     }
 
     @Override
-	public boolean addBind(BindBankCardDto newDataDto) {
-		// 校验是否重复
-		existsBankNo(newDataDto.getBankNo(), newDataDto.getFundAccountId(), newDataDto.getFirmId());
+    public boolean addBind(BindBankCardDto newDataDto) {
+        // 校验是否重复
+        existsBankNo(newDataDto.getBankNo(), newDataDto.getFundAccountId(), newDataDto.getFirmId());
 
-		// 保存数据
-		BindBankCardDo newData = new BindBankCardDo();
-		BeanUtils.copyProperties(newDataDto, newData);
-		newData.setStatus(BindBankStatus.NORMAL.getCode());
-		newData.setCreateTime(LocalDateTime.now());
-		newData.setOperatorId(newDataDto.getOpId());
-		newData.setOperatorName(newDataDto.getOpName());
+        // 保存数据
+        BindBankCardDo newData = new BindBankCardDo();
+        BeanUtils.copyProperties(newDataDto, newData);
+        newData.setStatus(BindBankStatus.NORMAL.getCode());
+        newData.setCreateTime(LocalDateTime.now());
+        newData.setOperatorId(newDataDto.getOpId());
+        newData.setOperatorName(newDataDto.getOpName());
 
-		newData.setAccountId(0L);  // 市场没有园区账号但有支付账号
-		bankCardDao.save(newData);
-		return true;
-	}
+        newData.setAccountId(0L);  // 市场没有园区账号但有支付账号
+        bankCardDao.save(newData);
+        return true;
+    }
 
-	/**
-	 * 对公校验是否重复
-	 * @param bankNo
-	 * @param fundAccountId
-	 * @param firmId
-	 * @return
-	 */
-	private boolean existsBankNo(String bankNo, Long fundAccountId, Long firmId) {
-		// 校验是否重复
-		BindBankCardDto queryParam =new BindBankCardDto();
-		queryParam.setFundAccountId(fundAccountId);
-		queryParam.setBankNo(bankNo);
-		queryParam.setFirmId(firmId);
-		List<BindBankCardDto> list = bankCardDao.selectList(queryParam);
-		if (list != null && list.size() >= 1) {
-			throw new CardAppBizException("该市场已绑定了相同的卡号");
-		}
-		return true;
-	}
+    /**
+     * 对公校验是否重复
+     * @param bankNo
+     * @param fundAccountId
+     * @param firmId
+     * @return
+     */
+    private boolean existsBankNo(String bankNo, Long fundAccountId, Long firmId) {
+        // 校验是否重复
+        BindBankCardDto queryParam = new BindBankCardDto();
+        queryParam.setFundAccountId(fundAccountId);
+        queryParam.setBankNo(bankNo);
+        queryParam.setFirmId(firmId);
+        List<BindBankCardDto> list = bankCardDao.selectList(queryParam);
+        if (list != null && list.size() >= 1) {
+            throw new CardAppBizException("该市场已绑定了相同的卡号");
+        }
+        return true;
+    }
 
     @Override
     public PageOutput<List<PipelineRecordResponseDto>> bankWithdrawPage(PipelineRecordQueryDto param) {
@@ -242,7 +240,6 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
         }
         return result;
     }
-
 
 
     private MerAccountResponseDto getMerInfo(Long firmId) {
@@ -323,21 +320,34 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
     }
 
 
-	@Override
-	public boolean unBind(BindBankCardDto bankCardDto) {
-		// 校验支付 密码
-		FirmWithdrawAuthRequestDto requestDto = new FirmWithdrawAuthRequestDto();
-		requestDto.setAccountId(bankCardDto.getFundAccountId());
-		requestDto.setPassword(bankCardDto.getLoginPwd());
-		checkAuth(requestDto);
+    @Override
+    public boolean unBind(BindBankCardDto bankCardDto) {
+        // 校验支付 密码
+        FirmWithdrawAuthRequestDto requestDto = new FirmWithdrawAuthRequestDto();
+        requestDto.setAccountId(bankCardDto.getFundAccountId());
+        requestDto.setPassword(bankCardDto.getLoginPwd());
+        checkAuth(requestDto);
 
-		// 解绑数据
-		BindBankCardDo unBind = new BindBankCardDo();
-		unBind.setId(bankCardDto.getId());
-		unBind.setStatus(BindBankStatus.INVALID.getCode());
-		unBind.setModifyTime(LocalDateTime.now());
-		bankCardDao.update(unBind);
-		return true;
-	}
+        // 解绑数据
+        BindBankCardDo unBind = new BindBankCardDo();
+        unBind.setId(bankCardDto.getId());
+        unBind.setStatus(BindBankStatus.INVALID.getCode());
+        unBind.setModifyTime(LocalDateTime.now());
+        bankCardDao.update(unBind);
+        return true;
+    }
+
+    @Override
+    public void updateFirmAccountPwd(UpdateFirmAccountPwdRequestDto requestDto) {
+        FirmWithdrawAuthRequestDto authRequestDto = new FirmWithdrawAuthRequestDto();
+        authRequestDto.setAccountId(requestDto.getFundAccountId());
+        authRequestDto.setPassword(requestDto.getOldPassword());
+        GenericRpcResolver.resolver(payRpc.checkTradePwd(authRequestDto), ServiceName.PAY);
+
+        CreateTradeRequestDto uPwdRequestDto = new CreateTradeRequestDto();
+        uPwdRequestDto.setAccountId(requestDto.getFundAccountId());
+        uPwdRequestDto.setPassword(requestDto.getNewPassword());
+        GenericRpcResolver.resolver(payRpc.resetPwd(uPwdRequestDto), ServiceName.PAY);
+    }
 
 }

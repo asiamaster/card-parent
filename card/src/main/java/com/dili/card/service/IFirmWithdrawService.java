@@ -5,6 +5,7 @@ import com.dili.card.dto.FirmWithdrawAuthRequestDto;
 import com.dili.card.dto.FirmWithdrawInitResponseDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.PipelineRecordQueryDto;
+import com.dili.card.dto.UpdateFirmAccountPwdRequestDto;
 import com.dili.card.dto.pay.PipelineRecordResponseDto;
 import com.dili.card.entity.bo.MessageBo;
 import com.dili.ss.domain.PageOutput;
@@ -25,13 +26,13 @@ public interface IFirmWithdrawService {
     * @date 2021/1/22
     */
     FirmWithdrawInitResponseDto init(Long firmId);
-    
+
     /**
      * 获取市场列表,如果当前市场有子商户，则返回所有子商户列表
      * @return
      */
     List<Firm> getFirmList(Long firmId);
-    
+
 
     /**
      * 市场圈提
@@ -60,11 +61,18 @@ public interface IFirmWithdrawService {
 	 * @return
 	 */
 	boolean addBind(BindBankCardDto newDataDto);
-	
+
 	/**
 	 * 市场解绑银行卡
 	 * @param bankCardDto
 	 * @return
 	 */
 	boolean unBind(BindBankCardDto bankCardDto);
+
+	/**
+	* 修改市场账户密码
+	* @author miaoguoxin
+	* @date 2021/3/24
+	*/
+	void updateFirmAccountPwd(UpdateFirmAccountPwdRequestDto requestDto);
 }

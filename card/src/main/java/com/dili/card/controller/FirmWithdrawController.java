@@ -9,6 +9,7 @@ import com.dili.card.dto.FirmWithdrawAuthRequestDto;
 import com.dili.card.dto.FirmWithdrawInitResponseDto;
 import com.dili.card.dto.FundRequestDto;
 import com.dili.card.dto.PipelineRecordQueryDto;
+import com.dili.card.dto.UpdateFirmAccountPwdRequestDto;
 import com.dili.card.dto.pay.PipelineRecordResponseDto;
 import com.dili.card.entity.bo.MessageBo;
 import com.dili.card.service.IBusinessLogService;
@@ -152,6 +153,22 @@ public class FirmWithdrawController implements IControllerHandler {
         firmWithdrawService.unBind(bankCardDto);
         return BaseOutput.success();
     }
+
+    /**
+     * 修改市场账户密码密码
+     */
+    @PostMapping("/updateFirmAccountPwd.action")
+    @ResponseBody
+    public BaseOutput<?> updateFirmAccountPassword(@RequestBody UpdateFirmAccountPwdRequestDto requestDto) {
+        // 设置操作人信息
+        UserTicket user = getUserTicket();
+        // 操作日志
+//        businessLogService.saveLog(OperateType.BANKCARD_REMOVE, user, "客户姓名:" + bankCardDto.getCustomerName(),
+//                "客户ID:" + bankCardDto.getCustomerCode(), "卡号:" + bankCardDto.getCardNo());
+        firmWithdrawService.updateFirmAccountPwd(requestDto);
+        return BaseOutput.success();
+    }
+
 
     /**
      * 市场圈提历史记录

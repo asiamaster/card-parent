@@ -9,7 +9,6 @@ import com.dili.card.dto.UnfreezeFundDto;
 import com.dili.card.dto.pay.*;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
-import com.fasterxml.jackson.databind.deser.Deserializers.Base;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -187,13 +186,13 @@ public interface PayRpc {
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.permission.service:password", method = RequestMethod.POST)
     BaseOutput<?> checkTradePwd(FirmWithdrawAuthRequestDto params);
-    
+
     /**
      * 获取账户限额设置
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.sentinel.service:loadGlobal", method = RequestMethod.POST)
     BaseOutput<PayGlobalConfigDto> getPayGlobal(Map<String, Object> params);
-    
+
     /**
      * 账户限额设置
      */
