@@ -360,6 +360,7 @@ public class AccountCycleServiceImpl implements IAccountCycleService {
 			accountCyclePageListDto
 					.setLastDeliverAmount(accountCycleDto.getAccountCycleDetailDto().getLastDeliverAmount());
 			accountCyclePageListDto.setSettleTime(accountCycleDto.getSettleTime());
+			accountCyclePageListDto.setAuditorName(accountCycleDto.getAuditorName());
 			accountCyclePageListDtos.add(accountCyclePageListDto);
 		}
 		return accountCyclePageListDtos;

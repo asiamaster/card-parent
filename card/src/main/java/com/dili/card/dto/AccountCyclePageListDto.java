@@ -76,6 +76,16 @@ public class AccountCyclePageListDto extends BaseDto implements Serializable {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime settleTime;
+	/**对账员*/
+	private String auditorName;
+
+	public String getAuditorName() {
+		return auditorName;
+	}
+
+	public void setAuditorName(String auditorName) {
+		this.auditorName = auditorName;
+	}
 
 	public LocalDateTime getSettleTime() {
 		return settleTime;
