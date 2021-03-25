@@ -61,12 +61,15 @@
     * @date 2021/3/24
     */
     function openUpdatePwdModal(){
-        let template1 = template('updatePwdModal');
+        let data = {
+            merInfoName : $("#merInfoName").val(),
+            fundAccountId:$("#fundAccountId").val()
+        }
         let dia = bs4pop.dialog({
             title: '修改密码',// 对话框title
-            content: bui.util.HTMLDecode(template('updatePwdModal',{})),
+            content: bui.util.HTMLDecode(template('updatePwdModal',data)),
             width: '500px',// 宽度
-            height: '350px',// 高度
+            height: '450px',// 高度
             btns: [{
                 label: '确定', className: 'btn-primary', onClick(e) {
                     if (!$.validate.form('update-pwd-form')) {

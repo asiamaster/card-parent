@@ -159,6 +159,14 @@
 	<form id="update-pwd-form">
 		<div class="row row-cols-1"  style="text-align: center">
 			<div class="input-group mb-3">
+				<label class="col-3 text-right">账户</label>
+				<input type="text" class="form-control col-6" value="{{fundAccountId}}" readonly>
+			</div>
+			<div class="input-group mb-3">
+				<label class="col-3 text-right">市场名称</label>
+				<input type="text" class="form-control col-6" value="{{merInfoName}}" readonly>
+			</div>
+			<div class="input-group mb-3">
 				<label class="col-md-3 col-form-label">原密码</label>
 				<% if(isNotEmpty(allowInput) && allowInput == "1") {%>
 				<input type="password" id="oldPassword" name="oldPassword" class="form-control col-md-6" maxlength="6"/>
