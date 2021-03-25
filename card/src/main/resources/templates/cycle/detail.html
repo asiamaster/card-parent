@@ -558,7 +558,7 @@
     	    success: function(result) {
     	    	var jsonData = JSON.stringify(result.data);
     	    	if(result.code=="200"){
-    	    		callbackObj.printDirect(jsonData,"cycleDocument");
+					printPreview(jsonData, "", "cycleDocument", 0);
     	    	}else{
     	    		$.modal.alertError(result.message);
     	    	}
@@ -595,12 +595,12 @@
 		    	$.modal.alertError(result.message);
 		    },
 		    success: function(result) {
-		    	var jsonData = JSON.stringify(result.data);
-		    	if(result.code=="200"){
-		    		callbackObj.printDirect(jsonData,"settleDocument");
-		    	}else{
-		    		$.modal.alertError(result.message);
-		    	}
+				var jsonData = JSON.stringify(result.data);
+				if (result.code == "200") {
+					printPreview(jsonData, "", "settleDocument", 0);
+				} else {
+					$.modal.alertError(result.message);
+				}
 		    }
 		});
 	}
