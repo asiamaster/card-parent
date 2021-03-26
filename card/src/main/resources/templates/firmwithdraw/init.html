@@ -393,18 +393,18 @@
 						},
 						success: function (ret) {
 							$.modal.closeLoading();
-							if (ret.success){
+							if (ret.success) {
 								let templateData = {
 									message: "提现成功！",
 									serialNo: ret.data
 								};
 								bs4pop.alert(bui.util.HTMLDecode(template('postWithdraw', templateData)), {type: 'success'});
 								that.resetFormInput();
-								that.getFirmAccountInfo();
-								$.table.refresh();
-							}else {
+							} else {
 								bs4pop.alert(ret.message, {type: 'error'});
 							}
+							//可能有处理中的情况，因此这里全部刷新(市场账户信息和圈提记录)
+							that.getFirmAccountInfo();
 						},
 						error: (status, result) => {
 							$.modal.closeLoading();
