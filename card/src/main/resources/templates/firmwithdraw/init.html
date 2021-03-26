@@ -292,7 +292,7 @@
 			},
 			// 获取市场帐户详情
 			getFirmAccountInfo(){
-				var firmId = $("#firmAccount").val();
+				let firmId = $("#firmAccount").val();
 				this.resetFormInput();
 				if(firmId == ""){
 					Object.assign(this.$data, this.$options.data());
@@ -400,6 +400,7 @@
 								};
 								bs4pop.alert(bui.util.HTMLDecode(template('postWithdraw', templateData)), {type: 'success'});
 								that.resetFormInput();
+								that.getFirmAccountInfo();
 								$.table.refresh();
 							}else {
 								bs4pop.alert(ret.message, {type: 'error'});
