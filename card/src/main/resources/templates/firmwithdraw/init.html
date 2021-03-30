@@ -8,7 +8,7 @@
 		<form id="withdraw-form">
 			<div class="row row-cols-6">
 				<label class="col-2 text-right">提款账户</label>
-				<select id="firmAccount" name="firmAccount" class="form-control row-cols-8"  @change='getFirmAccountInfo'></select>
+				<select id="firmAccount" name="firmAccount" class="form-control row-cols-8"  @change='getFirmAccountInfo(true)'></select>
 				<#bcomboProvider _id="firmAccount" _provider="firmProvider" />
 				<div class="input-group-append">
 					<button v-show="firmInfo.merInfo.profitAccount != 0" class="btn btn-primary" type="button" onclick="openUpdatePwdModal()">修改密码</button>
@@ -182,9 +182,9 @@
 			<div class="input-group mb-3">
 				<label class="col-md-3 col-form-label">新密码</label>
 				<% if(isNotEmpty(allowInput) && allowInput == "1") {%>
-				<input type="password" id="newPassword" name="newPassword" class="form-control col-md-6" maxlength="6"/>
+				    <input type="password" id="newPassword" name="newPassword" class="form-control col-md-6" maxlength="6"/>
 				<% } else { %>
-				<input type="password" id="newPassword" name="newPassword" class="form-control col-md-6" maxlength="6" readonly/>
+				    <input type="password" id="newPassword" name="newPassword" class="form-control col-md-6" maxlength="6" readonly/>
 				<% } %>
 				<div class="input-group-append">
 					<button type="button" onclick="readFirmWithdrawPwd('u_newPassword')" class="btn btn-primary">
@@ -291,9 +291,11 @@
 				this.selectedBankCardId = "";
 			},
 			// 获取市场帐户详情
-			getFirmAccountInfo(){
+			getFirmAccountInfo(needReset){
 				let firmId = $("#firmAccount").val();
-				this.resetFormInput();
+				if (needReset){
+					this.resetFormInput();
+				}
 				if(firmId == ""){
 					Object.assign(this.$data, this.$options.data());
 					$('#withdrawTableDiv').hide();
@@ -404,7 +406,7 @@
 								bs4pop.alert(ret.message, {type: 'error'});
 							}
 							//可能有处理中的情况，因此这里全部刷新(市场账户信息和圈提记录)
-							that.getFirmAccountInfo();
+							that.getFirmAccountInfo(false);
 						},
 						error: (status, result) => {
 							$.modal.closeLoading();
