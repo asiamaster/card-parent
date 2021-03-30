@@ -10,6 +10,7 @@
 	</div>
 </div>
 </#bs4Body>
+<#common_commonJs/>
 <script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
 <script>
 
@@ -18,9 +19,8 @@ function submitHandler(e) {
     let data = $.common.formToJSON("flated");
     $.operate.post(url, data, function(ret){
     	if(ret.success){
-    		parent.location.reload(true);
     		printSettleData();
-    		return true;
+			parent.location.reload(true);
     	}
     });
     return false;
@@ -30,17 +30,20 @@ function submitHandler(e) {
 function printSettleData(){
 	var id = $("#id").val();
 	var url = '${contextPath}/cycle/settlePrint.action?id=' + id;
+	//同步请求，避免
 	$.ajax({
 	    type: "GET",
 	    url:url,
+		async:false,
 	    contentType: "application/x-www-form-urlencoded",
+
 	    error: function(result) {
 	    	$.modal.alertError(result.message);
 	    },
 	    success: function(result) {
 	    	var jsonData = JSON.stringify(result.data);
 	    	if(result.code=="200"){
-	    		callbackObj.printDirect(jsonData,"settleDocument");
+				printData(jsonData,"settleDocument");
 	    	}else{
 	    		$.modal.alertError(result.message);
 	    	}
