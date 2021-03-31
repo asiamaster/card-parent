@@ -93,7 +93,6 @@ public class BusinessRecordDo implements Serializable {
 	private Integer version;
 	/**pos类型，从字典中获取*/
 	private String posType;
-
 	/** 客户身份类型  用于构建交易流水，业务办理记录不存储该字段*/
 	@Transient
 	private String customerType;

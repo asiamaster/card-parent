@@ -179,7 +179,7 @@ public interface PayRpc {
      * 设置卡账户权限
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.sentinel.service:set", method = RequestMethod.POST)
-    BaseOutput setPermission(Map<String, Object> params);
+    BaseOutput<?> setPermission(Map<String, Object> params);
 
     /**
      * 校验支付密码

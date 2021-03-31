@@ -1,5 +1,6 @@
 package com.dili.card.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.dto.*;
 import com.dili.card.dto.pay.CustomerBalanceResponseDto;
 import com.dili.ss.domain.BaseOutput;
@@ -107,7 +108,7 @@ public interface IAccountQueryService {
      * @date 2020/8/6
      */
     UserAccountCardResponseDto getForUnLockCard(UserAccountSingleQueryDto query);
-    
+
     /**
      * 重置密码查询操作,允许锁定状态，排除退卡、挂失、账户禁用
      * @author miaoguoxin
@@ -121,8 +122,8 @@ public interface IAccountQueryService {
      * @date 2020/10/14
      */
     List<AccountWithAssociationResponseDto> getMasterAssociationList(Long customerId);
-    
-    
+
+
     /**
      * 根据客户ID获取客户下所有账户，及资金情况(包括可用资金、冻结资金)
      */
@@ -133,7 +134,7 @@ public interface IAccountQueryService {
      * @param cardNo 卡号
      * @return
      */
-    BaseOutput presetPermissionByCard(String cardNo);
+    JSONObject presetPermissionByCard(String cardNo);
 
 }
 

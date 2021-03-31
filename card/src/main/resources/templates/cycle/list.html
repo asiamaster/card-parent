@@ -13,7 +13,7 @@
                 _placeholder="" _optionVariable="userNameQueryAutoCompleteOption"/>
             </div>
             <div class="form-group col">
-                <label for="creatorId">财务员</label>
+                <label for="creatorId">对账员</label>
                 <#bautoCompleteProvider _hiddenDomainId="auditorId" _hiddenDomainName="auditorId" _displayDomainId="creatorName" _displayDomainName="creatorName" _placeholder="" _optionVariable="userNameQueryAutoCompleteOption"/>
             </div>
             <div class="form-group col">
@@ -70,12 +70,6 @@
                 <th data-field="cycleNo" data-align="center" >
                     账期编号
                 </th>
-                <th data-field="settleTime" data-align="center" >
-                    对账时间
-                </th>
-                <th data-field="auditorName" data-align="center">
-                    对账员
-                </th>
                 <th data-field="userCode" data-align="center"  >
                     柜员工号
                 </th>
@@ -112,7 +106,12 @@
                 <th data-field="stateText" data-align="center">
                     账期状态
                 </th>
-
+                <th data-field="settleTime" data-align="center" >
+                    对账时间
+                </th>
+                <th data-field="auditorName" data-align="center">
+                    对账员
+                </th>
             </tr>
             </thead>
         </table>

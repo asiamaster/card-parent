@@ -1,5 +1,6 @@
 package com.dili.card.dto;
 
+
 /**
  * 打印数据dto
  */
@@ -57,6 +58,67 @@ public class PrintDto {
 	private String firmName;
 	/** 卡类型 */
 	private String cardType;
+/*-----------------------------权限设置所需字段---------------------*/
+	/**客户身份号*/
+	private String customerCertificateNumber;
+	/**权限名称*/
+	private String permissionNames;
+	/**提现额度*/
+	private String withdrawDailyAmount;
+	/**提现次数*/
+	private Integer withdrawDailyTimes;
+	/**提现额度*/
+	private String tradeDailyAmount;
+	/**提现次数*/
+	private Integer tradeDailyTimes;
+
+	public String getPermissionNames() {
+		return permissionNames;
+	}
+
+	public void setPermissionNames(String permissionNames) {
+		this.permissionNames = permissionNames;
+	}
+
+	public String getWithdrawDailyAmount() {
+		return withdrawDailyAmount;
+	}
+
+	public void setWithdrawDailyAmount(String withdrawDailyAmount) {
+		this.withdrawDailyAmount = withdrawDailyAmount;
+	}
+
+	public Integer getWithdrawDailyTimes() {
+		return withdrawDailyTimes;
+	}
+
+	public void setWithdrawDailyTimes(Integer withdrawDailyTimes) {
+		this.withdrawDailyTimes = withdrawDailyTimes;
+	}
+
+	public String getTradeDailyAmount() {
+		return tradeDailyAmount;
+	}
+
+	public void setTradeDailyAmount(String tradeDailyAmount) {
+		this.tradeDailyAmount = tradeDailyAmount;
+	}
+
+	public Integer getTradeDailyTimes() {
+		return tradeDailyTimes;
+	}
+
+	public void setTradeDailyTimes(Integer tradeDailyTimes) {
+		this.tradeDailyTimes = tradeDailyTimes;
+	}
+
+	public String getCustomerCertificateNumber() {
+		return customerCertificateNumber;
+	}
+
+	public void setCustomerCertificateNumber(String customerCertificateNumber) {
+		this.customerCertificateNumber = customerCertificateNumber;
+	}
 
 	public String getPosCertNum() {
 		return posCertNum;

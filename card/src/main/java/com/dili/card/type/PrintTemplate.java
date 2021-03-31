@@ -24,6 +24,7 @@ public enum PrintTemplate implements Serializable {
 	CYCLE("cycleDocument","结帐申请打印"),
 	SETTLE("settleDocument","结帐申请打印"),
 	BANK_COUNTER("bankCounterDocument","银行存取款"),
+	ACCOUNT_PERMISSION("PermissionDocument","账户权限"),
 	;
 
 	private String type;

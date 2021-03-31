@@ -159,7 +159,7 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
             fund.setBalance(0L);
             fund.setFrozenAmount(0L);
         }
-        
+
         String subTypeNames = customerService.getSubTypeNames(customer.getId(), primary.getFirmId());
         customer.setCustomerSubType(subTypeNames);
         detail.setAccountFund(fund);
@@ -344,19 +344,10 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
 	}
 
     @Override
-    public BaseOutput presetPermissionByCard(String cardNo) {
-        if (StrUtil.isBlank(cardNo)) {
-            return BaseOutput.failure("参数丢失");
-        }
-        UserAccountCardResponseDto cardInfo = getByCardNo(cardNo);
-        if (Objects.isNull(cardInfo)) {
-            return BaseOutput.failure("卡账户数据不存在");
-        }
-        if (CardType.MASTER.getCode() != cardInfo.getCardType().intValue()) {
-            return BaseOutput.failure("此功能只对主卡账户开放");
-        }
-        if (!DisableState.ENABLED.getCode().equals(cardInfo.getDisabledState())) {
-            return BaseOutput.failure("卡账户已冻结，不支持办理此业务");
+    public JSONObject presetPermissionByCard(String cardNo) {
+        UserAccountCardResponseDto cardInfo = this.getByCardNo(cardNo);
+        if (CardType.MASTER.getCode() != cardInfo.getCardType()) {
+            throw new CardAppBizException("此功能只对主卡账户开放");
         }
         JSONObject params = new JSONObject();
         params.put("accountId", cardInfo.getFundAccountId());
@@ -376,13 +367,13 @@ public class AccountQueryServiceImpl implements IAccountQueryService {
         jsonObject.put("permission", allPermissionObject);
         jsonObject.put("withdraw", responseDto.getWithdraw());
         jsonObject.put("trade", responseDto.getTrade());
-        return BaseOutput.successData(jsonObject);
+        return jsonObject;
     }
 
     @Override
 	public UserAccountCardResponseDto getForResetLoginPassword(UserAccountSingleQueryDto query) {
 		UserAccountCardResponseDto single = accountQueryRpcResolver.findSingleWithoutValidate(query);
-		
+
 		if (CardStatus.RETURNED.getCode() == single.getCardState()) {
             throw new CardAppBizException(ResultCode.DATA_ERROR, "该卡已退卡，不能进行此操作");
         }
