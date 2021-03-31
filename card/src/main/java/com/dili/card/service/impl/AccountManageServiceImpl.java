@@ -3,6 +3,7 @@ package com.dili.card.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
+import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dto.AccountPermissionRequestDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.FirmWithdrawAuthRequestDto;
@@ -18,6 +19,7 @@ import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.resolver.AccountManageRpcResolver;
 import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
+import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.service.IAccountManageService;
@@ -137,7 +139,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
         FirmWithdrawAuthRequestDto checkPasswordReq = new FirmWithdrawAuthRequestDto();
         checkPasswordReq.setAccountId(cardInfo.getFundAccountId());
         checkPasswordReq.setPassword(requestDto.getPayPassword());
-        //GenericRpcResolver.resolver(payRpc.checkTradePwd(checkPasswordReq), ServiceName.PAY);
+        GenericRpcResolver.resolver(payRpc.checkTradePwd(checkPasswordReq), ServiceName.PAY);
 
         requestDto.setCardNo(cardInfo.getCardNo());
         requestDto.setAccountId(cardInfo.getAccountId());
