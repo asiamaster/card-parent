@@ -1,6 +1,7 @@
 package com.dili.card.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
@@ -135,11 +136,15 @@ public class AccountManageServiceImpl implements IAccountManageService {
         if (CardType.MASTER.getCode() != cardInfo.getCardType()) {
             throw new CardAppBizException("此功能只对主卡账户开放");
         }
-        //校验密码
-        FirmWithdrawAuthRequestDto checkPasswordReq = new FirmWithdrawAuthRequestDto();
-        checkPasswordReq.setAccountId(cardInfo.getFundAccountId());
-        checkPasswordReq.setPassword(requestDto.getPayPassword());
-        GenericRpcResolver.resolver(payRpc.checkTradePwd(checkPasswordReq), ServiceName.PAY);
+        //有密码就校验，没密码就跳过
+        String payPassword = requestDto.getPayPassword();
+        if (StrUtil.isNotBlank(payPassword)){
+            //校验密码
+            FirmWithdrawAuthRequestDto checkPasswordReq = new FirmWithdrawAuthRequestDto();
+            checkPasswordReq.setAccountId(cardInfo.getFundAccountId());
+            checkPasswordReq.setPassword(payPassword);
+            GenericRpcResolver.resolver(payRpc.checkTradePwd(checkPasswordReq), ServiceName.PAY);
+        }
 
         requestDto.setCardNo(cardInfo.getCardNo());
         requestDto.setAccountId(cardInfo.getAccountId());
