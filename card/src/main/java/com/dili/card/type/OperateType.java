@@ -94,6 +94,7 @@ public enum OperateType
 		typeList.add(LOSS_CARD.getCode());
 		typeList.add(LOSS_REMOVE.getCode());
 		typeList.add(LIFT_LOCKED.getCode());
+		typeList.add(PERMISSION_SET.getCode());
 		return typeList;
 	}
 
