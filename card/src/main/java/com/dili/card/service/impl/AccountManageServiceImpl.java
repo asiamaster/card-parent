@@ -159,6 +159,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
             record.setType(OperateType.PERMISSION_SET.getCode());
             record.setAttach(JSON.toJSONString(attach));
         });
+        serialService.saveBusinessRecord(businessRecord);
         //保存支付权限
         String permissionValue = this.savePayPermissions(requestDto, cardInfo);
 
