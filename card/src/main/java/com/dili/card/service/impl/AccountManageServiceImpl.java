@@ -2,6 +2,7 @@ package com.dili.card.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
@@ -33,6 +34,7 @@ import com.dili.card.type.DisableState;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.LogOperationType;
 import com.dili.card.type.OperateType;
+import com.dili.card.type.TradeType;
 import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.logger.sdk.util.LoggerUtil;
 import com.dili.ss.constant.ResultCode;
@@ -153,8 +155,10 @@ public class AccountManageServiceImpl implements IAccountManageService {
         attach.put(Constant.BUSINESS_RECORD_ATTACH_CARDTYPE, cardInfo.getCardType());
         attach.put(Constant.BUSINESS_RECORD_ATTACH_FUND_ACCOUNTID, cardInfo.getFundAccountId());
         attach.put(Constant.BUSINESS_RECORD_ATTACH_CERT_NO, cardInfo.getCustomerCertificateNumber());
-        BusinessRecordDo businessRecord = this.saveLocalSerialRecord(requestDto, cardInfo, OperateType.PERMISSION_SET.getCode(), JSONObject.toJSONString(attach));
-
+        BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, cardInfo, record -> {
+            record.setType(OperateType.PERMISSION_SET.getCode());
+            record.setAttach(JSON.toJSONString(attach));
+        });
         //保存支付权限
         String permissionValue = this.savePayPermissions(requestDto, cardInfo);
 
