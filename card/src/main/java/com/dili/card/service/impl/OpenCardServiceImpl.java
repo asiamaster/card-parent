@@ -8,6 +8,10 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.StrUtil;
+import com.dili.customer.sdk.domain.dto.EmployeeOpenCardInput;
+import com.dili.customer.sdk.rpc.CustomerEmployeeRpc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -17,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dili.assets.sdk.rpc.BusinessChargeItemRpc;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.config.OpenCardMQConfig;
@@ -44,7 +47,6 @@ import com.dili.card.exception.ErrorCode;
 import com.dili.card.rpc.CardManageRpc;
 import com.dili.card.rpc.OpenCardRpc;
 import com.dili.card.rpc.PayRpc;
-import com.dili.card.rpc.SerialRecordRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
 import com.dili.card.service.IAccountCycleService;
@@ -54,7 +56,6 @@ import com.dili.card.service.ICustomerService;
 import com.dili.card.service.IOpenCardService;
 import com.dili.card.service.IRuleFeeService;
 import com.dili.card.service.ISerialService;
-import com.dili.card.service.ITypeMarketService;
 import com.dili.card.type.BizNoType;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
@@ -72,7 +73,6 @@ import com.dili.card.util.CurrencyUtils;
 import com.dili.commons.rabbitmq.RabbitMQMessageService;
 import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.customer.sdk.rpc.CustomerRpc;
-import com.dili.rule.sdk.rpc.ChargeRuleRpc;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
@@ -96,17 +96,11 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@Resource
 	private OpenCardRpc openCardRpc;
 	@Resource
-	private SerialRecordRpc serialRecordRpc;
-	@Resource
 	IAccountCycleService accountCycleService;
 	@Resource
 	private UidRpcResovler uidRpcResovler;
 	@Resource
 	private ISerialService serialService;
-	@Resource
-	private ChargeRuleRpc chargeRuleRpc;
-	@Resource
-	BusinessChargeItemRpc businessChargeItemRpc;
 	@Resource
 	private PayRpc payRpc;
 	@Resource
@@ -126,7 +120,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
 	@Autowired
 	private ICustomerService customerService;
 	@Autowired
-	private ITypeMarketService typeMarketService;
+	private CustomerEmployeeRpc customerEmployeeRpc;
 
 	@Override
 	public Long getOpenCostFee() {
@@ -201,12 +195,11 @@ public class OpenCardServiceImpl implements IOpenCardService {
 			BalanceResponseDto resolver = GenericRpcResolver.resolver(payRpc.getAccountBalance(requestDto),
 					ServiceName.PAY);
 			tradeResponseDto.setBalance(resolver.getAvailableAmount());
-			tradeResponseDto.setFrozenBalance(0L);
 		} else {
 			tradeResponseDto.setBalance(0L);
-			tradeResponseDto.setFrozenBalance(0L);
 		}
 
+		tradeResponseDto.setFrozenBalance(0L);
 		// 保存卡务柜台开卡操作记录 使用seate后状态默认为成功,开卡期初期末默认为0
 		BusinessRecordDo busiRecord = buildBusinessRecordDo(openCardInfo, accountId, cycleDo.getCycleNo(),
 				tradeResponseDto, serialNo);
@@ -215,9 +208,10 @@ public class OpenCardServiceImpl implements IOpenCardService {
 
 		// 保存全局操作交易记录 开卡工本费
 		saveSerialRecord(openCardInfo, accountId);
-
 		// 发送MQ通知
 		sendMQ(openCardInfo);
+		//创建员工信息，附加功能，不能影响主流程
+		this.registerEmployee(openCardInfo);
 		return openCardResponse;
 	}
 
@@ -448,4 +442,19 @@ public class OpenCardServiceImpl implements IOpenCardService {
 		return nowCardNum;
 	}
 
+	private void registerEmployee(OpenCardDto openCardInfo) {
+		final String holdName = openCardInfo.getHoldName();
+		final String holdContactsPhone = openCardInfo.getHoldContactsPhone();
+		if (StrUtil.isNotBlank(holdName)&&StrUtil.isNotBlank(holdContactsPhone)){
+			ThreadUtil.execute(() -> {
+				EmployeeOpenCardInput input = new EmployeeOpenCardInput();
+				input.setCardNo(openCardInfo.getCardNo());
+				input.setMarketId(openCardInfo.getFirmId());
+				input.setCellphone(holdContactsPhone);
+				input.setCustomerId(openCardInfo.getCustomerId());
+				input.setName(holdName);
+				customerEmployeeRpc.createdByOpenCard(input);
+			});
+		}
+	}
 }
