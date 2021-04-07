@@ -130,7 +130,7 @@ public class AccountManagementController implements IControllerHandler {
             String serialNo = accountManageService.saveCardPermission(requestDto);
             return BaseOutput.successData(serialNo);
         } catch (CardAppBizException e) {
-            return BaseOutput.failure(e.getMessage());
+            return BaseOutput.failure(e.getCode(),e.getMessage());
         } catch (Exception e) {
             log.error(String.format("卡[%s]账户权限[%s]获取异常:%s", requestDto.getAccountId(), JSONUtil.toJsonStr(requestDto.getPermission()), e.getMessage()), e);
             return BaseOutput.failure("卡账户权限设置异常");
