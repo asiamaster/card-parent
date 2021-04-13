@@ -1,0 +1,108 @@
+<style>
+	.info-column {
+		font-weight: bold ;
+		text-align: center;
+	}
+
+	.info-cell {
+		width: 15%;
+	}
+	.panel-heading{
+		margin-top:.5rem
+	}
+</style>
+<#bs4Body>
+<div class="container-fluid ">
+	<div>
+		<div class="breadcrumb">
+			业务详情
+		</div>
+		<div id="base-info" class="panel-heading" >
+			<div class="row row-cols-6" >
+				<div class="form-group col">
+					<label class="info-column">客户编号</label>
+					<input  type="text" class="form-control" value="${record.customerNo!}" readonly/>
+				</div>
+				<div class="form-group col">
+					<label class="info-column">客户名称</label>
+					<input  type="text" class="form-control" value="${record.customerName!}" readonly/>
+				</div>
+				<div class="form-group col">
+					<label class="info-column">客户卡号</label>
+					<input  type="text" class="form-control" value="${record.cardNo!}" readonly/>
+				</div>
+				<div class="form-group col">
+					<label class="info-column">卡类别</label>
+					<input  type="text" class="form-control" value="${accountCard.cardTypeText!}" readonly/>
+				</div>
+			</div>
+			<div class="row row-cols-6" >
+				<div class="form-group col">
+					<label class="info-column">业务类型</label>
+					<input  type="text" class="form-control" value="${record.typeText!}" readonly/>
+				</div>
+				<div class="form-group col">
+					<label class="info-column">业务编号</label>
+					<input  type="text" class="form-control" value="${record.serialNo!}" readonly/>
+				</div>
+				<div class="form-group col">
+					<label class="info-column">操作时间</label>
+					<input  type="text" class="form-control" value="${record.operateTime!}" readonly/>
+				</div>
+				<div class="form-group col">
+					<label class="info-column">操作人</label>
+					<input  type="text" class="form-control" value="${record.operatorName!}" readonly/>
+				</div>
+			</div>
+			<div class="row row-cols-6" >
+				<div class="form-group col">
+					<label class="info-column">操作方式</label>
+					<input  type="text" class="form-control" value="${record.tradeChannelText!}" readonly/>
+				</div>
+				<div class="form-group col">
+					<label class="info-column">期初金额</label>
+					<input  type="text" class="form-control" value="${record.startBalanceText!}" readonly/>
+				</div>
+				<div class="form-group col">
+					<label class="info-column">操作金额</label>
+					<input  type="text" class="form-control" value="${record.amountText!}" readonly/>
+				</div>
+				<div class="form-group col">
+					<label class="info-column">期末金额</label>
+					<input  type="text" class="form-control" value="${record.endBalanceText!}" readonly/>
+				</div>
+			</div>
+
+			<div class="row row-cols-6" >
+
+			</div>
+		</div>
+	</div>
+
+	<div>
+		<% if(feeList.~size>0) { %>
+		<div class="breadcrumb">
+			费用明细
+		</div>
+		<div  id="cardAssociation" class="panel-heading" >
+			<table  class="table table-bordered">
+				<tbody style="text-align: center">
+				<tr style="font-size: 14px">
+					<td class="info-column">费用类型</td>
+					<td class="info-column">金额</td>
+					<td class="info-column">备注</td>
+				</tr>
+				<% for(item in feeList) { %>
+				<tr style="font-size: 14px">
+					<td class="info-cell">${item.fundItemName!}</td>
+					<td class="info-cell">${item.amountText!}</td>
+					<td class="info-cell">${item.notes!}</td>
+				</tr>
+				<% } %>
+				</tbody>
+			</table>
+		</div>
+		<% } %>
+	</div>
+</div>
+</#bs4Body>

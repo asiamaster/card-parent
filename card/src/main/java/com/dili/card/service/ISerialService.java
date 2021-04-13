@@ -4,6 +4,7 @@ import com.dili.card.dto.BusinessRecordResponseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.SerialQueryDto;
+import com.dili.card.dto.SerialRecordResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
@@ -92,6 +93,20 @@ public interface ISerialService {
      * @date 2020/7/1
      */
     PageOutput<List<BusinessRecordResponseDto>> queryPage(SerialQueryDto serialQueryDto);
+
+    /**
+    * 根据id查询操作记录
+    * @author miaoguoxin
+    * @date 2021/4/12
+    */
+    BusinessRecordResponseDto getOneById(Long id);
+
+    /**
+    * 获取流水记录列表
+    * @author miaoguoxin
+    * @date 2021/4/12
+    */
+    List<SerialRecordResponseDto> getSerialList(SerialQueryDto serialQueryDto);
 
     /**
      * 构建业务记录数据并提供回调处理

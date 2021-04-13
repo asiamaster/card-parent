@@ -188,6 +188,8 @@ public class SerialController implements IControllerHandler {
     @ResponseBody
     public Map<String, Object> businessPage(SerialQueryDto queryDto) {
         LOGGER.info("业务日志分页*****{}", JSONObject.toJSONString(queryDto));
+        UserTicket userTicket = getUserTicket();
+        queryDto.setFirmId(userTicket.getFirmId());
         PageOutput<List<BusinessRecordResponseDto>> lists = serialService.queryPage(queryDto);
         return successPage(lists);
     }

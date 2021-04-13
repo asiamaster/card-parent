@@ -1,13 +1,6 @@
 package com.dili.card.service.impl;
 
-import java.math.BigDecimal;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import cn.hutool.core.thread.ThreadUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
@@ -40,9 +33,18 @@ import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.AccountValidator;
+import com.dili.customer.sdk.domain.dto.EmployeeChangeCardInput;
+import com.dili.customer.sdk.rpc.CustomerEmployeeRpc;
 import com.dili.ss.domain.BaseOutput;
-
 import io.seata.spring.annotation.GlobalTransactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -71,7 +73,9 @@ public class CardManageServiceImpl implements ICardManageService {
     @Autowired
     private IRuleFeeService ruleFeeService;
     @Resource
-    ICardStorageService cardStorageService;
+    private ICardStorageService cardStorageService;
+    @Autowired
+    private CustomerEmployeeRpc customerEmployeeRpc;
 
     /**
      * @param cardParam
@@ -110,8 +114,8 @@ public class CardManageServiceImpl implements ICardManageService {
     public String resetLoginPwd(CardRequestDto cardParam) {
 
         //获取卡信息
-    	UserAccountSingleQueryDto queryDto = new UserAccountSingleQueryDto();
-    	queryDto.setAccountId(cardParam.getAccountId());
+        UserAccountSingleQueryDto queryDto = new UserAccountSingleQueryDto();
+        queryDto.setAccountId(cardParam.getAccountId());
         UserAccountCardResponseDto accountCard = accountQueryService.getForResetLoginPassword(queryDto);
 
         //校验卡信息与客户信息
@@ -132,8 +136,8 @@ public class CardManageServiceImpl implements ICardManageService {
     }
 
     @Override
-	public String modifyLoginPwd(CardRequestDto cardParam) {
-    	 //获取卡信息
+    public String modifyLoginPwd(CardRequestDto cardParam) {
+        //获取卡信息
         UserAccountCardResponseDto accountCard = accountQueryService.getByAccountId(cardParam.getAccountId());
 
         //校验卡信息与客户信息
@@ -143,7 +147,7 @@ public class CardManageServiceImpl implements ICardManageService {
         BusinessRecordDo businessRecordDo = saveLocalSerialRecordNoFundSerial(cardParam, accountCard, OperateType.PWD_CHANGE);
 
         //远程账户修改密码操作
-        GenericRpcResolver.resolver(cardManageRpc.modifyLoginPwd(cardParam),ServiceName.ACCOUNT);
+        GenericRpcResolver.resolver(cardManageRpc.modifyLoginPwd(cardParam), ServiceName.ACCOUNT);
 
         //远程支付重置密码操作
         payRpcResolver.resetPwd(CreateTradeRequestDto.createPwd(accountCard.getFundAccountId(), cardParam.getLoginPwd()));
@@ -151,9 +155,9 @@ public class CardManageServiceImpl implements ICardManageService {
         //记录远程操作记录
         this.saveRemoteSerialRecord(businessRecordDo);
         return businessRecordDo.getSerialNo();
-	}
-    
-    
+    }
+
+
     @GlobalTransactional(rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -202,7 +206,7 @@ public class CardManageServiceImpl implements ICardManageService {
         AccountValidator.validateMatchAccount(requestDto, userAccount);
         //this.validateCanChange(requestDto, userAccount);
 
-        cardStorageService.checkAndGetByCardNo(requestDto.getNewCardNo(), userAccount.getCardType(),  userAccount.getCustomerId());
+        cardStorageService.checkAndGetByCardNo(requestDto.getNewCardNo(), userAccount.getCardType(), userAccount.getCustomerId());
 
         Long serviceFee = requestDto.getServiceFee();
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, userAccount, record -> {
@@ -254,6 +258,8 @@ public class CardManageServiceImpl implements ICardManageService {
         serialDto.setStartBalance(balance.getAvailableAmount());
         serialDto.setEndBalance(balance.getAvailableAmount());
         serialService.handleSuccess(serialDto);
+
+        this.changeEmployee(requestDto.getNewCardNo(), userAccount.getHoldContactsPhone(), userAccount.getCustomerId(), userAccount.getAccountId(), userAccount.getFirmId());
         return businessRecord.getSerialNo();
     }
 
@@ -284,4 +290,16 @@ public class CardManageServiceImpl implements ICardManageService {
         serialService.handleSuccess(serialDto, false);
     }
 
+    private void changeEmployee(String newCardNo, String cellPhone, Long customerId, Long accountId, Long firmId) {
+        ThreadUtil.execute(() -> {
+            EmployeeChangeCardInput input = new EmployeeChangeCardInput();
+            input.setCardAccountId(accountId);
+            input.setCardNo(newCardNo);
+            input.setCellphone(cellPhone);
+            input.setCustomerId(customerId);
+            input.setMarketId(firmId);
+            customerEmployeeRpc.changeCard(input);
+        });
+    }
 }
+

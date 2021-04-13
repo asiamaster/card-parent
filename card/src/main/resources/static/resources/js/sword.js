@@ -178,25 +178,6 @@ tab = {
                 };
                 return $.extend(curParams, $.common.formToPairValue(currentId));
             },
-            //初始化已记忆的页面参数
-            initRememberedViewParams: function(options){
-                let currentId = $.common.isEmpty(table.options.formId) ? 'queryForm' : table.options.formId;
-                let prefixKey = table.options.modalName + "_";
-                let rememberedParams = JSON.parse(sessionStorage.getItem(prefixKey + currentId));
-                //填充表格参数
-                if(!$.common.isEmpty(rememberedParams)){
-                    options.pageNumber = rememberedParams.page;
-                    options.pageSize = rememberedParams.rows;
-                    options.sortName = rememberedParams.sort;
-                    options.sortOrder = rememberedParams.order;
-                    //填充表单
-                    $.each($("#" + currentId).find('input,textarea,select'), (i, e) => {
-                        if (!$.common.isEmpty(rememberedParams[e.id])) {
-                            e.value = rememberedParams[e.id];
-                        }
-                    });
-                }
-            },
             //单击事件
             onClickRow: function (row, $element, field) {
             },

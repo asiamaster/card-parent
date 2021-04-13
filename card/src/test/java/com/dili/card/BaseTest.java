@@ -2,7 +2,7 @@ package com.dili.card;
 
 import com.alibaba.fastjson.JSON;
 import com.dili.ss.redis.service.RedisUtil;
-import com.dili.uap.sdk.session.SessionConstants;
+import com.dili.uap.sdk.constant.SessionConstants;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

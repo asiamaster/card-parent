@@ -1,0 +1,222 @@
+<#bs4Body>
+<#vueElm/>
+<div class="container-fluid" id="v">
+	<form id="queryForm" role="form">
+		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" :value="selectedOpType">
+		<div class="row row-cols-6">
+			<% if(allAuth == 1) {%>
+			<div class="form-group col">
+				<label for="operatorId">操作员</label>
+				<#bautoCompleteProvider
+				_hiddenDomainId="operatorId"
+				_hiddenDomainName="operatorId"
+				_displayDomainId="userName"
+				_displayDomainName="userName"
+				_placeholder="" _optionVariable="userNameQueryAutoCompleteOption"/>
+			</div>
+			<% } else { %>
+			<input type="hidden" name="userName" id="userName" value="${userName!}">
+			<input type="hidden" name="operatorId" id="operatorId" value="${operatorId!}">
+			<% } %>
+			<#component_dateControls
+			_labelText="操作时间"
+			_startDateParam="operateTimeStart"
+			_endDateParam="operateTimeEnd"
+			_resetDate="false"
+			/>
+			<div class="col-auto align-self-center mt-3">
+				<button id="query" type="button" class="btn btn-outline-primary" @click="search()"><i
+						class="fa fa-search"></i> 查询
+				</button>
+				<button id="clear" type="button" class="btn btn-outline-primary mr-2" @click="resetForm()"><i
+						class="fa fa-refresh"></i> 重置
+				</button>
+			</div>
+		</div>
+	</form>
+	<br>
+
+	<div >
+		<table id="summaryTable"></table>
+	</div>
+
+	<div class="row">
+		<div class="col-12">
+			<div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
+				<#resource code="card_op_export">
+					<button id="btn-export" type="button" class="btn btn-primary" onclick="$.table.exportExcel('queryForm')"><i
+							class="fa fa-file-excel-o"></i>
+						导出
+					</button>
+			    </#resource>
+			</div>
+			<table id="grid"
+				   class="table"
+				   data-title="操作记录查询"
+				   data-buttons-class="primary"
+				   data-icons="bui.variable.icons">
+				<thead>
+				   <tr>
+					<th data-field="serialNo" data-align="center" data-sortable="true" data-sort-name="serial_no" data-formatter="serialNoFormatter">
+						业务编号
+					</th>
+					<th data-field="typeText" data-align="center">
+						业务类型
+					</th>
+					<th data-field="tradeChannelText" data-align="center">
+						操作方式
+					</th>
+					<th data-field="amountText" data-align="center" data-type="number">
+						操作金额
+					</th>
+					<th data-field="customerName" data-align="center" >
+						客户名称
+					</th>
+					<th data-field="cardNo" data-align="center" >
+						卡号
+					</th>
+					<th data-field="operatorName" data-align="center">
+						操作员
+					</th>
+					<th data-field="operateTime" data-align="center" data-sortable="true" data-sort-name="operate_time">
+						操作时间
+					</th>
+				</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+</div>
+
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<#common_userJs/>
+<script>
+	function serialNoFormatter(value, row, index, field) {
+		return '<a class="" style="color: #007BFF" href="javascript:void(0);" onclick="openDetailModal('+row.id+')">' + value + '</a> ';
+	}
+
+	function openDetailModal(id){
+		let url = "${contextPath}/statistics/recordDetail.html?id=" + id;
+		let options = {
+			title: '详情',
+			width: '100%',
+			height: '90%',
+			content: url,
+			btns: [{
+				label: '关闭', className: 'btn-secondary', onClick(e) {
+
+				}
+			}]
+		};
+		$.modal.openOptions(options);
+	}
+
+	let vue = new Vue({
+		el: '#v',
+		data() {
+			return {
+				selectedOpType: "",//当前选中的操作类型
+				summaryList:[],
+				summaryTotal:0
+			}
+		},
+		mounted: function(){
+			this.resetDateControl();
+			this.getSummary();
+			this.initRecordTable();
+		},
+		methods :{
+			initRecordTable: function () {
+				let options = {
+					uniqueId: "id",
+					url: "${contextPath}/serial/business/page.action",
+					sortName: "operate_time",
+					modalName: "操作记录查询"
+				};
+				$.table.init(options);
+			},
+			//获取统计数据
+			getSummary: function () {
+				let that = this;
+				let queryData = $.common.formToPairValue("queryForm");
+				$.ajax({
+					type: 'GET',
+					url: '${contextPath}/statistics/recordSummary.action',
+					data: queryData,
+					success: function (ret) {
+						if (ret.code == '200') {
+							that.summaryList = ret.data;
+							let total = 0;
+							for (let s of that.summaryList) {
+								total += s.count;
+							}
+							that.summaryTotal = total;
+							that.initSummaryTable();
+						} else {
+							$.modal.alertError(ret.message);
+						}
+					},
+					error: function () {
+						$.modal.alertError("网络异常！");
+					}
+				});
+			},
+			//初始化统计总览表格
+			initSummaryTable() {
+				$('#summaryTable').bootstrapTable('destroy');
+				let data = {};
+				let columnList = [];
+				columnList.push({
+					field: 'summaryTotal',
+					title: '总条数/笔',
+					align: 'center'
+				});
+				data['summaryTotal'] = this.summaryTotal;
+				for (const item of this.summaryList) {
+					const field = 'opType_' + item.operateType;
+					columnList.push({
+						field: field,
+						title: item.operateTypeName,
+						align: 'center',
+						formatter: function (value, row, index, field) {
+							if (item.allowClick == 1) {
+								return '<a class="" style="color: #007BFF" href="javascript:void(0);" onclick="vue.getRecordList(' + item.operateType + ')">' + item.count + '</a> ';
+							}
+							return item.count;
+						}
+					});
+					data[field] = item.operateTypeName;
+				}
+				$('#summaryTable').bootstrapTable({
+					columns: columnList,
+					data: [data]
+				})
+			},
+			getRecordList(operateType){
+				console.log("fff");
+				this.selectedOpType = operateType;
+				console.log(this.selectedOpType);
+				$.table.search();
+			},
+			//搜索
+			search(){
+				this.getSummary();
+				$.table.search()
+			},
+			//重置表单
+			resetForm(){
+				$.form.reset();
+				this.resetDateControl();
+				this.getSummary();
+			},
+			//重置时间控件
+			resetDateControl(){
+				let start = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				let end = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				$(".laystart").val( start);
+				$(".layend").val(end);
+			}
+		}
+	});
+</script>

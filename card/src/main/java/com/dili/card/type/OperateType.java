@@ -21,7 +21,7 @@ public enum OperateType
 	PWD_CHANGE("修改密码", 16),
 	RESET_PWD("重置密码", 17),
 	REFUND_CARD("退卡", 18),
-	LIFT_LOCKED("解锁", 19),
+	LIFT_LOCKED("卡片解锁", 19),
 	FLAT_COST("缴费", 20),
 	BANKCARD_BIND("银行卡绑定", 21),
 	BANKCARD_REMOVE("银行卡解绑", 22),
