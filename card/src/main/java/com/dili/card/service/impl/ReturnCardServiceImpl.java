@@ -25,6 +25,7 @@ import com.dili.card.type.PaySubject;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.validator.AccountValidator;
+import com.dili.customer.sdk.domain.dto.EmployeeCancelCardInput;
 import com.dili.customer.sdk.rpc.CustomerEmployeeRpc;
 import com.dili.ss.constant.ResultCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,18 +141,19 @@ public class ReturnCardServiceImpl implements IReturnCardService {
         //保存远程流水记录
         serialService.handleSuccess(serialDto, masterHasTradeSerial);
         //解除员工关系
-        this.deregisterEmployee(accountCard.getCustomerId(), accountCard.getAccountId(), accountCard.getFirmId());
+        this.deregisterEmployee(accountCard.getCustomerId(), accountCard.getHoldContactsPhone(), accountCard.getAccountId(), accountCard.getFirmId());
         //返回操作记录流水号 补打需要使用
         return businessRecord.getSerialNo();
     }
 
-    private void deregisterEmployee(Long customerId, Long accountId, Long firmId) {
+    private void deregisterEmployee(Long customerId, String cellPhone, Long accountId, Long firmId) {
         ThreadUtil.execute(() -> {
-            Map<String, Object> params = new HashMap<>();
-            params.put("customerId", customerId);
-            params.put("cardAccountId", accountId);
-            params.put("marketId", firmId);
-            customerEmployeeRpc.cancelCard(params);
+            EmployeeCancelCardInput input = new EmployeeCancelCardInput();
+            input.setCustomerId(customerId);
+            input.setCardAccountId(accountId);
+            input.setCellphone(cellPhone);
+            input.setMarketId(firmId);
+            customerEmployeeRpc.cancelCard(input);
         });
     }
 

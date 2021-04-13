@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dili.card.dao.IStatisticsDao">
+
+    <select id="countBusinessRecordOperateType" resultType="com.dili.card.entity.BusinessRecordSummaryDo">
+        SELECT
+            type AS operateType,
+            COUNT( * ) AS count
+        FROM
+            card_business_record
+        <where>
+            <if test="operatorId != null">
+                AND operator_id = #{operatorId}
+            </if>
+            AND firm_id= #{firmId}
+            AND type IS NOT NULL
+            AND state = 2
+            <if test="startDate != null">
+                AND `operate_time` &gt;= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND `operate_time` &lt;= #{endDate}
+            </if>
+        </where>
+        GROUP BY
+            type
+    </select>
+</mapper>

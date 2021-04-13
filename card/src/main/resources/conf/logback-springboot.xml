@@ -37,7 +37,7 @@
 	</appender>
 
 	<!-- 开发环境 -->
-	<springProfile name="dev">
+	<springProfile name="dev,test">
 		<root level="INFO">
 			<appender-ref ref="CONSOLE" />
 			<appender-ref ref="FILE" />

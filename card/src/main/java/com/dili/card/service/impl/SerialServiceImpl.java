@@ -12,6 +12,7 @@ import com.dili.card.dto.BusinessRecordResponseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
 import com.dili.card.dto.SerialQueryDto;
+import com.dili.card.dto.SerialRecordResponseDto;
 import com.dili.card.dto.UserAccountCardQuery;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.FeeItemDto;
@@ -229,6 +230,27 @@ public class SerialServiceImpl implements ISerialService {
             return responseDto;
         }).collect(Collectors.toList());
         return PageUtils.convert2PageOutput(page, recordResponseDtos);
+    }
+
+    @Override
+    public BusinessRecordResponseDto getOneById(Long id) {
+        BusinessRecordDo record = businessRecordDao.getById(id);
+        if (record == null){
+            throw new CardAppBizException("操作记录不存在");
+        }
+        BusinessRecordResponseDto responseDto = new BusinessRecordResponseDto();
+        BeanUtils.copyProperties(record, responseDto);
+        return responseDto;
+    }
+
+    @Override
+    public List<SerialRecordResponseDto> getSerialList(SerialQueryDto serialQueryDto) {
+        List<SerialRecordDo> list = serialRecordRpcResolver.getList(serialQueryDto);
+        return list.stream().map(l -> {
+            SerialRecordResponseDto dto = new SerialRecordResponseDto();
+            BeanUtils.copyProperties(l, dto);
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     @Override

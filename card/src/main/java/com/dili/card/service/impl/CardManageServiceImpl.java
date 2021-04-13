@@ -33,6 +33,7 @@ import com.dili.card.type.TradeChannel;
 import com.dili.card.type.TradeType;
 import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.AccountValidator;
+import com.dili.customer.sdk.domain.dto.EmployeeChangeCardInput;
 import com.dili.customer.sdk.rpc.CustomerEmployeeRpc;
 import com.dili.ss.domain.BaseOutput;
 import io.seata.spring.annotation.GlobalTransactional;
@@ -258,7 +259,7 @@ public class CardManageServiceImpl implements ICardManageService {
         serialDto.setEndBalance(balance.getAvailableAmount());
         serialService.handleSuccess(serialDto);
 
-        this.changeEmployee(requestDto.getNewCardNo(), userAccount.getCustomerId(), userAccount.getAccountId(), userAccount.getFirmId());
+        this.changeEmployee(requestDto.getNewCardNo(), userAccount.getHoldContactsPhone(), userAccount.getCustomerId(), userAccount.getAccountId(), userAccount.getFirmId());
         return businessRecord.getSerialNo();
     }
 
@@ -289,14 +290,15 @@ public class CardManageServiceImpl implements ICardManageService {
         serialService.handleSuccess(serialDto, false);
     }
 
-    private void changeEmployee(String newCardNo, Long customerId, Long accountId, Long firmId) {
+    private void changeEmployee(String newCardNo, String cellPhone, Long customerId, Long accountId, Long firmId) {
         ThreadUtil.execute(() -> {
-            Map<String, Object> params = new HashMap<>();
-            params.put("customerId", customerId);
-            params.put("cardNo", newCardNo);
-            params.put("cardAccountId", accountId);
-            params.put("marketId", firmId);
-            customerEmployeeRpc.changeCard(params);
+            EmployeeChangeCardInput input = new EmployeeChangeCardInput();
+            input.setCardAccountId(accountId);
+            input.setCardNo(newCardNo);
+            input.setCellphone(cellPhone);
+            input.setCustomerId(customerId);
+            input.setMarketId(firmId);
+            customerEmployeeRpc.changeCard(input);
         });
     }
 }
