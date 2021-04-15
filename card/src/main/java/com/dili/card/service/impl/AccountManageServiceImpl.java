@@ -34,7 +34,7 @@ import com.dili.card.type.DisableState;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.LogOperationType;
 import com.dili.card.type.OperateType;
-import com.dili.card.type.TradeType;
+import com.dili.card.util.CurrencyUtils;
 import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.logger.sdk.util.LoggerUtil;
 import com.dili.ss.constant.ResultCode;
@@ -140,7 +140,7 @@ public class AccountManageServiceImpl implements IAccountManageService {
         }
         //有密码就校验，没密码就跳过
         String payPassword = requestDto.getPayPassword();
-        if (StrUtil.isNotBlank(payPassword)){
+        if (StrUtil.isNotBlank(payPassword)) {
             //校验密码
             FirmWithdrawAuthRequestDto checkPasswordReq = new FirmWithdrawAuthRequestDto();
             checkPasswordReq.setAccountId(cardInfo.getFundAccountId());
@@ -159,9 +159,14 @@ public class AccountManageServiceImpl implements IAccountManageService {
             record.setType(OperateType.PERMISSION_SET.getCode());
             record.setAttach(JSON.toJSONString(attach));
         });
-        serialService.saveBusinessRecord(businessRecord);
         //保存支付权限
         String permissionValue = this.savePayPermissions(requestDto, cardInfo);
+        attach.put("permissionStr", permissionValue);
+        attach.put("permissionWithdrawDailyAmount", CurrencyUtils.toYuanWithStripTrailingZeros(requestDto.getWithdraw().getDailyAmount()));
+        attach.put("permissionWithdrawDailyTimes", requestDto.getWithdraw().getDailyTimes());
+        attach.put("permissionTradeDailyAmount", CurrencyUtils.toYuanWithStripTrailingZeros(requestDto.getTrade().getDailyAmount()));
+        attach.put("permissionTradeDailyTimes", requestDto.getTrade().getDailyTimes());
+        serialService.saveBusinessRecord(businessRecord);
 
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         String content = String.format("%s 设置 客户[%s] 卡[%s]账户权限为 %s", userTicket.getRealName(), cardInfo.getCustomerName(), cardInfo.getCardNo(), permissionValue);

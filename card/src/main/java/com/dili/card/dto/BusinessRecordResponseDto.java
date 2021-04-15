@@ -1,5 +1,6 @@
 package com.dili.card.dto;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.card.common.annotation.TextDisplay;
 import com.dili.card.common.provider.FenToYuanProvider;
@@ -73,6 +74,8 @@ public class BusinessRecordResponseDto implements Serializable {
 	private Long serviceCost;
 	/** 附加内容-存储不太重要的内容，否则请扩充该表字段 */
 	private String attach;
+	/**附加内容转换*/
+	private JSONObject attachObj;
 	/** 操作员ID */
 	private Long operatorId;
 	/** 操作员工号 */
@@ -90,6 +93,14 @@ public class BusinessRecordResponseDto implements Serializable {
 	private Integer state;
 	/** 修改时间 */
 	private LocalDateTime modifyTime;
+
+	public JSONObject getAttachObj() {
+		return attachObj;
+	}
+
+	public void setAttachObj(JSONObject attachObj) {
+		this.attachObj = attachObj;
+	}
 
 	public Long getId() {
 		return id;

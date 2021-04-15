@@ -240,6 +240,9 @@ public class SerialServiceImpl implements ISerialService {
         }
         BusinessRecordResponseDto responseDto = new BusinessRecordResponseDto();
         BeanUtils.copyProperties(record, responseDto);
+        if (StrUtil.isNotBlank(responseDto.getAttach())){
+            responseDto.setAttachObj(JSON.parseObject(responseDto.getAttach()));
+        }
         return responseDto;
     }
 

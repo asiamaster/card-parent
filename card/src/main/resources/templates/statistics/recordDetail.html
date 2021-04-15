@@ -54,27 +54,62 @@
 					<input  type="text" class="form-control" value="${record.operatorName!}" readonly/>
 				</div>
 			</div>
-			<div class="row row-cols-6" >
-				<div class="form-group col">
-					<label class="info-column">操作方式</label>
-					<input  type="text" class="form-control" value="${record.tradeChannelText!}" readonly/>
+			<!--权限设置-->
+			<% if(record.type == 24) {%>
+				<div class="row row-cols-6" >
+					<div class="form-group col">
+						<label class="info-column">日提现额度</label>
+						<input  type="text" class="form-control" value="${record.attachObj.permissionWithdrawDailyAmount!}" readonly/>
+					</div>
+					<div class="form-group col">
+						<label class="info-column">日提现次数</label>
+						<input  type="text" class="form-control" value="${record.attachObj.permissionWithdrawDailyTimes!}" readonly/>
+					</div>
+					<div class="form-group col">
+						<label class="info-column">日交易额度</label>
+						<input  type="text" class="form-control" value="${record.attachObj.permissionTradeDailyAmount!}" readonly/>
+					</div>
+					<div class="form-group col">
+						<label class="info-column">日交易次数</label>
+						<input  type="text" class="form-control" value="${record.attachObj.permissionTradeDailyTimes!}" readonly/>
+					</div>
 				</div>
-				<div class="form-group col">
-					<label class="info-column">期初金额</label>
-					<input  type="text" class="form-control" value="${record.startBalanceText!}" readonly/>
+			<% } else { %>
+				<div class="row row-cols-6" >
+					<div class="form-group col">
+						<label class="info-column">操作方式</label>
+						<input  type="text" class="form-control" value="${record.tradeChannelText!}" readonly/>
+					</div>
+					<div class="form-group col">
+						<label class="info-column">期初金额</label>
+						<input  type="text" class="form-control" value="${record.startBalanceText!}" readonly/>
+					</div>
+					<div class="form-group col">
+						<label class="info-column">操作金额</label>
+						<input  type="text" class="form-control" value="${record.amountText!}" readonly/>
+					</div>
+					<div class="form-group col">
+						<label class="info-column">期末金额</label>
+						<input  type="text" class="form-control" value="${record.endBalanceText!}" readonly/>
+					</div>
 				</div>
-				<div class="form-group col">
-					<label class="info-column">操作金额</label>
-					<input  type="text" class="form-control" value="${record.amountText!}" readonly/>
-				</div>
-				<div class="form-group col">
-					<label class="info-column">期末金额</label>
-					<input  type="text" class="form-control" value="${record.endBalanceText!}" readonly/>
-				</div>
-			</div>
+			<% } %>
 
 			<div class="row row-cols-6" >
-
+				<!--换卡-->
+				<% if(record.type == 13) {%>
+				<div class="form-group col">
+					<label class="info-column">新卡卡号</label>
+					<input  type="text" class="form-control" value="${record.attachObj.new_card_no!}" readonly/>
+				</div>
+				<% } %>
+				<!--权限设置-->
+				<% if(record.type == 24) {%>
+					<div class="form-group col">
+						<label class="info-column">账户权限</label>
+						<input  type="text" class="form-control" value="${record.attachObj.permissionStr!}" readonly/>
+					</div>
+				<% } %>
 			</div>
 		</div>
 	</div>

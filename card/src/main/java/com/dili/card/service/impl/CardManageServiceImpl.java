@@ -215,7 +215,7 @@ public class CardManageServiceImpl implements ICardManageService {
             record.setCardCost(serviceFee);
             record.setTradeType(TradeType.FEE.getCode());
             record.setTradeChannel(TradeChannel.CASH.getCode());
-            //记录老卡卡号，用于生成打印数据
+            //记录新卡卡号，用于生成打印数据
             JSONObject obj = new JSONObject();
             obj.put(Constant.NEW_CARD_NO_PARAM, requestDto.getNewCardNo());
             record.setAttach(obj.toJSONString());
