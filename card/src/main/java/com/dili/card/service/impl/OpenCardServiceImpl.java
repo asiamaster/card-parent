@@ -208,9 +208,9 @@ public class OpenCardServiceImpl implements IOpenCardService {
         // 发送MQ通知
         sendMQ(openCardInfo);
         //创建员工信息，附加功能，不能影响主流程
-        //TODO 持卡人同客户不建员工
-
-        this.registerEmployee(openCardInfo, accountId);
+        if (openCardInfo.getCustomerSyncModifyHoldinfo() == 2){
+            this.registerEmployee(openCardInfo, accountId);
+        }
         return openCardResponse;
     }
 
