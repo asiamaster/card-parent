@@ -556,8 +556,7 @@ tab = {
                  $(".laystart").val( start);
                  $(".layend").val(end);
             },
-            // 表单重置
-            reset: function (formId, tableId) {
+            resetOnlyForm: function (formId, tableId) {
                 table.set(tableId);
                 let currentId = $.common.isEmpty(formId) ? $('form').attr('id') : formId;
                 let form = $("#" + currentId);
@@ -567,6 +566,10 @@ tab = {
                 $.each(form.find('input:hidden'), (i, e) => {
                     e.value = '';
                 });
+            },
+            // 表单重置
+            reset: function (formId, tableId) {
+                $.form.resetOnlyForm();
                 if (table.options.type == table_type.bootstrapTable) {
                     if ($.common.isEmpty(tableId)) {
                         $("#" + table.options.id).bootstrapTable('refresh', {pageNumber: 1});
