@@ -150,11 +150,10 @@ public class StatisticsController implements IControllerHandler {
         LOGGER.info("统计业务日志分页*****{}", JSONObject.toJSONString(queryDto));
         UserTicket userTicket = getUserTicket();
         queryDto.setFirmId(userTicket.getFirmId());
+        //默认查询只查询指定的操作类型
         List<Integer> operateTypeList = queryDto.getOperateTypeList();
         if (CollectionUtil.isEmpty(operateTypeList)) {
             operateTypeList = new ArrayList<>(operateType);
-        } else {
-            operateTypeList.addAll(operateType);
         }
         queryDto.setOperateTypeList(operateTypeList);
         PageOutput<List<BusinessRecordResponseDto>> lists = serialService.queryPage(queryDto);
