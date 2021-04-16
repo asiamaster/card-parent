@@ -130,7 +130,7 @@
 			initRecordTable: function () {
 				let options = {
 					uniqueId: "id",
-					url: "${contextPath}/serial/business/page.action",
+					url: "${contextPath}/statistics/business/page.action",
 					sortName: "operate_time",
 					modalName: "操作记录查询"
 				};
@@ -164,15 +164,18 @@
 			},
 			//初始化统计总览表格
 			initSummaryTable() {
+				let that = this;
 				$('#summaryTable').bootstrapTable('destroy');
 				let data = {};
 				let columnList = [];
 				columnList.push({
 					field: 'summaryTotal',
 					title: '总条数/笔',
-					align: 'center'
+					align: 'center',
+					formatter: function (value, row, index, field) {
+						return '<a class="" style="color: #007BFF" href="javascript:void(0);" onclick="vue.getRecordList()">' + that.summaryTotal + '</a> ';
+					}
 				});
-				data['summaryTotal'] = this.summaryTotal;
 				for (const item of this.summaryList) {
 					const field = 'opType_' + item.operateType;
 					columnList.push({

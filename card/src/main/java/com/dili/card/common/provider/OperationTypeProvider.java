@@ -33,7 +33,7 @@ public class OperationTypeProvider implements ValueProvider {
     @Override
     public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
         if (obj == null) {
-            return null;
+            return "--";
         }
         Integer code = (Integer) obj;
         return OperateType.getName(code);

@@ -150,6 +150,9 @@ public class AccountManageServiceImpl implements IAccountManageService {
 
         requestDto.setCardNo(cardInfo.getCardNo());
         requestDto.setAccountId(cardInfo.getAccountId());
+        //保存支付权限
+        String permissionValue = this.savePayPermissions(requestDto, cardInfo);
+
         //记录卡类别，用于打印
         Map<String, Object> attach = new HashMap<>();
         attach.put(Constant.BUSINESS_RECORD_ATTACH_CARDTYPE, cardInfo.getCardType());
@@ -157,15 +160,13 @@ public class AccountManageServiceImpl implements IAccountManageService {
         attach.put(Constant.BUSINESS_RECORD_ATTACH_CERT_NO, cardInfo.getCustomerCertificateNumber());
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, cardInfo, record -> {
             record.setType(OperateType.PERMISSION_SET.getCode());
-            record.setAttach(JSON.toJSONString(attach));
         });
-        //保存支付权限
-        String permissionValue = this.savePayPermissions(requestDto, cardInfo);
         attach.put("permissionStr", permissionValue);
         attach.put("permissionWithdrawDailyAmount", CurrencyUtils.toYuanWithStripTrailingZeros(requestDto.getWithdraw().getDailyAmount()));
         attach.put("permissionWithdrawDailyTimes", requestDto.getWithdraw().getDailyTimes());
         attach.put("permissionTradeDailyAmount", CurrencyUtils.toYuanWithStripTrailingZeros(requestDto.getTrade().getDailyAmount()));
         attach.put("permissionTradeDailyTimes", requestDto.getTrade().getDailyTimes());
+        businessRecord.setAttach(JSON.toJSONString(attach));
         serialService.saveBusinessRecord(businessRecord);
 
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();

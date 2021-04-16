@@ -33,7 +33,7 @@ public class TradeChannelProvider implements ValueProvider {
     @Override
     public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
         if (obj == null) {
-            return null;
+            return "--";
         }
         Integer code = (Integer) obj;
         return TradeChannel.getNameByCode(code);
