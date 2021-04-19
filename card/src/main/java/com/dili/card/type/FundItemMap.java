@@ -3,7 +3,7 @@ package com.dili.card.type;
 /**
  * 用于冲正时资金项目映射
  */
-public enum ReverseFundItemMap {
+public enum FundItemMap {
     /** 现金存款 */
     CASH_CHARGE(FundItem.CASH_CHARGE, false),
     /** POS存款 */
@@ -24,7 +24,7 @@ public enum ReverseFundItemMap {
     /***/
     private FundItem code;
 
-    ReverseFundItemMap(FundItem code, Boolean isFee) {
+    FundItemMap(FundItem code, Boolean isFee) {
         this.isFee = isFee;
         this.code = code;
     }
@@ -39,10 +39,10 @@ public enum ReverseFundItemMap {
     }
 
     /**
-    * 判断是否是费用项
-    * @author miaoguoxin
-    * @date 2020/11/25
-    */
+     * 判断是否是费用项
+     * @author miaoguoxin
+     * @date 2020/11/25
+     */
     public static boolean isFeeFundItem(Integer fundItemCode) {
         if (fundItemCode == null) {
             return false;
@@ -51,16 +51,16 @@ public enum ReverseFundItemMap {
         if (item == null) {
             return false;
         }
-        ReverseFundItemMap itemMap = getByCode(item);
-        if (itemMap == null){
+        FundItemMap itemMap = getByCode(item);
+        if (itemMap == null) {
             return false;
         }
         return itemMap.getIsFee();
     }
 
 
-    public static ReverseFundItemMap getByCode(FundItem code) {
-        for (ReverseFundItemMap itemMap : ReverseFundItemMap.values()) {
+    public static FundItemMap getByCode(FundItem code) {
+        for (FundItemMap itemMap : FundItemMap.values()) {
             if (itemMap.getCode() == code) {
                 return itemMap;
             }

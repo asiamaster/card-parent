@@ -14,8 +14,8 @@ import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.IStatisticsService;
+import com.dili.card.type.FundItemMap;
 import com.dili.card.type.OperateType;
-import com.dili.card.type.ReverseFundItemMap;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -97,7 +97,7 @@ public class StatisticsController implements IControllerHandler {
         queryDto.setSerialNo(recordResponseDto.getSerialNo());
         List<SerialRecordResponseDto> serialList = serialService.getSerialList(queryDto);
         List<SerialRecordResponseDto> feeList = serialList.stream()
-                .filter(l -> ReverseFundItemMap.isFeeFundItem(l.getFundItem()))
+                .filter(l -> FundItemMap.isFeeFundItem(l.getFundItem()))
                 .filter(l -> l.getAmount() != null)
                 .collect(Collectors.toList());
         Long totalFee = feeList.stream()

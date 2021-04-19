@@ -30,7 +30,7 @@ import com.dili.card.service.ISerialService;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
-import com.dili.card.type.ReverseFundItemMap;
+import com.dili.card.type.FundItemMap;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.domain.PageOutput;
@@ -231,7 +231,7 @@ public class ReverseService implements IReverseService {
 
     private FundItem getAccountFeeItem(List<SerialRecordResponseDto> recordResponseDtos) {
         for (SerialRecordResponseDto serialRecordDo : recordResponseDtos) {
-            if (!ReverseFundItemMap.isFeeFundItem(serialRecordDo.getFundItem())) {
+            if (!FundItemMap.isFeeFundItem(serialRecordDo.getFundItem())) {
                 return FundItem.getByCode(serialRecordDo.getFundItem());
             }
         }
@@ -240,7 +240,7 @@ public class ReverseService implements IReverseService {
 
     private FundItem getServiceFeeItem(List<SerialRecordResponseDto> recordResponseDtos) {
         for (SerialRecordResponseDto serialRecordDo : recordResponseDtos) {
-            if (ReverseFundItemMap.isFeeFundItem(serialRecordDo.getFundItem())) {
+            if (FundItemMap.isFeeFundItem(serialRecordDo.getFundItem())) {
                 return FundItem.getByCode(serialRecordDo.getFundItem());
             }
         }
@@ -258,7 +258,7 @@ public class ReverseService implements IReverseService {
     private List<SerialRecordResponseDto> getFeeSerialRecords(List<SerialRecordDo> serialRecordDos) {
         List<SerialRecordResponseDto> feeSerials = new ArrayList<>();
         for (SerialRecordDo serialRecordDo : serialRecordDos) {
-            if (ReverseFundItemMap.isFeeFundItem(serialRecordDo.getFundItem())) {
+            if (FundItemMap.isFeeFundItem(serialRecordDo.getFundItem())) {
                 SerialRecordResponseDto dto = new SerialRecordResponseDto();
                 BeanUtils.copyProperties(serialRecordDo, dto);
                 feeSerials.add(dto);
