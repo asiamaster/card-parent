@@ -14,10 +14,8 @@
 				_displayDomainName="userName"
 				_placeholder="" _optionVariable="userNameQueryAutoCompleteOption"/>
 			</div>
-			<% } else { %>
-			<input type="hidden" name="userName" id="userName" value="${userName!}">
-			<input type="hidden" name="operatorId" id="operatorId" value="${operatorId!}">
 			<% } %>
+
 			<#component_dateControls
 			_labelText="操作时间"
 			_startDateParam="operateTimeStart"

@@ -76,17 +76,8 @@ public class StatisticsController implements IControllerHandler {
      */
     @GetMapping("index.html")
     public String recordIndex(ModelMap model) {
-        UserTicket userTicket = getUserTicket();
         //需要做数据权限控制
-        List<Map> maps = SessionContext.getSessionContext().dataAuth("dataRange");
-        if (CollectionUtil.isEmpty(maps)){
-            model.put("allAuth",1);
-        }else {
-            Object value = maps.get(0).get("value");
-            model.put("allAuth",NumberUtil.parseInt(value.toString()));
-        }
-        model.put("operatorId", userTicket.getId());
-        model.put("userName", userTicket.getRealName());
+        model.put("allAuth", getDataAuthFlag());
         return "statistics/recordList";
     }
 
@@ -135,6 +126,10 @@ public class StatisticsController implements IControllerHandler {
     public BaseOutput<List<BusinessRecordSummaryDto>> getBusinessRecordSummaryList(SerialQueryDto queryDto) {
         UserTicket userTicket = getUserTicket();
         queryDto.setFirmId(userTicket.getFirmId());
+        //“个人”权限设置为当前操作员
+        if (getDataAuthFlag() == 0) {
+            queryDto.setOperatorId(userTicket.getId());
+        }
         List<BusinessRecordSummaryDto> result = statisticsService.countBusinessRecordSummary(queryDto);
         return BaseOutput.successData(result);
     }
@@ -150,14 +145,32 @@ public class StatisticsController implements IControllerHandler {
         LOGGER.info("统计业务日志分页*****{}", JSONObject.toJSONString(queryDto));
         UserTicket userTicket = getUserTicket();
         queryDto.setFirmId(userTicket.getFirmId());
-        //默认查询只查询指定的操作类型
+        //只查询指定的操作类型
         List<Integer> operateTypeList = queryDto.getOperateTypeList();
         if (CollectionUtil.isEmpty(operateTypeList)) {
             operateTypeList = new ArrayList<>(operateType);
         }
         queryDto.setOperateTypeList(operateTypeList);
+        //“个人”权限设置为当前操作员
+        if (getDataAuthFlag() == 0) {
+            queryDto.setOperatorId(userTicket.getId());
+        }
         PageOutput<List<BusinessRecordResponseDto>> lists = serialService.queryPage(queryDto);
         return successPage(lists);
     }
 
+    /**
+     * 获取数据权限的标记 ，1：所有人 0：个人
+     * @author miaoguoxin
+     * @date 2021/4/19
+     */
+    private static int getDataAuthFlag() {
+        List<Map> maps = SessionContext.getSessionContext().dataAuth("dataRange");
+        if (CollectionUtil.isEmpty(maps)) {
+            return 1;
+        } else {
+            Object value = maps.get(0).get("value");
+            return NumberUtil.parseInt(value.toString());
+        }
+    }
 }
