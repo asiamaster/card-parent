@@ -49,7 +49,7 @@
 			</div>
 			<table id="grid"
 				   class="table"
-				   data-title="操作记录查询"
+				   data-title="卡务操作统计报表"
 				   data-buttons-class="primary"
 				   data-icons="bui.variable.icons">
 				<thead>
@@ -130,7 +130,7 @@
 					uniqueId: "id",
 					url: "${contextPath}/statistics/business/page.action",
 					sortName: "operate_time",
-					modalName: "操作记录查询",
+					modalName: "卡务操作统计报表",
 					queryParams:function (params) {
 						let queryParams = $.table.queryParams(params);
 						queryParams.operateTypeList = that.selectedOpType;

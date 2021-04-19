@@ -76,8 +76,10 @@ public class StatisticsController implements IControllerHandler {
      */
     @GetMapping("index.html")
     public String recordIndex(ModelMap model) {
+        UserTicket userTicket = getUserTicket();
         //需要做数据权限控制
         model.put("allAuth", getDataAuthFlag());
+        model.put("firmName", userTicket.getFirmName());
         return "statistics/recordList";
     }
 
@@ -101,7 +103,7 @@ public class StatisticsController implements IControllerHandler {
                 .mapToLong(serialRecordDo -> NumberUtils.toLong(serialRecordDo.getAmount() + ""))
                 .sum();
         //期末需要扣除手续费
-        if (recordResponseDto.getEndBalance() != null){
+        if (recordResponseDto.getEndBalance() != null) {
             recordResponseDto.setEndBalance(NumberUtil.sub(recordResponseDto.getEndBalance(), totalFee).longValue());
         }
 
