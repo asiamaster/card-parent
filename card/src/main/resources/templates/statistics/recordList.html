@@ -200,9 +200,7 @@
 				})
 			},
 			getRecordList(operateType){
-				console.log("fff");
 				this.selectedOpType = operateType;
-				console.log(this.selectedOpType);
 				$.table.search();
 			},
 			//搜索
@@ -213,6 +211,7 @@
 			//重置表单
 			resetForm(){
 				$.form.resetOnlyForm();
+				this.selectedOpType = '';
 				this.resetDateControl();
 				this.search();
 			},
