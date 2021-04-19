@@ -101,7 +101,9 @@ public class StatisticsController implements IControllerHandler {
                 .mapToLong(serialRecordDo -> NumberUtils.toLong(serialRecordDo.getAmount() + ""))
                 .sum();
         //期末需要扣除手续费
-        recordResponseDto.setEndBalance(NumberUtil.sub(recordResponseDto.getEndBalance(), totalFee).longValue());
+        if (recordResponseDto.getEndBalance() != null){
+            recordResponseDto.setEndBalance(NumberUtil.sub(recordResponseDto.getEndBalance(), totalFee).longValue());
+        }
 
         String recordJson = JSON.toJSONString(recordResponseDto, new EnumTextDisplayAfterFilter());
         modelMap.put("record", JSON.parseObject(recordJson));

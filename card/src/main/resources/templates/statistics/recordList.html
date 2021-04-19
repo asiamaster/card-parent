@@ -2,7 +2,6 @@
 <#vueElm/>
 <div class="container-fluid" id="v">
 	<form id="queryForm" role="form">
-		<input type="hidden" name="operateTypeList" id="operateTypeList[0]" :value="selectedOpType">
 		<div class="row row-cols-6">
 			<% if(allAuth == 1) {%>
 			<div class="form-group col">
@@ -126,11 +125,17 @@
 		},
 		methods :{
 			initRecordTable: function () {
+				let that = this;
 				let options = {
 					uniqueId: "id",
 					url: "${contextPath}/statistics/business/page.action",
 					sortName: "operate_time",
-					modalName: "操作记录查询"
+					modalName: "操作记录查询",
+					queryParams:function (params) {
+						let queryParams = $.table.queryParams(params);
+						queryParams.operateTypeList = that.selectedOpType;
+						return queryParams;
+					}
 				};
 				$.table.init(options);
 			},
