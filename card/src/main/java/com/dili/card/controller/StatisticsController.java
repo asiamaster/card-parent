@@ -98,6 +98,7 @@ public class StatisticsController implements IControllerHandler {
         List<SerialRecordResponseDto> serialList = serialService.getSerialList(queryDto);
         List<SerialRecordResponseDto> feeList = serialList.stream()
                 .filter(l -> ReverseFundItemMap.isFeeFundItem(l.getFundItem()))
+                .filter(l -> l.getAmount() != null)
                 .collect(Collectors.toList());
         Long totalFee = feeList.stream()
                 .mapToLong(serialRecordDo -> NumberUtils.toLong(serialRecordDo.getAmount() + ""))

@@ -40,8 +40,29 @@ public class BankCounterPrintResponseDto implements Serializable {
     /** 创建时间 */
     @JSONField(format = "yyyy  MM  dd  HH:mm:ss")
     private LocalDateTime createdTime;
+    /**特殊处理的银行存取款时间*/
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime otherApplyTime;
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime otherCreatedTime;
     /**打印模板名称*/
     private String printTemplate;
+
+    public LocalDateTime getOtherApplyTime() {
+        return otherApplyTime;
+    }
+
+    public void setOtherApplyTime(LocalDateTime otherApplyTime) {
+        this.otherApplyTime = otherApplyTime;
+    }
+
+    public LocalDateTime getOtherCreatedTime() {
+        return otherCreatedTime;
+    }
+
+    public void setOtherCreatedTime(LocalDateTime otherCreatedTime) {
+        this.otherCreatedTime = otherCreatedTime;
+    }
 
     public String getPrintTemplate() {
         return printTemplate;

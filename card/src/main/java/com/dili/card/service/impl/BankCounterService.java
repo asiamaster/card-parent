@@ -6,10 +6,14 @@ import java.util.stream.Collectors;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
+import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dto.BankCounterPrintResponseDto;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.type.PrintTemplate;
 import com.dili.card.util.CurrencyUtils;
+import com.dili.uap.sdk.domain.Firm;
+import com.dili.uap.sdk.rpc.FirmRpc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +37,8 @@ import com.github.pagehelper.PageHelper;
 public class BankCounterService implements IBankCounterService {
     @Autowired
     private IBankCounterDao bankCounterDao;
+    @Autowired
+    private FirmRpc firmRpc;
 
     @Override
     public PageOutput<List<BankCounterResponseDto>> getPage(BankCounterQuery param) {
@@ -57,18 +63,21 @@ public class BankCounterService implements IBankCounterService {
     }
 
     private BankCounterPrintResponseDto copyPrintData(BankCounterDo bankCounterDo) {
+        Firm firm = GenericRpcResolver.resolver(firmRpc.getById(bankCounterDo.getFirmId()), ServiceName.UAP);
         BankCounterPrintResponseDto responseDto = new BankCounterPrintResponseDto();
-        responseDto.setReceiveAccountNo("123");
-        responseDto.setReceiveCompany("xxx公司");
+        responseDto.setReceiveAccountNo(bankCounterDo.getFirmName());
+        responseDto.setReceiveCompany(firm.getSimpleName());
         responseDto.setAction(bankCounterDo.getAction());
         String amountText = String.valueOf(bankCounterDo.getAmount());
         responseDto.setAmountText(formatPrintAmount(amountText));
-        responseDto.setApplyTime(bankCounterDo.getApplyTime());
         responseDto.setAmountCN(Convert.digitToChinese(new BigDecimal(amountText)));
-        responseDto.setCreatedTime(bankCounterDo.getCreatedTime());
         responseDto.setDescription(bankCounterDo.getDescription());
         responseDto.setOperatorId(bankCounterDo.getOperatorId());
         responseDto.setOperatorName(bankCounterDo.getOperatorName());
+        responseDto.setApplyTime(bankCounterDo.getApplyTime());
+        responseDto.setOtherApplyTime(bankCounterDo.getApplyTime());
+        responseDto.setCreatedTime(bankCounterDo.getCreatedTime());
+        responseDto.setOtherCreatedTime(bankCounterDo.getCreatedTime());
         responseDto.setSerialNo(bankCounterDo.getSerialNo());
         responseDto.setPrintTemplate(PrintTemplate.BANK_COUNTER.getType());
         return responseDto;
