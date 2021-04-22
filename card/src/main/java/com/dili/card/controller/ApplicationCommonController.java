@@ -63,11 +63,13 @@ public class ApplicationCommonController implements IControllerHandler {
     @GetMapping("/dictList.action")
     @ResponseBody
     public BaseOutput<List<DataDictionaryValue>> getDataDictList(String code) {
+        UserTicket userTicket = getUserTicket();
         BaseOutput<List<DataDictionaryValue>> listBaseOutput = dataDictionaryRpc.listDataDictionaryValueByDdCode(code);
         List<DataDictionaryValue> resolver = GenericRpcResolver.resolver(listBaseOutput, ServiceName.UAP);
         //只要已启用的
         List<DataDictionaryValue> collect = resolver.stream()
                 .filter(d -> d.getState() != null && d.getState() == 1)
+                .filter(d-> userTicket.getFirmId().equals(d.getFirmId()))
                 .collect(Collectors.toList());
         return BaseOutput.successData(collect);
     }
