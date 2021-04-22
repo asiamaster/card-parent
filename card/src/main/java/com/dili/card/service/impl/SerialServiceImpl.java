@@ -20,6 +20,7 @@ import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.AccountCycleDo;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
+import com.dili.card.entity.bo.FeeSerialRecordBo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.SerialRecordRpcResolver;
 import com.dili.card.rpc.resolver.UidRpcResovler;
@@ -34,6 +35,7 @@ import com.dili.card.type.BizNoType;
 import com.dili.card.type.CardType;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
+import com.dili.card.type.FundItemMap;
 import com.dili.card.type.OperateState;
 import com.dili.card.type.OperateType;
 import com.dili.card.util.DateUtil;
@@ -254,6 +256,14 @@ public class SerialServiceImpl implements ISerialService {
             BeanUtils.copyProperties(l, dto);
             return dto;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public FeeSerialRecordBo getFeeSerialListBySerialNo(String serialNo) {
+        SerialQueryDto queryDto = new SerialQueryDto();
+        queryDto.setSerialNo(serialNo);
+        List<SerialRecordResponseDto> serialList = this.getSerialList(queryDto);
+        return new FeeSerialRecordBo(serialList);
     }
 
     @Override

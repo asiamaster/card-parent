@@ -18,6 +18,7 @@ import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.ReverseRecord;
 import com.dili.card.entity.SerialRecordDo;
+import com.dili.card.entity.bo.FeeSerialRecordBo;
 import com.dili.card.entity.bo.ReverseAmountBo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.PayRpc;
@@ -93,15 +94,10 @@ public class ReverseService implements IReverseService {
         }
         BusinessRecordResponseDto bizSerial = new BusinessRecordResponseDto();
         BeanUtils.copyProperties(businessRecord, bizSerial);
-        //查询操作记录
-        SerialQueryDto queryDto = new SerialQueryDto();
-        queryDto.setSerialNo(serialNo);
-        List<SerialRecordDo> serialRecordDos = serialRecordRpcResolver.getList(queryDto);
-        //手续费
-        List<SerialRecordResponseDto> feeSerials = this.getFeeSerialRecords(serialRecordDos);
-        Long totalFee = this.getTotalFee(feeSerials);
+        //查询手续费记录
+        FeeSerialRecordBo feeSerialRecordBo = serialService.getFeeSerialListBySerialNo(serialNo);
         //期末要求计算手续费
-        bizSerial.setEndBalance(NumberUtil.sub(bizSerial.getEndBalance(), totalFee).longValue());
+        bizSerial.setEndBalance(feeSerialRecordBo.calculateEndBalanceWhenDeductFee(bizSerial.getEndBalance()));
         //查询卡账户
         UserAccountSingleQueryDto accountQueryDto = new UserAccountSingleQueryDto();
         accountQueryDto.setAccountId(bizSerial.getAccountId());
@@ -111,8 +107,8 @@ public class ReverseService implements IReverseService {
         ReverseDetailResponseDto result = new ReverseDetailResponseDto();
         result.setAccountInfo(accountInfo);
         result.setBizSerial(bizSerial);
-        result.setFeeSerials(feeSerials);
-        result.setTotalSerials(this.getTotalSerialRecords(serialRecordDos));
+        result.setFeeSerials(feeSerialRecordBo.getFeeList());
+        result.setTotalSerials(feeSerialRecordBo.getTotalList());
         return result;
     }
 

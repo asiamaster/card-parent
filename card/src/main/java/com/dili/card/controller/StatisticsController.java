@@ -11,6 +11,7 @@ import com.dili.card.dto.BusinessRecordSummaryDto;
 import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.dto.SerialRecordResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.entity.bo.FeeSerialRecordBo;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.IStatisticsService;
@@ -91,33 +92,20 @@ public class StatisticsController implements IControllerHandler {
     @GetMapping("recordDetail.html")
     public String recordDetail(Long id, ModelMap modelMap) {
         //操作记录
-        BusinessRecordResponseDto recordResponseDto = serialService.getOneById(id);
+        BusinessRecordResponseDto record = serialService.getOneById(id);
         //手续费信息
-        SerialQueryDto queryDto = new SerialQueryDto();
-        queryDto.setSerialNo(recordResponseDto.getSerialNo());
-        List<SerialRecordResponseDto> serialList = serialService.getSerialList(queryDto);
-        List<SerialRecordResponseDto> feeList = serialList.stream()
-                .filter(l -> FundItemMap.isFeeFundItem(l.getFundItem()))
-                .filter(l -> l.getAmount() != null)
-                .collect(Collectors.toList());
-        Long totalFee = feeList.stream()
-                .mapToLong(serialRecordDo -> NumberUtils.toLong(serialRecordDo.getAmount() + ""))
-                .sum();
+        FeeSerialRecordBo feeSerialRecordBo = serialService.getFeeSerialListBySerialNo(record.getSerialNo());
         //期末需要扣除手续费
-        if (recordResponseDto.getEndBalance() != null) {
-            recordResponseDto.setEndBalance(NumberUtil.sub(recordResponseDto.getEndBalance(), totalFee).longValue());
-        }
-
-        String recordJson = JSON.toJSONString(recordResponseDto, new EnumTextDisplayAfterFilter());
-        modelMap.put("record", JSON.parseObject(recordJson));
-        String listJson = JSON.toJSONString(feeList, new EnumTextDisplayAfterFilter());
-        modelMap.put("feeList", JSON.parseArray(listJson));
-
+        record.setEndBalance(feeSerialRecordBo.calculateEndBalanceWhenDeductFee(record.getEndBalance()));
         //卡信息
-        UserAccountCardResponseDto accountCard = accountQueryService.getByCardNoWithoutValidate(recordResponseDto.getCardNo());
-        String accountCardJson = JSON.toJSONString(accountCard, new EnumTextDisplayAfterFilter());
-        modelMap.put("accountCard", JSON.parseObject(accountCardJson));
+        UserAccountCardResponseDto accountCard = accountQueryService.getByCardNoWithoutValidate(record.getCardNo());
 
+        String accountCardJson = JSON.toJSONString(accountCard, new EnumTextDisplayAfterFilter());
+        String recordJson = JSON.toJSONString(record, new EnumTextDisplayAfterFilter());
+        String listJson = JSON.toJSONString(feeSerialRecordBo.getFeeList(), new EnumTextDisplayAfterFilter());
+        modelMap.put("record", JSON.parseObject(recordJson));
+        modelMap.put("feeList", JSON.parseArray(listJson));
+        modelMap.put("accountCard", JSON.parseObject(accountCardJson));
         return "statistics/recordDetail";
     }
 

@@ -1,5 +1,6 @@
 package com.dili.card.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.card.dto.BusinessRecordResponseDto;
 import com.dili.card.dto.CardRequestDto;
 import com.dili.card.dto.SerialDto;
@@ -9,6 +10,7 @@ import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.entity.SerialRecordDo;
+import com.dili.card.entity.bo.FeeSerialRecordBo;
 import com.dili.card.service.serial.IAccountSerialFilter;
 import com.dili.card.service.serial.IBusinessRecordFilter;
 import com.dili.ss.domain.PageOutput;
@@ -107,6 +109,13 @@ public interface ISerialService {
     * @date 2021/4/12
     */
     List<SerialRecordResponseDto> getSerialList(SerialQueryDto serialQueryDto);
+
+    /**
+    *  获取手续费流水记录列表
+    * @author miaoguoxin
+    * @date 2021/4/22
+    */
+    FeeSerialRecordBo getFeeSerialListBySerialNo(String serialNo);
 
     /**
      * 构建业务记录数据并提供回调处理
