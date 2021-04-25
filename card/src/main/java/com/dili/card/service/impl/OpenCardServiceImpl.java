@@ -202,7 +202,6 @@ public class OpenCardServiceImpl implements IOpenCardService {
                 tradeResponseDto, serialNo);
         serialService.saveBusinessRecord(busiRecord);
         openCardResponse.setSerialNo(busiRecord.getSerialNo());
-
         // 保存全局操作交易记录 开卡工本费
         saveSerialRecord(openCardInfo, accountId, serialNo);
         // 发送MQ通知
