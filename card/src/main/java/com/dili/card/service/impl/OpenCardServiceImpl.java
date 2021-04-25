@@ -203,7 +203,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
         serialService.saveBusinessRecord(busiRecord);
         openCardResponse.setSerialNo(busiRecord.getSerialNo());
         // 保存全局操作交易记录 开卡工本费
-        saveSerialRecord(openCardInfo, accountId, serialNo, tradeResponseDto.getWhen());
+        saveSerialRecord(openCardInfo, accountId, serialNo);
         // 发送MQ通知
         sendMQ(openCardInfo);
         //创建员工信息，附加功能，不能影响主流程
@@ -272,7 +272,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
     /**
      * 生成全局日志
      */
-    private void saveSerialRecord(OpenCardDto openCardInfo, Long accountId, String serialNo, LocalDateTime operateTime) {
+    private void saveSerialRecord(OpenCardDto openCardInfo, Long accountId, String serialNo) {
         SerialRecordDo record = new SerialRecordDo();
         record.setAccountId(accountId);
         record.setCardNo(openCardInfo.getCardNo());
@@ -292,7 +292,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
         record.setFundItemName(FundItem.IC_CARD_COST.getName());
         record.setAmount(openCardInfo.getCostFee());
         record.setTradeChannel(TradeChannel.CASH.getCode());
-        record.setOperateTime(operateTime);
+        record.setOperateTime(LocalDateTime.now());
         record.setHoldName(openCardInfo.getHoldName());
         record.setHoldContactsPhone(openCardInfo.getHoldContactsPhone());
         record.setHoldCertificateNumber(openCardInfo.getHoldCertificateNumber());
