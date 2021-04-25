@@ -204,11 +204,11 @@ public class OpenCardServiceImpl implements IOpenCardService {
         openCardResponse.setSerialNo(busiRecord.getSerialNo());
 
         // 保存全局操作交易记录 开卡工本费
-        saveSerialRecord(openCardInfo, accountId);
+        saveSerialRecord(openCardInfo, accountId, serialNo);
         // 发送MQ通知
         sendMQ(openCardInfo);
         //创建员工信息，附加功能，不能影响主流程
-        if (openCardInfo.getCustomerSyncModifyHoldinfo() == 2){
+        if (openCardInfo.getCustomerSyncModifyHoldinfo() == 2) {
             this.registerEmployee(openCardInfo, accountId);
         }
         return openCardResponse;
@@ -273,7 +273,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
     /**
      * 生成全局日志
      */
-    private void saveSerialRecord(OpenCardDto openCardInfo, Long accountId) {
+    private void saveSerialRecord(OpenCardDto openCardInfo, Long accountId, String serialNo) {
         SerialRecordDo record = new SerialRecordDo();
         record.setAccountId(accountId);
         record.setCardNo(openCardInfo.getCardNo());
@@ -282,7 +282,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
         record.setCustomerNo(openCardInfo.getCustomerCode());
         record.setCustomerType(openCardInfo.getCustomerSubTypes());
         record.setFirmId(openCardInfo.getFirmId());
-        record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
+        record.setSerialNo(serialNo);
         record.setNotes("开卡，工本费转为市场收入");
         record.setOperatorId(openCardInfo.getCreatorId());
         record.setOperatorName(openCardInfo.getCreator());
