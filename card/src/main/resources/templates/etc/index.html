@@ -1,0 +1,271 @@
+<#bs4Body>
+<#vueElm />
+<div class="container-fluid" style="padding: 10px" id="v">
+    <form id="queryForm"  role="form">
+		<input type="text" name="" hidden data-text="一个input时占位解决自动提交" >
+        <div class="row row-cols-6">
+            <div class="form-group col-auto">
+                <label for="cardNo">卡号</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="cardNo" id="cardNo" v-model="queryForm.cardNo" @keyup.enter="getCardInfo" maxlength="12"/>
+                </div>
+            </div>
+            <div class="col-auto align-self-center mt-3">
+	            <button id="query" type="button" class="btn btn-primary"  onclick="readCard()">
+	                <i class="fa fa-search">请刷园区主卡</i>
+	            </button>
+	            <#resource code="add_authBindETC">
+					<button id="authBindBtn" type="button" class="btn btn-primary" v-show="showAuthBtn" @click="openCheckPwdModal">授权绑定</button>
+                </#resource>
+            </div>
+        </div>
+    </form>
+	<div id="cardInfoDiv">
+	</div>
+	 <!-- 已绑定ETC列表 -->
+	<div id="etcTableDiv" style="display: none" v-show="showBindTable">
+		<div class="breadcrumb">
+			 绑定车牌号
+        </div>
+        <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
+            <button id="refreshBtn" type="button" class="btn btn-primary" onclick="$.table.refresh()">
+                <i class="fa fa-refresh">刷新</i>
+            </button>
+            <#resource code="add_bindETCPlate">
+            <button id="openAddHtmlBtn" type="button" class="btn btn-primary" @click="openBindModal">
+                <i class="fa fa-plus" >绑定车牌号</i>
+            </button>
+            </#resource>
+        </div>
+		<table id="grid" data-title="已绑定车牌号列表" data-show-fullscreen="true"
+			data-buttons-class="primary" data-icons="bui.variable.icons">
+			<thead>
+				<tr>
+					<th data-radio="true"></th>
+					<th data-field="plateNo" data-align="center">车牌号</th>
+					<th data-field="cardNo" data-align="center">关联卡号</th>
+					<th data-field="holdName" data-align="center">持卡人名称</th>
+					<th data-field="operatorName" data-align="center">创建人</th>
+					<th data-field="createTime" data-align="center">创建时间 </th>
+					<th data-field="description" data-align="center" >备注 </th>
+					<th data-align="center" data-formatter="operFormatter">操作 </th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/jquery.validate.extend.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/api/etc.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/api/common.js"></script>
+<#common_cardBaseJs/>
+<#common_customerInfoTmpl/>
+<#comment>
+    页面层弹框
+</#comment>
+<script id="checkPassword" type="text/html">
+    <div class="form-group row col">
+		<label for="accountType" class="div_label col-form-label col-md-3 ">园区卡密码</label>
+		<% if(isNotEmpty(allowInput) && allowInput == "1") {%>
+		    <input type="password" class="form-control col-md-6" id="password" maxlength="6" name="password" >
+		<% } else { %>
+		    <input type="password" class="form-control col-md-6" id="password" maxlength="6" name="password" readonly>
+		<% } %>
+		<button id="pwdBtn" type="button" onclick="readPwd()" class="btn btn-primary col-md-3">
+			请输入密码
+		</button>
+	</div>
+</script>
+
+<!--绑定弹出层-->
+<script id="bindPlate" type="text/html">
+	<div class="row row-cols-1"  style="text-align: center">
+	      <form id="bindAddForm" role="form" class="pb-5">
+			   <div class="form-group row">
+	      			<label class="col-md-4 col-form-label">&nbsp车牌号</label>
+	      			<input id="bindPlateNo" name="plateNo" type="text"  class="form-control col-md-6" />
+	      		</div>
+	      		<div class="form-group row">
+	      			<label class="col-md-4 col-form-label">备注</label>
+	      			<textarea id="bindDescription" name="description" class="form-control col-md-6" maxlength="50" rows="3" placeholder="不超过50个字符"></textarea>
+	      		</div>
+	      </form>
+		<p>注：绑定成功后，请让客户签订免密支付协议。</p>
+	</div>
+</script>
+
+<script>
+	$(()=> {
+		$("#queryForm").validate({
+			onkeyup: false,
+			rules: {
+				cardNo: {
+					required: true,
+					maxlength: 12,
+				}
+			},
+			messages: {
+				cardNo: {
+					required: "请输入卡号",
+					maxlength: "卡号最多{0}位"
+				},
+			},
+			focusCleanup: true
+		})
+	});
+
+	let vue = new Vue({
+		el: '#v',
+		data() {
+			return {
+				queryForm: {
+					cardNo: ""
+				},
+				showAuthBtn: false,//授权按钮显示标记
+				showBindTable: false,//显示绑定表格标记
+				checkPwdDialog: null,//校验密码弹框对象
+				bindDialog: null,//绑定车牌号弹框对象
+				cardInfo: {
+					tradePwd: ""
+				},//卡信息
+			}
+		},
+		mounted: function () {
+		},
+		methods: {
+			//获取卡信息
+			getCardInfo() {
+				if (!$.validate.form("queryForm")) {
+					return;
+				}
+				let that = this;
+				etcApi.getCardInfo(this.queryForm.cardNo).then(res => {
+					if (res.success) {
+						that.cardInfo = res.data;
+						that.showAuthBtn = true;
+						$('#cardInfoDiv').html(bui.util.HTMLDecode(template('customerInfoTmpl', res.data)));
+					} else {
+						that.showAuthBtn = false;
+						that.cardInfo = {};
+						$('#cardInfoDiv').html(res.message);
+					}
+					//只要刷卡都隐藏表格
+					that.showBindTable = false;
+					$.table.destroy();
+				})
+			},
+			//开启校验密码弹出框
+			openCheckPwdModal() {
+				let that = this;
+				this.checkPwdDialog = bs4pop.dialog({
+					id: "checkPwdModel",
+					title: '授权绑定',// 对话框title
+					content: bui.util.HTMLDecode(template('checkPassword', {})),
+					width: '500px',
+					height: '200px',
+					btns: [{
+						label: '确定', className: 'btn-primary', onClick(e) {
+							let pwd = $("#password").val();
+							that.cardInfo.tradePwd = pwd;
+							commonApi.checkPwd(that.cardInfo.fundAccountId, pwd).then(res => {
+								if (res.success) {
+									that.showAuthBtn = false;
+									that.showBindTable = true;
+									etcApi.initTable(that.cardInfo.accountId);
+									that.checkPwdDialog.hide();
+								} else {
+									$.modal.alertError(res.message);
+								}
+							});
+							return false;
+						}
+					}, {
+						label: '取消', className: 'btn-secondary', onClick(e) {
+							return true;
+						}
+					}]
+				});
+			},
+			//绑定弹框
+			openBindModal() {
+				let content = bui.util.HTMLDecode(template('bindPlate', {}));
+				let that = this;
+				this.bindDialog = bs4pop.dialog({
+					id: "bindModal",
+					title: '新增绑定车牌号',// 对话框title
+					content: content,
+					width: '500px',
+					height: '400px',
+					btns: [{
+						label: '确定', className: 'btn-primary', onClick(e) {
+							if (!$.validate.form("bindAddForm")) {
+								return false;
+							}
+							let plateNo = $("#bindPlateNo").val();
+							let description = $("#bindDescription").val();
+							etcApi.add(that.cardInfo, plateNo, description).then(res => {
+								if (res.success) {
+									$.modal.alertSuccess("绑定成功");
+									$.table.refresh();
+									that.bindDialog.hide();
+								} else {
+									$.modal.alertError(res.message);
+								}
+							});
+							return false;
+						}
+					}, {
+						label: '取消', className: 'btn-secondary', onClick(e) {
+							return true;
+						}
+					}]
+				});
+				this.initBindValidateRule();
+			},
+			//解绑弹框
+			openUnBindModal(id){
+				let that = this;
+				let rowData = $("#grid").bootstrapTable('getRowByUniqueId', id);
+				$.modal.confirm("确认解绑车牌号【" + rowData.plateNo + "】？", function (sure) {
+					if (!sure) {
+						return;
+					}
+					etcApi.unbind(that.cardInfo, id).then(res => {
+						if (res.success) {
+							$.modal.alertSuccess("解绑成功");
+							$.table.refresh();
+						} else {
+							$.modal.alertError(res.message);
+						}
+					})
+				});
+			},
+
+			//初始化绑定modal的校验规则
+			initBindValidateRule(){
+				$("#bindAddForm").validate({
+					onkeyup: false,
+					rules: {
+						plateNo: {
+							required: true,
+							isPlate: true,
+						}
+					},
+					messages: {
+						plateNo: {
+							required: "请输入车牌号"
+						}
+					},
+					focusCleanup: true
+				})
+			}
+		},
+	});
+
+	// 列表解绑 操作
+	function operFormatter(value, row, index, field) {
+		return "<a href='javascript:void(0);' onclick='vue.openUnBindModal("+row.id+")'>解绑</a>";
+	}
+</script>

@@ -74,6 +74,12 @@ $(document).ready(function () {
         return this.optional(element) || (decimalsValue.test(value));
     }, "金额不能小于0并且只能精确到分");
 
+    //车牌号校验
+    jQuery.validator.addMethod("isPlate",function(value, element) {
+        let pattern = /(^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z][A-Z][A-Z0-9]{4,5}[A-Z0-9挂学警港澳]$)/;
+        return pattern.test(value);
+    }, "不是有效的车牌号");
+
     //校验新密码和确认密码是否相同
     jQuery.validator.addMethod("issame", function () {
         var p3 = $("#confirm_password").val();

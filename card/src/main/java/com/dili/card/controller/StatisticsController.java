@@ -9,19 +9,16 @@ import com.dili.card.common.serializer.EnumTextDisplayAfterFilter;
 import com.dili.card.dto.BusinessRecordResponseDto;
 import com.dili.card.dto.BusinessRecordSummaryDto;
 import com.dili.card.dto.SerialQueryDto;
-import com.dili.card.dto.SerialRecordResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.entity.bo.FeeSerialRecordBo;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.service.IStatisticsService;
-import com.dili.card.type.FundItemMap;
 import com.dili.card.type.OperateType;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.PageOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @Auther: miaoguoxin
