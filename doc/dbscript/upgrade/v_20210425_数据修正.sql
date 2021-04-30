@@ -17,7 +17,8 @@ set b.serial_no=a.serial_no;
 -- 解决类型冲突
 ALTER TABLE `dili_card`.`card_business_record`
     MODIFY COLUMN `type` smallint(4) NULL DEFAULT NULL COMMENT '业务类型-办卡、充值、提现等' AFTER `cycle_no`;
-
-UPDATE  dili_account.account_serial_record SET type = type + 1000 WHERE type <=36;
-UPDATE  dili_card.card_business_record SET type = type +1000 WHERE type <=36;
-UPDATE  dili_card.card_reverse_record SET biz_type = biz_type +1000 WHERE biz_type <=36;
+ALTER TABLE `dili_card`.`card_reverse_record`
+    MODIFY COLUMN `biz_type` smallint(4) NOT NULL COMMENT '对应的业务类型，见枚举TradeType' AFTER `biz_serial_no`;
+UPDATE  dili_account.account_serial_record SET type = type + 1000 WHERE type <=33;
+UPDATE  dili_card.card_business_record SET type = type + 1000 WHERE type <=33;
+UPDATE  dili_card.card_reverse_record SET biz_type = biz_type + 1000 WHERE biz_type <=33;

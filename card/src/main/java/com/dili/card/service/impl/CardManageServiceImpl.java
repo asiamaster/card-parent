@@ -246,7 +246,6 @@ public class CardManageServiceImpl implements ICardManageService {
         payRpcResolver.trade(tradeRequestDto);
 
         SerialDto serialDto = serialService.createAccountSerial(businessRecord, (serialRecord, feeType) -> {
-            serialRecord.setTradeType(OperateType.CHANGE.getCode());
             serialRecord.setType(OperateType.CHANGE.getCode());
             serialRecord.setFundItem(FundItem.IC_CARD_COST.getCode());
             serialRecord.setFundItemName(FundItem.IC_CARD_COST.getName());
