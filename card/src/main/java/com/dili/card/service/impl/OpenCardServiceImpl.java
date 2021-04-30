@@ -286,7 +286,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
         record.setOperatorId(openCardInfo.getCreatorId());
         record.setOperatorName(openCardInfo.getCreator());
         record.setOperatorNo(openCardInfo.getCreatorCode());
-        record.setTradeType(OperateType.ACCOUNT_TRANSACT.getCode());
+        record.setTradeType(TradeType.FEE.getCode());
         record.setType(OperateType.ACCOUNT_TRANSACT.getCode());
         record.setFundItem(FundItem.IC_CARD_COST.getCode());
         record.setFundItemName(FundItem.IC_CARD_COST.getName());
