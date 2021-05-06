@@ -165,6 +165,7 @@ public class FundServiceImpl implements IFundService {
 
             // 保存卡务操作记录
             BusinessRecordDo businessRecord = createBusinessRecord(accountInfo, unfreezeFundDto, payResponse);
+            businessRecord.setType(OperateType.UNFROZEN_FUND.getCode());
             serialService.saveBusinessRecord(businessRecord);
 
             // 构建全局操作记录
