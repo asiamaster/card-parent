@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.BitSet;
 import java.util.Map;
 
 /**
@@ -64,6 +65,16 @@ public class ETCManagementController implements IControllerHandler {
         String dictVal = miscService.getSingleDictVal(DictValue.PWD_BOX_ALLOW_INPUT.getCode(), userTicket.getFirmId(), "1");
         pageView.put("allowInput", dictVal);
         return "etc/index";
+    }
+
+    /**
+    * etc列表查询页面
+    * @author miaoguoxin
+    * @date 2021/5/6
+    */
+    @GetMapping("/list.html")
+    public String list(){
+        return "etc/list";
     }
 
     /**
@@ -124,6 +135,9 @@ public class ETCManagementController implements IControllerHandler {
     @PostMapping("page.action")
     @ResponseBody
     public Map<String, Object> getPage(ETCQueryDto queryDto) {
+        // AssertUtils.notNull(queryDto.getFirmId(),"市场id不能为空");
+        queryDto.setFirmId(8L);
         return successPage(ETCService.getPage(queryDto));
     }
+
 }

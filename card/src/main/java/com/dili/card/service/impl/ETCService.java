@@ -1,5 +1,6 @@
 package com.dili.card.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.dili.card.dao.IBindETCDao;
 import com.dili.card.dto.ETCQueryDto;
 import com.dili.card.dto.ETCRequestDto;
@@ -7,12 +8,14 @@ import com.dili.card.dto.ETCResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.entity.BindETCDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.resolver.CustomerRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IETCService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
 import com.dili.card.type.DisableState;
 import com.dili.card.util.PageUtils;
+import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.ss.domain.PageOutput;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -21,7 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +40,8 @@ public class ETCService implements IETCService {
     private IAccountQueryService accountQueryService;
     @Autowired
     private IBindETCDao bindETCDao;
+    @Autowired
+    private CustomerRpcResolver customerRpcResolver;
 
     @Override
     public String bind(ETCRequestDto requestDto) {
@@ -87,7 +94,7 @@ public class ETCService implements IETCService {
             } else {
                 UserAccountCardResponseDto userAccountCard = accountQueryService.getByAccountIdWithoutValidate(queryDo.getAccountId());
                 if (CardStatus.RETURNED.getCode() != userAccountCard.getCardState()
-                        && DisableState.ENABLED.getCode().equals(userAccountCard.getAccountState())
+                        && DisableState.ENABLED.getCode().equals(userAccountCard.getDisabledState())
                         && queryDo.getState() == 1) {
                     throw new CardAppBizException(String.format("该车牌号已被卡号【%s】绑定", queryDo.getCardNo()));
                 }
@@ -151,9 +158,16 @@ public class ETCService implements IETCService {
     }
 
     private List<ETCResponseDto> convert2RespDto(List<BindETCDo> bindETCDos) {
+        if (CollectionUtil.isEmpty(bindETCDos)) {
+            return new ArrayList<>();
+        }
+        List<Long> customerIds = bindETCDos.stream().map(BindETCDo::getCustomerId).collect(Collectors.toList());
+        Map<Long, CustomerExtendDto> customerMap = customerRpcResolver.findCustomerMapByCustomerIds(customerIds, bindETCDos.get(0).getFirmId());
         return bindETCDos.stream().map(etc -> {
             ETCResponseDto responseDto = new ETCResponseDto();
             BeanUtils.copyProperties(etc, responseDto);
+            CustomerExtendDto customerExtendDto = customerMap.getOrDefault(etc.getCustomerId(), new CustomerExtendDto());
+            responseDto.setCustomerName(customerExtendDto.getName());
             return responseDto;
         }).collect(Collectors.toList());
     }

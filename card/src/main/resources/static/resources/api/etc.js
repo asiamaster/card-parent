@@ -1,23 +1,32 @@
 const etcApi = (function () {
     const prefix = "/etc";
     return {
-        initTable: (accountId) => {
+        initTable: (queryParams) => {
             let options = {
                 uniqueId: "id",
                 url: prefix + "/page.action",
-                sortName: "modify_time",
+                sortName: "create_time",
                 modalName: "已绑定车牌号列表",
                 queryParams: function (params) {
-                    return {
+                    let curParams = {
                         // 传递参数查询参数
                         rows: params.limit,
-                        page: params.offset / params.limit + 1,
+                            page: params.offset / params.limit + 1,
                         searchValue: params.search,
                         sort: params.sort,
-                        order: params.order,
-                        accountId
+                        order: params.order
                     };
+                    return $.extend(curParams, queryParams);
                 }
+            };
+            $.table.init(options);
+        },
+        initPageTable:()=>{
+            let options = {
+                uniqueId: "id",
+                url: prefix + "/page.action",
+                sortName: "create_time",
+                modalName: "已绑定车牌号列表"
             };
             $.table.init(options);
         },

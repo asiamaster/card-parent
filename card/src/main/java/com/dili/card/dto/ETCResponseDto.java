@@ -20,6 +20,8 @@ public class ETCResponseDto {
     private String cardNo;
     /**持卡人名称*/
     private String holdName;
+    /**客户名称*/
+    private String customerName;
     /**车牌号*/
     private String plateNo;
     /**备注*/
@@ -33,6 +35,14 @@ public class ETCResponseDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 
     public Long getId() {
         return id;

@@ -173,7 +173,8 @@
 								if (res.success) {
 									that.showAuthBtn = false;
 									that.showBindTable = true;
-									etcApi.initTable(that.cardInfo.accountId);
+									let params = {accountId: that.cardInfo.accountId};
+									etcApi.initTable(params);
 									that.checkPwdDialog.hide();
 								} else {
 									$.modal.alertError(res.message);
