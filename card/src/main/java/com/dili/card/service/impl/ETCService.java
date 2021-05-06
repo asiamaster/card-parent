@@ -82,7 +82,7 @@ public class ETCService implements IETCService {
         } else {
             if (responseDto.getAccountId().equals(queryDo.getAccountId())) {
                 if (queryDo.getState() == 1) {
-                    throw new CardAppBizException("该车牌号已绑定，请勿重复操作");
+                    throw new CardAppBizException("该车牌号已被绑定，请勿重复操作");
                 }
             } else {
                 UserAccountCardResponseDto userAccountCard = accountQueryService.getByAccountIdWithoutValidate(queryDo.getAccountId());
