@@ -170,6 +170,7 @@ public class FundServiceImpl implements IFundService {
 
             // 构建全局操作记录
             SerialRecordDo serialRecord = buildSerialRecord(accountInfo, unfreezeFundDto, payResponse);
+            serialRecord.setCustomerType(businessRecord.getCustomerType());
             serialList.add(serialRecord);
         }
 
@@ -280,7 +281,7 @@ public class FundServiceImpl implements IFundService {
         record.setCustomerId(accountInfo.getCustomerId());
         record.setCustomerName(accountInfo.getCustomerName());
         record.setCustomerNo(accountInfo.getCustomerCode());
-        record.setCustomerType(accountInfo.getCustomerCharacterType());
+       // record.setCustomerType(accountInfo.getCustomerCharacterType());
         record.setFirmId(unfreezeFundDto.getFirmId());
         record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
         record.setNotes(unfreezeFundDto.getRemark());
