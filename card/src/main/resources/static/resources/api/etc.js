@@ -26,8 +26,8 @@ const etcApi = (function () {
             return $.operate.http(url, "get", {cardNo});
         },
         //绑定
-        add: (cardInfo, plateNo, description) => {
-            let url = prefix + "/add.action";
+        bind: (cardInfo, plateNo, description) => {
+            let url = prefix + "/bind.action";
             let params = {
                 accountId: cardInfo.accountId,
                 cardNo: cardInfo.cardNo,

@@ -9,7 +9,9 @@ import com.dili.card.entity.BindETCDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IETCService;
+import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
+import com.dili.card.type.DisableState;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.domain.PageOutput;
 import com.github.pagehelper.Page;
@@ -39,18 +41,8 @@ public class ETCService implements IETCService {
         //绑定车牌是挂在账号名下，因此这里要以账号为基准
         UserAccountCardResponseDto responseDto = this.getAndValidateAccountCard(requestDto);
 
-        //已存在，但是解绑状态的，更改信息为最新参数
-        //已存在，但是绑定状态的，直接抛错
-        BindETCDo queryDo = bindETCDao.findByPlateNo(requestDto.getPlateNo(), requestDto.getFirmId());
-        BindETCDo saveDo;
-        if (queryDo == null) {
-            saveDo = this.createETCDo(requestDto, responseDto);
-        } else {
-            if (queryDo.getState() == 1) {
-                throw new CardAppBizException(String.format("该车牌号已被卡号【%s】绑定", queryDo.getCardNo()));
-            }
-            saveDo = this.updateETCDo(queryDo, requestDto, responseDto);
-        }
+        //流程见doc/etc绑定流程.jpg
+        BindETCDo saveDo = this.doBind(requestDto, responseDto);
 
         //TODO 先查询是否开通免密，再向支付发起免密协议申请
 
@@ -63,26 +55,15 @@ public class ETCService implements IETCService {
         return saveDo.getLicenseNo();
     }
 
-    private UserAccountCardResponseDto getAndValidateAccountCard(ETCRequestDto requestDto) {
-        UserAccountCardResponseDto responseDto = accountQueryService.getByAccountId(requestDto.getAccountId());
-        if (!CardType.isMaster(responseDto.getCardType())) {
-            throw new CardAppBizException("请使用主卡进行操作");
-        }
-        if (!requestDto.getAccountId().equals(responseDto.getAccountId())
-                || !requestDto.getCardNo().equals(responseDto.getCardNo())) {
-            throw new CardAppBizException("绑定信息不匹配");
-        }
-        return responseDto;
-    }
 
     @Override
     public void unBind(ETCRequestDto requestDto) {
         this.getAndValidateAccountCard(requestDto);
         BindETCDo bindETCDo = bindETCDao.findById(requestDto.getId());
-        if (bindETCDo==null){
+        if (bindETCDo == null) {
             throw new CardAppBizException("绑定记录不存在");
         }
-        this.doUnbind(bindETCDo,requestDto.getOpId(),requestDto.getOpName());
+        this.doUnbind(bindETCDo, requestDto.getOpId(), requestDto.getOpName());
         bindETCDao.updateById(bindETCDo);
     }
 
@@ -93,11 +74,46 @@ public class ETCService implements IETCService {
         return PageUtils.convert2PageOutput(page, this.convert2RespDto(list));
     }
 
-    private void doUnbind(BindETCDo bindETCDo,Long operatorId,String operatorName){
+    private BindETCDo doBind(ETCRequestDto requestDto, UserAccountCardResponseDto responseDto) {
+        BindETCDo queryDo = bindETCDao.findByPlateNo(requestDto.getPlateNo(), requestDto.getFirmId());
+        BindETCDo saveDo;
+        if (queryDo == null) {
+            saveDo = this.createETCDo(requestDto, responseDto);
+        } else {
+            if (responseDto.getAccountId().equals(queryDo.getAccountId())) {
+                if (queryDo.getState() == 1) {
+                    throw new CardAppBizException("该车牌号已绑定，请勿重复操作");
+                }
+            } else {
+                UserAccountCardResponseDto userAccountCard = accountQueryService.getByAccountIdWithoutValidate(queryDo.getAccountId());
+                if (CardStatus.RETURNED.getCode() != userAccountCard.getCardState()
+                        && DisableState.ENABLED.getCode().equals(userAccountCard.getAccountState())
+                        && queryDo.getState() == 1) {
+                    throw new CardAppBizException(String.format("该车牌号已被卡号【%s】绑定", queryDo.getCardNo()));
+                }
+            }
+            saveDo = this.updateETCDo(queryDo, requestDto, responseDto);
+        }
+        return saveDo;
+    }
+
+    private void doUnbind(BindETCDo bindETCDo, Long operatorId, String operatorName) {
         bindETCDo.setOperatorId(operatorId);
         bindETCDo.setOperatorName(operatorName);
         bindETCDo.setState(0);
         bindETCDo.setModifyTime(LocalDateTime.now());
+    }
+
+    private UserAccountCardResponseDto getAndValidateAccountCard(ETCRequestDto requestDto) {
+        UserAccountCardResponseDto responseDto = accountQueryService.getByAccountId(requestDto.getAccountId());
+        if (!CardType.isMaster(responseDto.getCardType())) {
+            throw new CardAppBizException("请使用主卡进行操作");
+        }
+        if (!requestDto.getAccountId().equals(responseDto.getAccountId())
+                || !requestDto.getCardNo().equals(responseDto.getCardNo())) {
+            throw new CardAppBizException("绑定信息不匹配");
+        }
+        return responseDto;
     }
 
     private BindETCDo updateETCDo(BindETCDo bindETCDo, ETCRequestDto requestDto, UserAccountCardResponseDto responseDto) {

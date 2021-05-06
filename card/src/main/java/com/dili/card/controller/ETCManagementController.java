@@ -89,9 +89,9 @@ public class ETCManagementController implements IControllerHandler {
      * @author miaoguoxin
      * @date 2021/4/27
      */
-    @PostMapping("add.action")
+    @PostMapping("bind.action")
     @ResponseBody
-    public BaseOutput<String> add(@RequestBody @Validated(ConstantValidator.Insert.class)
+    public BaseOutput<String> bind(@RequestBody @Validated(ConstantValidator.Insert.class)
                                           ETCRequestDto requestDto) {
         validateCommonParam(requestDto);
         buildOperatorInfo(requestDto);

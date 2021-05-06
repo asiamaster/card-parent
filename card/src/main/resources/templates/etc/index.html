@@ -205,7 +205,7 @@
 							}
 							let plateNo = $("#bindPlateNo").val();
 							let description = $("#bindDescription").val();
-							etcApi.add(that.cardInfo, plateNo, description).then(res => {
+							etcApi.bind(that.cardInfo, plateNo, description).then(res => {
 								if (res.success) {
 									$.modal.alertSuccess("绑定成功");
 									$.table.refresh();
