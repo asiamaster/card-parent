@@ -11,30 +11,30 @@ import java.util.List;
  */
 public enum SerialRecordType
 {
-	ACCOUNT_TRANSACT("办卡", 10),
-	ACCOUNT_CHARGE("充值", 11),
-	ACCOUNT_WITHDRAW("提现", 12),
-	CHANGE("换卡", 13),
-	LOSS_CARD("挂失", 14),
-	LOSS_REMOVE("解挂", 15),
-	PWD_CHANGE("密码更改", 16),
-	RESET_PWD("重置密码", 17),
-	REFUND_CARD("退卡", 18),
-	LIFT_LOCKED("解锁", 19),
-	FLAT_COST("缴费", 20),
-	BANKCARD_BIND("银行卡绑定", 21),
-	BANKCARD_REMOVE("银行卡解绑", 22),
-	BANK_TRANSFER("转账", 23),
-	PERMISSION_SET("权限设置", 24),
-	PAYEE("领款", 25),
-	PAYER("交款", 26),
-	FROZEN_FUND("冻结资金",27),
+	ACCOUNT_TRANSACT("办卡", OperateType.ACCOUNT_TRANSACT.getCode()),
+	ACCOUNT_CHARGE("充值", OperateType.ACCOUNT_CHARGE.getCode()),
+	ACCOUNT_WITHDRAW("提现", OperateType.ACCOUNT_WITHDRAW.getCode()),
+	CHANGE("换卡", OperateType.CHANGE.getCode()),
+	LOSS_CARD("挂失", OperateType.LOSS_CARD.getCode()),
+	LOSS_REMOVE("解挂", OperateType.LOSS_REMOVE.getCode()),
+	PWD_CHANGE("密码更改", OperateType.PWD_CHANGE.getCode()),
+	RESET_PWD("重置密码", OperateType.RESET_PWD.getCode()),
+	REFUND_CARD("退卡", OperateType.REFUND_CARD.getCode()),
+	LIFT_LOCKED("解锁", OperateType.LIFT_LOCKED.getCode()),
+	FLAT_COST("缴费", OperateType.FLAT_COST.getCode()),
+	BANKCARD_BIND("银行卡绑定", OperateType.BANKCARD_BIND.getCode()),
+	BANKCARD_REMOVE("银行卡解绑", OperateType.BANKCARD_REMOVE.getCode()),
+	BANK_TRANSFER("转账", OperateType.BANK_TRANSFER.getCode()),
+	PERMISSION_SET("权限设置", OperateType.PERMISSION_SET.getCode()),
+	PAYEE("领款", OperateType.PAYEE.getCode()),
+	PAYER("交款", OperateType.PAYER.getCode()),
+	FROZEN_FUND("冻结资金",OperateType.FROZEN_FUND.getCode()),
 	;
 
 	private String name;
 	private int code;
 
-	private SerialRecordType(String name, int code)
+	SerialRecordType(String name, int code)
 	{
 		this.name = name;
 		this.code = code;

@@ -110,10 +110,13 @@
  			card_business_record
  		WHERE
  			`cycle_no` IN
- 			<foreach collection ="list" item="cycleNo" separator ="," open="(" close=")">
+ 			<foreach collection ="cycleNos" item="cycleNo" separator ="," open="(" close=")">
          		#{cycleNo}
    	 		</foreach>
-   	 	AND type IN (10,11,12,13)
+   	 	AND type IN
+		<foreach collection ="types" item="type" separator ="," open="(" close=")">
+			#{type}
+		</foreach>
 		AND state = 2
  		GROUP BY `cycle_no`,type,tradeChannel
 
@@ -125,7 +128,7 @@
  			card_user_cash
  		WHERE
  			`cycle_no` IN
- 			<foreach collection ="list" item="cycleNo" separator ="," open="(" close=")">
+ 			<foreach collection ="cycleNos" item="cycleNo" separator ="," open="(" close=")">
          		#{cycleNo}
    	 		</foreach>
    	 	AND state != 10
