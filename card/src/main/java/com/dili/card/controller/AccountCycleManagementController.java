@@ -16,6 +16,7 @@ import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IAccountCycleService;
 import com.dili.card.type.CashAction;
 import com.dili.card.type.CycleState;
+import com.dili.card.util.CurrencyUtils;
 import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
@@ -289,10 +290,10 @@ public class AccountCycleManagementController implements IControllerHandler {
      * @param amount 分
      * @return
      */
-    private String getMoneyFormat(Long amount) {
+    private static String getMoneyFormat(Long amount) {
         if (amount == null) {
             amount = 0L;
         }
-        return "￥" + NumberUtil.decimalFormatMoney(amount / 100);
+        return "￥" + CurrencyUtils.toYuanWithStripTrailingZeros(amount);
     }
 }
