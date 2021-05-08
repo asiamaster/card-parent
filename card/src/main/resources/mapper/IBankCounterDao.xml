@@ -22,6 +22,7 @@
 	</sql>
 	<sql id="Where_Column">
 		<where>
+			firm_id = #{firmId}
 			<if test="action !=null">
 				AND `action` = #{action}
 			</if>
