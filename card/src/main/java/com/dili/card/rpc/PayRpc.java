@@ -181,7 +181,7 @@ public interface PayRpc {
     * @date 2021/5/8
     */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.protocol.service:query", method = RequestMethod.POST)
-    BaseOutput<String> getPwdFreeProtocol(PwdFreeProtocolQueryDto params);
+    BaseOutput<PwdFreeProtocolResponseDto> getPwdFreeProtocol(PwdFreeProtocolQueryDto params);
 
     /**
     * 注册免密协议

@@ -30,6 +30,7 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -60,6 +61,7 @@ public class ETCService implements IETCService {
     private PayRpc payRpc;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String bind(ETCRequestDto requestDto) {
         //绑定车牌是挂在账号名下，因此这里要以账号为基准
         UserAccountCardResponseDto responseDto = this.getAndValidateAccountCard(requestDto);
@@ -80,6 +82,7 @@ public class ETCService implements IETCService {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void unBind(ETCRequestDto requestDto) {
         this.getAndValidateAccountCard(requestDto);
         BindETCDo bindETCDo = bindETCDao.findById(requestDto.getId());

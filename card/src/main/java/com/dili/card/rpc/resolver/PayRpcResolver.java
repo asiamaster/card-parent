@@ -8,6 +8,7 @@ import com.dili.card.dto.pay.CreateTradeResponseDto;
 import com.dili.card.dto.pay.FundOpResponseDto;
 import com.dili.card.dto.pay.PayGlobalConfigDto;
 import com.dili.card.dto.pay.PwdFreeProtocolQueryDto;
+import com.dili.card.dto.pay.PwdFreeProtocolResponseDto;
 import com.dili.card.dto.pay.TradeRequestDto;
 import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.exception.CardAppBizException;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @Auther: miaoguoxin
@@ -28,7 +28,7 @@ import java.util.Optional;
  */
 @Component("payRpcResolver")
 public class PayRpcResolver {
-   private static Logger log = LoggerFactory.getLogger(GenericRpcResolver.class);
+    private static Logger log = LoggerFactory.getLogger(GenericRpcResolver.class);
 
     @Autowired
     private PayRpc payRpc;
@@ -140,12 +140,12 @@ public class PayRpcResolver {
      * @date 2021/5/8
      */
     public String getPwdFreeProtocolNo(PwdFreeProtocolQueryDto queryDto) {
-        BaseOutput<String> result = payRpc.getPwdFreeProtocol(queryDto);
+        BaseOutput<PwdFreeProtocolResponseDto> result = payRpc.getPwdFreeProtocol(queryDto);
         if ("200".equals(result.getCode())) {
-            return result.getData();
+            return result.getData().getProtocolId() + "";
         } else {
             //当前未开通免密，但允许开通
-            if ("509002 ".equals(result.getCode())){
+            if ("509002".equals(result.getCode())) {
                 return null;
             }
             log.error("{}远程服务返回了一个错误![{}]", ServiceName.PAY, JSONObject.toJSONString(result));
