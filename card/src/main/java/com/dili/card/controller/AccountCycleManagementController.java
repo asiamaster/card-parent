@@ -243,7 +243,7 @@ public class AccountCycleManagementController implements IControllerHandler {
     @RequestMapping("/settlePrint.action")
     @ResponseBody
     public BaseOutput<AccountSettlePrintPrintlDto> settlePrint(Long id) {
-        log.info("对帐申请打印*****{}={}", id);
+        log.info("对帐申请打印*****{}", id);
         AccountCycleDto detail = iAccountCycleService.detail(id);
         // 获取最新的账务周期,获取对帐时间，能进到这个方法的都是已对帐了的
         //AccountCycleDo accountCycle = iAccountCycleService.findLatestCycleByUserId(detail.getUserId());

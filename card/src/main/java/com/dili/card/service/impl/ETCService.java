@@ -1,19 +1,27 @@
 package com.dili.card.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
+import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dao.IBindETCDao;
 import com.dili.card.dto.ETCQueryDto;
 import com.dili.card.dto.ETCRequestDto;
 import com.dili.card.dto.ETCResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
+import com.dili.card.dto.pay.PwdFreeProtocolQueryDto;
+import com.dili.card.dto.pay.PwdFreeProtocolRequestDto;
 import com.dili.card.entity.BindETCDo;
 import com.dili.card.exception.CardAppBizException;
+import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.resolver.CustomerRpcResolver;
+import com.dili.card.rpc.resolver.GenericRpcResolver;
+import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IETCService;
 import com.dili.card.type.CardStatus;
 import com.dili.card.type.CardType;
 import com.dili.card.type.DisableState;
+import com.dili.card.type.PwdFreeProtocolType;
 import com.dili.card.util.PageUtils;
 import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.ss.domain.PageOutput;
@@ -23,6 +31,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +54,10 @@ public class ETCService implements IETCService {
     private IBindETCDao bindETCDao;
     @Autowired
     private CustomerRpcResolver customerRpcResolver;
+    @Autowired
+    private PayRpcResolver payRpcResolver;
+    @Autowired
+    private PayRpc payRpc;
 
     @Override
     public String bind(ETCRequestDto requestDto) {
@@ -51,9 +67,9 @@ public class ETCService implements IETCService {
         //流程见doc/etc绑定流程.jpg
         BindETCDo saveDo = this.doBind(requestDto, responseDto);
 
-        //TODO 先查询是否开通免密，再向支付发起免密协议申请
-
-        saveDo.setLicenseNo("123");
+        //申请免密协议
+        String protocolNo = this.createPwdFreeProtocolIfNecessary(responseDto.getFundAccountId(), requestDto.getTradePwd());
+        saveDo.setLicenseNo(protocolNo);
         if (saveDo.getId() != null) {
             bindETCDao.updateById(saveDo);
         } else {
@@ -170,5 +186,22 @@ public class ETCService implements IETCService {
             responseDto.setCustomerName(customerExtendDto.getName());
             return responseDto;
         }).collect(Collectors.toList());
+    }
+
+
+    private String createPwdFreeProtocolIfNecessary(Long fundAccountId, String pwd) {
+        PwdFreeProtocolQueryDto queryDto = new PwdFreeProtocolQueryDto();
+        queryDto.setAccountId(fundAccountId);
+        queryDto.setType(PwdFreeProtocolType.ETC.getCode());
+        queryDto.setAmount(1L);
+        String protocolNo = payRpcResolver.getPwdFreeProtocolNo(queryDto);
+        if (StrUtil.isBlank(protocolNo)) {
+            PwdFreeProtocolRequestDto requestDto = new PwdFreeProtocolRequestDto();
+            requestDto.setAccountId(fundAccountId);
+            requestDto.setType(PwdFreeProtocolType.ETC.getCode());
+            requestDto.setPassword(pwd);
+            protocolNo = GenericRpcResolver.resolver(payRpc.registerPwdFreeProtocol(requestDto), ServiceName.PAY);
+        }
+        return protocolNo;
     }
 }
