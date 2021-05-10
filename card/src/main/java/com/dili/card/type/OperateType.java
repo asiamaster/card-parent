@@ -35,6 +35,7 @@ public enum OperateType
 	UNFROZEN_ACCOUNT("解冻账户",1030),
 	FUND_REVERSE("冲正",1031),
 	FIRM_WITHDRAW("市场圈提",1032),
+	ETC_BIND("ETC绑定",1033)
 	;
 
 	private String name;
