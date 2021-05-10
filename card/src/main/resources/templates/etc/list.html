@@ -1,0 +1,100 @@
+<#bs4Body>
+<#vueElm />
+<div class="container-fluid" id="v">
+    <form id="queryForm" role="form">
+        <div class="row row-cols-6">
+            <div class="form-group col">
+                <label for="plateNo">车牌号</label>
+                <input type="text" id="plateNo" name="plateNo" class="form-control"/>
+            </div>
+            <div class="form-group col-auto" style="width: 350px">
+                <label for="customerCode">客户</label>
+                <div class="input-group">
+                	<#bautoCompleteProvider _hiddenDomainId="customerId" _hiddenDomainName="customerId" _displayDomainId="customerCode" _displayDomainName="customerCode" _placeholder="" _optionVariable="customerNameQueryAutoCompleteOption"/>
+            		<input type="text" class="form-control" id="show_customer_name" readonly/>
+            	</div>
+            </div>
+            <div class="form-group col-auto">
+                <label for="cardNo">卡号</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="cardNo" id="cardNo" maxlength="12"/>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><a id="idCardRead" href="javascript:;"  onclick="readCard()">刷卡</a></span>
+                    </div>
+                </div>
+            </div>
+            <#component_dateControls
+            _labelText="创建时间:"
+            _startDateParam="startDate"
+            _endDateParam="endDate"
+            _resetDate="false"
+            />
+            <div class="col-auto align-self-center mt-3">
+                <button id="clear" type="button" class="btn btn-outline-primary mr-2" onclick="$.form.reset()"><i
+                        class="fa fa-refresh"></i> 清空
+                </button>
+                <button id="query" type="button" class="btn btn-outline-primary" onclick="$.table.search()"><i
+                        class="fa fa-search"></i> 查询
+                </button>
+            </div>
+        </div>
+    </form>
+
+<hr>
+<div class="row" >
+    <div class="col-12">
+        <table id="grid"
+               class="table"
+               data-title="etc绑定查询"
+               data-show-fullscreen="true"
+               data-buttons-class="primary"
+               data-icons="bui.variable.icons" >
+            <thead>
+            <tr>
+                <th data-field="plateNo" data-align="center">
+                    车牌号
+                </th>
+                <th data-field="cardNo" data-align="center">
+                    关联卡号
+                </th>
+                <th data-field="customerName" data-align="center">
+                    客户名称
+                </th>
+                <th data-field="operatorName" data-align="center">
+                    创建人
+                </th>
+                <th data-field="createTime"  data-align="center">
+                    创建时间
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+</div>
+
+</#bs4Body>
+<script type="text/javascript" src="${contextPath}/resources/js/sword.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/api/etc.js"></script>
+<#common_cardBaseJs/>
+<#common_customerJs/>
+
+<script>
+    let vue = new Vue({
+        el: '#v',
+        data() {
+            return {
+            }
+        },
+        mounted: function () {
+            //初始化表格
+            etcApi.initPageTable()
+        },
+        methods: {
+            search(){
+
+            }
+        },
+    });
+</script>
+

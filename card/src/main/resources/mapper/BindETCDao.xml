@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dili.card.dao.IBindETCDao">
+    <sql id="Update_Column">
+        <set>
+            <if test="accountId != null">`account_id` = #{accountId},</if>
+            <if test="cardNo != null and cardNo !=''">`card_no` = #{cardNo},</if>
+            <if test="customerId != null">`customer_id` = #{customerId},</if>
+            <if test="holdName != null and holdName !=''">`hold_name` = #{holdName},</if>
+            <if test="licenseNo != null and licenseNo !=''">`license_no` = #{licenseNo},</if>
+            <if test="operatorId != null">`operator_id` = #{operatorId},</if>
+            <if test="operatorName != null and operatorName !=''">`operator_name` = #{operatorName},</if>
+            <if test="description != null and description !=''">`description` = #{description},</if>
+            <if test="state != null">`state` = #{state},</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            `modify_time`=#{modifyTime}
+        </set>
+    </sql>
+
+    <sql id="Where_Column">
+        <where>
+            `firm_id`= #{firmId}
+            AND `state` = 1
+            <if test="accountId != null">AND `account_id`=#{accountId}</if>
+            <if test="customerId !=null">AND customer_id = #{customerId}</if>
+            <if test="plateNo !=null and plateNo !=''">AND plate_no = #{plateNo}</if>
+            <if test="cardNo !=null and cardNo !=''">AND card_no = #{cardNo}</if>
+            <if test="startDate !=null">AND create_time &gt;= #{startDate}</if>
+            <if test="endDate !=null">AND create_time &lt;= #{endDate}</if>
+        </where>
+    </sql>
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO card_bind_etc(account_id, card_no, customer_id, hold_name, plate_no, license_no, operator_id, operator_name,
+                                  description, firm_id, firm_name, create_time, modify_time, state)
+        VALUES (#{accountId}, #{cardNo}, #{customerId}, #{holdName}, #{plateNo}, #{licenseNo}, #{operatorId}, #{operatorName},
+                #{description}, #{firmId}, #{firmName}, #{createTime}, #{modifyTime}, #{state})
+    </insert>
+
+    <update id="updateById">
+        UPDATE card_bind_etc
+        <include refid="Update_Column"/>
+        WHERE id=#{id}
+    </update>
+
+    <select id="findByPlateNo" resultType="com.dili.card.entity.BindETCDo">
+        SELECT *
+        FROM card_bind_etc
+        WHERE plate_no = #{plateNo}
+          AND firm_id = #{firmId}
+    </select>
+
+    <select id="findByCondition" resultType="com.dili.card.entity.BindETCDo">
+        SELECT *
+        FROM card_bind_etc
+        <include refid="Where_Column"/>
+        <if test="sort != null and sort != '' and order != null and order != ''">
+            ORDER BY ${sort} ${order}
+        </if>
+    </select>
+
+    <select id="findById" resultType="com.dili.card.entity.BindETCDo">
+        SELECT *
+        FROM card_bind_etc
+        WHERE id = #{id}
+          AND state = 1
+    </select>
+</mapper>

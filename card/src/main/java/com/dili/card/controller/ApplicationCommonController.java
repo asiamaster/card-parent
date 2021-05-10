@@ -4,8 +4,11 @@ import cn.hutool.core.util.IdUtil;
 import com.dili.card.common.constant.CacheKey;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.common.handler.IControllerHandler;
+import com.dili.card.dto.FirmWithdrawAuthRequestDto;
+import com.dili.card.rpc.PayRpc;
 import com.dili.card.rpc.resolver.GenericRpcResolver;
 import com.dili.card.service.IMiscService;
+import com.dili.card.validator.ConstantValidator;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.redis.service.RedisUtil;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
@@ -15,7 +18,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -36,6 +42,8 @@ public class ApplicationCommonController implements IControllerHandler {
     private RedisUtil redisUtil;
     @Autowired
     private IMiscService miscService;
+    @Autowired
+    private PayRpc payRpc;
     @Autowired
     private DataDictionaryRpc dataDictionaryRpc;
 
@@ -85,5 +93,18 @@ public class ApplicationCommonController implements IControllerHandler {
         UserTicket userTicket = getUserTicket();
         Long firmId = userTicket.getFirmId();
         return BaseOutput.successData(miscService.getSingleDictVal(code, firmId));
+    }
+
+    /**
+    * 校验支付密码
+    * @author miaoguoxin
+    * @date 2021/4/27
+    */
+    @PostMapping("/checkTradePwd.action")
+    @ResponseBody
+    public BaseOutput<?> checkTradePwd(@RequestBody @Validated(ConstantValidator.Check.class)
+                                                   FirmWithdrawAuthRequestDto requestDto){
+        GenericRpcResolver.resolver(payRpc.checkTradePwd(requestDto), ServiceName.PAY);
+        return BaseOutput.success();
     }
 }

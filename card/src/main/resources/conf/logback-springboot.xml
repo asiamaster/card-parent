@@ -36,6 +36,7 @@
 		</encoder>
 	</appender>
 
+	<logger name="com.alibaba.nacos.client.naming" level="OFF"/>
 	<!-- 开发环境 -->
 	<springProfile name="dev,test">
 		<root level="INFO">

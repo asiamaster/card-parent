@@ -726,8 +726,34 @@ tab = {
                 parent.location.reload();
             }
         },
+
         // 操作封装处理
         operate: {
+            http: function (url, type, data, dataType = "json") {
+               return new Promise((resolve, reject) =>{
+                   $.ajax({
+                       url: url,
+                       type: type,
+                       contentType: "application/json; charset=utf-8",
+                       dataType: dataType,
+                       data: data,
+                       beforeSend: () => {
+                           $.modal.loading("正在处理中，请稍后...");
+                           $.modal.disable();
+                       },
+                       success: (result) => {
+                           resolve(result);
+                       },
+                       complete:(status, result)=>{
+                           $.modal.closeLoading();
+                           $.modal.enable();
+                       },
+                       error: (status, result) => {
+                            reject(result);
+                       }
+                   });
+               })
+            },
             // 提交数据
             submit: function (url, type, dataType, data, callback) {
                 let config = {
@@ -741,16 +767,17 @@ tab = {
                         $.modal.disable();
                     },
                     success: (result) => {
-                        $.modal.closeLoading();
-                        $.modal.enable();
                         if (typeof callback == "function") {
                             callback(result);
                         }
                         $.operate.successCallback(result);
                     },
-                    error: (status, result) => {
+                    complete:(status, result)=>{
                         $.modal.closeLoading();
                         $.modal.enable();
+                    },
+                    error: (status, result) => {
+
                     }
                 };
                 //非get请求都转json

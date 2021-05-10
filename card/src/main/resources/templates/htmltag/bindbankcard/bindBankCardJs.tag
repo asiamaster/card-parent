@@ -5,7 +5,7 @@
 	$(function () {
 		initTable();
 	});
-	
+
 	// 初始化绑定列表
 	function initTable(){
 		let options = {
@@ -24,7 +24,7 @@
     	CefSharp.BindObjectAsync("callbackObj");
         callbackObj.readPasswordKeyboardAsync();
     }
-    
+
     // 该方法名为固定，C端回调
     function pswClientHandler(data){
         var json = JSON.parse(data);
@@ -36,7 +36,7 @@
             return false;
         }
     }
-    
+
     /**
 	 * 授权绑定,密码验证
 	 */
@@ -187,7 +187,7 @@
             }
         })
     }
-    
+
     function operFormatter(value, row, index, field) {
 //    	$("#bankCardNo").val(row["bankNo"]);
 //    	$("#bankName").val(row["bankName"]);
@@ -196,8 +196,8 @@
 //    	$("#description").val(row["description"]);
         return "<a href='javascript:openUnBindModal("+JSON.stringify(row)+");'>解绑</a>";
     }
-    
-    
+
+
     function openUnBindModal(row){
     	var id = row["id"];
     	let dia = bs4pop.dialog({
@@ -229,7 +229,7 @@
             }]
         });
     }
-    
+
     // 解绑银行卡
     function unBind(id) {
     	 var url = "${contextPath}/bindBankCard/unBind.action";
@@ -238,7 +238,7 @@
 	 	   $.table.refresh();
 	   	 });
     }
-    
+
     function noteFormatter(value, row, index, field) {
         if ($.common.isEmpty(value)){
             return value;

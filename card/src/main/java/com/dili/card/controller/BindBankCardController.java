@@ -155,7 +155,7 @@ public class BindBankCardController implements IControllerHandler {
     @PostMapping("/checkPwd.action")
     @ResponseBody
     public BaseOutput<?> checkPwd(@RequestBody CardRequestDto cardParam) {
-        LOG.info("绑定新银行卡校验密码*****" + JSONObject.toJSONString(cardParam, JsonExcludeFilter.PWD_FILTER));
+        LOG.info("绑定校验密码*****" + JSONObject.toJSONString(cardParam, JsonExcludeFilter.PWD_FILTER));
         AssertUtils.notNull(cardParam, "没有任何参数");
         AssertUtils.notNull(cardParam.getAccountId(), "账户ID不能为空");
         AssertUtils.notEmpty(cardParam.getLoginPwd(), "密码不能为空");

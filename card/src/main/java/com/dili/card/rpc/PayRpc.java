@@ -176,6 +176,22 @@ public interface PayRpc {
     BaseOutput<AccountPermissionResponseDto> loadPermission(JSONObject params);
 
     /**
+    * 查询免密协议
+    * @author miaoguoxin
+    * @date 2021/5/8
+    */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.protocol.service:query", method = RequestMethod.POST)
+    BaseOutput<PwdFreeProtocolResponseDto> getPwdFreeProtocol(PwdFreeProtocolQueryDto params);
+
+    /**
+    * 注册免密协议
+    * @author miaoguoxin
+    * @date 2021/5/8
+    */
+    @RequestMapping(value = "/payment/api/gateway.do?service=payment.protocol.service:register", method = RequestMethod.POST)
+    BaseOutput<String> registerPwdFreeProtocol(PwdFreeProtocolRequestDto params);
+
+    /**
      * 设置卡账户权限
      */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.sentinel.service:set", method = RequestMethod.POST)
