@@ -165,7 +165,8 @@ public class ETCService implements IETCService {
         bindETCDo.setCardNo(responseDto.getCardNo());
         bindETCDo.setHoldName(responseDto.getHoldName());
 
-        bindETCDo.setPlateNo(requestDto.getPlateNo());
+        //车牌号都转大写
+        bindETCDo.setPlateNo(requestDto.getPlateNo().toUpperCase());
         bindETCDo.setDescription(requestDto.getDescription());
         bindETCDo.setState(1);
 
@@ -197,6 +198,7 @@ public class ETCService implements IETCService {
         queryDto.setAccountId(fundAccountId);
         queryDto.setType(PwdFreeProtocolType.ETC.getCode());
         queryDto.setAmount(1L);
+        //TODO 是否需要校验资金账户状态
         String protocolNo = payRpcResolver.getPwdFreeProtocolNo(queryDto);
         if (StrUtil.isBlank(protocolNo)) {
             PwdFreeProtocolRequestDto requestDto = new PwdFreeProtocolRequestDto();

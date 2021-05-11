@@ -6,7 +6,7 @@ CREATE TABLE `card_bind_etc` (
                                  `customer_id` bigint(20) NOT NULL COMMENT '客户id',
                                  `hold_name` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT '持卡人名称',
                                  `plate_no` varchar(12) COLLATE utf8_unicode_ci NOT NULL COMMENT '车牌号',
-                                 `license_no` varchar(25) COLLATE utf8_unicode_ci NOT NULL COMMENT '免密协议号',
+                                 `license_no` varchar(40) COLLATE utf8_unicode_ci NOT NULL COMMENT '免密协议号',
                                  `operator_id` bigint(20) NOT NULL COMMENT '操作员id',
                                  `operator_name` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT '操作员名称',
                                  `description` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '备注',

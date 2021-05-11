@@ -76,7 +76,7 @@ $(document).ready(function () {
 
     //车牌号校验
     jQuery.validator.addMethod("isPlate",function(value, element) {
-        let pattern = /(^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z][A-Z][A-Z0-9]{4,5}[A-Z0-9挂学警港澳]$)/;
+        let pattern = /(^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Za-z][A-Za-z][A-Z0-9]{4,5}[A-Z0-9挂学警港澳]$)/;
         return pattern.test(value);
     }, "不是有效的车牌号");
 
