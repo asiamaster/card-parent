@@ -30,7 +30,7 @@
             _resetDate="false"
             />
             <div class="col-auto align-self-center mt-3">
-                <button id="clear" type="button" class="btn btn-outline-primary mr-2" onclick="$.form.reset()"><i
+                <button id="clear" type="button" class="btn btn-outline-primary mr-2" @click="resetForm"><i
                         class="fa fa-refresh"></i> 清空
                 </button>
                 <button id="query" type="button" class="btn btn-outline-primary" onclick="$.table.search()"><i
@@ -87,6 +87,7 @@
             }
         },
         mounted: function () {
+            this.resetDateControl();
             //初始化表格
             etcApi.initPageTable()
         },
@@ -97,6 +98,18 @@
                     return;
                 }
                 $("#cardNo").val(cardNo)
+            },
+            resetForm(){
+                $.form.resetOnlyForm();
+                this.resetDateControl();
+                $.table.search();
+            },
+            //重置时间控件
+            resetDateControl(){
+                let start = moment().subtract(1,'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+                let end = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
+                $(".laystart").val(start);
+                $(".layend").val(end);
             }
         },
     });
