@@ -23,7 +23,7 @@
             AND `state` = 1
             <if test="accountId != null">AND `account_id`=#{accountId}</if>
             <if test="customerId !=null">AND customer_id = #{customerId}</if>
-            <if test="plateNo !=null and plateNo !=''">AND plate_no = #{plateNo}</if>
+            <if test="plateNo !=null and plateNo !=''">AND plate_no like concat('%',#{plateNo},'%')</if>
             <if test="cardNo !=null and cardNo !=''">AND card_no = #{cardNo}</if>
             <if test="startDate !=null">AND create_time &gt;= #{startDate}</if>
             <if test="endDate !=null">AND create_time &lt;= #{endDate}</if>
