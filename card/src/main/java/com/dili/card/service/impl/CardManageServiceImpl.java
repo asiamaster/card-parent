@@ -37,14 +37,13 @@ import com.dili.customer.sdk.domain.dto.EmployeeChangeCardInput;
 import com.dili.customer.sdk.rpc.CustomerEmployeeRpc;
 import com.dili.ss.domain.BaseOutput;
 import io.seata.spring.annotation.GlobalTransactional;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -205,6 +204,11 @@ public class CardManageServiceImpl implements ICardManageService {
         UserAccountCardResponseDto userAccount = accountQueryService.getByCardNo(requestDto.getCardNo());
         AccountValidator.validateMatchAccount(requestDto, userAccount);
         //this.validateCanChange(requestDto, userAccount);
+        //查询余额，比对冻结金额，因为有其他业务系统有冻结金额的情况，换卡会有逻辑问题
+        BalanceResponseDto balance = payRpcResolver.findBalanceByFundAccountId(userAccount.getFundAccountId());
+        if (NumberUtils.toLong(balance.getFrozenAmount() + "") > 0) {
+            throw new CardAppBizException("当前卡账户下有冻结金额，无法换卡");
+        }
 
         cardStorageService.checkAndGetByCardNo(requestDto.getNewCardNo(), userAccount.getCardType(), userAccount.getCustomerId());
 
@@ -252,10 +256,10 @@ public class CardManageServiceImpl implements ICardManageService {
             serialRecord.setAmount(requestDto.getServiceFee());
             serialRecord.setNotes("换卡，工本费转为市场收入");
         });
-        //这里需要查询一次余额，因为直接从提交交易接口中拿不到余额
-        BalanceResponseDto balance = payRpcResolver.findBalanceByFundAccountId(userAccount.getFundAccountId());
-        serialDto.setStartBalance(balance.getAvailableAmount());
-        serialDto.setEndBalance(balance.getAvailableAmount());
+        //直接从提交交易接口中拿不到余额，因此这里从余额中获取
+        BalanceResponseDto balanceSecond = payRpcResolver.findBalanceByFundAccountId(userAccount.getFundAccountId());
+        serialDto.setStartBalance(balanceSecond.getAvailableAmount());
+        serialDto.setEndBalance(balanceSecond.getAvailableAmount());
         serialService.handleSuccess(serialDto);
 
         this.changeEmployee(requestDto.getNewCardNo(), userAccount.getHoldContactsPhone(), userAccount.getCustomerId(), userAccount.getAccountId(), userAccount.getFirmId());

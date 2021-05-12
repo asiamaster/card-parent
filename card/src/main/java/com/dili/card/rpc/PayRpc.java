@@ -189,7 +189,7 @@ public interface PayRpc {
     * @date 2021/5/8
     */
     @RequestMapping(value = "/payment/api/gateway.do?service=payment.protocol.service:register", method = RequestMethod.POST)
-    BaseOutput<String> registerPwdFreeProtocol(PwdFreeProtocolRequestDto params);
+    BaseOutput<PwdFreeProtocolResponseDto> registerPwdFreeProtocol(PwdFreeProtocolRequestDto params);
 
     /**
      * 设置卡账户权限

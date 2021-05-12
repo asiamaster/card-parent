@@ -10,6 +10,7 @@ import com.dili.card.dto.ETCResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.pay.PwdFreeProtocolQueryDto;
 import com.dili.card.dto.pay.PwdFreeProtocolRequestDto;
+import com.dili.card.dto.pay.PwdFreeProtocolResponseDto;
 import com.dili.card.entity.BindETCDo;
 import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.PayRpc;
@@ -206,7 +207,8 @@ public class ETCService implements IETCService {
             requestDto.setAccountId(fundAccountId);
             requestDto.setType(PwdFreeProtocolType.ETC.getCode());
             requestDto.setPassword(pwd);
-            protocolNo = GenericRpcResolver.resolver(payRpc.registerPwdFreeProtocol(requestDto), ServiceName.PAY);
+            PwdFreeProtocolResponseDto dto = GenericRpcResolver.resolver(payRpc.registerPwdFreeProtocol(requestDto), ServiceName.PAY);
+            protocolNo = dto.getProtocolId() + "";
         }
         return protocolNo;
     }
