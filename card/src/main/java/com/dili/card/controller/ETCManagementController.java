@@ -136,7 +136,6 @@ public class ETCManagementController implements IControllerHandler {
     @ResponseBody
     public Map<String, Object> getPage(ETCQueryDto queryDto) {
          AssertUtils.notNull(queryDto.getFirmId(),"市场id不能为空");
-        //queryDto.setFirmId(8L);
         return successPage(ETCService.getPage(queryDto));
     }
 

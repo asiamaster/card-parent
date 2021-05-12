@@ -32,10 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +93,7 @@ public class ETCService implements IETCService {
     public PageOutput<List<ETCResponseDto>> getPage(ETCQueryDto queryDto) {
         Page<?> page = PageHelper.startPage(queryDto.getPage(), queryDto.getRows());
         List<BindETCDo> list = bindETCDao.findByCondition(queryDto);
+        //考虑到换卡和退卡的情况，这里需要通过accountId查询卡号，并可能重新设置卡号
         return PageUtils.convert2PageOutput(page, this.convert2RespDto(list));
     }
 
@@ -112,8 +109,7 @@ public class ETCService implements IETCService {
                 }
             } else {
                 UserAccountCardResponseDto userAccountCard = accountQueryService.getByAccountIdWithoutValidate(queryDo.getAccountId());
-                if (CardStatus.RETURNED.getCode() != userAccountCard.getCardState()
-                        && DisableState.ENABLED.getCode().equals(userAccountCard.getDisabledState())
+                if (this.isEnableAccount(userAccountCard)
                         && queryDo.getState() == 1) {
                     throw new CardAppBizException(String.format("该车牌号已被卡号【%s】绑定", queryDo.getCardNo()));
                 }
@@ -121,6 +117,11 @@ public class ETCService implements IETCService {
             saveDo = this.updateETCDo(queryDo, requestDto, responseDto);
         }
         return saveDo;
+    }
+
+    private boolean isEnableAccount(UserAccountCardResponseDto userAccountCard) {
+        return CardStatus.RETURNED.getCode() != userAccountCard.getCardState()
+                && DisableState.ENABLED.getCode().equals(userAccountCard.getDisabledState());
     }
 
     private void doUnbind(BindETCDo bindETCDo, Long operatorId, String operatorName) {
@@ -181,6 +182,7 @@ public class ETCService implements IETCService {
         if (CollectionUtil.isEmpty(bindETCDos)) {
             return new ArrayList<>();
         }
+
         List<Long> customerIds = bindETCDos.stream().map(BindETCDo::getCustomerId).collect(Collectors.toList());
         Map<Long, CustomerExtendDto> customerMap = customerRpcResolver.findCustomerMapByCustomerIds(customerIds, bindETCDos.get(0).getFirmId());
         return bindETCDos.stream().map(etc -> {
@@ -198,7 +200,6 @@ public class ETCService implements IETCService {
         queryDto.setAccountId(fundAccountId);
         queryDto.setType(PwdFreeProtocolType.ETC.getCode());
         queryDto.setAmount(1L);
-        //TODO 是否需要校验资金账户状态
         String protocolNo = payRpcResolver.getPwdFreeProtocolNo(queryDto);
         if (StrUtil.isBlank(protocolNo)) {
             PwdFreeProtocolRequestDto requestDto = new PwdFreeProtocolRequestDto();

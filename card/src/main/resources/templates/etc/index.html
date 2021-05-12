@@ -82,13 +82,13 @@
 <!--绑定弹出层-->
 <script id="bindPlate" type="text/html">
 	<div class="row row-cols-1"  style="text-align: center">
-	      <form id="bindAddForm" role="form" class="pb-5">
+	      <form id="bindAddForm" role="form" class="pb-5" style="text-align: right">
 			   <div class="form-group row">
 				   <label class="col-md-4 col-form-label"><span style="color: red">*</span>&nbsp车牌号</label>
-				   <input id="bindPlateNo" name="plateNo" type="text" maxlength="8" class="form-control col-md-6" />
+				   <input id="bindPlateNo" name="plateNo" type="text" maxlength="8" class="form-control col-md-6" placeholder="省份+地区代码+5或6位数字/字母"/>
 	      		</div>
 	      		<div class="form-group row">
-	      			<label class="col-md-4 col-form-label">备注</label>
+	      			<label class="col-md-4 col-form-label">备&nbsp&nbsp注</label>
 	      			<textarea id="bindDescription" name="description" class="form-control col-md-6" maxlength="30" rows="3" placeholder="不超过30个字符"></textarea>
 	      		</div>
 	      </form>
@@ -249,8 +249,8 @@
 			//解绑弹框
 			openUnBindModal(id){
 				let that = this;
-				let rowData = $("#grid").bootstrapTable('getRowByUniqueId', id);
-				$.modal.confirm("确认解绑车牌号【" + rowData.plateNo + "】？", function (sure) {
+				//let rowData = $("#grid").bootstrapTable('getRowByUniqueId', id);
+				$.modal.confirm("确定解除当前车牌号和卡号的绑定？", function (sure) {
 					if (!sure) {
 						return;
 					}
