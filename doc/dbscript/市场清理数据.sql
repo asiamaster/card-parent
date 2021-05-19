@@ -1,4 +1,4 @@
-SET @firmId := 4;
+SET @firmId := 22;
 -- dili_account
 DELETE FROM dili_account.account_serial_record WHERE firm_id = @firmId;
 --
