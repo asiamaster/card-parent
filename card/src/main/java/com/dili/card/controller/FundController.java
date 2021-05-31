@@ -25,8 +25,8 @@ import com.dili.card.rpc.resolver.AccountQueryRpcResolver;
 import com.dili.card.service.IAccountQueryService;
 import com.dili.card.service.IBusinessLogService;
 import com.dili.card.service.IFundService;
+import com.dili.card.service.IMiscService;
 import com.dili.card.service.IRuleFeeService;
-import com.dili.card.service.ITypeMarketService;
 import com.dili.card.service.withdraw.WithdrawDispatcher;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.PayFreezeFundType;
@@ -80,8 +80,8 @@ public class FundController implements IControllerHandler {
     private AccountQueryRpcResolver accountQueryRpcResolver;
     @Resource
     IBusinessLogService businessLogService;
-    @Resource
-	private ITypeMarketService typeMarketService;
+    @Autowired
+    private IMiscService miscService;
 
     /**
      * 跳转冻结资金页面
@@ -130,35 +130,35 @@ public class FundController implements IControllerHandler {
         return "fund/unfrozenModal";
     }
 
-	/**
-	 * 提现
-	 *
-	 * @param fundRequestDto
-	 * @return
-	 */
-	@RequestMapping(value = "/withdraw.action")
-	@ResponseBody
-	@ForbidDuplicateCommit
-	public BaseOutput<String> withdraw(@RequestBody FundRequestDto fundRequestDto, HttpServletRequest request) {
-		LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto,JsonExcludeFilter.PWD_FILTER));
-		validateCommonParam(fundRequestDto);
-		UserTicket userTicket = getUserTicket();
+    /**
+     * 提现
+     *
+     * @param fundRequestDto
+     * @return
+     */
+    @RequestMapping(value = "/withdraw.action")
+    @ResponseBody
+    @ForbidDuplicateCommit
+    public BaseOutput<String> withdraw(@RequestBody FundRequestDto fundRequestDto) {
+        LOGGER.info("提现*****{}", JSONObject.toJSONString(fundRequestDto, JsonExcludeFilter.PWD_FILTER));
+        validateCommonParam(fundRequestDto);
+        UserTicket userTicket = getUserTicket();
         // 设置有主子商户的市场的收益帐户,feign调用支付接口时通过PayServiceFeignConfig将该值替换原mchId
-		setSubMarketIdToRequest(userTicket.getFirmId(), fundRequestDto.getServiceCost(), request);
-		// 操作日志
-		businessLogService.saveLog(OperateType.ACCOUNT_WITHDRAW, getUserTicket(),
-				"业务卡号:" + fundRequestDto.getCardNo(),
-				"金额:" + MoneyUtils.centToYuan(fundRequestDto.getAmount()),
-				"渠道:" + TradeChannel.getNameByCode(fundRequestDto.getTradeChannel()));
-		buildOperatorInfo(fundRequestDto);
-		//这里由于圈提需要支付系统的message，
+        miscService.setSubMarketIdToRequest(userTicket.getFirmId(), fundRequestDto.getServiceCost());
+        // 操作日志
+        businessLogService.saveLog(OperateType.ACCOUNT_WITHDRAW, getUserTicket(),
+                "业务卡号:" + fundRequestDto.getCardNo(),
+                "金额:" + MoneyUtils.centToYuan(fundRequestDto.getAmount()),
+                "渠道:" + TradeChannel.getNameByCode(fundRequestDto.getTradeChannel()));
+        buildOperatorInfo(fundRequestDto);
+        //这里由于圈提需要支付系统的message，
         MessageBo<String> messageBo = withdrawDispatcher.dispatch(fundRequestDto);
         BaseOutput<String> result = new BaseOutput<>();
         result.setCode(messageBo.getCode());
         result.setMessage(messageBo.getMessage());
         result.setData(messageBo.getData());
         return result;
-	}
+    }
 
     /**
      * 提现手续费
@@ -273,16 +273,16 @@ public class FundController implements IControllerHandler {
     @ResponseBody
     @ForbidDuplicateCommit
     public BaseOutput<String> recharge(
-            @RequestBody @Validated({FundValidator.Trade.class}) FundRequestDto requestDto, HttpServletRequest request) {
+            @RequestBody @Validated({FundValidator.Trade.class}) FundRequestDto requestDto) {
         LOGGER.info("充值请求参数:{}", JSON.toJSONString(requestDto, JsonExcludeFilter.PWD_FILTER));
         this.validateCommonParam(requestDto);
         UserTicket userTicket = getUserTicket();
         // 设置有主子商户的市场的收益帐户,feign调用支付接口时通过PayServiceFeignConfig将该值替换原mchId
-        setSubMarketIdToRequest(userTicket.getFirmId(), requestDto.getServiceCost(), request);
+        miscService.setSubMarketIdToRequest(userTicket.getFirmId(), requestDto.getServiceCost());
 
         // TODO 以会使用统一配置获取当前市场是否需要校验密码
-        if(requestDto.getFirmId() == FirmIdConstant.SG) {
-        	AssertUtils.notEmpty(requestDto.getTradePwd(), "交易密码不能为空");
+        if (requestDto.getFirmId() == FirmIdConstant.SG) {
+            AssertUtils.notEmpty(requestDto.getTradePwd(), "交易密码不能为空");
         }
 
         businessLogService.saveLog(OperateType.ACCOUNT_CHARGE, getUserTicket(),
@@ -315,19 +315,4 @@ public class FundController implements IControllerHandler {
                 SystemSubjectType.CARD_RECHARGE_POS_FEE);
         return BaseOutput.successData(CurrencyUtils.yuan2Cent(ruleFee));
     }
-
-
-    /**
-	 *  设置子商户的市场ID到request中
-	 */
-	private void setSubMarketIdToRequest(Long firmId, Long fee, HttpServletRequest request) {
-		if(fee == null || fee <= 0) {
-			return;
-		}
-		Long marketId = typeMarketService.getmarketId(Constant.CARD_INCOME_ACCOUNT);
-		if(firmId == FirmIdConstant.SY ) {
-			AssertUtils.notNull(marketId, "沈阳市场需要配置收益账户!");
-			request.setAttribute(Constant.CARD_INCOME_ACCOUNT, marketId);
-		}
-	}
 }
