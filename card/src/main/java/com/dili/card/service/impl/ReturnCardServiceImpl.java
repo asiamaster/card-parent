@@ -34,12 +34,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service("returnCardService")
 public class ReturnCardServiceImpl implements IReturnCardService {
-
+    @Autowired
+    private HttpServletRequest request;
     @Autowired
     private CardManageRpcResolver cardManageRpcResolver;
     @Resource
@@ -137,6 +139,8 @@ public class ReturnCardServiceImpl implements IReturnCardService {
             serialDto = serialService.createAccountSerial(businessRecord, null);
         }
 
+        //注意：这里需要把子商户id设置为Null，以便能正确切换成主商户id，否则无法注销资金账户
+        request.setAttribute(Constant.CARD_INCOME_ACCOUNT, null);
         // 主 副卡退卡注销资金账户
         CreateTradeRequestDto createTradeRequestDto = CreateTradeRequestDto
                 .createCommon(accountCard.getFundAccountId(), accountCard.getAccountId());
