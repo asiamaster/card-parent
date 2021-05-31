@@ -15,6 +15,7 @@ import com.dili.card.exception.CardAppBizException;
 import com.dili.card.rpc.resolver.CardManageRpcResolver;
 import com.dili.card.rpc.resolver.PayRpcResolver;
 import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.IMiscService;
 import com.dili.card.service.IReturnCardService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.CardStatus;
@@ -49,6 +50,8 @@ public class ReturnCardServiceImpl implements IReturnCardService {
     protected IAccountQueryService accountQueryService;
     @Autowired
     private CustomerEmployeeRpc customerEmployeeRpc;
+    @Autowired
+    private IMiscService miscService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -80,6 +83,9 @@ public class ReturnCardServiceImpl implements IReturnCardService {
             fee = balanceResponseDto.getBalance();
         }
         cardParam.setServiceFee(fee);
+        //用于传递子商户Id（支付服务用）
+        miscService.setSubMarketIdToRequest(cardParam.getFirmId(), cardParam.getServiceFee());
+
         // 是主卡 同时卡余额存在并且小于1元需要进行流水
         boolean masterHasTradeSerial = master && fee > 0L;
         // 构建本地记录

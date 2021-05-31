@@ -91,7 +91,6 @@ public class CardManageController implements IControllerHandler {
         // 操作日志
         businessLogService.saveLog(OperateType.REFUND_CARD, getUserTicket(), "业务卡号:" + cardRequest.getCardNo());
         buildOperatorInfo(cardRequest);
-        miscService.setSubMarketIdToRequest(cardRequest.getFirmId(), cardRequest.getServiceFee());
         return BaseOutput.successData(cardManageService.returnCard(cardRequest));
     }
 
