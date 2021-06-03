@@ -186,6 +186,7 @@ public class OpenCardController implements IControllerHandler {
         openCardInfo.setCreatorCode(user.getUserName());
         openCardInfo.setFirmId(user.getFirmId());
         openCardInfo.setFirmName(user.getFirmName());
+        openCardInfo.setFirmCode(user.getFirmCode());
     }
 
 

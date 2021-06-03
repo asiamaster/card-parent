@@ -38,6 +38,7 @@ import com.dili.card.type.FundItem;
 import com.dili.card.type.FundItemMap;
 import com.dili.card.type.OperateState;
 import com.dili.card.type.OperateType;
+import com.dili.card.util.AssertUtils;
 import com.dili.card.util.DateUtil;
 import com.dili.card.util.PageUtils;
 import com.dili.commons.rabbitmq.RabbitMQMessageService;
@@ -276,9 +277,10 @@ public class SerialServiceImpl implements ISerialService {
     @Override
     public BusinessRecordDo createBusinessRecord(CardRequestDto cardRequestDto, UserAccountCardResponseDto accountCard,
                                                  IBusinessRecordFilter filter, Long cycleNo) {
+        AssertUtils.notEmpty(cardRequestDto.getFirmCode(),"市场编码缺失！");
         BusinessRecordDo businessRecord = new BusinessRecordDo();
         //编号、卡号、账户id
-        businessRecord.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
+        businessRecord.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getIsolationCode(cardRequestDto.getFirmCode())));
         businessRecord.setAccountId(cardRequestDto.getAccountId());
         businessRecord.setCardNo(cardRequestDto.getCardNo());
         //客户信息 由于卡账户冗余了客户相关信息，所以直接获取

@@ -7,7 +7,7 @@ import com.dili.customer.sdk.domain.CharacterType;
 
 /**
  * @description： 开卡所需要的用户信息
- * 
+ *
  * @author ：WangBo
  * @time ：2020年7月3日下午3:38:26
  */
@@ -59,6 +59,8 @@ public class OpenCardDto extends BaseSerialLogDto {
 	private Long firmId;
 	/** 商户名称 */
 	private String firmName;
+	/***/
+	private String firmCode;
 	/** 工本费 */
 	private Long costFee;
 	/** 持卡人 */
@@ -69,6 +71,14 @@ public class OpenCardDto extends BaseSerialLogDto {
 	private String holdContactsPhone;
 	/** 客户信息修改时是否同步修改持卡人信息1-是，2-否 */
 	private Integer customerSyncModifyHoldinfo;
+
+	public String getFirmCode() {
+		return firmCode;
+	}
+
+	public void setFirmCode(String firmCode) {
+		this.firmCode = firmCode;
+	}
 
 	public Long getCustomerId() {
 		return customerId;

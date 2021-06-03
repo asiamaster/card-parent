@@ -62,6 +62,7 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
 import com.dili.uap.sdk.rpc.DataDictionaryRpc;
+import com.dili.uap.sdk.session.SessionContext;
 import com.google.common.collect.Lists;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
@@ -178,7 +179,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
         OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, ServiceName.ACCOUNT);
         Long accountId = openCardResponse.getAccountId();
 
-        String serialNo = uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode());
+        String serialNo = uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getIsolationCode(openCardInfo.getFirmCode()));
         // 调用支付系统向市场账户充值工本费
         TradeResponseDto tradeResponseDto = new TradeResponseDto();
         if (openCardInfo.getCostFee() > 0) {

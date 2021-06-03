@@ -44,12 +44,10 @@ import com.dili.card.service.recharge.RechargeFactory;
 import com.dili.card.service.withdraw.BankWithdrawServiceImpl;
 import com.dili.card.type.ActionType;
 import com.dili.card.type.BankWithdrawState;
-import com.dili.card.type.BizNoType;
 import com.dili.card.type.CardType;
 import com.dili.card.type.DictValue;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
-import com.dili.card.type.OperateState;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.PayPipelineType;
 import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
@@ -67,8 +65,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -156,28 +152,35 @@ public class FundServiceImpl implements IFundService {
     @Transactional(rollbackFor = Exception.class)
     public void unfrozen(UnfreezeFundDto unfreezeFundDto) {
         UserAccountCardResponseDto accountInfo = accountQueryService.getByAccountId(unfreezeFundDto.getAccountId());
-        List<SerialRecordDo> serialList = new ArrayList<SerialRecordDo>();
+        unfreezeFundDto.setCardNo(accountInfo.getCardNo());
+        unfreezeFundDto.setNotes(unfreezeFundDto.getRemark());
         for (Long frozenId : unfreezeFundDto.getFrozenIds()) {
             // 对应支付的frozenId
             UnfreezeFundDto dto = new UnfreezeFundDto();
             dto.setFrozenId(frozenId);
             FundOpResponseDto payResponse = GenericRpcResolver.resolver(payRpc.unfrozenFund(dto), ServiceName.PAY);
-
+            //单独处理账务周期，防止结账后无法解冻
+            AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(unfreezeFundDto.getOpId());
+            Long cycleNo = accountCycle == null ? 0L : accountCycle.getCycleNo();
             // 保存卡务操作记录
-            BusinessRecordDo businessRecord = createBusinessRecord(accountInfo, unfreezeFundDto, payResponse);
-            businessRecord.setType(OperateType.UNFROZEN_FUND.getCode());
+            BusinessRecordDo businessRecord = serialService.createBusinessRecord(unfreezeFundDto, accountInfo, record -> {
+                record.setType(OperateType.UNFROZEN_FUND.getCode());
+            }, cycleNo);
             serialService.saveBusinessRecord(businessRecord);
 
-            // 构建全局操作记录
-            SerialRecordDo serialRecord = buildSerialRecord(accountInfo, unfreezeFundDto, payResponse);
-            serialRecord.setCustomerType(businessRecord.getCustomerType());
-            serialList.add(serialRecord);
+            SerialDto serialDto = serialService.createAccountSerial(businessRecord, (record, feeType) -> {
+                record.setFundItem(FundItem.MANDATORY_UNFREEZE_FUND.getCode());
+                record.setFundItemName(FundItem.MANDATORY_UNFREEZE_FUND.getName());
+                record.setAction(ActionType.INCOME.getCode());
+                Long balance = payResponse.getTransaction().getBalance();
+                Long frozenBalance = payResponse.getTransaction().getFrozenBalance();
+                Long frozenAmount = payResponse.getTransaction().getFrozenAmount(); // 解冻金额该值为负数，冻结金额为正数
+                record.setStartBalance(balance - frozenBalance);
+                record.setEndBalance(balance - frozenBalance - frozenAmount);
+                record.setAmount(Math.abs(frozenAmount));//操作记录对于可用余额要显示+
+            });
+            serialService.handleSuccess(serialDto, true);
         }
-
-        SerialDto serialDto = new SerialDto();
-        // 保存全局操作记录
-        serialDto.setSerialRecordList(serialList);
-        serialService.saveSerialRecord(serialDto);
     }
 
     @Override
@@ -265,79 +268,6 @@ public class FundServiceImpl implements IFundService {
             }
         }
         return pageOutPut;
-    }
-
-    /**
-     * 生成全局日志
-     *
-     * @param accountInfo
-     * @param unfreezeFundDto
-     */
-    private SerialRecordDo buildSerialRecord(UserAccountCardResponseDto accountInfo,
-                                             UnfreezeFundDto unfreezeFundDto, FundOpResponseDto payResponse) {
-        SerialRecordDo record = new SerialRecordDo();
-        record.setAccountId(accountInfo.getAccountId());
-        record.setCardNo(accountInfo.getCardNo());
-        record.setCustomerId(accountInfo.getCustomerId());
-        record.setCustomerName(accountInfo.getCustomerName());
-        record.setCustomerNo(accountInfo.getCustomerCode());
-       // record.setCustomerType(accountInfo.getCustomerCharacterType());
-        record.setFirmId(unfreezeFundDto.getFirmId());
-        record.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
-        record.setNotes(unfreezeFundDto.getRemark());
-        record.setOperatorId(unfreezeFundDto.getOpId());
-        record.setOperatorName(unfreezeFundDto.getOpName());
-        record.setOperatorNo(unfreezeFundDto.getOpNo());
-        record.setType(OperateType.UNFROZEN_FUND.getCode());
-        record.setFundItem(FundItem.MANDATORY_UNFREEZE_FUND.getCode());
-        record.setFundItemName(FundItem.MANDATORY_UNFREEZE_FUND.getName());
-        record.setOperateTime(LocalDateTime.now());
-        record.setAction(ActionType.INCOME.getCode());
-        record.setHoldName(accountInfo.getHoldName());
-        // 计算期初期末
-        Long balance = payResponse.getTransaction().getBalance();
-        Long frozenBalance = payResponse.getTransaction().getFrozenBalance();
-        Long frozenAmount = payResponse.getTransaction().getFrozenAmount(); // 解冻金额该值为负数，冻结金额为正数
-        record.setStartBalance(balance - frozenBalance);
-        record.setEndBalance(balance - frozenBalance - frozenAmount);
-        record.setAmount(Math.abs(frozenAmount));//操作记录对于可用余额要显示+
-        return record;
-    }
-
-    /**
-     * 保存本地操作记录
-     * @return
-     */
-    private BusinessRecordDo createBusinessRecord(UserAccountCardResponseDto accountInfo,
-                                                  UnfreezeFundDto unfreezeFundDto, FundOpResponseDto payResponse) {
-        BusinessRecordDo businessRecord = new BusinessRecordDo();
-        //编号、卡号、账户id
-        businessRecord.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
-        businessRecord.setAccountId(accountInfo.getAccountId());
-        businessRecord.setCardNo(accountInfo.getCardNo());
-        //客户信息 由于卡账户冗余了客户相关信息，所以直接获取
-        businessRecord.setCustomerId(accountInfo.getCustomerId());
-        businessRecord.setCustomerNo(accountInfo.getCustomerCode());
-        businessRecord.setCustomerName(accountInfo.getCustomerName());
-        businessRecord.setCustomerType(customerService.getSubTypeCodes(accountInfo.getCustomerId(), accountInfo.getFirmId()));
-        businessRecord.setHoldName(accountInfo.getHoldName());
-        businessRecord.setNotes(unfreezeFundDto.getRemark());
-        //账务周期
-        AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(unfreezeFundDto.getOpId());
-        businessRecord.setCycleNo(accountCycle == null ? 0L : accountCycle.getCycleNo());
-        //操作员信息
-        businessRecord.setOperatorId(unfreezeFundDto.getOpId());
-        businessRecord.setOperatorNo(unfreezeFundDto.getOpNo());
-        businessRecord.setOperatorName(unfreezeFundDto.getOpName());
-        businessRecord.setFirmId(unfreezeFundDto.getFirmId());
-        //时间、默认状态等数据
-        LocalDateTime localDateTime = LocalDateTime.now();
-        businessRecord.setState(OperateState.SUCCESS.getCode());
-        businessRecord.setOperateTime(localDateTime);
-        businessRecord.setModifyTime(localDateTime);
-        businessRecord.setVersion(1);
-
-        return businessRecord;
     }
 
 
