@@ -10,6 +10,7 @@ public enum DictValue {
     PWD_BOX_ALLOW_INPUT("是否允许密码框手输", "pwd_box_allow_input", "1"),
     WITHDRAW_CASH_BOX_ALLOW_CHECK("提现允许校验现金柜余额", "withdraw_cash_box_allow_check", "0"),
     WITHDRAW_SMS_ALLOW_SEND("是否允许发送提现通知短信","withdraw_sms_allow_send","1"),
+    RECHARGE_SMS_ALLOW_SEND("是否允许发送存款通知短信","recharge_sms_allow_send","1"),
     ;
 
     private String name;

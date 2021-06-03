@@ -12,8 +12,10 @@ import com.dili.card.dto.pay.TradeResponseDto;
 import com.dili.card.entity.BusinessRecordDo;
 import com.dili.card.rpc.resolver.SmsMessageRpcResolver;
 import com.dili.card.service.IAccountQueryService;
+import com.dili.card.service.IMiscService;
 import com.dili.card.service.IPayService;
 import com.dili.card.service.ISerialService;
+import com.dili.card.type.DictValue;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
@@ -40,6 +42,8 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
     private IAccountQueryService accountQueryService;
     @Autowired
     private SmsMessageRpcResolver smsMessageRpcResolver;
+    @Autowired
+    private IMiscService miscService;
 
 
     /**
@@ -106,7 +110,11 @@ public abstract class AbstractRechargeManager implements IRechargeManager {
         ThreadUtil.execute(() -> {
             String phone = userAccount.getCustomerContactsPhone();
             String cardNo = userAccount.getCardNo();
-            smsMessageRpcResolver.rechargeNotice(phone, cardNo, requestDto.getFirmCode(), tradeResponseDto);
+            DictValue dictValue = DictValue.RECHARGE_SMS_ALLOW_SEND;
+            String val = miscService.getSingleDictVal(dictValue.getCode(), requestDto.getFirmId(), dictValue.getDefaultVal());
+            if ("1".equals(val)) {
+                smsMessageRpcResolver.rechargeNotice(phone, cardNo, requestDto.getFirmCode(), tradeResponseDto);
+            }
         });
         return businessRecord.getSerialNo();
     }
