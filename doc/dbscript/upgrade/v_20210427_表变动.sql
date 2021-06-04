@@ -1,5 +1,5 @@
 -- 创建etc表
-CREATE TABLE `card_bind_etc` (
+CREATE TABLE `dili_card`.`card_bind_etc` (
                                  `id` bigint(20) NOT NULL AUTO_INCREMENT,
                                  `account_id` bigint(20) NOT NULL COMMENT '卡账户id',
                                  `card_no` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT '关联卡号',
