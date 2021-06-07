@@ -62,7 +62,6 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
 import com.dili.uap.sdk.rpc.DataDictionaryRpc;
-import com.dili.uap.sdk.session.SessionContext;
 import com.google.common.collect.Lists;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
@@ -206,7 +205,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
         // 保存全局操作交易记录 开卡工本费
         saveSerialRecord(openCardInfo, accountId, serialNo);
         // 发送MQ通知
-        sendMQ(openCardInfo);
+        this.broadcastWhenFinishOpenCardWithMq(openCardInfo);
         //创建员工信息，附加功能，不能影响主流程
         if (openCardInfo.getCustomerSyncModifyHoldinfo() == 2) {
             this.registerEmployee(openCardInfo, accountId);
@@ -219,7 +218,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
      *
      * @param openCardInfo
      */
-    private void sendMQ(OpenCardDto openCardInfo) {
+    private void broadcastWhenFinishOpenCardWithMq(OpenCardDto openCardInfo) {
         OpenCardMqDto mqDto = new OpenCardMqDto();
         mqDto.setCustomerId(openCardInfo.getCustomerId());
         mqDto.setCustomerCode(openCardInfo.getCustomerCode());
