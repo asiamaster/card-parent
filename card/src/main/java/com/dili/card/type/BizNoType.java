@@ -51,6 +51,10 @@ public enum BizNoType {
         return code;
     }
 
+    public String getIsolationCode(String firmCode) {
+        return firmCode + "_" + this.code;
+    }
+
     public void setCode(String code) {
         this.code = code;
     }

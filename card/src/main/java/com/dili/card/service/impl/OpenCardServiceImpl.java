@@ -178,7 +178,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
         OpenCardResponseDto openCardResponse = GenericRpcResolver.resolver(baseOutPut, ServiceName.ACCOUNT);
         Long accountId = openCardResponse.getAccountId();
 
-        String serialNo = uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode());
+        String serialNo = uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getIsolationCode(openCardInfo.getFirmCode()));
         // 调用支付系统向市场账户充值工本费
         TradeResponseDto tradeResponseDto = new TradeResponseDto();
         if (openCardInfo.getCostFee() > 0) {
@@ -205,7 +205,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
         // 保存全局操作交易记录 开卡工本费
         saveSerialRecord(openCardInfo, accountId, serialNo);
         // 发送MQ通知
-        sendMQ(openCardInfo);
+        this.broadcastWhenFinishOpenCardWithMq(openCardInfo);
         //创建员工信息，附加功能，不能影响主流程
         if (openCardInfo.getCustomerSyncModifyHoldinfo() == 2) {
             this.registerEmployee(openCardInfo, accountId);
@@ -218,7 +218,7 @@ public class OpenCardServiceImpl implements IOpenCardService {
      *
      * @param openCardInfo
      */
-    private void sendMQ(OpenCardDto openCardInfo) {
+    private void broadcastWhenFinishOpenCardWithMq(OpenCardDto openCardInfo) {
         OpenCardMqDto mqDto = new OpenCardMqDto();
         mqDto.setCustomerId(openCardInfo.getCustomerId());
         mqDto.setCustomerCode(openCardInfo.getCustomerCode());

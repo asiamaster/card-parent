@@ -2,17 +2,15 @@ package com.dili.card.dto;
 
 /**
  * @description： 解冻资金实体类
- * 
+ *
  * @author ：WangBo
  * @time ：2020年7月21日下午2:22:04
  */
-public class UnfreezeFundDto extends BaseDto {
+public class UnfreezeFundDto extends CardRequestDto {
 	/** */
 	private static final long serialVersionUID = 1L;
 	/** 交易渠道 */
 	private Long[] frozenIds;
-	/** */
-	private Long accountId;
 	/** 冻结资金id,与支付对应 */
 	private Long frozenId;
 	/** 备注 */
@@ -32,14 +30,6 @@ public class UnfreezeFundDto extends BaseDto {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
-	}
-
-	public Long getAccountId() {
-		return accountId;
-	}
-
-	public void setAccountId(Long accountId) {
-		this.accountId = accountId;
 	}
 
 	public Long getFrozenId() {

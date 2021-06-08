@@ -42,8 +42,6 @@ import com.dili.card.service.withdraw.BankWithdrawServiceImpl;
 import com.dili.card.type.ActionType;
 import com.dili.card.type.BankWithdrawState;
 import com.dili.card.type.BindBankStatus;
-import com.dili.card.type.BizNoType;
-import com.dili.card.type.OperateState;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.PayPipelineType;
 import com.dili.card.type.PaySubject;
@@ -144,7 +142,23 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
         BindBankCardDo bankCardDo = bankCardService.getById(requestDto.getBindBankCardId());
         AssertUtils.notNull(bankCardDo, "该市场未绑定该卡");
 
-        BusinessRecordDo businessRecord = this.createFirmRecord(merInfo, requestDto);
+        UserAccountCardResponseDto accountCard = new UserAccountCardResponseDto();
+        accountCard.setAccountId(accountId);
+        accountCard.setFundAccountId(accountId);
+        BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, accountCard, record -> {
+            record.setAccountId(merInfo.getVouchAccount());
+            record.setCardNo(Constant.FIRM_WITHDRAW_CARD_NO);
+            record.setCustomerId(merInfo.getMchId());
+            record.setCustomerNo(merInfo.getCode());
+            record.setCustomerName(merInfo.getName());
+
+            record.setType(OperateType.ACCOUNT_WITHDRAW.getCode());
+            record.setAmount(requestDto.getAmount());
+            record.setTradeType(TradeType.WITHDRAW.getCode());
+            record.setTradeChannel(TradeChannel.BANK.getCode());
+            record.setServiceCost(requestDto.getServiceCost());
+            record.setNotes(String.format("圈提取款，手续费%s元", CurrencyUtils.toYuanWithStripTrailingZeros(requestDto.getServiceCost())));
+        }, merInfo.getVouchAccount());
         //构建创建交易参数
         CreateTradeRequestDto createTradeRequest = CreateTradeRequestDto.createTrade(
                 TradeType.BANK_WITHDRAW.getCode(),
@@ -160,9 +174,6 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
         //保存业务办理记录
         serialService.saveBusinessRecord(businessRecord);
         //提现提交
-        UserAccountCardResponseDto accountCard = new UserAccountCardResponseDto();
-        accountCard.setAccountId(accountId);
-        accountCard.setFundAccountId(accountId);
         TradeRequestDto withdrawRequest = TradeRequestDto.createTrade(accountCard,
                 tradeNo, requestDto.getChannelAccount().getToBankType(), requestDto.getTradePwd());
         withdrawRequest.setChannelAccount(requestDto.getChannelAccount());
@@ -251,42 +262,6 @@ public class FirmWithdrawServiceImpl implements IFirmWithdrawService {
             throw new CardAppBizException("市场商户信息不存在");
         }
         return merInfo;
-    }
-
-    /**
-     *  由于市场商户没有account相关信息，这里需要特殊构建
-     * @author miaoguoxin
-     * @date 2021/1/27
-     */
-    private BusinessRecordDo createFirmRecord(MerAccountResponseDto merInfo, FundRequestDto requestDto) {
-        BusinessRecordDo businessRecord = new BusinessRecordDo();
-        //编号、卡号、账户id
-        businessRecord.setSerialNo(uidRpcResovler.bizNumber(BizNoType.OPERATE_SERIAL_NO.getCode()));
-        businessRecord.setAccountId(merInfo.getVouchAccount());
-        businessRecord.setCardNo(Constant.FIRM_WITHDRAW_CARD_NO);
-        businessRecord.setCustomerId(merInfo.getMchId());
-        businessRecord.setCustomerNo(merInfo.getCode());
-        businessRecord.setCustomerName(merInfo.getName());
-        businessRecord.setCycleNo(merInfo.getVouchAccount());
-        //操作员信息
-        businessRecord.setOperatorId(requestDto.getOpId());
-        businessRecord.setOperatorNo(requestDto.getOpNo());
-        businessRecord.setOperatorName(requestDto.getOpName());
-        businessRecord.setFirmId(requestDto.getFirmId());
-
-        LocalDateTime localDateTime = LocalDateTime.now();
-        businessRecord.setState(OperateState.PROCESSING.getCode());
-        businessRecord.setOperateTime(localDateTime);
-        businessRecord.setModifyTime(localDateTime);
-        businessRecord.setVersion(1);
-
-        businessRecord.setType(OperateType.ACCOUNT_WITHDRAW.getCode());
-        businessRecord.setAmount(requestDto.getAmount());
-        businessRecord.setTradeType(TradeType.WITHDRAW.getCode());
-        businessRecord.setTradeChannel(TradeChannel.BANK.getCode());
-        businessRecord.setServiceCost(requestDto.getServiceCost());
-        businessRecord.setNotes(String.format("圈提取款，手续费%s元", CurrencyUtils.toYuanWithStripTrailingZeros(requestDto.getServiceCost())));
-        return businessRecord;
     }
 
 
