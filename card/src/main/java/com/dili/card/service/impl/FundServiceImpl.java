@@ -162,6 +162,10 @@ public class FundServiceImpl implements IFundService {
             UnfreezeFundDto dto = new UnfreezeFundDto();
             dto.setFrozenId(frozenId);
             FundOpResponseDto payResponse = GenericRpcResolver.resolver(payRpc.unfrozenFund(dto), ServiceName.PAY);
+            Long balance = payResponse.getTransaction().getBalance();
+            Long frozenBalance = payResponse.getTransaction().getFrozenBalance();
+            // 解冻金额该值为负数，冻结金额为正数
+            Long frozenAmount = payResponse.getTransaction().getFrozenAmount();
             //单独处理账务周期，防止结账后无法解冻
             AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(unfreezeFundDto.getOpId());
             Long cycleNo = accountCycle == null ? 0L : accountCycle.getCycleNo();
@@ -169,12 +173,9 @@ public class FundServiceImpl implements IFundService {
             BusinessRecordDo businessRecord = serialService.createBusinessRecord(unfreezeFundDto, accountInfo, record -> {
                 record.setType(OperateType.UNFROZEN_FUND.getCode());
                 record.setTradeChannel(TradeChannel.BALANCE.getCode());
+                record.setAmount(Math.abs(frozenAmount));
             }, cycleNo);
             serialService.saveBusinessRecord(businessRecord);
-            Long balance = payResponse.getTransaction().getBalance();
-            Long frozenBalance = payResponse.getTransaction().getFrozenBalance();
-            // 解冻金额该值为负数，冻结金额为正数
-            Long frozenAmount = payResponse.getTransaction().getFrozenAmount();
             Long startBalance = balance - frozenBalance;
             Long endBalance = balance - frozenBalance - frozenAmount;
             SerialDto serialDto = serialService.createAccountSerial(businessRecord, (record, feeType) -> {
