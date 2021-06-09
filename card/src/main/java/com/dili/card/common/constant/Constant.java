@@ -39,6 +39,8 @@ public class Constant {
     public static final String BUSINESS_RECORD_ATTACH_FUND_ACCOUNTID = "fundAccountId";
     /**柜台操作记录扩展字段，证件号*/
     public static final String BUSINESS_RECORD_ATTACH_CERT_NO = "certNo";
+    /**柜台操作记录扩展字段，流水号*/
+    public static final String BUSINESS_RECORD_NO = "recordNo";
 
     /**uap相关*/
     public static final String UAP_FIRMID = "UAP_firmId";

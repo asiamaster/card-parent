@@ -52,7 +52,15 @@ public class StatisticsController implements IControllerHandler {
 
     private static List<Integer> operateType = new ArrayList<>();
 
+    private static List<Integer> otherOperateType = new ArrayList<>();
+
     static {
+        otherOperateType.add(OperateType.FROZEN_FUND.getCode());
+        otherOperateType.add(OperateType.UNFROZEN_FUND.getCode());
+        otherOperateType.add(OperateType.FROZEN_ACCOUNT.getCode());
+        otherOperateType.add(OperateType.UNFROZEN_ACCOUNT.getCode());
+        otherOperateType.add(OperateType.FUND_REVERSE.getCode());
+
         operateType.add(OperateType.ACCOUNT_TRANSACT.getCode());
         operateType.add(OperateType.CHANGE.getCode());
         operateType.add(OperateType.ACCOUNT_CHARGE.getCode());
@@ -64,6 +72,8 @@ public class StatisticsController implements IControllerHandler {
         operateType.add(OperateType.RESET_PWD.getCode());
         operateType.add(OperateType.LIFT_LOCKED.getCode());
         operateType.add(OperateType.PERMISSION_SET.getCode());
+
+        operateType.addAll(otherOperateType);
     }
 
     /**
@@ -138,6 +148,9 @@ public class StatisticsController implements IControllerHandler {
         List<Integer> operateTypeList = queryDto.getOperateTypeList();
         if (CollectionUtil.isEmpty(operateTypeList)) {
             operateTypeList = new ArrayList<>(operateType);
+        }else if (operateTypeList.contains(0)){
+            //“其他”类型
+            operateTypeList.addAll(otherOperateType);
         }
         queryDto.setOperateTypeList(operateTypeList);
         //“个人”权限设置为当前操作员

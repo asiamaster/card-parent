@@ -50,6 +50,8 @@ import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
 import com.dili.card.type.OperateType;
 import com.dili.card.type.PayPipelineType;
+import com.dili.card.type.TradeChannel;
+import com.dili.card.type.TradeType;
 import com.dili.customer.sdk.domain.dto.CustomerExtendDto;
 import com.dili.feign.support.UapSessionThreadUtils;
 import com.dili.ss.domain.PageOutput;
@@ -122,6 +124,7 @@ public class FundServiceImpl implements IFundService {
         AccountCycleDo accountCycle = accountCycleService.findLatestCycleByUserId(requestDto.getOpId());
         BusinessRecordDo businessRecord = serialService.createBusinessRecord(requestDto, accountCard, record -> {
             record.setType(OperateType.FROZEN_FUND.getCode());
+            record.setTradeChannel(TradeChannel.BALANCE.getCode());
             record.setAmount(requestDto.getAmount());
             record.setNotes(requestDto.getMark());
         }, accountCycle == null ? 0L : accountCycle.getCycleNo());
@@ -165,20 +168,25 @@ public class FundServiceImpl implements IFundService {
             // 保存卡务操作记录
             BusinessRecordDo businessRecord = serialService.createBusinessRecord(unfreezeFundDto, accountInfo, record -> {
                 record.setType(OperateType.UNFROZEN_FUND.getCode());
+                record.setTradeChannel(TradeChannel.BALANCE.getCode());
             }, cycleNo);
             serialService.saveBusinessRecord(businessRecord);
-
+            Long balance = payResponse.getTransaction().getBalance();
+            Long frozenBalance = payResponse.getTransaction().getFrozenBalance();
+            // 解冻金额该值为负数，冻结金额为正数
+            Long frozenAmount = payResponse.getTransaction().getFrozenAmount();
+            Long startBalance = balance - frozenBalance;
+            Long endBalance = balance - frozenBalance - frozenAmount;
             SerialDto serialDto = serialService.createAccountSerial(businessRecord, (record, feeType) -> {
                 record.setFundItem(FundItem.MANDATORY_UNFREEZE_FUND.getCode());
                 record.setFundItemName(FundItem.MANDATORY_UNFREEZE_FUND.getName());
                 record.setAction(ActionType.INCOME.getCode());
-                Long balance = payResponse.getTransaction().getBalance();
-                Long frozenBalance = payResponse.getTransaction().getFrozenBalance();
-                Long frozenAmount = payResponse.getTransaction().getFrozenAmount(); // 解冻金额该值为负数，冻结金额为正数
-                record.setStartBalance(balance - frozenBalance);
-                record.setEndBalance(balance - frozenBalance - frozenAmount);
+                record.setStartBalance(startBalance);
+                record.setEndBalance(endBalance);
                 record.setAmount(Math.abs(frozenAmount));//操作记录对于可用余额要显示+
             });
+            serialDto.setStartBalance(startBalance);
+            serialDto.setEndBalance(endBalance);
             serialService.handleSuccess(serialDto, true);
         }
     }

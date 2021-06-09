@@ -55,7 +55,7 @@
 				</div>
 			</div>
 			<!--权限设置-->
-			<% if(record.type == 24) {%>
+			<% if(record.type == 1024) {%>
 				<div class="row row-cols-6" >
 					<div class="form-group col">
 						<label class="info-column">日提现额度</label>
@@ -97,18 +97,25 @@
 
 			<div class="row row-cols-6" >
 				<!--换卡-->
-				<% if(record.type == 13) {%>
+				<% if(record.type == 1013) {%>
 				<div class="form-group col">
 					<label class="info-column">新卡卡号</label>
 					<input  type="text" class="form-control" value="${record.attachObj.new_card_no!}" readonly/>
 				</div>
 				<% } %>
 				<!--权限设置-->
-				<% if(record.type == 24) {%>
+				<% if(record.type == 1024) {%>
 					<div class="form-group col">
 						<label class="info-column">账户权限</label>
 						<input  type="text" class="form-control" value="${record.attachObj.permissionStr!}" readonly/>
 					</div>
+				<% } %>
+				<!--冲正-->
+				<% if(record.type == 1031) {%>
+				<div class="form-group col">
+					<label class="info-column">原业务号</label>
+					<input  type="text" class="form-control" value="${record.attachObj.recordNo!}" readonly/>
+				</div>
 				<% } %>
 			</div>
 		</div>

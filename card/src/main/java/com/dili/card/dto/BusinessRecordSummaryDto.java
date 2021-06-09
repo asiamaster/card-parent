@@ -1,8 +1,10 @@
 package com.dili.card.dto;
 
+import cn.hutool.core.util.ReUtil;
 import com.dili.card.type.OperateType;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @Auther: miaoguoxin
@@ -30,8 +32,15 @@ public class BusinessRecordSummaryDto implements Serializable {
     }
 
     public BusinessRecordSummaryDto(OperateType operateType) {
-        //默认不可点击
-        this(operateType, 0);
+        //默认可点击
+        this(operateType, 1);
+    }
+
+    public BusinessRecordSummaryDto(Integer operateType, String operateTypeName,Integer allowClick) {
+        this.operateType = operateType;
+        this.operateTypeName = operateTypeName;
+        this.allowClick = allowClick;
+        this.count = 0L;
     }
 
     public Long getCount() {
@@ -64,5 +73,18 @@ public class BusinessRecordSummaryDto implements Serializable {
 
     public void setAllowClick(Integer allowClick) {
         this.allowClick = allowClick;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BusinessRecordSummaryDto that = (BusinessRecordSummaryDto) o;
+        return operateType.equals(that.operateType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(operateType);
     }
 }

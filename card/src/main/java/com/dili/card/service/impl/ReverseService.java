@@ -1,6 +1,7 @@
 package com.dili.card.service.impl;
 
-import cn.hutool.core.util.NumberUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.dili.card.common.constant.Constant;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dao.IReverseRecordDao;
 import com.dili.card.dto.BusinessRecordResponseDto;
@@ -9,7 +10,6 @@ import com.dili.card.dto.ReverseRecordQueryDto;
 import com.dili.card.dto.ReverseRecordResponseDto;
 import com.dili.card.dto.ReverseRequestDto;
 import com.dili.card.dto.SerialDto;
-import com.dili.card.dto.SerialQueryDto;
 import com.dili.card.dto.SerialRecordResponseDto;
 import com.dili.card.dto.UserAccountCardResponseDto;
 import com.dili.card.dto.UserAccountSingleQueryDto;
@@ -30,8 +30,8 @@ import com.dili.card.service.IReverseService;
 import com.dili.card.service.ISerialService;
 import com.dili.card.type.FeeType;
 import com.dili.card.type.FundItem;
-import com.dili.card.type.OperateType;
 import com.dili.card.type.FundItemMap;
+import com.dili.card.type.OperateType;
 import com.dili.card.type.TradeChannel;
 import com.dili.card.util.PageUtils;
 import com.dili.ss.domain.PageOutput;
@@ -165,6 +165,9 @@ public class ReverseService implements IReverseService {
             record.setTradeType(bizSerial.getTradeType());
             record.setTradeChannel(bizSerial.getTradeChannel());
             record.setTradeNo(tradeResponse.getTradeId());
+            JSONObject attachObj = new JSONObject();
+            attachObj.put(Constant.BUSINESS_RECORD_NO, bizSerial.getSerialNo());
+            record.setAttach(attachObj.toJSONString());
             record.setNotes(note);
         });
         serialService.saveBusinessRecord(businessRecord);
