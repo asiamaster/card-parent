@@ -137,7 +137,11 @@
 				<% for(item in feeList) { %>
 				<tr style="font-size: 14px">
 					<td class="info-cell">${item.fundItemName!}</td>
-					<td class="info-cell">${item.amountText!}</td>
+					<% if(item.action!=null && item.action==1) { %>
+					<td class="info-cell">+ ${item.amountText!}</td>
+					<% }else {%>
+					<td class="info-cell">- ${item.amountText!}</td>
+					<% } %>
 					<td class="info-cell">${item.notes!}</td>
 				</tr>
 				<% } %>

@@ -97,7 +97,7 @@ public class ReverseService implements IReverseService {
         //查询手续费记录
         FeeSerialRecordBo feeSerialRecordBo = serialService.getFeeSerialListBySerialNo(serialNo);
         //期末要求计算手续费
-        bizSerial.setEndBalance(feeSerialRecordBo.calculateEndBalanceWhenDeductFee(bizSerial.getEndBalance()));
+        bizSerial.setEndBalance(feeSerialRecordBo.calculateEndBalanceWhenDeductFee());
         //查询卡账户
         UserAccountSingleQueryDto accountQueryDto = new UserAccountSingleQueryDto();
         accountQueryDto.setAccountId(bizSerial.getAccountId());

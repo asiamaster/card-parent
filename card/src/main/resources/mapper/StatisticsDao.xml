@@ -15,6 +15,9 @@
             AND firm_id= #{firmId}
             AND type IS NOT NULL
             AND state = 2
+            <if test="serialNo != null and serialNo !=''">
+                and `serial_no` = #{serialNo}
+            </if>
             <if test="startDate != null">
                 AND `operate_time` &gt;= #{startDate}
             </if>

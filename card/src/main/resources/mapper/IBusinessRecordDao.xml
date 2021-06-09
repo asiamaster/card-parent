@@ -249,6 +249,9 @@
 		<if test="state != null">
 			and `state` = #{state}
 		</if>
+		<if test="serialNo != null and serialNo !=''">
+			and `serial_no` = #{serialNo}
+		</if>
 		<if test="operateTimeStart != null and operateTimeStart != ''">
 			and `operate_time` &gt;= #{operateTimeStart}
 		</if>

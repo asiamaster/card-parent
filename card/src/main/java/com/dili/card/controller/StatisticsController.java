@@ -102,7 +102,7 @@ public class StatisticsController implements IControllerHandler {
         //手续费信息
         FeeSerialRecordBo feeSerialRecordBo = serialService.getFeeSerialListBySerialNo(record.getSerialNo());
         //期末需要扣除手续费
-        record.setEndBalance(feeSerialRecordBo.calculateEndBalanceWhenDeductFee(record.getEndBalance()));
+        record.setEndBalance(feeSerialRecordBo.calculateEndBalanceWhenDeductFee());
         //卡信息
         UserAccountCardResponseDto accountCard = accountQueryService.getByCardNoWithoutValidate(record.getCardNo());
 

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,7 +29,7 @@ public class StatisticsService implements IStatisticsService {
     @Override
     public List<BusinessRecordSummaryDto> countBusinessRecordSummary(SerialQueryDto queryDto) {
         List<BusinessRecordSummaryDo> list = statisticsDao.countBusinessRecordOperateType(queryDto.getOperatorId(), queryDto.getFirmId(),
-                queryDto.getOperateTimeStart(), queryDto.getOperateTimeEnd());
+                queryDto.getOperateTimeStart(), queryDto.getOperateTimeEnd(), queryDto.getSerialNo());
         Map<Integer, BusinessRecordSummaryDto> summaryMap = initSummaryMap();
         for (BusinessRecordSummaryDo summaryDo : list) {
             BusinessRecordSummaryDto summaryDto = summaryMap.get(summaryDo.getOperateType());

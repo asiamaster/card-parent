@@ -3,7 +3,6 @@ package com.dili.card.dao;
 import com.dili.card.entity.BusinessRecordSummaryDo;
 import org.apache.ibatis.annotations.Param;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -21,5 +20,6 @@ public interface IStatisticsDao {
     List<BusinessRecordSummaryDo> countBusinessRecordOperateType(@Param("operatorId") Long operatorId,
                                                                  @Param("firmId") Long firmId,
                                                                  @Param("startDate") String startDate,
-                                                                 @Param("endDate") String endDate);
+                                                                 @Param("endDate") String endDate,
+                                                                 @Param("serialNo") String serialNo);
 }
