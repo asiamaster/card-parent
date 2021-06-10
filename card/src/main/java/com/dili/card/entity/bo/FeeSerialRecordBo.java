@@ -1,15 +1,12 @@
 package com.dili.card.entity.bo;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.NumberUtil;
 import com.dili.card.dto.SerialRecordResponseDto;
 import com.dili.card.type.FundItemMap;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -38,21 +35,21 @@ public class FeeSerialRecordBo {
     }
 
     /**
-    * 扣除手续费计算期末金额
-    * @author miaoguoxin
-    * @date 2021/4/22
-    */
-    public Long calculateEndBalanceWhenDeductFee(){
+     * 扣除手续费计算期末金额
+     * @author miaoguoxin
+     * @date 2021/4/22
+     */
+    public Long calculateEndBalanceWhenDeductFee() {
         //最后一条流水就是真实期末
-        if (CollectionUtil.isEmpty(this.totalList)){
+        if (CollectionUtil.isEmpty(this.totalList)) {
             return null;
         }
         List<SerialRecordResponseDto> filterList = this.totalList.stream().filter(l -> l.getAmount() != null).collect(Collectors.toList());
-        if (CollectionUtil.isEmpty(filterList)){
+        if (CollectionUtil.isEmpty(filterList)) {
             return null;
         }
         this.totalList.sort(Comparator.comparing(SerialRecordResponseDto::getId).reversed());
-        return this.totalList.get(0).getEndBalance();
+        return NumberUtils.toLong(this.totalList.get(0).getEndBalance() + "");
     }
 
     public List<SerialRecordResponseDto> getFeeList() {
