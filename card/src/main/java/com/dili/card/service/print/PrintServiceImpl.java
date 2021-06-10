@@ -75,26 +75,34 @@ public abstract class PrintServiceImpl implements IPrintService {
             account = accountQueryRpcResolver
                     .findSingleWithoutValidate(userAccountSingleQuery);
             if (account == null) {
+                this.setBalancePropsWhenEmpty(printDto);
                 return;
             }
             if (account.getCardState() == CardStatus.RETURNED.getCode()) {
+                this.setBalancePropsWhenEmpty(printDto);
                 return;
             }
         } catch (CardAppBizException e) {
             // TODO优化
             if ("10001".equals(e.getCode())) {
+                this.setBalancePropsWhenEmpty(printDto);
                 return;
             }
         }
         BalanceResponseDto balanceResponse = payRpcResolver.findBalanceByFundAccountId(account.getFundAccountId());
         if (balanceResponse == null) {
-            printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(0L));
-            printDto.setAvailableBalance(CurrencyUtils.cent2TenNoSymbol(0L));
-            printDto.setFrozenBalance(CurrencyUtils.cent2TenNoSymbol(0L));
+            this.setBalancePropsWhenEmpty(printDto);
         } else {
             printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(balanceResponse.getBalance()));
             printDto.setAvailableBalance(CurrencyUtils.cent2TenNoSymbol(balanceResponse.getAvailableAmount()));
             printDto.setFrozenBalance(CurrencyUtils.cent2TenNoSymbol(balanceResponse.getFrozenAmount()));
         }
     }
+
+    private void setBalancePropsWhenEmpty(PrintDto printDto) {
+        printDto.setBalance(CurrencyUtils.cent2TenNoSymbol(0L));
+        printDto.setAvailableBalance(CurrencyUtils.cent2TenNoSymbol(0L));
+        printDto.setFrozenBalance(CurrencyUtils.cent2TenNoSymbol(0L));
+    }
+
 }
