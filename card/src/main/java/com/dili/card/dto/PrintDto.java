@@ -26,6 +26,10 @@ public class PrintDto {
 	private String totalAmountWords;
 	/** 余额 */
 	private String balance;
+	/**可用余额*/
+	private String availableBalance;
+	/**冻结金额*/
+	private String frozenBalance;
 	/** 交易渠道 */
 	private String tradeChannel;
 	/** 押金 */
@@ -71,6 +75,22 @@ public class PrintDto {
 	private String tradeDailyAmount;
 	/**提现次数*/
 	private Integer tradeDailyTimes;
+
+	public String getAvailableBalance() {
+		return availableBalance;
+	}
+
+	public void setAvailableBalance(String availableBalance) {
+		this.availableBalance = availableBalance;
+	}
+
+	public String getFrozenBalance() {
+		return frozenBalance;
+	}
+
+	public void setFrozenBalance(String frozenBalance) {
+		this.frozenBalance = frozenBalance;
+	}
 
 	public String getPermissionNames() {
 		return permissionNames;
