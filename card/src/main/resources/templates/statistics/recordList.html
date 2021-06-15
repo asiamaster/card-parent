@@ -63,7 +63,7 @@
 					<th data-field="tradeChannelText" data-align="center">
 						操作方式
 					</th>
-					<th data-field="amountText" data-align="center">
+					<th data-field="amountText" data-align="center" data-sortable="true" data-sort-name="amount">
 						操作金额
 					</th>
 					<th data-field="customerName" data-align="center" >
@@ -217,8 +217,8 @@
 			},
 			//重置时间控件
 			resetDateControl(){
-				let start = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
-				let end = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				let start = moment().subtract(1,'day').millisecond(0).second(0).minute(0).hour(8).format('YYYY-MM-DD HH:mm:ss');
+				let end = moment().millisecond(0).second(59).minute(59).hour(7).format('YYYY-MM-DD HH:mm:ss');
 				$(".laystart").val(start);
 				$(".layend").val(end);
 			}
