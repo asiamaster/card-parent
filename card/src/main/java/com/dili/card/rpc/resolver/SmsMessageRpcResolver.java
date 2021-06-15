@@ -51,9 +51,10 @@ public class SmsMessageRpcResolver {
             jsonObj.put("amount", MoneyUtils.centToYuan(amount));
             jsonObj.put("balance", MoneyUtils.centToYuan(balance));
 
-//    		Long firmId = SessionContext.getSessionContext().getUserTicket().getFirmId();
             message.setCellphone(cellphone);
-            message.setMarketCode("group"); // 目前配置为集团
+            // message.setMarketCode("group"); // 目前配置为集团
+            //改为市场隔离
+            message.setMarketCode(firmCode);
             message.setSceneCode("rechargeNotice"); // 应用场景
             message.setParameters(jsonObj.toJSONString());
             message.setSystemCode("card");
@@ -88,9 +89,10 @@ public class SmsMessageRpcResolver {
             jsonObj.put("amount", MoneyUtils.centToYuan(amount));
             jsonObj.put("balance", MoneyUtils.centToYuan(balance));
 
-//    		Long firmId = SessionContext.getSessionContext().getUserTicket().getFirmId();
             message.setCellphone(cellphone);
-            message.setMarketCode("group"); // 目前配置为集团
+            // message.setMarketCode("group"); // 目前配置为集团
+            //改为市场隔离
+            message.setMarketCode(firmCode);
             message.setSceneCode("withdrawNotice"); // 应用场景
             message.setParameters(jsonObj.toJSONString());
             message.setSystemCode("card");
