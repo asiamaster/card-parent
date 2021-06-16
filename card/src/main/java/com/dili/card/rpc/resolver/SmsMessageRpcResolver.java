@@ -1,5 +1,6 @@
 package com.dili.card.rpc.resolver;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dto.pay.TradeResponseDto;
@@ -61,7 +62,7 @@ public class SmsMessageRpcResolver {
             message.setBusinessMarketCode(firmCode);
 //        	message.setTemplateCode(templateCode); // 短信模板ID
             resolver = GenericRpcResolver.resolver(smsMessageRpc.receiveMessage(message), ServiceName.MESSAGE);
-            log.info("短信发送成功************{}", cellphone);
+            log.info("存款短信发送成功************{}", JSON.toJSONString(message));
         } catch (CardAppBizException e) {
             log.info(JSONObject.toJSONString(message));
             log.error("{}存款短信发送失败", JSONObject.toJSONString(resolver));
@@ -99,6 +100,7 @@ public class SmsMessageRpcResolver {
             message.setBusinessMarketCode(firmCode);
 //        	message.setTemplateCode(templateCode); // 短信模板ID
             resolver = GenericRpcResolver.resolver(smsMessageRpc.receiveMessage(message), ServiceName.MESSAGE);
+            log.info("取款短信发送成功************{}", JSON.toJSONString(message));
         } catch (CardAppBizException e) {
             log.info(JSONObject.toJSONString(message));
             log.error("{}取款短信发送失败", JSONObject.toJSONString(resolver));
