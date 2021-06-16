@@ -24,6 +24,8 @@ public class UserAccountCardQuery extends BaseDto {
 	private List<String> cardNos;
 	/** 主账户ID */
 	private Long parentAccountId;
+	/** 持卡人 */
+	private String holdName;
 	/** 市场ID */
 	private Long firmId;
 	/** 结束时间 */
@@ -123,6 +125,14 @@ public class UserAccountCardQuery extends BaseDto {
 
 	public Integer getExcludeUnusualState() {
 		return excludeUnusualState;
+	}
+
+	public String getHoldName() {
+		return holdName;
+	}
+
+	public void setHoldName(String holdName) {
+		this.holdName = holdName;
 	}
 
 	public void setExcludeUnusualState(Integer excludeUnusualState) {

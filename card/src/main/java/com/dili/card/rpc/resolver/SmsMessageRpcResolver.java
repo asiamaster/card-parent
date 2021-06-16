@@ -1,5 +1,6 @@
 package com.dili.card.rpc.resolver;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.card.common.constant.ServiceName;
 import com.dili.card.dto.pay.TradeResponseDto;
@@ -51,16 +52,17 @@ public class SmsMessageRpcResolver {
             jsonObj.put("amount", MoneyUtils.centToYuan(amount));
             jsonObj.put("balance", MoneyUtils.centToYuan(balance));
 
-//    		Long firmId = SessionContext.getSessionContext().getUserTicket().getFirmId();
             message.setCellphone(cellphone);
-            message.setMarketCode("group"); // 目前配置为集团
+            // message.setMarketCode("group"); // 目前配置为集团
+            //改为市场隔离
+            message.setMarketCode(firmCode);
             message.setSceneCode("rechargeNotice"); // 应用场景
             message.setParameters(jsonObj.toJSONString());
             message.setSystemCode("card");
             message.setBusinessMarketCode(firmCode);
 //        	message.setTemplateCode(templateCode); // 短信模板ID
             resolver = GenericRpcResolver.resolver(smsMessageRpc.receiveMessage(message), ServiceName.MESSAGE);
-            log.info("短信发送成功************{}", cellphone);
+            log.info("存款短信发送成功************{}", JSON.toJSONString(message));
         } catch (CardAppBizException e) {
             log.info(JSONObject.toJSONString(message));
             log.error("{}存款短信发送失败", JSONObject.toJSONString(resolver));
@@ -88,15 +90,17 @@ public class SmsMessageRpcResolver {
             jsonObj.put("amount", MoneyUtils.centToYuan(amount));
             jsonObj.put("balance", MoneyUtils.centToYuan(balance));
 
-//    		Long firmId = SessionContext.getSessionContext().getUserTicket().getFirmId();
             message.setCellphone(cellphone);
-            message.setMarketCode("group"); // 目前配置为集团
+            // message.setMarketCode("group"); // 目前配置为集团
+            //改为市场隔离
+            message.setMarketCode(firmCode);
             message.setSceneCode("withdrawNotice"); // 应用场景
             message.setParameters(jsonObj.toJSONString());
             message.setSystemCode("card");
             message.setBusinessMarketCode(firmCode);
 //        	message.setTemplateCode(templateCode); // 短信模板ID
             resolver = GenericRpcResolver.resolver(smsMessageRpc.receiveMessage(message), ServiceName.MESSAGE);
+            log.info("取款短信发送成功************{}", JSON.toJSONString(message));
         } catch (CardAppBizException e) {
             log.info(JSONObject.toJSONString(message));
             log.error("{}取款短信发送失败", JSONObject.toJSONString(resolver));
